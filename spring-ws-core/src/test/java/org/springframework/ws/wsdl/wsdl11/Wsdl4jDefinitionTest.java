@@ -38,36 +38,36 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class Wsdl4jDefinitionTest {
 
-    private Wsdl4jDefinition definition;
+	private Wsdl4jDefinition definition;
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    @Before
-    public void setUp() throws Exception {
-        XMLUnit.setIgnoreWhitespace(true);
-        WSDLFactory factory = WSDLFactory.newInstance();
-        WSDLReader reader = factory.newWSDLReader();
-        InputStream is = getClass().getResourceAsStream("complete.wsdl");
-        try {
-            Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
-            definition = new Wsdl4jDefinition(wsdl4jDefinition);
-        }
-        finally {
-            is.close();
-        }
-        transformer = TransformerFactory.newInstance().newTransformer();
-    }
+	@Before
+	public void setUp() throws Exception {
+		XMLUnit.setIgnoreWhitespace(true);
+		WSDLFactory factory = WSDLFactory.newInstance();
+		WSDLReader reader = factory.newWSDLReader();
+		InputStream is = getClass().getResourceAsStream("complete.wsdl");
+		try {
+			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
+			definition = new Wsdl4jDefinition(wsdl4jDefinition);
+		}
+		finally {
+			is.close();
+		}
+		transformer = TransformerFactory.newInstance().newTransformer();
+	}
 
-    @Test
-    public void testGetSource() throws Exception {
-        Source source = definition.getSource();
-        Assert.assertNotNull("Source is null", source);
-        DOMResult result = new DOMResult();
-        transformer.transform(source, result);
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("complete.wsdl"));
-        assertXMLEqual(expected, (Document) result.getNode());
-    }
+	@Test
+	public void testGetSource() throws Exception {
+		Source source = definition.getSource();
+		Assert.assertNotNull("Source is null", source);
+		DOMResult result = new DOMResult();
+		transformer.transform(source, result);
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("complete.wsdl"));
+		assertXMLEqual(expected, (Document) result.getNode());
+	}
 }

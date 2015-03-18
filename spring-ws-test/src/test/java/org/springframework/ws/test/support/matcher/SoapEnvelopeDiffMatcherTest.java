@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,7 @@ import static org.easymock.EasyMock.*;
 public class SoapEnvelopeDiffMatcherTest {
 	
 	@Test
-    public void match() throws Exception {
+	public void match() throws Exception {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
@@ -41,18 +41,18 @@ public class SoapEnvelopeDiffMatcherTest {
 		DOMResult result = new DOMResult();
 		TransformerHelper transformerHelper = new TransformerHelper();
 		transformerHelper.transform(new StringSource(xml), result);
-        SoapMessage message = createMock(SoapMessage.class);
-        expect(message.getDocument()).andReturn((Document)result.getNode()).once();
-        replay(message);
+		SoapMessage message = createMock(SoapMessage.class);
+		expect(message.getDocument()).andReturn((Document)result.getNode()).once();
+		replay(message);
 
-        SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(xml));
-        matcher.match(message);
+		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(xml));
+		matcher.match(message);
 
-        verify(message);
-    }
+		verify(message);
+	}
 	
 	@Test(expected = AssertionError.class)
-    public void nonMatch() throws Exception {
+	public void nonMatch() throws Exception {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
@@ -64,13 +64,13 @@ public class SoapEnvelopeDiffMatcherTest {
 		DOMResult result = new DOMResult();
 		TransformerHelper transformerHelper = new TransformerHelper();
 		transformerHelper.transform(new StringSource(actual), result);
-        SoapMessage message = createMock(SoapMessage.class);
-        expect(message.getDocument()).andReturn((Document)result.getNode()).once();
-        replay(message);
+		SoapMessage message = createMock(SoapMessage.class);
+		expect(message.getDocument()).andReturn((Document)result.getNode()).once();
+		replay(message);
 
-        String expected = String.format(xml, "2");
-        SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
-        matcher.match(message);
-    }
+		String expected = String.format(xml, "2");
+		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
+		matcher.match(message);
+	}
 	
 }

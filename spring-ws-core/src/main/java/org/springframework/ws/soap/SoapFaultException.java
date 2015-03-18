@@ -25,16 +25,16 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapFaultException extends SoapEnvelopeException {
 
-    public SoapFaultException(String msg) {
-        super(msg);
-    }
+	public SoapFaultException(String msg) {
+		super(msg);
+	}
 
-    public SoapFaultException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SoapFaultException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SoapFaultException(Throwable ex) {
-        super("Could not access fault: " + ex.getMessage(), ex);
-    }
+	public SoapFaultException(Throwable ex) {
+		super("Could not access fault: " + ex.getMessage(), ex);
+	}
 
 }

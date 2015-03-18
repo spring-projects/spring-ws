@@ -34,104 +34,104 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 public class SoapEnvelopeLoggingInterceptorTest {
 
-    private SoapEnvelopeLoggingInterceptor interceptor;
+	private SoapEnvelopeLoggingInterceptor interceptor;
 
-    private CountingAppender appender;
+	private CountingAppender appender;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    @Before
-    public void setUp() throws Exception {
-        interceptor = new SoapEnvelopeLoggingInterceptor();
-        appender = new SoapEnvelopeLoggingInterceptorTest.CountingAppender();
-        BasicConfigurator.configure(appender);
-        Logger.getRootLogger().setLevel(Level.DEBUG);
-        SaajSoapMessageFactory factory = new SaajSoapMessageFactory();
-        factory.afterPropertiesSet();
-        messageContext = new DefaultMessageContext(factory);
-        appender.reset();
-    }
+	@Before
+	public void setUp() throws Exception {
+		interceptor = new SoapEnvelopeLoggingInterceptor();
+		appender = new SoapEnvelopeLoggingInterceptorTest.CountingAppender();
+		BasicConfigurator.configure(appender);
+		Logger.getRootLogger().setLevel(Level.DEBUG);
+		SaajSoapMessageFactory factory = new SaajSoapMessageFactory();
+		factory.afterPropertiesSet();
+		messageContext = new DefaultMessageContext(factory);
+		appender.reset();
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        BasicConfigurator.resetConfiguration();
-        ClassPathResource resource = new ClassPathResource("log4j.properties");
-        PropertyConfigurator.configure(resource.getURL());
-    }
+	@After
+	public void tearDown() throws Exception {
+		BasicConfigurator.resetConfiguration();
+		ClassPathResource resource = new ClassPathResource("log4j.properties");
+		PropertyConfigurator.configure(resource.getURL());
+	}
 
-    @Test
-    public void testHandleRequestDisabled() throws Exception {
-        interceptor.setLogRequest(false);
-        int eventCount = appender.getCount();
-        interceptor.handleRequest(messageContext, null);
-        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
-    }
+	@Test
+	public void testHandleRequestDisabled() throws Exception {
+		interceptor.setLogRequest(false);
+		int eventCount = appender.getCount();
+		interceptor.handleRequest(messageContext, null);
+		Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+	}
 
-    @Test
-    public void testHandleRequestEnabled() throws Exception {
-        int eventCount = appender.getCount();
-        interceptor.handleRequest(messageContext, null);
-        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
-    }
+	@Test
+	public void testHandleRequestEnabled() throws Exception {
+		int eventCount = appender.getCount();
+		interceptor.handleRequest(messageContext, null);
+		Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
+	}
 
-    @Test
-    public void testHandleResponseDisabled() throws Exception {
-        messageContext.getResponse();
-        interceptor.setLogResponse(false);
-        int eventCount = appender.getCount();
-        interceptor.handleResponse(messageContext, null);
-        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
-    }
+	@Test
+	public void testHandleResponseDisabled() throws Exception {
+		messageContext.getResponse();
+		interceptor.setLogResponse(false);
+		int eventCount = appender.getCount();
+		interceptor.handleResponse(messageContext, null);
+		Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+	}
 
-    @Test
-    public void testHandleResponseEnabled() throws Exception {
-        messageContext.getResponse();
-        int eventCount = appender.getCount();
-        interceptor.handleResponse(messageContext, null);
-        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
-    }
+	@Test
+	public void testHandleResponseEnabled() throws Exception {
+		messageContext.getResponse();
+		int eventCount = appender.getCount();
+		interceptor.handleResponse(messageContext, null);
+		Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
+	}
 
-    @Test
-    public void testHandleFaultDisabled() throws Exception {
-        messageContext.getResponse();
-        interceptor.setLogFault(false);
-        int eventCount = appender.getCount();
-        interceptor.handleFault(messageContext, null);
-        Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
-    }
+	@Test
+	public void testHandleFaultDisabled() throws Exception {
+		messageContext.getResponse();
+		interceptor.setLogFault(false);
+		int eventCount = appender.getCount();
+		interceptor.handleFault(messageContext, null);
+		Assert.assertEquals("interceptor logged when disabled", appender.getCount(), eventCount);
+	}
 
-    @Test
-    public void testHandleFaultEnabled() throws Exception {
-        messageContext.getResponse();
-        int eventCount = appender.getCount();
-        interceptor.handleResponse(messageContext, null);
-        Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
-    }
+	@Test
+	public void testHandleFaultEnabled() throws Exception {
+		messageContext.getResponse();
+		int eventCount = appender.getCount();
+		interceptor.handleResponse(messageContext, null);
+		Assert.assertTrue("interceptor did not log", appender.getCount() > eventCount);
+	}
 
-    private static class CountingAppender extends AppenderSkeleton {
+	private static class CountingAppender extends AppenderSkeleton {
 
-        private int count;
+		private int count;
 
-        public int getCount() {
-            return count;
-        }
+		public int getCount() {
+			return count;
+		}
 
-        public void reset() {
-            count = 0;
-        }
+		public void reset() {
+			count = 0;
+		}
 
-        @Override
-        protected void append(LoggingEvent loggingEvent) {
-            count++;
-        }
+		@Override
+		protected void append(LoggingEvent loggingEvent) {
+			count++;
+		}
 
-        @Override
-        public boolean requiresLayout() {
-            return false;
-        }
+		@Override
+		public boolean requiresLayout() {
+			return false;
+		}
 
-        @Override
-        public void close() {
-        }
-    }
+		@Override
+		public void close() {
+		}
+	}
 }

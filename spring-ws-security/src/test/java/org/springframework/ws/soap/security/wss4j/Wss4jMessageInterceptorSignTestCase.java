@@ -31,93 +31,93 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase {
 
-    protected Wss4jSecurityInterceptor interceptor;
+	protected Wss4jSecurityInterceptor interceptor;
 
-    @Override
-    protected void onSetup() throws Exception {
-        interceptor = new Wss4jSecurityInterceptor();
-        interceptor.setValidationActions("Signature");
+	@Override
+	protected void onSetup() throws Exception {
+		interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setValidationActions("Signature");
 
-        CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
-        Properties cryptoFactoryBeanConfig = new Properties();
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.provider",
-                "org.apache.ws.security.components.crypto.Merlin");
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", "jceks");
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
+		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
+		Properties cryptoFactoryBeanConfig = new Properties();
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.provider",
+				"org.apache.ws.security.components.crypto.Merlin");
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", "jceks");
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
 
-        // from the class path
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
-        cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
-        cryptoFactoryBean.afterPropertiesSet();
-        interceptor.setValidationSignatureCrypto(cryptoFactoryBean
-                .getObject());
-        interceptor.setSecurementSignatureCrypto(cryptoFactoryBean
-                .getObject());
-        interceptor.afterPropertiesSet();
+		// from the class path
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
+		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
+		cryptoFactoryBean.afterPropertiesSet();
+		interceptor.setValidationSignatureCrypto(cryptoFactoryBean
+				.getObject());
+		interceptor.setSecurementSignatureCrypto(cryptoFactoryBean
+				.getObject());
+		interceptor.afterPropertiesSet();
 
-    }
+	}
 
-    @Test
-    public void testValidateCertificate() throws Exception {
-        SoapMessage message = loadSoap11Message("signed-soap.xml");
+	@Test
+	public void testValidateCertificate() throws Exception {
+		SoapMessage message = loadSoap11Message("signed-soap.xml");
 
-        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-        interceptor.validateMessage(message, messageContext);
-        Object result = getMessage(message);
-        assertNotNull("No result returned", result);
-        assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
-                getDocument(message));
-    }
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		interceptor.validateMessage(message, messageContext);
+		Object result = getMessage(message);
+		assertNotNull("No result returned", result);
+		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
+				getDocument(message));
+	}
 
-    @Test
-    public void testValidateCertificateWithSignatureConfirmation() throws Exception {
-        SoapMessage message = loadSoap11Message("signed-soap.xml");
-        MessageContext messageContext = getSoap11MessageContext(message);
-        interceptor.setEnableSignatureConfirmation(true);
-        interceptor.validateMessage(message, messageContext);
-        WebServiceMessage response = messageContext.getResponse();
-        interceptor.secureMessage(message, messageContext);
-        assertNotNull("No result returned", response);
-        Document document = getDocument((SoapMessage) response);
-        assertXpathExists("Absent SignatureConfirmation element",
-                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse11:SignatureConfirmation", document);
-    }
+	@Test
+	public void testValidateCertificateWithSignatureConfirmation() throws Exception {
+		SoapMessage message = loadSoap11Message("signed-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+		interceptor.setEnableSignatureConfirmation(true);
+		interceptor.validateMessage(message, messageContext);
+		WebServiceMessage response = messageContext.getResponse();
+		interceptor.secureMessage(message, messageContext);
+		assertNotNull("No result returned", response);
+		Document document = getDocument((SoapMessage) response);
+		assertXpathExists("Absent SignatureConfirmation element",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse11:SignatureConfirmation", document);
+	}
 
-    @Test
-    public void testSignResponse() throws Exception {
-        interceptor.setSecurementActions("Signature");
-        interceptor.setEnableSignatureConfirmation(false);
-        interceptor.setSecurementPassword("123456");
-        interceptor.setSecurementUsername("rsaKey");
-        SoapMessage message = loadSoap11Message("empty-soap.xml");
-        MessageContext messageContext = getSoap11MessageContext(message);
+	@Test
+	public void testSignResponse() throws Exception {
+		interceptor.setSecurementActions("Signature");
+		interceptor.setEnableSignatureConfirmation(false);
+		interceptor.setSecurementPassword("123456");
+		interceptor.setSecurementUsername("rsaKey");
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
 
-        // interceptor.setSecurementSignatureKeyIdentifier("IssuerSerial");
+		// interceptor.setSecurementSignatureKeyIdentifier("IssuerSerial");
 
-        interceptor.secureMessage(message, messageContext);
+		interceptor.secureMessage(message, messageContext);
 
-        Document document = getDocument(message);
-        assertXpathExists("Absent SignatureConfirmation element",
-                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
-
-
-    }
-
-    @Test
-    public void testSignResponseWithSignatureUser() throws Exception {
-        interceptor.setSecurementActions("Signature");
-        interceptor.setEnableSignatureConfirmation(false);
-        interceptor.setSecurementPassword("123456");
-        interceptor.setSecurementSignatureUser("rsaKey");
-        SoapMessage message = loadSoap11Message("empty-soap.xml");
-        MessageContext messageContext = getSoap11MessageContext(message);
-
-        interceptor.secureMessage(message, messageContext);
-
-        Document document = getDocument(message);
-        assertXpathExists("Absent SignatureConfirmation element",
-                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
+		Document document = getDocument(message);
+		assertXpathExists("Absent SignatureConfirmation element",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
 
 
-    }
+	}
+
+	@Test
+	public void testSignResponseWithSignatureUser() throws Exception {
+		interceptor.setSecurementActions("Signature");
+		interceptor.setEnableSignatureConfirmation(false);
+		interceptor.setSecurementPassword("123456");
+		interceptor.setSecurementSignatureUser("rsaKey");
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+
+		interceptor.secureMessage(message, messageContext);
+
+		Document document = getDocument(message);
+		assertXpathExists("Absent SignatureConfirmation element",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
+
+
+	}
 }

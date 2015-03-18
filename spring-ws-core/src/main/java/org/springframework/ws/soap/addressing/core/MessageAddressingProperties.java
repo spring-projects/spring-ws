@@ -34,128 +34,128 @@ import org.w3c.dom.Node;
  */
 public final class MessageAddressingProperties implements Serializable {
 
-    private static final long serialVersionUID = -6980663311446506672L;
+	private static final long serialVersionUID = -6980663311446506672L;
 
-    private final URI to;
+	private final URI to;
 
-    private final EndpointReference from;
+	private final EndpointReference from;
 
-    private final EndpointReference replyTo;
+	private final EndpointReference replyTo;
 
-    private final EndpointReference faultTo;
+	private final EndpointReference faultTo;
 
-    private final URI action;
+	private final URI action;
 
-    private final URI messageId;
+	private final URI messageId;
 
-    private final URI relatesTo;
+	private final URI relatesTo;
 
-    private final List<Node> referenceProperties;
+	private final List<Node> referenceProperties;
 
-    private final List<Node> referenceParameters;
+	private final List<Node> referenceParameters;
 
-    /**
-     * Constructs a new {@link MessageAddressingProperties} with the given parameters.
-     *
-     * @param to        the value of the destination property
-     * @param from      the value of the source endpoint property
-     * @param replyTo   the value of the reply endpoint property
-     * @param faultTo   the value of the fault endpoint property
-     * @param action    the value of the action property
-     * @param messageId the value of the message id property
-     */
-    public MessageAddressingProperties(URI to,
-                                       EndpointReference from,
-                                       EndpointReference replyTo,
-                                       EndpointReference faultTo,
-                                       URI action,
-                                       URI messageId) {
-        this.to = to;
-        this.from = from;
-        this.replyTo = replyTo;
-        this.faultTo = faultTo;
-        this.action = action;
-        this.messageId = messageId;
-        this.relatesTo = null;
-        this.referenceProperties = Collections.emptyList();
-        this.referenceParameters = Collections.emptyList();
-    }
+	/**
+	 * Constructs a new {@link MessageAddressingProperties} with the given parameters.
+	 *
+	 * @param to		the value of the destination property
+	 * @param from		the value of the source endpoint property
+	 * @param replyTo	the value of the reply endpoint property
+	 * @param faultTo	the value of the fault endpoint property
+	 * @param action	the value of the action property
+	 * @param messageId the value of the message id property
+	 */
+	public MessageAddressingProperties(URI to,
+									   EndpointReference from,
+									   EndpointReference replyTo,
+									   EndpointReference faultTo,
+									   URI action,
+									   URI messageId) {
+		this.to = to;
+		this.from = from;
+		this.replyTo = replyTo;
+		this.faultTo = faultTo;
+		this.action = action;
+		this.messageId = messageId;
+		this.relatesTo = null;
+		this.referenceProperties = Collections.emptyList();
+		this.referenceParameters = Collections.emptyList();
+	}
 
-    /**
-     * Constructs a new {@link MessageAddressingProperties} that forms a reply to the given EPR.
-     *
-     * @param epr       the endpoint reference to create a reply for
-     * @param action    the value of the action property
-     * @param messageId the value of the message id property
-     * @param relatesTo the value of the relates to property
-     */
-    private MessageAddressingProperties(EndpointReference epr, URI action, URI messageId, URI relatesTo) {
-        this.to = epr.getAddress();
-        this.action = action;
-        this.messageId = messageId;
-        this.relatesTo = relatesTo;
-        this.referenceParameters = epr.getReferenceParameters();
-        this.referenceProperties = epr.getReferenceProperties();
-        this.from = null;
-        this.replyTo = null;
-        this.faultTo = null;
-    }
+	/**
+	 * Constructs a new {@link MessageAddressingProperties} that forms a reply to the given EPR.
+	 *
+	 * @param epr		the endpoint reference to create a reply for
+	 * @param action	the value of the action property
+	 * @param messageId the value of the message id property
+	 * @param relatesTo the value of the relates to property
+	 */
+	private MessageAddressingProperties(EndpointReference epr, URI action, URI messageId, URI relatesTo) {
+		this.to = epr.getAddress();
+		this.action = action;
+		this.messageId = messageId;
+		this.relatesTo = relatesTo;
+		this.referenceParameters = epr.getReferenceParameters();
+		this.referenceProperties = epr.getReferenceProperties();
+		this.from = null;
+		this.replyTo = null;
+		this.faultTo = null;
+	}
 
-    /** Returns the value of the destination property. */
-    public URI getTo() {
-        return to;
-    }
+	/** Returns the value of the destination property. */
+	public URI getTo() {
+		return to;
+	}
 
-    /** Returns the value of the source endpoint property. */
-    public EndpointReference getFrom() {
-        return from;
-    }
+	/** Returns the value of the source endpoint property. */
+	public EndpointReference getFrom() {
+		return from;
+	}
 
-    /** Returns the value of the reply endpoint property. */
-    public EndpointReference getReplyTo() {
-        return replyTo;
-    }
+	/** Returns the value of the reply endpoint property. */
+	public EndpointReference getReplyTo() {
+		return replyTo;
+	}
 
-    /** Returns the value of the fault endpoint property. */
-    public EndpointReference getFaultTo() {
-        return faultTo;
-    }
+	/** Returns the value of the fault endpoint property. */
+	public EndpointReference getFaultTo() {
+		return faultTo;
+	}
 
-    /** Returns the value of the action property. */
-    public URI getAction() {
-        return action;
-    }
+	/** Returns the value of the action property. */
+	public URI getAction() {
+		return action;
+	}
 
-    /** Returns the value of the message id property. */
-    public URI getMessageId() {
-        return messageId;
-    }
+	/** Returns the value of the message id property. */
+	public URI getMessageId() {
+		return messageId;
+	}
 
-    /** Returns the value of the relationship property. */
-    public URI getRelatesTo() {
-        return relatesTo;
-    }
+	/** Returns the value of the relationship property. */
+	public URI getRelatesTo() {
+		return relatesTo;
+	}
 
-    /** Returns the endpoint properties. Returns an empty list of none are set. */
-    public List<Node> getReferenceProperties() {
-        return Collections.unmodifiableList(referenceProperties);
-    }
+	/** Returns the endpoint properties. Returns an empty list of none are set. */
+	public List<Node> getReferenceProperties() {
+		return Collections.unmodifiableList(referenceProperties);
+	}
 
-    /** Returns the endpoint parameters. Returns an empty list of none are set. */
-    public List<Node> getReferenceParameters() {
-        return Collections.unmodifiableList(referenceParameters);
-    }
+	/** Returns the endpoint parameters. Returns an empty list of none are set. */
+	public List<Node> getReferenceParameters() {
+		return Collections.unmodifiableList(referenceParameters);
+	}
 
-    /**
-     * Creates a {@link MessageAddressingProperties} that can be used for creating a reply to the given {@link
-     * EndpointReference}. The {@link #getTo() destination} property will be populated with the {@link
-     * EndpointReference#getAddress() address} of the given EPR, and the {@link #getRelatesTo() relationship} property
-     * will be set to the {@link #getMessageId() message id} property of this instance. the action is specified, the
-     *
-     * @param epr    the endpoint reference to create a reply to
-     * @param action the action
-     */
-    public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
-        return new MessageAddressingProperties(epr, action, messageId, this.messageId);
-    }
+	/**
+	 * Creates a {@link MessageAddressingProperties} that can be used for creating a reply to the given {@link
+	 * EndpointReference}. The {@link #getTo() destination} property will be populated with the {@link
+	 * EndpointReference#getAddress() address} of the given EPR, and the {@link #getRelatesTo() relationship} property
+	 * will be set to the {@link #getMessageId() message id} property of this instance. the action is specified, the
+	 *
+	 * @param epr	 the endpoint reference to create a reply to
+	 * @param action the action
+	 */
+	public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
+		return new MessageAddressingProperties(epr, action, messageId, this.messageId);
+	}
 }

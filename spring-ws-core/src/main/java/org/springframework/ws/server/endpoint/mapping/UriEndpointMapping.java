@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -57,43 +57,43 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  */
 public class UriEndpointMapping extends AbstractMapBasedEndpointMapping {
 
-    private boolean usePath = false;
+	private boolean usePath = false;
 
-    /**
-     * Indicates whether the path should be used instead of the full URI. Default is {@code false}.
-     *
-     * @since 2.1.1
-     */
-    public void setUsePath(boolean usePath) {
-        this.usePath = usePath;
-    }
+	/**
+	 * Indicates whether the path should be used instead of the full URI. Default is {@code false}.
+	 *
+	 * @since 2.1.1
+	 */
+	public void setUsePath(boolean usePath) {
+		this.usePath = usePath;
+	}
 
-    @Override
-    protected boolean validateLookupKey(String key) {
-        try {
-            new URI(key);
-            return true;
-        }
-        catch (URISyntaxException e) {
-            return false;
-        }
-    }
+	@Override
+	protected boolean validateLookupKey(String key) {
+		try {
+			new URI(key);
+			return true;
+		}
+		catch (URISyntaxException e) {
+			return false;
+		}
+	}
 
-    @Override
-    protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        TransportContext transportContext = TransportContextHolder.getTransportContext();
-        if (transportContext != null) {
-            WebServiceConnection connection = transportContext.getConnection();
-            if (connection != null) {
-                URI connectionUri = connection.getUri();
-                if (usePath) {
-                    return connectionUri.getPath();
-                }
-                else {
-                    return connectionUri.toString();
-                }
-            }
-        }
-        return null;
-    }
+	@Override
+	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		TransportContext transportContext = TransportContextHolder.getTransportContext();
+		if (transportContext != null) {
+			WebServiceConnection connection = transportContext.getConnection();
+			if (connection != null) {
+				URI connectionUri = connection.getUri();
+				if (usePath) {
+					return connectionUri.getPath();
+				}
+				else {
+					return connectionUri.toString();
+				}
+			}
+		}
+		return null;
+	}
 }

@@ -27,25 +27,25 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  * @since 1.0.0
  */
 public abstract class AbstractJaasValidationCallbackHandler extends AbstractCallbackHandler
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private String loginContextName;
+	private String loginContextName;
 
-    protected AbstractJaasValidationCallbackHandler() {
-    }
+	protected AbstractJaasValidationCallbackHandler() {
+	}
 
-    /** Returns the login context name. */
-    public String getLoginContextName() {
-        return loginContextName;
-    }
+	/** Returns the login context name. */
+	public String getLoginContextName() {
+		return loginContextName;
+	}
 
-    /** Sets the login context name. */
-    public void setLoginContextName(String loginContextName) {
-        this.loginContextName = loginContextName;
-    }
+	/** Sets the login context name. */
+	public void setLoginContextName(String loginContextName) {
+		this.loginContextName = loginContextName;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(loginContextName, "loginContextName is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(loginContextName, "loginContextName is required");
+	}
 }

@@ -32,35 +32,35 @@ import org.w3c.dom.Document;
 
 public class LastModifiedHelperTest {
 
-    private Resource resource;
+	private Resource resource;
 
-    private long expected;
+	private long expected;
 
-    @Before
-    public void setUp() throws Exception {
-        resource = new ClassPathResource("single.xsd", getClass());
-        expected = resource.lastModified();
-    }
+	@Before
+	public void setUp() throws Exception {
+		resource = new ClassPathResource("single.xsd", getClass());
+		expected = resource.lastModified();
+	}
 
-    @Test
-    public void testSaxSource() throws Exception {
-        long result = LastModifiedHelper.getLastModified(new ResourceSource(resource));
-        Assert.assertEquals("Invalid last modified", expected, result);
-    }
+	@Test
+	public void testSaxSource() throws Exception {
+		long result = LastModifiedHelper.getLastModified(new ResourceSource(resource));
+		Assert.assertEquals("Invalid last modified", expected, result);
+	}
 
-    @Test
-    public void testDomSource() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(resource.getFile());
-        long result = LastModifiedHelper.getLastModified(new DOMSource(document));
-        Assert.assertEquals("Invalid last modified", expected, result);
-    }
+	@Test
+	public void testDomSource() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.parse(resource.getFile());
+		long result = LastModifiedHelper.getLastModified(new DOMSource(document));
+		Assert.assertEquals("Invalid last modified", expected, result);
+	}
 
-    @Test
-    public void testStreamSource() throws Exception {
-        long result = LastModifiedHelper.getLastModified(new StreamSource(resource.getFile()));
-        Assert.assertEquals("Invalid last modified", expected, result);
-    }
+	@Test
+	public void testStreamSource() throws Exception {
+		long result = LastModifiedHelper.getLastModified(new StreamSource(resource.getFile()));
+		Assert.assertEquals("Invalid last modified", expected, result);
+	}
 }

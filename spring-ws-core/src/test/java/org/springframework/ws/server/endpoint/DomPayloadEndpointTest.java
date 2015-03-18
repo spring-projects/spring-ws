@@ -23,41 +23,41 @@ import static org.junit.Assert.*;
 
 public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
-    @Override
-    protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
-        return new AbstractDomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+		return new AbstractDomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document document) throws Exception {
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document document) throws Exception {
+				return null;
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createResponseEndpoint() throws Exception {
-        return new AbstractDomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+		return new AbstractDomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-                assertNotNull("No requestElement passed", requestElement);
-                assertNotNull("No responseDocument passed", responseDocument);
-                assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
-                assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
-                return responseDocument.createElementNS(NAMESPACE_URI, RESPONSE_ELEMENT);
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+				assertNotNull("No requestElement passed", requestElement);
+				assertNotNull("No responseDocument passed", responseDocument);
+				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
+				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+				return responseDocument.createElementNS(NAMESPACE_URI, RESPONSE_ELEMENT);
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
-        return new AbstractDomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+		return new AbstractDomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-                assertNull("RequestElement passed", requestElement);
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+				assertNull("RequestElement passed", requestElement);
+				return null;
+			}
+		};
+	}
 }

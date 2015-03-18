@@ -32,30 +32,30 @@ import org.junit.Test;
  */
 public class EndpointExceptionResolverTest {
 
-    private MethodEndpoint methodEndpoint;
+	private MethodEndpoint methodEndpoint;
 
-    private AbstractEndpointExceptionResolver exceptionResolver;
+	private AbstractEndpointExceptionResolver exceptionResolver;
 
-    @Before
-    public void setUp() throws Exception {
-        exceptionResolver = new AbstractEndpointExceptionResolver() {
+	@Before
+	public void setUp() throws Exception {
+		exceptionResolver = new AbstractEndpointExceptionResolver() {
 
-            @Override
-            protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
-                return true;
-            }
-        };
+			@Override
+			protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
+				return true;
+			}
+		};
 
-        exceptionResolver.setMappedEndpoints(Collections.singleton(this));
-        methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod", new Class[0]));
-    }
+		exceptionResolver.setMappedEndpoints(Collections.singleton(this));
+		methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod", new Class[0]));
+	}
 
-    @Test
-    public void testMatchMethodEndpoint() {
-        boolean matched = exceptionResolver.resolveException(null, methodEndpoint, null);
-        Assert.assertTrue("AbstractEndpointExceptionResolver did not match mapped MethodEndpoint", matched);
-    }
+	@Test
+	public void testMatchMethodEndpoint() {
+		boolean matched = exceptionResolver.resolveException(null, methodEndpoint, null);
+		Assert.assertTrue("AbstractEndpointExceptionResolver did not match mapped MethodEndpoint", matched);
+	}
 
-    public void emptyMethod() {
-    }
+	public void emptyMethod() {
+	}
 }

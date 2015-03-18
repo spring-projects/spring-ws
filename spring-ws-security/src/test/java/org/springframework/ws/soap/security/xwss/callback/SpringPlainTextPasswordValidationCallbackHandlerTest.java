@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,72 +37,72 @@ import static org.easymock.EasyMock.*;
 
 public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
-    private SpringPlainTextPasswordValidationCallbackHandler callbackHandler;
+	private SpringPlainTextPasswordValidationCallbackHandler callbackHandler;
 
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
-    private PasswordValidationCallback callback;
+	private PasswordValidationCallback callback;
 
-    private String username;
+	private String username;
 
-    private String password;
+	private String password;
 
-    @Before
-    public void setUp() throws Exception {
-        callbackHandler = new SpringPlainTextPasswordValidationCallbackHandler();
-        authenticationManager = createMock(AuthenticationManager.class);
-        callbackHandler.setAuthenticationManager(authenticationManager);
-        username = "Bert";
-        password = "Ernie";
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest(username, password);
-        callback = new PasswordValidationCallback(request);
-    }
+	@Before
+	public void setUp() throws Exception {
+		callbackHandler = new SpringPlainTextPasswordValidationCallbackHandler();
+		authenticationManager = createMock(AuthenticationManager.class);
+		callbackHandler.setAuthenticationManager(authenticationManager);
+		username = "Bert";
+		password = "Ernie";
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest(username, password);
+		callback = new PasswordValidationCallback(request);
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        SecurityContextHolder.clearContext();
-    }
+	@After
+	public void tearDown() throws Exception {
+		SecurityContextHolder.clearContext();
+	}
 
-    @Test
-    public void testAuthenticateUserPlainTextValid() throws Exception {
-        Authentication authResult = new TestingAuthenticationToken(username, password, Collections
-                        .<GrantedAuthority>emptyList());
-        expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andReturn(authResult);
+	@Test
+	public void testAuthenticateUserPlainTextValid() throws Exception {
+		Authentication authResult = new TestingAuthenticationToken(username, password, Collections
+						.<GrantedAuthority>emptyList());
+		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andReturn(authResult);
 
-        replay(authenticationManager);
+		replay(authenticationManager);
 
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Not authenticated", authenticated);
-        Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Not authenticated", authenticated);
+		Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
 
-        verify(authenticationManager);
-    }
+		verify(authenticationManager);
+	}
 
-    @Test
-    public void testAuthenticateUserPlainTextInvalid() throws Exception {
-        expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andThrow(new BadCredentialsException(""));
+	@Test
+	public void testAuthenticateUserPlainTextInvalid() throws Exception {
+		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andThrow(new BadCredentialsException(""));
 
-        replay(authenticationManager);
+		replay(authenticationManager);
 
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
-        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
+		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
 
-        verify(authenticationManager);
-    }
+		verify(authenticationManager);
+	}
 
-    @Test
-    public void testCleanUp() throws Exception {
-        TestingAuthenticationToken authentication =
-                new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+	@Test
+	public void testCleanUp() throws Exception {
+		TestingAuthenticationToken authentication =
+				new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        CleanupCallback cleanupCallback = new CleanupCallback();
-        callbackHandler.handleInternal(cleanupCallback);
-        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-    }
+		CleanupCallback cleanupCallback = new CleanupCallback();
+		callbackHandler.handleInternal(cleanupCallback);
+		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+	}
 
 }

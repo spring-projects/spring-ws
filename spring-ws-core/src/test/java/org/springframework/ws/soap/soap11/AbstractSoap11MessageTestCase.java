@@ -41,115 +41,115 @@ import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
-    @Override
-    protected final Resource[] getSoapSchemas() {
-        return new Resource[]{new ClassPathResource("soap11.xsd", AbstractSoap11MessageTestCase.class)};
-    }
+	@Override
+	protected final Resource[] getSoapSchemas() {
+		return new Resource[]{new ClassPathResource("soap11.xsd", AbstractSoap11MessageTestCase.class)};
+	}
 
-    @Override
-    public void testGetVersion() throws Exception {
-        Assert.assertEquals("Invalid SOAP version", SoapVersion.SOAP_11, soapMessage.getVersion());
-    }
+	@Override
+	public void testGetVersion() throws Exception {
+		Assert.assertEquals("Invalid SOAP version", SoapVersion.SOAP_11, soapMessage.getVersion());
+	}
 
-    @Override
-    public void testWriteToTransportOutputStream() throws Exception {
-        SoapBody body = soapMessage.getSoapBody();
-        String payload = "<payload xmlns='http://www.springframework.org' />";
-        transformer.transform(new StringSource(payload), body.getPayloadResult());
+	@Override
+	public void testWriteToTransportOutputStream() throws Exception {
+		SoapBody body = soapMessage.getSoapBody();
+		String payload = "<payload xmlns='http://www.springframework.org' />";
+		transformer.transform(new StringSource(payload), body.getPayloadResult());
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        MockTransportOutputStream tos = new MockTransportOutputStream(bos);
-        String soapAction = "http://springframework.org/spring-ws/Action";
-        soapMessage.setSoapAction(soapAction);
-        soapMessage.writeTo(tos);
-        String result = bos.toString("UTF-8");
-        assertXMLEqual(
-                "<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
-                result);
-        String contentType = tos.getHeaders().get("Content-Type");
-        assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
-        String resultSoapAction = tos.getHeaders().get("SOAPAction");
-        assertEquals("Invalid soap action", "\"" + soapAction + "\"", resultSoapAction);
-        String resultAccept = tos.getHeaders().get("Accept");
-        assertNotNull("Invalid accept header", resultAccept);
-    }
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MockTransportOutputStream tos = new MockTransportOutputStream(bos);
+		String soapAction = "http://springframework.org/spring-ws/Action";
+		soapMessage.setSoapAction(soapAction);
+		soapMessage.writeTo(tos);
+		String result = bos.toString("UTF-8");
+		assertXMLEqual(
+				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				result);
+		String contentType = tos.getHeaders().get("Content-Type");
+		assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
+		String resultSoapAction = tos.getHeaders().get("SOAPAction");
+		assertEquals("Invalid soap action", "\"" + soapAction + "\"", resultSoapAction);
+		String resultAccept = tos.getHeaders().get("Accept");
+		assertNotNull("Invalid accept header", resultAccept);
+	}
 
-    @Override
-    public void testWriteToTransportResponseAttachment() throws Exception {
-        InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
-        soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        MockTransportOutputStream tos = new MockTransportOutputStream(bos);
-        soapMessage.writeTo(tos);
-        String contentType = tos.getHeaders().get("Content-Type");
-        assertTrue("Content-Type for attachment message does not contains multipart/related",
-                contentType.indexOf("multipart/related") != -1);
-        assertTrue("Content-Type for attachment message does not contains type=\"text/xml\"",
-                contentType.indexOf("type=\"text/xml\"") != -1);
-    }
+	@Override
+	public void testWriteToTransportResponseAttachment() throws Exception {
+		InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
+		soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MockTransportOutputStream tos = new MockTransportOutputStream(bos);
+		soapMessage.writeTo(tos);
+		String contentType = tos.getHeaders().get("Content-Type");
+		assertTrue("Content-Type for attachment message does not contains multipart/related",
+				contentType.indexOf("multipart/related") != -1);
+		assertTrue("Content-Type for attachment message does not contains type=\"text/xml\"",
+				contentType.indexOf("type=\"text/xml\"") != -1);
+	}
 
-    @Override
-    public void testToDocument() throws Exception {
-        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-                soapMessage.getSoapBody().getPayloadResult());
+	@Override
+	public void testToDocument() throws Exception {
+		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				soapMessage.getSoapBody().getPayloadResult());
 
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document expected = documentBuilder.newDocument();
-        Element envelope = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Envelope");
-        expected.appendChild(envelope);
-        Element body = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Body");
-        envelope.appendChild(body);
-        Element payload = expected.createElementNS("http://www.springframework.org", "payload");
-        body.appendChild(payload);
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document expected = documentBuilder.newDocument();
+		Element envelope = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Envelope");
+		expected.appendChild(envelope);
+		Element body = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Body");
+		envelope.appendChild(body);
+		Element payload = expected.createElementNS("http://www.springframework.org", "payload");
+		body.appendChild(payload);
 
-        Document result = soapMessage.getDocument();
+		Document result = soapMessage.getDocument();
 
-        assertXMLEqual(expected, result);
-    }
+		assertXMLEqual(expected, result);
+	}
 
-    @Override
-    public void testSetLiveDocument() throws Exception {
-        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-                soapMessage.getSoapBody().getPayloadResult());
+	@Override
+	public void testSetLiveDocument() throws Exception {
+		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				soapMessage.getSoapBody().getPayloadResult());
 
-        Document document = soapMessage.getDocument();
+		Document document = soapMessage.getDocument();
 
-        soapMessage.setDocument(document);
+		soapMessage.setDocument(document);
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        soapMessage.writeTo(bos);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		soapMessage.writeTo(bos);
 
-        String result = bos.toString("UTF-8");
-        assertXMLEqual(
-                "<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
-                result);
-    }
+		String result = bos.toString("UTF-8");
+		assertXMLEqual(
+				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				result);
+	}
 
-    @Override
-    public void testSetOtherDocument() throws Exception {
-        transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-                soapMessage.getSoapBody().getPayloadResult());
+	@Override
+	public void testSetOtherDocument() throws Exception {
+		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				soapMessage.getSoapBody().getPayloadResult());
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        soapMessage.writeTo(bos);
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		soapMessage.writeTo(bos);
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-        DOMResult domResult = new DOMResult();
-        transformer.transform(new StreamSource(bis), domResult);
+		DOMResult domResult = new DOMResult();
+		transformer.transform(new StreamSource(bis), domResult);
 
-        Document document = (Document) domResult.getNode();
+		Document document = (Document) domResult.getNode();
 
-        soapMessage.setDocument(document);
+		soapMessage.setDocument(document);
 
-        bos = new ByteArrayOutputStream();
-        soapMessage.writeTo(bos);
+		bos = new ByteArrayOutputStream();
+		soapMessage.writeTo(bos);
 
-        String result = bos.toString("UTF-8");
-        assertXMLEqual(
-                "<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
-                result);
-    }
+		String result = bos.toString("UTF-8");
+		assertXMLEqual(
+				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				result);
+	}
 
 }

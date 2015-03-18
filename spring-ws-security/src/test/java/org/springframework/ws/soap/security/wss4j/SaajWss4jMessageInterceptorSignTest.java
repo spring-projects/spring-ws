@@ -41,43 +41,43 @@ import static org.junit.Assert.assertTrue;
 
 public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTestCase {
 
-    private static final String PAYLOAD =
-            "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
+	private static final String PAYLOAD =
+			"<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 
-    @Test
-    public void testSignAndValidate() throws Exception {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        interceptor.setSecurementActions("Signature");
-        interceptor.setEnableSignatureConfirmation(false);
-        interceptor.setSecurementPassword("123456");
-        interceptor.setSecurementUsername("rsaKey");
-        SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
-        transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-        SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
-        MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+	@Test
+	public void testSignAndValidate() throws Exception {
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		interceptor.setSecurementActions("Signature");
+		interceptor.setEnableSignatureConfirmation(false);
+		interceptor.setSecurementPassword("123456");
+		interceptor.setSecurementUsername("rsaKey");
+		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
+		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
-        interceptor.secureMessage(message, messageContext);
+		interceptor.secureMessage(message, messageContext);
 
-        SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
-        Iterator<?> iterator = header.getChildElements(new QName(
-                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
-        assertTrue("No security header", iterator.hasNext());
-        SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();
-        iterator = securityHeader.getChildElements(new QName("http://www.w3.org/2000/09/xmldsig#", "Signature"));
-        assertTrue("No signature header", iterator.hasNext());
+		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
+		Iterator<?> iterator = header.getChildElements(new QName(
+				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
+		assertTrue("No security header", iterator.hasNext());
+		SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();
+		iterator = securityHeader.getChildElements(new QName("http://www.w3.org/2000/09/xmldsig#", "Signature"));
+		assertTrue("No signature header", iterator.hasNext());
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        message.writeTo(bos);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		message.writeTo(bos);
 
-        MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.addHeader("Content-Type", "text/xml");
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		MimeHeaders mimeHeaders = new MimeHeaders();
+		mimeHeaders.addHeader("Content-Type", "text/xml");
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-        SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
-        message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
-        messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
+		message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
+		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
-        interceptor.validateMessage(message, messageContext);
-    }
+		interceptor.validateMessage(message, messageContext);
+	}
 
 }

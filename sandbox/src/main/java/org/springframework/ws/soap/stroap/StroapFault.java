@@ -23,7 +23,7 @@ import org.springframework.ws.soap.SoapFault;
  */
 abstract class StroapFault extends StroapElement implements SoapFault {
 
-    protected StroapFault(StroapMessageFactory messageFactory) {
-        super(messageFactory.getSoapVersion().getFaultName(), messageFactory);
-    }
+	protected StroapFault(StroapMessageFactory messageFactory) {
+		super(messageFactory.getSoapVersion().getFaultName(), messageFactory);
+	}
 }

@@ -30,49 +30,49 @@ import static org.easymock.EasyMock.*;
 
 public class DefaultMessageContextTest {
 
-    private DefaultMessageContext context;
+	private DefaultMessageContext context;
 
-    private WebServiceMessageFactory factoryMock;
+	private WebServiceMessageFactory factoryMock;
 
-    private WebServiceMessage request;
+	private WebServiceMessage request;
 
-    @Before
-    public void setUp() throws Exception {
-        factoryMock = createMock(WebServiceMessageFactory.class);
-        request = new MockWebServiceMessage();
-        context = new DefaultMessageContext(request, factoryMock);
-    }
+	@Before
+	public void setUp() throws Exception {
+		factoryMock = createMock(WebServiceMessageFactory.class);
+		request = new MockWebServiceMessage();
+		context = new DefaultMessageContext(request, factoryMock);
+	}
 
-    @Test
-    public void testRequest() throws Exception {
-        Assert.assertEquals("Invalid request returned", request, context.getRequest());
-    }
+	@Test
+	public void testRequest() throws Exception {
+		Assert.assertEquals("Invalid request returned", request, context.getRequest());
+	}
 
-    @Test
-    public void testResponse() throws Exception {
-        WebServiceMessage response = new MockWebServiceMessage();
-        expect(factoryMock.createWebServiceMessage()).andReturn(response);
-        replay(factoryMock);
+	@Test
+	public void testResponse() throws Exception {
+		WebServiceMessage response = new MockWebServiceMessage();
+		expect(factoryMock.createWebServiceMessage()).andReturn(response);
+		replay(factoryMock);
 
-        WebServiceMessage result = context.getResponse();
-        Assert.assertEquals("Invalid response returned", response, result);
-        verify(factoryMock);
-    }
+		WebServiceMessage result = context.getResponse();
+		Assert.assertEquals("Invalid response returned", response, result);
+		verify(factoryMock);
+	}
 
-    @Test
-    public void testProperties() throws Exception {
-        Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
-        String name = "name";
-        Assert.assertFalse("Property set", context.containsProperty(name));
-        String value = "value";
-        context.setProperty(name, value);
-        Assert.assertTrue("Property not set", context.containsProperty(name));
-        Assert.assertEquals("Invalid property names returned", Arrays.asList(name),
-                Arrays.asList(context.getPropertyNames()));
-        Assert.assertEquals("Invalid property value returned", value, context.getProperty(name));
-        context.removeProperty(name);
-        Assert.assertFalse("Property set", context.containsProperty(name));
-        Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
-    }
+	@Test
+	public void testProperties() throws Exception {
+		Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
+		String name = "name";
+		Assert.assertFalse("Property set", context.containsProperty(name));
+		String value = "value";
+		context.setProperty(name, value);
+		Assert.assertTrue("Property not set", context.containsProperty(name));
+		Assert.assertEquals("Invalid property names returned", Arrays.asList(name),
+				Arrays.asList(context.getPropertyNames()));
+		Assert.assertEquals("Invalid property value returned", value, context.getProperty(name));
+		context.removeProperty(name);
+		Assert.assertFalse("Property set", context.containsProperty(name));
+		Assert.assertEquals("Invalid property names returned", 0, context.getPropertyNames().length);
+	}
 
 }

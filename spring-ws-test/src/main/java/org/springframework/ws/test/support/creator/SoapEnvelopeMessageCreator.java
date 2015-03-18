@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,30 +41,30 @@ public class SoapEnvelopeMessageCreator extends AbstractMessageCreator {
 	
 	private final Source soapEnvelope;
 
-    private final TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 	
 	/**
-     * Creates a new instance of the {@code SoapEnvelopeMessageCreator} with the given SOAP envelope source.
-     *
-     * @param soapEnvelope the SOAP envelope source
-     */
-    public SoapEnvelopeMessageCreator(Source soapEnvelope) {
-        Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
-        this.soapEnvelope = soapEnvelope;
-    }
+	 * Creates a new instance of the {@code SoapEnvelopeMessageCreator} with the given SOAP envelope source.
+	 *
+	 * @param soapEnvelope the SOAP envelope source
+	 */
+	public SoapEnvelopeMessageCreator(Source soapEnvelope) {
+		Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
+		this.soapEnvelope = soapEnvelope;
+	}
 
 	@Override
 	protected void doWithMessage(WebServiceMessage message) throws IOException {
 		assertTrue("Message created with factory is not a SOAP message", message instanceof SoapMessage);
-        SoapMessage soapMessage = (SoapMessage) message;
+		SoapMessage soapMessage = (SoapMessage) message;
 		try {
 			DOMResult result = new DOMResult();
-            transformerHelper.transform(soapEnvelope, result);
-            soapMessage.setDocument((Document) result.getNode());
-        }
-        catch (TransformerException ex) {
-            fail("Could not transform request SOAP envelope to message: " + ex.getMessage());
-        }		
+			transformerHelper.transform(soapEnvelope, result);
+			soapMessage.setDocument((Document) result.getNode());
+		}
+		catch (TransformerException ex) {
+			fail("Could not transform request SOAP envelope to message: " + ex.getMessage());
+		}		
 	}
 
 }

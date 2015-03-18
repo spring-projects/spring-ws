@@ -32,13 +32,13 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface WebServiceMessageCallback {
 
-    /**
-     * Execute any number of operations on the supplied {@code message}.
-     *
-     * @param message the message
-     * @throws IOException          in case of I/O errors
-     * @throws TransformerException in case of transformation errors
-     */
-    void doWithMessage(WebServiceMessage message) throws IOException, TransformerException;
+	/**
+	 * Execute any number of operations on the supplied {@code message}.
+	 *
+	 * @param message the message
+	 * @throws IOException			in case of I/O errors
+	 * @throws TransformerException in case of transformation errors
+	 */
+	void doWithMessage(WebServiceMessage message) throws IOException, TransformerException;
 
 }

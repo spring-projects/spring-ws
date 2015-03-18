@@ -27,26 +27,26 @@ import org.springframework.ws.FaultAwareWebServiceMessage;
 @SuppressWarnings("serial")
 public class WebServiceFaultException extends WebServiceClientException {
 
-    private final FaultAwareWebServiceMessage faultMessage;
+	private final FaultAwareWebServiceMessage faultMessage;
 
-    /** Create a new instance of the {@code WebServiceFaultException} class. */
-    public WebServiceFaultException(String msg) {
-        super(msg);
-        faultMessage = null;
-    }
+	/** Create a new instance of the {@code WebServiceFaultException} class. */
+	public WebServiceFaultException(String msg) {
+		super(msg);
+		faultMessage = null;
+	}
 
-    /**
-     * Create a new instance of the {@code WebServiceFaultException} class.
-     *
-     * @param faultMessage the fault message
-     */
-    public WebServiceFaultException(FaultAwareWebServiceMessage faultMessage) {
-        super(faultMessage.getFaultReason());
-        this.faultMessage = faultMessage;
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceFaultException} class.
+	 *
+	 * @param faultMessage the fault message
+	 */
+	public WebServiceFaultException(FaultAwareWebServiceMessage faultMessage) {
+		super(faultMessage.getFaultReason());
+		this.faultMessage = faultMessage;
+	}
 
-    /** Returns the fault message. */
-    public FaultAwareWebServiceMessage getWebServiceMessage() {
-        return faultMessage;
-    }
+	/** Returns the fault message. */
+	public FaultAwareWebServiceMessage getWebServiceMessage() {
+		return faultMessage;
+	}
 }

@@ -32,9 +32,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface SoapHeader {
-    /**
-     * The qualified name of the soap header. The format used is that of {@link javax.xml.namespace.QName#toString()}, i.e.
-     * "{" + Namespace URI + "}" + local part, where the namespace is optional.
-     */
-    String value();
+	/**
+	 * The qualified name of the soap header. The format used is that of {@link javax.xml.namespace.QName#toString()}, i.e.
+	 * "{" + Namespace URI + "}" + local part, where the namespace is optional.
+	 */
+	String value();
 }

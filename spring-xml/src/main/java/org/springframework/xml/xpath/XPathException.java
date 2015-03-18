@@ -27,22 +27,22 @@ import org.springframework.xml.XmlException;
 @SuppressWarnings("serial")
 public class XPathException extends XmlException {
 
-    /**
-     * Constructs a new instance of the {@code XPathException} with the specific detail message.
-     *
-     * @param message the detail message
-     */
-    public XPathException(String message) {
-        super(message);
-    }
+	/**
+	 * Constructs a new instance of the {@code XPathException} with the specific detail message.
+	 *
+	 * @param message the detail message
+	 */
+	public XPathException(String message) {
+		super(message);
+	}
 
-    /**
-     * Constructs a new instance of the {@code XPathException} with the specific detail message and exception.
-     *
-     * @param message   the detail message
-     * @param throwable the wrapped exception
-     */
-    public XPathException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
+	/**
+	 * Constructs a new instance of the {@code XPathException} with the specific detail message and exception.
+	 *
+	 * @param message	the detail message
+	 * @param throwable the wrapped exception
+	 */
+	public XPathException(String message, Throwable throwable) {
+		super(message, throwable);
+	}
 }

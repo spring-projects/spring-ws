@@ -29,8 +29,8 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
 @SuppressWarnings("serial")
 public class Wsdl4jDefinitionException extends WsdlDefinitionException {
 
-    public Wsdl4jDefinitionException(WSDLException ex) {
-        super(ex.getMessage(), ex);
-    }
+	public Wsdl4jDefinitionException(WSDLException ex) {
+		super(ex.getMessage(), ex);
+	}
 
 }

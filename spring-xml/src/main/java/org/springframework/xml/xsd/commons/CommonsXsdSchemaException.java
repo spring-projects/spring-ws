@@ -27,11 +27,11 @@ import org.springframework.xml.xsd.XsdSchemaException;
 @SuppressWarnings("serial")
 public class CommonsXsdSchemaException extends XsdSchemaException {
 
-    public CommonsXsdSchemaException(String message) {
-        super(message);
-    }
+	public CommonsXsdSchemaException(String message) {
+		super(message);
+	}
 
-    public CommonsXsdSchemaException(String message, Throwable exception) {
-        super(message, exception);
-    }
+	public CommonsXsdSchemaException(String message, Throwable exception) {
+		super(message, exception);
+	}
 }

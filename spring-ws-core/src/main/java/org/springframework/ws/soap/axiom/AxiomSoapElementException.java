@@ -21,15 +21,15 @@ import org.springframework.ws.soap.SoapElementException;
 @SuppressWarnings("serial")
 public class AxiomSoapElementException extends SoapElementException {
 
-    public AxiomSoapElementException(String msg) {
-        super(msg);
-    }
+	public AxiomSoapElementException(String msg) {
+		super(msg);
+	}
 
-    public AxiomSoapElementException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AxiomSoapElementException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public AxiomSoapElementException(Throwable ex) {
-        super(ex);
-    }
+	public AxiomSoapElementException(Throwable ex) {
+		super(ex);
+	}
 }

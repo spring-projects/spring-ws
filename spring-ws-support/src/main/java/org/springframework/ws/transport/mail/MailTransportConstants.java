@@ -26,13 +26,13 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public interface MailTransportConstants extends TransportConstants {
 
-    /**
-     * The "mail" URI scheme.
-     */
-    String MAIL_URI_SCHEME = "mailto";
+	/**
+	 * The "mail" URI scheme.
+	 */
+	String MAIL_URI_SCHEME = "mailto";
 
-    /**
-     * The "In-Reply-To" header.
-     */
-    String HEADER_IN_REPLY_TO = "In-Reply-To";
+	/**
+	 * The "In-Reply-To" header.
+	 */
+	String HEADER_IN_REPLY_TO = "In-Reply-To";
 }

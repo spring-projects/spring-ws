@@ -21,13 +21,13 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 
 public class ActionCallback10Test extends AbstractActionCallbackTestCase {
 
-    @Override
-    protected AddressingVersion getVersion() {
-        return new Addressing10();
-    }
+	@Override
+	protected AddressingVersion getVersion() {
+		return new Addressing10();
+	}
 
-    @Override
-    protected String getTestPath() {
-        return "10";
-    }
+	@Override
+	protected String getTestPath() {
+		return "10";
+	}
 }

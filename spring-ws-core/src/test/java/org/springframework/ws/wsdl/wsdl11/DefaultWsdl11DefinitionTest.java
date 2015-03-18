@@ -36,112 +36,112 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class DefaultWsdl11DefinitionTest {
 
-    private DefaultWsdl11Definition definition;
+	private DefaultWsdl11Definition definition;
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    private DocumentBuilder documentBuilder;
+	private DocumentBuilder documentBuilder;
 
-    @Before
-    public void setUp() throws Exception {
-        definition = new DefaultWsdl11Definition();
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformer = transformerFactory.newTransformer();
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        XMLUnit.setIgnoreWhitespace(true);
-    }
+	@Before
+	public void setUp() throws Exception {
+		definition = new DefaultWsdl11Definition();
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		transformer = transformerFactory.newTransformer();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		XMLUnit.setIgnoreWhitespace(true);
+	}
 
-    @Test
-    public void testSingle() throws Exception {
-        Resource resource = new ClassPathResource("single.xsd", getClass());
-        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-        schema.afterPropertiesSet();
-        definition.setSchema(schema);
+	@Test
+	public void testSingle() throws Exception {
+		Resource resource = new ClassPathResource("single.xsd", getClass());
+		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+		schema.afterPropertiesSet();
+		definition.setSchema(schema);
 
-        definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
-        definition.setPortTypeName("Order");
-        definition.setLocationUri("http://localhost:8080/");
+		definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+		definition.setPortTypeName("Order");
+		definition.setLocationUri("http://localhost:8080/");
 
-        definition.afterPropertiesSet();
+		definition.afterPropertiesSet();
 
-        DOMResult domResult = new DOMResult();
-        transformer.transform(definition.getSource(), domResult);
+		DOMResult domResult = new DOMResult();
+		transformer.transform(definition.getSource(), domResult);
 
-        Document result = (Document) domResult.getNode();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
+		Document result = (Document) domResult.getNode();
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
 
-        assertXMLEqual("Invalid WSDL built", expected, result);
+		assertXMLEqual("Invalid WSDL built", expected, result);
 
-    }
+	}
 
-    @Test
-    public void testInclude() throws Exception {
-        ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
-        CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
-        schemaCollection.setInline(true);
-        schemaCollection.afterPropertiesSet();
-        definition.setSchemaCollection(schemaCollection);
+	@Test
+	public void testInclude() throws Exception {
+		ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
+		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		schemaCollection.setInline(true);
+		schemaCollection.afterPropertiesSet();
+		definition.setSchemaCollection(schemaCollection);
 
-        definition.setPortTypeName("Order");
-        definition.setTargetNamespace("http://www.springframework.org/spring-ws/include/definitions");
-        definition.setLocationUri("http://localhost:8080/");
-        definition.afterPropertiesSet();
+		definition.setPortTypeName("Order");
+		definition.setTargetNamespace("http://www.springframework.org/spring-ws/include/definitions");
+		definition.setLocationUri("http://localhost:8080/");
+		definition.afterPropertiesSet();
 
-        DOMResult domResult = new DOMResult();
-        transformer.transform(definition.getSource(), domResult);
+		DOMResult domResult = new DOMResult();
+		transformer.transform(definition.getSource(), domResult);
 
-        Document result = (Document) domResult.getNode();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
-        assertXMLEqual("Invalid WSDL built", expected, result);
-    }
+		Document result = (Document) domResult.getNode();
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
+		assertXMLEqual("Invalid WSDL built", expected, result);
+	}
 
-    @Test
-    public void testImport() throws Exception {
-        ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
-        CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
-        schemaCollection.setInline(true);
-        schemaCollection.afterPropertiesSet();
-        definition.setSchemaCollection(schemaCollection);
+	@Test
+	public void testImport() throws Exception {
+		ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
+		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		schemaCollection.setInline(true);
+		schemaCollection.afterPropertiesSet();
+		definition.setSchemaCollection(schemaCollection);
 
-        definition.setPortTypeName("Order");
-        definition.setTargetNamespace("http://www.springframework.org/spring-ws/import/definitions");
-        definition.setLocationUri("http://localhost:8080/");
-        definition.afterPropertiesSet();
+		definition.setPortTypeName("Order");
+		definition.setTargetNamespace("http://www.springframework.org/spring-ws/import/definitions");
+		definition.setLocationUri("http://localhost:8080/");
+		definition.afterPropertiesSet();
 
-        DOMResult domResult = new DOMResult();
-        transformer.transform(definition.getSource(), domResult);
+		DOMResult domResult = new DOMResult();
+		transformer.transform(definition.getSource(), domResult);
 
-        Document result = (Document) domResult.getNode();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
-        assertXMLEqual("Invalid WSDL built", expected, result);
-    }
+		Document result = (Document) domResult.getNode();
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
+		assertXMLEqual("Invalid WSDL built", expected, result);
+	}
 
-    @Test
-    public void testSoap11And12() throws Exception {
-        Resource resource = new ClassPathResource("single.xsd", getClass());
-        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-        schema.afterPropertiesSet();
-        definition.setSchema(schema);
+	@Test
+	public void testSoap11And12() throws Exception {
+		Resource resource = new ClassPathResource("single.xsd", getClass());
+		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+		schema.afterPropertiesSet();
+		definition.setSchema(schema);
 
-        definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
-        definition.setPortTypeName("Order");
-        definition.setLocationUri("http://localhost:8080/");
-        definition.setCreateSoap11Binding(true);
-        definition.setCreateSoap12Binding(true);
+		definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+		definition.setPortTypeName("Order");
+		definition.setLocationUri("http://localhost:8080/");
+		definition.setCreateSoap11Binding(true);
+		definition.setCreateSoap12Binding(true);
 
-        definition.afterPropertiesSet();
+		definition.afterPropertiesSet();
 
-        DOMResult domResult = new DOMResult();
-        transformer.transform(definition.getSource(), domResult);
+		DOMResult domResult = new DOMResult();
+		transformer.transform(definition.getSource(), domResult);
 
-        Document result = (Document) domResult.getNode();
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
+		Document result = (Document) domResult.getNode();
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
 
-        assertXMLEqual("Invalid WSDL built", expected, result);
+		assertXMLEqual("Invalid WSDL built", expected, result);
 
-    }
+	}
 
 
 }

@@ -40,140 +40,140 @@ import org.w3c.dom.Node;
  */
 public class JaxenXPathTemplate extends AbstractXPathTemplate {
 
-    @Override
-    public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            return xpath.booleanValueOf(element);
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			return xpath.booleanValueOf(element);
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    public Node evaluateAsNode(String expression, Source context) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            return (Node) xpath.selectSingleNode(element);
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	public Node evaluateAsNode(String expression, Source context) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			return (Node) xpath.selectSingleNode(element);
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            return xpath.selectNodes(element);
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			return xpath.selectNodes(element);
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    public double evaluateAsDouble(String expression, Source context) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            return xpath.numberValueOf(element).doubleValue();
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	public double evaluateAsDouble(String expression, Source context) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			return xpath.numberValueOf(element).doubleValue();
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    public String evaluateAsString(String expression, Source context) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            return xpath.stringValueOf(element);
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	public String evaluateAsString(String expression, Source context) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			return xpath.stringValueOf(element);
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            Node node = (Node) xpath.selectSingleNode(element);
-            if (node != null) {
-                try {
-                    return nodeMapper.mapNode(node, 0);
-                }
-                catch (DOMException ex) {
-                    throw new XPathException("Mapping resulted in DOMException", ex);
-                }
-            }
-            else {
-                return null;
-            }
+	@Override
+	public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			Node node = (Node) xpath.selectSingleNode(element);
+			if (node != null) {
+				try {
+					return nodeMapper.mapNode(node, 0);
+				}
+				catch (DOMException ex) {
+					throw new XPathException("Mapping resulted in DOMException", ex);
+				}
+			}
+			else {
+				return null;
+			}
 
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    @Override
-    public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
-        try {
-            XPath xpath = createXPath(expression);
-            Element element = getRootElement(context);
-            List<?> nodes = xpath.selectNodes(element);
-            List<T> results = new ArrayList<T>(nodes.size());
-            for (int i = 0; i < nodes.size(); i++) {
-                Node node = (Node) nodes.get(i);
-                try {
-                    results.add(nodeMapper.mapNode(node, i));
-                }
-                catch (DOMException ex) {
-                    throw new XPathException("Mapping resulted in DOMException", ex);
-                }
-            }
-            return results;
-        }
-        catch (JaxenException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-    }
+	@Override
+	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+		try {
+			XPath xpath = createXPath(expression);
+			Element element = getRootElement(context);
+			List<?> nodes = xpath.selectNodes(element);
+			List<T> results = new ArrayList<T>(nodes.size());
+			for (int i = 0; i < nodes.size(); i++) {
+				Node node = (Node) nodes.get(i);
+				try {
+					results.add(nodeMapper.mapNode(node, i));
+				}
+				catch (DOMException ex) {
+					throw new XPathException("Mapping resulted in DOMException", ex);
+				}
+			}
+			return results;
+		}
+		catch (JaxenException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+	}
 
-    private XPath createXPath(String expression) throws JaxenException {
-        XPath xpath = new DOMXPath(expression);
-        if (getNamespaces() != null && !getNamespaces().isEmpty()) {
-            xpath.setNamespaceContext(new SimpleNamespaceContext(getNamespaces()));
-        }
-        return xpath;
-    }
+	private XPath createXPath(String expression) throws JaxenException {
+		XPath xpath = new DOMXPath(expression);
+		if (getNamespaces() != null && !getNamespaces().isEmpty()) {
+			xpath.setNamespaceContext(new SimpleNamespaceContext(getNamespaces()));
+		}
+		return xpath;
+	}
 }

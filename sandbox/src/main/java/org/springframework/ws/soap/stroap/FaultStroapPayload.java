@@ -27,25 +27,25 @@ import org.springframework.ws.soap.SoapFault;
  */
 class FaultStroapPayload extends StroapPayload {
 
-    private final StroapFault fault;
+	private final StroapFault fault;
 
-    FaultStroapPayload(StroapFault fault) {
-        Assert.notNull(fault, "'fault' must not be null");
-        this.fault = fault;
-    }
+	FaultStroapPayload(StroapFault fault) {
+		Assert.notNull(fault, "'fault' must not be null");
+		this.fault = fault;
+	}
 
-    SoapFault getFault() {
-        return fault;
-    }
+	SoapFault getFault() {
+		return fault;
+	}
 
-    @Override
-    public QName getName() {
-        return fault.getName();
-    }
+	@Override
+	public QName getName() {
+		return fault.getName();
+	}
 
-    @Override
-    public XMLEventReader getEventReader() {
-        return fault.getEventReader(false);
-    }
+	@Override
+	public XMLEventReader getEventReader() {
+		return fault.getEventReader(false);
+	}
 
 }

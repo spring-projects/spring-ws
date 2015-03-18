@@ -41,61 +41,61 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  */
 public class XmppMessageSender implements WebServiceMessageSender, InitializingBean {
 
-    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
-    public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
+	/** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
+	public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
-    /** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
-    public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
+	/** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
+	public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
 
-    private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+	private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
-    private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
+	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
-    private XMPPConnection connection;
+	private XMPPConnection connection;
 
-    /** Sets the {@code XMPPConnection}. Setting this property is required. */
-    public void setConnection(XMPPConnection connection) {
-        this.connection = connection;
-    }
+	/** Sets the {@code XMPPConnection}. Setting this property is required. */
+	public void setConnection(XMPPConnection connection) {
+		this.connection = connection;
+	}
 
-    /**
-     * Set the timeout to use for receive calls. The default is -1, which means no timeout.
-     *
-     * @see org.jivesoftware.smack.PacketCollector#nextResult(long)
-     */
-    public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
-    }
+	/**
+	 * Set the timeout to use for receive calls. The default is -1, which means no timeout.
+	 *
+	 * @see org.jivesoftware.smack.PacketCollector#nextResult(long)
+	 */
+	public void setReceiveTimeout(long receiveTimeout) {
+		this.receiveTimeout = receiveTimeout;
+	}
 
-    /**
-     * Sets the encoding used to read from {@link org.jivesoftware.smack.packet.Message} object. Defaults to
-     * {@code UTF-8}.
-     */
-    public void setMessageEncoding(String messageEncoding) {
-        this.messageEncoding = messageEncoding;
-    }
+	/**
+	 * Sets the encoding used to read from {@link org.jivesoftware.smack.packet.Message} object. Defaults to
+	 * {@code UTF-8}.
+	 */
+	public void setMessageEncoding(String messageEncoding) {
+		this.messageEncoding = messageEncoding;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(connection, "'connection' is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(connection, "'connection' is required");
+	}
 
-    @Override
-    public WebServiceConnection createConnection(URI uri) throws IOException {
-        String to = XmppTransportUtils.getTo(uri);
-        String thread = createThread();
-        XmppSenderConnection connection = new XmppSenderConnection(this.connection, to, thread);
-        connection.setReceiveTimeout(receiveTimeout);
-        connection.setMessageEncoding(messageEncoding);
-        return connection;
-    }
+	@Override
+	public WebServiceConnection createConnection(URI uri) throws IOException {
+		String to = XmppTransportUtils.getTo(uri);
+		String thread = createThread();
+		XmppSenderConnection connection = new XmppSenderConnection(this.connection, to, thread);
+		connection.setReceiveTimeout(receiveTimeout);
+		connection.setMessageEncoding(messageEncoding);
+		return connection;
+	}
 
-    @Override
-    public boolean supports(URI uri) {
-        return uri.getScheme().equals(XmppTransportConstants.XMPP_URI_SCHEME);
-    }
+	@Override
+	public boolean supports(URI uri) {
+		return uri.getScheme().equals(XmppTransportConstants.XMPP_URI_SCHEME);
+	}
 
-    protected String createThread() {
-        return UUID.randomUUID().toString();
-    }
+	protected String createThread() {
+		return UUID.randomUUID().toString();
+	}
 }

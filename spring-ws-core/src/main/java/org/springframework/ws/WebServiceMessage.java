@@ -33,35 +33,35 @@ import javax.xml.transform.Source;
  */
 public interface WebServiceMessage {
 
-    /**
-     * Returns the contents of the message as a {@link Source}.
-     *
-     * <p>Depending on the implementation, this can be retrieved multiple times, or just
-     * a single time.
-     *
-     * @return the message contents
-     */
-    Source getPayloadSource();
+	/**
+	 * Returns the contents of the message as a {@link Source}.
+	 *
+	 * <p>Depending on the implementation, this can be retrieved multiple times, or just
+	 * a single time.
+	 *
+	 * @return the message contents
+	 */
+	Source getPayloadSource();
 
-    /**
-     * Returns the contents of the message as a {@link Result}.
-     *
-     * <p>Calling this method removes the current payload.
-     *
-     * <p>Implementations that are read-only will throw an {@link UnsupportedOperationException}.
-     *
-     * @return the message contents
-     * @throws UnsupportedOperationException if the message is read-only
-     */
-    Result getPayloadResult();
+	/**
+	 * Returns the contents of the message as a {@link Result}.
+	 *
+	 * <p>Calling this method removes the current payload.
+	 *
+	 * <p>Implementations that are read-only will throw an {@link UnsupportedOperationException}.
+	 *
+	 * @return the message contents
+	 * @throws UnsupportedOperationException if the message is read-only
+	 */
+	Result getPayloadResult();
 
-    /**
-     * Writes the entire message to the given output stream. <p>If the given stream is an instance of {@link
-     * org.springframework.ws.transport.TransportOutputStream}, the corresponding headers will be written as well.
-     *
-     * @param outputStream the stream to write to
-     * @throws IOException if an I/O exception occurs
-     */
-    void writeTo(OutputStream outputStream) throws IOException;
+	/**
+	 * Writes the entire message to the given output stream. <p>If the given stream is an instance of {@link
+	 * org.springframework.ws.transport.TransportOutputStream}, the corresponding headers will be written as well.
+	 *
+	 * @param outputStream the stream to write to
+	 * @throws IOException if an I/O exception occurs
+	 */
+	void writeTo(OutputStream outputStream) throws IOException;
 
 }

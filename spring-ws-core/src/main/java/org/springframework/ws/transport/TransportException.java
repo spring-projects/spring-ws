@@ -27,13 +27,13 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public abstract class TransportException extends IOException {
 
-    protected TransportException(String msg) {
-        super(msg);
-    }
+	protected TransportException(String msg) {
+		super(msg);
+	}
 
-    protected TransportException(String msg, Throwable cause) {
-        super(msg);
-        initCause(cause);
-    }
+	protected TransportException(String msg, Throwable cause) {
+		super(msg);
+		initCause(cause);
+	}
 
 }

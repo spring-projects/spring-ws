@@ -26,30 +26,30 @@ package org.springframework.ws.transport.context;
  */
 public abstract class TransportContextHolder {
 
-    private static final ThreadLocal<TransportContext> transportContextHolder = new TransportThreadLocal();
+	private static final ThreadLocal<TransportContext> transportContextHolder = new TransportThreadLocal();
 
-    /**
-     * Associate the given {@code TransportContext} with the current thread.
-     *
-     * @param transportContext the current transport context, or {@code null} to reset the thread-bound context
-     */
-    public static void setTransportContext(TransportContext transportContext) {
-        transportContextHolder.set(transportContext);
-    }
+	/**
+	 * Associate the given {@code TransportContext} with the current thread.
+	 *
+	 * @param transportContext the current transport context, or {@code null} to reset the thread-bound context
+	 */
+	public static void setTransportContext(TransportContext transportContext) {
+		transportContextHolder.set(transportContext);
+	}
 
-    /**
-     * Return the {@code TransportContext} associated with the current thread, if any.
-     *
-     * @return the current transport context, or {@code null} if none
-     */
-    public static TransportContext getTransportContext() {
-        return transportContextHolder.get();
-    }
+	/**
+	 * Return the {@code TransportContext} associated with the current thread, if any.
+	 *
+	 * @return the current transport context, or {@code null} if none
+	 */
+	public static TransportContext getTransportContext() {
+		return transportContextHolder.get();
+	}
 
-    private static class TransportThreadLocal extends ThreadLocal<TransportContext> {
+	private static class TransportThreadLocal extends ThreadLocal<TransportContext> {
 
-        public String toString() {
-            return "Transport State";
-        }
-    }
+		public String toString() {
+			return "Transport State";
+		}
+	}
 }

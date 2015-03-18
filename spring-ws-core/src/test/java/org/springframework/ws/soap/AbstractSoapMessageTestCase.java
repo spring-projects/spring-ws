@@ -44,100 +44,100 @@ import static org.junit.Assert.*;
 
 public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
 
-    protected SoapMessage soapMessage;
+	protected SoapMessage soapMessage;
 
-    @Override
-    protected MimeMessage createMimeMessage() throws Exception {
-        soapMessage = createSoapMessage();
-        return soapMessage;
-    }
+	@Override
+	protected MimeMessage createMimeMessage() throws Exception {
+		soapMessage = createSoapMessage();
+		return soapMessage;
+	}
 
-    protected abstract SoapMessage createSoapMessage() throws Exception;
+	protected abstract SoapMessage createSoapMessage() throws Exception;
 
-    @Test
-    public void testValidate() throws Exception {
-        XmlValidator validator =
-                XmlValidatorFactory.createValidator(getSoapSchemas(), XmlValidatorFactory.SCHEMA_W3C_XML);
-        SAXParseException[] errors = validator.validate(soapMessage.getEnvelope().getSource());
-        if (errors.length > 0) {
-            fail(StringUtils.arrayToCommaDelimitedString(errors));
-        }
-    }
+	@Test
+	public void testValidate() throws Exception {
+		XmlValidator validator =
+				XmlValidatorFactory.createValidator(getSoapSchemas(), XmlValidatorFactory.SCHEMA_W3C_XML);
+		SAXParseException[] errors = validator.validate(soapMessage.getEnvelope().getSource());
+		if (errors.length > 0) {
+			fail(StringUtils.arrayToCommaDelimitedString(errors));
+		}
+	}
 
-    @Test
-    public void testSoapAction() throws Exception {
-        assertEquals("Invalid default SOAP Action", "\"\"", soapMessage.getSoapAction());
-        soapMessage.setSoapAction("SoapAction");
-        assertEquals("Invalid SOAP Action", "\"SoapAction\"", soapMessage.getSoapAction());
-    }
+	@Test
+	public void testSoapAction() throws Exception {
+		assertEquals("Invalid default SOAP Action", "\"\"", soapMessage.getSoapAction());
+		soapMessage.setSoapAction("SoapAction");
+		assertEquals("Invalid SOAP Action", "\"SoapAction\"", soapMessage.getSoapAction());
+	}
 
-    @Test
-    public void testCharsetAttribute() throws Exception {
-        MockTransportOutputStream outputStream = new MockTransportOutputStream(new ByteArrayOutputStream());
-        soapMessage.writeTo(outputStream);
-        Map<String, String> headers = outputStream.getHeaders();
-        String contentType = headers.get(TransportConstants.HEADER_CONTENT_TYPE);
-        if (contentType != null) {
-            Pattern charsetPattern = Pattern.compile("charset\\s*=\\s*([^;]+)");
-            Matcher matcher = charsetPattern.matcher(contentType);
-            if (matcher.find() && matcher.groupCount() == 1) {
-                String charset = matcher.group(1).trim();
-                assertTrue("Invalid charset", charset.indexOf('"') < 0);
-            }
-        }
-    }
+	@Test
+	public void testCharsetAttribute() throws Exception {
+		MockTransportOutputStream outputStream = new MockTransportOutputStream(new ByteArrayOutputStream());
+		soapMessage.writeTo(outputStream);
+		Map<String, String> headers = outputStream.getHeaders();
+		String contentType = headers.get(TransportConstants.HEADER_CONTENT_TYPE);
+		if (contentType != null) {
+			Pattern charsetPattern = Pattern.compile("charset\\s*=\\s*([^;]+)");
+			Matcher matcher = charsetPattern.matcher(contentType);
+			if (matcher.find() && matcher.groupCount() == 1) {
+				String charset = matcher.group(1).trim();
+				assertTrue("Invalid charset", charset.indexOf('"') < 0);
+			}
+		}
+	}
 
-    @Test
-    public void testSetStreamingPayload() throws Exception {
-        if (!(soapMessage instanceof StreamingWebServiceMessage)) {
-            return;
-        }
-        StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
+	@Test
+	public void testSetStreamingPayload() throws Exception {
+		if (!(soapMessage instanceof StreamingWebServiceMessage)) {
+			return;
+		}
+		StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
 
-        final QName name = new QName("http://springframework.org", "root", "prefix");
-        streamingMessage.setStreamingPayload(new StreamingPayload() {
-            public QName getName() {
-                return name;
-            }
+		final QName name = new QName("http://springframework.org", "root", "prefix");
+		streamingMessage.setStreamingPayload(new StreamingPayload() {
+			public QName getName() {
+				return name;
+			}
 
-            public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
-                streamWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
-                streamWriter.writeNamespace("prefix", name.getNamespaceURI());
-                streamWriter.writeStartElement(name.getNamespaceURI(), "child");
-                streamWriter.writeCharacters("Foo");
-                streamWriter.writeEndElement();
-                streamWriter.writeEndElement();
-            }
-        });
+			public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
+				streamWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
+				streamWriter.writeNamespace("prefix", name.getNamespaceURI());
+				streamWriter.writeStartElement(name.getNamespaceURI(), "child");
+				streamWriter.writeCharacters("Foo");
+				streamWriter.writeEndElement();
+				streamWriter.writeEndElement();
+			}
+		});
 
-        StringResult result = new StringResult();
-        transformer.transform(streamingMessage.getPayloadSource(), result);
+		StringResult result = new StringResult();
+		transformer.transform(streamingMessage.getPayloadSource(), result);
 
-        String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
-        assertXMLEqual(expected, result.toString());
+		String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
+		assertXMLEqual(expected, result.toString());
 
-        soapMessage.writeTo(new ByteArrayOutputStream());
-    }
+		soapMessage.writeTo(new ByteArrayOutputStream());
+	}
 
-    protected abstract Resource[] getSoapSchemas();
+	protected abstract Resource[] getSoapSchemas();
 
-    @Test
-    public abstract void testGetVersion() throws Exception;
+	@Test
+	public abstract void testGetVersion() throws Exception;
 
-    @Test
-    public abstract void testWriteToTransportOutputStream() throws Exception;
+	@Test
+	public abstract void testWriteToTransportOutputStream() throws Exception;
 
-    @Test
-    public abstract void testWriteToTransportResponseAttachment() throws Exception;
+	@Test
+	public abstract void testWriteToTransportResponseAttachment() throws Exception;
 
-    @Test
-    public abstract void testToDocument() throws Exception;
+	@Test
+	public abstract void testToDocument() throws Exception;
 
-    @Test
-    public abstract void testSetLiveDocument() throws Exception;
+	@Test
+	public abstract void testSetLiveDocument() throws Exception;
 
-    @Test
-    public abstract void testSetOtherDocument() throws Exception;
+	@Test
+	public abstract void testSetOtherDocument() throws Exception;
 
 
 }

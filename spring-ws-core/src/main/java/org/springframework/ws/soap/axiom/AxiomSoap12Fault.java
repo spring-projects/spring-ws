@@ -40,116 +40,116 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 /** Axiom-specific version of {@code org.springframework.ws.soap.Soap12Fault}. */
 class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 
-    AxiomSoap12Fault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
-        super(axiomFault, axiomFactory);
-    }
+	AxiomSoap12Fault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
+		super(axiomFault, axiomFactory);
+	}
 
-    @Override
-    public QName getFaultCode() {
-        return getAxiomFault().getCode().getValue().getTextAsQName();
-    }
+	@Override
+	public QName getFaultCode() {
+		return getAxiomFault().getCode().getValue().getTextAsQName();
+	}
 
-    @Override
-    public Iterator<QName> getFaultSubcodes() {
-        List<QName> subcodes = new ArrayList<QName>();
-        SOAPFaultSubCode subcode = getAxiomFault().getCode().getSubCode();
-        while (subcode != null) {
-            subcodes.add(subcode.getValue().getTextAsQName());
-            subcode = subcode.getSubCode();
-        }
-        return subcodes.iterator();
-    }
+	@Override
+	public Iterator<QName> getFaultSubcodes() {
+		List<QName> subcodes = new ArrayList<QName>();
+		SOAPFaultSubCode subcode = getAxiomFault().getCode().getSubCode();
+		while (subcode != null) {
+			subcodes.add(subcode.getValue().getTextAsQName());
+			subcode = subcode.getSubCode();
+		}
+		return subcodes.iterator();
+	}
 
-    @Override
-    public void addFaultSubcode(QName subcode) {
-        SOAPFaultCode faultCode = getAxiomFault().getCode();
-        SOAPFaultSubCode faultSubCode = null;
-        if (faultCode.getSubCode() == null) {
-            faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultCode);
-        }
-        else {
-            faultSubCode = faultCode.getSubCode();
-            while (true) {
-                if (faultSubCode.getSubCode() != null) {
-                    faultSubCode = faultSubCode.getSubCode();
-                }
-                else {
-                    faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultSubCode);
-                    break;
-                }
-            }
-        }
-        SOAPFaultValue faultValue = getAxiomFactory().createSOAPFaultValue(faultSubCode);
-        setValueText(subcode, faultValue);
-    }
+	@Override
+	public void addFaultSubcode(QName subcode) {
+		SOAPFaultCode faultCode = getAxiomFault().getCode();
+		SOAPFaultSubCode faultSubCode = null;
+		if (faultCode.getSubCode() == null) {
+			faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultCode);
+		}
+		else {
+			faultSubCode = faultCode.getSubCode();
+			while (true) {
+				if (faultSubCode.getSubCode() != null) {
+					faultSubCode = faultSubCode.getSubCode();
+				}
+				else {
+					faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultSubCode);
+					break;
+				}
+			}
+		}
+		SOAPFaultValue faultValue = getAxiomFactory().createSOAPFaultValue(faultSubCode);
+		setValueText(subcode, faultValue);
+	}
 
-    private void setValueText(QName code, SOAPFaultValue faultValue) {
-	    String prefix = code.getPrefix();
-        if (StringUtils.hasLength(code.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
-            OMNamespace namespace = getAxiomFault().findNamespaceURI(prefix);
-            if (namespace == null) {
-                getAxiomFault().declareNamespace(code.getNamespaceURI(), prefix);
-            }
-        }
-        else if (StringUtils.hasLength(code.getNamespaceURI())) {
-            OMNamespace namespace = getAxiomFault().findNamespace(code.getNamespaceURI(), null);
-            if (namespace == null) {
-                throw new IllegalArgumentException("Could not resolve namespace of code [" + code + "]");
-            }
-	        code = new QName(code.getNamespaceURI(), code.getLocalPart(),
-			        namespace.getPrefix());
-        }
-        faultValue.setText(prefix + ":" + code.getLocalPart());
-    }
+	private void setValueText(QName code, SOAPFaultValue faultValue) {
+		String prefix = code.getPrefix();
+		if (StringUtils.hasLength(code.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
+			OMNamespace namespace = getAxiomFault().findNamespaceURI(prefix);
+			if (namespace == null) {
+				getAxiomFault().declareNamespace(code.getNamespaceURI(), prefix);
+			}
+		}
+		else if (StringUtils.hasLength(code.getNamespaceURI())) {
+			OMNamespace namespace = getAxiomFault().findNamespace(code.getNamespaceURI(), null);
+			if (namespace == null) {
+				throw new IllegalArgumentException("Could not resolve namespace of code [" + code + "]");
+			}
+			code = new QName(code.getNamespaceURI(), code.getLocalPart(),
+					namespace.getPrefix());
+		}
+		faultValue.setText(prefix + ":" + code.getLocalPart());
+	}
 
-    @Override
-    public String getFaultNode() {
-        SOAPFaultNode faultNode = getAxiomFault().getNode();
-        if (faultNode == null) {
-            return null;
-        }
-        else {
-            return faultNode.getFaultNodeValue();
-        }
-    }
+	@Override
+	public String getFaultNode() {
+		SOAPFaultNode faultNode = getAxiomFault().getNode();
+		if (faultNode == null) {
+			return null;
+		}
+		else {
+			return faultNode.getFaultNodeValue();
+		}
+	}
 
-    @Override
-    public void setFaultNode(String uri) {
-        try {
-            SOAPFaultNode faultNode = getAxiomFactory().createSOAPFaultNode(getAxiomFault());
-            faultNode.setFaultNodeValue(uri);
-            getAxiomFault().setNode(faultNode);
-        }
-        catch (SOAPProcessingException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
-    }
+	@Override
+	public void setFaultNode(String uri) {
+		try {
+			SOAPFaultNode faultNode = getAxiomFactory().createSOAPFaultNode(getAxiomFault());
+			faultNode.setFaultNodeValue(uri);
+			getAxiomFault().setNode(faultNode);
+		}
+		catch (SOAPProcessingException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
+	}
 
-    @Override
-    public String getFaultStringOrReason() {
-        return getFaultReasonText(Locale.getDefault());
-    }
+	@Override
+	public String getFaultStringOrReason() {
+		return getFaultReasonText(Locale.getDefault());
+	}
 
-    @Override
-    public String getFaultReasonText(Locale locale) {
-        SOAPFaultReason faultReason = getAxiomFault().getReason();
-        String language = AxiomUtils.toLanguage(locale);
-        SOAPFaultText faultText = faultReason.getSOAPFaultText(language);
-        return faultText != null ? faultText.getText() : null;
-    }
+	@Override
+	public String getFaultReasonText(Locale locale) {
+		SOAPFaultReason faultReason = getAxiomFault().getReason();
+		String language = AxiomUtils.toLanguage(locale);
+		SOAPFaultText faultText = faultReason.getSOAPFaultText(language);
+		return faultText != null ? faultText.getText() : null;
+	}
 
-    @Override
-    public void setFaultReasonText(Locale locale, String text) {
-        SOAPFaultReason faultReason = getAxiomFault().getReason();
-        String language = AxiomUtils.toLanguage(locale);
-        try {
-            SOAPFaultText faultText = getAxiomFactory().createSOAPFaultText(faultReason);
-            faultText.setLang(language);
-            faultText.setText(text);
-        }
-        catch (SOAPProcessingException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
-    }
+	@Override
+	public void setFaultReasonText(Locale locale, String text) {
+		SOAPFaultReason faultReason = getAxiomFault().getReason();
+		String language = AxiomUtils.toLanguage(locale);
+		try {
+			SOAPFaultText faultText = getAxiomFactory().createSOAPFaultText(faultReason);
+			faultText.setLang(language);
+			faultText.setText(text);
+		}
+		catch (SOAPProcessingException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
+	}
 
 }

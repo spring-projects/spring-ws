@@ -33,24 +33,24 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 abstract class AbstractResponseCreator implements ResponseCreator {
 
-    @Override
-    public final WebServiceMessage createResponse(URI uri,
-                                                  WebServiceMessage request,
-                                                  WebServiceMessageFactory messageFactory) throws IOException {
-        WebServiceMessage response = messageFactory.createWebServiceMessage();
-        doWithResponse(uri, request, response);
-        return response;
-    }
+	@Override
+	public final WebServiceMessage createResponse(URI uri,
+												  WebServiceMessage request,
+												  WebServiceMessageFactory messageFactory) throws IOException {
+		WebServiceMessage response = messageFactory.createWebServiceMessage();
+		doWithResponse(uri, request, response);
+		return response;
+	}
 
-    /**
-     * Execute any number of operations on the supplied response, given the request and URI.
-     *
-     * @param uri      the URI
-     * @param request  the request message
-     * @param response the response message
-     * @throws IOException in case of I/O errors
-     */
-    protected abstract void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response)
-            throws IOException;
+	/**
+	 * Execute any number of operations on the supplied response, given the request and URI.
+	 *
+	 * @param uri	   the URI
+	 * @param request  the request message
+	 * @param response the response message
+	 * @throws IOException in case of I/O errors
+	 */
+	protected abstract void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response)
+			throws IOException;
 
 }

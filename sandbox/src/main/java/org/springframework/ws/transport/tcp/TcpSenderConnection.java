@@ -39,76 +39,76 @@ import org.springframework.ws.transport.tcp.support.TcpTransportUtils;
  */
 public class TcpSenderConnection extends AbstractSenderConnection {
 
-    private final Socket socket;
+	private final Socket socket;
 
-    /** Constructs a new TCP/IP connection with the given socket. */
-    protected TcpSenderConnection(Socket socket) {
-        Assert.notNull(socket, "socket must not be null");
-        this.socket = socket;
-    }
+	/** Constructs a new TCP/IP connection with the given socket. */
+	protected TcpSenderConnection(Socket socket) {
+		Assert.notNull(socket, "socket must not be null");
+		this.socket = socket;
+	}
 
-    /** Returns the socket for this connection. */
-    public Socket getSocket() {
-        return socket;
-    }
+	/** Returns the socket for this connection. */
+	public Socket getSocket() {
+		return socket;
+	}
 
-    public URI getUri() throws URISyntaxException {
-        return TcpTransportUtils.toUri(socket);
-    }
+	public URI getUri() throws URISyntaxException {
+		return TcpTransportUtils.toUri(socket);
+	}
 
-    public void onClose() throws IOException {
-        socket.close();
-    }
+	public void onClose() throws IOException {
+		socket.close();
+	}
 
-    /*
-     * Errors
-     */
+	/*
+	 * Errors
+	 */
 
-    public boolean hasError() throws IOException {
-        return false;
-    }
+	public boolean hasError() throws IOException {
+		return false;
+	}
 
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
+	public String getErrorMessage() throws IOException {
+		return null;
+	}
 
-    protected void addRequestHeader(String name, String value) throws IOException {
-    }
+	protected void addRequestHeader(String name, String value) throws IOException {
+	}
 
-    protected OutputStream getRequestOutputStream() throws IOException {
-        return new FilterOutputStream(socket.getOutputStream()) {
+	protected OutputStream getRequestOutputStream() throws IOException {
+		return new FilterOutputStream(socket.getOutputStream()) {
 
-            @Override
-            public void close() throws IOException {
-                // don't close the socket
-                socket.shutdownOutput();
-            }
-        };
-    }
+			@Override
+			public void close() throws IOException {
+				// don't close the socket
+				socket.shutdownOutput();
+			}
+		};
+	}
 
-    protected void sendRequest() throws IOException {
-    }
+	protected void sendRequest() throws IOException {
+	}
 
-    protected boolean hasResponse() throws IOException {
-        return true;
-    }
+	protected boolean hasResponse() throws IOException {
+		return true;
+	}
 
-    protected Iterator getResponseHeaderNames() throws IOException {
-        return Collections.EMPTY_LIST.iterator();
-    }
+	protected Iterator getResponseHeaderNames() throws IOException {
+		return Collections.EMPTY_LIST.iterator();
+	}
 
-    protected Iterator getResponseHeaders(String name) throws IOException {
-        return Collections.EMPTY_LIST.iterator();
-    }
+	protected Iterator getResponseHeaders(String name) throws IOException {
+		return Collections.EMPTY_LIST.iterator();
+	}
 
-    protected InputStream getResponseInputStream() throws IOException {
-        return new FilterInputStream(socket.getInputStream()) {
+	protected InputStream getResponseInputStream() throws IOException {
+		return new FilterInputStream(socket.getInputStream()) {
 
-            @Override
-            public void close() throws IOException {
-                // don't close the socket
-                socket.shutdownInput();
-            }
-        };
-    }
+			@Override
+			public void close() throws IOException {
+				// don't close the socket
+				socket.shutdownInput();
+			}
+		};
+	}
 }

@@ -47,61 +47,61 @@ import static org.junit.Assert.*;
  */
 public class AnnotationActionMethodEndpointMappingTest {
 
-    private StaticApplicationContext applicationContext;
+	private StaticApplicationContext applicationContext;
 
-    private AnnotationActionEndpointMapping mapping;
+	private AnnotationActionEndpointMapping mapping;
 
-    private MessageFactory messageFactory;
+	private MessageFactory messageFactory;
 
-    @Before
-    public void setUp() throws Exception {
-        messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        XMLUnit.setIgnoreWhitespace(true);
-        applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
-        applicationContext.registerSingleton("interceptor", MyInterceptor.class);
-        applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
-        applicationContext.registerSingleton("endpoint", MyEndpoint.class);
-        applicationContext.refresh();
-        mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
-    }
+	@Before
+	public void setUp() throws Exception {
+		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		XMLUnit.setIgnoreWhitespace(true);
+		applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
+		applicationContext.registerSingleton("interceptor", MyInterceptor.class);
+		applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
+		applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+		applicationContext.refresh();
+		mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
+	}
 
-    @Test
-    public void mapping() throws Exception {
-        MessageContext messageContext = createMessageContext();
+	@Test
+	public void mapping() throws Exception {
+		MessageContext messageContext = createMessageContext();
 
-        EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-        assertNotNull("MethodEndpoint not registered", chain);
-        MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt");
-        assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
-	    assertEquals("No smart interceptors registered", 2, chain.getInterceptors().length);
-	    assertTrue(chain.getInterceptors()[0] instanceof AddressingEndpointInterceptor);
-	    assertTrue(chain.getInterceptors()[1] instanceof MyInterceptor);
-    }
+		EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
+		assertNotNull("MethodEndpoint not registered", chain);
+		MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt");
+		assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+		assertEquals("No smart interceptors registered", 2, chain.getInterceptors().length);
+		assertTrue(chain.getInterceptors()[0] instanceof AddressingEndpointInterceptor);
+		assertTrue(chain.getInterceptors()[1] instanceof MyInterceptor);
+	}
 
-    private MessageContext createMessageContext() throws SOAPException, IOException {
-        MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.addHeader("Content-Type", " application/soap+xml");
-        InputStream is = getClass().getResourceAsStream("valid.xml");
-        assertNotNull("Could not load valid.xml", is);
-        try {
-            SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-            return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
-        }
-        finally {
-            is.close();
-        }
-    }
+	private MessageContext createMessageContext() throws SOAPException, IOException {
+		MimeHeaders mimeHeaders = new MimeHeaders();
+		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
+		InputStream is = getClass().getResourceAsStream("valid.xml");
+		assertNotNull("Could not load valid.xml", is);
+		try {
+			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+		}
+		finally {
+			is.close();
+		}
+	}
 
-    @Endpoint
-    @Address("mailto:joe@fabrikam123.example")
-    private static class MyEndpoint {
+	@Endpoint
+	@Address("mailto:joe@fabrikam123.example")
+	private static class MyEndpoint {
 
-        @Action("http://fabrikam123.example/mail/Delete")
-        public void doIt() {
+		@Action("http://fabrikam123.example/mail/Delete")
+		public void doIt() {
 
-        }
-    }
+		}
+	}
 
 	private static class MyInterceptor extends DelegatingSmartEndpointInterceptor {
 
@@ -110,14 +110,14 @@ public class AnnotationActionMethodEndpointMappingTest {
 		}
 	}
 
-    private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
 
-        public MySmartInterceptor() {
-            super(new PayloadLoggingInterceptor());
-        }
+		public MySmartInterceptor() {
+			super(new PayloadLoggingInterceptor());
+		}
 
-        public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
-            return false;
-        }
-    }
+		public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
+			return false;
+		}
+	}
 }

@@ -23,18 +23,18 @@ import javax.xml.transform.stream.StreamSource;
 
 public class MockWebServiceMessageFactory implements WebServiceMessageFactory {
 
-    @Override
-    public MockWebServiceMessage createWebServiceMessage() {
-        return new MockWebServiceMessage();
-    }
+	@Override
+	public MockWebServiceMessage createWebServiceMessage() {
+		return new MockWebServiceMessage();
+	}
 
-    @Override
-    public MockWebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
-        try {
-            return new MockWebServiceMessage(new StreamSource(inputStream));
-        }
-        catch (TransformerException ex) {
-            throw new IOException(ex.getMessage());
-        }
-    }
+	@Override
+	public MockWebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+		try {
+			return new MockWebServiceMessage(new StreamSource(inputStream));
+		}
+		catch (TransformerException ex) {
+			throw new IOException(ex.getMessage());
+		}
+	}
 }

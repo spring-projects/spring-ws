@@ -30,37 +30,37 @@ import org.springframework.ws.mime.AbstractMimeMessage;
  */
 public abstract class AbstractSoapMessage extends AbstractMimeMessage implements SoapMessage {
 
-    private SoapVersion version;
+	private SoapVersion version;
 
-    /** Returns {@code getEnvelope().getBody()}. */
-    @Override
-    public final SoapBody getSoapBody() {
-        return getEnvelope().getBody();
-    }
+	/** Returns {@code getEnvelope().getBody()}. */
+	@Override
+	public final SoapBody getSoapBody() {
+		return getEnvelope().getBody();
+	}
 
-    /** Returns {@code getEnvelope().getHeader()}. */
-    @Override
-    public final SoapHeader getSoapHeader() {
-        return getEnvelope().getHeader();
-    }
+	/** Returns {@code getEnvelope().getHeader()}. */
+	@Override
+	public final SoapHeader getSoapHeader() {
+		return getEnvelope().getHeader();
+	}
 
-    /** Returns {@code getSoapBody().getPayloadSource()}. */
-    @Override
-    public final Source getPayloadSource() {
-        return getSoapBody().getPayloadSource();
-    }
+	/** Returns {@code getSoapBody().getPayloadSource()}. */
+	@Override
+	public final Source getPayloadSource() {
+		return getSoapBody().getPayloadSource();
+	}
 
-    /** Returns {@code getSoapBody().getPayloadResult()}. */
-    @Override
-    public final Result getPayloadResult() {
-        return getSoapBody().getPayloadResult();
-    }
+	/** Returns {@code getSoapBody().getPayloadResult()}. */
+	@Override
+	public final Result getPayloadResult() {
+		return getSoapBody().getPayloadResult();
+	}
 
-    /** Returns {@code getSoapBody().hasFault()}. */
-    @Override
-    public final boolean hasFault() {
-        return getSoapBody().hasFault();
-    }
+	/** Returns {@code getSoapBody().hasFault()}. */
+	@Override
+	public final boolean hasFault() {
+		return getSoapBody().hasFault();
+	}
 
 	/** Returns {@code getSoapBody().getFault().getFaultCode()}. */
 	@Override
@@ -73,31 +73,31 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 	}
 
 	/** Returns {@code getSoapBody().getFault().getFaultStringOrReason()}. */
-    @Override
-    public final String getFaultReason() {
-        if (hasFault()) {
-            return getSoapBody().getFault().getFaultStringOrReason();
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	public final String getFaultReason() {
+		if (hasFault()) {
+			return getSoapBody().getFault().getFaultStringOrReason();
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    public SoapVersion getVersion() {
-        if (version == null) {
-            String envelopeNamespace = getEnvelope().getName().getNamespaceURI();
-            if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
-                version = SoapVersion.SOAP_11;
-            }
-            else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
-                version = SoapVersion.SOAP_12;
-            }
-            else {
-                throw new IllegalStateException(
-                        "Unknown Envelope namespace uri '" + envelopeNamespace + "'. " + "Cannot deduce SoapVersion.");
-            }
-        }
-        return version;
-    }
+	@Override
+	public SoapVersion getVersion() {
+		if (version == null) {
+			String envelopeNamespace = getEnvelope().getName().getNamespaceURI();
+			if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
+				version = SoapVersion.SOAP_11;
+			}
+			else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
+				version = SoapVersion.SOAP_12;
+			}
+			else {
+				throw new IllegalStateException(
+						"Unknown Envelope namespace uri '" + envelopeNamespace + "'. " + "Cannot deduce SoapVersion.");
+			}
+		}
+		return version;
+	}
 }

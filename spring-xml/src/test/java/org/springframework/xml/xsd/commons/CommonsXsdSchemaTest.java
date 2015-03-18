@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,25 +35,25 @@ import static org.junit.Assert.assertNotNull;
 
 public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
-    @Override
-    protected XsdSchema createSchema(Resource resource) throws Exception {
-        XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
-        XmlSchema schema = schemaCollection.read(SaxUtils.createInputSource(resource));
-        return new CommonsXsdSchema(schema);
-    }
+	@Override
+	protected XsdSchema createSchema(Resource resource) throws Exception {
+		XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
+		XmlSchema schema = schemaCollection.read(SaxUtils.createInputSource(resource));
+		return new CommonsXsdSchema(schema);
+	}
 
-    @Test
-    public void testXmime() throws Exception {
-        Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
-        XsdSchema schema = createSchema(resource);
-        String namespace = "urn:test";
-        assertEquals("Invalid target namespace", namespace, schema.getTargetNamespace());
-        Document result = (Document) ((DOMSource) schema.getSource()).getNode();
-        Element schemaElement = result.getDocumentElement();
-        Element elementElement = (Element) schemaElement.getFirstChild();
-        assertNotNull("No expectedContentTypes found",
-                elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
-    }
+	@Test
+	public void testXmime() throws Exception {
+		Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
+		XsdSchema schema = createSchema(resource);
+		String namespace = "urn:test";
+		assertEquals("Invalid target namespace", namespace, schema.getTargetNamespace());
+		Document result = (Document) ((DOMSource) schema.getSource()).getNode();
+		Element schemaElement = result.getDocumentElement();
+		Element elementElement = (Element) schemaElement.getFirstChild();
+		assertNotNull("No expectedContentTypes found",
+				elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
+	}
 
 
 }

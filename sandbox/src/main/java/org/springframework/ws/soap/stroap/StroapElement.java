@@ -44,217 +44,217 @@ import org.springframework.xml.stream.AbstractXMLEventReader;
  */
 abstract class StroapElement implements SoapElement {
 
-    protected static final String DEFAULT_PREFIX = "SOAP-ENV";
+	protected static final String DEFAULT_PREFIX = "SOAP-ENV";
 
-    private final StroapMessageFactory messageFactory;
+	private final StroapMessageFactory messageFactory;
 
-    private StartElement startElement;
+	private StartElement startElement;
 
-    private EndElement endElement;
+	private EndElement endElement;
 
-    protected StroapElement(QName name, StroapMessageFactory messageFactory) {
-        this(createStartElement(name, messageFactory), messageFactory);
-    }
+	protected StroapElement(QName name, StroapMessageFactory messageFactory) {
+		this(createStartElement(name, messageFactory), messageFactory);
+	}
 
-    private static StartElement createStartElement(QName name, StroapMessageFactory messageFactory) {
-        if (!StringUtils.hasLength(name.getPrefix())) {
-            name = new QName(name.getNamespaceURI(), name.getLocalPart(), DEFAULT_PREFIX);
-        }
-        return messageFactory.getEventFactory().createStartElement(name, null, null);
-    }
+	private static StartElement createStartElement(QName name, StroapMessageFactory messageFactory) {
+		if (!StringUtils.hasLength(name.getPrefix())) {
+			name = new QName(name.getNamespaceURI(), name.getLocalPart(), DEFAULT_PREFIX);
+		}
+		return messageFactory.getEventFactory().createStartElement(name, null, null);
+	}
 
-    protected StroapElement(StartElement startElement, StroapMessageFactory messageFactory) {
-        Assert.notNull(startElement, "'startElement' must not be null");
-        Assert.notNull(messageFactory, "'messageFactory' must not be null");
-        this.messageFactory = messageFactory;
-        this.startElement = startElement;
-        this.endElement = getEventFactory().createEndElement(startElement.getName(), startElement.getNamespaces());
-    }
+	protected StroapElement(StartElement startElement, StroapMessageFactory messageFactory) {
+		Assert.notNull(startElement, "'startElement' must not be null");
+		Assert.notNull(messageFactory, "'messageFactory' must not be null");
+		this.messageFactory = messageFactory;
+		this.startElement = startElement;
+		this.endElement = getEventFactory().createEndElement(startElement.getName(), startElement.getNamespaces());
+	}
 
-    public final Source getSource() {
-        return StaxUtils.createCustomStaxSource(getEventReader(true));
-    }
+	public final Source getSource() {
+		return StaxUtils.createCustomStaxSource(getEventReader(true));
+	}
 
-    protected XMLEventReader getEventReader(boolean documentEvents) {
-        return new StroapElementEventReader(documentEvents);
-    }
+	protected XMLEventReader getEventReader(boolean documentEvents) {
+		return new StroapElementEventReader(documentEvents);
+	}
 
-    public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
-        eventWriter.add(getEventReader(false));
-    }
+	public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
+		eventWriter.add(getEventReader(false));
+	}
 
-    protected StroapMessageFactory getMessageFactory() {
-        return messageFactory;
-    }
+	protected StroapMessageFactory getMessageFactory() {
+		return messageFactory;
+	}
 
-    protected final XMLEventFactory getEventFactory() {
-        return getMessageFactory().getEventFactory();
-    }
+	protected final XMLEventFactory getEventFactory() {
+		return getMessageFactory().getEventFactory();
+	}
 
-    protected SoapVersion getSoapVersion() {
-        return getMessageFactory().getSoapVersion();
-    }
+	protected SoapVersion getSoapVersion() {
+		return getMessageFactory().getSoapVersion();
+	}
 
-    public final QName getName() {
-        return getStartElement().getName();
-    }
+	public final QName getName() {
+		return getStartElement().getName();
+	}
 
-    protected abstract XMLEventReader getChildEventReader();
+	protected abstract XMLEventReader getChildEventReader();
 
-    public final Iterator<QName> getAllAttributes() {
-        List<QName> result = new LinkedList<QName>();
-        for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
-            Attribute attribute = (Attribute) iterator.next();
-            result.add(attribute.getName());
-        }
-        return result.iterator();
-    }
+	public final Iterator<QName> getAllAttributes() {
+		List<QName> result = new LinkedList<QName>();
+		for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
+			Attribute attribute = (Attribute) iterator.next();
+			result.add(attribute.getName());
+		}
+		return result.iterator();
+	}
 
-    public final String getAttributeValue(QName name) {
-        Attribute attribute = getStartElement().getAttributeByName(name);
-        return attribute != null ? attribute.getValue() : null;
-    }
+	public final String getAttributeValue(QName name) {
+		Attribute attribute = getStartElement().getAttributeByName(name);
+		return attribute != null ? attribute.getValue() : null;
+	}
 
-    public final void removeAttribute(QName name) {
-        List<Attribute> newAttributes = new LinkedList<Attribute>();
-        for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
-            Attribute attribute = (Attribute) iterator.next();
-            if (!name.equals(attribute.getName())) {
-                newAttributes.add(attribute);
-            }
-        }
-        StartElement oldStartElement = getStartElement();
-        this.startElement = getEventFactory().createStartElement(oldStartElement.getName(), newAttributes.iterator(),
-                oldStartElement.getNamespaces());
-    }
+	public final void removeAttribute(QName name) {
+		List<Attribute> newAttributes = new LinkedList<Attribute>();
+		for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
+			Attribute attribute = (Attribute) iterator.next();
+			if (!name.equals(attribute.getName())) {
+				newAttributes.add(attribute);
+			}
+		}
+		StartElement oldStartElement = getStartElement();
+		this.startElement = getEventFactory().createStartElement(oldStartElement.getName(), newAttributes.iterator(),
+				oldStartElement.getNamespaces());
+	}
 
-    public final void addAttribute(QName name, String value) {
-        List<Attribute> newAttributes = new LinkedList<Attribute>();
-        for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
-            Attribute attribute = (Attribute) iterator.next();
-            newAttributes.add(attribute);
-        }
-        Attribute newAttribute = getEventFactory().createAttribute(name, value);
-        newAttributes.add(newAttribute);
-        StartElement oldStartElement = getStartElement();
-        this.startElement = getEventFactory().createStartElement(oldStartElement.getName(), newAttributes.iterator(),
-                oldStartElement.getNamespaces());
-    }
+	public final void addAttribute(QName name, String value) {
+		List<Attribute> newAttributes = new LinkedList<Attribute>();
+		for (Iterator iterator = getStartElement().getAttributes(); iterator.hasNext();) {
+			Attribute attribute = (Attribute) iterator.next();
+			newAttributes.add(attribute);
+		}
+		Attribute newAttribute = getEventFactory().createAttribute(name, value);
+		newAttributes.add(newAttribute);
+		StartElement oldStartElement = getStartElement();
+		this.startElement = getEventFactory().createStartElement(oldStartElement.getName(), newAttributes.iterator(),
+				oldStartElement.getNamespaces());
+	}
 
-    public final void addNamespaceDeclaration(String prefix, String namespaceUri) {
-        List<Namespace> newNamespaces = new LinkedList<Namespace>();
-        for (Iterator iterator = getStartElement().getNamespaces(); iterator.hasNext();) {
-            Namespace namespace = (Namespace) iterator.next();
-            newNamespaces.add(namespace);
-        }
-        Namespace newNamespace;
-        if (StringUtils.hasLength(prefix)) {
-            newNamespace = getEventFactory().createNamespace(prefix, namespaceUri);
-        }
-        else {
-            newNamespace = getEventFactory().createNamespace(namespaceUri);
-        }
-        newNamespaces.add(newNamespace);
-        StartElement oldStartElement = getStartElement();
-        this.startElement = getEventFactory()
-                .createStartElement(oldStartElement.getName(), oldStartElement.getAttributes(),
-                        newNamespaces.iterator());
-    }
+	public final void addNamespaceDeclaration(String prefix, String namespaceUri) {
+		List<Namespace> newNamespaces = new LinkedList<Namespace>();
+		for (Iterator iterator = getStartElement().getNamespaces(); iterator.hasNext();) {
+			Namespace namespace = (Namespace) iterator.next();
+			newNamespaces.add(namespace);
+		}
+		Namespace newNamespace;
+		if (StringUtils.hasLength(prefix)) {
+			newNamespace = getEventFactory().createNamespace(prefix, namespaceUri);
+		}
+		else {
+			newNamespace = getEventFactory().createNamespace(namespaceUri);
+		}
+		newNamespaces.add(newNamespace);
+		StartElement oldStartElement = getStartElement();
+		this.startElement = getEventFactory()
+				.createStartElement(oldStartElement.getName(), oldStartElement.getAttributes(),
+						newNamespaces.iterator());
+	}
 
-    protected final StartElement getStartElement() {
-        return startElement;
-    }
+	protected final StartElement getStartElement() {
+		return startElement;
+	}
 
-    protected final EndElement getEndElement() {
-        return endElement;
-    }
+	protected final EndElement getEndElement() {
+		return endElement;
+	}
 
-    private enum EVENT_READER_STATE {
+	private enum EVENT_READER_STATE {
 
-        START_DOCUMENT,
-        START_ELEMENT,
-        CHILDREN,
-        END_ELEMENT,
-        END_DOCUMENT,
-        DONE
-    }
+		START_DOCUMENT,
+		START_ELEMENT,
+		CHILDREN,
+		END_ELEMENT,
+		END_DOCUMENT,
+		DONE
+	}
 
-    private class StroapElementEventReader extends AbstractXMLEventReader {
+	private class StroapElementEventReader extends AbstractXMLEventReader {
 
-        private EVENT_READER_STATE state;
+		private EVENT_READER_STATE state;
 
-        private boolean documentEvents;
+		private boolean documentEvents;
 
-        private final XMLEventReader childEventReader;
+		private final XMLEventReader childEventReader;
 
-        private StroapElementEventReader(boolean documentEvents) {
-            this.documentEvents = documentEvents;
-            state = documentEvents ? EVENT_READER_STATE.START_DOCUMENT : EVENT_READER_STATE.START_ELEMENT;
-            this.childEventReader = getChildEventReader();
-        }
+		private StroapElementEventReader(boolean documentEvents) {
+			this.documentEvents = documentEvents;
+			state = documentEvents ? EVENT_READER_STATE.START_DOCUMENT : EVENT_READER_STATE.START_ELEMENT;
+			this.childEventReader = getChildEventReader();
+		}
 
-        public boolean hasNext() {
-            if (documentEvents && state == EVENT_READER_STATE.DONE) {
-                return false;
-            }
-            else if (!documentEvents && state == EVENT_READER_STATE.END_DOCUMENT) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
+		public boolean hasNext() {
+			if (documentEvents && state == EVENT_READER_STATE.DONE) {
+				return false;
+			}
+			else if (!documentEvents && state == EVENT_READER_STATE.END_DOCUMENT) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
 
-        public XMLEvent nextEvent() throws XMLStreamException {
-            switch (state) {
-                case START_DOCUMENT:
-                    state = EVENT_READER_STATE.START_ELEMENT;
-                    return getEventFactory().createStartDocument();
-                case START_ELEMENT:
-                    state = EVENT_READER_STATE.CHILDREN;
-                    return getStartElement();
-                case CHILDREN:
-                    if (!childEventReader.hasNext()) {
-                        state = EVENT_READER_STATE.END_ELEMENT;
-                        return nextEvent();
-                    }
-                    return childEventReader.nextEvent();
-                case END_ELEMENT:
-                    state = EVENT_READER_STATE.END_DOCUMENT;
-                    return getEndElement();
-                case END_DOCUMENT:
-                    state = EVENT_READER_STATE.DONE;
-                    return getEventFactory().createEndDocument();
-                case DONE:
-                    throw new NoSuchElementException();
-                default:
-                    throw new IllegalStateException();
-            }
-        }
+		public XMLEvent nextEvent() throws XMLStreamException {
+			switch (state) {
+				case START_DOCUMENT:
+					state = EVENT_READER_STATE.START_ELEMENT;
+					return getEventFactory().createStartDocument();
+				case START_ELEMENT:
+					state = EVENT_READER_STATE.CHILDREN;
+					return getStartElement();
+				case CHILDREN:
+					if (!childEventReader.hasNext()) {
+						state = EVENT_READER_STATE.END_ELEMENT;
+						return nextEvent();
+					}
+					return childEventReader.nextEvent();
+				case END_ELEMENT:
+					state = EVENT_READER_STATE.END_DOCUMENT;
+					return getEndElement();
+				case END_DOCUMENT:
+					state = EVENT_READER_STATE.DONE;
+					return getEventFactory().createEndDocument();
+				case DONE:
+					throw new NoSuchElementException();
+				default:
+					throw new IllegalStateException();
+			}
+		}
 
-        public XMLEvent peek() throws XMLStreamException {
-            switch (state) {
-                case START_DOCUMENT:
-                    return getEventFactory().createStartDocument();
-                case START_ELEMENT:
-                    return getStartElement();
-                case CHILDREN:
-                    XMLEvent event = childEventReader.peek();
-                    if (event == null) {
-                        state = EVENT_READER_STATE.END_ELEMENT;
-                        event = getEndElement();
-                    }
-                    return event;
-                case END_ELEMENT:
-                    return getEndElement();
-                case END_DOCUMENT:
-                    return getEventFactory().createEndDocument();
-                case DONE:
-                    return null;
-                default:
-                    throw new IllegalStateException();
-            }
+		public XMLEvent peek() throws XMLStreamException {
+			switch (state) {
+				case START_DOCUMENT:
+					return getEventFactory().createStartDocument();
+				case START_ELEMENT:
+					return getStartElement();
+				case CHILDREN:
+					XMLEvent event = childEventReader.peek();
+					if (event == null) {
+						state = EVENT_READER_STATE.END_ELEMENT;
+						event = getEndElement();
+					}
+					return event;
+				case END_ELEMENT:
+					return getEndElement();
+				case END_DOCUMENT:
+					return getEventFactory().createEndDocument();
+				case DONE:
+					return null;
+				default:
+					throw new IllegalStateException();
+			}
 
-        }
-    }
+		}
+	}
 }

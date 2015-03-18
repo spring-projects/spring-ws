@@ -27,53 +27,53 @@ import org.springframework.ws.soap.SoapHeaderElement;
 /** Axiom-specific version of {@code org.springframework.ws.soap.SoapHeaderHeaderElement}. */
 class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderElement {
 
-    public AxiomSoapHeaderElement(SOAPHeaderBlock axiomHeaderBlock, SOAPFactory axiomFactory) {
-        super(axiomHeaderBlock, axiomFactory);
-    }
+	public AxiomSoapHeaderElement(SOAPHeaderBlock axiomHeaderBlock, SOAPFactory axiomFactory) {
+		super(axiomHeaderBlock, axiomFactory);
+	}
 
-    @Override
-    public String getActorOrRole() {
-        return getAxiomHeaderBlock().getRole();
-    }
+	@Override
+	public String getActorOrRole() {
+		return getAxiomHeaderBlock().getRole();
+	}
 
-    @Override
-    public void setActorOrRole(String role) {
-        getAxiomHeaderBlock().setRole(role);
-    }
+	@Override
+	public void setActorOrRole(String role) {
+		getAxiomHeaderBlock().setRole(role);
+	}
 
-    @Override
-    public boolean getMustUnderstand() {
-        return getAxiomHeaderBlock().getMustUnderstand();
-    }
+	@Override
+	public boolean getMustUnderstand() {
+		return getAxiomHeaderBlock().getMustUnderstand();
+	}
 
-    @Override
-    public void setMustUnderstand(boolean mustUnderstand) {
-        getAxiomHeaderBlock().setMustUnderstand(mustUnderstand);
-    }
+	@Override
+	public void setMustUnderstand(boolean mustUnderstand) {
+		getAxiomHeaderBlock().setMustUnderstand(mustUnderstand);
+	}
 
-    @Override
-    public Result getResult() {
-        try {
-            return new AxiomResult(getAxiomHeaderBlock(), getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
+	@Override
+	public Result getResult() {
+		try {
+			return new AxiomResult(getAxiomHeaderBlock(), getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    public String getText() {
-        return getAxiomHeaderBlock().getText();
-    }
+	@Override
+	public String getText() {
+		return getAxiomHeaderBlock().getText();
+	}
 
-    @Override
-    public void setText(String content) {
-        getAxiomHeaderBlock().setText(content);
-    }
+	@Override
+	public void setText(String content) {
+		getAxiomHeaderBlock().setText(content);
+	}
 
-    protected SOAPHeaderBlock getAxiomHeaderBlock() {
-        return (SOAPHeaderBlock) getAxiomElement();
-    }
+	protected SOAPHeaderBlock getAxiomHeaderBlock() {
+		return (SOAPHeaderBlock) getAxiomElement();
+	}
 
 }

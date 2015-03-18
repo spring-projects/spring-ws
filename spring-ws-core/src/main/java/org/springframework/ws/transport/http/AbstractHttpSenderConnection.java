@@ -36,126 +36,126 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @since 1.0.0
  */
 public abstract class AbstractHttpSenderConnection extends AbstractSenderConnection
-        implements FaultAwareWebServiceConnection {
+		implements FaultAwareWebServiceConnection {
 
-    /** Buffer used for reading the response, when the content length is invalid. */
-    private byte[] responseBuffer;
+	/** Buffer used for reading the response, when the content length is invalid. */
+	private byte[] responseBuffer;
 
-    @Override
-    public final boolean hasError() throws IOException {
-        return getResponseCode() / 100 != 2;
-    }
+	@Override
+	public final boolean hasError() throws IOException {
+		return getResponseCode() / 100 != 2;
+	}
 
-    @Override
-    public final String getErrorMessage() throws IOException {
-        StringBuilder builder = new StringBuilder();
-        String responseMessage = getResponseMessage();
-        if (StringUtils.hasLength(responseMessage)) {
-            builder.append(responseMessage);
-        }
-        builder.append(" [");
-        builder.append(getResponseCode());
-        builder.append(']');
-        return builder.toString();
-    }
+	@Override
+	public final String getErrorMessage() throws IOException {
+		StringBuilder builder = new StringBuilder();
+		String responseMessage = getResponseMessage();
+		if (StringUtils.hasLength(responseMessage)) {
+			builder.append(responseMessage);
+		}
+		builder.append(" [");
+		builder.append(getResponseCode());
+		builder.append(']');
+		return builder.toString();
+	}
 
-    /*
-     * Receiving response
-     */
-    @Override
-    protected final boolean hasResponse() throws IOException {
-        int responseCode = getResponseCode();
-        if (HttpTransportConstants.STATUS_ACCEPTED == responseCode ||
-                HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
-            return false;
-        }
-        long contentLength = getResponseContentLength();
-        if (contentLength < 0) {
-            if (responseBuffer == null) {
-                responseBuffer = FileCopyUtils.copyToByteArray(getRawResponseInputStream());
-            }
-            contentLength = responseBuffer.length;
-        }
-        return contentLength > 0;
-    }
+	/*
+	 * Receiving response
+	 */
+	@Override
+	protected final boolean hasResponse() throws IOException {
+		int responseCode = getResponseCode();
+		if (HttpTransportConstants.STATUS_ACCEPTED == responseCode ||
+				HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
+			return false;
+		}
+		long contentLength = getResponseContentLength();
+		if (contentLength < 0) {
+			if (responseBuffer == null) {
+				responseBuffer = FileCopyUtils.copyToByteArray(getRawResponseInputStream());
+			}
+			contentLength = responseBuffer.length;
+		}
+		return contentLength > 0;
+	}
 
-    @Override
-    protected final InputStream getResponseInputStream() throws IOException {
-        InputStream inputStream;
-        if (responseBuffer != null) {
-            inputStream = new ByteArrayInputStream(responseBuffer);
-        }
-        else {
-            inputStream = getRawResponseInputStream();
-        }
-        return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
-    }
+	@Override
+	protected final InputStream getResponseInputStream() throws IOException {
+		InputStream inputStream;
+		if (responseBuffer != null) {
+			inputStream = new ByteArrayInputStream(responseBuffer);
+		}
+		else {
+			inputStream = getRawResponseInputStream();
+		}
+		return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
+	}
 
-    /** Determine whether the response is a GZIP response. */
-    private boolean isGzipResponse() throws IOException {
-        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
-        if (iterator.hasNext()) {
-            String encodingHeader = iterator.next();
-            return encodingHeader.toLowerCase()
-		            .contains(HttpTransportConstants.CONTENT_ENCODING_GZIP);
-        }
-        return false;
-    }
+	/** Determine whether the response is a GZIP response. */
+	private boolean isGzipResponse() throws IOException {
+		Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
+		if (iterator.hasNext()) {
+			String encodingHeader = iterator.next();
+			return encodingHeader.toLowerCase()
+					.contains(HttpTransportConstants.CONTENT_ENCODING_GZIP);
+		}
+		return false;
+	}
 
-    /** Returns the HTTP status code of the response. */
-    protected abstract int getResponseCode() throws IOException;
+	/** Returns the HTTP status code of the response. */
+	protected abstract int getResponseCode() throws IOException;
 
-    /** Returns the HTTP status message of the response. */
-    protected abstract String getResponseMessage() throws IOException;
+	/** Returns the HTTP status message of the response. */
+	protected abstract String getResponseMessage() throws IOException;
 
-    /** Returns the length of the response. */
-    protected abstract long getResponseContentLength() throws IOException;
+	/** Returns the length of the response. */
+	protected abstract long getResponseContentLength() throws IOException;
 
-    /** Returns the raw, possibly compressed input stream to read the response from. */
-    protected abstract InputStream getRawResponseInputStream() throws IOException;
+	/** Returns the raw, possibly compressed input stream to read the response from. */
+	protected abstract InputStream getRawResponseInputStream() throws IOException;
 
-    /*
-     * Faults
-     */
+	/*
+	 * Faults
+	 */
 
-    @Override
-    public final boolean hasFault() throws IOException {
-	    // SOAP 1.1 specifies a 500 status code for faults
-	    // SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other faults
-	    switch (getResponseCode()) {
-		    case HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR:
-			    return isSoap11Response() || isSoap12Response();
-		    case HttpTransportConstants.STATUS_BAD_REQUEST:
-			    return isSoap12Response();
-		    default:
-			    return false;
-	    }
-    }
+	@Override
+	public final boolean hasFault() throws IOException {
+		// SOAP 1.1 specifies a 500 status code for faults
+		// SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other faults
+		switch (getResponseCode()) {
+			case HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR:
+				return isSoap11Response() || isSoap12Response();
+			case HttpTransportConstants.STATUS_BAD_REQUEST:
+				return isSoap12Response();
+			default:
+				return false;
+		}
+	}
 
-    /** Determine whether the response is a SOAP 1.1 message. */
-    private boolean isSoap11Response() throws IOException {
-        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
-        if (iterator.hasNext()) {
-            String contentType = iterator.next().toLowerCase();
-            return contentType.contains("text/xml");
-        }
-        return false;
-    }
+	/** Determine whether the response is a SOAP 1.1 message. */
+	private boolean isSoap11Response() throws IOException {
+		Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
+		if (iterator.hasNext()) {
+			String contentType = iterator.next().toLowerCase();
+			return contentType.contains("text/xml");
+		}
+		return false;
+	}
 
-    /** Determine whether the response is a SOAP 1.1 message. */
-    private boolean isSoap12Response() throws IOException {
-        Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
-        if (iterator.hasNext()) {
-            String contentType = iterator.next().toLowerCase();
-            return contentType.contains("application/soap+xml");
-        }
-        return false;
-    }
+	/** Determine whether the response is a SOAP 1.1 message. */
+	private boolean isSoap12Response() throws IOException {
+		Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_TYPE);
+		if (iterator.hasNext()) {
+			String contentType = iterator.next().toLowerCase();
+			return contentType.contains("application/soap+xml");
+		}
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public final void setFault(boolean fault) {
-    }
+	@Override
+	@Deprecated
+	public final void setFault(boolean fault) {
+	}
 
 	@Override
 	public final void setFaultCode(QName faultCode) throws IOException {

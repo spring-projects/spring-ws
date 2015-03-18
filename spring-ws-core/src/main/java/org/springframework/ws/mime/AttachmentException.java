@@ -28,16 +28,16 @@ import org.springframework.ws.WebServiceMessageException;
 @SuppressWarnings("serial")
 public class AttachmentException extends WebServiceMessageException {
 
-    public AttachmentException(String msg) {
-        super(msg);
-    }
+	public AttachmentException(String msg) {
+		super(msg);
+	}
 
-    public AttachmentException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AttachmentException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public AttachmentException(Throwable ex) {
-        super("Could not access body: " + ex.getMessage(), ex);
-    }
+	public AttachmentException(Throwable ex) {
+		super("Could not access body: " + ex.getMessage(), ex);
+	}
 
 }

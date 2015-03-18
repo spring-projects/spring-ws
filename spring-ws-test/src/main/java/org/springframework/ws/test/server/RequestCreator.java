@@ -30,13 +30,13 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public interface RequestCreator {
 
-    /**
-     * Create a request.
-     *
-     * @param messageFactory the message that can be used to create responses
-     * @throws IOException in case of I/O errors
-     */
-    WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException;
+	/**
+	 * Create a request.
+	 *
+	 * @param messageFactory the message that can be used to create responses
+	 * @throws IOException in case of I/O errors
+	 */
+	WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException;
 
 
 }

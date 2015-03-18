@@ -28,11 +28,11 @@ package org.springframework.ws.soap.security;
 @SuppressWarnings("serial")
 public abstract class WsSecurityValidationException extends WsSecurityException {
 
-    public WsSecurityValidationException(String msg) {
-        super(msg);
-    }
+	public WsSecurityValidationException(String msg) {
+		super(msg);
+	}
 
-    public WsSecurityValidationException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public WsSecurityValidationException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

@@ -43,59 +43,59 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class SimplePasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
-    private Map<String, String> users = new HashMap<String, String>();
+	private Map<String, String> users = new HashMap<String, String>();
 
-    /** Sets the users to validate against. Property names are usernames, property values are passwords. */
-    public void setUsers(Properties users) {
-        for (Map.Entry<Object, Object> entry : users.entrySet()) {
-            if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-                this.users.put((String) entry.getKey(), (String) entry.getValue());
-            }
-        }
-    }
+	/** Sets the users to validate against. Property names are usernames, property values are passwords. */
+	public void setUsers(Properties users) {
+		for (Map.Entry<Object, Object> entry : users.entrySet()) {
+			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+				this.users.put((String) entry.getKey(), (String) entry.getValue());
+			}
+		}
+	}
 
-    public void setUsersMap(Map<String, String> users) {
-        this.users = users;
-    }
+	public void setUsersMap(Map<String, String> users) {
+		this.users = users;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(users, "users is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(users, "users is required");
+	}
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
-            if (passwordCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
-                passwordCallback.setValidator(new SimplePlainTextPasswordValidator());
-            }
-            else if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
-                PasswordValidationCallback.DigestPasswordRequest digestPasswordRequest =
-                        (PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
-                String password = users.get(digestPasswordRequest.getUsername());
-                digestPasswordRequest.setPassword(password);
-                passwordCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
-            }
-        }
-        else if (callback instanceof TimestampValidationCallback) {
-            TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
-            timestampCallback.setValidator(new DefaultTimestampValidator());
-        }
-        else {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof PasswordValidationCallback) {
+			PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
+			if (passwordCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
+				passwordCallback.setValidator(new SimplePlainTextPasswordValidator());
+			}
+			else if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
+				PasswordValidationCallback.DigestPasswordRequest digestPasswordRequest =
+						(PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
+				String password = users.get(digestPasswordRequest.getUsername());
+				digestPasswordRequest.setPassword(password);
+				passwordCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
+			}
+		}
+		else if (callback instanceof TimestampValidationCallback) {
+			TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
+			timestampCallback.setValidator(new DefaultTimestampValidator());
+		}
+		else {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 
-    private class SimplePlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
+	private class SimplePlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            PasswordValidationCallback.PlainTextPasswordRequest plainTextPasswordRequest =
-                    (PasswordValidationCallback.PlainTextPasswordRequest) request;
-            String password = users.get(plainTextPasswordRequest.getUsername());
-            return password != null && password.equals(plainTextPasswordRequest.getPassword());
-        }
-    }
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			PasswordValidationCallback.PlainTextPasswordRequest plainTextPasswordRequest =
+					(PasswordValidationCallback.PlainTextPasswordRequest) request;
+			String password = users.get(plainTextPasswordRequest.getUsername());
+			return password != null && password.equals(plainTextPasswordRequest.getPassword());
+		}
+	}
 }

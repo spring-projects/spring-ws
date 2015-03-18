@@ -32,47 +32,47 @@ import org.springframework.ws.soap.SoapHeaderException;
  */
 class SaajSoapHeaderElement extends SaajSoapElement<SOAPHeaderElement> implements SoapHeaderElement {
 
-    SaajSoapHeaderElement(SOAPHeaderElement headerElement) {
-        super(headerElement);
-    }
+	SaajSoapHeaderElement(SOAPHeaderElement headerElement) {
+		super(headerElement);
+	}
 
-    @Override
-    public Result getResult() throws SoapHeaderException {
-	    return new DOMResult(getSaajElement());
-    }
+	@Override
+	public Result getResult() throws SoapHeaderException {
+		return new DOMResult(getSaajElement());
+	}
 
-    @Override
-    public String getActorOrRole() throws SoapHeaderException {
-	    return getSaajHeaderElement().getActor();
-    }
+	@Override
+	public String getActorOrRole() throws SoapHeaderException {
+		return getSaajHeaderElement().getActor();
+	}
 
-    @Override
-    public void setActorOrRole(String actorOrRole) throws SoapHeaderException {
-	    getSaajHeaderElement().setActor(actorOrRole);
-    }
+	@Override
+	public void setActorOrRole(String actorOrRole) throws SoapHeaderException {
+		getSaajHeaderElement().setActor(actorOrRole);
+	}
 
-    @Override
-    public boolean getMustUnderstand() throws SoapHeaderException {
-	    return getSaajHeaderElement().getMustUnderstand();
-    }
+	@Override
+	public boolean getMustUnderstand() throws SoapHeaderException {
+		return getSaajHeaderElement().getMustUnderstand();
+	}
 
-    @Override
-    public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
-	    getSaajHeaderElement().setMustUnderstand(mustUnderstand);
-    }
+	@Override
+	public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
+		getSaajHeaderElement().setMustUnderstand(mustUnderstand);
+	}
 
-    @Override
-    public String getText() {
-	    return getSaajHeaderElement().getValue();
-    }
+	@Override
+	public String getText() {
+		return getSaajHeaderElement().getValue();
+	}
 
-    @Override
-    public void setText(String content) {
-	    getSaajHeaderElement().setValue(content);
-    }
+	@Override
+	public void setText(String content) {
+		getSaajHeaderElement().setValue(content);
+	}
 
-    protected SOAPHeaderElement getSaajHeaderElement() {
-        return getSaajElement();
-    }
+	protected SOAPHeaderElement getSaajHeaderElement() {
+		return getSaajElement();
+	}
 
 }

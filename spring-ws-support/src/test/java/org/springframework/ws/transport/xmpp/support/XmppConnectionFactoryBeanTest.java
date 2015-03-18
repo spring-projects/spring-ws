@@ -23,26 +23,26 @@ import org.junit.Test;
 /** @author Arjen Poutsma */
 public class XmppConnectionFactoryBeanTest {
 
-    private XmppConnectionFactoryBean factoryBean;
+	private XmppConnectionFactoryBean factoryBean;
 
-    @Before
-    public void createFactoryBean() {
-        factoryBean = new XmppConnectionFactoryBean();
-    }
-    @Test(expected = IllegalArgumentException.class)
-    public void noHost() throws XMPPException {
-        factoryBean.afterPropertiesSet();
-    }
+	@Before
+	public void createFactoryBean() {
+		factoryBean = new XmppConnectionFactoryBean();
+	}
+	@Test(expected = IllegalArgumentException.class)
+	public void noHost() throws XMPPException {
+		factoryBean.afterPropertiesSet();
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void noUsername() throws XMPPException {
-        factoryBean.setHost("jabber.org");
-        factoryBean.afterPropertiesSet();
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void noUsername() throws XMPPException {
+		factoryBean.setHost("jabber.org");
+		factoryBean.afterPropertiesSet();
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void wrongPort() throws XMPPException {
-        factoryBean.setPort(-10);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void wrongPort() throws XMPPException {
+		factoryBean.setPort(-10);
+	}
 
 }

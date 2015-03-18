@@ -54,225 +54,225 @@ import org.springframework.xml.transform.StringResult;
 
 public class XmlRootElementPayloadMethodProcessorTest {
 
-    private XmlRootElementPayloadMethodProcessor processor;
+	private XmlRootElementPayloadMethodProcessor processor;
 
-    private MethodParameter rootElementParameter;
+	private MethodParameter rootElementParameter;
 
-    private MethodParameter typeParameter;
+	private MethodParameter typeParameter;
 
-    private MethodParameter rootElementReturnType;
+	private MethodParameter rootElementReturnType;
 
-    @Before
-    public void setUp() throws Exception {
-        processor = new XmlRootElementPayloadMethodProcessor();
-        rootElementParameter = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), 0);
-        typeParameter = new MethodParameter(getClass().getMethod("type", MyType.class), 0);
-        rootElementReturnType = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), -1);
-    }
+	@Before
+	public void setUp() throws Exception {
+		processor = new XmlRootElementPayloadMethodProcessor();
+		rootElementParameter = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), 0);
+		typeParameter = new MethodParameter(getClass().getMethod("type", MyType.class), 0);
+		rootElementReturnType = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), -1);
+	}
 
-    @Test
-    public void supportsParameter() {
-        assertTrue("processor does not support @XmlRootElement parameter",
-                processor.supportsParameter(rootElementParameter));
-        assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(
-		        typeParameter));
-    }
+	@Test
+	public void supportsParameter() {
+		assertTrue("processor does not support @XmlRootElement parameter",
+				processor.supportsParameter(rootElementParameter));
+		assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(
+				typeParameter));
+	}
 
-    @Test
-    public void supportsReturnType() {
-        assertTrue("processor does not support @XmlRootElement return type",
-		        processor.supportsReturnType(rootElementReturnType));
-    }
+	@Test
+	public void supportsReturnType() {
+		assertTrue("processor does not support @XmlRootElement return type",
+				processor.supportsReturnType(rootElementReturnType));
+	}
 
-    @Test
-    public void resolveArgumentRootElement() throws JAXBException {
-        WebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'><string>Foo</string></root>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+	@Test
+	public void resolveArgumentRootElement() throws JAXBException {
+		WebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'><string>Foo</string></root>");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-        Object result = processor.resolveArgument(messageContext, rootElementParameter);
-        assertTrue("result not a MyRootElement", result instanceof MyRootElement);
-        MyRootElement rootElement = (MyRootElement) result;
-        assertEquals("invalid result", "Foo", rootElement.getString());
-    }
+		Object result = processor.resolveArgument(messageContext, rootElementParameter);
+		assertTrue("result not a MyRootElement", result instanceof MyRootElement);
+		MyRootElement rootElement = (MyRootElement) result;
+		assertEquals("invalid result", "Foo", rootElement.getString());
+	}
 
-    @Test
-    public void resolveArgumentType() throws JAXBException {
-        WebServiceMessage request = new MockWebServiceMessage("<type xmlns='http://springframework.org'><string>Foo</string></type>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+	@Test
+	public void resolveArgumentType() throws JAXBException {
+		WebServiceMessage request = new MockWebServiceMessage("<type xmlns='http://springframework.org'><string>Foo</string></type>");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-        Object result = processor.resolveArgument(messageContext, typeParameter);
-        assertTrue("result not a MyType", result instanceof MyType);
-        MyType type = (MyType) result;
-        assertEquals("invalid result", "Foo", type.getString());
-    }
+		Object result = processor.resolveArgument(messageContext, typeParameter);
+		assertTrue("result not a MyType", result instanceof MyType);
+		MyType type = (MyType) result;
+		assertEquals("invalid result", "Foo", type.getString());
+	}
 
-    @Test
-    public void resolveArgumentFromCustomSAXSource() throws JAXBException {
-        // Create a custom SAXSource that generates an appropriate sequence of events.
-        XMLReader xmlReader = new AbstractXmlReader() {
-            @Override
-            public void parse(String systemId) throws IOException, SAXException {
-                parse();
-            }
-            
-            @Override
-            public void parse(InputSource input) throws IOException, SAXException {
-                parse();
-            }
-            
-            private void parse() throws SAXException {
-                ContentHandler handler = getContentHandler();
-                // <root xmlns='http://springframework.org'><string>Foo</string></root>
-                handler.startDocument();
-                handler.startPrefixMapping("", "http://springframework.org");
-                handler.startElement("http://springframework.org", "root", "root", new AttributesImpl());
-                handler.startElement("http://springframework.org", "string", "string", new AttributesImpl());
-                handler.characters("Foo".toCharArray(), 0, 3);
-                handler.endElement("http://springframework.org", "string", "string");
-                handler.endElement("http://springframework.org", "root", "root");
-                handler.endPrefixMapping("");
-                handler.endDocument();
-            }
-        };
-        final SAXSource source = new SAXSource(xmlReader, new InputSource());
-        
-        // Create a mock WebServiceMessage that returns the SAXSource as payload source.
-        WebServiceMessage request = new WebServiceMessage() {
-            @Override
-            public void writeTo(OutputStream outputStream) throws IOException {
-                throw new UnsupportedOperationException();
-            }
-            
-            @Override
-            public Source getPayloadSource() {
-                return source;
-            }
-            
-            @Override
-            public Result getPayloadResult() {
-                throw new UnsupportedOperationException();
-            }
-        };
-        // Create a message context with that request. Note that the message factory doesn't matter here:
-        // it is required but not used.
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        
-        Object result = processor.resolveArgument(messageContext, rootElementParameter);
-        assertTrue("result not a MyRootElement", result instanceof MyRootElement);
-        MyRootElement rootElement = (MyRootElement) result;
-        assertEquals("invalid result", "Foo", rootElement.getString());
-    }
+	@Test
+	public void resolveArgumentFromCustomSAXSource() throws JAXBException {
+		// Create a custom SAXSource that generates an appropriate sequence of events.
+		XMLReader xmlReader = new AbstractXmlReader() {
+			@Override
+			public void parse(String systemId) throws IOException, SAXException {
+				parse();
+			}
+			
+			@Override
+			public void parse(InputSource input) throws IOException, SAXException {
+				parse();
+			}
+			
+			private void parse() throws SAXException {
+				ContentHandler handler = getContentHandler();
+				// <root xmlns='http://springframework.org'><string>Foo</string></root>
+				handler.startDocument();
+				handler.startPrefixMapping("", "http://springframework.org");
+				handler.startElement("http://springframework.org", "root", "root", new AttributesImpl());
+				handler.startElement("http://springframework.org", "string", "string", new AttributesImpl());
+				handler.characters("Foo".toCharArray(), 0, 3);
+				handler.endElement("http://springframework.org", "string", "string");
+				handler.endElement("http://springframework.org", "root", "root");
+				handler.endPrefixMapping("");
+				handler.endDocument();
+			}
+		};
+		final SAXSource source = new SAXSource(xmlReader, new InputSource());
+		
+		// Create a mock WebServiceMessage that returns the SAXSource as payload source.
+		WebServiceMessage request = new WebServiceMessage() {
+			@Override
+			public void writeTo(OutputStream outputStream) throws IOException {
+				throw new UnsupportedOperationException();
+			}
+			
+			@Override
+			public Source getPayloadSource() {
+				return source;
+			}
+			
+			@Override
+			public Result getPayloadResult() {
+				throw new UnsupportedOperationException();
+			}
+		};
+		// Create a message context with that request. Note that the message factory doesn't matter here:
+		// it is required but not used.
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		
+		Object result = processor.resolveArgument(messageContext, rootElementParameter);
+		assertTrue("result not a MyRootElement", result instanceof MyRootElement);
+		MyRootElement rootElement = (MyRootElement) result;
+		assertEquals("invalid result", "Foo", rootElement.getString());
+	}
 
-    @Test
-    public void handleReturnValue() throws Exception {
-        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	@Test
+	public void handleReturnValue() throws Exception {
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-        MyRootElement rootElement = new MyRootElement();
-        rootElement.setString("Foo");
-        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
-        assertTrue("context has no response", messageContext.hasResponse());
-        MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-        assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
-    }
+		MyRootElement rootElement = new MyRootElement();
+		rootElement.setString("Foo");
+		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		assertTrue("context has no response", messageContext.hasResponse());
+		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
+		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
+	}
 
-    @Test
-    public void handleNullReturnValue() throws Exception {
-        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	@Test
+	public void handleNullReturnValue() throws Exception {
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-        MyRootElement rootElement = null;
-        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
-        assertFalse("context has response", messageContext.hasResponse());
-    }
+		MyRootElement rootElement = null;
+		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		assertFalse("context has response", messageContext.hasResponse());
+	}
 
-    @Test
-    public void handleReturnValueAxiom() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        MessageContext messageContext = new DefaultMessageContext(messageFactory);
+	@Test
+	public void handleReturnValueAxiom() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		MessageContext messageContext = new DefaultMessageContext(messageFactory);
 
-        MyRootElement rootElement = new MyRootElement();
-        rootElement.setString("Foo");
+		MyRootElement rootElement = new MyRootElement();
+		rootElement.setString("Foo");
 
-        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
-        assertTrue("context has no response", messageContext.hasResponse());
-        AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
+		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		assertTrue("context has no response", messageContext.hasResponse());
+		AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
 
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult payloadResult = new StringResult();
-        transformer.transform(response.getPayloadSource(), payloadResult);
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		StringResult payloadResult = new StringResult();
+		transformer.transform(response.getPayloadSource(), payloadResult);
 
-        assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
-                payloadResult.toString());
+		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
+				payloadResult.toString());
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        response.writeTo(bos);
-        String messageResult = bos.toString("UTF-8");
-        
-        assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
-                "<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-                "</soapenv:Body></soapenv:Envelope>", messageResult);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		response.writeTo(bos);
+		String messageResult = bos.toString("UTF-8");
+		
+		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
+				"</soapenv:Body></soapenv:Envelope>", messageResult);
 
-    }
+	}
 
-    @Test
-    public void handleReturnValueAxiomNoPayloadCaching() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        MessageContext messageContext = new DefaultMessageContext(messageFactory);
+	@Test
+	public void handleReturnValueAxiomNoPayloadCaching() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		MessageContext messageContext = new DefaultMessageContext(messageFactory);
 
-        MyRootElement rootElement = new MyRootElement();
-        rootElement.setString("Foo");
+		MyRootElement rootElement = new MyRootElement();
+		rootElement.setString("Foo");
 
-        processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
-        assertTrue("context has no response", messageContext.hasResponse());
-        AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
+		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		assertTrue("context has no response", messageContext.hasResponse());
+		AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        response.writeTo(bos);
-        String messageResult = bos.toString("UTF-8");
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		response.writeTo(bos);
+		String messageResult = bos.toString("UTF-8");
 
-        assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
-                "<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-                "</soapenv:Body></soapenv:Envelope>", messageResult);
+		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
+				"</soapenv:Body></soapenv:Envelope>", messageResult);
 
-    }
+	}
 
-    @ResponsePayload
-    public MyRootElement rootElement(@RequestPayload MyRootElement rootElement) {
-        return rootElement;
-    }
+	@ResponsePayload
+	public MyRootElement rootElement(@RequestPayload MyRootElement rootElement) {
+		return rootElement;
+	}
 
-    public void type(@RequestPayload MyType type) {
-    }
+	public void type(@RequestPayload MyType type) {
+	}
 
-    @XmlRootElement(name = "root", namespace = "http://springframework.org")
-    public static class MyRootElement {
+	@XmlRootElement(name = "root", namespace = "http://springframework.org")
+	public static class MyRootElement {
 
-        private String string;
+		private String string;
 
-        @XmlElement(name = "string", namespace = "http://springframework.org")
-        public String getString() {
-            return string;
-        }
+		@XmlElement(name = "string", namespace = "http://springframework.org")
+		public String getString() {
+			return string;
+		}
 
-        public void setString(String string) {
-            this.string = string;
-        }
-    }
+		public void setString(String string) {
+			this.string = string;
+		}
+	}
 
-    @XmlType(name = "root", namespace = "http://springframework.org")
-    public static class MyType {
+	@XmlType(name = "root", namespace = "http://springframework.org")
+	public static class MyType {
 
-        private String string;
+		private String string;
 
-        @XmlElement(name = "string", namespace = "http://springframework.org")
-        public String getString() {
-            return string;
-        }
+		@XmlElement(name = "string", namespace = "http://springframework.org")
+		public String getString() {
+			return string;
+		}
 
-        public void setString(String string) {
-            this.string = string;
-        }
-    }
+		public void setString(String string) {
+			this.string = string;
+		}
+	}
 
 
 }

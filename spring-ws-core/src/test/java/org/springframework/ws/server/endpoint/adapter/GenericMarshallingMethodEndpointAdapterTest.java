@@ -38,177 +38,177 @@ import static org.easymock.EasyMock.*;
 
 public class GenericMarshallingMethodEndpointAdapterTest {
 
-    private GenericMarshallingMethodEndpointAdapter adapter;
+	private GenericMarshallingMethodEndpointAdapter adapter;
 
-    private boolean noResponseInvoked;
+	private boolean noResponseInvoked;
 
-    private GenericMarshaller marshallerMock;
+	private GenericMarshaller marshallerMock;
 
-    private GenericUnmarshaller unmarshallerMock;
+	private GenericUnmarshaller unmarshallerMock;
 
-    private boolean responseInvoked;
+	private boolean responseInvoked;
 
-    @Before
-    public void setUp() throws Exception {
-        adapter = new GenericMarshallingMethodEndpointAdapter();
-        marshallerMock = createMock(GenericMarshaller.class);
-        adapter.setMarshaller(marshallerMock);
-        unmarshallerMock = createMock(GenericUnmarshaller.class);
-        adapter.setUnmarshaller(unmarshallerMock);
-        adapter.afterPropertiesSet();
-    }
+	@Before
+	public void setUp() throws Exception {
+		adapter = new GenericMarshallingMethodEndpointAdapter();
+		marshallerMock = createMock(GenericMarshaller.class);
+		adapter.setMarshaller(marshallerMock);
+		unmarshallerMock = createMock(GenericUnmarshaller.class);
+		adapter.setUnmarshaller(unmarshallerMock);
+		adapter.afterPropertiesSet();
+	}
 
-    @Test
-    public void testNoResponse() throws Exception {
-        WebServiceMessage messageMock = createMock(WebServiceMessage.class);
-        expect(messageMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
-        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
-        MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
+	@Test
+	public void testNoResponse() throws Exception {
+		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
+		expect(messageMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
+		WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+		MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
 
-        Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-        expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
+		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
 
-        replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
 
-        Assert.assertFalse("Method invoked", noResponseInvoked);
-        adapter.invoke(messageContext, methodEndpoint);
-        Assert.assertTrue("Method not invoked", noResponseInvoked);
+		Assert.assertFalse("Method invoked", noResponseInvoked);
+		adapter.invoke(messageContext, methodEndpoint);
+		Assert.assertTrue("Method not invoked", noResponseInvoked);
 
-        verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
-    }
+		verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+	}
 
-    @Test
-    public void testNoRequestPayload() throws Exception {
-        WebServiceMessage messageMock = createMock(WebServiceMessage.class);
-        expect(messageMock.getPayloadSource()).andReturn(null);
-        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
-        MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
+	@Test
+	public void testNoRequestPayload() throws Exception {
+		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
+		expect(messageMock.getPayloadSource()).andReturn(null);
+		WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+		MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
 
-        Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
 
-        replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
 
-        Assert.assertFalse("Method invoked", noResponseInvoked);
-        adapter.invoke(messageContext, methodEndpoint);
-        Assert.assertTrue("Method not invoked", noResponseInvoked);
+		Assert.assertFalse("Method invoked", noResponseInvoked);
+		adapter.invoke(messageContext, methodEndpoint);
+		Assert.assertTrue("Method not invoked", noResponseInvoked);
 
-        verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
-    }
+		verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+	}
 
-    @Test
-    public void testResponse() throws Exception {
-        WebServiceMessage requestMock = createMock(WebServiceMessage.class);
-        expect(requestMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
-        WebServiceMessage responseMock = createMock(WebServiceMessage.class);
-        expect(responseMock.getPayloadResult()).andReturn(new StringResult());
-        WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
-        expect(factoryMock.createWebServiceMessage()).andReturn(responseMock);
-        MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
+	@Test
+	public void testResponse() throws Exception {
+		WebServiceMessage requestMock = createMock(WebServiceMessage.class);
+		expect(requestMock.getPayloadSource()).andReturn(new StringSource("<request/>"));
+		WebServiceMessage responseMock = createMock(WebServiceMessage.class);
+		expect(responseMock.getPayloadResult()).andReturn(new StringResult());
+		WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+		expect(factoryMock.createWebServiceMessage()).andReturn(responseMock);
+		MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
 
-        Method response = getClass().getMethod("response", MyGenericType.class);
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
-        expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
-        marshallerMock.marshal(isA(MyGenericType.class), isA(Result.class));
+		Method response = getClass().getMethod("response", MyGenericType.class);
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
+		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
+		marshallerMock.marshal(isA(MyGenericType.class), isA(Result.class));
 
-        replay(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
+		replay(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
 
-        Assert.assertFalse("Method invoked", responseInvoked);
-        adapter.invoke(messageContext, methodEndpoint);
-        Assert.assertTrue("Method not invoked", responseInvoked);
+		Assert.assertFalse("Method invoked", responseInvoked);
+		adapter.invoke(messageContext, methodEndpoint);
+		Assert.assertTrue("Method not invoked", responseInvoked);
 
-        verify(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
-    }
+		verify(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
+	}
 
-    @Test
-    public void testSupportedNoResponse() throws NoSuchMethodException {
-        Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-        expect(unmarshallerMock.supports(noResponse.getGenericParameterTypes()[0])).andReturn(true);
+	@Test
+	public void testSupportedNoResponse() throws NoSuchMethodException {
+		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
+		expect(unmarshallerMock.supports(noResponse.getGenericParameterTypes()[0])).andReturn(true);
 
-        replay(marshallerMock, unmarshallerMock);
+		replay(marshallerMock, unmarshallerMock);
 
-        Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+		Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
 
-        verify(marshallerMock, unmarshallerMock);
-    }
+		verify(marshallerMock, unmarshallerMock);
+	}
 
-    @Test
-    public void testSupportedResponse() throws NoSuchMethodException {
-        Method response = getClass().getMethod("response", MyGenericType.class);
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
+	@Test
+	public void testSupportedResponse() throws NoSuchMethodException {
+		Method response = getClass().getMethod("response", MyGenericType.class);
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
 
-        expect(unmarshallerMock.supports(response.getGenericParameterTypes()[0])).andReturn(true);
-        expect(marshallerMock.supports(response.getGenericReturnType())).andReturn(true);
+		expect(unmarshallerMock.supports(response.getGenericParameterTypes()[0])).andReturn(true);
+		expect(marshallerMock.supports(response.getGenericReturnType())).andReturn(true);
 
-        replay(marshallerMock, unmarshallerMock);
+		replay(marshallerMock, unmarshallerMock);
 
-        Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+		Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
 
-        verify(marshallerMock, unmarshallerMock);
-    }
+		verify(marshallerMock, unmarshallerMock);
+	}
 
-    @Test
-    public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
+	@Test
+	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+		Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
 
-        replay(marshallerMock, unmarshallerMock);
+		replay(marshallerMock, unmarshallerMock);
 
-        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+		Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
-        verify(marshallerMock, unmarshallerMock);
-    }
+		verify(marshallerMock, unmarshallerMock);
+	}
 
-    @Test
-    public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-        expect(unmarshallerMock.supports(unsupported.getGenericParameterTypes()[0])).andReturn(false);
-        expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(true);
+	@Test
+	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
+		expect(unmarshallerMock.supports(unsupported.getGenericParameterTypes()[0])).andReturn(false);
+		expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(true);
 
-        replay(marshallerMock, unmarshallerMock);
+		replay(marshallerMock, unmarshallerMock);
 
-        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+		Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
-        verify(marshallerMock, unmarshallerMock);
-    }
+		verify(marshallerMock, unmarshallerMock);
+	}
 
-    @Test
-    public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
-        Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-        expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(false);
+	@Test
+	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
+		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
+		expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(false);
 
-        replay(marshallerMock, unmarshallerMock);
+		replay(marshallerMock, unmarshallerMock);
 
-        Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
+		Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this, unsupported)));
 
-        verify(marshallerMock, unmarshallerMock);
-    }
+		verify(marshallerMock, unmarshallerMock);
+	}
 
-    public void noResponse(MyGenericType<MyType> type) {
-        noResponseInvoked = true;
+	public void noResponse(MyGenericType<MyType> type) {
+		noResponseInvoked = true;
 
-    }
+	}
 
-    public MyGenericType<MyType> response(MyGenericType<MyType> type) {
-        responseInvoked = true;
-        return type;
-    }
+	public MyGenericType<MyType> response(MyGenericType<MyType> type) {
+		responseInvoked = true;
+		return type;
+	}
 
-    public void unsupportedMultipleParams(String s1, String s2) {
-    }
+	public void unsupportedMultipleParams(String s1, String s2) {
+	}
 
-    public String unsupportedWrongParam(String s) {
-        return s;
-    }
+	public String unsupportedWrongParam(String s) {
+		return s;
+	}
 
-    private static class MyType {
+	private static class MyType {
 
-    }
+	}
 
-    private static class MyGenericType<T> {
+	private static class MyGenericType<T> {
 
-    }
+	}
 
 
 }

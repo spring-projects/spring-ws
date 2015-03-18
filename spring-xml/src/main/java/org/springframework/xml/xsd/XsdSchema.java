@@ -29,24 +29,24 @@ import org.springframework.xml.validation.XmlValidator;
  */
 public interface XsdSchema {
 
-    /**
-     * Returns the target namespace of this schema.
-     *
-     * @return the target namespace
-     */
-    String getTargetNamespace();
+	/**
+	 * Returns the target namespace of this schema.
+	 *
+	 * @return the target namespace
+	 */
+	String getTargetNamespace();
 
-    /**
-     * Returns the {@link Source} of the schema.
-     *
-     * @return the source of this XSD schema
-     */
-    Source getSource();
+	/**
+	 * Returns the {@link Source} of the schema.
+	 *
+	 * @return the source of this XSD schema
+	 */
+	Source getSource();
 
-    /**
-     * Creates a {@link XmlValidator} based on the schema.
-     *
-     * @return a validator for this schema
-     */
-    XmlValidator createValidator();
+	/**
+	 * Creates a {@link XmlValidator} based on the schema.
+	 *
+	 * @return a validator for this schema
+	 */
+	XmlValidator createValidator();
 }

@@ -29,31 +29,31 @@ import org.junit.Test;
 
 public class SpringUsernamePasswordCallbackHandlerTest {
 
-    private SpringUsernamePasswordCallbackHandler handler;
+	private SpringUsernamePasswordCallbackHandler handler;
 
-    @Before
-    public void setUp() throws Exception {
-        handler = new SpringUsernamePasswordCallbackHandler();
-        Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+	@Before
+	public void setUp() throws Exception {
+		handler = new SpringUsernamePasswordCallbackHandler();
+		Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        SecurityContextHolder.clearContext();
-    }
+	@After
+	public void tearDown() throws Exception {
+		SecurityContextHolder.clearContext();
+	}
 
-    @Test
-    public void testUsernameCallback() throws Exception {
-        UsernameCallback usernameCallback = new UsernameCallback();
-        handler.handleInternal(usernameCallback);
-        Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
-    }
+	@Test
+	public void testUsernameCallback() throws Exception {
+		UsernameCallback usernameCallback = new UsernameCallback();
+		handler.handleInternal(usernameCallback);
+		Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+	}
 
-    @Test
-    public void testPasswordCallback() throws Exception {
-        PasswordCallback passwordCallback = new PasswordCallback();
-        handler.handleInternal(passwordCallback);
-        Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
-    }
+	@Test
+	public void testPasswordCallback() throws Exception {
+		PasswordCallback passwordCallback = new PasswordCallback();
+		handler.handleInternal(passwordCallback);
+		Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+	}
 }

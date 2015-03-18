@@ -30,14 +30,14 @@ import org.springframework.ws.WebServiceMessage;
  */
 class UriMatcher implements RequestMatcher {
 
-    private final URI expected;
+	private final URI expected;
 
-    UriMatcher(URI expected) {
-        this.expected = expected;
-    }
+	UriMatcher(URI expected) {
+		this.expected = expected;
+	}
 
-    @Override
-    public void match(URI actual, WebServiceMessage request) {
-        assertEquals("Unexpected connection", expected, actual, "Payload", request.getPayloadSource());
-    }
+	@Override
+	public void match(URI actual, WebServiceMessage request) {
+		assertEquals("Unexpected connection", expected, actual, "Payload", request.getPayloadSource());
+	}
 }

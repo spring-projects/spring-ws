@@ -20,13 +20,13 @@ import java.util.Map;
 
 public class Jaxp13XPathExpressionFactoryTest extends AbstractXPathExpressionFactoryTestCase {
 
-    @Override
-    protected XPathExpression createXPathExpression(String expression) {
-        return Jaxp13XPathExpressionFactory.createXPathExpression(expression);
-    }
+	@Override
+	protected XPathExpression createXPathExpression(String expression) {
+		return Jaxp13XPathExpressionFactory.createXPathExpression(expression);
+	}
 
-    @Override
-    protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
-        return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
-    }
+	@Override
+	protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
+		return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
+	}
 }

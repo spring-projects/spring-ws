@@ -38,82 +38,82 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface SoapBody extends SoapElement {
 
-    /**
-     * Returns a {@code Source} that represents the contents of the body.
-     *
-     * @return the message contents
-     * @see WebServiceMessage#getPayloadSource()
-     */
-    Source getPayloadSource();
+	/**
+	 * Returns a {@code Source} that represents the contents of the body.
+	 *
+	 * @return the message contents
+	 * @see WebServiceMessage#getPayloadSource()
+	 */
+	Source getPayloadSource();
 
-    /**
-     * Returns a {@code Result} that represents the contents of the body.
-     *
-     * <p>Calling this method removes the current content of the body.
-     *
-     * @return the message contents
-     * @see WebServiceMessage#getPayloadResult()
-     */
-    Result getPayloadResult();
+	/**
+	 * Returns a {@code Result} that represents the contents of the body.
+	 *
+	 * <p>Calling this method removes the current content of the body.
+	 *
+	 * @return the message contents
+	 * @see WebServiceMessage#getPayloadResult()
+	 */
+	Result getPayloadResult();
 
-    /**
-     * Adds a {@code MustUnderstand} fault to the body. A {@code MustUnderstand} is returned when a SOAP
-     * header with a {@code MustUnderstand} attribute is not understood.
-     *
-     * <p>Adding a fault removes the current content of the body.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @return the created {@code SoapFault}
-     */
-    SoapFault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	/**
+	 * Adds a {@code MustUnderstand} fault to the body. A {@code MustUnderstand} is returned when a SOAP
+	 * header with a {@code MustUnderstand} attribute is not understood.
+	 *
+	 * <p>Adding a fault removes the current content of the body.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @return the created {@code SoapFault}
+	 */
+	SoapFault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    /**
-     * Adds a {@code Client}/{@code Sender} fault to the body. For SOAP 1.1, this adds a fault with a
-     * {@code Client} fault code. For SOAP 1.2, this adds a fault with a {@code Sender} code.
-     *
-     * <p>Adding a fault removes the current content of the body.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @return the created {@code SoapFault}
-     */
-    SoapFault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	/**
+	 * Adds a {@code Client}/{@code Sender} fault to the body. For SOAP 1.1, this adds a fault with a
+	 * {@code Client} fault code. For SOAP 1.2, this adds a fault with a {@code Sender} code.
+	 *
+	 * <p>Adding a fault removes the current content of the body.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @return the created {@code SoapFault}
+	 */
+	SoapFault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    /**
-     * Adds a {@code Server}/{@code Receiver} fault to the body. For SOAP 1.1, this adds a fault with a
-     * {@code Server} fault code. For SOAP 1.2, this adds a fault with a {@code Receiver} code.
-     *
-     * <p>Adding a fault removes the current content of the body.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @return the created {@code SoapFault}
-     */
-    SoapFault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	/**
+	 * Adds a {@code Server}/{@code Receiver} fault to the body. For SOAP 1.1, this adds a fault with a
+	 * {@code Server} fault code. For SOAP 1.2, this adds a fault with a {@code Receiver} code.
+	 *
+	 * <p>Adding a fault removes the current content of the body.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @return the created {@code SoapFault}
+	 */
+	SoapFault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    /**
-     * Adds a {@code VersionMismatch} fault to the body.
-     *
-     * <p>Adding a fault removes the current content of the body.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @return the created {@code SoapFault}
-     */
-    SoapFault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	/**
+	 * Adds a {@code VersionMismatch} fault to the body.
+	 *
+	 * <p>Adding a fault removes the current content of the body.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @return the created {@code SoapFault}
+	 */
+	SoapFault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    /**
-     * Indicates whether this body has a {@code SoapFault}.
-     *
-     * @return {@code true} if the body has a fault; {@code false} otherwise
-     */
-    boolean hasFault();
+	/**
+	 * Indicates whether this body has a {@code SoapFault}.
+	 *
+	 * @return {@code true} if the body has a fault; {@code false} otherwise
+	 */
+	boolean hasFault();
 
-    /**
-     * Returns the {@code SoapFault} of this body.
-     *
-     * @return the {@code SoapFault}, or {@code null} if none is present
-     */
-    SoapFault getFault();
+	/**
+	 * Returns the {@code SoapFault} of this body.
+	 *
+	 * @return the {@code SoapFault}, or {@code null} if none is present
+	 */
+	SoapFault getFault();
 }

@@ -29,140 +29,140 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public abstract class AbstractWebServiceConnection implements WebServiceConnection {
 
-    private TransportInputStream tis;
+	private TransportInputStream tis;
 
-    private TransportOutputStream tos;
+	private TransportOutputStream tos;
 
-    private boolean closed = false;
+	private boolean closed = false;
 
-    @Override
-    public final void send(WebServiceMessage message) throws IOException {
-        checkClosed();
-        onSendBeforeWrite(message);
-        tos = createTransportOutputStream();
-        if (tos == null) {
-            return;
-        }
-        message.writeTo(tos);
-        tos.flush();
-        onSendAfterWrite(message);
-    }
+	@Override
+	public final void send(WebServiceMessage message) throws IOException {
+		checkClosed();
+		onSendBeforeWrite(message);
+		tos = createTransportOutputStream();
+		if (tos == null) {
+			return;
+		}
+		message.writeTo(tos);
+		tos.flush();
+		onSendAfterWrite(message);
+	}
 
-    /**
-     * Called before the given message has been written to the {@code TransportOutputStream}. Called from {@link
-     * #send(WebServiceMessage)}.
-     *
-     * <p>Default implementation does nothing.
-     *
-     * @param message the message
-     * @throws IOException when an I/O exception occurs
-     */
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-    }
+	/**
+	 * Called before the given message has been written to the {@code TransportOutputStream}. Called from {@link
+	 * #send(WebServiceMessage)}.
+	 *
+	 * <p>Default implementation does nothing.
+	 *
+	 * @param message the message
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+	}
 
-    /**
-     * Returns a {@code TransportOutputStream} for the given message. Called from {@link
-     * #send(WebServiceMessage)}.
-     *
-     * @return the output stream
-     * @throws IOException when an I/O exception occurs
-     */
-    protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
+	/**
+	 * Returns a {@code TransportOutputStream} for the given message. Called from {@link
+	 * #send(WebServiceMessage)}.
+	 *
+	 * @return the output stream
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
 
-    /**
-     * Called after the given message has been written to the {@code TransportOutputStream}. Called from {@link
-     * #send(WebServiceMessage)}.
-     *
-     * <p>Default implementation does nothing.
-     *
-     * @param message the message
-     * @throws IOException when an I/O exception occurs
-     */
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-    }
+	/**
+	 * Called after the given message has been written to the {@code TransportOutputStream}. Called from {@link
+	 * #send(WebServiceMessage)}.
+	 *
+	 * <p>Default implementation does nothing.
+	 *
+	 * @param message the message
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+	}
 
-    @Override
-    public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
-        checkClosed();
-        onReceiveBeforeRead();
-        tis = createTransportInputStream();
-        if (tis == null) {
-            return null;
-        }
-        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-        onReceiveAfterRead(message);
-        return message;
-    }
+	@Override
+	public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+		checkClosed();
+		onReceiveBeforeRead();
+		tis = createTransportInputStream();
+		if (tis == null) {
+			return null;
+		}
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		onReceiveAfterRead(message);
+		return message;
+	}
 
-    /**
-     * Called before a message has been read from the {@code TransportInputStream}. Called from {@link
-     * #receive(WebServiceMessageFactory)}.
-     *
-     * <p>Default implementation does nothing.
-     *
-     * @throws IOException when an I/O exception occurs
-     */
-    protected void onReceiveBeforeRead() throws IOException {
-    }
+	/**
+	 * Called before a message has been read from the {@code TransportInputStream}. Called from {@link
+	 * #receive(WebServiceMessageFactory)}.
+	 *
+	 * <p>Default implementation does nothing.
+	 *
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected void onReceiveBeforeRead() throws IOException {
+	}
 
-    /**
-     * Returns a {@code TransportInputStream}. Called from {@link #receive(WebServiceMessageFactory)}.
-     *
-     * @return the input stream, or {@code null} if no response can be read
-     * @throws IOException when an I/O exception occurs
-     */
-    protected abstract TransportInputStream createTransportInputStream() throws IOException;
+	/**
+	 * Returns a {@code TransportInputStream}. Called from {@link #receive(WebServiceMessageFactory)}.
+	 *
+	 * @return the input stream, or {@code null} if no response can be read
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected abstract TransportInputStream createTransportInputStream() throws IOException;
 
-    /**
-     * Called when the given message has been read from the {@code TransportInputStream}. Called from {@link
-     * #receive(WebServiceMessageFactory)}.
-     *
-     * <p>Default implementation does nothing.
-     *
-     * @param message the message
-     * @throws IOException when an I/O exception occurs
-     */
-    protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {
-    }
+	/**
+	 * Called when the given message has been read from the {@code TransportInputStream}. Called from {@link
+	 * #receive(WebServiceMessageFactory)}.
+	 *
+	 * <p>Default implementation does nothing.
+	 *
+	 * @param message the message
+	 * @throws IOException when an I/O exception occurs
+	 */
+	protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {
+	}
 
-    @Override
-    public final void close() throws IOException {
-        IOException ioex = null;
-        if (tis != null) {
-            try {
-                tis.close();
-            }
-            catch (IOException ex) {
-                ioex = ex;
-            }
-        }
-        if (tos != null) {
-            try {
-                tos.close();
-            }
-            catch (IOException ex) {
-                ioex = ex;
-            }
-        }
-        onClose();
-        closed = true;
-        if (ioex != null) {
-            throw ioex;
-        }
-    }
+	@Override
+	public final void close() throws IOException {
+		IOException ioex = null;
+		if (tis != null) {
+			try {
+				tis.close();
+			}
+			catch (IOException ex) {
+				ioex = ex;
+			}
+		}
+		if (tos != null) {
+			try {
+				tos.close();
+			}
+			catch (IOException ex) {
+				ioex = ex;
+			}
+		}
+		onClose();
+		closed = true;
+		if (ioex != null) {
+			throw ioex;
+		}
+	}
 
-    private void checkClosed() {
-        if (closed) {
-            throw new IllegalStateException("Connection has been closed and cannot be reused.");
-        }
-    }
+	private void checkClosed() {
+		if (closed) {
+			throw new IllegalStateException("Connection has been closed and cannot be reused.");
+		}
+	}
 
-    /**
-     * Template method invoked from {@link #close()}. Default implementation is empty.
-     *
-     * @throws IOException if an I/O error occurs when closing this connection
-     */
-    protected void onClose() throws IOException {
-    }
+	/**
+	 * Template method invoked from {@link #close()}. Default implementation is empty.
+	 *
+	 * @throws IOException if an I/O error occurs when closing this connection
+	 */
+	protected void onClose() throws IOException {
+	}
 
 }

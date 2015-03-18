@@ -31,15 +31,15 @@ import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
  */
 class WebServiceMessageMatcherAdapter implements RequestMatcher {
 
-    private final WebServiceMessageMatcher adaptee;
+	private final WebServiceMessageMatcher adaptee;
 
-    WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
-        Assert.notNull(adaptee, "'adaptee' must not be null");
-        this.adaptee = adaptee;
-    }
+	WebServiceMessageMatcherAdapter(WebServiceMessageMatcher adaptee) {
+		Assert.notNull(adaptee, "'adaptee' must not be null");
+		this.adaptee = adaptee;
+	}
 
-    @Override
-    public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-        adaptee.match(request);
-    }
+	@Override
+	public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
+		adaptee.match(request);
+	}
 }

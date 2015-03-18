@@ -29,6 +29,6 @@ import javax.wsdl.WSDLException;
  */
 public interface BindingsProvider {
 
-    void addBindings(Definition definition) throws WSDLException;
+	void addBindings(Definition definition) throws WSDLException;
 
 }

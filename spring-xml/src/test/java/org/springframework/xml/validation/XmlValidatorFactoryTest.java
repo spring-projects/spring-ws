@@ -31,87 +31,87 @@ import org.springframework.core.io.Resource;
 
 public class XmlValidatorFactoryTest {
 
-    @Test
-    public void testCreateValidator() throws Exception {
-        Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
-        XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-        Assert.assertNotNull("No validator returned", validator);
-    }
+	@Test
+	public void testCreateValidator() throws Exception {
+		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
+		XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+		Assert.assertNotNull("No validator returned", validator);
+	}
 
-    @Test
-    public void testNonExistentResource() throws Exception {
-        Resource resource = new NonExistentResource();
-        try {
-            XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-            Assert.fail("IllegalArgumentException expected");
-        }
-        catch (IllegalArgumentException ex) {
-            // expected
-        }
-    }
+	@Test
+	public void testNonExistentResource() throws Exception {
+		Resource resource = new NonExistentResource();
+		try {
+			XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+			Assert.fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException ex) {
+			// expected
+		}
+	}
 
-    @Test
-    public void testInvalidSchemaLanguage() throws Exception {
-        Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
-        try {
-            XmlValidatorFactory.createValidator(resource, "bla");
-            Assert.fail("IllegalArgumentException expected");
-        }
-        catch (IllegalArgumentException ex) {
-            // expected
-        }
-    }
+	@Test
+	public void testInvalidSchemaLanguage() throws Exception {
+		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
+		try {
+			XmlValidatorFactory.createValidator(resource, "bla");
+			Assert.fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException ex) {
+			// expected
+		}
+	}
 
-    private static class NonExistentResource extends AbstractResource {
+	private static class NonExistentResource extends AbstractResource {
 
-        @Override
-        public Resource createRelative(String relativePath) throws IOException {
-            throw new IOException();
-        }
+		@Override
+		public Resource createRelative(String relativePath) throws IOException {
+			throw new IOException();
+		}
 
-        @Override
-        public boolean exists() {
-            return false;
-        }
+		@Override
+		public boolean exists() {
+			return false;
+		}
 
-        @Override
-        public String getDescription() {
-            return null;
-        }
+		@Override
+		public String getDescription() {
+			return null;
+		}
 
-        @Override
-        public File getFile() throws IOException {
-            throw new IOException();
-        }
+		@Override
+		public File getFile() throws IOException {
+			throw new IOException();
+		}
 
-        @Override
-        public String getFilename() {
-            return null;
-        }
+		@Override
+		public String getFilename() {
+			return null;
+		}
 
-        @Override
-        public URL getURL() throws IOException {
-            throw new IOException();
-        }
+		@Override
+		public URL getURL() throws IOException {
+			throw new IOException();
+		}
 
-        @Override
-        public URI getURI() throws IOException {
-            throw new IOException();
-        }
+		@Override
+		public URI getURI() throws IOException {
+			throw new IOException();
+		}
 
-        @Override
-        public boolean isOpen() {
-            return false;
-        }
+		@Override
+		public boolean isOpen() {
+			return false;
+		}
 
-        @Override
-        public InputStream getInputStream() throws IOException {
-            throw new IOException();
-        }
+		@Override
+		public InputStream getInputStream() throws IOException {
+			throw new IOException();
+		}
 
-        @Override
-        public boolean isReadable() {
-            return false;
-        }
-    }
+		@Override
+		public boolean isReadable() {
+			return false;
+		}
+	}
 }

@@ -29,21 +29,21 @@ import org.springframework.ws.transport.TransportException;
 @SuppressWarnings("serial")
 public class JmsTransportException extends TransportException {
 
-    private final JMSException jmsException;
+	private final JMSException jmsException;
 
-    public JmsTransportException(String msg, JMSException ex) {
-        super(msg + ": " + ex.getMessage());
-        initCause(ex);
-        jmsException = ex;
-    }
+	public JmsTransportException(String msg, JMSException ex) {
+		super(msg + ": " + ex.getMessage());
+		initCause(ex);
+		jmsException = ex;
+	}
 
-    public JmsTransportException(JMSException ex) {
-        super(ex.getMessage());
-        initCause(ex);
-        jmsException = ex;
-    }
+	public JmsTransportException(JMSException ex) {
+		super(ex.getMessage());
+		initCause(ex);
+		jmsException = ex;
+	}
 
-    public JMSException getJmsException() {
-        return jmsException;
-    }
+	public JMSException getJmsException() {
+		return jmsException;
+	}
 }

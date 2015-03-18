@@ -35,38 +35,38 @@ import org.springframework.ws.context.MessageContext;
  */
 public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMethodProcessor {
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        Class<?> parameterType = parameter.getParameterType();
-        return parameterType.isAnnotationPresent(XmlRootElement.class) ||
-                parameterType.isAnnotationPresent(XmlType.class);
-    }
-
-    @Override
-    public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
-        Class<?> parameterType = parameter.getParameterType();
-
-        if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
-            return unmarshalFromRequestPayload(messageContext, parameterType);
-        }
-        else {
-            JAXBElement<?> element = unmarshalElementFromRequestPayload(messageContext, parameterType);
-            return element != null ? element.getValue() : null;
-        }
-    }
-
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        Class<?> parameterType = returnType.getParameterType();
-        return parameterType.isAnnotationPresent(XmlRootElement.class);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		Class<?> parameterType = parameter.getParameterType();
+		return parameterType.isAnnotationPresent(XmlRootElement.class) ||
+				parameterType.isAnnotationPresent(XmlType.class);
+	}
 
 	@Override
-    protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-            throws JAXBException {
-        Class<?> parameterType = returnType.getParameterType();
-        marshalToResponsePayload(messageContext, parameterType, returnValue);
-    }
+	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
+		Class<?> parameterType = parameter.getParameterType();
+
+		if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
+			return unmarshalFromRequestPayload(messageContext, parameterType);
+		}
+		else {
+			JAXBElement<?> element = unmarshalElementFromRequestPayload(messageContext, parameterType);
+			return element != null ? element.getValue() : null;
+		}
+	}
+
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		Class<?> parameterType = returnType.getParameterType();
+		return parameterType.isAnnotationPresent(XmlRootElement.class);
+	}
+
+	@Override
+	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+			throws JAXBException {
+		Class<?> parameterType = returnType.getParameterType();
+		marshalToResponsePayload(messageContext, parameterType, returnValue);
+	}
 
 
 }

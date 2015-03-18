@@ -28,7 +28,7 @@ public class AxiomStreamingSoap11WebServiceTemplateIntegrationTest
 	@Override
 	public SoapMessageFactory createMessageFactory() throws Exception {
 		AxiomSoapMessageFactory axiomFactory = new AxiomSoapMessageFactory();
-	    axiomFactory.setPayloadCaching(false);
+		axiomFactory.setPayloadCaching(false);
 		return axiomFactory;
 	}
 }

@@ -29,16 +29,16 @@ import org.springframework.ws.transport.tcp.TcpTransportConstants;
  */
 public abstract class TcpTransportUtils {
 
-    /**
-     * Converts the given Socket into a <code>tcp</code> URI.
-     *
-     * @param socket the socket
-     * @return a tcp URI
-     */
-    public static URI toUri(Socket socket) throws URISyntaxException {
-        String host = socket.getInetAddress().getHostName();
-        return new URI(TcpTransportConstants.TCP_URI_SCHEME, null, host, socket.getPort(), null, null, null);
+	/**
+	 * Converts the given Socket into a <code>tcp</code> URI.
+	 *
+	 * @param socket the socket
+	 * @return a tcp URI
+	 */
+	public static URI toUri(Socket socket) throws URISyntaxException {
+		String host = socket.getInetAddress().getHostName();
+		return new URI(TcpTransportConstants.TCP_URI_SCHEME, null, host, socket.getPort(), null, null, null);
 
-    }
+	}
 
 }

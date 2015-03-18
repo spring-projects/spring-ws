@@ -38,130 +38,130 @@ import org.springframework.util.Assert;
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 
-    private Map<String, String> prefixToNamespaceUri = new LinkedHashMap<String, String>();
+	private Map<String, String> prefixToNamespaceUri = new LinkedHashMap<String, String>();
 
-    private Map<String, Set<String>> namespaceUriToPrefixes = new LinkedHashMap<String, Set<String>>();
+	private Map<String, Set<String>> namespaceUriToPrefixes = new LinkedHashMap<String, Set<String>>();
 
-    @Override
-    public String getNamespaceURI(String prefix) {
-        Assert.notNull(prefix, "prefix is null");
-        if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-            return XMLConstants.XML_NS_URI;
-        }
-        else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
-            return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-        }
-        else if (prefixToNamespaceUri.containsKey(prefix)) {
-            return prefixToNamespaceUri.get(prefix);
-        }
-        return XMLConstants.NULL_NS_URI;
-    }
+	@Override
+	public String getNamespaceURI(String prefix) {
+		Assert.notNull(prefix, "prefix is null");
+		if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+			return XMLConstants.XML_NS_URI;
+		}
+		else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+			return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+		}
+		else if (prefixToNamespaceUri.containsKey(prefix)) {
+			return prefixToNamespaceUri.get(prefix);
+		}
+		return XMLConstants.NULL_NS_URI;
+	}
 
-    @Override
-    public String getPrefix(String namespaceUri) {
-        Iterator<String> iterator = getPrefixes(namespaceUri);
-        return iterator.hasNext() ? iterator.next() : null;
-    }
+	@Override
+	public String getPrefix(String namespaceUri) {
+		Iterator<String> iterator = getPrefixes(namespaceUri);
+		return iterator.hasNext() ? iterator.next() : null;
+	}
 
-    @Override
-    public Iterator<String> getPrefixes(String namespaceUri) {
-        Set<String> prefixes = getPrefixesInternal(namespaceUri);
-        prefixes = Collections.unmodifiableSet(prefixes);
-        return prefixes.iterator();
-    }
+	@Override
+	public Iterator<String> getPrefixes(String namespaceUri) {
+		Set<String> prefixes = getPrefixesInternal(namespaceUri);
+		prefixes = Collections.unmodifiableSet(prefixes);
+		return prefixes.iterator();
+	}
 
-    /**
-     * Sets the bindings for this namespace context. The supplied map must consist of string key value pairs.
-     *
-     * @param bindings the bindings
-     */
-    public void setBindings(Map<String, String> bindings) {
-        for (Map.Entry<String, String> entry : bindings.entrySet()) {
-            bindNamespaceUri(entry.getKey(), entry.getValue());
-        }
-    }
+	/**
+	 * Sets the bindings for this namespace context. The supplied map must consist of string key value pairs.
+	 *
+	 * @param bindings the bindings
+	 */
+	public void setBindings(Map<String, String> bindings) {
+		for (Map.Entry<String, String> entry : bindings.entrySet()) {
+			bindNamespaceUri(entry.getKey(), entry.getValue());
+		}
+	}
 
-    /**
-     * Binds the given namespace as default namespace.
-     *
-     * @param namespaceUri the namespace uri
-     */
-    public void bindDefaultNamespaceUri(String namespaceUri) {
-        bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, namespaceUri);
-    }
+	/**
+	 * Binds the given namespace as default namespace.
+	 *
+	 * @param namespaceUri the namespace uri
+	 */
+	public void bindDefaultNamespaceUri(String namespaceUri) {
+		bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, namespaceUri);
+	}
 
-    /**
-     * Binds the given prefix to the given namespace.
-     *
-     * @param prefix       the namespace prefix
-     * @param namespaceUri the namespace uri
-     */
-    public void bindNamespaceUri(String prefix, String namespaceUri) {
-        Assert.notNull(prefix, "No prefix given");
-        Assert.notNull(namespaceUri, "No namespaceUri given");
-        if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-            Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
-                    "\" bound to namespace \"" + namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
-        } else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
-            Assert.isTrue(XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
-                    "\" bound to namespace \"" + namespaceUri + "\" (should be \"" +
-                    XMLConstants.XMLNS_ATTRIBUTE_NS_URI + "\")");
-        }
-        else {
-            prefixToNamespaceUri.put(prefix, namespaceUri);
-            getPrefixesInternal(namespaceUri).add(prefix);
-        }
-    }
+	/**
+	 * Binds the given prefix to the given namespace.
+	 *
+	 * @param prefix	   the namespace prefix
+	 * @param namespaceUri the namespace uri
+	 */
+	public void bindNamespaceUri(String prefix, String namespaceUri) {
+		Assert.notNull(prefix, "No prefix given");
+		Assert.notNull(namespaceUri, "No namespaceUri given");
+		if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+			Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
+					"\" bound to namespace \"" + namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
+		} else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+			Assert.isTrue(XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri), "Prefix \"" + prefix +
+					"\" bound to namespace \"" + namespaceUri + "\" (should be \"" +
+					XMLConstants.XMLNS_ATTRIBUTE_NS_URI + "\")");
+		}
+		else {
+			prefixToNamespaceUri.put(prefix, namespaceUri);
+			getPrefixesInternal(namespaceUri).add(prefix);
+		}
+	}
 
-    /** Removes all declared prefixes. */
-    public void clear() {
-        prefixToNamespaceUri.clear();
-        namespaceUriToPrefixes.clear();
-    }
+	/** Removes all declared prefixes. */
+	public void clear() {
+		prefixToNamespaceUri.clear();
+		namespaceUriToPrefixes.clear();
+	}
 
-    /**
-     * Returns all declared prefixes.
-     *
-     * @return the declared prefixes
-     */
-    public Iterator<String> getBoundPrefixes() {
-        Set<String> prefixes = new HashSet<String>(prefixToNamespaceUri.keySet());
-        prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
-        prefixes = Collections.unmodifiableSet(prefixes);
-        return prefixes.iterator();
-    }
+	/**
+	 * Returns all declared prefixes.
+	 *
+	 * @return the declared prefixes
+	 */
+	public Iterator<String> getBoundPrefixes() {
+		Set<String> prefixes = new HashSet<String>(prefixToNamespaceUri.keySet());
+		prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
+		prefixes = Collections.unmodifiableSet(prefixes);
+		return prefixes.iterator();
+	}
 
-    private Set<String> getPrefixesInternal(String namespaceUri) {
-        if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
-            return Collections.singleton(XMLConstants.XML_NS_PREFIX);
-        }
-        else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
-            return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
-        }
-        else {
-            Set<String> set = namespaceUriToPrefixes.get(namespaceUri);
-            if (set == null) {
-                set = new LinkedHashSet<String>();
-                namespaceUriToPrefixes.put(namespaceUri, set);
-            }
-            return set;
-        }
-    }
+	private Set<String> getPrefixesInternal(String namespaceUri) {
+		if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
+			return Collections.singleton(XMLConstants.XML_NS_PREFIX);
+		}
+		else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
+			return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
+		}
+		else {
+			Set<String> set = namespaceUriToPrefixes.get(namespaceUri);
+			if (set == null) {
+				set = new LinkedHashSet<String>();
+				namespaceUriToPrefixes.put(namespaceUri, set);
+			}
+			return set;
+		}
+	}
 
-    /**
-     * Removes the given prefix from this context.
-     *
-     * @param prefix the prefix to be removed
-     */
-    public void removeBinding(String prefix) {
-        String namespaceUri = prefixToNamespaceUri.remove(prefix);
-        if (namespaceUri != null) {
-            Set<String> prefixes = getPrefixesInternal(namespaceUri);
-            prefixes.remove(prefix);
-        }
-    }
+	/**
+	 * Removes the given prefix from this context.
+	 *
+	 * @param prefix the prefix to be removed
+	 */
+	public void removeBinding(String prefix) {
+		String namespaceUri = prefixToNamespaceUri.remove(prefix);
+		if (namespaceUri != null) {
+			Set<String> prefixes = getPrefixesInternal(namespaceUri);
+			prefixes.remove(prefix);
+		}
+	}
 
-    public boolean hasBinding(String prefix) {
-        return prefixToNamespaceUri.containsKey(prefix);
-    }
+	public boolean hasBinding(String prefix) {
+		return prefixToNamespaceUri.containsKey(prefix);
+	}
 }

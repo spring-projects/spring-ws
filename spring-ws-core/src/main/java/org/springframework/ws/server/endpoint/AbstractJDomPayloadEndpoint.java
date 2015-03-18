@@ -45,63 +45,63 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 @Deprecated
 public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
-    private boolean alwaysTransform = false;
+	private boolean alwaysTransform = false;
 
-    /**
-     * Set if the request {@link Source} should always be transformed into a new {@link JDOMResult}.
-     *
-     * <p>Default is {@code false}, which is faster.
-     */
-    public void setAlwaysTransform(boolean alwaysTransform) {
-        this.alwaysTransform = alwaysTransform;
-    }
+	/**
+	 * Set if the request {@link Source} should always be transformed into a new {@link JDOMResult}.
+	 *
+	 * <p>Default is {@code false}, which is faster.
+	 */
+	public void setAlwaysTransform(boolean alwaysTransform) {
+		this.alwaysTransform = alwaysTransform;
+	}
 
-    @Override
-    public final Source invoke(Source request) throws Exception {
-        Element requestElement = getDocumentElement(request);
-        Element responseElement = invokeInternal(requestElement);
-        return responseElement != null ? new JDOMSource(responseElement) : null;
-    }
+	@Override
+	public final Source invoke(Source request) throws Exception {
+		Element requestElement = getDocumentElement(request);
+		Element responseElement = invokeInternal(requestElement);
+		return responseElement != null ? new JDOMSource(responseElement) : null;
+	}
 
-    /**
-     * Returns the payload element of the given source.
-     *
-     * <p>Default implementation checks whether the source is a {@link DOMSource}, and uses a {@link DOMBuilder} to create
-     * a JDOM {@link Element}. In all other cases, or when {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is
-     * {@code true}, the source is transformed into a {@link JDOMResult}, which is more expensive. If the passed source
-     * is {@code null}, {@code null} is returned.
-     *
-     * @param source the source to return the root element of; can be {@code null}
-     * @return the document element
-     * @throws TransformerException in case of errors
-     */
-    protected Element getDocumentElement(Source source) throws TransformerException {
-        if (source == null) {
-            return null;
-        }
-        if (!alwaysTransform && source instanceof DOMSource) {
-            Node node = ((DOMSource) source).getNode();
-            DOMBuilder domBuilder = new DOMBuilder();
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                return domBuilder.build((org.w3c.dom.Element) node);
-            }
-            else if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                Document document = domBuilder.build((org.w3c.dom.Document) node);
-                return document.getRootElement();
-            }
-        }
-        // we have no other option than to transform
-        JDOMResult jdomResult = new JDOMResult();
-        transform(source, jdomResult);
-        return jdomResult.getDocument().getRootElement();
-    }
+	/**
+	 * Returns the payload element of the given source.
+	 *
+	 * <p>Default implementation checks whether the source is a {@link DOMSource}, and uses a {@link DOMBuilder} to create
+	 * a JDOM {@link Element}. In all other cases, or when {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is
+	 * {@code true}, the source is transformed into a {@link JDOMResult}, which is more expensive. If the passed source
+	 * is {@code null}, {@code null} is returned.
+	 *
+	 * @param source the source to return the root element of; can be {@code null}
+	 * @return the document element
+	 * @throws TransformerException in case of errors
+	 */
+	protected Element getDocumentElement(Source source) throws TransformerException {
+		if (source == null) {
+			return null;
+		}
+		if (!alwaysTransform && source instanceof DOMSource) {
+			Node node = ((DOMSource) source).getNode();
+			DOMBuilder domBuilder = new DOMBuilder();
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				return domBuilder.build((org.w3c.dom.Element) node);
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				Document document = domBuilder.build((org.w3c.dom.Document) node);
+				return document.getRootElement();
+			}
+		}
+		// we have no other option than to transform
+		JDOMResult jdomResult = new JDOMResult();
+		transform(source, jdomResult);
+		return jdomResult.getDocument().getRootElement();
+	}
 
-    /**
-     * Template method. Subclasses must implement this. Offers the request payload as a JDOM {@code Element}, and
-     * allows subclasses to return a response {@code Element}.
-     *
-     * @param requestElement the contents of the SOAP message as JDOM element
-     * @return the response element. Can be {@code null} to specify no response.
-     */
-    protected abstract Element invokeInternal(Element requestElement) throws Exception;
+	/**
+	 * Template method. Subclasses must implement this. Offers the request payload as a JDOM {@code Element}, and
+	 * allows subclasses to return a response {@code Element}.
+	 *
+	 * @param requestElement the contents of the SOAP message as JDOM element
+	 * @return the response element. Can be {@code null} to specify no response.
+	 */
+	protected abstract Element invokeInternal(Element requestElement) throws Exception;
 }

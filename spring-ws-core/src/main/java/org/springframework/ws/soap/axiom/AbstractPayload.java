@@ -37,54 +37,54 @@ import org.apache.axiom.soap.SOAPFactory;
  */
 abstract class AbstractPayload extends Payload {
 
-    private final SOAPBody axiomBody;
+	private final SOAPBody axiomBody;
 
-    private final SOAPFactory axiomFactory;
+	private final SOAPFactory axiomFactory;
 
-    protected AbstractPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomBody, "'axiomBody' must not be null");
-        Assert.notNull(axiomFactory, "'axiomFactory' must not be null");
-        this.axiomBody = axiomBody;
-        this.axiomFactory = axiomFactory;
-    }
+	protected AbstractPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
+		Assert.notNull(axiomBody, "'axiomBody' must not be null");
+		Assert.notNull(axiomFactory, "'axiomFactory' must not be null");
+		this.axiomBody = axiomBody;
+		this.axiomFactory = axiomFactory;
+	}
 
-    @Override
-    public final Source getSource() {
-        try {
-            OMElement payloadElement = getPayloadElement();
-            if (payloadElement != null) {
-                XMLStreamReader streamReader = getStreamReader(payloadElement);
-                return StaxUtils.createCustomStaxSource(streamReader);
-            }
-            else {
-                return null;
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapBodyException(ex);
-        }
-    }
+	@Override
+	public final Source getSource() {
+		try {
+			OMElement payloadElement = getPayloadElement();
+			if (payloadElement != null) {
+				XMLStreamReader streamReader = getStreamReader(payloadElement);
+				return StaxUtils.createCustomStaxSource(streamReader);
+			}
+			else {
+				return null;
+			}
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapBodyException(ex);
+		}
+	}
 
-    protected abstract XMLStreamReader getStreamReader(OMElement payloadElement);
+	protected abstract XMLStreamReader getStreamReader(OMElement payloadElement);
 
-    @Override
-    public final Result getResult() {
-        AxiomUtils.removeContents(getAxiomBody());
-        return getResultInternal();
-    }
+	@Override
+	public final Result getResult() {
+		AxiomUtils.removeContents(getAxiomBody());
+		return getResultInternal();
+	}
 
-    protected abstract Result getResultInternal();
+	protected abstract Result getResultInternal();
 
-    public SOAPFactory getAxiomFactory() {
-        return axiomFactory;
-    }
+	public SOAPFactory getAxiomFactory() {
+		return axiomFactory;
+	}
 
-    protected SOAPBody getAxiomBody() {
-        return axiomBody;
-    }
+	protected SOAPBody getAxiomBody() {
+		return axiomBody;
+	}
 
-    protected OMElement getPayloadElement() throws OMException {
-        return getAxiomBody().getFirstElement();
-    }
+	protected OMElement getPayloadElement() throws OMException {
+		return getAxiomBody().getFirstElement();
+	}
 
 }

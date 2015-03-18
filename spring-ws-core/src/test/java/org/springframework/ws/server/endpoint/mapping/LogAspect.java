@@ -26,29 +26,29 @@ import org.aspectj.lang.annotation.Pointcut;
 @Aspect
 public class LogAspect {
 
-    private static final Log logger = LogFactory.getLog(LogAspect.class);
+	private static final Log logger = LogFactory.getLog(LogAspect.class);
 
-    private boolean logInvoked = false;
+	private boolean logInvoked = false;
 
-    public boolean isLogInvoked() {
-        return logInvoked;
-    }
+	public boolean isLogInvoked() {
+		return logInvoked;
+	}
 
-    @Pointcut("@annotation(org.springframework.ws.server.endpoint.mapping.Log)")
-    private void loggedMethod() {
+	@Pointcut("@annotation(org.springframework.ws.server.endpoint.mapping.Log)")
+	private void loggedMethod() {
 
-    }
+	}
 
-    @Around("loggedMethod()")
-    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
-        logInvoked = true;
-        logger.info("Before: " + joinPoint.getSignature());
-        try {
-            return joinPoint.proceed();
-        }
-        finally {
-            logger.info("After: " + joinPoint.getSignature());
-        }
-    }
+	@Around("loggedMethod()")
+	public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+		logInvoked = true;
+		logger.info("Before: " + joinPoint.getSignature());
+		try {
+			return joinPoint.proceed();
+		}
+		finally {
+			logger.info("After: " + joinPoint.getSignature());
+		}
+	}
 
 }

@@ -44,214 +44,214 @@ import static org.easymock.EasyMock.*;
 
 public class SoapMessageDispatcherTest {
 
-    private SoapMessageDispatcher dispatcher;
+	private SoapMessageDispatcher dispatcher;
 
-    private SoapEndpointInterceptor interceptorMock;
+	private SoapEndpointInterceptor interceptorMock;
 
-    @Before
-    public void setUp() throws Exception {
-        interceptorMock = createMock(SoapEndpointInterceptor.class);
-        dispatcher = new SoapMessageDispatcher();
-    }
+	@Before
+	public void setUp() throws Exception {
+		interceptorMock = createMock(SoapEndpointInterceptor.class);
+		dispatcher = new SoapMessageDispatcher();
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersUnderstoodSoap11() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header =
-                request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
-        header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
-        header.setMustUnderstand(true);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+	@Test
+	public void testProcessMustUnderstandHeadersUnderstoodSoap11() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header =
+				request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
+		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
+		header.setMustUnderstand(true);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain =
-                new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
+		SoapEndpointInvocationChain chain =
+				new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertTrue("Header not understood", result);
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertTrue("Header not understood", result);
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersUnderstoodSoap12() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header =
-                request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
-        header.setMustUnderstand(true);
-        header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+	@Test
+	public void testProcessMustUnderstandHeadersUnderstoodSoap12() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header =
+				request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
+		header.setMustUnderstand(true);
+		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain =
-                new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
+		SoapEndpointInvocationChain chain =
+				new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertTrue("Header not understood", result);
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertTrue("Header not understood", result);
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersNotUnderstoodSoap11() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header = request.getSOAPHeader()
-                .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
-        header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
-        header.setMustUnderstand(true);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
+	@Test
+	public void testProcessMustUnderstandHeadersNotUnderstoodSoap11() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header = request.getSOAPHeader()
+				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
+		header.setMustUnderstand(true);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain =
-                new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
+		SoapEndpointInvocationChain chain =
+				new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertFalse("Header understood", result);
-        Assert.assertTrue("Context has no response", context.hasResponse());
-        SoapBody responseBody = ((SoapMessage) context.getResponse()).getSoapBody();
-        Assert.assertTrue("Response body has no fault", responseBody.hasFault());
-        Soap11Fault fault = (Soap11Fault) responseBody.getFault();
-        Assert.assertEquals("Invalid fault code", new QName(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE, "MustUnderstand"),
-                fault.getFaultCode());
-        Assert.assertEquals("Invalid fault string", SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING,
-                fault.getFaultStringOrReason());
-        Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertFalse("Header understood", result);
+		Assert.assertTrue("Context has no response", context.hasResponse());
+		SoapBody responseBody = ((SoapMessage) context.getResponse()).getSoapBody();
+		Assert.assertTrue("Response body has no fault", responseBody.hasFault());
+		Soap11Fault fault = (Soap11Fault) responseBody.getFault();
+		Assert.assertEquals("Invalid fault code", new QName(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE, "MustUnderstand"),
+				fault.getFaultCode());
+		Assert.assertEquals("Invalid fault string", SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING,
+				fault.getFaultStringOrReason());
+		Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersNotUnderstoodSoap12() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header = request.getSOAPHeader()
-                .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
-        header.setMustUnderstand(true);
-        header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
+	@Test
+	public void testProcessMustUnderstandHeadersNotUnderstoodSoap12() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header = request.getSOAPHeader()
+				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+		header.setMustUnderstand(true);
+		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain =
-                new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
+		SoapEndpointInvocationChain chain =
+				new SoapEndpointInvocationChain(new Object(), new SoapEndpointInterceptor[]{interceptorMock});
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertFalse("Header understood", result);
-        Assert.assertTrue("Context has no response", context.hasResponse());
-        SoapMessage response = (SoapMessage) context.getResponse();
-        SoapBody responseBody = response.getSoapBody();
-        Assert.assertTrue("Response body has no fault", responseBody.hasFault());
-        Soap12Fault fault = (Soap12Fault) responseBody.getFault();
-        Assert.assertEquals("Invalid fault code", new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "MustUnderstand"),
-                fault.getFaultCode());
-        Assert.assertEquals("Invalid fault string", SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING,
-                fault.getFaultReasonText(Locale.ENGLISH));
-        SoapHeader responseHeader = response.getSoapHeader();
-        Iterator<SoapHeaderElement> iterator = responseHeader.examineAllHeaderElements();
-        Assert.assertTrue("Response header has no elements", iterator.hasNext());
-        SoapHeaderElement headerElement = iterator.next();
-        Assert.assertEquals("No NotUnderstood header",
-                new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "NotUnderstood"), headerElement.getName());
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertFalse("Header understood", result);
+		Assert.assertTrue("Context has no response", context.hasResponse());
+		SoapMessage response = (SoapMessage) context.getResponse();
+		SoapBody responseBody = response.getSoapBody();
+		Assert.assertTrue("Response body has no fault", responseBody.hasFault());
+		Soap12Fault fault = (Soap12Fault) responseBody.getFault();
+		Assert.assertEquals("Invalid fault code", new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "MustUnderstand"),
+				fault.getFaultCode());
+		Assert.assertEquals("Invalid fault string", SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING,
+				fault.getFaultReasonText(Locale.ENGLISH));
+		SoapHeader responseHeader = response.getSoapHeader();
+		Iterator<SoapHeaderElement> iterator = responseHeader.examineAllHeaderElements();
+		Assert.assertTrue("Response header has no elements", iterator.hasNext());
+		SoapHeaderElement headerElement = iterator.next();
+		Assert.assertEquals("No NotUnderstood header",
+				new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "NotUnderstood"), headerElement.getName());
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersForActorSoap11() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header = request.getSOAPHeader()
-                .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
-        String headerActor = "http://www/springframework.org/role";
-        header.setActor(headerActor);
-        header.setMustUnderstand(true);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+	@Test
+	public void testProcessMustUnderstandHeadersForActorSoap11() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header = request.getSOAPHeader()
+				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+		String headerActor = "http://www/springframework.org/role";
+		header.setActor(headerActor);
+		header.setMustUnderstand(true);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-                new SoapEndpointInterceptor[]{interceptorMock}, new String[]{headerActor}, true);
+		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
+				new SoapEndpointInterceptor[]{interceptorMock}, new String[]{headerActor}, true);
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertTrue("actor-specific header not understood", result);
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertTrue("actor-specific header not understood", result);
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersForRoleSoap12() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header = request.getSOAPHeader()
-                .addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
-        String headerRole = "http://www/springframework.org/role";
-        header.setRole(headerRole);
-        header.setMustUnderstand(true);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+	@Test
+	public void testProcessMustUnderstandHeadersForRoleSoap12() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header = request.getSOAPHeader()
+				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+		String headerRole = "http://www/springframework.org/role";
+		header.setRole(headerRole);
+		header.setMustUnderstand(true);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-        replay(interceptorMock);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-                new SoapEndpointInterceptor[]{interceptorMock}, new String[]{headerRole}, true);
+		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
+				new SoapEndpointInterceptor[]{interceptorMock}, new String[]{headerRole}, true);
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertTrue("role-specific header not understood", result);
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertTrue("role-specific header not understood", result);
 
-        verify(interceptorMock);
-    }
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessNoHeader() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        request.getSOAPHeader().detachNode();
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        replay(interceptorMock);
+	@Test
+	public void testProcessNoHeader() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		request.getSOAPHeader().detachNode();
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-                new SoapEndpointInterceptor[]{interceptorMock}, new String[]{"role"}, true);
+		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
+				new SoapEndpointInterceptor[]{interceptorMock}, new String[]{"role"}, true);
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertTrue("Invalid result", result);
-        verify(interceptorMock);
-    }
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertTrue("Invalid result", result);
+		verify(interceptorMock);
+	}
 
-    @Test
-    public void testProcessMustUnderstandHeadersNoInterceptors() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPHeaderElement header =
-                request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
-        header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
-        header.setMustUnderstand(true);
-        SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
-        MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-        replay(interceptorMock);
+	@Test
+	public void testProcessMustUnderstandHeadersNoInterceptors() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPHeaderElement header =
+				request.getSOAPHeader().addHeaderElement(new QName("http://www.springframework.org", "Header"));
+		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
+		header.setMustUnderstand(true);
+		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
+		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
+		replay(interceptorMock);
 
-        SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(), null);
+		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(), null);
 
-        boolean result = dispatcher.handleRequest(chain, context);
-        Assert.assertFalse("Header understood", result);
-        verify(interceptorMock);
-    }
+		boolean result = dispatcher.handleRequest(chain, context);
+		Assert.assertFalse("Header understood", result);
+		verify(interceptorMock);
+	}
 
 }

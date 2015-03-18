@@ -53,69 +53,69 @@ import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
  */
 public class SpringCertificateValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
-    private boolean ignoreFailure = false;
+	private boolean ignoreFailure = false;
 
-    /** Sets the Spring Security authentication manager. Required. */
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+	/** Sets the Spring Security authentication manager. Required. */
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
 
-    public void setIgnoreFailure(boolean ignoreFailure) {
-        this.ignoreFailure = ignoreFailure;
-    }
+	public void setIgnoreFailure(boolean ignoreFailure) {
+		this.ignoreFailure = ignoreFailure;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(authenticationManager, "authenticationManager is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(authenticationManager, "authenticationManager is required");
+	}
 
-    /**
-     * Handles  {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
-     * others
-     *
-     * @throws javax.security.auth.callback.UnsupportedCallbackException
-     *          when the callback is not supported
-     */
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof CertificateValidationCallback) {
-            ((CertificateValidationCallback) callback).setValidator(new SpringSecurityCertificateValidator());
-        }
-        else if (callback instanceof CleanupCallback) {
-            SecurityContextHolder.clearContext();
-        }
-        else {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	/**
+	 * Handles	{@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
+	 * others
+	 *
+	 * @throws javax.security.auth.callback.UnsupportedCallbackException
+	 *			when the callback is not supported
+	 */
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof CertificateValidationCallback) {
+			((CertificateValidationCallback) callback).setValidator(new SpringSecurityCertificateValidator());
+		}
+		else if (callback instanceof CleanupCallback) {
+			SecurityContextHolder.clearContext();
+		}
+		else {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 
-    private class SpringSecurityCertificateValidator implements CertificateValidationCallback.CertificateValidator {
+	private class SpringSecurityCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
-        @Override
-        public boolean validate(X509Certificate certificate)
-                throws CertificateValidationCallback.CertificateValidationException {
-            boolean result;
-            try {
-                Authentication authResult =
-                        authenticationManager.authenticate(new X509AuthenticationToken(certificate));
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication request for certificate with DN [" +
-                            certificate.getSubjectX500Principal().getName() + "] successful");
-                }
-                SecurityContextHolder.getContext().setAuthentication(authResult);
-                return true;
-            }
-            catch (AuthenticationException failed) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication request for certificate with DN [" +
-                            certificate.getSubjectX500Principal().getName() + "] failed: " + failed.toString());
-                }
-                SecurityContextHolder.clearContext();
-                result = ignoreFailure;
-            }
-            return result;
-        }
-    }
+		@Override
+		public boolean validate(X509Certificate certificate)
+				throws CertificateValidationCallback.CertificateValidationException {
+			boolean result;
+			try {
+				Authentication authResult =
+						authenticationManager.authenticate(new X509AuthenticationToken(certificate));
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication request for certificate with DN [" +
+							certificate.getSubjectX500Principal().getName() + "] successful");
+				}
+				SecurityContextHolder.getContext().setAuthentication(authResult);
+				return true;
+			}
+			catch (AuthenticationException failed) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication request for certificate with DN [" +
+							certificate.getSubjectX500Principal().getName() + "] failed: " + failed.toString());
+				}
+				SecurityContextHolder.clearContext();
+				result = ignoreFailure;
+			}
+			return result;
+		}
+	}
 }

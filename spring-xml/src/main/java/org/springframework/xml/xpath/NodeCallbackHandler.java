@@ -33,12 +33,12 @@ import org.w3c.dom.Node;
  */
 public interface NodeCallbackHandler {
 
-    /**
-     * Processed a single node.
-     *
-     * @param node the node to map
-     * @throws DOMException in case of DOM errors
-     */
-    void processNode(Node node) throws DOMException;
+	/**
+	 * Processed a single node.
+	 *
+	 * @param node the node to map
+	 * @throws DOMException in case of DOM errors
+	 */
+	void processNode(Node node) throws DOMException;
 
 }

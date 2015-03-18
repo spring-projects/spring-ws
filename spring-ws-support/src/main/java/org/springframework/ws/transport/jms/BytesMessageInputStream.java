@@ -32,48 +32,48 @@ import org.springframework.util.Assert;
  */
 class BytesMessageInputStream extends InputStream {
 
-    private final BytesMessage message;
+	private final BytesMessage message;
 
-    BytesMessageInputStream(BytesMessage message) {
-        Assert.notNull(message, "'message' must not be null");
-        this.message = message;
-    }
+	BytesMessageInputStream(BytesMessage message) {
+		Assert.notNull(message, "'message' must not be null");
+		this.message = message;
+	}
 
-    @Override
-    public int read(byte b[]) throws IOException {
-        try {
-            return message.readBytes(b);
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
+	@Override
+	public int read(byte b[]) throws IOException {
+		try {
+			return message.readBytes(b);
+		}
+		catch (JMSException ex) {
+			throw new JmsTransportException(ex);
+		}
+	}
 
-    @Override
-    public int read(byte b[], int off, int len) throws IOException {
-        if (off == 0) {
-            try {
-                return message.readBytes(b, len);
-            }
-            catch (JMSException ex) {
-                throw new JmsTransportException(ex);
-            }
-        }
-        else {
-            return super.read(b, off, len);
-        }
-    }
+	@Override
+	public int read(byte b[], int off, int len) throws IOException {
+		if (off == 0) {
+			try {
+				return message.readBytes(b, len);
+			}
+			catch (JMSException ex) {
+				throw new JmsTransportException(ex);
+			}
+		}
+		else {
+			return super.read(b, off, len);
+		}
+	}
 
-    @Override
-    public int read() throws IOException {
-        try {
-            return message.readByte();
-        }
-        catch (MessageEOFException ex) {
-            return -1;
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
+	@Override
+	public int read() throws IOException {
+		try {
+			return message.readByte();
+		}
+		catch (MessageEOFException ex) {
+			return -1;
+		}
+		catch (JMSException ex) {
+			throw new JmsTransportException(ex);
+		}
+	}
 }

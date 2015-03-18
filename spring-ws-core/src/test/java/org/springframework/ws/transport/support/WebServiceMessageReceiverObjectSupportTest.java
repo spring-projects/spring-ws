@@ -33,96 +33,96 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 public class WebServiceMessageReceiverObjectSupportTest {
 
-    private WebServiceMessageReceiverObjectSupport receiverSupport;
+	private WebServiceMessageReceiverObjectSupport receiverSupport;
 
-    private FaultAwareWebServiceConnection connectionMock;
+	private FaultAwareWebServiceConnection connectionMock;
 
-    private MockWebServiceMessageFactory messageFactory;
+	private MockWebServiceMessageFactory messageFactory;
 
-    private MockWebServiceMessage request;
+	private MockWebServiceMessage request;
 
-    @Before
-    public void setUp() throws Exception {
-        receiverSupport = new MyReceiverSupport();
-        messageFactory = new MockWebServiceMessageFactory();
-        receiverSupport.setMessageFactory(messageFactory);
-        connectionMock = createStrictMock(FaultAwareWebServiceConnection.class);
-        request = new MockWebServiceMessage();
-    }
+	@Before
+	public void setUp() throws Exception {
+		receiverSupport = new MyReceiverSupport();
+		messageFactory = new MockWebServiceMessageFactory();
+		receiverSupport.setMessageFactory(messageFactory);
+		connectionMock = createStrictMock(FaultAwareWebServiceConnection.class);
+		request = new MockWebServiceMessage();
+	}
 
-    @Test
-    public void handleConnectionResponse() throws Exception {
-        expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-        expect(connectionMock.receive(messageFactory)).andReturn(request);
-        connectionMock.setFaultCode(null);
-        connectionMock.send(isA(WebServiceMessage.class));
-        connectionMock.close();
+	@Test
+	public void handleConnectionResponse() throws Exception {
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.receive(messageFactory)).andReturn(request);
+		connectionMock.setFaultCode(null);
+		connectionMock.send(isA(WebServiceMessage.class));
+		connectionMock.close();
 
-        replay(connectionMock);
+		replay(connectionMock);
 
-        WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
+		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
-            @Override
-            public void receive(MessageContext messageContext) throws Exception {
-                Assert.assertNotNull("No message context", messageContext);
-                messageContext.getResponse();
-            }
-        };
+			@Override
+			public void receive(MessageContext messageContext) throws Exception {
+				Assert.assertNotNull("No message context", messageContext);
+				messageContext.getResponse();
+			}
+		};
 
-        receiverSupport.handleConnection(connectionMock, receiver);
+		receiverSupport.handleConnection(connectionMock, receiver);
 
-        verify(connectionMock);
-    }
+		verify(connectionMock);
+	}
 
-    @Test
-    public void handleConnectionFaultResponse() throws Exception {
-	    final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
+	@Test
+	public void handleConnectionFaultResponse() throws Exception {
+		final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
 
-	    expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-        expect(connectionMock.receive(messageFactory)).andReturn(request);
-        connectionMock.setFaultCode(faultCode);
-        connectionMock.send(isA(WebServiceMessage.class));
-        connectionMock.close();
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.receive(messageFactory)).andReturn(request);
+		connectionMock.setFaultCode(faultCode);
+		connectionMock.send(isA(WebServiceMessage.class));
+		connectionMock.close();
 
-        replay(connectionMock);
+		replay(connectionMock);
 
-        WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
+		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
-            @Override
-            public void receive(MessageContext messageContext) throws Exception {
-                Assert.assertNotNull("No message context", messageContext);
-                MockWebServiceMessage response =
-		                (MockWebServiceMessage) messageContext.getResponse();
-	            response.setFaultCode(faultCode);
-            }
-        };
+			@Override
+			public void receive(MessageContext messageContext) throws Exception {
+				Assert.assertNotNull("No message context", messageContext);
+				MockWebServiceMessage response =
+						(MockWebServiceMessage) messageContext.getResponse();
+				response.setFaultCode(faultCode);
+			}
+		};
 
-        receiverSupport.handleConnection(connectionMock, receiver);
+		receiverSupport.handleConnection(connectionMock, receiver);
 
-        verify(connectionMock);
-    }
+		verify(connectionMock);
+	}
 
-    @Test
-    public void handleConnectionNoResponse() throws Exception {
-        expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-        expect(connectionMock.receive(messageFactory)).andReturn(request);
-        connectionMock.close();
+	@Test
+	public void handleConnectionNoResponse() throws Exception {
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.receive(messageFactory)).andReturn(request);
+		connectionMock.close();
 
-        replay(connectionMock);
+		replay(connectionMock);
 
-        WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
+		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
-            public void receive(MessageContext messageContext) throws Exception {
-                Assert.assertNotNull("No message context", messageContext);
-            }
-        };
+			public void receive(MessageContext messageContext) throws Exception {
+				Assert.assertNotNull("No message context", messageContext);
+			}
+		};
 
-        receiverSupport.handleConnection(connectionMock, receiver);
+		receiverSupport.handleConnection(connectionMock, receiver);
 
-        verify(connectionMock);
-    }
+		verify(connectionMock);
+	}
 
-    private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {
+	private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {
 
-    }
+	}
 }

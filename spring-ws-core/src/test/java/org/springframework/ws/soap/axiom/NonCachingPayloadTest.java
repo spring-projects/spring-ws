@@ -32,79 +32,79 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 @SuppressWarnings("Since15")
 public class NonCachingPayloadTest {
 
-    private Payload payload;
+	private Payload payload;
 
-    private SOAPBody body;
+	private SOAPBody body;
 
-    @Before
-    public final void setUp() {
-        SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
-        body = soapFactory.createSOAPBody();
-        payload = new NonCachingPayload(body, soapFactory);
-    }
+	@Before
+	public final void setUp() {
+		SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
+		body = soapFactory.createSOAPBody();
+		payload = new NonCachingPayload(body, soapFactory);
+	}
 
-    @Test
-    public void testDelegatingStreamWriter() throws Exception {
-        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
+	@Test
+	public void testDelegatingStreamWriter() throws Exception {
+		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
-        String namespace = "http://springframework.org/spring-ws";
-        streamWriter.setDefaultNamespace(namespace);
-        streamWriter.writeStartElement(namespace, "root");
-        streamWriter.writeDefaultNamespace(namespace);
-        streamWriter.writeStartElement(namespace, "child");
-        streamWriter.writeCharacters("text");
-        streamWriter.writeEndElement();
-        streamWriter.writeEndElement();
-        streamWriter.flush();
+		String namespace = "http://springframework.org/spring-ws";
+		streamWriter.setDefaultNamespace(namespace);
+		streamWriter.writeStartElement(namespace, "root");
+		streamWriter.writeDefaultNamespace(namespace);
+		streamWriter.writeStartElement(namespace, "child");
+		streamWriter.writeCharacters("text");
+		streamWriter.writeEndElement();
+		streamWriter.writeEndElement();
+		streamWriter.flush();
 
-        StringWriter writer = new StringWriter();
-        body.serialize(writer);
+		StringWriter writer = new StringWriter();
+		body.serialize(writer);
 
-        String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
-                ;
-        assertXMLEqual(expected, writer.toString());
-    }
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
+				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
+				;
+		assertXMLEqual(expected, writer.toString());
+	}
 
-    @Test
-    public void testDelegatingStreamWriterWriteEndDocument() throws Exception {
-        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
+	@Test
+	public void testDelegatingStreamWriterWriteEndDocument() throws Exception {
+		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
-        String namespace = "http://springframework.org/spring-ws";
-        streamWriter.setDefaultNamespace(namespace);
-        streamWriter.writeStartElement(namespace, "root");
-        streamWriter.writeDefaultNamespace(namespace);
-        streamWriter.writeStartElement(namespace, "child");
-        streamWriter.writeCharacters("text");
-        streamWriter.writeEndDocument();
-        streamWriter.flush();
+		String namespace = "http://springframework.org/spring-ws";
+		streamWriter.setDefaultNamespace(namespace);
+		streamWriter.writeStartElement(namespace, "root");
+		streamWriter.writeDefaultNamespace(namespace);
+		streamWriter.writeStartElement(namespace, "child");
+		streamWriter.writeCharacters("text");
+		streamWriter.writeEndDocument();
+		streamWriter.flush();
 
-        StringWriter writer = new StringWriter();
-        body.serialize(writer);
+		StringWriter writer = new StringWriter();
+		body.serialize(writer);
 
-        String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
-                ;
-        assertXMLEqual(expected, writer.toString());
-    }
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
+				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
+				;
+		assertXMLEqual(expected, writer.toString());
+	}
 
-    @Test
-    public void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
-        XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
+	@Test
+	public void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
+		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(payload.getResult());
 
-        String namespace = "http://springframework.org/spring-ws";
-        streamWriter.setDefaultNamespace(namespace);
-        streamWriter.writeStartElement(namespace, "root");
-        streamWriter.writeDefaultNamespace(namespace);
-        streamWriter.writeEmptyElement(namespace, "child");
-        streamWriter.writeEndElement();
-        streamWriter.flush();
+		String namespace = "http://springframework.org/spring-ws";
+		streamWriter.setDefaultNamespace(namespace);
+		streamWriter.writeStartElement(namespace, "root");
+		streamWriter.writeDefaultNamespace(namespace);
+		streamWriter.writeEmptyElement(namespace, "child");
+		streamWriter.writeEndElement();
+		streamWriter.flush();
 
-        StringWriter writer = new StringWriter();
-        body.serialize(writer);
+		StringWriter writer = new StringWriter();
+		body.serialize(writer);
 
-        String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-                "<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";
-        assertXMLEqual(expected, writer.toString());
-    }
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
+				"<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";
+		assertXMLEqual(expected, writer.toString());
+	}
 }

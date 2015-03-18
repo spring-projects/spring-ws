@@ -42,70 +42,70 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("serial")
 public class SimpleSaajServlet extends HttpServlet {
 
-    private MessageFactory msgFactory = null;
+	private MessageFactory msgFactory = null;
 
-    @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
-        try {
-            msgFactory = MessageFactory.newInstance();
-        }
-        catch (SOAPException ex) {
-            throw new ServletException("Unable to create message factory" + ex.getMessage());
-        }
-    }
+	@Override
+	public void init(ServletConfig servletConfig) throws ServletException {
+		super.init(servletConfig);
+		try {
+			msgFactory = MessageFactory.newInstance();
+		}
+		catch (SOAPException ex) {
+			throw new ServletException("Unable to create message factory" + ex.getMessage());
+		}
+	}
 
-    private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
-        Enumeration<?> enumeration = httpServletRequest.getHeaderNames();
-        MimeHeaders headers = new MimeHeaders();
-        while (enumeration.hasMoreElements()) {
-            String headerName = (String) enumeration.nextElement();
-            String headerValue = httpServletRequest.getHeader(headerName);
-            StringTokenizer values = new StringTokenizer(headerValue, ",");
-            while (values.hasMoreTokens()) {
-                headers.addHeader(headerName, values.nextToken().trim());
-            }
-        }
-        return headers;
-    }
+	private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
+		Enumeration<?> enumeration = httpServletRequest.getHeaderNames();
+		MimeHeaders headers = new MimeHeaders();
+		while (enumeration.hasMoreElements()) {
+			String headerName = (String) enumeration.nextElement();
+			String headerValue = httpServletRequest.getHeader(headerName);
+			StringTokenizer values = new StringTokenizer(headerValue, ",");
+			while (values.hasMoreTokens()) {
+				headers.addHeader(headerName, values.nextToken().trim());
+			}
+		}
+		return headers;
+	}
 
-    private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
-        Iterator<?> it = headers.getAllHeaders();
-        while (it.hasNext()) {
-            MimeHeader header = (MimeHeader) it.next();
-            String[] values = headers.getHeader(header.getName());
-            String value = StringUtils.arrayToCommaDelimitedString(values);
-            res.setHeader(header.getName(), value);
-        }
-    }
+	private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
+		Iterator<?> it = headers.getAllHeaders();
+		while (it.hasNext()) {
+			MimeHeader header = (MimeHeader) it.next();
+			String[] values = headers.getHeader(header.getName());
+			String value = StringUtils.arrayToCommaDelimitedString(values);
+			res.setHeader(header.getName(), value);
+		}
+	}
 
-    @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            MimeHeaders headers = getHeaders(req);
-            SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
-            SOAPMessage reply = onMessage(request);
-            if (reply != null) {
-                if (reply.saveRequired()) {
-                    reply.saveChanges();
-                }
-                resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
-                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                putHeaders(reply.getMimeHeaders(), resp);
-                reply.writeTo(resp.getOutputStream());
-            }
-            else {
-                resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-            }
-        }
-        catch (Exception ex) {
-            throw new ServletException("SAAJ POST failed " + ex.getMessage());
-        }
-    }
+	@Override
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		try {
+			MimeHeaders headers = getHeaders(req);
+			SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
+			SOAPMessage reply = onMessage(request);
+			if (reply != null) {
+				if (reply.saveRequired()) {
+					reply.saveChanges();
+				}
+				resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
+						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				putHeaders(reply.getMimeHeaders(), resp);
+				reply.writeTo(resp.getOutputStream());
+			}
+			else {
+				resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+			}
+		}
+		catch (Exception ex) {
+			throw new ServletException("SAAJ POST failed " + ex.getMessage());
+		}
+	}
 
-    protected SOAPMessage onMessage(SOAPMessage message) {
-        return message;
-    }
+	protected SOAPMessage onMessage(SOAPMessage message) {
+		return message;
+	}
 
 
 }

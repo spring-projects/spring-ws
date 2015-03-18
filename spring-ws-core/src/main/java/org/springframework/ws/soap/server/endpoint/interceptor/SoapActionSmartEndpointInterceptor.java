@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,26 +31,26 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class SoapActionSmartEndpointInterceptor extends DelegatingSmartSoapEndpointInterceptor {
 
-    private final String soapAction;
+	private final String soapAction;
 
-    public SoapActionSmartEndpointInterceptor(EndpointInterceptor delegate, String soapAction) {
-        super(delegate);
-        Assert.hasLength(soapAction, "soapAction can not be empty");
-        this.soapAction = soapAction;
-    }
+	public SoapActionSmartEndpointInterceptor(EndpointInterceptor delegate, String soapAction) {
+		super(delegate);
+		Assert.hasLength(soapAction, "soapAction can not be empty");
+		this.soapAction = soapAction;
+	}
 
-    @Override
-    protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
-        if (request instanceof SoapMessage) {
-            String soapAction = ((SoapMessage) request).getSoapAction();
-            if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
-                    soapAction.charAt(soapAction.length() - 1) == '"') {
-                soapAction = soapAction.substring(1, soapAction.length() - 1);
-            }
-            return this.soapAction.equals(soapAction);
-        }
-        else {
-            return false;
-        }
-    }
+	@Override
+	protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
+		if (request instanceof SoapMessage) {
+			String soapAction = ((SoapMessage) request).getSoapAction();
+			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
+					soapAction.charAt(soapAction.length() - 1) == '"') {
+				soapAction = soapAction.substring(1, soapAction.length() - 1);
+			}
+			return this.soapAction.equals(soapAction);
+		}
+		else {
+			return false;
+		}
+	}
 }

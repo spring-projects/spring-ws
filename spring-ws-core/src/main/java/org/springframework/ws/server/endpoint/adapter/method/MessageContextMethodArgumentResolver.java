@@ -27,13 +27,13 @@ import org.springframework.ws.context.MessageContext;
  */
 public class MessageContextMethodArgumentResolver implements MethodArgumentResolver {
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        return MessageContext.class.equals(parameter.getParameterType());
-    }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		return MessageContext.class.equals(parameter.getParameterType());
+	}
 
-    @Override
-    public MessageContext resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
-        return messageContext;
-    }
+	@Override
+	public MessageContext resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
+		return messageContext;
+	}
 }

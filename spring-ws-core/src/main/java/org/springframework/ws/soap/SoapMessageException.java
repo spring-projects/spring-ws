@@ -27,13 +27,13 @@ import org.springframework.ws.WebServiceMessageException;
 @SuppressWarnings("serial")
 public abstract class SoapMessageException extends WebServiceMessageException {
 
-    /** Constructor for {@code SoapMessageException}. */
-    public SoapMessageException(String msg) {
-        super(msg);
-    }
+	/** Constructor for {@code SoapMessageException}. */
+	public SoapMessageException(String msg) {
+		super(msg);
+	}
 
-    /** Constructor for {@code SoapMessageException}. */
-    public SoapMessageException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	/** Constructor for {@code SoapMessageException}. */
+	public SoapMessageException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

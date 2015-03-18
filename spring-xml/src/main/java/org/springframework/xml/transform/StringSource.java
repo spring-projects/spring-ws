@@ -32,55 +32,55 @@ import org.springframework.util.Assert;
  */
 public class StringSource extends StreamSource {
 
-    private final String content;
+	private final String content;
 
-    /**
-     * Initializes a new instance of the {@code StringSource} with the given string content.
-     *
-     * @param content the content
-     */
-    public StringSource(String content) {
-        Assert.notNull(content, "'content' must not be null");
-        this.content = content;
-    }
+	/**
+	 * Initializes a new instance of the {@code StringSource} with the given string content.
+	 *
+	 * @param content the content
+	 */
+	public StringSource(String content) {
+		Assert.notNull(content, "'content' must not be null");
+		this.content = content;
+	}
 
-    @Override
-    public Reader getReader() {
-        return new StringReader(content);
-    }
+	@Override
+	public Reader getReader() {
+		return new StringReader(content);
+	}
 
-    /**
-     * Throws {@link UnsupportedOperationException}.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    @Override
-    public void setInputStream(InputStream inputStream) {
-        throw new UnsupportedOperationException("setInputStream is not supported");
-    }
+	/**
+	 * Throws {@link UnsupportedOperationException}.
+	 *
+	 * @throws UnsupportedOperationException always
+	 */
+	@Override
+	public void setInputStream(InputStream inputStream) {
+		throw new UnsupportedOperationException("setInputStream is not supported");
+	}
 
-    /**
-     * Returns {@code null}.
-     *
-     * @return {@code null}
-     */
-    @Override
-    public InputStream getInputStream() {
-        return null;
-    }
+	/**
+	 * Returns {@code null}.
+	 *
+	 * @return {@code null}
+	 */
+	@Override
+	public InputStream getInputStream() {
+		return null;
+	}
 
-    /**
-     * Throws {@link UnsupportedOperationException}.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    @Override
-    public void setReader(Reader reader) {
-        throw new UnsupportedOperationException("setReader is not supported");
-    }
+	/**
+	 * Throws {@link UnsupportedOperationException}.
+	 *
+	 * @throws UnsupportedOperationException always
+	 */
+	@Override
+	public void setReader(Reader reader) {
+		throw new UnsupportedOperationException("setReader is not supported");
+	}
 
-    @Override
-    public String toString() {
-        return content;
-    }
+	@Override
+	public String toString() {
+		return content;
+	}
 }

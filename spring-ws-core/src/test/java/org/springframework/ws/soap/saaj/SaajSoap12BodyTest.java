@@ -25,11 +25,11 @@ import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
 
 public class SaajSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
-    @Override
-    protected SoapBody createSoapBody() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoap12Body(saajMessage.getSOAPBody());
-    }
+	@Override
+	protected SoapBody createSoapBody() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		return new SaajSoap12Body(saajMessage.getSOAPBody());
+	}
 
 }

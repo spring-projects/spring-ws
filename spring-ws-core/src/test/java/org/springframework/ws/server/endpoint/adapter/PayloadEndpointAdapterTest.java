@@ -39,54 +39,54 @@ import static org.easymock.EasyMock.*;
 
 public class PayloadEndpointAdapterTest {
 
-    private PayloadEndpointAdapter adapter;
+	private PayloadEndpointAdapter adapter;
 
-    private PayloadEndpoint endpointMock;
+	private PayloadEndpoint endpointMock;
 
-    @Before
-    public void setUp() throws Exception {
-        adapter = new PayloadEndpointAdapter();
-        endpointMock = createMock(PayloadEndpoint.class);
-    }
+	@Before
+	public void setUp() throws Exception {
+		adapter = new PayloadEndpointAdapter();
+		endpointMock = createMock(PayloadEndpoint.class);
+	}
 
-    @Test
-    public void testSupports() throws Exception {
-        Assert.assertTrue("PayloadEndpointAdapter does not support PayloadEndpoint", adapter.supports(endpointMock));
-    }
+	@Test
+	public void testSupports() throws Exception {
+		Assert.assertTrue("PayloadEndpointAdapter does not support PayloadEndpoint", adapter.supports(endpointMock));
+	}
 
-    @Test
-    public void testInvoke() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        PayloadEndpoint endpoint = new PayloadEndpoint() {
-            public Source invoke(Source request) throws Exception {
-                StringWriter writer = new StringWriter();
-                transformer.transform(request, new StreamResult(writer));
-                assertXMLEqual("Invalid request", "<request/>", writer.toString());
-                return new StreamSource(new StringReader("<response/>"));
-            }
-        };
-        endpoint.invoke(request.getPayloadSource());
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        adapter.invoke(messageContext, endpoint);
-        MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-        Assert.assertNotNull("No response created", response);
-        assertXMLEqual("Invalid payload", "<response/>", response.getPayloadAsString());
-    }
+	@Test
+	public void testInvoke() throws Exception {
+		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
+		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		PayloadEndpoint endpoint = new PayloadEndpoint() {
+			public Source invoke(Source request) throws Exception {
+				StringWriter writer = new StringWriter();
+				transformer.transform(request, new StreamResult(writer));
+				assertXMLEqual("Invalid request", "<request/>", writer.toString());
+				return new StreamSource(new StringReader("<response/>"));
+			}
+		};
+		endpoint.invoke(request.getPayloadSource());
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		adapter.invoke(messageContext, endpoint);
+		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
+		Assert.assertNotNull("No response created", response);
+		assertXMLEqual("Invalid payload", "<response/>", response.getPayloadAsString());
+	}
 
-    @Test
-    public void testInvokeNoResponse() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        expect(endpointMock.invoke(isA(Source.class))).andReturn(null);
+	@Test
+	public void testInvokeNoResponse() throws Exception {
+		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		expect(endpointMock.invoke(isA(Source.class))).andReturn(null);
 
-        replay(endpointMock);
+		replay(endpointMock);
 
-        adapter.invoke(messageContext, endpointMock);
+		adapter.invoke(messageContext, endpointMock);
 
-        verify(endpointMock);
+		verify(endpointMock);
 
-        Assert.assertFalse("Response created", messageContext.hasResponse());
-    }
+		Assert.assertFalse("Response created", messageContext.hasResponse());
+	}
 
 }

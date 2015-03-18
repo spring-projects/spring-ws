@@ -42,7 +42,7 @@ import org.springframework.ws.context.MessageContext;
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
- *      javax.xml.stream.XMLEventFactory)
+ *		javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
  * @since 1.0.0
@@ -51,199 +51,199 @@ import org.springframework.ws.context.MessageContext;
 @Deprecated
 public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPayloadEndpoint implements MessageEndpoint {
 
-    private XMLEventFactory eventFactory;
+	private XMLEventFactory eventFactory;
 
-    @Override
-    public final void invoke(MessageContext messageContext) throws Exception {
-        XMLEventReader eventReader = getEventReader(messageContext.getRequest().getPayloadSource());
-        XMLEventWriter streamWriter = new ResponseCreatingEventWriter(messageContext);
-        invokeInternal(eventReader, streamWriter, getEventFactory());
-        streamWriter.flush();
-    }
+	@Override
+	public final void invoke(MessageContext messageContext) throws Exception {
+		XMLEventReader eventReader = getEventReader(messageContext.getRequest().getPayloadSource());
+		XMLEventWriter streamWriter = new ResponseCreatingEventWriter(messageContext);
+		invokeInternal(eventReader, streamWriter, getEventFactory());
+		streamWriter.flush();
+	}
 
-    /**
-     * Create a {@code XMLEventFactory} that this endpoint will use to create {@code XMLEvent}s. Can be
-     * overridden in subclasses, adding further initialization of the factory. The resulting
-     * {@code XMLEventFactory} is cached, so this method will only be called once.
-     *
-     * @return the created {@code XMLEventFactory}
-     */
-    protected XMLEventFactory createXmlEventFactory() {
-        return XMLEventFactory.newInstance();
-    }
+	/**
+	 * Create a {@code XMLEventFactory} that this endpoint will use to create {@code XMLEvent}s. Can be
+	 * overridden in subclasses, adding further initialization of the factory. The resulting
+	 * {@code XMLEventFactory} is cached, so this method will only be called once.
+	 *
+	 * @return the created {@code XMLEventFactory}
+	 */
+	protected XMLEventFactory createXmlEventFactory() {
+		return XMLEventFactory.newInstance();
+	}
 
-    /** Returns an {@code XMLEventFactory} to read XML from. */
-    private XMLEventFactory getEventFactory() {
-        if (eventFactory == null) {
-            eventFactory = createXmlEventFactory();
-        }
-        return eventFactory;
-    }
+	/** Returns an {@code XMLEventFactory} to read XML from. */
+	private XMLEventFactory getEventFactory() {
+		if (eventFactory == null) {
+			eventFactory = createXmlEventFactory();
+		}
+		return eventFactory;
+	}
 
-    private XMLEventReader getEventReader(Source source) throws XMLStreamException, TransformerException {
-        if (source == null) {
-            return null;
-        }
-        XMLEventReader eventReader = null;
-        if (StaxUtils.isStaxSource(source)) {
-            eventReader = StaxUtils.getXMLEventReader(source);
-            if (eventReader == null) {
-                XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
-                if (streamReader != null) {
-                    try {
-                        eventReader = getInputFactory().createXMLEventReader(streamReader);
-                    }
-                    catch (XMLStreamException ex) {
-                        eventReader = null;
-                    }
-                }
-            }
-        }
-        if (eventReader == null) {
-            try {
-                eventReader = getInputFactory().createXMLEventReader(source);
-            }
-            catch (XMLStreamException ex) {
-                eventReader = null;
-            }
-            catch (UnsupportedOperationException ex) {
-                eventReader = null;
-            }
-        }
-        if (eventReader == null) {
-            // as a final resort, transform the source to a stream, and read from that
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            transform(source, new StreamResult(os));
-            ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-            eventReader = getInputFactory().createXMLEventReader(is);
-        }
-        return eventReader;
-    }
+	private XMLEventReader getEventReader(Source source) throws XMLStreamException, TransformerException {
+		if (source == null) {
+			return null;
+		}
+		XMLEventReader eventReader = null;
+		if (StaxUtils.isStaxSource(source)) {
+			eventReader = StaxUtils.getXMLEventReader(source);
+			if (eventReader == null) {
+				XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
+				if (streamReader != null) {
+					try {
+						eventReader = getInputFactory().createXMLEventReader(streamReader);
+					}
+					catch (XMLStreamException ex) {
+						eventReader = null;
+					}
+				}
+			}
+		}
+		if (eventReader == null) {
+			try {
+				eventReader = getInputFactory().createXMLEventReader(source);
+			}
+			catch (XMLStreamException ex) {
+				eventReader = null;
+			}
+			catch (UnsupportedOperationException ex) {
+				eventReader = null;
+			}
+		}
+		if (eventReader == null) {
+			// as a final resort, transform the source to a stream, and read from that
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			transform(source, new StreamResult(os));
+			ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+			eventReader = getInputFactory().createXMLEventReader(is);
+		}
+		return eventReader;
+	}
 
-    private XMLEventWriter getEventWriter(Result result) {
-        XMLEventWriter eventWriter = null;
-        if (StaxUtils.isStaxResult(result)) {
-            eventWriter = StaxUtils.getXMLEventWriter(result);
-        }
-        if (eventWriter == null) {
-            try {
-                eventWriter = getOutputFactory().createXMLEventWriter(result);
-            }
-            catch (XMLStreamException ex) {
-                // ignore
-            }
-        }
-        return eventWriter;
-    }
+	private XMLEventWriter getEventWriter(Result result) {
+		XMLEventWriter eventWriter = null;
+		if (StaxUtils.isStaxResult(result)) {
+			eventWriter = StaxUtils.getXMLEventWriter(result);
+		}
+		if (eventWriter == null) {
+			try {
+				eventWriter = getOutputFactory().createXMLEventWriter(result);
+			}
+			catch (XMLStreamException ex) {
+				// ignore
+			}
+		}
+		return eventWriter;
+	}
 
-    /**
-     * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLEventReader}, and
-     * a {@code XMLEventWriter} to write the response payload to.
-     *
-     * @param eventReader  the reader to read the payload events from
-     * @param eventWriter  the writer to write payload events to
-     * @param eventFactory an {@code XMLEventFactory} that can be used to create events
-     */
-    protected abstract void invokeInternal(XMLEventReader eventReader,
-                                           XMLEventConsumer eventWriter,
-                                           XMLEventFactory eventFactory) throws Exception;
+	/**
+	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLEventReader}, and
+	 * a {@code XMLEventWriter} to write the response payload to.
+	 *
+	 * @param eventReader  the reader to read the payload events from
+	 * @param eventWriter  the writer to write payload events to
+	 * @param eventFactory an {@code XMLEventFactory} that can be used to create events
+	 */
+	protected abstract void invokeInternal(XMLEventReader eventReader,
+										   XMLEventConsumer eventWriter,
+										   XMLEventFactory eventFactory) throws Exception;
 
-    /**
-     * Implementation of the {@code XMLEventWriter} interface that creates a response
-     * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
-     */
-    private class ResponseCreatingEventWriter implements XMLEventWriter {
+	/**
+	 * Implementation of the {@code XMLEventWriter} interface that creates a response
+	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
+	 */
+	private class ResponseCreatingEventWriter implements XMLEventWriter {
 
-        private XMLEventWriter eventWriter;
+		private XMLEventWriter eventWriter;
 
-        private MessageContext messageContext;
+		private MessageContext messageContext;
 
-        private ByteArrayOutputStream os;
+		private ByteArrayOutputStream os;
 
-        public ResponseCreatingEventWriter(MessageContext messageContext) {
-            this.messageContext = messageContext;
-        }
+		public ResponseCreatingEventWriter(MessageContext messageContext) {
+			this.messageContext = messageContext;
+		}
 
-        @Override
-        public NamespaceContext getNamespaceContext() {
-            return eventWriter.getNamespaceContext();
-        }
+		@Override
+		public NamespaceContext getNamespaceContext() {
+			return eventWriter.getNamespaceContext();
+		}
 
-        @Override
-        public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
-            createEventWriter();
-            eventWriter.setNamespaceContext(context);
-        }
+		@Override
+		public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
+			createEventWriter();
+			eventWriter.setNamespaceContext(context);
+		}
 
-        @Override
-        public void add(XMLEventReader reader) throws XMLStreamException {
-            createEventWriter();
-            while (reader.hasNext()) {
-                add(reader.nextEvent());
-            }
-        }
+		@Override
+		public void add(XMLEventReader reader) throws XMLStreamException {
+			createEventWriter();
+			while (reader.hasNext()) {
+				add(reader.nextEvent());
+			}
+		}
 
-        @Override
-        public void add(XMLEvent event) throws XMLStreamException {
-            createEventWriter();
-            eventWriter.add(event);
-            if (event.isEndDocument()) {
-                if (os != null) {
-                    eventWriter.flush();
-                    // if we used an output stream cache, we have to transform it to the response again
-                    try {
-                        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-                        transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
-                    }
-                    catch (TransformerException ex) {
-                        throw new XMLStreamException(ex);
-                    }
-                }
-            }
-        }
+		@Override
+		public void add(XMLEvent event) throws XMLStreamException {
+			createEventWriter();
+			eventWriter.add(event);
+			if (event.isEndDocument()) {
+				if (os != null) {
+					eventWriter.flush();
+					// if we used an output stream cache, we have to transform it to the response again
+					try {
+						ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+						transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
+					}
+					catch (TransformerException ex) {
+						throw new XMLStreamException(ex);
+					}
+				}
+			}
+		}
 
-        @Override
-        public void close() throws XMLStreamException {
-            if (eventWriter != null) {
-                eventWriter.close();
-            }
-        }
+		@Override
+		public void close() throws XMLStreamException {
+			if (eventWriter != null) {
+				eventWriter.close();
+			}
+		}
 
-        @Override
-        public void flush() throws XMLStreamException {
-            if (eventWriter != null) {
-                eventWriter.flush();
-            }
-        }
+		@Override
+		public void flush() throws XMLStreamException {
+			if (eventWriter != null) {
+				eventWriter.flush();
+			}
+		}
 
-        @Override
-        public String getPrefix(String uri) throws XMLStreamException {
-            createEventWriter();
-            return eventWriter.getPrefix(uri);
-        }
+		@Override
+		public String getPrefix(String uri) throws XMLStreamException {
+			createEventWriter();
+			return eventWriter.getPrefix(uri);
+		}
 
-        @Override
-        public void setDefaultNamespace(String uri) throws XMLStreamException {
-            createEventWriter();
-            eventWriter.setDefaultNamespace(uri);
-        }
+		@Override
+		public void setDefaultNamespace(String uri) throws XMLStreamException {
+			createEventWriter();
+			eventWriter.setDefaultNamespace(uri);
+		}
 
-        @Override
-        public void setPrefix(String prefix, String uri) throws XMLStreamException {
-            createEventWriter();
-            eventWriter.setPrefix(prefix, uri);
-        }
+		@Override
+		public void setPrefix(String prefix, String uri) throws XMLStreamException {
+			createEventWriter();
+			eventWriter.setPrefix(prefix, uri);
+		}
 
-        private void createEventWriter() throws XMLStreamException {
-            if (eventWriter == null) {
-                WebServiceMessage response = messageContext.getResponse();
-                eventWriter = getEventWriter(response.getPayloadResult());
-                if (eventWriter == null) {
-                    // as a final resort, use a stream, and transform that at endDocument()
-                    os = new ByteArrayOutputStream();
-                    eventWriter = getOutputFactory().createXMLEventWriter(os);
-                }
-            }
-        }
-    }
+		private void createEventWriter() throws XMLStreamException {
+			if (eventWriter == null) {
+				WebServiceMessage response = messageContext.getResponse();
+				eventWriter = getEventWriter(response.getPayloadResult());
+				if (eventWriter == null) {
+					// as a final resort, use a stream, and transform that at endDocument()
+					os = new ByteArrayOutputStream();
+					eventWriter = getOutputFactory().createXMLEventWriter(os);
+				}
+			}
+		}
+	}
 }

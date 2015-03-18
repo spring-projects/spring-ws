@@ -34,27 +34,27 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  */
 public class PayloadMessageCreator extends AbstractMessageCreator {
 
-    private final Source payload;
+	private final Source payload;
 
-    private TransformerHelper transformerHelper = new TransformerHelper();
+	private TransformerHelper transformerHelper = new TransformerHelper();
 
-    /**
-     * Creates a new instance of the {@code PayloadMessageCreator} with the given payload source.
-     *
-     * @param payload the payload source
-     */
-    public PayloadMessageCreator(Source payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        this.payload = payload;
-    }
+	/**
+	 * Creates a new instance of the {@code PayloadMessageCreator} with the given payload source.
+	 *
+	 * @param payload the payload source
+	 */
+	public PayloadMessageCreator(Source payload) {
+		Assert.notNull(payload, "'payload' must not be null");
+		this.payload = payload;
+	}
 
-    @Override
-    protected void doWithMessage(WebServiceMessage message) throws IOException {
-        try {
-            transformerHelper.transform(payload, message.getPayloadResult());
-        }
-        catch (TransformerException ex) {
-            fail("Could not transform request payload to message: " + ex.getMessage());
-        }
-    }
+	@Override
+	protected void doWithMessage(WebServiceMessage message) throws IOException {
+		try {
+			transformerHelper.transform(payload, message.getPayloadResult());
+		}
+		catch (TransformerException ex) {
+			fail("Could not transform request payload to message: " + ex.getMessage());
+		}
+	}
 }

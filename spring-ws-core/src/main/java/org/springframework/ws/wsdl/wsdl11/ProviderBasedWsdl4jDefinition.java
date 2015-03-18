@@ -51,200 +51,200 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
  */
 public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements InitializingBean {
 
-    /** The prefix used to register the target namespace in the WSDL. */
-    public static final String TARGET_NAMESPACE_PREFIX = "tns";
+	/** The prefix used to register the target namespace in the WSDL. */
+	public static final String TARGET_NAMESPACE_PREFIX = "tns";
 
-    private ImportsProvider importsProvider;
+	private ImportsProvider importsProvider;
 
-    private TypesProvider typesProvider;
+	private TypesProvider typesProvider;
 
-    private MessagesProvider messagesProvider;
+	private MessagesProvider messagesProvider;
 
-    private PortTypesProvider portTypesProvider;
+	private PortTypesProvider portTypesProvider;
 
-    private BindingsProvider bindingsProvider;
+	private BindingsProvider bindingsProvider;
 
-    private ServicesProvider servicesProvider;
+	private ServicesProvider servicesProvider;
 
-    private String targetNamespace;
+	private String targetNamespace;
 
-    /**
-     * Returns the {@link ImportsProvider} for this definition.
-     *
-     * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
-     *
-     * @return the import provider; or {@code null}
-     */
-    public ImportsProvider getImportsProvider() {
-        return importsProvider;
-    }
+	/**
+	 * Returns the {@link ImportsProvider} for this definition.
+	 *
+	 * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
+	 *
+	 * @return the import provider; or {@code null}
+	 */
+	public ImportsProvider getImportsProvider() {
+		return importsProvider;
+	}
 
-    /**
-     * Sets the {@link ImportsProvider} for this definition.
-     *
-     * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
-     *
-     * @param importsProvider the import provider
-     */
-    public void setImportsProvider(ImportsProvider importsProvider) {
-        this.importsProvider = importsProvider;
-    }
+	/**
+	 * Sets the {@link ImportsProvider} for this definition.
+	 *
+	 * <p>Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
+	 *
+	 * @param importsProvider the import provider
+	 */
+	public void setImportsProvider(ImportsProvider importsProvider) {
+		this.importsProvider = importsProvider;
+	}
 
-    /**
-     * Returns the {@link TypesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
-     *
-     * @return the types provider; or {@code null}
-     */
-    public TypesProvider getTypesProvider() {
-        return typesProvider;
-    }
+	/**
+	 * Returns the {@link TypesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
+	 *
+	 * @return the types provider; or {@code null}
+	 */
+	public TypesProvider getTypesProvider() {
+		return typesProvider;
+	}
 
-    /**
-     * Sets the {@link TypesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
-     *
-     * @param typesProvider the types provider; or {@code null}
-     */
-    public void setTypesProvider(TypesProvider typesProvider) {
-        this.typesProvider = typesProvider;
-    }
+	/**
+	 * Sets the {@link TypesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
+	 *
+	 * @param typesProvider the types provider; or {@code null}
+	 */
+	public void setTypesProvider(TypesProvider typesProvider) {
+		this.typesProvider = typesProvider;
+	}
 
-    /**
-     * Returns the {@link MessagesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
-     *
-     * @return the messages provider; or {@code null}
-     */
-    public MessagesProvider getMessagesProvider() {
-        return messagesProvider;
-    }
+	/**
+	 * Returns the {@link MessagesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
+	 *
+	 * @return the messages provider; or {@code null}
+	 */
+	public MessagesProvider getMessagesProvider() {
+		return messagesProvider;
+	}
 
-    /**
-     * Sets the {@link MessagesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
-     *
-     * @param messagesProvider the messages provider; or {@code null}
-     */
-    public void setMessagesProvider(MessagesProvider messagesProvider) {
-        this.messagesProvider = messagesProvider;
-    }
+	/**
+	 * Sets the {@link MessagesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
+	 *
+	 * @param messagesProvider the messages provider; or {@code null}
+	 */
+	public void setMessagesProvider(MessagesProvider messagesProvider) {
+		this.messagesProvider = messagesProvider;
+	}
 
-    /**
-     * Returns the {@link PortTypesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
-     *
-     * @return the port types provider; or {@code null}
-     */
-    public PortTypesProvider getPortTypesProvider() {
-        return portTypesProvider;
-    }
+	/**
+	 * Returns the {@link PortTypesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
+	 *
+	 * @return the port types provider; or {@code null}
+	 */
+	public PortTypesProvider getPortTypesProvider() {
+		return portTypesProvider;
+	}
 
-    /**
-     * Sets the {@link PortTypesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
-     *
-     * @param portTypesProvider the port types provider; or {@code null}
-     */
-    public void setPortTypesProvider(PortTypesProvider portTypesProvider) {
-        this.portTypesProvider = portTypesProvider;
-    }
+	/**
+	 * Sets the {@link PortTypesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
+	 *
+	 * @param portTypesProvider the port types provider; or {@code null}
+	 */
+	public void setPortTypesProvider(PortTypesProvider portTypesProvider) {
+		this.portTypesProvider = portTypesProvider;
+	}
 
-    /**
-     * Returns the {@link BindingsProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
-     *
-     * @return the binding provider; or {@code null}
-     */
-    public BindingsProvider getBindingsProvider() {
-        return bindingsProvider;
-    }
+	/**
+	 * Returns the {@link BindingsProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
+	 *
+	 * @return the binding provider; or {@code null}
+	 */
+	public BindingsProvider getBindingsProvider() {
+		return bindingsProvider;
+	}
 
-    /**
-     * Sets the {@link BindingsProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
-     *
-     * @param bindingsProvider the bindings provider; or {@code null}
-     */
-    public void setBindingsProvider(BindingsProvider bindingsProvider) {
-        this.bindingsProvider = bindingsProvider;
-    }
+	/**
+	 * Sets the {@link BindingsProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
+	 *
+	 * @param bindingsProvider the bindings provider; or {@code null}
+	 */
+	public void setBindingsProvider(BindingsProvider bindingsProvider) {
+		this.bindingsProvider = bindingsProvider;
+	}
 
-    /**
-     * Returns the {@link ServicesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
-     *
-     * @return the services provider; or {@code null}
-     */
-    public ServicesProvider getServicesProvider() {
-        return servicesProvider;
-    }
+	/**
+	 * Returns the {@link ServicesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
+	 *
+	 * @return the services provider; or {@code null}
+	 */
+	public ServicesProvider getServicesProvider() {
+		return servicesProvider;
+	}
 
-    /**
-     * Sets the {@link ServicesProvider} for this definition.
-     *
-     * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
-     *
-     * @param servicesProvider the services provider; or {@code null}
-     */
-    public void setServicesProvider(ServicesProvider servicesProvider) {
-        this.servicesProvider = servicesProvider;
-    }
+	/**
+	 * Sets the {@link ServicesProvider} for this definition.
+	 *
+	 * <p>Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
+	 *
+	 * @param servicesProvider the services provider; or {@code null}
+	 */
+	public void setServicesProvider(ServicesProvider servicesProvider) {
+		this.servicesProvider = servicesProvider;
+	}
 
-    /**
-     * Returns the target namespace for the WSDL definition.
-     *
-     * @return the target namespace
-     * @see javax.wsdl.Definition#getTargetNamespace()
-     */
-    public String getTargetNamespace() {
-        return targetNamespace;
-    }
+	/**
+	 * Returns the target namespace for the WSDL definition.
+	 *
+	 * @return the target namespace
+	 * @see javax.wsdl.Definition#getTargetNamespace()
+	 */
+	public String getTargetNamespace() {
+		return targetNamespace;
+	}
 
-    /**
-     * Sets the target namespace used for this definition. Required.
-     *
-     * @param targetNamespace the target namespace
-     * @see javax.wsdl.Definition#setTargetNamespace(String)
-     */
-    public void setTargetNamespace(String targetNamespace) {
-        this.targetNamespace = targetNamespace;
-    }
+	/**
+	 * Sets the target namespace used for this definition. Required.
+	 *
+	 * @param targetNamespace the target namespace
+	 * @see javax.wsdl.Definition#setTargetNamespace(String)
+	 */
+	public void setTargetNamespace(String targetNamespace) {
+		this.targetNamespace = targetNamespace;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws WSDLException {
-        Assert.notNull(getTargetNamespace(), "'targetNamespace' is required");
-        WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-        Definition definition = wsdlFactory.newDefinition();
-        definition.setTargetNamespace(getTargetNamespace());
-        definition.addNamespace(TARGET_NAMESPACE_PREFIX, getTargetNamespace());
-        if (importsProvider != null) {
-            importsProvider.addImports(definition);
-        }
-        if (typesProvider != null) {
-            typesProvider.addTypes(definition);
-        }
-        if (messagesProvider != null) {
-            messagesProvider.addMessages(definition);
-        }
-        if (portTypesProvider != null) {
-            portTypesProvider.addPortTypes(definition);
-        }
-        if (bindingsProvider != null) {
-            bindingsProvider.addBindings(definition);
-        }
-        if (servicesProvider != null) {
-            servicesProvider.addServices(definition);
-        }
-        setDefinition(definition);
-    }
+	@Override
+	public void afterPropertiesSet() throws WSDLException {
+		Assert.notNull(getTargetNamespace(), "'targetNamespace' is required");
+		WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+		Definition definition = wsdlFactory.newDefinition();
+		definition.setTargetNamespace(getTargetNamespace());
+		definition.addNamespace(TARGET_NAMESPACE_PREFIX, getTargetNamespace());
+		if (importsProvider != null) {
+			importsProvider.addImports(definition);
+		}
+		if (typesProvider != null) {
+			typesProvider.addTypes(definition);
+		}
+		if (messagesProvider != null) {
+			messagesProvider.addMessages(definition);
+		}
+		if (portTypesProvider != null) {
+			portTypesProvider.addPortTypes(definition);
+		}
+		if (bindingsProvider != null) {
+			bindingsProvider.addBindings(definition);
+		}
+		if (servicesProvider != null) {
+			servicesProvider.addServices(definition);
+		}
+		setDefinition(definition);
+	}
 }

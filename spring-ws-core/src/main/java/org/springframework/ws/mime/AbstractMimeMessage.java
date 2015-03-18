@@ -36,69 +36,69 @@ import org.springframework.util.Assert;
  */
 public abstract class AbstractMimeMessage implements MimeMessage {
 
-    @Override
-    public final Attachment addAttachment(String contentId, File file) throws AttachmentException {
-        Assert.hasLength(contentId, "contentId must not be empty");
-        Assert.notNull(file, "File must not be null");
-        DataHandler dataHandler = new DataHandler(new FileDataSource(file));
-        return addAttachment(contentId, dataHandler);
-    }
+	@Override
+	public final Attachment addAttachment(String contentId, File file) throws AttachmentException {
+		Assert.hasLength(contentId, "contentId must not be empty");
+		Assert.notNull(file, "File must not be null");
+		DataHandler dataHandler = new DataHandler(new FileDataSource(file));
+		return addAttachment(contentId, dataHandler);
+	}
 
-    @Override
-    public final Attachment addAttachment(String contentId, InputStreamSource inputStreamSource, String contentType) {
-        Assert.hasLength(contentId, "contentId must not be empty");
-        Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
-        if (inputStreamSource instanceof Resource && ((Resource) inputStreamSource).isOpen()) {
-            throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. " +
-                    "MIME requires an InputStreamSource that creates a fresh stream for every call.");
-        }
-        DataHandler dataHandler = new DataHandler(new InputStreamSourceDataSource(inputStreamSource, contentType));
-        return addAttachment(contentId, dataHandler);
-    }
+	@Override
+	public final Attachment addAttachment(String contentId, InputStreamSource inputStreamSource, String contentType) {
+		Assert.hasLength(contentId, "contentId must not be empty");
+		Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
+		if (inputStreamSource instanceof Resource && ((Resource) inputStreamSource).isOpen()) {
+			throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. " +
+					"MIME requires an InputStreamSource that creates a fresh stream for every call.");
+		}
+		DataHandler dataHandler = new DataHandler(new InputStreamSourceDataSource(inputStreamSource, contentType));
+		return addAttachment(contentId, dataHandler);
+	}
 
-    /**
-     * Activation framework {@code DataSource} that wraps a Spring {@code InputStreamSource}.
-     *
-     * @author Arjen Poutsma
-     * @since 1.0.0
-     */
-    private static class InputStreamSourceDataSource implements DataSource {
+	/**
+	 * Activation framework {@code DataSource} that wraps a Spring {@code InputStreamSource}.
+	 *
+	 * @author Arjen Poutsma
+	 * @since 1.0.0
+	 */
+	private static class InputStreamSourceDataSource implements DataSource {
 
-        private final InputStreamSource inputStreamSource;
+		private final InputStreamSource inputStreamSource;
 
-        private final String contentType;
+		private final String contentType;
 
-        public InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
-            this.inputStreamSource = inputStreamSource;
-            this.contentType = contentType;
-        }
+		public InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
+			this.inputStreamSource = inputStreamSource;
+			this.contentType = contentType;
+		}
 
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return inputStreamSource.getInputStream();
-        }
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return inputStreamSource.getInputStream();
+		}
 
-        @Override
-        public OutputStream getOutputStream() {
-            throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
-        }
+		@Override
+		public OutputStream getOutputStream() {
+			throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+		}
 
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
+		@Override
+		public String getContentType() {
+			return contentType;
+		}
 
-        @Override
-        public String getName() {
-            if (inputStreamSource instanceof Resource) {
-                Resource resource = (Resource) inputStreamSource;
-                return resource.getFilename();
-            }
-            else {
-                throw new UnsupportedOperationException("DataSource name not available");
-            }
-        }
+		@Override
+		public String getName() {
+			if (inputStreamSource instanceof Resource) {
+				Resource resource = (Resource) inputStreamSource;
+				return resource.getFilename();
+			}
+			else {
+				throw new UnsupportedOperationException("DataSource name not available");
+			}
+		}
 
-    }
+	}
 
 }

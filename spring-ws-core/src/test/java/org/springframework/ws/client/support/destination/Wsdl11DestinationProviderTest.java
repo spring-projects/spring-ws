@@ -28,41 +28,41 @@ import org.junit.Test;
 
 public class Wsdl11DestinationProviderTest {
 
-    private Wsdl11DestinationProvider provider;
+	private Wsdl11DestinationProvider provider;
 
-    @Before
-    public void setUp() throws Exception {
-        provider = new Wsdl11DestinationProvider();
-    }
+	@Before
+	public void setUp() throws Exception {
+		provider = new Wsdl11DestinationProvider();
+	}
 
-    @Test
-    public void testSimple() throws URISyntaxException {
-        Resource wsdl = new ClassPathResource("simple.wsdl", getClass());
-        provider.setWsdl(wsdl);
+	@Test
+	public void testSimple() throws URISyntaxException {
+		Resource wsdl = new ClassPathResource("simple.wsdl", getClass());
+		provider.setWsdl(wsdl);
 
-        URI result = provider.getDestination();
+		URI result = provider.getDestination();
 
-        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
-    }
+		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
+	}
 
-    @Test
-    public void testComplex() throws URISyntaxException {
-        Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
-        provider.setWsdl(wsdl);
+	@Test
+	public void testComplex() throws URISyntaxException {
+		Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
+		provider.setWsdl(wsdl);
 
-        URI result = provider.getDestination();
+		URI result = provider.getDestination();
 
-        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
-    }
+		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
+	}
 
-    @Test
-    public void testCustomExpression() throws URISyntaxException {
-        provider.setLocationExpression("/wsdl:definitions/wsdl:service/wsdl:port/soap12:address/@location");
-        Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
-        provider.setWsdl(wsdl);
+	@Test
+	public void testCustomExpression() throws URISyntaxException {
+		provider.setLocationExpression("/wsdl:definitions/wsdl:service/wsdl:port/soap12:address/@location");
+		Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
+		provider.setWsdl(wsdl);
 
-        URI result = provider.getDestination();
+		URI result = provider.getDestination();
 
-        Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
-    }
+		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
+	}
 }

@@ -30,32 +30,32 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  */
 class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
 
-    SaajSoap11Fault(SOAPFault fault) {
-        super(fault);
-    }
+	SaajSoap11Fault(SOAPFault fault) {
+		super(fault);
+	}
 
-    @Override
-    public String getFaultActorOrRole() {
-	    return getSaajFault().getFaultActor();
-    }
+	@Override
+	public String getFaultActorOrRole() {
+		return getSaajFault().getFaultActor();
+	}
 
-    @Override
-    public void setFaultActorOrRole(String faultActor) {
-        try {
-	        getSaajFault().setFaultActor(faultActor);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
+	@Override
+	public void setFaultActorOrRole(String faultActor) {
+		try {
+			getSaajFault().setFaultActor(faultActor);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapFaultException(ex);
+		}
+	}
 
-    @Override
-    public String getFaultStringOrReason() {
-	    return getSaajFault().getFaultString();
-    }
+	@Override
+	public String getFaultStringOrReason() {
+		return getSaajFault().getFaultString();
+	}
 
-    @Override
-    public Locale getFaultStringLocale() {
-	    return getSaajFault().getFaultStringLocale();
-    }
+	@Override
+	public Locale getFaultStringLocale() {
+		return getSaajFault().getFaultStringLocale();
+	}
 }

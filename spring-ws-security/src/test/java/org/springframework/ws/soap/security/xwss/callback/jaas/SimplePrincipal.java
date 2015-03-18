@@ -20,33 +20,33 @@ import java.security.Principal;
 
 public final class SimplePrincipal implements Principal {
 
-    private String name;
+	private String name;
 
-    public SimplePrincipal() {
-        name = "";
-    }
+	public SimplePrincipal() {
+		name = "";
+	}
 
-    public SimplePrincipal(String name) {
-        this.name = name;
-    }
+	public SimplePrincipal(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    public int hashCode() {
-        return name.hashCode();
-    }
+	public int hashCode() {
+		return name.hashCode();
+	}
 
-    public boolean equals(Object o) {
-        if (!(o instanceof SimplePrincipal)) {
-            return false;
-        }
-        return name.equals(((SimplePrincipal) o).name);
-    }
+	public boolean equals(Object o) {
+		if (!(o instanceof SimplePrincipal)) {
+			return false;
+		}
+		return name.equals(((SimplePrincipal) o).name);
+	}
 
-    public String toString() {
-        return name;
-    }
+	public String toString() {
+		return name;
+	}
 }

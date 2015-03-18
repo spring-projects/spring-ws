@@ -36,92 +36,92 @@ import org.springframework.ws.stream.StreamingPayload;
  */
 abstract class StroapBody extends StroapElement implements SoapBody {
 
-    private StroapPayload payload;
+	private StroapPayload payload;
 
-    protected StroapBody(StroapMessageFactory messageFactory) {
-        super(messageFactory.getSoapVersion().getBodyName(), messageFactory);
-        this.payload = new CachingStroapPayload();
-    }
+	protected StroapBody(StroapMessageFactory messageFactory) {
+		super(messageFactory.getSoapVersion().getBodyName(), messageFactory);
+		this.payload = new CachingStroapPayload();
+	}
 
-    protected StroapBody(StartElement startElement, StroapPayload payload, StroapMessageFactory messageFactory) {
-        super(startElement, messageFactory);
-        this.payload = payload;
-    }
+	protected StroapBody(StartElement startElement, StroapPayload payload, StroapMessageFactory messageFactory) {
+		super(startElement, messageFactory);
+		this.payload = payload;
+	}
 
-    static StroapBody build(XMLEventReader eventReader, StroapMessageFactory messageFactory) throws XMLStreamException {
-        XMLEvent event = eventReader.nextTag();
-        if (!event.isStartElement()) {
-            throw new StroapMessageCreationException("Unexpected event: " + event + ", expected StartElement");
-        }
-        StartElement startElement = event.asStartElement();
-        SoapVersion soapVersion = messageFactory.getSoapVersion();
-        if (!soapVersion.getBodyName().equals(startElement.getName())) {
-            throw new StroapMessageCreationException(
-                    "Unexpected name: " + startElement.getName() + ", expected " + soapVersion.getBodyName());
-        }
-        StroapPayload payload;
-        if (messageFactory.isPayloadCaching()) {
-            payload = new CachingStroapPayload(eventReader);
-        }
-        else {
-            payload = new NonCachingStroapPayload(eventReader);
-        }
+	static StroapBody build(XMLEventReader eventReader, StroapMessageFactory messageFactory) throws XMLStreamException {
+		XMLEvent event = eventReader.nextTag();
+		if (!event.isStartElement()) {
+			throw new StroapMessageCreationException("Unexpected event: " + event + ", expected StartElement");
+		}
+		StartElement startElement = event.asStartElement();
+		SoapVersion soapVersion = messageFactory.getSoapVersion();
+		if (!soapVersion.getBodyName().equals(startElement.getName())) {
+			throw new StroapMessageCreationException(
+					"Unexpected name: " + startElement.getName() + ", expected " + soapVersion.getBodyName());
+		}
+		StroapPayload payload;
+		if (messageFactory.isPayloadCaching()) {
+			payload = new CachingStroapPayload(eventReader);
+		}
+		else {
+			payload = new NonCachingStroapPayload(eventReader);
+		}
 
-        if (SoapVersion.SOAP_11.equals(soapVersion)) {
-            return new Stroap11Body(startElement, payload, messageFactory);
-        }
-        else {
-            return null;
-        }
-    }
+		if (SoapVersion.SOAP_11.equals(soapVersion)) {
+			return new Stroap11Body(startElement, payload, messageFactory);
+		}
+		else {
+			return null;
+		}
+	}
 
-    public Source getPayloadSource() {
-        XMLEventReader eventReader = payload.getEventReader();
-        return StaxUtils.createCustomStaxSource(eventReader);
-    }
+	public Source getPayloadSource() {
+		XMLEventReader eventReader = payload.getEventReader();
+		return StaxUtils.createCustomStaxSource(eventReader);
+	}
 
-    public Result getPayloadResult() {
-        CachingStroapPayload cachingPayload;
-        if (payload instanceof CachingStroapPayload) {
-            cachingPayload = (CachingStroapPayload) payload;
-        }
-        else {
-            cachingPayload = new CachingStroapPayload();
-            this.payload = cachingPayload;
-        }
-        XMLEventWriter eventWriter = cachingPayload.getEventWriter();
-        return StaxUtils.createCustomStaxResult(eventWriter);
-    }
+	public Result getPayloadResult() {
+		CachingStroapPayload cachingPayload;
+		if (payload instanceof CachingStroapPayload) {
+			cachingPayload = (CachingStroapPayload) payload;
+		}
+		else {
+			cachingPayload = new CachingStroapPayload();
+			this.payload = cachingPayload;
+		}
+		XMLEventWriter eventWriter = cachingPayload.getEventWriter();
+		return StaxUtils.createCustomStaxResult(eventWriter);
+	}
 
-    public boolean hasFault() {
-        return payload instanceof FaultStroapPayload;
-    }
+	public boolean hasFault() {
+		return payload instanceof FaultStroapPayload;
+	}
 
-    public SoapFault getFault() {
-        return payload instanceof FaultStroapPayload ? ((FaultStroapPayload) payload).getFault() : null;
-    }
+	public SoapFault getFault() {
+		return payload instanceof FaultStroapPayload ? ((FaultStroapPayload) payload).getFault() : null;
+	}
 
-    protected void setFault(StroapFault fault) {
-        this.payload = new FaultStroapPayload(fault);
-    }
+	protected void setFault(StroapFault fault) {
+		this.payload = new FaultStroapPayload(fault);
+	}
 
-    @Override
-    protected final XMLEventReader getChildEventReader() {
-        return payload.getEventReader();
-    }
+	@Override
+	protected final XMLEventReader getChildEventReader() {
+		return payload.getEventReader();
+	}
 
-    @Override
-    public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
-        eventWriter.add(getStartElement());
-        payload.writeTo(eventWriter);
-        eventWriter.add(getEndElement());
-    }
+	@Override
+	public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
+		eventWriter.add(getStartElement());
+		payload.writeTo(eventWriter);
+		eventWriter.add(getEndElement());
+	}
 
-    public void setStreamingPayload(StreamingPayload payload) {
-        this.payload = new StreamingStroapPayload(payload, getMessageFactory());
-    }
+	public void setStreamingPayload(StreamingPayload payload) {
+		this.payload = new StreamingStroapPayload(payload, getMessageFactory());
+	}
 
-    public QName getPayloadName() {
-        return payload.getName();
-    }
+	public QName getPayloadName() {
+		return payload.getName();
+	}
 }

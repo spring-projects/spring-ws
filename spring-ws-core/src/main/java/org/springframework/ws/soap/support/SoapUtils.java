@@ -31,66 +31,66 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public abstract class SoapUtils {
 
-    private static final Pattern ACTION_PATTERN = Pattern.compile("action\\s*=\\s*([^;]+)");
+	private static final Pattern ACTION_PATTERN = Pattern.compile("action\\s*=\\s*([^;]+)");
 
-    private SoapUtils() {
-    }
+	private SoapUtils() {
+	}
 
-    /** Escapes the given SOAP action to be surrounded by quotes. */
-    public static String escapeAction(String soapAction) {
-        if (!StringUtils.hasLength(soapAction)) {
-            soapAction = "\"\"";
-        }
-        if (!soapAction.startsWith("\"")) {
-            soapAction = "\"" + soapAction;
-        }
-        if (!soapAction.endsWith("\"")) {
-            soapAction = soapAction + "\"";
-        }
-        return soapAction;
-    }
+	/** Escapes the given SOAP action to be surrounded by quotes. */
+	public static String escapeAction(String soapAction) {
+		if (!StringUtils.hasLength(soapAction)) {
+			soapAction = "\"\"";
+		}
+		if (!soapAction.startsWith("\"")) {
+			soapAction = "\"" + soapAction;
+		}
+		if (!soapAction.endsWith("\"")) {
+			soapAction = soapAction + "\"";
+		}
+		return soapAction;
+	}
 
-    /**
-     * Returns the value of the action parameter in the given SOAP 1.2 content type.
-     *
-     * @param contentType the SOAP 1.2 content type
-     * @return the action
-     */
-    public static String extractActionFromContentType(String contentType) {
-        if (contentType != null) {
-            Matcher matcher = ACTION_PATTERN.matcher(contentType);
-            if (matcher.find() && matcher.groupCount() == 1) {
-                return matcher.group(1).trim();
-            }
-        }
-        return TransportConstants.EMPTY_SOAP_ACTION;
-    }
+	/**
+	 * Returns the value of the action parameter in the given SOAP 1.2 content type.
+	 *
+	 * @param contentType the SOAP 1.2 content type
+	 * @return the action
+	 */
+	public static String extractActionFromContentType(String contentType) {
+		if (contentType != null) {
+			Matcher matcher = ACTION_PATTERN.matcher(contentType);
+			if (matcher.find() && matcher.groupCount() == 1) {
+				return matcher.group(1).trim();
+			}
+		}
+		return TransportConstants.EMPTY_SOAP_ACTION;
+	}
 
-    /**
-     * Replaces or adds the value of the action parameter in the given SOAP 1.2 content type.
-     *
-     * @param contentType the SOAP 1.2 content type
-     * @param action      the action
-     * @return the new content type
-     */
-    public static String setActionInContentType(String contentType, String action) {
-        Assert.hasLength(contentType, "'contentType' must not be empty");
-        if (StringUtils.hasText(action)) {
-            Matcher matcher = ACTION_PATTERN.matcher(contentType);
-            if (matcher.find() && matcher.groupCount() == 1) {
-                StringBuffer buffer = new StringBuffer();
-                matcher.appendReplacement(buffer, "action=" + action);
-                matcher.appendTail(buffer);
-                return buffer.toString();
-            }
-            else {
-                return contentType + "; action=" + action;
-            }
-        }
-        else {
-            return contentType;
-        }
-    }
+	/**
+	 * Replaces or adds the value of the action parameter in the given SOAP 1.2 content type.
+	 *
+	 * @param contentType the SOAP 1.2 content type
+	 * @param action	  the action
+	 * @return the new content type
+	 */
+	public static String setActionInContentType(String contentType, String action) {
+		Assert.hasLength(contentType, "'contentType' must not be empty");
+		if (StringUtils.hasText(action)) {
+			Matcher matcher = ACTION_PATTERN.matcher(contentType);
+			if (matcher.find() && matcher.groupCount() == 1) {
+				StringBuffer buffer = new StringBuffer();
+				matcher.appendReplacement(buffer, "action=" + action);
+				matcher.appendTail(buffer);
+				return buffer.toString();
+			}
+			else {
+				return contentType + "; action=" + action;
+			}
+		}
+		else {
+			return contentType;
+		}
+	}
 
 
 }

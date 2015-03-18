@@ -36,77 +36,77 @@ import org.springframework.xml.stream.ListBasedXMLEventReader;
  */
 class StroapHeaderElement extends StroapElement implements SoapHeaderElement {
 
-    private final List<XMLEvent> events = new LinkedList<XMLEvent>();
+	private final List<XMLEvent> events = new LinkedList<XMLEvent>();
 
-    StroapHeaderElement(QName name, StroapMessageFactory messageFactory) {
-        super(name, messageFactory);
-    }
+	StroapHeaderElement(QName name, StroapMessageFactory messageFactory) {
+		super(name, messageFactory);
+	}
 
-    private StroapHeaderElement(StartElement startElement, List<XMLEvent> events, StroapMessageFactory messageFactory) {
-        super(startElement, messageFactory);
-        Assert.notNull(events, "'events' must not be null");
-        this.events.addAll(events);
-    }
+	private StroapHeaderElement(StartElement startElement, List<XMLEvent> events, StroapMessageFactory messageFactory) {
+		super(startElement, messageFactory);
+		Assert.notNull(events, "'events' must not be null");
+		this.events.addAll(events);
+	}
 
-    static StroapHeaderElement build(List<XMLEvent> events, StroapMessageFactory messageFactory)
-            throws XMLStreamException {
-        Assert.notNull(events, "'events' must not be null");
-        Assert.isTrue(events.size() >= 2, "not enough events");
-        XMLEvent event = events.get(0);
-        if (!event.isStartElement()) {
-            throw new StroapHeaderException("Unexpected event: " + event + ", expected StartElement");
-        }
-        StartElement startElement = event.asStartElement();
-        event = events.get(events.size() - 1);
-        if (!event.isEndElement()) {
-            throw new StroapHeaderException("Unexpected event: " + event + ", expected EndElement");
-        }
-        List<XMLEvent> childEvents = events.subList(1, events.size() - 1);
-        return new StroapHeaderElement(startElement, childEvents, messageFactory);
-    }
+	static StroapHeaderElement build(List<XMLEvent> events, StroapMessageFactory messageFactory)
+			throws XMLStreamException {
+		Assert.notNull(events, "'events' must not be null");
+		Assert.isTrue(events.size() >= 2, "not enough events");
+		XMLEvent event = events.get(0);
+		if (!event.isStartElement()) {
+			throw new StroapHeaderException("Unexpected event: " + event + ", expected StartElement");
+		}
+		StartElement startElement = event.asStartElement();
+		event = events.get(events.size() - 1);
+		if (!event.isEndElement()) {
+			throw new StroapHeaderException("Unexpected event: " + event + ", expected EndElement");
+		}
+		List<XMLEvent> childEvents = events.subList(1, events.size() - 1);
+		return new StroapHeaderElement(startElement, childEvents, messageFactory);
+	}
 
-    public final String getActorOrRole() throws SoapHeaderException {
-        return getAttributeValue(getSoapVersion().getActorOrRoleName());
-    }
+	public final String getActorOrRole() throws SoapHeaderException {
+		return getAttributeValue(getSoapVersion().getActorOrRoleName());
+	}
 
-    public final void setActorOrRole(String actorOrRole) throws SoapHeaderException {
-        addAttribute(getSoapVersion().getActorOrRoleName(), actorOrRole);
-    }
+	public final void setActorOrRole(String actorOrRole) throws SoapHeaderException {
+		addAttribute(getSoapVersion().getActorOrRoleName(), actorOrRole);
+	}
 
-    public final boolean getMustUnderstand() throws SoapHeaderException {
-        String mustUnderstandAttribute = getAttributeValue(getSoapVersion().getMustUnderstandAttributeName());
-        return "1".equals(mustUnderstandAttribute);
-    }
+	public final boolean getMustUnderstand() throws SoapHeaderException {
+		String mustUnderstandAttribute = getAttributeValue(getSoapVersion().getMustUnderstandAttributeName());
+		return "1".equals(mustUnderstandAttribute);
+	}
 
-    public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
-        String mustUnderstandAttribute = mustUnderstand ? "1" : "0";
-        addAttribute(getSoapVersion().getMustUnderstandAttributeName(), mustUnderstandAttribute);
-    }
+	public void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException {
+		String mustUnderstandAttribute = mustUnderstand ? "1" : "0";
+		addAttribute(getSoapVersion().getMustUnderstandAttributeName(), mustUnderstandAttribute);
+	}
 
-    public Result getResult() throws SoapHeaderException {
-        events.clear();
-        return StaxUtils.createCustomStaxResult(new CachingXMLEventWriter(events));
-    }
+	public Result getResult() throws SoapHeaderException {
+		events.clear();
+		return StaxUtils.createCustomStaxResult(new CachingXMLEventWriter(events));
+	}
 
-    public String getText() {
-        StringBuilder builder = new StringBuilder();
-        for (XMLEvent event : events) {
-            if (event.isCharacters()) {
-                builder.append(event.asCharacters().getData());
-            }
-        }
-        return builder.toString();
-    }
+	public String getText() {
+		StringBuilder builder = new StringBuilder();
+		for (XMLEvent event : events) {
+			if (event.isCharacters()) {
+				builder.append(event.asCharacters().getData());
+			}
+		}
+		return builder.toString();
+	}
 
-    public void setText(String content) {
-        events.clear();
-        events.add(getEventFactory().createCharacters(content));
-    }
+	public void setText(String content) {
+		events.clear();
+		events.add(getEventFactory().createCharacters(content));
+	}
 
-    @Override
-    protected XMLEventReader getChildEventReader() {
-        return new ListBasedXMLEventReader(events);
-    }
+	@Override
+	protected XMLEventReader getChildEventReader() {
+		return new ListBasedXMLEventReader(events);
+	}
 
 
 }

@@ -29,7 +29,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * implementations. Provides infrastructure for mapping endpoints to actions.
  *
  * <p>By default, this mapping creates a {@code Action} for reply messages based on the request message, plus the
- * extra {@link #setOutputActionSuffix(String) suffix}, and a   * By default, this mapping creates a {@code Action}
+ * extra {@link #setOutputActionSuffix(String) suffix}, and a	* By default, this mapping creates a {@code Action}
  * for reply messages based on the request message, plus the extra {@link #setOutputActionSuffix(String) suffix}.
  *
  * @author Arjen Poutsma
@@ -37,142 +37,142 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  */
 public abstract class AbstractActionEndpointMapping extends AbstractAddressingEndpointMapping {
 
-    /** The defaults suffix to add to the request {@code Action} for reply messages. */
-    public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
+	/** The defaults suffix to add to the request {@code Action} for reply messages. */
+	public static final String DEFAULT_OUTPUT_ACTION_SUFFIX = "Response";
 
-    /** The defaults suffix to add to response {@code Action} for reply messages. */
-    public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
+	/** The defaults suffix to add to response {@code Action} for reply messages. */
+	public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
 
-    // keys are action URIs, values are endpoints
-    private final Map<URI, Object> endpointMap = new HashMap<URI, Object>();
+	// keys are action URIs, values are endpoints
+	private final Map<URI, Object> endpointMap = new HashMap<URI, Object>();
 
-    private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
+	private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
-    private String faultActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
+	private String faultActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
 
-    /** Returns the suffix to add to request {@code Action}s for reply messages. */
-    public String getOutputActionSuffix() {
-        return outputActionSuffix;
-    }
+	/** Returns the suffix to add to request {@code Action}s for reply messages. */
+	public String getOutputActionSuffix() {
+		return outputActionSuffix;
+	}
 
-    /**
-     * Sets the suffix to add to request {@code Action}s for reply messages.
-     *
-     * @see #DEFAULT_OUTPUT_ACTION_SUFFIX
-     */
-    public void setOutputActionSuffix(String outputActionSuffix) {
-        Assert.hasText(outputActionSuffix, "'outputActionSuffix' must not be empty");
-        this.outputActionSuffix = outputActionSuffix;
-    }
+	/**
+	 * Sets the suffix to add to request {@code Action}s for reply messages.
+	 *
+	 * @see #DEFAULT_OUTPUT_ACTION_SUFFIX
+	 */
+	public void setOutputActionSuffix(String outputActionSuffix) {
+		Assert.hasText(outputActionSuffix, "'outputActionSuffix' must not be empty");
+		this.outputActionSuffix = outputActionSuffix;
+	}
 
-    /** Returns the suffix to add to request {@code Action}s for reply fault messages. */
-    public String getFaultActionSuffix() {
-        return faultActionSuffix;
-    }
+	/** Returns the suffix to add to request {@code Action}s for reply fault messages. */
+	public String getFaultActionSuffix() {
+		return faultActionSuffix;
+	}
 
-    /**
-     * Sets the suffix to add to request {@code Action}s for reply fault messages.
-     *
-     * @see #DEFAULT_FAULT_ACTION_SUFFIX
-     */
-    public void setFaultActionSuffix(String faultActionSuffix) {
-        Assert.hasText(faultActionSuffix, "'faultActionSuffix' must not be empty");
-        this.faultActionSuffix = faultActionSuffix;
-    }
+	/**
+	 * Sets the suffix to add to request {@code Action}s for reply fault messages.
+	 *
+	 * @see #DEFAULT_FAULT_ACTION_SUFFIX
+	 */
+	public void setFaultActionSuffix(String faultActionSuffix) {
+		Assert.hasText(faultActionSuffix, "'faultActionSuffix' must not be empty");
+		this.faultActionSuffix = faultActionSuffix;
+	}
 
-    @Override
-    protected final Object getEndpointInternal(MessageAddressingProperties map) {
-        URI action = map.getAction();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Looking up endpoint for action [" + action + "]");
-        }
-        Object endpoint = lookupEndpoint(action);
-        if (endpoint != null) {
-            URI endpointAddress = getEndpointAddress(endpoint);
-            if (endpointAddress == null || endpointAddress.equals(map.getTo())) {
-                return endpoint;
-            }
-        }
-        return null;
-    }
+	@Override
+	protected final Object getEndpointInternal(MessageAddressingProperties map) {
+		URI action = map.getAction();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Looking up endpoint for action [" + action + "]");
+		}
+		Object endpoint = lookupEndpoint(action);
+		if (endpoint != null) {
+			URI endpointAddress = getEndpointAddress(endpoint);
+			if (endpointAddress == null || endpointAddress.equals(map.getTo())) {
+				return endpoint;
+			}
+		}
+		return null;
+	}
 
-    /**
-     * Returns the address property of the given endpoint. The value of this property should match the {@link
-     * MessageAddressingProperties#getTo() destination} of incoming messages. May return {@code null}  to ignore
-     * the destination.
-     *
-     * @param endpoint the endpoint to return the address for
-     * @return the endpoint address; or {@code null} to ignore the destination property
-     */
-    protected abstract URI getEndpointAddress(Object endpoint);
+	/**
+	 * Returns the address property of the given endpoint. The value of this property should match the {@link
+	 * MessageAddressingProperties#getTo() destination} of incoming messages. May return {@code null}  to ignore
+	 * the destination.
+	 *
+	 * @param endpoint the endpoint to return the address for
+	 * @return the endpoint address; or {@code null} to ignore the destination property
+	 */
+	protected abstract URI getEndpointAddress(Object endpoint);
 
-    /**
-     * Looks up an endpoint instance for the given action. All keys are tried in order.
-     *
-     * @param action the action URI
-     * @return the associated endpoint instance, or {@code null} if not found
-     */
-    protected Object lookupEndpoint(URI action) {
-        return endpointMap.get(action);
-    }
+	/**
+	 * Looks up an endpoint instance for the given action. All keys are tried in order.
+	 *
+	 * @param action the action URI
+	 * @return the associated endpoint instance, or {@code null} if not found
+	 */
+	protected Object lookupEndpoint(URI action) {
+		return endpointMap.get(action);
+	}
 
-    /**
-     * Register the specified endpoint for the given action URI.
-     *
-     * @param action   the action the bean should be mapped to
-     * @param endpoint the endpoint instance or endpoint bean name String (a bean name will automatically be resolved
-     *                 into the corresponding endpoint bean)
-     * @throws org.springframework.beans.BeansException
-     *                               if the endpoint couldn't be registered
-     * @throws IllegalStateException if there is a conflicting endpoint registered
-     */
-    protected void registerEndpoint(URI action, Object endpoint) throws BeansException, IllegalStateException {
-        Assert.notNull(action, "Action must not be null");
-        Assert.notNull(endpoint, "Endpoint object must not be null");
-        Object resolvedEndpoint = endpoint;
+	/**
+	 * Register the specified endpoint for the given action URI.
+	 *
+	 * @param action   the action the bean should be mapped to
+	 * @param endpoint the endpoint instance or endpoint bean name String (a bean name will automatically be resolved
+	 *				   into the corresponding endpoint bean)
+	 * @throws org.springframework.beans.BeansException
+	 *								 if the endpoint couldn't be registered
+	 * @throws IllegalStateException if there is a conflicting endpoint registered
+	 */
+	protected void registerEndpoint(URI action, Object endpoint) throws BeansException, IllegalStateException {
+		Assert.notNull(action, "Action must not be null");
+		Assert.notNull(endpoint, "Endpoint object must not be null");
+		Object resolvedEndpoint = endpoint;
 
-        if (endpoint instanceof String) {
-            String endpointName = (String) endpoint;
-            if (getApplicationContext().isSingleton(endpointName)) {
-                resolvedEndpoint = getApplicationContext().getBean(endpointName);
-            }
-        }
-        Object mappedEndpoint = this.endpointMap.get(action);
-        if (mappedEndpoint != null) {
-            if (mappedEndpoint != resolvedEndpoint) {
-                throw new IllegalStateException("Cannot map endpoint [" + endpoint + "] to action [" + action +
-                        "]: There is already endpoint [" + resolvedEndpoint + "] mapped.");
-            }
-        }
-        else {
-            this.endpointMap.put(action, resolvedEndpoint);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Mapped Action [" + action + "] onto endpoint [" + resolvedEndpoint + "]");
-            }
-        }
-    }
+		if (endpoint instanceof String) {
+			String endpointName = (String) endpoint;
+			if (getApplicationContext().isSingleton(endpointName)) {
+				resolvedEndpoint = getApplicationContext().getBean(endpointName);
+			}
+		}
+		Object mappedEndpoint = this.endpointMap.get(action);
+		if (mappedEndpoint != null) {
+			if (mappedEndpoint != resolvedEndpoint) {
+				throw new IllegalStateException("Cannot map endpoint [" + endpoint + "] to action [" + action +
+						"]: There is already endpoint [" + resolvedEndpoint + "] mapped.");
+			}
+		}
+		else {
+			this.endpointMap.put(action, resolvedEndpoint);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Mapped Action [" + action + "] onto endpoint [" + resolvedEndpoint + "]");
+			}
+		}
+	}
 
-    @Override
-    protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
-        URI requestAction = requestMap.getAction();
-        if (requestAction != null) {
-            return URI.create(requestAction.toString() + getOutputActionSuffix());
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
+		URI requestAction = requestMap.getAction();
+		if (requestAction != null) {
+			return URI.create(requestAction.toString() + getOutputActionSuffix());
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
-        URI requestAction = requestMap.getAction();
-        if (requestAction != null) {
-            return URI.create(requestAction.toString() + getFaultActionSuffix());
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
+		URI requestAction = requestMap.getAction();
+		if (requestAction != null) {
+			return URI.create(requestAction.toString() + getFaultActionSuffix());
+		}
+		else {
+			return null;
+		}
+	}
 
 }

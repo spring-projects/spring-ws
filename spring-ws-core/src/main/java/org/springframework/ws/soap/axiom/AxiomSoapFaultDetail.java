@@ -36,66 +36,66 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  */
 class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
-    public AxiomSoapFaultDetail(SOAPFaultDetail axiomFaultDetail, SOAPFactory axiomFactory) {
-        super(axiomFaultDetail, axiomFactory);
-    }
+	public AxiomSoapFaultDetail(SOAPFaultDetail axiomFaultDetail, SOAPFactory axiomFactory) {
+		super(axiomFaultDetail, axiomFactory);
+	}
 
-    @Override
-    public SoapFaultDetailElement addFaultDetailElement(QName name) {
-        try {
-            OMElement element = getAxiomFactory().createOMElement(name, getAxiomFaultDetail());
-            return new AxiomSoapFaultDetailElement(element, getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+	@Override
+	public SoapFaultDetailElement addFaultDetailElement(QName name) {
+		try {
+			OMElement element = getAxiomFactory().createOMElement(name, getAxiomFaultDetail());
+			return new AxiomSoapFaultDetailElement(element, getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapFaultDetailElement> getDetailEntries() {
-        return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapFaultDetailElement> getDetailEntries() {
+		return new AxiomSoapFaultDetailElementIterator(getAxiomFaultDetail().getChildElements());
+	}
 
-    @Override
-    public Result getResult() {
-        return new AxiomResult(getAxiomFaultDetail(), getAxiomFactory());
-    }
+	@Override
+	public Result getResult() {
+		return new AxiomResult(getAxiomFaultDetail(), getAxiomFactory());
+	}
 
-    protected SOAPFaultDetail getAxiomFaultDetail() {
-        return (SOAPFaultDetail) getAxiomElement();
-    }
+	protected SOAPFaultDetail getAxiomFaultDetail() {
+		return (SOAPFaultDetail) getAxiomElement();
+	}
 
-    private class AxiomSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
+	private class AxiomSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
-        private final Iterator<OMElement> axiomIterator;
+		private final Iterator<OMElement> axiomIterator;
 
-        private AxiomSoapFaultDetailElementIterator(Iterator<OMElement> axiomIterator) {
-            this.axiomIterator = axiomIterator;
-        }
+		private AxiomSoapFaultDetailElementIterator(Iterator<OMElement> axiomIterator) {
+			this.axiomIterator = axiomIterator;
+		}
 
-        @Override
-        public boolean hasNext() {
-            return axiomIterator.hasNext();
-        }
+		@Override
+		public boolean hasNext() {
+			return axiomIterator.hasNext();
+		}
 
-        @Override
-        public SoapFaultDetailElement next() {
-            try {
-                OMElement axiomElement = axiomIterator.next();
-                return new AxiomSoapFaultDetailElement(axiomElement, getAxiomFactory());
-            }
-            catch (OMException ex) {
-                throw new AxiomSoapFaultException(ex);
-            }
+		@Override
+		public SoapFaultDetailElement next() {
+			try {
+				OMElement axiomElement = axiomIterator.next();
+				return new AxiomSoapFaultDetailElement(axiomElement, getAxiomFactory());
+			}
+			catch (OMException ex) {
+				throw new AxiomSoapFaultException(ex);
+			}
 
-        }
+		}
 
-        @Override
-        public void remove() {
-            axiomIterator.remove();
-        }
-    }
+		@Override
+		public void remove() {
+			axiomIterator.remove();
+		}
+	}
 
 }

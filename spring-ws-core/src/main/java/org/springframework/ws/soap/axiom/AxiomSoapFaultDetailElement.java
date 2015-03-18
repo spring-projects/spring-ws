@@ -32,29 +32,29 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  */
 class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultDetailElement {
 
-    public AxiomSoapFaultDetailElement(OMElement axiomElement, SOAPFactory soapFactory) {
-        super(axiomElement, soapFactory);
-    }
+	public AxiomSoapFaultDetailElement(OMElement axiomElement, SOAPFactory soapFactory) {
+		super(axiomElement, soapFactory);
+	}
 
-    @Override
-    public Result getResult() {
-        try {
-            return new AxiomResult(getAxiomElement(), getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+	@Override
+	public Result getResult() {
+		try {
+			return new AxiomResult(getAxiomElement(), getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    public void addText(String text) {
-        try {
-            getAxiomElement().setText(text);
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
-    }
+	@Override
+	public void addText(String text) {
+		try {
+			getAxiomElement().setText(text);
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
+	}
 
 }

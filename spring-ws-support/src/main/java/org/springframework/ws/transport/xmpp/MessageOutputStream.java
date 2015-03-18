@@ -33,23 +33,23 @@ import org.jivesoftware.smack.packet.Message;
  */
 class MessageOutputStream extends FilterOutputStream {
 
-    private final Message message;
+	private final Message message;
 
-    private final String encoding;
+	private final String encoding;
 
-    MessageOutputStream(Message message, String encoding) {
-        super(new ByteArrayOutputStream());
-        Assert.notNull(message, "'message' must not be null");
-        Assert.notNull(encoding, "'encoding' must not be null");
-        this.message = message;
-        this.encoding = encoding;
-    }
+	MessageOutputStream(Message message, String encoding) {
+		super(new ByteArrayOutputStream());
+		Assert.notNull(message, "'message' must not be null");
+		Assert.notNull(encoding, "'encoding' must not be null");
+		this.message = message;
+		this.encoding = encoding;
+	}
 
-    @Override
-    public void flush() throws IOException {
-        super.flush();
-        ByteArrayOutputStream bos = (ByteArrayOutputStream) out;
-        String text = new String(bos.toByteArray(), encoding);
-        message.setBody(text);
-    }
+	@Override
+	public void flush() throws IOException {
+		super.flush();
+		ByteArrayOutputStream bos = (ByteArrayOutputStream) out;
+		String text = new String(bos.toByteArray(), encoding);
+		message.setBody(text);
+	}
 }

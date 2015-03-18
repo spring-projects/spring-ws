@@ -31,28 +31,28 @@ import org.junit.runner.RunWith;
 @ContextConfiguration("jms-applicationContext.xml")
 public class JmsIntegrationTest {
 
-    @Autowired
-    private WebServiceTemplate webServiceTemplate;
+	@Autowired
+	private WebServiceTemplate webServiceTemplate;
 
 
-    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
+	public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+		this.webServiceTemplate = webServiceTemplate;
+	}
 
-    @Test
-    public void testTemporaryQueue() throws Exception {
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-        StringResult result = new StringResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-        XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
-    }
+	@Test
+	public void testTemporaryQueue() throws Exception {
+		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+		StringResult result = new StringResult();
+		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+	}
 
-    @Test
-    public void testPermanentQueue() throws Exception {
-        String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-        StringResult result = new StringResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
-        XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
-    }
+	@Test
+	public void testPermanentQueue() throws Exception {
+		String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
+		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+		StringResult result = new StringResult();
+		webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
+		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+	}
 }

@@ -21,26 +21,26 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 
 public class Stroap11MessageTest extends AbstractSoap11MessageTestCase {
 
-    @Override
-    protected final SoapMessage createSoapMessage() throws Exception {
-        StroapMessageFactory messageFactory = new StroapMessageFactory();
-        return new StroapMessage(messageFactory);
-    }
+	@Override
+	protected final SoapMessage createSoapMessage() throws Exception {
+		StroapMessageFactory messageFactory = new StroapMessageFactory();
+		return new StroapMessage(messageFactory);
+	}
 
-    @Override
-    public void testWriteToTransportResponseAttachment() throws Exception {
-    }
+	@Override
+	public void testWriteToTransportResponseAttachment() throws Exception {
+	}
 
-    @Override
-    public void testAddAttachment() throws Exception {
-    }
+	@Override
+	public void testAddAttachment() throws Exception {
+	}
 
-    @Override
-    public void testGetAttachment() throws Exception {
-    }
+	@Override
+	public void testGetAttachment() throws Exception {
+	}
 
-    @Override
-    public void testGetAttachments() throws Exception {
-    }
+	@Override
+	public void testGetAttachments() throws Exception {
+	}
 
 }

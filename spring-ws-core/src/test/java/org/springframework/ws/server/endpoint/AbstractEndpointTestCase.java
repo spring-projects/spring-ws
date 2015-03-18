@@ -41,57 +41,57 @@ import org.xml.sax.helpers.XMLReaderFactory;
 @SuppressWarnings("Since15")
 public abstract class AbstractEndpointTestCase {
 
-    protected static final String NAMESPACE_URI = "http://springframework.org/ws";
+	protected static final String NAMESPACE_URI = "http://springframework.org/ws";
 
-    protected static final String REQUEST_ELEMENT = "request";
+	protected static final String REQUEST_ELEMENT = "request";
 
-    protected static final String RESPONSE_ELEMENT = "response";
+	protected static final String RESPONSE_ELEMENT = "response";
 
-    protected static final String REQUEST = "<" + REQUEST_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
+	protected static final String REQUEST = "<" + REQUEST_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
-    protected static final String RESPONSE = "<" + RESPONSE_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
+	protected static final String RESPONSE = "<" + RESPONSE_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
-    @Test
-    public void testDomSource() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document requestDocument = documentBuilder.parse(new InputSource(new StringReader(REQUEST)));
-        testSource(new DOMSource(requestDocument.getDocumentElement()));
-    }
+	@Test
+	public void testDomSource() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document requestDocument = documentBuilder.parse(new InputSource(new StringReader(REQUEST)));
+		testSource(new DOMSource(requestDocument.getDocumentElement()));
+	}
 
-    @Test
-    public void testSaxSource() throws Exception {
-        XMLReader reader = XMLReaderFactory.createXMLReader();
-        InputSource inputSource = new InputSource(new StringReader(REQUEST));
-        testSource(new SAXSource(reader, inputSource));
-    }
+	@Test
+	public void testSaxSource() throws Exception {
+		XMLReader reader = XMLReaderFactory.createXMLReader();
+		InputSource inputSource = new InputSource(new StringReader(REQUEST));
+		testSource(new SAXSource(reader, inputSource));
+	}
 
-    @Test
-    public void testStaxSourceEventReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
-        testSource(new SAXSource(StaxUtils.createXMLReader(eventReader), new InputSource()));
-    }
+	@Test
+	public void testStaxSourceEventReader() throws Exception {
+		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
+		testSource(new SAXSource(StaxUtils.createXMLReader(eventReader), new InputSource()));
+	}
 
-    @Test
-    public void testStaxSourceStreamReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
-        testSource(new SAXSource(StaxUtils.createXMLReader(streamReader), new InputSource()));
-    }
+	@Test
+	public void testStaxSourceStreamReader() throws Exception {
+		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
+		testSource(new SAXSource(StaxUtils.createXMLReader(streamReader), new InputSource()));
+	}
 
-    @Test
-    public void testStreamSourceInputStream() throws Exception {
-        InputStream is = new ByteArrayInputStream(REQUEST.getBytes("UTF-8"));
-        testSource(new StreamSource(is));
-    }
+	@Test
+	public void testStreamSourceInputStream() throws Exception {
+		InputStream is = new ByteArrayInputStream(REQUEST.getBytes("UTF-8"));
+		testSource(new StreamSource(is));
+	}
 
-    @Test
-    public void testStreamSourceReader() throws Exception {
-        Reader reader = new StringReader(REQUEST);
-        testSource(new StreamSource(reader));
-    }
+	@Test
+	public void testStreamSourceReader() throws Exception {
+		Reader reader = new StringReader(REQUEST);
+		testSource(new StreamSource(reader));
+	}
 
-    protected abstract void testSource(Source requestSource) throws Exception;
+	protected abstract void testSource(Source requestSource) throws Exception;
 }

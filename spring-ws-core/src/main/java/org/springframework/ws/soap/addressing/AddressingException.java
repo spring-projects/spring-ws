@@ -27,11 +27,11 @@ import org.springframework.ws.WebServiceException;
 @SuppressWarnings("serial")
 public class AddressingException extends WebServiceException {
 
-    public AddressingException(String msg) {
-        super(msg);
-    }
+	public AddressingException(String msg) {
+		super(msg);
+	}
 
-    public AddressingException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AddressingException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

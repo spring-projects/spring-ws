@@ -32,38 +32,38 @@ import org.springframework.ws.soap.SoapMessage;
 @SuppressWarnings("serial")
 public class SoapFaultClientException extends WebServiceFaultException {
 
-    private final SoapFault soapFault;
+	private final SoapFault soapFault;
 
-    /**
-     * Create a new instance of the {@code SoapFaultClientException} class.
-     *
-     * @param faultMessage the fault message
-     */
-    public SoapFaultClientException(SoapMessage faultMessage) {
-        super(faultMessage);
-        SoapBody body = faultMessage.getSoapBody();
-        soapFault = body != null ? body.getFault() : null;
-    }
+	/**
+	 * Create a new instance of the {@code SoapFaultClientException} class.
+	 *
+	 * @param faultMessage the fault message
+	 */
+	public SoapFaultClientException(SoapMessage faultMessage) {
+		super(faultMessage);
+		SoapBody body = faultMessage.getSoapBody();
+		soapFault = body != null ? body.getFault() : null;
+	}
 
-    /** Returns the {@link SoapFault}. */
-    public SoapFault getSoapFault() {
-        return soapFault;
-    }
+	/** Returns the {@link SoapFault}. */
+	public SoapFault getSoapFault() {
+		return soapFault;
+	}
 
-    /** Returns the fault code. */
-    public QName getFaultCode() {
-        return soapFault != null ? soapFault.getFaultCode() : null;
-    }
+	/** Returns the fault code. */
+	public QName getFaultCode() {
+		return soapFault != null ? soapFault.getFaultCode() : null;
+	}
 
-    /**
-     * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
-     * fault reason for the default locale.
-     *
-     * <p>Note that this message returns the same as {@link #getMessage()}.
-     */
-    public String getFaultStringOrReason() {
-        return soapFault != null ? soapFault.getFaultStringOrReason() : null;
-    }
+	/**
+	 * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
+	 * fault reason for the default locale.
+	 *
+	 * <p>Note that this message returns the same as {@link #getMessage()}.
+	 */
+	public String getFaultStringOrReason() {
+		return soapFault != null ? soapFault.getFaultStringOrReason() : null;
+	}
 
 
 }

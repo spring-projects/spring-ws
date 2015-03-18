@@ -31,40 +31,40 @@ import org.springframework.ws.mime.Attachment;
  */
 class AxiomAttachment implements Attachment {
 
-    private final DataHandler dataHandler;
+	private final DataHandler dataHandler;
 
-    private final String contentId;
+	private final String contentId;
 
-    public AxiomAttachment(String contentId, DataHandler dataHandler) {
-        Assert.notNull(contentId, "contentId must not be null");
-        Assert.notNull(dataHandler, "dataHandler must not be null");
-        this.contentId = contentId;
-        this.dataHandler = dataHandler;
-    }
+	public AxiomAttachment(String contentId, DataHandler dataHandler) {
+		Assert.notNull(contentId, "contentId must not be null");
+		Assert.notNull(dataHandler, "dataHandler must not be null");
+		this.contentId = contentId;
+		this.dataHandler = dataHandler;
+	}
 
-    @Override
-    public String getContentId() {
-        return contentId;
-    }
+	@Override
+	public String getContentId() {
+		return contentId;
+	}
 
-    @Override
-    public String getContentType() {
-        return dataHandler.getContentType();
-    }
+	@Override
+	public String getContentType() {
+		return dataHandler.getContentType();
+	}
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return dataHandler.getInputStream();
-    }
+	@Override
+	public InputStream getInputStream() throws IOException {
+		return dataHandler.getInputStream();
+	}
 
-    @Override
-    public long getSize() {
-        // Axiom does not support getting the size of attachments.
-        return -1;
-    }
+	@Override
+	public long getSize() {
+		// Axiom does not support getting the size of attachments.
+		return -1;
+	}
 
-    @Override
-    public DataHandler getDataHandler() {
-        return dataHandler;
-    }
+	@Override
+	public DataHandler getDataHandler() {
+		return dataHandler;
+	}
 }

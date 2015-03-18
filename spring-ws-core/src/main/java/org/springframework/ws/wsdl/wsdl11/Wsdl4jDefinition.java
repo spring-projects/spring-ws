@@ -40,71 +40,71 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 
-    private Definition definition;
+	private Definition definition;
 
-    /** Cached DOM version of the definition */
-    private Document document;
+	/** Cached DOM version of the definition */
+	private Document document;
 
-    /** WSDL4J is not thread safe, hence the need for a monitor. */
-    private final Object monitor = new Object();
+	/** WSDL4J is not thread safe, hence the need for a monitor. */
+	private final Object monitor = new Object();
 
-    /**
-     * Constructs a new, empty {@code Wsdl4jDefinition}.
-     *
-     * @see #setDefinition(javax.wsdl.Definition)
-     */
-    public Wsdl4jDefinition() {
-    }
+	/**
+	 * Constructs a new, empty {@code Wsdl4jDefinition}.
+	 *
+	 * @see #setDefinition(javax.wsdl.Definition)
+	 */
+	public Wsdl4jDefinition() {
+	}
 
-    /**
-     * Constructs a new {@code Wsdl4jDefinition} based on the given {@code Definition}.
-     *
-     * @param definition the WSDL4J definition
-     */
-    public Wsdl4jDefinition(Definition definition) {
-        setDefinition(definition);
-    }
+	/**
+	 * Constructs a new {@code Wsdl4jDefinition} based on the given {@code Definition}.
+	 *
+	 * @param definition the WSDL4J definition
+	 */
+	public Wsdl4jDefinition(Definition definition) {
+		setDefinition(definition);
+	}
 
-    /** Returns the WSDL4J {@code Definition}. */
-    public Definition getDefinition() {
-        synchronized (monitor) {
-            return definition;
-        }
-    }
+	/** Returns the WSDL4J {@code Definition}. */
+	public Definition getDefinition() {
+		synchronized (monitor) {
+			return definition;
+		}
+	}
 
-    /** Set the WSDL4J {@code Definition}. */
-    public void setDefinition(Definition definition) {
-        synchronized (monitor) {
-            this.definition = definition;
-            this.document = null;
-        }
-    }
+	/** Set the WSDL4J {@code Definition}. */
+	public void setDefinition(Definition definition) {
+		synchronized (monitor) {
+			this.definition = definition;
+			this.document = null;
+		}
+	}
 
-    @Override
-    public Source getSource() {
-        synchronized (monitor) {
-            Assert.notNull(definition, "definition must not be null");
-            if (document == null) {
-                try {
-                    WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-                    WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-                    document = wsdlWriter.getDocument(definition);
-                }
-                catch (WSDLException ex) {
-                    throw new WsdlDefinitionException(ex.getMessage(), ex);
-                }
-            }
-        }
-        return new DOMSource(document);
-    }
+	@Override
+	public Source getSource() {
+		synchronized (monitor) {
+			Assert.notNull(definition, "definition must not be null");
+			if (document == null) {
+				try {
+					WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+					WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
+					document = wsdlWriter.getDocument(definition);
+				}
+				catch (WSDLException ex) {
+					throw new WsdlDefinitionException(ex.getMessage(), ex);
+				}
+			}
+		}
+		return new DOMSource(document);
+	}
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("Wsdl4jDefinition");
-        if (definition != null && StringUtils.hasLength(definition.getTargetNamespace())) {
-            builder.append('{');
-            builder.append(definition.getTargetNamespace());
-            builder.append('}');
-        }
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder("Wsdl4jDefinition");
+		if (definition != null && StringUtils.hasLength(definition.getTargetNamespace())) {
+			builder.append('{');
+			builder.append(definition.getTargetNamespace());
+			builder.append('}');
+		}
+		return builder.toString();
+	}
 }

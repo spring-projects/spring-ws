@@ -27,24 +27,24 @@ import org.springframework.xml.transform.StringSource;
 
 public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
-    @Override
-    protected SoapBody createSoapBody() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP12Factory();
-        AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
-        return axiomSoapMessage.getSoapBody();
-    }
+	@Override
+	protected SoapBody createSoapBody() throws Exception {
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP12Factory();
+		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
+		return axiomSoapMessage.getSoapBody();
+	}
 
-    @Test
-    public void testPayloadNoCaching() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        messageFactory.setSoapVersion(SoapVersion.SOAP_12);
+	@Test
+	public void testPayloadNoCaching() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 
-        AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
-        soapBody = axiomSoapMessage.getSoapBody();
+		AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
+		soapBody = axiomSoapMessage.getSoapBody();
 
-        String payload = "<payload xmlns='http://www.springframework.org' />";
-        transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
-        assertPayloadEqual(payload);
-    }
+		String payload = "<payload xmlns='http://www.springframework.org' />";
+		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+		assertPayloadEqual(payload);
+	}
 }

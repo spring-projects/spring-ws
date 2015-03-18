@@ -202,9 +202,9 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 				"apos".equals(name);
 	}
 
-    /*
-    * Unsupported
-    */
+	/*
+	* Unsupported
+	*/
 
 	@Override
 	public void setDocumentLocator(Locator locator) {

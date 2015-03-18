@@ -32,41 +32,41 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractCachingDestinationProvider implements DestinationProvider {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    private URI cachedUri;
+	private URI cachedUri;
 
-    private boolean cache = true;
+	private boolean cache = true;
 
-    /**
-     * Set whether to cache resolved destinations. Default is {@code true}. This flag can be turned off to
-     * re-lookup a destination for each operation, which allows for hot restarting of destinations. This is mainly
-     * useful during development.
-     */
-    public void setCache(boolean cache) {
-        this.cache = cache;
-    }
+	/**
+	 * Set whether to cache resolved destinations. Default is {@code true}. This flag can be turned off to
+	 * re-lookup a destination for each operation, which allows for hot restarting of destinations. This is mainly
+	 * useful during development.
+	 */
+	public void setCache(boolean cache) {
+		this.cache = cache;
+	}
 
-    @Override
-    public final URI getDestination() {
-        if (cache) {
-            if (cachedUri == null) {
-                cachedUri = lookupDestination();
-            }
-            return cachedUri;
-        }
-        else {
-            return lookupDestination();
-        }
-    }
+	@Override
+	public final URI getDestination() {
+		if (cache) {
+			if (cachedUri == null) {
+				cachedUri = lookupDestination();
+			}
+			return cachedUri;
+		}
+		else {
+			return lookupDestination();
+		}
+	}
 
-    /**
-     * Abstract template method that looks up the URI.
-     *
-     * <p>If {@linkplain #setCache(boolean) caching}  is enabled, this method will only be called once.
-     *
-     * @return the destination URI
-     */
-    protected abstract URI lookupDestination();
+	/**
+	 * Abstract template method that looks up the URI.
+	 *
+	 * <p>If {@linkplain #setCache(boolean) caching}  is enabled, this method will only be called once.
+	 *
+	 * @return the destination URI
+	 */
+	protected abstract URI lookupDestination();
 }

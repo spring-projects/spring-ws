@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,78 +40,78 @@ import static org.easymock.EasyMock.*;
 
 public class SpringCertificateValidationCallbackHandlerTest {
 
-    private SpringCertificateValidationCallbackHandler callbackHandler;
+	private SpringCertificateValidationCallbackHandler callbackHandler;
 
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
-    private X509Certificate certificate;
+	private X509Certificate certificate;
 
-    private CertificateValidationCallback callback;
+	private CertificateValidationCallback callback;
 
-    @Before
-    public void setUp() throws Exception {
-        callbackHandler = new SpringCertificateValidationCallbackHandler();
-        authenticationManager = createMock(AuthenticationManager.class);
-        callbackHandler.setAuthenticationManager(authenticationManager);
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream is = null;
-        try {
-            is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
-            keyStore.load(is, "password".toCharArray());
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        certificate = (X509Certificate) keyStore.getCertificate("alias");
-        callback = new CertificateValidationCallback(certificate);
-    }
+	@Before
+	public void setUp() throws Exception {
+		callbackHandler = new SpringCertificateValidationCallbackHandler();
+		authenticationManager = createMock(AuthenticationManager.class);
+		callbackHandler.setAuthenticationManager(authenticationManager);
+		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream is = null;
+		try {
+			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
+			keyStore.load(is, "password".toCharArray());
+		}
+		finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+		certificate = (X509Certificate) keyStore.getCertificate("alias");
+		callback = new CertificateValidationCallback(certificate);
+	}
 
-    @After
-    public void tearDown() throws Exception {
-        SecurityContextHolder.clearContext();
-    }
+	@After
+	public void tearDown() throws Exception {
+		SecurityContextHolder.clearContext();
+	}
 
-    @Test
-    public void testValidateCertificateValid() throws Exception {
-        expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
-                .andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority>emptyList()));
+	@Test
+	public void testValidateCertificateValid() throws Exception {
+		expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
+				.andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority>emptyList()));
 
-        replay(authenticationManager);
+		replay(authenticationManager);
 
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Not authenticated", authenticated);
-        Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Not authenticated", authenticated);
+		Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
 
-        verify(authenticationManager);
-    }
+		verify(authenticationManager);
+	}
 
-    @Test
-    public void testValidateCertificateInvalid() throws Exception {
-        expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
-                .andThrow(new BadCredentialsException(""));
+	@Test
+	public void testValidateCertificateInvalid() throws Exception {
+		expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
+				.andThrow(new BadCredentialsException(""));
 
-        replay(authenticationManager);
+		replay(authenticationManager);
 
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
-        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
+		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
 
-        verify(authenticationManager);
-    }
+		verify(authenticationManager);
+	}
 
-    @Test
-    public void testCleanUp() throws Exception {
-        TestingAuthenticationToken authentication =
-                new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+	@Test
+	public void testCleanUp() throws Exception {
+		TestingAuthenticationToken authentication =
+				new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        CleanupCallback cleanupCallback = new CleanupCallback();
-        callbackHandler.handleInternal(cleanupCallback);
-        Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-    }
+		CleanupCallback cleanupCallback = new CleanupCallback();
+		callbackHandler.handleInternal(cleanupCallback);
+		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+	}
 
 }

@@ -25,16 +25,16 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapElementException extends SoapMessageException {
 
-    public SoapElementException(String msg) {
-        super(msg);
-    }
+	public SoapElementException(String msg) {
+		super(msg);
+	}
 
-    public SoapElementException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SoapElementException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SoapElementException(Throwable ex) {
-        super("Could not access element: " + ex.getMessage(), ex);
-    }
+	public SoapElementException(Throwable ex) {
+		super("Could not access element: " + ex.getMessage(), ex);
+	}
 
 }

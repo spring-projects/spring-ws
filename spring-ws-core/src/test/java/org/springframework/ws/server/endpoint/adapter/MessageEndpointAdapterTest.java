@@ -29,33 +29,33 @@ import static org.easymock.EasyMock.*;
 
 public class MessageEndpointAdapterTest {
 
-    private MessageEndpointAdapter adapter;
+	private MessageEndpointAdapter adapter;
 
-    private MessageEndpoint endpointMock;
+	private MessageEndpoint endpointMock;
 
-    @Before
-    public void setUp() throws Exception {
-        adapter = new MessageEndpointAdapter();
-        endpointMock = createMock(MessageEndpoint.class);
-    }
+	@Before
+	public void setUp() throws Exception {
+		adapter = new MessageEndpointAdapter();
+		endpointMock = createMock(MessageEndpoint.class);
+	}
 
-    @Test
-    public void testSupports() throws Exception {
-        Assert.assertTrue("MessageEndpointAdapter does not support MessageEndpoint", adapter.supports(endpointMock));
-    }
+	@Test
+	public void testSupports() throws Exception {
+		Assert.assertTrue("MessageEndpointAdapter does not support MessageEndpoint", adapter.supports(endpointMock));
+	}
 
-    @Test
-    public void testInvoke() throws Exception {
-        MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	@Test
+	public void testInvoke() throws Exception {
+		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-        endpointMock.invoke(context);
+		endpointMock.invoke(context);
 
-        replay(endpointMock);
+		replay(endpointMock);
 
-        adapter.invoke(context, endpointMock);
+		adapter.invoke(context, endpointMock);
 
-        verify(endpointMock);
-    }
+		verify(endpointMock);
+	}
 
 
 

@@ -24,29 +24,29 @@ import org.junit.Test;
 
 public class MockWebServiceMessageSenderTest {
 
-    private MockWebServiceMessageSender sender;
+	private MockWebServiceMessageSender sender;
 
-    @Before
-    public void setUp() throws Exception {
-        sender = new MockWebServiceMessageSender();
-    }
+	@Before
+	public void setUp() throws Exception {
+		sender = new MockWebServiceMessageSender();
+	}
 
-    @Test(expected = AssertionError.class)
-    public void noMoreExpectedConnections() throws IOException {
-        sender.createConnection(URI.create("http://localhost"));
-    }
+	@Test(expected = AssertionError.class)
+	public void noMoreExpectedConnections() throws IOException {
+		sender.createConnection(URI.create("http://localhost"));
+	}
 
-    @Test(expected = AssertionError.class)
-    public void verify() throws IOException {
-        sender.expectNewConnection();
-        sender.verifyConnections();
-    }
+	@Test(expected = AssertionError.class)
+	public void verify() throws IOException {
+		sender.expectNewConnection();
+		sender.verifyConnections();
+	}
 
-    @Test(expected = AssertionError.class)
-    public void verifyMoteThanOne() throws IOException {
-        sender.expectNewConnection();
-        sender.expectNewConnection();
-        sender.createConnection(URI.create("http://localhost"));
-        sender.verifyConnections();
-    }
+	@Test(expected = AssertionError.class)
+	public void verifyMoteThanOne() throws IOException {
+		sender.expectNewConnection();
+		sender.expectNewConnection();
+		sender.createConnection(URI.create("http://localhost"));
+		sender.verifyConnections();
+	}
 }

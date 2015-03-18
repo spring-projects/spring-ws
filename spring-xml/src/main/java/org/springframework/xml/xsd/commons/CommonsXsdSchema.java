@@ -50,95 +50,95 @@ import org.springframework.xml.xsd.XsdSchema;
  */
 public class CommonsXsdSchema implements XsdSchema {
 
-    private final XmlSchema schema;
+	private final XmlSchema schema;
 
-    private final XmlSchemaCollection collection;
+	private final XmlSchemaCollection collection;
 
-    /**
-     * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
-     *
-     * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
-     * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
-     */
-    protected CommonsXsdSchema(XmlSchema schema) {
-        this(schema, null);
-    }
+	/**
+	 * Create a new instance of the	 {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
+	 *
+	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
+	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
+	 */
+	protected CommonsXsdSchema(XmlSchema schema) {
+		this(schema, null);
+	}
 
-    /**
-     * Create a new instance of the  {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
-     * XmlSchemaCollection} reference.
-     *
-     * @param schema     the Commons {@code XmlSchema} object; must not be {@code null}
-     * @param collection the Commons {@code XmlSchemaCollection} object; can be {@code null}
-     * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
-     */
-    protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
-        Assert.notNull(schema, "'schema' must not be null");
-        this.schema = schema;
-        this.collection = collection;
-    }
+	/**
+	 * Create a new instance of the	 {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
+	 * XmlSchemaCollection} reference.
+	 *
+	 * @param schema	 the Commons {@code XmlSchema} object; must not be {@code null}
+	 * @param collection the Commons {@code XmlSchemaCollection} object; can be {@code null}
+	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
+	 */
+	protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
+		Assert.notNull(schema, "'schema' must not be null");
+		this.schema = schema;
+		this.collection = collection;
+	}
 
-    @Override
-    public String getTargetNamespace() {
-        return schema.getTargetNamespace();
-    }
+	@Override
+	public String getTargetNamespace() {
+		return schema.getTargetNamespace();
+	}
 
-    public QName[] getElementNames() {
-        List<QName> result = new ArrayList<QName>(schema.getElements().keySet());
-        return result.toArray(new QName[result.size()]);
-    }
+	public QName[] getElementNames() {
+		List<QName> result = new ArrayList<QName>(schema.getElements().keySet());
+		return result.toArray(new QName[result.size()]);
+	}
 
-    @Override
-    public Source getSource() {
-        // try to use the the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
-        try {
-            XmlSchemaSerializer serializer = BeanUtils.instantiateClass(XmlSchemaSerializer.class);
-            if (collection != null) {
-                serializer.setExtReg(collection.getExtReg());
-            }
-            Document[] serializedSchemas = serializer.serializeSchema(schema, false);
-            return new DOMSource(serializedSchemas[0]);
-        }
-        catch (BeanInstantiationException ex) {
-            // ignore
-        }
-        catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
-            // ignore
-        }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            schema.write(bos);
-        }
-        catch (UnsupportedEncodingException ex) {
-            throw new CommonsXsdSchemaException(ex.getMessage(), ex);
-        }
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        return new StreamSource(bis);
-    }
+	@Override
+	public Source getSource() {
+		// try to use the the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
+		try {
+			XmlSchemaSerializer serializer = BeanUtils.instantiateClass(XmlSchemaSerializer.class);
+			if (collection != null) {
+				serializer.setExtReg(collection.getExtReg());
+			}
+			Document[] serializedSchemas = serializer.serializeSchema(schema, false);
+			return new DOMSource(serializedSchemas[0]);
+		}
+		catch (BeanInstantiationException ex) {
+			// ignore
+		}
+		catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
+			// ignore
+		}
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			schema.write(bos);
+		}
+		catch (UnsupportedEncodingException ex) {
+			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+		}
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		return new StreamSource(bis);
+	}
 
-    @Override
-    public XmlValidator createValidator() {
-	    try {
-		    Resource resource = new UrlResource(schema.getSourceURI());
-		    return XmlValidatorFactory
-				    .createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-	    }
-	    catch (IOException ex) {
-		    throw new CommonsXsdSchemaException(ex.getMessage(), ex);
-	    }
-    }
+	@Override
+	public XmlValidator createValidator() {
+		try {
+			Resource resource = new UrlResource(schema.getSourceURI());
+			return XmlValidatorFactory
+					.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+		}
+		catch (IOException ex) {
+			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+		}
+	}
 
-	    /** Returns the wrapped Commons {@code XmlSchema} object. */
-    public XmlSchema getSchema() {
-        return schema;
-    }
+		/** Returns the wrapped Commons {@code XmlSchema} object. */
+	public XmlSchema getSchema() {
+		return schema;
+	}
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("CommonsXsdSchema");
-        builder.append('{');
-        builder.append(getTargetNamespace());
-        builder.append('}');
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder("CommonsXsdSchema");
+		builder.append('{');
+		builder.append(getTargetNamespace());
+		builder.append('}');
+		return builder.toString();
+	}
 
 }

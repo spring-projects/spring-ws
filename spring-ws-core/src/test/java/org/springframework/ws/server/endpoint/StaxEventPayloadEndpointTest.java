@@ -35,67 +35,67 @@ import static org.junit.Assert.*;
 @SuppressWarnings("Since15")
 public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCase {
 
-    @Override
-    protected MessageEndpoint createNoResponseEndpoint() {
-        return new AbstractStaxEventPayloadEndpoint() {
-            @Override
-            protected void invokeInternal(XMLEventReader eventReader,
-                                          XMLEventConsumer eventWriter,
-                                          XMLEventFactory eventFactory) throws Exception {
-                assertNotNull("No EventReader passed", eventReader);
-            }
-        };
-    }
+	@Override
+	protected MessageEndpoint createNoResponseEndpoint() {
+		return new AbstractStaxEventPayloadEndpoint() {
+			@Override
+			protected void invokeInternal(XMLEventReader eventReader,
+										  XMLEventConsumer eventWriter,
+										  XMLEventFactory eventFactory) throws Exception {
+				assertNotNull("No EventReader passed", eventReader);
+			}
+		};
+	}
 
-    @Override
-    protected MessageEndpoint createNoRequestPayloadEndpoint() {
-        return new AbstractStaxEventPayloadEndpoint() {
+	@Override
+	protected MessageEndpoint createNoRequestPayloadEndpoint() {
+		return new AbstractStaxEventPayloadEndpoint() {
 
-            @Override
-            protected void invokeInternal(XMLEventReader eventReader,
-                                          XMLEventConsumer eventWriter,
-                                          XMLEventFactory eventFactory) throws Exception {
-                assertNull("EventReader passed", eventReader);
-            }
-        };
-    }
+			@Override
+			protected void invokeInternal(XMLEventReader eventReader,
+										  XMLEventConsumer eventWriter,
+										  XMLEventFactory eventFactory) throws Exception {
+				assertNull("EventReader passed", eventReader);
+			}
+		};
+	}
 
-    @Override
-    protected MessageEndpoint createResponseEndpoint() {
-        return new AbstractStaxEventPayloadEndpoint() {
+	@Override
+	protected MessageEndpoint createResponseEndpoint() {
+		return new AbstractStaxEventPayloadEndpoint() {
 
-            @Override
-            protected void invokeInternal(XMLEventReader eventReader,
-                                          XMLEventConsumer eventWriter,
-                                          XMLEventFactory eventFactory) throws XMLStreamException {
-                assertNotNull("eventReader not given", eventReader);
-                assertNotNull("eventWriter not given", eventWriter);
-                assertNotNull("eventFactory not given", eventFactory);
-                assertTrue("eventReader has not next element", eventReader.hasNext());
-                XMLEvent event = eventReader.nextEvent();
-                assertTrue("Not a start document", event.isStartDocument());
-                event = eventReader.nextEvent();
-                assertTrue("Not a start element", event.isStartElement());
-                assertEquals("Invalid start event local name", REQUEST_ELEMENT,
-                        event.asStartElement().getName().getLocalPart());
-                assertEquals("Invalid start event namespace", NAMESPACE_URI,
-                        event.asStartElement().getName().getNamespaceURI());
-                assertTrue("eventReader has not next element", eventReader.hasNext());
-                event = eventReader.nextEvent();
-                assertTrue("Not a end element", event.isEndElement());
-                assertEquals("Invalid end event local name", REQUEST_ELEMENT,
-                        event.asEndElement().getName().getLocalPart());
-                assertEquals("Invalid end event namespace", NAMESPACE_URI,
-                        event.asEndElement().getName().getNamespaceURI());
-                Namespace namespace = eventFactory.createNamespace(NAMESPACE_URI);
-                QName name = new QName(NAMESPACE_URI, RESPONSE_ELEMENT);
-                eventWriter
-                        .add(eventFactory.createStartElement(name, null, Collections.singleton(namespace).iterator()));
-                eventWriter.add(eventFactory.createEndElement(name, Collections.singleton(namespace).iterator()));
-                eventWriter.add(eventFactory.createEndDocument());
-            }
-        };
-    }
+			@Override
+			protected void invokeInternal(XMLEventReader eventReader,
+										  XMLEventConsumer eventWriter,
+										  XMLEventFactory eventFactory) throws XMLStreamException {
+				assertNotNull("eventReader not given", eventReader);
+				assertNotNull("eventWriter not given", eventWriter);
+				assertNotNull("eventFactory not given", eventFactory);
+				assertTrue("eventReader has not next element", eventReader.hasNext());
+				XMLEvent event = eventReader.nextEvent();
+				assertTrue("Not a start document", event.isStartDocument());
+				event = eventReader.nextEvent();
+				assertTrue("Not a start element", event.isStartElement());
+				assertEquals("Invalid start event local name", REQUEST_ELEMENT,
+						event.asStartElement().getName().getLocalPart());
+				assertEquals("Invalid start event namespace", NAMESPACE_URI,
+						event.asStartElement().getName().getNamespaceURI());
+				assertTrue("eventReader has not next element", eventReader.hasNext());
+				event = eventReader.nextEvent();
+				assertTrue("Not a end element", event.isEndElement());
+				assertEquals("Invalid end event local name", REQUEST_ELEMENT,
+						event.asEndElement().getName().getLocalPart());
+				assertEquals("Invalid end event namespace", NAMESPACE_URI,
+						event.asEndElement().getName().getNamespaceURI());
+				Namespace namespace = eventFactory.createNamespace(NAMESPACE_URI);
+				QName name = new QName(NAMESPACE_URI, RESPONSE_ELEMENT);
+				eventWriter
+						.add(eventFactory.createStartElement(name, null, Collections.singleton(namespace).iterator()));
+				eventWriter.add(eventFactory.createEndElement(name, Collections.singleton(namespace).iterator()));
+				eventWriter.add(eventFactory.createEndDocument());
+			}
+		};
+	}
 
 
 }

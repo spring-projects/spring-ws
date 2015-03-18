@@ -33,47 +33,47 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class DomPoxMessageTest {
 
-    private DomPoxMessage message;
+	private DomPoxMessage message;
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    @Before
-    public void setUp() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformer = transformerFactory.newTransformer();
-        message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
-    }
+	@Before
+	public void setUp() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.newDocument();
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		transformer = transformerFactory.newTransformer();
+		message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
+	}
 
-    @Test
-    public void testGetPayload() throws Exception {
-        String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
-        StringSource source = new StringSource(content);
-        transformer.transform(source, message.getPayloadResult());
-        StringResult stringResult = new StringResult();
-        transformer.transform(message.getPayloadSource(), stringResult);
-        assertXMLEqual(content, stringResult.toString());
-    }
+	@Test
+	public void testGetPayload() throws Exception {
+		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
+		StringSource source = new StringSource(content);
+		transformer.transform(source, message.getPayloadResult());
+		StringResult stringResult = new StringResult();
+		transformer.transform(message.getPayloadSource(), stringResult);
+		assertXMLEqual(content, stringResult.toString());
+	}
 
-    @Test
-    public void testGetPayloadResultTwice() throws Exception {
-        String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
-        transformer.transform(new StringSource(content), message.getPayloadResult());
-        transformer.transform(new StringSource(content), message.getPayloadResult());
-        StringResult stringResult = new StringResult();
-        transformer.transform(message.getPayloadSource(), stringResult);
-        assertXMLEqual(content, stringResult.toString());
-    }
+	@Test
+	public void testGetPayloadResultTwice() throws Exception {
+		String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
+		transformer.transform(new StringSource(content), message.getPayloadResult());
+		transformer.transform(new StringSource(content), message.getPayloadResult());
+		StringResult stringResult = new StringResult();
+		transformer.transform(message.getPayloadSource(), stringResult);
+		assertXMLEqual(content, stringResult.toString());
+	}
 
-    @Test
-    public void testWriteTo() throws Exception {
-        String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
-        StringSource source = new StringSource(content);
-        transformer.transform(source, message.getPayloadResult());
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        message.writeTo(os);
-        assertXMLEqual(content, os.toString("UTF-8"));
-    }
+	@Test
+	public void testWriteTo() throws Exception {
+		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
+		StringSource source = new StringSource(content);
+		transformer.transform(source, message.getPayloadResult());
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		message.writeTo(os);
+		assertXMLEqual(content, os.toString("UTF-8"));
+	}
 }

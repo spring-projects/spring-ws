@@ -24,11 +24,11 @@ import org.junit.Test;
 
 public class SaxUtilsTest {
 
-    @Test
-    public void testGetSystemId() throws Exception {
-        Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
-        String systemId = SaxUtils.getSystemId(resource);
-        Assert.assertNotNull("No systemId returned", systemId);
-        Assert.assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
-    }
+	@Test
+	public void testGetSystemId() throws Exception {
+		Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
+		String systemId = SaxUtils.getSystemId(resource);
+		Assert.assertNotNull("No systemId returned", systemId);
+		Assert.assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
+	}
 }

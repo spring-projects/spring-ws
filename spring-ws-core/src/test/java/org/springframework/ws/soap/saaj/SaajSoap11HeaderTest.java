@@ -25,10 +25,10 @@ import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;
 
 public class SaajSoap11HeaderTest extends AbstractSoap11HeaderTestCase {
 
-    @Override
-    protected SoapHeader createSoapHeader() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoap11Header(saajMessage.getSOAPPart().getEnvelope().getHeader());
-    }
+	@Override
+	protected SoapHeader createSoapHeader() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		return new SaajSoap11Header(saajMessage.getSOAPPart().getEnvelope().getHeader());
+	}
 }

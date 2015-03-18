@@ -25,11 +25,11 @@ import org.springframework.ws.test.integration.CustomerCountResponse;
 @Endpoint
 public class CustomerEndpoint {
 
-    @ResponsePayload
-    public CustomerCountResponse getCustomerCount(@RequestPayload CustomerCountRequest request) {
-        CustomerCountResponse response = new CustomerCountResponse();
-        response.setCustomerCount(42);
-        return response;
-    }
+	@ResponsePayload
+	public CustomerCountResponse getCustomerCount(@RequestPayload CustomerCountRequest request) {
+		CustomerCountResponse response = new CustomerCountResponse();
+		response.setCustomerCount(42);
+		return response;
+	}
 
 }

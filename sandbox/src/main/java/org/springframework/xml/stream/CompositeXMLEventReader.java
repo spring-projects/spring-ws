@@ -30,72 +30,72 @@ import org.springframework.util.Assert;
  */
 public class CompositeXMLEventReader extends AbstractXMLEventReader {
 
-    private final XMLEventReader[] eventReaders;
+	private final XMLEventReader[] eventReaders;
 
-    private int cursor = 0;
+	private int cursor = 0;
 
-    public CompositeXMLEventReader(XMLEventReader eventReader) {
-        Assert.notNull(eventReader, "'eventReader' must not be null");
-        this.eventReaders = new XMLEventReader[]{eventReader};
-    }
+	public CompositeXMLEventReader(XMLEventReader eventReader) {
+		Assert.notNull(eventReader, "'eventReader' must not be null");
+		this.eventReaders = new XMLEventReader[]{eventReader};
+	}
 
-    public CompositeXMLEventReader(XMLEventReader... eventReaders) {
-        Assert.notNull(eventReaders, "'eventReaders' must not be null");
-        this.eventReaders = eventReaders;
-    }
+	public CompositeXMLEventReader(XMLEventReader... eventReaders) {
+		Assert.notNull(eventReaders, "'eventReaders' must not be null");
+		this.eventReaders = eventReaders;
+	}
 
-    public CompositeXMLEventReader(List<XMLEventReader> eventReaders) {
-        Assert.notNull(eventReaders, "'eventReaders' must not be null");
-        this.eventReaders = eventReaders.toArray(new XMLEventReader[eventReaders.size()]);
-    }
+	public CompositeXMLEventReader(List<XMLEventReader> eventReaders) {
+		Assert.notNull(eventReaders, "'eventReaders' must not be null");
+		this.eventReaders = eventReaders.toArray(new XMLEventReader[eventReaders.size()]);
+	}
 
-    public boolean hasNext() {
-        while (cursor < eventReaders.length) {
-            if (!atLastEventReader()) {
-                if (!currentEventReader().hasNext()) {
-                    cursor++;
-                    continue;
-                }
-            }
-            return currentEventReader().hasNext();
-        }
-        return false;
-    }
+	public boolean hasNext() {
+		while (cursor < eventReaders.length) {
+			if (!atLastEventReader()) {
+				if (!currentEventReader().hasNext()) {
+					cursor++;
+					continue;
+				}
+			}
+			return currentEventReader().hasNext();
+		}
+		return false;
+	}
 
-    public XMLEvent nextEvent() throws XMLStreamException {
-        XMLEvent event = null;
-        while (cursor < eventReaders.length) {
-            event = currentEventReader().nextEvent();
-            if (!atLastEventReader() && event.isEndDocument()) {
-                cursor++;
-            }
-            else {
-                break;
-            }
-        }
-        return event;
-    }
+	public XMLEvent nextEvent() throws XMLStreamException {
+		XMLEvent event = null;
+		while (cursor < eventReaders.length) {
+			event = currentEventReader().nextEvent();
+			if (!atLastEventReader() && event.isEndDocument()) {
+				cursor++;
+			}
+			else {
+				break;
+			}
+		}
+		return event;
+	}
 
-    public XMLEvent peek() throws XMLStreamException {
-        XMLEvent event = null;
-        while (cursor < eventReaders.length) {
-            event = currentEventReader().peek();
-            if (!atLastEventReader() && (event == null || event.isEndDocument())) {
-                cursor++;
-            }
-            else {
-                break;
-            }
-        }
-        return event;
-    }
+	public XMLEvent peek() throws XMLStreamException {
+		XMLEvent event = null;
+		while (cursor < eventReaders.length) {
+			event = currentEventReader().peek();
+			if (!atLastEventReader() && (event == null || event.isEndDocument())) {
+				cursor++;
+			}
+			else {
+				break;
+			}
+		}
+		return event;
+	}
 
-    private XMLEventReader currentEventReader() {
-        return eventReaders[cursor];
-    }
+	private XMLEventReader currentEventReader() {
+		return eventReaders[cursor];
+	}
 
-    private boolean atLastEventReader() {
-        return cursor == eventReaders.length - 1;
-    }
+	private boolean atLastEventReader() {
+		return cursor == eventReaders.length - 1;
+	}
 
 }

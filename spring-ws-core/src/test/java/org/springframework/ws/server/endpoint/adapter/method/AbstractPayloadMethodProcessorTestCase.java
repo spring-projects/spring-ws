@@ -31,118 +31,118 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMethodArgumentResolverTestCase {
 
-    private AbstractPayloadSourceMethodProcessor processor;
+	private AbstractPayloadSourceMethodProcessor processor;
 
-    private MethodParameter[] supportedParameters;
+	private MethodParameter[] supportedParameters;
 
-    private MethodParameter[] supportedReturnTypes;
+	private MethodParameter[] supportedReturnTypes;
 
-    @Before
-    public final void setUp() throws NoSuchMethodException {
-        processor = createProcessor();
-        supportedParameters = createSupportedParameters();
-        supportedReturnTypes = createSupportedReturnTypes();
-    }
+	@Before
+	public final void setUp() throws NoSuchMethodException {
+		processor = createProcessor();
+		supportedParameters = createSupportedParameters();
+		supportedReturnTypes = createSupportedReturnTypes();
+	}
 
-    protected abstract AbstractPayloadSourceMethodProcessor createProcessor();
+	protected abstract AbstractPayloadSourceMethodProcessor createProcessor();
 
-    protected abstract MethodParameter[] createSupportedParameters() throws NoSuchMethodException;
+	protected abstract MethodParameter[] createSupportedParameters() throws NoSuchMethodException;
 
-    protected abstract MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException;
+	protected abstract MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException;
 
-    @Test
-    public void supportsParameter() throws NoSuchMethodException {
-        for (MethodParameter supportedParameter : supportedParameters) {
-            assertTrue("processor does not support " + supportedParameter.getParameterType() + " parameter",
-                    processor.supportsParameter(supportedParameter));
-        }
-        MethodParameter unsupportedParameter =
-                new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
-        assertFalse("processor supports invalid parameter", processor.supportsParameter(unsupportedParameter));
-    }
+	@Test
+	public void supportsParameter() throws NoSuchMethodException {
+		for (MethodParameter supportedParameter : supportedParameters) {
+			assertTrue("processor does not support " + supportedParameter.getParameterType() + " parameter",
+					processor.supportsParameter(supportedParameter));
+		}
+		MethodParameter unsupportedParameter =
+				new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
+		assertFalse("processor supports invalid parameter", processor.supportsParameter(unsupportedParameter));
+	}
 
-    @Test
-    public void supportsReturnType() throws NoSuchMethodException {
-        for (MethodParameter supportedReturnType : supportedReturnTypes) {
-            assertTrue("processor does not support " + supportedReturnType.getParameterType() + " return type",
-                    processor.supportsReturnType(supportedReturnType));
-        }
-        MethodParameter unsupportedReturnType =
-                new MethodParameter(getClass().getMethod("unsupported", String.class), -1);
-        assertFalse("processor supports invalid return type", processor.supportsReturnType(unsupportedReturnType));
-    }
+	@Test
+	public void supportsReturnType() throws NoSuchMethodException {
+		for (MethodParameter supportedReturnType : supportedReturnTypes) {
+			assertTrue("processor does not support " + supportedReturnType.getParameterType() + " return type",
+					processor.supportsReturnType(supportedReturnType));
+		}
+		MethodParameter unsupportedReturnType =
+				new MethodParameter(getClass().getMethod("unsupported", String.class), -1);
+		assertFalse("processor supports invalid return type", processor.supportsReturnType(unsupportedReturnType));
+	}
 
-    @Test
-    public void saajArgument() throws Exception {
-        testResolveArgument(createSaajMessageContext());
-    }
+	@Test
+	public void saajArgument() throws Exception {
+		testResolveArgument(createSaajMessageContext());
+	}
 
-    @Test
-    public void mockArgument() throws Exception {
-        testResolveArgument(createMockMessageContext());
-    }
+	@Test
+	public void mockArgument() throws Exception {
+		testResolveArgument(createMockMessageContext());
+	}
 
-    @Test
-    public void axiomCachingArgument() throws Exception {
-        testResolveArgument(createCachingAxiomMessageContext());
-    }
+	@Test
+	public void axiomCachingArgument() throws Exception {
+		testResolveArgument(createCachingAxiomMessageContext());
+	}
 
-    @Test
-    public void axiomNonCachingArgument() throws Exception {
-        testResolveArgument(createNonCachingAxiomMessageContext());
-    }
+	@Test
+	public void axiomNonCachingArgument() throws Exception {
+		testResolveArgument(createNonCachingAxiomMessageContext());
+	}
 
-    private void testResolveArgument(MessageContext messageContext) throws Exception {
-        for (MethodParameter supportedParameter : supportedParameters) {
-            Object argument = processor.resolveArgument(messageContext, supportedParameter);
+	private void testResolveArgument(MessageContext messageContext) throws Exception {
+		for (MethodParameter supportedParameter : supportedParameters) {
+			Object argument = processor.resolveArgument(messageContext, supportedParameter);
 
-            assertTrue(argument + " is not an instance of " + supportedParameter.getParameterType(),
-                    supportedParameter.getParameterType().isInstance(argument));
-            testArgument(argument, supportedParameter);
-        }
-    }
-
-
-    protected void testArgument(Object argument, MethodParameter parameter) {
-    }
-
-    @Test
-    public void saajReturnValue() throws Exception {
-        testHandleReturnValue(createSaajMessageContext());
-    }
-
-    @Test
-    public void mockReturnValue() throws Exception {
-        testHandleReturnValue(createMockMessageContext());
-    }
-
-    @Test
-    public void axiomCachingReturnValue() throws Exception {
-        testHandleReturnValue(createCachingAxiomMessageContext());
-    }
-
-    @Test
-    public void axiomNonCachingReturnValue() throws Exception {
-        testHandleReturnValue(createNonCachingAxiomMessageContext());
-    }
+			assertTrue(argument + " is not an instance of " + supportedParameter.getParameterType(),
+					supportedParameter.getParameterType().isInstance(argument));
+			testArgument(argument, supportedParameter);
+		}
+	}
 
 
-    private void testHandleReturnValue(MessageContext messageContext) throws Exception {
-        for (MethodParameter supportedReturnType : supportedReturnTypes) {
-            Object returnValue = getReturnValue(supportedReturnType);
-            processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
-            assertTrue("No response created", messageContext.hasResponse());
-            Source responsePayload = messageContext.getResponse().getPayloadSource();
-            StringResult result = new StringResult();
-            transform(responsePayload, result);
-            assertXMLEqual(XML, result.toString());
-        }
-    }
+	protected void testArgument(Object argument, MethodParameter parameter) {
+	}
 
-    protected abstract Object getReturnValue(MethodParameter returnType) throws Exception;
+	@Test
+	public void saajReturnValue() throws Exception {
+		testHandleReturnValue(createSaajMessageContext());
+	}
 
-    public String unsupported(String s) {
-        return s;
-    }
+	@Test
+	public void mockReturnValue() throws Exception {
+		testHandleReturnValue(createMockMessageContext());
+	}
+
+	@Test
+	public void axiomCachingReturnValue() throws Exception {
+		testHandleReturnValue(createCachingAxiomMessageContext());
+	}
+
+	@Test
+	public void axiomNonCachingReturnValue() throws Exception {
+		testHandleReturnValue(createNonCachingAxiomMessageContext());
+	}
+
+
+	private void testHandleReturnValue(MessageContext messageContext) throws Exception {
+		for (MethodParameter supportedReturnType : supportedReturnTypes) {
+			Object returnValue = getReturnValue(supportedReturnType);
+			processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
+			assertTrue("No response created", messageContext.hasResponse());
+			Source responsePayload = messageContext.getResponse().getPayloadSource();
+			StringResult result = new StringResult();
+			transform(responsePayload, result);
+			assertXMLEqual(XML, result.toString());
+		}
+	}
+
+	protected abstract Object getReturnValue(MethodParameter returnType) throws Exception;
+
+	public String unsupported(String s) {
+		return s;
+	}
 
 }

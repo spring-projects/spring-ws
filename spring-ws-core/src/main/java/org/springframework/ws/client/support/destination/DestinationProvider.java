@@ -31,11 +31,11 @@ import java.net.URI;
  */
 public interface DestinationProvider {
 
-    /**
-     * Return the destination URI.
-     *
-     * @return the destination URI
-     */
-    URI getDestination();
+	/**
+	 * Return the destination URI.
+	 *
+	 * @return the destination URI
+	 */
+	URI getDestination();
 
 }

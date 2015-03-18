@@ -30,62 +30,62 @@ import org.springframework.xml.stream.AbstractXMLEventReader;
  */
 class NonCachingStroapPayload extends StroapPayload {
 
-    private final XMLEventReader eventReader;
+	private final XMLEventReader eventReader;
 
-    private int elementDepth = 0;
+	private int elementDepth = 0;
 
-    NonCachingStroapPayload(XMLEventReader eventReader) throws XMLStreamException {
-        Assert.notNull(eventReader, "'eventReader' must not be null");
-        this.eventReader = eventReader;
-    }
+	NonCachingStroapPayload(XMLEventReader eventReader) throws XMLStreamException {
+		Assert.notNull(eventReader, "'eventReader' must not be null");
+		this.eventReader = eventReader;
+	}
 
-    @Override
-    public QName getName() {
-        try {
-            XMLEvent event = eventReader.peek();
-            if (event != null && event.isStartElement()) {
-                return event.asStartElement().getName();
-            }
+	@Override
+	public QName getName() {
+		try {
+			XMLEvent event = eventReader.peek();
+			if (event != null && event.isStartElement()) {
+				return event.asStartElement().getName();
+			}
 
-        }
-        catch (XMLStreamException ex) {
-            // ignore
-        }
-        return null;
-    }
+		}
+		catch (XMLStreamException ex) {
+			// ignore
+		}
+		return null;
+	}
 
-    @Override
-    public XMLEventReader getEventReader() {
-        return new NonCachingXMLEventReader();
-    }
+	@Override
+	public XMLEventReader getEventReader() {
+		return new NonCachingXMLEventReader();
+	}
 
-    private class NonCachingXMLEventReader extends AbstractXMLEventReader {
+	private class NonCachingXMLEventReader extends AbstractXMLEventReader {
 
-        public boolean hasNext() {
-            return elementDepth >= 0 && eventReader.hasNext();
-        }
+		public boolean hasNext() {
+			return elementDepth >= 0 && eventReader.hasNext();
+		}
 
-        public XMLEvent nextEvent() throws XMLStreamException {
-            if (elementDepth < 0) {
-                throw new NoSuchElementException();
-            }
-            XMLEvent event = eventReader.nextEvent();
-            if (event.isStartElement()) {
-                elementDepth++;
-            }
-            else if (event.isEndElement()) {
-                elementDepth--;
-            }
-            return event;
-        }
+		public XMLEvent nextEvent() throws XMLStreamException {
+			if (elementDepth < 0) {
+				throw new NoSuchElementException();
+			}
+			XMLEvent event = eventReader.nextEvent();
+			if (event.isStartElement()) {
+				elementDepth++;
+			}
+			else if (event.isEndElement()) {
+				elementDepth--;
+			}
+			return event;
+		}
 
-        public XMLEvent peek() throws XMLStreamException {
-            if (elementDepth < 0) {
-                return null;
-            }
-            else {
-                return eventReader.peek();
-            }
-        }
-    }
+		public XMLEvent peek() throws XMLStreamException {
+			if (elementDepth < 0) {
+				return null;
+			}
+			else {
+				return eventReader.peek();
+			}
+		}
+	}
 }

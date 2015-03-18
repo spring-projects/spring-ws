@@ -37,55 +37,55 @@ import org.w3c.dom.Node;
  */
 public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-    // MethodArgumentResolver
+	// MethodArgumentResolver
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        return supports(parameter);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		return supports(parameter);
+	}
 
-    @Override
-    protected Node resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
-        if (requestPayload instanceof DOMSource) {
-            return resolveArgumentDomSource(parameter, (DOMSource) requestPayload);
-        }
-        else {
-            DOMResult domResult = new DOMResult();
-            transform(requestPayload, domResult);
-            DOMSource domSource = new DOMSource(domResult.getNode());
-            return resolveArgumentDomSource(parameter, domSource);
-        }
-    }
+	@Override
+	protected Node resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
+		if (requestPayload instanceof DOMSource) {
+			return resolveArgumentDomSource(parameter, (DOMSource) requestPayload);
+		}
+		else {
+			DOMResult domResult = new DOMResult();
+			transform(requestPayload, domResult);
+			DOMSource domSource = new DOMSource(domResult.getNode());
+			return resolveArgumentDomSource(parameter, domSource);
+		}
+	}
 
-    private Node resolveArgumentDomSource(MethodParameter parameter, DOMSource requestSource) {
-        Class<?> parameterType = parameter.getParameterType();
-        Node requestNode = requestSource.getNode();
-        if (parameterType.isAssignableFrom(requestNode.getClass())) {
-            return requestNode;
-        }
-        else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
-            Document document = (Document) requestNode;
-            return document.getDocumentElement();
-        }
-        // should not happen
-        throw new UnsupportedOperationException();
-    }
+	private Node resolveArgumentDomSource(MethodParameter parameter, DOMSource requestSource) {
+		Class<?> parameterType = parameter.getParameterType();
+		Node requestNode = requestSource.getNode();
+		if (parameterType.isAssignableFrom(requestNode.getClass())) {
+			return requestNode;
+		}
+		else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
+			Document document = (Document) requestNode;
+			return document.getDocumentElement();
+		}
+		// should not happen
+		throw new UnsupportedOperationException();
+	}
 
-    // MethodReturnValueHandler
+	// MethodReturnValueHandler
 
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        return supports(returnType);
-    }
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		return supports(returnType);
+	}
 
-    @Override
-    protected DOMSource createResponsePayload(MethodParameter returnType, Object returnValue) {
-        Element returnedElement = (Element) returnValue;
-        return new DOMSource(returnedElement);
-    }
+	@Override
+	protected DOMSource createResponsePayload(MethodParameter returnType, Object returnValue) {
+		Element returnedElement = (Element) returnValue;
+		return new DOMSource(returnedElement);
+	}
 
-    private boolean supports(MethodParameter parameter) {
-        return Element.class.equals(parameter.getParameterType());
-    }
+	private boolean supports(MethodParameter parameter) {
+		return Element.class.equals(parameter.getParameterType());
+	}
 
 }

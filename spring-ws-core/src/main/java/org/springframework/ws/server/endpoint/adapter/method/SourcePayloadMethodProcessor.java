@@ -45,136 +45,136 @@ import org.xml.sax.InputSource;
  */
 public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-    private XMLInputFactory inputFactory = createXmlInputFactory();
+	private XMLInputFactory inputFactory = createXmlInputFactory();
 
-    // MethodArgumentResolver
+	// MethodArgumentResolver
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        return supports(parameter);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		return supports(parameter);
+	}
 
-    @Override
-    protected Source resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
-        Class<?> parameterType = parameter.getParameterType();
-        if (parameterType.isAssignableFrom(requestPayload.getClass())) {
-            return requestPayload;
-        }
-        if (DOMSource.class.isAssignableFrom(parameterType)) {
-            DOMResult domResult = new DOMResult();
-            transform(requestPayload, domResult);
-            Node node = domResult.getNode();
-            if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                return new DOMSource(((Document) node).getDocumentElement());
-            }
-            else {
-                return new DOMSource(domResult.getNode());
-            }
-        }
-        else if (SAXSource.class.isAssignableFrom(parameterType)) {
-            ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-            InputSource inputSource = new InputSource(bis);
-            return new SAXSource(inputSource);
-        }
-        else if (StreamSource.class.isAssignableFrom(parameterType)) {
-            ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-            return new StreamSource(bis);
-        }
-        else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
-            XMLStreamReader streamReader;
-            try {
-                streamReader = inputFactory.createXMLStreamReader(requestPayload);
-            } catch (UnsupportedOperationException ignored) {
-                streamReader = null;
-            }
-            catch (XMLStreamException ignored) {
-                streamReader = null;
-            }
-            if (streamReader == null) {
-                ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-                streamReader = inputFactory.createXMLStreamReader(bis);
-            }
-            return Jaxp14StaxHandler.createStaxSource(streamReader, requestPayload.getSystemId());
-        }
-        throw new IllegalArgumentException("Unknown Source type: " + parameterType);
-    }
+	@Override
+	protected Source resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
+		Class<?> parameterType = parameter.getParameterType();
+		if (parameterType.isAssignableFrom(requestPayload.getClass())) {
+			return requestPayload;
+		}
+		if (DOMSource.class.isAssignableFrom(parameterType)) {
+			DOMResult domResult = new DOMResult();
+			transform(requestPayload, domResult);
+			Node node = domResult.getNode();
+			if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				return new DOMSource(((Document) node).getDocumentElement());
+			}
+			else {
+				return new DOMSource(domResult.getNode());
+			}
+		}
+		else if (SAXSource.class.isAssignableFrom(parameterType)) {
+			ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+			InputSource inputSource = new InputSource(bis);
+			return new SAXSource(inputSource);
+		}
+		else if (StreamSource.class.isAssignableFrom(parameterType)) {
+			ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+			return new StreamSource(bis);
+		}
+		else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
+			XMLStreamReader streamReader;
+			try {
+				streamReader = inputFactory.createXMLStreamReader(requestPayload);
+			} catch (UnsupportedOperationException ignored) {
+				streamReader = null;
+			}
+			catch (XMLStreamException ignored) {
+				streamReader = null;
+			}
+			if (streamReader == null) {
+				ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+				streamReader = inputFactory.createXMLStreamReader(bis);
+			}
+			return Jaxp14StaxHandler.createStaxSource(streamReader, requestPayload.getSystemId());
+		}
+		throw new IllegalArgumentException("Unknown Source type: " + parameterType);
+	}
 
-    // MethodReturnValueHandler
+	// MethodReturnValueHandler
 
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        return supports(returnType);
-    }
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		return supports(returnType);
+	}
 
-    @Override
-    protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
-        return (Source) returnValue;
-    }
+	@Override
+	protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
+		return (Source) returnValue;
+	}
 
-    private boolean supports(MethodParameter parameter) {
-        return Source.class.isAssignableFrom(parameter.getParameterType());
-    }
+	private boolean supports(MethodParameter parameter) {
+		return Source.class.isAssignableFrom(parameter.getParameterType());
+	}
 
-    /**
-     * Create a {@code XMLInputFactory} that this resolver will use to create {@link javax.xml.stream.XMLStreamReader}
-     * and {@link javax.xml.stream.XMLEventReader} objects.
-     *
-     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
-     * so this method will only be called once.
-     *
-     * @return the created factory
-     */
-    protected XMLInputFactory createXmlInputFactory() {
-        return XMLInputFactory.newInstance();
-    }
+	/**
+	 * Create a {@code XMLInputFactory} that this resolver will use to create {@link javax.xml.stream.XMLStreamReader}
+	 * and {@link javax.xml.stream.XMLEventReader} objects.
+	 *
+	 * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+	 * so this method will only be called once.
+	 *
+	 * @return the created factory
+	 */
+	protected XMLInputFactory createXmlInputFactory() {
+		return XMLInputFactory.newInstance();
+	}
 
-    /** Inner class to avoid a static JAXP 1.4 dependency. */
-    private static class Jaxp14StaxHandler {
+	/** Inner class to avoid a static JAXP 1.4 dependency. */
+	private static class Jaxp14StaxHandler {
 
-        private static boolean isStaxSource(Class<?> clazz) {
-            return StAXSource.class.isAssignableFrom(clazz);
-        }
+		private static boolean isStaxSource(Class<?> clazz) {
+			return StAXSource.class.isAssignableFrom(clazz);
+		}
 
-        private static Source createStaxSource(XMLStreamReader streamReader, String systemId) {
-            return new StAXSource(new SystemIdStreamReaderDelegate(streamReader, systemId));
-        }
+		private static Source createStaxSource(XMLStreamReader streamReader, String systemId) {
+			return new StAXSource(new SystemIdStreamReaderDelegate(streamReader, systemId));
+		}
 
-    }
+	}
 
-    private static class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
+	private static class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
 
-        private final String systemId;
+		private final String systemId;
 
-        private SystemIdStreamReaderDelegate(XMLStreamReader reader, String systemId) {
-            super(reader);
-            this.systemId = systemId;
-        }
+		private SystemIdStreamReaderDelegate(XMLStreamReader reader, String systemId) {
+			super(reader);
+			this.systemId = systemId;
+		}
 
-        @Override
-        public Location getLocation() {
-            final Location parentLocation = getParent().getLocation();
-            return new Location() {
-                public int getLineNumber() {
-                    return parentLocation != null ? parentLocation.getLineNumber() : -1;
-                }
+		@Override
+		public Location getLocation() {
+			final Location parentLocation = getParent().getLocation();
+			return new Location() {
+				public int getLineNumber() {
+					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+				}
 
-                public int getColumnNumber() {
-                    return parentLocation != null ? parentLocation.getColumnNumber() : -1;
-                }
+				public int getColumnNumber() {
+					return parentLocation != null ? parentLocation.getColumnNumber() : -1;
+				}
 
-                public int getCharacterOffset() {
-                    return parentLocation != null ? parentLocation.getLineNumber() : -1;
-                }
+				public int getCharacterOffset() {
+					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+				}
 
-                public String getPublicId() {
-                    return parentLocation != null ? parentLocation.getPublicId() : null;
-                }
+				public String getPublicId() {
+					return parentLocation != null ? parentLocation.getPublicId() : null;
+				}
 
-                public String getSystemId() {
-                    return systemId;
-                }
-            };
-        }
-    }
+				public String getSystemId() {
+					return systemId;
+				}
+			};
+		}
+	}
 
 }

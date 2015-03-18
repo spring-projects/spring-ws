@@ -31,66 +31,66 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  */
 public abstract class AbstractXMLEventWriter implements XMLEventWriter {
 
-    private boolean closed;
+	private boolean closed;
 
-    private SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
+	private SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
 
-    public void flush() throws XMLStreamException {
-    }
+	public void flush() throws XMLStreamException {
+	}
 
-    public void add(XMLEventReader eventReader) throws XMLStreamException {
-        checkIfClosed();
-        while (eventReader.hasNext()) {
-            XMLEvent event = eventReader.nextEvent();
-            add(event);
-        }
-    }
+	public void add(XMLEventReader eventReader) throws XMLStreamException {
+		checkIfClosed();
+		while (eventReader.hasNext()) {
+			XMLEvent event = eventReader.nextEvent();
+			add(event);
+		}
+	}
 
-    public String getPrefix(String uri) throws XMLStreamException {
-        return namespaceContext.getPrefix(uri);
-    }
+	public String getPrefix(String uri) throws XMLStreamException {
+		return namespaceContext.getPrefix(uri);
+	}
 
-    public void setPrefix(String prefix, String uri) throws XMLStreamException {
-        namespaceContext.bindNamespaceUri(prefix, uri);
-    }
+	public void setPrefix(String prefix, String uri) throws XMLStreamException {
+		namespaceContext.bindNamespaceUri(prefix, uri);
+	}
 
-    public void setDefaultNamespace(String uri) throws XMLStreamException {
-        namespaceContext.bindDefaultNamespaceUri(uri);
-    }
+	public void setDefaultNamespace(String uri) throws XMLStreamException {
+		namespaceContext.bindDefaultNamespaceUri(uri);
+	}
 
-    public void setNamespaceContext(NamespaceContext namespaceContext) throws XMLStreamException {
-        Assert.notNull(namespaceContext, "'namespaceContext' must not be null");
-        this.namespaceContext = (SimpleNamespaceContext) namespaceContext;
-    }
+	public void setNamespaceContext(NamespaceContext namespaceContext) throws XMLStreamException {
+		Assert.notNull(namespaceContext, "'namespaceContext' must not be null");
+		this.namespaceContext = (SimpleNamespaceContext) namespaceContext;
+	}
 
-    public NamespaceContext getNamespaceContext() {
-        return namespaceContext;
-    }
+	public NamespaceContext getNamespaceContext() {
+		return namespaceContext;
+	}
 
-    /**
-     * Returns <code>true</code> if closed; <code>false</code> otherwise.
-     *
-     * @see #close()
-     */
-    protected boolean isClosed() {
-        return closed;
-    }
+	/**
+	 * Returns <code>true</code> if closed; <code>false</code> otherwise.
+	 *
+	 * @see #close()
+	 */
+	protected boolean isClosed() {
+		return closed;
+	}
 
-    /**
-     * Checks if the reader is closed, and throws a <code>XMLStreamException</code> if so.
-     *
-     * @throws XMLStreamException if the reader is closed
-     * @see #close()
-     * @see #isClosed()
-     */
-    protected void checkIfClosed() throws XMLStreamException {
-        if (closed) {
-            throw new XMLStreamException(ClassUtils.getShortName(getClass()) + " has been closed");
-        }
-    }
+	/**
+	 * Checks if the reader is closed, and throws a <code>XMLStreamException</code> if so.
+	 *
+	 * @throws XMLStreamException if the reader is closed
+	 * @see #close()
+	 * @see #isClosed()
+	 */
+	protected void checkIfClosed() throws XMLStreamException {
+		if (closed) {
+			throw new XMLStreamException(ClassUtils.getShortName(getClass()) + " has been closed");
+		}
+	}
 
-    public void close() {
-        closed = true;
-    }
+	public void close() {
+		closed = true;
+	}
 
 }

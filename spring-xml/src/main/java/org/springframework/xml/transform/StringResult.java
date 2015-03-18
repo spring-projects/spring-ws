@@ -29,13 +29,13 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class StringResult extends StreamResult {
 
-    public StringResult() {
-        super(new StringWriter());
-    }
+	public StringResult() {
+		super(new StringWriter());
+	}
 
-    /** Returns the written XML as a string. */
-    public String toString() {
-        return getWriter().toString();
-    }
+	/** Returns the written XML as a string. */
+	public String toString() {
+		return getWriter().toString();
+	}
 
 }

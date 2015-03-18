@@ -57,179 +57,179 @@ import org.springframework.xml.transform.TraxUtils;
  */
 public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
-    private XPathFactory xpathFactory;
+	private XPathFactory xpathFactory;
 
-    public Jaxp13XPathTemplate() {
-        this(XPathFactory.DEFAULT_OBJECT_MODEL_URI);
-    }
+	public Jaxp13XPathTemplate() {
+		this(XPathFactory.DEFAULT_OBJECT_MODEL_URI);
+	}
 
-    public Jaxp13XPathTemplate(String xpathFactoryUri) {
-        try {
-            xpathFactory = XPathFactory.newInstance(xpathFactoryUri);
-        }
-        catch (XPathFactoryConfigurationException ex) {
-            throw new XPathException("Could not create XPathFactory", ex);
-        }
-    }
+	public Jaxp13XPathTemplate(String xpathFactoryUri) {
+		try {
+			xpathFactory = XPathFactory.newInstance(xpathFactoryUri);
+		}
+		catch (XPathFactoryConfigurationException ex) {
+			throw new XPathException("Could not create XPathFactory", ex);
+		}
+	}
 
-    @Override
-    public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
-        Boolean result = (Boolean) evaluate(expression, context, XPathConstants.BOOLEAN);
-        return result != null && result;
-    }
+	@Override
+	public boolean evaluateAsBoolean(String expression, Source context) throws XPathException {
+		Boolean result = (Boolean) evaluate(expression, context, XPathConstants.BOOLEAN);
+		return result != null && result;
+	}
 
-    @Override
-    public Node evaluateAsNode(String expression, Source context) throws XPathException {
-        return (Node) evaluate(expression, context, XPathConstants.NODE);
-    }
+	@Override
+	public Node evaluateAsNode(String expression, Source context) throws XPathException {
+		return (Node) evaluate(expression, context, XPathConstants.NODE);
+	}
 
-    @Override
-    public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
-        NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-        List<Node> nodes = new ArrayList<Node>(result.getLength());
-        for (int i = 0; i < result.getLength(); i++) {
-            nodes.add(result.item(i));
-        }
-        return nodes;
-    }
+	@Override
+	public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
+		NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
+		List<Node> nodes = new ArrayList<Node>(result.getLength());
+		for (int i = 0; i < result.getLength(); i++) {
+			nodes.add(result.item(i));
+		}
+		return nodes;
+	}
 
-    @Override
-    public double evaluateAsDouble(String expression, Source context) throws XPathException {
-        Double result = (Double) evaluate(expression, context, XPathConstants.NUMBER);
-        return result != null ? result : Double.NaN;
-    }
+	@Override
+	public double evaluateAsDouble(String expression, Source context) throws XPathException {
+		Double result = (Double) evaluate(expression, context, XPathConstants.NUMBER);
+		return result != null ? result : Double.NaN;
+	}
 
-    @Override
-    public String evaluateAsString(String expression, Source context) throws XPathException {
-        return (String) evaluate(expression, context, XPathConstants.STRING);
-    }
+	@Override
+	public String evaluateAsString(String expression, Source context) throws XPathException {
+		return (String) evaluate(expression, context, XPathConstants.STRING);
+	}
 
-    @Override
-    public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
-        Node node = evaluateAsNode(expression, context);
-        if (node != null) {
-            try {
-                return nodeMapper.mapNode(node, 0);
-            }
-            catch (DOMException ex) {
-                throw new XPathException("Mapping resulted in DOMException", ex);
-            }
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+		Node node = evaluateAsNode(expression, context);
+		if (node != null) {
+			try {
+				return nodeMapper.mapNode(node, 0);
+			}
+			catch (DOMException ex) {
+				throw new XPathException("Mapping resulted in DOMException", ex);
+			}
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
-        NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-        List<T> results = new ArrayList<T>(nodes.getLength());
-        for (int i = 0; i < nodes.getLength(); i++) {
-            try {
-                results.add(nodeMapper.mapNode(nodes.item(i), i));
-            }
-            catch (DOMException ex) {
-                throw new XPathException("Mapping resulted in DOMException", ex);
-            }
-        }
-        return results;
-    }
+	@Override
+	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+		NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
+		List<T> results = new ArrayList<T>(nodes.getLength());
+		for (int i = 0; i < nodes.getLength(); i++) {
+			try {
+				results.add(nodeMapper.mapNode(nodes.item(i), i));
+			}
+			catch (DOMException ex) {
+				throw new XPathException("Mapping resulted in DOMException", ex);
+			}
+		}
+		return results;
+	}
 
-    private Object evaluate(String expression, Source context, QName returnType) throws XPathException {
-        XPath xpath = createXPath();
-        if (getNamespaces() != null && !getNamespaces().isEmpty()) {
-            SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-            namespaceContext.setBindings(getNamespaces());
-            xpath.setNamespaceContext(namespaceContext);
-        }
-        try {
-            EvaluationCallback callback = new EvaluationCallback(xpath, expression, returnType);
-            TraxUtils.doWithSource(context, callback);
-            return callback.result;
-        }
-        catch (javax.xml.xpath.XPathException ex) {
-            throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new XPathException("Could not transform context to DOM Node", ex);
-        }
-        catch (Exception ex) {
-            throw new XPathException(ex.getMessage(), ex);
-        }
-    }
+	private Object evaluate(String expression, Source context, QName returnType) throws XPathException {
+		XPath xpath = createXPath();
+		if (getNamespaces() != null && !getNamespaces().isEmpty()) {
+			SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
+			namespaceContext.setBindings(getNamespaces());
+			xpath.setNamespaceContext(namespaceContext);
+		}
+		try {
+			EvaluationCallback callback = new EvaluationCallback(xpath, expression, returnType);
+			TraxUtils.doWithSource(context, callback);
+			return callback.result;
+		}
+		catch (javax.xml.xpath.XPathException ex) {
+			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new XPathException("Could not transform context to DOM Node", ex);
+		}
+		catch (Exception ex) {
+			throw new XPathException(ex.getMessage(), ex);
+		}
+	}
 
-    private synchronized XPath createXPath() {
-        return xpathFactory.newXPath();
-    }
+	private synchronized XPath createXPath() {
+		return xpathFactory.newXPath();
+	}
 
-    private static class EvaluationCallback implements TraxUtils.SourceCallback {
+	private static class EvaluationCallback implements TraxUtils.SourceCallback {
 
-        private final XPath xpath;
+		private final XPath xpath;
 
-        private final String expression;
+		private final String expression;
 
-        private final QName returnType;
+		private final QName returnType;
 
-        private final TransformerHelper transformerHelper = new TransformerHelper();
+		private final TransformerHelper transformerHelper = new TransformerHelper();
 
-        private Object result;
+		private Object result;
 
-        private EvaluationCallback(XPath xpath, String expression, QName returnType) {
-            this.xpath = xpath;
-            this.expression = expression;
-            this.returnType = returnType;
-        }
+		private EvaluationCallback(XPath xpath, String expression, QName returnType) {
+			this.xpath = xpath;
+			this.expression = expression;
+			this.returnType = returnType;
+		}
 
-        @Override
-        public void domSource(Node node) throws XPathExpressionException {
-            result = xpath.evaluate(expression, node, returnType);
-        }
+		@Override
+		public void domSource(Node node) throws XPathExpressionException {
+			result = xpath.evaluate(expression, node, returnType);
+		}
 
-        @Override
-        public void saxSource(XMLReader reader, InputSource inputSource) throws XPathExpressionException {
-            inputSource(inputSource);
-        }
+		@Override
+		public void saxSource(XMLReader reader, InputSource inputSource) throws XPathExpressionException {
+			inputSource(inputSource);
+		}
 
-        @Override
-        public void staxSource(XMLEventReader eventReader)
-                throws XPathExpressionException, XMLStreamException, TransformerException {
-            Element element = getRootElement(StaxUtils.createCustomStaxSource(eventReader));
-            domSource(element);
-        }
+		@Override
+		public void staxSource(XMLEventReader eventReader)
+				throws XPathExpressionException, XMLStreamException, TransformerException {
+			Element element = getRootElement(StaxUtils.createCustomStaxSource(eventReader));
+			domSource(element);
+		}
 
-        @Override
-        public void staxSource(XMLStreamReader streamReader) throws TransformerException, XPathExpressionException {
-            Element element = getRootElement(StaxUtils.createCustomStaxSource(streamReader));
-            domSource(element);
-        }
+		@Override
+		public void staxSource(XMLStreamReader streamReader) throws TransformerException, XPathExpressionException {
+			Element element = getRootElement(StaxUtils.createCustomStaxSource(streamReader));
+			domSource(element);
+		}
 
-        @Override
-        public void streamSource(InputStream inputStream) throws XPathExpressionException {
-            inputSource(new InputSource(inputStream));
-        }
+		@Override
+		public void streamSource(InputStream inputStream) throws XPathExpressionException {
+			inputSource(new InputSource(inputStream));
+		}
 
-        @Override
-        public void streamSource(Reader reader) throws XPathExpressionException {
-            inputSource(new InputSource(reader));
-        }
+		@Override
+		public void streamSource(Reader reader) throws XPathExpressionException {
+			inputSource(new InputSource(reader));
+		}
 
-        @Override
-        public void source(String systemId) throws XPathExpressionException {
-            inputSource(new InputSource(systemId));
-        }
+		@Override
+		public void source(String systemId) throws XPathExpressionException {
+			inputSource(new InputSource(systemId));
+		}
 
-        private void inputSource(InputSource inputSource) throws XPathExpressionException {
-            result = xpath.evaluate(expression, inputSource, returnType);
-        }
+		private void inputSource(InputSource inputSource) throws XPathExpressionException {
+			result = xpath.evaluate(expression, inputSource, returnType);
+		}
 
-        private Element getRootElement(Source source) throws TransformerException {
-            DOMResult domResult = new DOMResult();
-            transformerHelper.transform(source, domResult);
-            Document document = (Document) domResult.getNode();
-            return document.getDocumentElement();
-        }
+		private Element getRootElement(Source source) throws TransformerException {
+			DOMResult domResult = new DOMResult();
+			transformerHelper.transform(source, domResult);
+			Document document = (Document) domResult.getNode();
+			return document.getDocumentElement();
+		}
 
-    }
+	}
 
 
 

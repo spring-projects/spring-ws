@@ -32,66 +32,66 @@ import org.junit.Test;
 
 public class InliningXsdSchemaTypesProviderTest {
 
-    private InliningXsdSchemaTypesProvider provider;
+	private InliningXsdSchemaTypesProvider provider;
 
-    private Definition definition;
+	private Definition definition;
 
-    @Before
-    public void setUp() throws Exception {
-        provider = new InliningXsdSchemaTypesProvider();
-        WSDLFactory factory = WSDLFactory.newInstance();
-        definition = factory.newDefinition();
-    }
+	@Before
+	public void setUp() throws Exception {
+		provider = new InliningXsdSchemaTypesProvider();
+		WSDLFactory factory = WSDLFactory.newInstance();
+		definition = factory.newDefinition();
+	}
 
-    @Test
-    public void testSingle() throws Exception {
-        String definitionNamespace = "http://springframework.org/spring-ws";
-        definition.addNamespace("tns", definitionNamespace);
-        definition.setTargetNamespace(definitionNamespace);
-        String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
-        definition.addNamespace("schema", schemaNamespace);
+	@Test
+	public void testSingle() throws Exception {
+		String definitionNamespace = "http://springframework.org/spring-ws";
+		definition.addNamespace("tns", definitionNamespace);
+		definition.setTargetNamespace(definitionNamespace);
+		String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
+		definition.addNamespace("schema", schemaNamespace);
 
-        Resource resource = new ClassPathResource("schema.xsd", getClass());
-        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-        schema.afterPropertiesSet();
+		Resource resource = new ClassPathResource("schema.xsd", getClass());
+		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+		schema.afterPropertiesSet();
 
-        provider.setSchema(schema);
+		provider.setSchema(schema);
 
-        provider.addTypes(definition);
+		provider.addTypes(definition);
 
-        Types types = definition.getTypes();
-        Assert.assertNotNull("No types created", types);
-        Assert.assertEquals("Invalid amount of schemas", 1, types.getExtensibilityElements().size());
+		Types types = definition.getTypes();
+		Assert.assertNotNull("No types created", types);
+		Assert.assertEquals("Invalid amount of schemas", 1, types.getExtensibilityElements().size());
 
-        Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
-        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
-    }
+		Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
+		Assert.assertNotNull("No element defined", wsdlSchema.getElement());
+	}
 
-    @Test
-    public void testComplex() throws Exception {
-        String definitionNamespace = "http://springframework.org/spring-ws";
-        definition.addNamespace("tns", definitionNamespace);
-        definition.setTargetNamespace(definitionNamespace);
-        String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
-        definition.addNamespace("schema", schemaNamespace);
+	@Test
+	public void testComplex() throws Exception {
+		String definitionNamespace = "http://springframework.org/spring-ws";
+		definition.addNamespace("tns", definitionNamespace);
+		definition.setTargetNamespace(definitionNamespace);
+		String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
+		definition.addNamespace("schema", schemaNamespace);
 
-        Resource resource = new ClassPathResource("A.xsd", getClass());
-        CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection(new Resource[]{resource});
-        collection.setInline(true);
-        collection.afterPropertiesSet();
+		Resource resource = new ClassPathResource("A.xsd", getClass());
+		CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		collection.setInline(true);
+		collection.afterPropertiesSet();
 
-        provider.setSchemaCollection(collection);
+		provider.setSchemaCollection(collection);
 
-        provider.addTypes(definition);
+		provider.addTypes(definition);
 
-        Types types = definition.getTypes();
-        Assert.assertNotNull("No types created", types);
-        Assert.assertEquals("Invalid amount of schemas", 2, types.getExtensibilityElements().size());
+		Types types = definition.getTypes();
+		Assert.assertNotNull("No types created", types);
+		Assert.assertEquals("Invalid amount of schemas", 2, types.getExtensibilityElements().size());
 
-        Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
-        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
+		Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
+		Assert.assertNotNull("No element defined", wsdlSchema.getElement());
 
-        wsdlSchema = (Schema) types.getExtensibilityElements().get(1);
-        Assert.assertNotNull("No element defined", wsdlSchema.getElement());
-    }
+		wsdlSchema = (Schema) types.getExtensibilityElements().get(1);
+		Assert.assertNotNull("No element defined", wsdlSchema.getElement());
+	}
 }

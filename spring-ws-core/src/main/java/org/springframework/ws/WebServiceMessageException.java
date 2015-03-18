@@ -25,13 +25,13 @@ package org.springframework.ws;
 @SuppressWarnings("serial")
 public abstract class WebServiceMessageException extends WebServiceException {
 
-    /** Constructor for {@code WebServiceMessageException}. */
-    public WebServiceMessageException(String msg) {
-        super(msg);
-    }
+	/** Constructor for {@code WebServiceMessageException}. */
+	public WebServiceMessageException(String msg) {
+		super(msg);
+	}
 
-    /** Constructor for {@code WebServiceMessageException}. */
-    public WebServiceMessageException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	/** Constructor for {@code WebServiceMessageException}. */
+	public WebServiceMessageException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

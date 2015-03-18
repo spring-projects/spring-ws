@@ -25,15 +25,15 @@ import org.springframework.ws.soap.SoapHeaderException;
 @SuppressWarnings("serial")
 public class AxiomSoapHeaderException extends SoapHeaderException {
 
-    public AxiomSoapHeaderException(String msg) {
-        super(msg);
-    }
+	public AxiomSoapHeaderException(String msg) {
+		super(msg);
+	}
 
-    public AxiomSoapHeaderException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AxiomSoapHeaderException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public AxiomSoapHeaderException(Throwable ex) {
-        super(ex);
-    }
+	public AxiomSoapHeaderException(Throwable ex) {
+		super(ex);
+	}
 }

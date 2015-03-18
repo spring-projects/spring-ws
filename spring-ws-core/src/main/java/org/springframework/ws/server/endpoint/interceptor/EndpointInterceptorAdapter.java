@@ -32,48 +32,48 @@ import org.springframework.ws.server.EndpointInterceptor;
  */
 public class EndpointInterceptorAdapter implements EndpointInterceptor {
 
-    /** Logger available to subclasses */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    /** Returns {@code false}. */
-    public boolean understands(Element header) {
-        return false;
-    }
+	/** Returns {@code false}. */
+	public boolean understands(Element header) {
+		return false;
+	}
 
-    /**
-     * Returns {@code true}.
-     *
-     * @return {@code true}
-     */
-    @Override
-    public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	/**
+	 * Returns {@code true}.
+	 *
+	 * @return {@code true}
+	 */
+	@Override
+	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    /**
-     * Returns {@code true}.
-     *
-     * @return {@code true}
-     */
-    @Override
-    public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	/**
+	 * Returns {@code true}.
+	 *
+	 * @return {@code true}
+	 */
+	@Override
+	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    /**
-     * Returns {@code true}.
-     *
-     * @return {@code true}
-     */
-    @Override
-    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	/**
+	 * Returns {@code true}.
+	 *
+	 * @return {@code true}
+	 */
+	@Override
+	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    /**
-     * Does nothing by default.
-     */
-    @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
-    }
+	/**
+	 * Does nothing by default.
+	 */
+	@Override
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+	}
 }

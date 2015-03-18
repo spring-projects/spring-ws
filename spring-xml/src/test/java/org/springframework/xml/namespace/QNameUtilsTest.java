@@ -29,89 +29,89 @@ import org.w3c.dom.Element;
 
 public class QNameUtilsTest {
 
-    @Test
-    public void testValidQNames() {
-        Assert.assertTrue("Namespace QName not validated", QNameUtils.validateQName("{namespace}local"));
-        Assert.assertTrue("No Namespace QName not validated", QNameUtils.validateQName("local"));
-    }
+	@Test
+	public void testValidQNames() {
+		Assert.assertTrue("Namespace QName not validated", QNameUtils.validateQName("{namespace}local"));
+		Assert.assertTrue("No Namespace QName not validated", QNameUtils.validateQName("local"));
+	}
 
-    @Test
-    public void testInvalidQNames() {
-        Assert.assertFalse("Null QName validated", QNameUtils.validateQName(null));
-        Assert.assertFalse("Empty QName validated", QNameUtils.validateQName(""));
-        Assert.assertFalse("Invalid QName validated", QNameUtils.validateQName("{namespace}"));
-        Assert.assertFalse("Invalid QName validated", QNameUtils.validateQName("{namespace"));
-    }
+	@Test
+	public void testInvalidQNames() {
+		Assert.assertFalse("Null QName validated", QNameUtils.validateQName(null));
+		Assert.assertFalse("Empty QName validated", QNameUtils.validateQName(""));
+		Assert.assertFalse("Invalid QName validated", QNameUtils.validateQName("{namespace}"));
+		Assert.assertFalse("Invalid QName validated", QNameUtils.validateQName("{namespace"));
+	}
 
-    @Test
-    public void testGetQNameForNodeNoNamespace() throws Exception {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.newDocument();
-        Element element = document.createElement("localname");
-        QName qName = QNameUtils.getQNameForNode(element);
-        Assert.assertNotNull("getQNameForNode returns null", qName);
-        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        Assert.assertFalse("Qname has invalid namespace", StringUtils.hasLength(qName.getNamespaceURI()));
-        Assert.assertFalse("Qname has invalid prefix", StringUtils.hasLength(qName.getPrefix()));
+	@Test
+	public void testGetQNameForNodeNoNamespace() throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		Element element = document.createElement("localname");
+		QName qName = QNameUtils.getQNameForNode(element);
+		Assert.assertNotNull("getQNameForNode returns null", qName);
+		Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+		Assert.assertFalse("Qname has invalid namespace", StringUtils.hasLength(qName.getNamespaceURI()));
+		Assert.assertFalse("Qname has invalid prefix", StringUtils.hasLength(qName.getPrefix()));
 
-    }
+	}
 
-    @Test
-    public void testGetQNameForNodeNoPrefix() throws Exception {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.newDocument();
-        Element element = document.createElementNS("namespace", "localname");
-        QName qName = QNameUtils.getQNameForNode(element);
-        Assert.assertNotNull("getQNameForNode returns null", qName);
-        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        Assert.assertFalse("Qname has invalid prefix", StringUtils.hasLength(qName.getPrefix()));
-    }
+	@Test
+	public void testGetQNameForNodeNoPrefix() throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		Element element = document.createElementNS("namespace", "localname");
+		QName qName = QNameUtils.getQNameForNode(element);
+		Assert.assertNotNull("getQNameForNode returns null", qName);
+		Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+		Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+		Assert.assertFalse("Qname has invalid prefix", StringUtils.hasLength(qName.getPrefix()));
+	}
 
-    @Test
-    public void testGetQNameForNode() throws Exception {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.newDocument();
-        Element element = document.createElementNS("namespace", "prefix:localname");
-        QName qName = QNameUtils.getQNameForNode(element);
-        Assert.assertNotNull("getQNameForNode returns null", qName);
-        Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
-        Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
-        Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
-    }
+	@Test
+	public void testGetQNameForNode() throws Exception {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document document = builder.newDocument();
+		Element element = document.createElementNS("namespace", "prefix:localname");
+		QName qName = QNameUtils.getQNameForNode(element);
+		Assert.assertNotNull("getQNameForNode returns null", qName);
+		Assert.assertEquals("QName has invalid localname", "localname", qName.getLocalPart());
+		Assert.assertEquals("Qname has invalid namespace", "namespace", qName.getNamespaceURI());
+		Assert.assertEquals("Qname has invalid prefix", "prefix", qName.getPrefix());
+	}
 
-    @Test
-    public void testToQualifiedNamePrefix() throws Exception {
-        QName qName = new QName("namespace", "localName", "prefix");
-        String result = QNameUtils.toQualifiedName(qName);
-        Assert.assertEquals("Invalid result", "prefix:localName", result);
-    }
+	@Test
+	public void testToQualifiedNamePrefix() throws Exception {
+		QName qName = new QName("namespace", "localName", "prefix");
+		String result = QNameUtils.toQualifiedName(qName);
+		Assert.assertEquals("Invalid result", "prefix:localName", result);
+	}
 
-    @Test
-    public void testToQualifiedNameNoPrefix() throws Exception {
-        QName qName = new QName("localName");
-        String result = QNameUtils.toQualifiedName(qName);
-        Assert.assertEquals("Invalid result", "localName", result);
-    }
+	@Test
+	public void testToQualifiedNameNoPrefix() throws Exception {
+		QName qName = new QName("localName");
+		String result = QNameUtils.toQualifiedName(qName);
+		Assert.assertEquals("Invalid result", "localName", result);
+	}
 
-    @Test
-    public void testToQNamePrefix() throws Exception {
-        QName result = QNameUtils.toQName("namespace", "prefix:localName");
-        Assert.assertEquals("invalid namespace", "namespace", result.getNamespaceURI());
-        Assert.assertEquals("invalid prefix", "prefix", result.getPrefix());
-        Assert.assertEquals("invalid localname", "localName", result.getLocalPart());
-    }
+	@Test
+	public void testToQNamePrefix() throws Exception {
+		QName result = QNameUtils.toQName("namespace", "prefix:localName");
+		Assert.assertEquals("invalid namespace", "namespace", result.getNamespaceURI());
+		Assert.assertEquals("invalid prefix", "prefix", result.getPrefix());
+		Assert.assertEquals("invalid localname", "localName", result.getLocalPart());
+	}
 
-    @Test
-    public void testToQNameNoPrefix() throws Exception {
-        QName result = QNameUtils.toQName("namespace", "localName");
-        Assert.assertEquals("invalid namespace", "namespace", result.getNamespaceURI());
-        Assert.assertEquals("invalid prefix", "", result.getPrefix());
-        Assert.assertEquals("invalid localname", "localName", result.getLocalPart());
-    }
+	@Test
+	public void testToQNameNoPrefix() throws Exception {
+		QName result = QNameUtils.toQName("namespace", "localName");
+		Assert.assertEquals("invalid namespace", "namespace", result.getNamespaceURI());
+		Assert.assertEquals("invalid prefix", "", result.getPrefix());
+		Assert.assertEquals("invalid localname", "localName", result.getLocalPart());
+	}
 
 
 }

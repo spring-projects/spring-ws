@@ -25,63 +25,63 @@ import org.junit.Test;
 
 public class SoapFaultDefinitionEditorTest {
 
-    private SoapFaultDefinitionEditor editor;
+	private SoapFaultDefinitionEditor editor;
 
-    @Before
-    public void setUp() throws Exception {
-        editor = new SoapFaultDefinitionEditor();
-    }
+	@Before
+	public void setUp() throws Exception {
+		editor = new SoapFaultDefinitionEditor();
+	}
 
-    @Test
-    public void testSetAsTextNoLocale() throws Exception {
-        editor.setAsText("Server, Server error");
-        SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        Assert.assertNotNull("fault not set", definition);
-        Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-        Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, definition.getLocale());
-    }
+	@Test
+	public void testSetAsTextNoLocale() throws Exception {
+		editor.setAsText("Server, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		Assert.assertNotNull("fault not set", definition);
+		Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
+		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+		Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, definition.getLocale());
+	}
 
-    @Test
-    public void testSetAsTextLocale() throws Exception {
-        editor.setAsText("Server, Server error, nl");
-        SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        Assert.assertNotNull("fault not set", definition);
-        Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-        Assert.assertEquals("Invalid fault string locale", new Locale("nl"), definition.getLocale());
-    }
+	@Test
+	public void testSetAsTextLocale() throws Exception {
+		editor.setAsText("Server, Server error, nl");
+		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		Assert.assertNotNull("fault not set", definition);
+		Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
+		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+		Assert.assertEquals("Invalid fault string locale", new Locale("nl"), definition.getLocale());
+	}
 
-    @Test
-    public void testSetAsTextSender() throws Exception {
-        editor.setAsText("SENDER, Server error");
-        SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        Assert.assertNotNull("fault not set", definition);
-        Assert.assertEquals("Invalid fault code", SoapFaultDefinition.SENDER, definition.getFaultCode());
-        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-    }
+	@Test
+	public void testSetAsTextSender() throws Exception {
+		editor.setAsText("SENDER, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		Assert.assertNotNull("fault not set", definition);
+		Assert.assertEquals("Invalid fault code", SoapFaultDefinition.SENDER, definition.getFaultCode());
+		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+	}
 
-    @Test
-    public void testSetAsTextReceiver() throws Exception {
-        editor.setAsText("RECEIVER, Server error");
-        SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-        Assert.assertNotNull("fault not set", definition);
-        Assert.assertEquals("Invalid fault code", SoapFaultDefinition.RECEIVER, definition.getFaultCode());
-        Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-    }
+	@Test
+	public void testSetAsTextReceiver() throws Exception {
+		editor.setAsText("RECEIVER, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		Assert.assertNotNull("fault not set", definition);
+		Assert.assertEquals("Invalid fault code", SoapFaultDefinition.RECEIVER, definition.getFaultCode());
+		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+	}
 
-    @Test
-    public void testSetAsTextIllegalArgument() throws Exception {
-        try {
-            editor.setAsText("SOAP-ENV:Server");
-        }
-        catch (IllegalArgumentException ex) {
-        }
-    }
+	@Test
+	public void testSetAsTextIllegalArgument() throws Exception {
+		try {
+			editor.setAsText("SOAP-ENV:Server");
+		}
+		catch (IllegalArgumentException ex) {
+		}
+	}
 
-    @Test
-    public void testSetAsTextEmpty() throws Exception {
-        editor.setAsText("");
-        Assert.assertNull("definition not set to null", editor.getValue());
-    }
+	@Test
+	public void testSetAsTextEmpty() throws Exception {
+		editor.setAsText("");
+		Assert.assertNull("definition not set to null", editor.getValue());
+	}
 }

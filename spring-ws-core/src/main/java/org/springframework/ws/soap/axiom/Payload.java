@@ -27,17 +27,17 @@ import javax.xml.transform.Source;
  */
 abstract class Payload {
 
-    /**
-     * Returns the source of the payload.
-     *
-     * @return the source of the payload
-     */
-    public abstract Source getSource();
+	/**
+	 * Returns the source of the payload.
+	 *
+	 * @return the source of the payload
+	 */
+	public abstract Source getSource();
 
-    /**
-     * Returns the result of the payload.
-     *
-     * @return the result of the payload
-     */
-    public abstract Result getResult();
+	/**
+	 * Returns the result of the payload.
+	 *
+	 * @return the result of the payload
+	 */
+	public abstract Result getResult();
 }

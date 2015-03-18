@@ -29,32 +29,32 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * @since 1.5.0
  */
 public abstract class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private WebServiceMessageReceiver messageReceiver;
+	private WebServiceMessageReceiver messageReceiver;
 
-    /**
-     * Returns the {@code WebServiceMessageReceiver} used by this listener.
-     */
-    public WebServiceMessageReceiver getMessageReceiver() {
-        return messageReceiver;
-    }
+	/**
+	 * Returns the {@code WebServiceMessageReceiver} used by this listener.
+	 */
+	public WebServiceMessageReceiver getMessageReceiver() {
+		return messageReceiver;
+	}
 
-    /**
-     * Sets the {@code WebServiceMessageReceiver} used by this listener.
-     */
-    public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
-        this.messageReceiver = messageReceiver;
-    }
+	/**
+	 * Sets the {@code WebServiceMessageReceiver} used by this listener.
+	 */
+	public void setMessageReceiver(WebServiceMessageReceiver messageReceiver) {
+		this.messageReceiver = messageReceiver;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-        Assert.notNull(getMessageReceiver(), "messageReceiver must not be null");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
+		Assert.notNull(getMessageReceiver(), "messageReceiver must not be null");
+	}
 
-    protected final void handleConnection(WebServiceConnection connection) throws Exception {
-        handleConnection(connection, getMessageReceiver());
-    }
+	protected final void handleConnection(WebServiceConnection connection) throws Exception {
+		handleConnection(connection, getMessageReceiver());
+	}
 
 }

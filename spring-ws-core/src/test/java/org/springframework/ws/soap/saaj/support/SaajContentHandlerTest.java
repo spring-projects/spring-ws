@@ -37,39 +37,39 @@ import org.junit.Test;
 
 public class SaajContentHandlerTest {
 
-    private SaajContentHandler handler;
+	private SaajContentHandler handler;
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    private SOAPEnvelope envelope;
+	private SOAPEnvelope envelope;
 
-    @Before
-    public void setUp() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage message = messageFactory.createMessage();
-        envelope = message.getSOAPPart().getEnvelope();
-        handler = new SaajContentHandler(envelope.getBody());
-        transformer = TransformerFactory.newInstance().newTransformer();
-    }
+	@Before
+	public void setUp() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage message = messageFactory.createMessage();
+		envelope = message.getSOAPPart().getEnvelope();
+		handler = new SaajContentHandler(envelope.getBody());
+		transformer = TransformerFactory.newInstance().newTransformer();
+	}
 
-    @Test
-    public void testHandler() throws Exception {
-        String content = "<Root xmlns='http://springframework.org/spring-ws/1' " +
-                "xmlns:child='http://springframework.org/spring-ws/2'>" +
-                "<child:Child attribute='value'>Content</child:Child></Root>";
-        Source source = new StringSource(content);
-        Result result = new SAXResult(handler);
-        transformer.transform(source, result);
-        Name rootName = envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
-        Iterator<?> iterator = envelope.getBody().getChildElements(rootName);
-        Assert.assertTrue("No child found", iterator.hasNext());
-        SOAPBodyElement rootElement = (SOAPBodyElement) iterator.next();
-        Name childName = envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
-        iterator = rootElement.getChildElements(childName);
-        Assert.assertTrue("No child found", iterator.hasNext());
-        SOAPElement childElement = (SOAPElement) iterator.next();
-        Assert.assertEquals("Invalid contents", "Content", childElement.getValue());
-        Name attributeName = envelope.createName("attribute");
-        Assert.assertEquals("Invalid attribute value", "value", childElement.getAttributeValue(attributeName));
-    }
+	@Test
+	public void testHandler() throws Exception {
+		String content = "<Root xmlns='http://springframework.org/spring-ws/1' " +
+				"xmlns:child='http://springframework.org/spring-ws/2'>" +
+				"<child:Child attribute='value'>Content</child:Child></Root>";
+		Source source = new StringSource(content);
+		Result result = new SAXResult(handler);
+		transformer.transform(source, result);
+		Name rootName = envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
+		Iterator<?> iterator = envelope.getBody().getChildElements(rootName);
+		Assert.assertTrue("No child found", iterator.hasNext());
+		SOAPBodyElement rootElement = (SOAPBodyElement) iterator.next();
+		Name childName = envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
+		iterator = rootElement.getChildElements(childName);
+		Assert.assertTrue("No child found", iterator.hasNext());
+		SOAPElement childElement = (SOAPElement) iterator.next();
+		Assert.assertEquals("Invalid contents", "Content", childElement.getValue());
+		Name attributeName = envelope.createName("attribute");
+		Assert.assertEquals("Invalid attribute value", "value", childElement.getAttributeValue(attributeName));
+	}
 }

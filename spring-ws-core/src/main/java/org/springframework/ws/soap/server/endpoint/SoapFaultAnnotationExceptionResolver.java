@@ -31,23 +31,23 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
  */
 public class SoapFaultAnnotationExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 
-    @Override
-    protected final SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
-        SoapFault faultAnnotation = ex.getClass().getAnnotation(SoapFault.class);
-        if (faultAnnotation != null) {
-            SoapFaultDefinition definition = new SoapFaultDefinition();
-            if (faultAnnotation.faultCode() != FaultCode.CUSTOM) {
-                definition.setFaultCode(faultAnnotation.faultCode().value());
-            }
-            else if (StringUtils.hasLength(faultAnnotation.customFaultCode())) {
-                definition.setFaultCode(QName.valueOf(faultAnnotation.customFaultCode()));
-            }
-            definition.setFaultStringOrReason(faultAnnotation.faultStringOrReason());
-            definition.setLocale(StringUtils.parseLocaleString(faultAnnotation.locale()));
-            return definition;
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	protected final SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
+		SoapFault faultAnnotation = ex.getClass().getAnnotation(SoapFault.class);
+		if (faultAnnotation != null) {
+			SoapFaultDefinition definition = new SoapFaultDefinition();
+			if (faultAnnotation.faultCode() != FaultCode.CUSTOM) {
+				definition.setFaultCode(faultAnnotation.faultCode().value());
+			}
+			else if (StringUtils.hasLength(faultAnnotation.customFaultCode())) {
+				definition.setFaultCode(QName.valueOf(faultAnnotation.customFaultCode()));
+			}
+			definition.setFaultStringOrReason(faultAnnotation.faultStringOrReason());
+			definition.setLocale(StringUtils.parseLocaleString(faultAnnotation.locale()));
+			return definition;
+		}
+		else {
+			return null;
+		}
+	}
 }

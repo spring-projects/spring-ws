@@ -45,78 +45,78 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  */
 public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport implements TypesProvider {
 
-    private static final Log logger = LogFactory.getLog(InliningXsdSchemaTypesProvider.class);
+	private static final Log logger = LogFactory.getLog(InliningXsdSchemaTypesProvider.class);
 
-    /** The prefix used to register the schema namespace in the WSDL. */
-    public static final String SCHEMA_PREFIX = "sch";
+	/** The prefix used to register the schema namespace in the WSDL. */
+	public static final String SCHEMA_PREFIX = "sch";
 
-    private XsdSchemaCollection schemaCollection;
+	private XsdSchemaCollection schemaCollection;
 
-    /**
-     * Sets the single XSD schema to inline. Either this property, or {@link #setSchemaCollection(XsdSchemaCollection)
-     * schemaCollection} must be set.
-     */
-    public void setSchema(final XsdSchema schema) {
-        this.schemaCollection = new XsdSchemaCollection() {
+	/**
+	 * Sets the single XSD schema to inline. Either this property, or {@link #setSchemaCollection(XsdSchemaCollection)
+	 * schemaCollection} must be set.
+	 */
+	public void setSchema(final XsdSchema schema) {
+		this.schemaCollection = new XsdSchemaCollection() {
 
-            public XsdSchema[] getXsdSchemas() {
-                return new XsdSchema[]{schema};
-            }
+			public XsdSchema[] getXsdSchemas() {
+				return new XsdSchema[]{schema};
+			}
 
-            public XmlValidator createValidator() {
-                throw new UnsupportedOperationException();
-            }
-        };
-    }
+			public XmlValidator createValidator() {
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
 
-    /** Returns the XSD schema collection to inline. */
-    public XsdSchemaCollection getSchemaCollection() {
-        return schemaCollection;
-    }
+	/** Returns the XSD schema collection to inline. */
+	public XsdSchemaCollection getSchemaCollection() {
+		return schemaCollection;
+	}
 
-    /**
-     * Sets the XSD schema collection to inline. Either this property, or {@link #setSchema(XsdSchema) schema} must be
-     * set.
-     */
-    public void setSchemaCollection(XsdSchemaCollection schemaCollection) {
-        this.schemaCollection = schemaCollection;
-    }
+	/**
+	 * Sets the XSD schema collection to inline. Either this property, or {@link #setSchema(XsdSchema) schema} must be
+	 * set.
+	 */
+	public void setSchemaCollection(XsdSchemaCollection schemaCollection) {
+		this.schemaCollection = schemaCollection;
+	}
 
-    @Override
-    public void addTypes(Definition definition) throws WSDLException {
-        Assert.notNull(getSchemaCollection(), "setting 'schema' or 'schemaCollection' is required");
-        Types types = definition.createTypes();
-        XsdSchema[] schemas = schemaCollection.getXsdSchemas();
-        for (int i = 0; i < schemas.length; i++) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Inlining " + schemas[i]);
-            }
-            if (schemas.length == 1) {
-                definition.addNamespace(SCHEMA_PREFIX, schemas[i].getTargetNamespace());
-            }
-            else {
-                String prefix = SCHEMA_PREFIX + i;
-                definition.addNamespace(prefix, schemas[i].getTargetNamespace());
-            }
-            Element schemaElement = getSchemaElement(schemas[i]);
-            Schema schema = (Schema) definition.getExtensionRegistry()
-                    .createExtension(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"));
-            types.addExtensibilityElement(schema);
-            schema.setElement(schemaElement);
-        }
-        definition.setTypes(types);
-    }
+	@Override
+	public void addTypes(Definition definition) throws WSDLException {
+		Assert.notNull(getSchemaCollection(), "setting 'schema' or 'schemaCollection' is required");
+		Types types = definition.createTypes();
+		XsdSchema[] schemas = schemaCollection.getXsdSchemas();
+		for (int i = 0; i < schemas.length; i++) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Inlining " + schemas[i]);
+			}
+			if (schemas.length == 1) {
+				definition.addNamespace(SCHEMA_PREFIX, schemas[i].getTargetNamespace());
+			}
+			else {
+				String prefix = SCHEMA_PREFIX + i;
+				definition.addNamespace(prefix, schemas[i].getTargetNamespace());
+			}
+			Element schemaElement = getSchemaElement(schemas[i]);
+			Schema schema = (Schema) definition.getExtensionRegistry()
+					.createExtension(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"));
+			types.addExtensibilityElement(schema);
+			schema.setElement(schemaElement);
+		}
+		definition.setTypes(types);
+	}
 
-    private Element getSchemaElement(XsdSchema schema) {
-        try {
-            DOMResult result = new DOMResult();
-            transform(schema.getSource(), result);
-            Document schemaDocument = (Document) result.getNode();
-            return schemaDocument.getDocumentElement();
-        }
-        catch (TransformerException e) {
-            throw new WsdlDefinitionException("Could not transform schema source to Document");
-        }
-    }
+	private Element getSchemaElement(XsdSchema schema) {
+		try {
+			DOMResult result = new DOMResult();
+			transform(schema.getSource(), result);
+			Document schemaDocument = (Document) result.getNode();
+			return schemaDocument.getDocumentElement();
+		}
+		catch (TransformerException e) {
+			throw new WsdlDefinitionException("Could not transform schema source to Document");
+		}
+	}
 
 }

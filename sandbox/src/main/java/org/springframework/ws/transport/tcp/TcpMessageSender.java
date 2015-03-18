@@ -30,27 +30,27 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 /** @author Arjen Poutsma */
 public class TcpMessageSender implements WebServiceMessageSender {
 
-    public static final int DEFAULT_PORT = 8081;
+	public static final int DEFAULT_PORT = 8081;
 
-    private int timeOut = 1000;
+	private int timeOut = 1000;
 
-    /** Sets the amount of milliseconds before the tcp connection will timeout. */
-    public void setTimeOut(int timeOut) {
-        this.timeOut = timeOut;
-    }
+	/** Sets the amount of milliseconds before the tcp connection will timeout. */
+	public void setTimeOut(int timeOut) {
+		this.timeOut = timeOut;
+	}
 
-    public WebServiceConnection createConnection(URI theUri) throws IOException {
-        int port = theUri.getPort();
-        if (port == -1) {
-            port = DEFAULT_PORT;
-        }
-        Socket socket = new Socket();
-        SocketAddress socketAddress = new InetSocketAddress(theUri.getHost(), port);
-        socket.connect(socketAddress, timeOut);
-        return new TcpSenderConnection(socket);
-    }
+	public WebServiceConnection createConnection(URI theUri) throws IOException {
+		int port = theUri.getPort();
+		if (port == -1) {
+			port = DEFAULT_PORT;
+		}
+		Socket socket = new Socket();
+		SocketAddress socketAddress = new InetSocketAddress(theUri.getHost(), port);
+		socket.connect(socketAddress, timeOut);
+		return new TcpSenderConnection(socket);
+	}
 
-    public boolean supports(URI uri) {
-        return uri.getScheme().equals(TcpTransportConstants.TCP_URI_SCHEME);
-    }
+	public boolean supports(URI uri) {
+		return uri.getScheme().equals(TcpTransportConstants.TCP_URI_SCHEME);
+	}
 }

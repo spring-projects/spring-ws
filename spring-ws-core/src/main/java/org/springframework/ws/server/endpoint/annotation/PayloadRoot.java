@@ -37,18 +37,18 @@ import java.lang.annotation.Target;
 @Repeatable(PayloadRoots.class)
 public @interface PayloadRoot {
 
-    /**
-     * Signifies the local part of the payload root element handled by the annotated method.
-     *
-     * @see #namespace()
-     */
-    String localPart();
+	/**
+	 * Signifies the local part of the payload root element handled by the annotated method.
+	 *
+	 * @see #namespace()
+	 */
+	String localPart();
 
-    /**
-     * Signifies the namespace of the payload root element handled by the annotated method.
-     *
-     * @see #localPart()
-     */
-    String namespace() default "";
+	/**
+	 * Signifies the namespace of the payload root element handled by the annotated method.
+	 *
+	 * @see #localPart()
+	 */
+	String namespace() default "";
 
 }

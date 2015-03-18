@@ -32,27 +32,27 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  */
 class SaajSoapFaultDetailElement extends SaajSoapElement<DetailEntry> implements SoapFaultDetailElement {
 
-    SaajSoapFaultDetailElement(DetailEntry entry) {
-        super(entry);
-    }
+	SaajSoapFaultDetailElement(DetailEntry entry) {
+		super(entry);
+	}
 
-    @Override
-    public Result getResult() {
-	    return new DOMResult(getSaajDetailEntry());
-    }
+	@Override
+	public Result getResult() {
+		return new DOMResult(getSaajDetailEntry());
+	}
 
-    @Override
-    public void addText(String text) {
-        try {
-	        getSaajDetailEntry().addTextNode(text);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
+	@Override
+	public void addText(String text) {
+		try {
+			getSaajDetailEntry().addTextNode(text);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapFaultException(ex);
+		}
+	}
 
-    protected DetailEntry getSaajDetailEntry() {
-        return getSaajElement();
-    }
+	protected DetailEntry getSaajDetailEntry() {
+		return getSaajElement();
+	}
 
 }

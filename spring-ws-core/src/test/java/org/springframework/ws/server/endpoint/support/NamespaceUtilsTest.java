@@ -30,27 +30,27 @@ import static org.junit.Assert.assertEquals;
 @Namespaces({@Namespace(prefix = "prefix1", uri = "class1"), @Namespace(uri = "class2")})
 public class NamespaceUtilsTest {
 
-    @Test
-    public void getNamespaceContextMethod() throws NoSuchMethodException {
-        Method method = getClass().getMethod("method");
-        NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
-        assertEquals("method1", namespaceContext.getNamespaceURI("prefix1"));
-        assertEquals("method2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+	@Test
+	public void getNamespaceContextMethod() throws NoSuchMethodException {
+		Method method = getClass().getMethod("method");
+		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
+		assertEquals("method1", namespaceContext.getNamespaceURI("prefix1"));
+		assertEquals("method2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
 
-    }
-    
-    @Test
-    public void getNamespaceContextClass() throws NoSuchMethodException {
-        Method method = getClass().getMethod("getNamespaceContextClass");
-        NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
-        assertEquals("class1", namespaceContext.getNamespaceURI("prefix1"));
-        assertEquals("class2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+	}
+	
+	@Test
+	public void getNamespaceContextClass() throws NoSuchMethodException {
+		Method method = getClass().getMethod("getNamespaceContextClass");
+		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
+		assertEquals("class1", namespaceContext.getNamespaceURI("prefix1"));
+		assertEquals("class2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
 
-    }
+	}
 
-    @Namespaces({@Namespace(prefix = "prefix1", uri = "method1"), @Namespace(uri = "method2")})
-    public void method() {
+	@Namespaces({@Namespace(prefix = "prefix1", uri = "method1"), @Namespace(uri = "method2")})
+	public void method() {
 
-    }
+	}
 
 }

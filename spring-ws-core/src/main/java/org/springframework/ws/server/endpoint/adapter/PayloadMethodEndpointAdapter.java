@@ -42,29 +42,29 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * @author Arjen Poutsma
  * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *             org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor
- *             SourcePayloadMethodProcessor}.
+ *			   org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor
+ *			   SourcePayloadMethodProcessor}.
  */
 @Deprecated
 public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 
-    @Override
-    protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
-        Method method = methodEndpoint.getMethod();
-        return (Void.TYPE.isAssignableFrom(method.getReturnType()) ||
-                Source.class.isAssignableFrom(method.getReturnType())) && method.getParameterTypes().length == 1 &&
-                Source.class.isAssignableFrom(method.getParameterTypes()[0]);
+	@Override
+	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
+		Method method = methodEndpoint.getMethod();
+		return (Void.TYPE.isAssignableFrom(method.getReturnType()) ||
+				Source.class.isAssignableFrom(method.getReturnType())) && method.getParameterTypes().length == 1 &&
+				Source.class.isAssignableFrom(method.getParameterTypes()[0]);
 
-    }
+	}
 
-    @Override
-    protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        Source requestSource = messageContext.getRequest().getPayloadSource();
-        Object result = methodEndpoint.invoke(requestSource);
-        if (result != null) {
-            Source responseSource = (Source) result;
-            WebServiceMessage response = messageContext.getResponse();
-            transform(responseSource, response.getPayloadResult());
-        }
-    }
+	@Override
+	protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
+		Source requestSource = messageContext.getRequest().getPayloadSource();
+		Object result = methodEndpoint.invoke(requestSource);
+		if (result != null) {
+			Source responseSource = (Source) result;
+			WebServiceMessage response = messageContext.getResponse();
+			transform(responseSource, response.getPayloadResult());
+		}
+	}
 }

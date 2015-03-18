@@ -43,146 +43,146 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class MailTransportUtils {
 
-    private static final Pattern TO_PATTERN = Pattern.compile("^([^\\?]+)");
+	private static final Pattern TO_PATTERN = Pattern.compile("^([^\\?]+)");
 
-    private static final Pattern SUBJECT_PATTERN = Pattern.compile("subject=([^\\&]+)");
+	private static final Pattern SUBJECT_PATTERN = Pattern.compile("subject=([^\\&]+)");
 
-    private static final Log logger = LogFactory.getLog(MailTransportUtils.class);
+	private static final Log logger = LogFactory.getLog(MailTransportUtils.class);
 
-    private MailTransportUtils() {
-    }
+	private MailTransportUtils() {
+	}
 
-    public static InternetAddress getTo(URI uri) {
-        Matcher matcher = TO_PATTERN.matcher(uri.getSchemeSpecificPart());
-        if (matcher.find()) {
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                String group = matcher.group(i);
-                if (group != null) {
-                    try {
-                        return new InternetAddress(group);
-                    }
-                    catch (AddressException e) {
-                        // try next group
-                    }
-                }
-            }
-        }
-        return null;
-    }
+	public static InternetAddress getTo(URI uri) {
+		Matcher matcher = TO_PATTERN.matcher(uri.getSchemeSpecificPart());
+		if (matcher.find()) {
+			for (int i = 1; i <= matcher.groupCount(); i++) {
+				String group = matcher.group(i);
+				if (group != null) {
+					try {
+						return new InternetAddress(group);
+					}
+					catch (AddressException e) {
+						// try next group
+					}
+				}
+			}
+		}
+		return null;
+	}
 
-    public static String getSubject(URI uri) {
-        Matcher matcher = SUBJECT_PATTERN.matcher(uri.getSchemeSpecificPart());
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
+	public static String getSubject(URI uri) {
+		Matcher matcher = SUBJECT_PATTERN.matcher(uri.getSchemeSpecificPart());
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return null;
+	}
 
-    /**
-     * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally}
-     * blocks in manual JavaMail code.
-     *
-     * @param service the JavaMail Service to close (may be {@code null})
-     * @see Transport
-     * @see Store
-     */
-    public static void closeService(Service service) {
-        if (service != null) {
-            try {
-                service.close();
-            }
-            catch (MessagingException ex) {
-                logger.debug("Could not close JavaMail Service", ex);
-            }
-        }
-    }
+	/**
+	 * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally}
+	 * blocks in manual JavaMail code.
+	 *
+	 * @param service the JavaMail Service to close (may be {@code null})
+	 * @see Transport
+	 * @see Store
+	 */
+	public static void closeService(Service service) {
+		if (service != null) {
+			try {
+				service.close();
+			}
+			catch (MessagingException ex) {
+				logger.debug("Could not close JavaMail Service", ex);
+			}
+		}
+	}
 
-    /**
-     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
-     * blocks in manual JavaMail code.
-     *
-     * @param folder the JavaMail Folder to close (may be {@code null})
-     */
+	/**
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
+	 * blocks in manual JavaMail code.
+	 *
+	 * @param folder the JavaMail Folder to close (may be {@code null})
+	 */
 
-    public static void closeFolder(Folder folder) {
-        closeFolder(folder, false);
-    }
+	public static void closeFolder(Folder folder) {
+		closeFolder(folder, false);
+	}
 
-    /**
-     * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
-     * blocks in manual JavaMail code.
-     *
-     * @param folder  the JavaMail Folder to close (may be {@code null})
-     * @param expunge whether all deleted messages should be expunged from the folder
-     */
-    public static void closeFolder(Folder folder, boolean expunge) {
-        if (folder != null && folder.isOpen()) {
-            try {
-                folder.close(expunge);
-            }
-            catch (MessagingException ex) {
-                logger.debug("Could not close JavaMail Folder", ex);
-            }
-        }
-    }
+	/**
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
+	 * blocks in manual JavaMail code.
+	 *
+	 * @param folder  the JavaMail Folder to close (may be {@code null})
+	 * @param expunge whether all deleted messages should be expunged from the folder
+	 */
+	public static void closeFolder(Folder folder, boolean expunge) {
+		if (folder != null && folder.isOpen()) {
+			try {
+				folder.close(expunge);
+			}
+			catch (MessagingException ex) {
+				logger.debug("Could not close JavaMail Folder", ex);
+			}
+		}
+	}
 
-    /** Returns a string representation of the given {@link URLName}, where the password has been protected. */
-    public static String toPasswordProtectedString(URLName name) {
-        String protocol = name.getProtocol();
-        String username = name.getUsername();
-        String password = name.getPassword();
-        String host = name.getHost();
-        int port = name.getPort();
-        String file = name.getFile();
-        String ref = name.getRef();
-        StringBuilder tempURL = new StringBuilder();
-        if (protocol != null) {
-            tempURL.append(protocol).append(':');
-        }
+	/** Returns a string representation of the given {@link URLName}, where the password has been protected. */
+	public static String toPasswordProtectedString(URLName name) {
+		String protocol = name.getProtocol();
+		String username = name.getUsername();
+		String password = name.getPassword();
+		String host = name.getHost();
+		int port = name.getPort();
+		String file = name.getFile();
+		String ref = name.getRef();
+		StringBuilder tempURL = new StringBuilder();
+		if (protocol != null) {
+			tempURL.append(protocol).append(':');
+		}
 
-        if (StringUtils.hasLength(username) || StringUtils.hasLength(host)) {
-            tempURL.append("//");
-            if (StringUtils.hasLength(username)) {
-                tempURL.append(username);
-                if (StringUtils.hasLength(password)) {
-                    tempURL.append(":*****");
-                }
-                tempURL.append("@");
-            }
-            if (StringUtils.hasLength(host)) {
-                tempURL.append(host);
-            }
-            if (port != -1) {
-                tempURL.append(':').append(Integer.toString(port));
-            }
-            if (StringUtils.hasLength(file)) {
-                tempURL.append('/');
-            }
-        }
-        if (StringUtils.hasLength(file)) {
-            tempURL.append(file);
-        }
-        if (StringUtils.hasLength(ref)) {
-            tempURL.append('#').append(ref);
-        }
-        return tempURL.toString();
-    }
+		if (StringUtils.hasLength(username) || StringUtils.hasLength(host)) {
+			tempURL.append("//");
+			if (StringUtils.hasLength(username)) {
+				tempURL.append(username);
+				if (StringUtils.hasLength(password)) {
+					tempURL.append(":*****");
+				}
+				tempURL.append("@");
+			}
+			if (StringUtils.hasLength(host)) {
+				tempURL.append(host);
+			}
+			if (port != -1) {
+				tempURL.append(':').append(Integer.toString(port));
+			}
+			if (StringUtils.hasLength(file)) {
+				tempURL.append('/');
+			}
+		}
+		if (StringUtils.hasLength(file)) {
+			tempURL.append(file);
+		}
+		if (StringUtils.hasLength(ref)) {
+			tempURL.append('#').append(ref);
+		}
+		return tempURL.toString();
+	}
 
-    /**
-     * Converts the given internet address into a {@code mailto} URI.
-     *
-     * @param to      the To: address
-     * @param subject the subject, may be {@code null}
-     * @return a mailto URI
-     */
-    public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
-        if (StringUtils.hasLength(subject)) {
-            return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
-        }
-        else {
-            return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress(), null);
-        }
-    }
+	/**
+	 * Converts the given internet address into a {@code mailto} URI.
+	 *
+	 * @param to	  the To: address
+	 * @param subject the subject, may be {@code null}
+	 * @return a mailto URI
+	 */
+	public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
+		if (StringUtils.hasLength(subject)) {
+			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
+		}
+		else {
+			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress(), null);
+		}
+	}
 
 
 }

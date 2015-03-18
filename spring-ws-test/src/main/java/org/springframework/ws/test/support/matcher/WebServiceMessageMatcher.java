@@ -28,13 +28,13 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface WebServiceMessageMatcher {
 
-    /**
-     * Matches the given message against the expectations. Implementations typically make use of JUnit-based
-     * assertions.
-     *
-     * @param message the message
-     * @throws IOException    in case of I/O errors
-     * @throws AssertionError if expectations are not met
-     */
-    void match(WebServiceMessage message) throws IOException, AssertionError;
+	/**
+	 * Matches the given message against the expectations. Implementations typically make use of JUnit-based
+	 * assertions.
+	 *
+	 * @param message the message
+	 * @throws IOException	  in case of I/O errors
+	 * @throws AssertionError if expectations are not met
+	 */
+	void match(WebServiceMessage message) throws IOException, AssertionError;
 }

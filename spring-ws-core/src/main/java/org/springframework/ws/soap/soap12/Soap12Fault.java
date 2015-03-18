@@ -31,30 +31,30 @@ import org.springframework.ws.soap.SoapFault;
  */
 public interface Soap12Fault extends SoapFault {
 
-    /**
-     * Returns an iteration over the fault subcodes. The subcodes are returned in order: from top to bottom.
-     *
-     * @return an Iterator that contains {@code QNames} representing the fault subcodes
-     */
-    Iterator<QName> getFaultSubcodes();
+	/**
+	 * Returns an iteration over the fault subcodes. The subcodes are returned in order: from top to bottom.
+	 *
+	 * @return an Iterator that contains {@code QNames} representing the fault subcodes
+	 */
+	Iterator<QName> getFaultSubcodes();
 
-    /**
-     * Adds a fault subcode this fault.
-     *
-     * @param subcode the qualified name of the subcode
-     */
-    void addFaultSubcode(QName subcode);
+	/**
+	 * Adds a fault subcode this fault.
+	 *
+	 * @param subcode the qualified name of the subcode
+	 */
+	void addFaultSubcode(QName subcode);
 
-    /** Returns the fault node. Optional. */
-    String getFaultNode();
+	/** Returns the fault node. Optional. */
+	String getFaultNode();
 
-    /** Sets the fault node. */
-    void setFaultNode(String uri);
+	/** Sets the fault node. */
+	void setFaultNode(String uri);
 
-    /** Sets the specified fault reason text. */
-    void setFaultReasonText(Locale locale, String text);
+	/** Sets the specified fault reason text. */
+	void setFaultReasonText(Locale locale, String text);
 
-    /** Returns the reason associated with the given language. */
-    String getFaultReasonText(Locale locale);
+	/** Returns the reason associated with the given language. */
+	String getFaultReasonText(Locale locale);
 
 }

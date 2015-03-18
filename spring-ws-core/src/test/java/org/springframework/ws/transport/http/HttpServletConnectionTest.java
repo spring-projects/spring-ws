@@ -40,71 +40,71 @@ import org.springframework.xml.transform.StringSource;
 
 public class HttpServletConnectionTest {
 
-    private HttpServletConnection connection;
+	private HttpServletConnection connection;
 
-    private MockHttpServletRequest httpServletRequest;
+	private MockHttpServletRequest httpServletRequest;
 
-    private MockHttpServletResponse httpServletResponse;
+	private MockHttpServletResponse httpServletResponse;
 
-    private static final String HEADER_NAME = "RequestHeader";
+	private static final String HEADER_NAME = "RequestHeader";
 
-    private static final String HEADER_VALUE = "RequestHeaderValue";
+	private static final String HEADER_VALUE = "RequestHeaderValue";
 
-    private static final String CONTENT = "<Request xmlns='http://springframework.org/spring-ws/' />";
+	private static final String CONTENT = "<Request xmlns='http://springframework.org/spring-ws/' />";
 
-    private static final String SOAP_CONTENT =
-            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
-                    CONTENT + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String SOAP_CONTENT =
+			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
+					CONTENT + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-    private SaajSoapMessageFactory messageFactory;
+	private SaajSoapMessageFactory messageFactory;
 
-    private TransformerFactory transformerFactory;
+	private TransformerFactory transformerFactory;
 
-    @Before
-    public void setUp() throws Exception {
-        httpServletRequest = new MockHttpServletRequest();
-        httpServletResponse = new MockHttpServletResponse();
-        connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
-        MessageFactory saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
-        transformerFactory = TransformerFactory.newInstance();
-    }
+	@Before
+	public void setUp() throws Exception {
+		httpServletRequest = new MockHttpServletRequest();
+		httpServletResponse = new MockHttpServletResponse();
+		connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
+		MessageFactory saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
+		transformerFactory = TransformerFactory.newInstance();
+	}
 
-    @Test
-    public void receive() throws Exception {
-        byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
-        httpServletRequest.addHeader("Content-Type", "text/xml");
-        httpServletRequest.addHeader("Content-Length", Integer.toString(bytes.length));
-        httpServletRequest.addHeader(HEADER_NAME, HEADER_VALUE);
-        httpServletRequest.setContent(bytes);
-        SaajSoapMessage message = (SaajSoapMessage) connection.receive(messageFactory);
-        Assert.assertNotNull("No message received", message);
-        StringResult result = new StringResult();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.transform(message.getPayloadSource(), result);
-        assertXMLEqual("Invalid message", CONTENT, result.toString());
-        SOAPMessage saajMessage = message.getSaajMessage();
-        String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
-        Assert.assertNotNull("Response has no header", headerValues);
-        assertEquals("Response has invalid header", 1, headerValues.length);
-        assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
-    }
+	@Test
+	public void receive() throws Exception {
+		byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
+		httpServletRequest.addHeader("Content-Type", "text/xml");
+		httpServletRequest.addHeader("Content-Length", Integer.toString(bytes.length));
+		httpServletRequest.addHeader(HEADER_NAME, HEADER_VALUE);
+		httpServletRequest.setContent(bytes);
+		SaajSoapMessage message = (SaajSoapMessage) connection.receive(messageFactory);
+		Assert.assertNotNull("No message received", message);
+		StringResult result = new StringResult();
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.transform(message.getPayloadSource(), result);
+		assertXMLEqual("Invalid message", CONTENT, result.toString());
+		SOAPMessage saajMessage = message.getSaajMessage();
+		String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
+		Assert.assertNotNull("Response has no header", headerValues);
+		assertEquals("Response has invalid header", 1, headerValues.length);
+		assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
+	}
 
-    @Test
-    public void send() throws Exception {
-        SaajSoapMessage message = messageFactory.createWebServiceMessage();
-        SOAPMessage saajMessage = message.getSaajMessage();
-        MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
-        mimeHeaders.addHeader(HEADER_NAME, HEADER_VALUE);
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.transform(new StringSource(CONTENT), message.getPayloadResult());
+	@Test
+	public void send() throws Exception {
+		SaajSoapMessage message = messageFactory.createWebServiceMessage();
+		SOAPMessage saajMessage = message.getSaajMessage();
+		MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
+		mimeHeaders.addHeader(HEADER_NAME, HEADER_VALUE);
+		Transformer transformer = transformerFactory.newTransformer();
+		transformer.transform(new StringSource(CONTENT), message.getPayloadResult());
 
-        connection.send(message);
+		connection.send(message);
 
-        assertEquals("Invalid header", HEADER_VALUE,
-		        httpServletResponse.getHeader(HEADER_NAME));
-        assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
-    }
+		assertEquals("Invalid header", HEADER_VALUE,
+				httpServletResponse.getHeader(HEADER_NAME));
+		assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
+	}
 
 	@Test
 	public void faultCodes() throws IOException {

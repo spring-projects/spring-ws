@@ -23,26 +23,26 @@ import java.security.cert.X509Certificate;
 
 public abstract class AbstractXwssMessageInterceptorKeyStoreTestCase extends AbstractXwssMessageInterceptorTestCase {
 
-    protected X509Certificate certificate;
+	protected X509Certificate certificate;
 
-    protected PrivateKey privateKey;
+	protected PrivateKey privateKey;
 
-    @Override
-    protected void onSetup() throws Exception {
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream is = null;
-        try {
-            is = getClass().getResourceAsStream("test-keystore.jks");
-            keyStore.load(is, "password".toCharArray());
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        certificate = (X509Certificate) keyStore.getCertificate("alias");
-        privateKey = (PrivateKey) keyStore.getKey("alias", "password".toCharArray());
+	@Override
+	protected void onSetup() throws Exception {
+		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream is = null;
+		try {
+			is = getClass().getResourceAsStream("test-keystore.jks");
+			keyStore.load(is, "password".toCharArray());
+		}
+		finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+		certificate = (X509Certificate) keyStore.getCertificate("alias");
+		privateKey = (PrivateKey) keyStore.getKey("alias", "password".toCharArray());
 
-    }
+	}
 
 }

@@ -21,14 +21,14 @@ import java.util.Map;
 
 public class JaxenXPathTemplateTest extends AbstractXPathTemplateTestCase {
 
-    @Override
-    protected XPathOperations createTemplate() throws Exception {
-        JaxenXPathTemplate template = new JaxenXPathTemplate();
-        Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("prefix1", "namespace1");
-        namespaces.put("prefix2", "namespace2");
-        template.setNamespaces(namespaces);
-        return template;
-    }
+	@Override
+	protected XPathOperations createTemplate() throws Exception {
+		JaxenXPathTemplate template = new JaxenXPathTemplate();
+		Map<String, String> namespaces = new HashMap<String, String>();
+		namespaces.put("prefix1", "namespace1");
+		namespaces.put("prefix2", "namespace2");
+		template.setNamespaces(namespaces);
+		return template;
+	}
 
 }

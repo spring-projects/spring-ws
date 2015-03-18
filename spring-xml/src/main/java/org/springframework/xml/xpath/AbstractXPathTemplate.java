@@ -36,51 +36,51 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public abstract class AbstractXPathTemplate extends TransformerObjectSupport implements XPathOperations {
 
-    private Map<String, String> namespaces;
+	private Map<String, String> namespaces;
 
-    /** Returns namespaces used in the XPath expression. */
-    public Map<String, String> getNamespaces() {
-        return namespaces;
-    }
+	/** Returns namespaces used in the XPath expression. */
+	public Map<String, String> getNamespaces() {
+		return namespaces;
+	}
 
-    /** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
+	/** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
+	public void setNamespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
+	}
 
-    @Override
-    public final void evaluate(String expression, Source context, NodeCallbackHandler callbackHandler)
-            throws XPathException {
-        evaluate(expression, context, new NodeCallbackHandlerNodeMapper(callbackHandler));
-    }
+	@Override
+	public final void evaluate(String expression, Source context, NodeCallbackHandler callbackHandler)
+			throws XPathException {
+		evaluate(expression, context, new NodeCallbackHandlerNodeMapper(callbackHandler));
+	}
 
-    /** Static inner class that adapts a {@link NodeCallbackHandler} to the interface of {@link NodeMapper}. */
-    private static class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
+	/** Static inner class that adapts a {@link NodeCallbackHandler} to the interface of {@link NodeMapper}. */
+	private static class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
 
-        private final NodeCallbackHandler callbackHandler;
+		private final NodeCallbackHandler callbackHandler;
 
-        public NodeCallbackHandlerNodeMapper(NodeCallbackHandler callbackHandler) {
-            this.callbackHandler = callbackHandler;
-        }
+		public NodeCallbackHandlerNodeMapper(NodeCallbackHandler callbackHandler) {
+			this.callbackHandler = callbackHandler;
+		}
 
-        @Override
-        public Object mapNode(Node node, int nodeNum) throws DOMException {
-            callbackHandler.processNode(node);
-            return null;
-        }
-    }
+		@Override
+		public Object mapNode(Node node, int nodeNum) throws DOMException {
+			callbackHandler.processNode(node);
+			return null;
+		}
+	}
 
-    /**
-     * Returns the root element of the given source.
-     *
-     * @param source the source to get the root element from
-     * @return the root element
-     */
-    protected Element getRootElement(Source source) throws TransformerException {
-        DOMResult domResult = new DOMResult();
-        transform(source, domResult);
-        Document document = (Document) domResult.getNode();
-        return document.getDocumentElement();
-    }
+	/**
+	 * Returns the root element of the given source.
+	 *
+	 * @param source the source to get the root element from
+	 * @return the root element
+	 */
+	protected Element getRootElement(Source source) throws TransformerException {
+		DOMResult domResult = new DOMResult();
+		transform(source, domResult);
+		Document document = (Document) domResult.getNode();
+		return document.getDocumentElement();
+	}
 
 }

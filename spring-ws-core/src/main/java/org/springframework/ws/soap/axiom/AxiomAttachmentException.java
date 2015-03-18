@@ -22,15 +22,15 @@ import org.springframework.ws.mime.AttachmentException;
 @SuppressWarnings("serial")
 public class AxiomAttachmentException extends AttachmentException {
 
-    public AxiomAttachmentException(String msg) {
-        super(msg);
-    }
+	public AxiomAttachmentException(String msg) {
+		super(msg);
+	}
 
-    public AxiomAttachmentException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AxiomAttachmentException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public AxiomAttachmentException(Throwable ex) {
-        super(ex);
-    }
+	public AxiomAttachmentException(Throwable ex) {
+		super(ex);
+	}
 }

@@ -34,22 +34,22 @@ import static org.junit.Assert.assertTrue;
 
 public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
-    @Override
-    protected WebServiceMessageFactory createMessageFactory() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-        return new SaajSoapMessageFactory(messageFactory);
-    }
+	@Override
+	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		return new SaajSoapMessageFactory(messageFactory);
+	}
 
-    @Test
-    public void properties() throws IOException {
-        Map<String, ?> properties = Collections.singletonMap(SOAPMessage.WRITE_XML_DECLARATION, "true");
-        ((SaajSoapMessageFactory)messageFactory).setMessageProperties(properties);
-        SoapMessage soapMessage = (SoapMessage) messageFactory.createWebServiceMessage();
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        soapMessage.writeTo(os);
-        String result = os.toString("UTF-8");
-        assertTrue("XML declaration not written", result.startsWith("<?xml version=\"1.0\""));
-    }
+	@Test
+	public void properties() throws IOException {
+		Map<String, ?> properties = Collections.singletonMap(SOAPMessage.WRITE_XML_DECLARATION, "true");
+		((SaajSoapMessageFactory)messageFactory).setMessageProperties(properties);
+		SoapMessage soapMessage = (SoapMessage) messageFactory.createWebServiceMessage();
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		soapMessage.writeTo(os);
+		String result = os.toString("UTF-8");
+		assertTrue("XML declaration not written", result.startsWith("<?xml version=\"1.0\""));
+	}
 
 
 }

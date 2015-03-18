@@ -32,9 +32,9 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
  */
 public class SoapFaultMessageResolver implements FaultMessageResolver {
 
-    @Override
-    public void resolveFault(WebServiceMessage message) throws IOException {
-        SoapMessage soapMessage = (SoapMessage) message;
-        throw new SoapFaultClientException(soapMessage);
-    }
+	@Override
+	public void resolveFault(WebServiceMessage message) throws IOException {
+		SoapMessage soapMessage = (SoapMessage) message;
+		throw new SoapFaultClientException(soapMessage);
+	}
 }

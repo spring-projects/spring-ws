@@ -27,22 +27,22 @@ import org.springframework.core.NestedRuntimeException;
 @SuppressWarnings("serial")
 public abstract class XmlException extends NestedRuntimeException {
 
-    /**
-     * Constructs a new instance of the {@code XmlException} with the specific detail message.
-     *
-     * @param message the detail message
-     */
-    protected XmlException(String message) {
-        super(message);
-    }
+	/**
+	 * Constructs a new instance of the {@code XmlException} with the specific detail message.
+	 *
+	 * @param message the detail message
+	 */
+	protected XmlException(String message) {
+		super(message);
+	}
 
-    /**
-     * Constructs a new instance of the {@code XmlException} with the specific detail message and exception.
-     *
-     * @param message   the detail message
-     * @param throwable the wrapped exception
-     */
-    protected XmlException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
+	/**
+	 * Constructs a new instance of the {@code XmlException} with the specific detail message and exception.
+	 *
+	 * @param message	the detail message
+	 * @param throwable the wrapped exception
+	 */
+	protected XmlException(String message, Throwable throwable) {
+		super(message, throwable);
+	}
 }

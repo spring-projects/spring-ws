@@ -25,20 +25,20 @@ package org.springframework.ws.soap;
  */
 public interface SoapEnvelope extends SoapElement {
 
-    /**
-     * Returns the {@code SoapHeader}. Returns {@code null} if no header is present.
-     *
-     * @return the {@code SoapHeader}, or {@code null}
-     * @throws SoapHeaderException if the header cannot be returned
-     */
-    SoapHeader getHeader() throws SoapHeaderException;
+	/**
+	 * Returns the {@code SoapHeader}. Returns {@code null} if no header is present.
+	 *
+	 * @return the {@code SoapHeader}, or {@code null}
+	 * @throws SoapHeaderException if the header cannot be returned
+	 */
+	SoapHeader getHeader() throws SoapHeaderException;
 
-    /**
-     * Returns the {@code SoapBody}.
-     *
-     * @return the {@code SoapBody}
-     * @throws SoapBodyException if the header cannot be returned
-     */
-    SoapBody getBody() throws SoapBodyException;
+	/**
+	 * Returns the {@code SoapBody}.
+	 *
+	 * @return the {@code SoapBody}
+	 * @throws SoapBodyException if the header cannot be returned
+	 */
+	SoapBody getBody() throws SoapBodyException;
 
 }

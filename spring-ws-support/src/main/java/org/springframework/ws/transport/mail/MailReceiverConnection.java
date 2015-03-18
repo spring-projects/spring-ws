@@ -56,206 +56,206 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  */
 public class MailReceiverConnection extends AbstractReceiverConnection {
 
-    private final Message requestMessage;
+	private final Message requestMessage;
 
-    private final Session session;
+	private final Session session;
 
-    private Message responseMessage;
+	private Message responseMessage;
 
-    private ByteArrayOutputStream responseBuffer;
+	private ByteArrayOutputStream responseBuffer;
 
-    private String responseContentType;
+	private String responseContentType;
 
-    private URLName transportUri;
+	private URLName transportUri;
 
-    private InternetAddress from;
+	private InternetAddress from;
 
-    /** Constructs a new Mail connection with the given parameters. */
-    protected MailReceiverConnection(Message requestMessage, Session session) {
-        Assert.notNull(requestMessage, "'requestMessage' must not be null");
-        Assert.notNull(session, "'session' must not be null");
-        this.requestMessage = requestMessage;
-        this.session = session;
-    }
+	/** Constructs a new Mail connection with the given parameters. */
+	protected MailReceiverConnection(Message requestMessage, Session session) {
+		Assert.notNull(requestMessage, "'requestMessage' must not be null");
+		Assert.notNull(session, "'session' must not be null");
+		this.requestMessage = requestMessage;
+		this.session = session;
+	}
 
-    /** Returns the request message for this connection. */
-    public Message getRequestMessage() {
-        return requestMessage;
-    }
+	/** Returns the request message for this connection. */
+	public Message getRequestMessage() {
+		return requestMessage;
+	}
 
-    /** Returns the response message, if any, for this connection. */
-    public Message getResponseMessage() {
-        return responseMessage;
-    }
+	/** Returns the response message, if any, for this connection. */
+	public Message getResponseMessage() {
+		return responseMessage;
+	}
 
-    /*
-     * Package-friendly setters
-     */
-    void setTransportUri(URLName transportUri) {
-        this.transportUri = transportUri;
-    }
+	/*
+	 * Package-friendly setters
+	 */
+	void setTransportUri(URLName transportUri) {
+		this.transportUri = transportUri;
+	}
 
-    void setFrom(InternetAddress from) {
-        this.from = from;
-    }
+	void setFrom(InternetAddress from) {
+		this.from = from;
+	}
 
-    /*
-     * URI
-     */
+	/*
+	 * URI
+	 */
 
-    @Override
-    public URI getUri() throws URISyntaxException {
-        try {
-            Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
-            if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
-                return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
-            }
-            else {
-                throw new URISyntaxException("", "Could not determine To header");
-            }
-        }
-        catch (MessagingException ex) {
-            throw new URISyntaxException("", ex.getMessage());
-        }
-    }
+	@Override
+	public URI getUri() throws URISyntaxException {
+		try {
+			Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
+			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
+				return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
+			}
+			else {
+				throw new URISyntaxException("", "Could not determine To header");
+			}
+		}
+		catch (MessagingException ex) {
+			throw new URISyntaxException("", ex.getMessage());
+		}
+	}
 /*
-     * Errors
-     */
+	 * Errors
+	 */
 
-    @Override
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
+	@Override
+	public String getErrorMessage() throws IOException {
+		return null;
+	}
 
-    @Override
-    public boolean hasError() throws IOException {
-        return false;
-    }
+	@Override
+	public boolean hasError() throws IOException {
+		return false;
+	}
 
-    /*
-    * Receiving
-    */
+	/*
+	* Receiving
+	*/
 
-    @Override
-    protected Iterator<String> getRequestHeaderNames() throws IOException {
-        try {
-            List<String> headers = new ArrayList<String>();
-            Enumeration<?> enumeration = requestMessage.getAllHeaders();
-            while (enumeration.hasMoreElements()) {
-                Header header = (Header) enumeration.nextElement();
-                headers.add(header.getName());
-            }
-            return headers.iterator();
-        }
-        catch (MessagingException ex) {
-            throw new IOException(ex.getMessage());
-        }
-    }
+	@Override
+	protected Iterator<String> getRequestHeaderNames() throws IOException {
+		try {
+			List<String> headers = new ArrayList<String>();
+			Enumeration<?> enumeration = requestMessage.getAllHeaders();
+			while (enumeration.hasMoreElements()) {
+				Header header = (Header) enumeration.nextElement();
+				headers.add(header.getName());
+			}
+			return headers.iterator();
+		}
+		catch (MessagingException ex) {
+			throw new IOException(ex.getMessage());
+		}
+	}
 
-    @Override
-    protected Iterator<String> getRequestHeaders(String name) throws IOException {
-        try {
-            String[] headers = requestMessage.getHeader(name);
-            return Arrays.asList(headers).iterator();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+		try {
+			String[] headers = requestMessage.getHeader(name);
+			return Arrays.asList(headers).iterator();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected InputStream getRequestInputStream() throws IOException {
-        try {
-            return requestMessage.getInputStream();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected InputStream getRequestInputStream() throws IOException {
+		try {
+			return requestMessage.getInputStream();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected void addResponseHeader(String name, String value) throws IOException {
-        try {
-            responseMessage.addHeader(name, value);
-            if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
-                responseContentType = value;
-            }
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected void addResponseHeader(String name, String value) throws IOException {
+		try {
+			responseMessage.addHeader(name, value);
+			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
+				responseContentType = value;
+			}
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected OutputStream getResponseOutputStream() throws IOException {
-        return responseBuffer;
-    }
+	@Override
+	protected OutputStream getResponseOutputStream() throws IOException {
+		return responseBuffer;
+	}
 
-    /*
-     * Sending
-     */
+	/*
+	 * Sending
+	 */
 
-    @Override
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        try {
-            responseMessage = requestMessage.reply(false);
-            responseMessage.setFrom(from);
+	@Override
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+		try {
+			responseMessage = requestMessage.reply(false);
+			responseMessage.setFrom(from);
 
-            responseBuffer = new ByteArrayOutputStream();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+			responseBuffer = new ByteArrayOutputStream();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        Transport transport = null;
-        try {
-            responseMessage.setDataHandler(
-                    new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
-            transport = session.getTransport(transportUri);
-            transport.connect();
-            responseMessage.saveChanges();
-            transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-        finally {
-            MailTransportUtils.closeService(transport);
-        }
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		Transport transport = null;
+		try {
+			responseMessage.setDataHandler(
+					new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
+			transport = session.getTransport(transportUri);
+			transport.connect();
+			responseMessage.saveChanges();
+			transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+		finally {
+			MailTransportUtils.closeService(transport);
+		}
+	}
 
-    private class ByteArrayDataSource implements DataSource {
+	private class ByteArrayDataSource implements DataSource {
 
-        private byte[] data;
+		private byte[] data;
 
-        private String contentType;
+		private String contentType;
 
-        public ByteArrayDataSource(String contentType, byte[] data) {
-            this.data = data;
-            this.contentType = contentType;
-        }
+		public ByteArrayDataSource(String contentType, byte[] data) {
+			this.data = data;
+			this.contentType = contentType;
+		}
 
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
+		@Override
+		public String getContentType() {
+			return contentType;
+		}
 
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return new ByteArrayInputStream(data);
-        }
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return new ByteArrayInputStream(data);
+		}
 
-        @Override
-        public String getName() {
-            return "ByteArrayDataSource";
-        }
+		@Override
+		public String getName() {
+			return "ByteArrayDataSource";
+		}
 
-        @Override
-        public OutputStream getOutputStream() throws IOException {
-            throw new UnsupportedOperationException();
-        }
-    }
+		@Override
+		public OutputStream getOutputStream() throws IOException {
+			throw new UnsupportedOperationException();
+		}
+	}
 }

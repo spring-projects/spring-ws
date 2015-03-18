@@ -31,40 +31,40 @@ import static org.easymock.EasyMock.createMock;
 
 public class SoapHeaderMatcherTest {
 
-    private SoapHeaderMatcher matcher;
+	private SoapHeaderMatcher matcher;
 
-    private QName expectedHeaderName;
+	private QName expectedHeaderName;
 
-    @Before
-    public void setUp() throws Exception {
-        expectedHeaderName = new QName("http://example.com", "header");
-        matcher = new SoapHeaderMatcher(expectedHeaderName);
-    }
+	@Before
+	public void setUp() throws Exception {
+		expectedHeaderName = new QName("http://example.com", "header");
+		matcher = new SoapHeaderMatcher(expectedHeaderName);
+	}
 
-    @Test
-    public void match() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        saajMessage.getSOAPHeader().addHeaderElement(expectedHeaderName);
-        SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
+	@Test
+	public void match() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		saajMessage.getSOAPHeader().addHeaderElement(expectedHeaderName);
+		SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-        matcher.match(soapMessage);
-    }
+		matcher.match(soapMessage);
+	}
 
-    @Test(expected = AssertionError.class)
-    public void nonMatch() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
+	@Test(expected = AssertionError.class)
+	public void nonMatch() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-        matcher.match(soapMessage);
-    }
+		matcher.match(soapMessage);
+	}
 
-    @Test(expected = AssertionError.class)
-    public void nonSoap() throws Exception {
-        WebServiceMessage message = createMock(WebServiceMessage.class);
+	@Test(expected = AssertionError.class)
+	public void nonSoap() throws Exception {
+		WebServiceMessage message = createMock(WebServiceMessage.class);
 
-        matcher.match(message);
-    }
+		matcher.match(message);
+	}
 
 }

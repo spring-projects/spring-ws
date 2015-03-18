@@ -21,20 +21,20 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
 
 public class Stroap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
-    @Override
-    protected WebServiceMessageFactory createMessageFactory() throws Exception {
-        return new StroapMessageFactory();
-    }
+	@Override
+	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+		return new StroapMessageFactory();
+	}
 
-    @Override
-    public void testCreateSoapMessageMtom() throws Exception {
-    }
+	@Override
+	public void testCreateSoapMessageMtom() throws Exception {
+	}
 
-    @Override
-    public void testCreateSoapMessageSwA() throws Exception {
-    }
+	@Override
+	public void testCreateSoapMessageSwA() throws Exception {
+	}
 
-    @Override
-    public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
-    }
+	@Override
+	public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
+	}
 }

@@ -39,69 +39,69 @@ import org.springframework.util.Assert;
  * @author Ben Alex
  */
 public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBean {
-    //~ Static fields/initializers =====================================================================================
+	//~ Static fields/initializers =====================================================================================
 
-    private static final Log logger = LogFactory.getLog(EhCacheBasedX509UserCache.class);
+	private static final Log logger = LogFactory.getLog(EhCacheBasedX509UserCache.class);
 
-    //~ Instance fields ================================================================================================
+	//~ Instance fields ================================================================================================
 
-    private Ehcache cache;
+	private Ehcache cache;
 
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(cache, "cache is mandatory");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(cache, "cache is mandatory");
+	}
 
-    @Override
-    public UserDetails getUserFromCache(X509Certificate userCert) {
-        Element element = null;
+	@Override
+	public UserDetails getUserFromCache(X509Certificate userCert) {
+		Element element = null;
 
-        try {
-            element = cache.get(userCert);
-        } catch (CacheException cacheException) {
-            throw new DataRetrievalFailureException("Cache failure: " + cacheException.getMessage());
-        }
+		try {
+			element = cache.get(userCert);
+		} catch (CacheException cacheException) {
+			throw new DataRetrievalFailureException("Cache failure: " + cacheException.getMessage());
+		}
 
-        if (logger.isDebugEnabled()) {
-            String subjectDN = "unknown";
+		if (logger.isDebugEnabled()) {
+			String subjectDN = "unknown";
 
-            if ((userCert != null) && (userCert.getSubjectDN() != null)) {
-                subjectDN = userCert.getSubjectDN().toString();
-            }
+			if ((userCert != null) && (userCert.getSubjectDN() != null)) {
+				subjectDN = userCert.getSubjectDN().toString();
+			}
 
-            logger.debug("X.509 Cache hit. SubjectDN: " + subjectDN);
-        }
+			logger.debug("X.509 Cache hit. SubjectDN: " + subjectDN);
+		}
 
-        if (element == null) {
-            return null;
-        } else {
-            return (UserDetails) element.getObjectValue();
-        }
-    }
+		if (element == null) {
+			return null;
+		} else {
+			return (UserDetails) element.getObjectValue();
+		}
+	}
 
-    @Override
-    public void putUserInCache(X509Certificate userCert, UserDetails user) {
-        Element element = new Element(userCert, user);
+	@Override
+	public void putUserInCache(X509Certificate userCert, UserDetails user) {
+		Element element = new Element(userCert, user);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Cache put: " + userCert.getSubjectDN());
-        }
+		if (logger.isDebugEnabled()) {
+			logger.debug("Cache put: " + userCert.getSubjectDN());
+		}
 
-        cache.put(element);
-    }
+		cache.put(element);
+	}
 
-    @Override
-    public void removeUserFromCache(X509Certificate userCert) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Cache remove: " + userCert.getSubjectDN());
-        }
+	@Override
+	public void removeUserFromCache(X509Certificate userCert) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Cache remove: " + userCert.getSubjectDN());
+		}
 
-        cache.remove(userCert);
-    }
+		cache.remove(userCert);
+	}
 
-    public void setCache(Ehcache cache) {
-        this.cache = cache;
-    }
+	public void setCache(Ehcache cache) {
+		this.cache = cache;
+	}
 }

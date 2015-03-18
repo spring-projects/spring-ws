@@ -28,30 +28,30 @@ import org.springframework.xml.stream.AbstractXMLEventWriter;
  */
 class CachingXMLEventWriter extends AbstractXMLEventWriter {
 
-    private int elementDepth = 0;
+	private int elementDepth = 0;
 
-    boolean startElementSeen = false;
+	boolean startElementSeen = false;
 
-    private final List<XMLEvent> events;
+	private final List<XMLEvent> events;
 
-    CachingXMLEventWriter(List<XMLEvent> events) {
-        Assert.notNull(events, "'events' must not be null");
-        this.events = events;
-    }
+	CachingXMLEventWriter(List<XMLEvent> events) {
+		Assert.notNull(events, "'events' must not be null");
+		this.events = events;
+	}
 
-    public void add(XMLEvent event) throws XMLStreamException {
-        if (event.isStartElement()) {
-            startElementSeen = true;
-            elementDepth++;
-        }
-        else if (event.isEndElement()) {
-            elementDepth--;
-        }
-        else if (event.isStartDocument() || event.isEndDocument()) {
-            return;
-        }
-        if (elementDepth >= 0 && startElementSeen) {
-            events.add(event);
-        }
-    }
+	public void add(XMLEvent event) throws XMLStreamException {
+		if (event.isStartElement()) {
+			startElementSeen = true;
+			elementDepth++;
+		}
+		else if (event.isEndElement()) {
+			elementDepth--;
+		}
+		else if (event.isStartDocument() || event.isEndDocument()) {
+			return;
+		}
+		if (elementDepth >= 0 && startElementSeen) {
+			events.add(event);
+		}
+	}
 }

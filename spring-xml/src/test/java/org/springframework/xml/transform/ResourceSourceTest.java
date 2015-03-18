@@ -28,16 +28,16 @@ import org.w3c.dom.Element;
 
 public class ResourceSourceTest {
 
-    @Test
-    public void testStringSource() throws Exception {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        DOMResult result = new DOMResult();
-        ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
-        transformer.transform(source, result);
-        Element rootElement = (Element) result.getNode().getFirstChild();
-        Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
-        Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-        Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
-    }
+	@Test
+	public void testStringSource() throws Exception {
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		DOMResult result = new DOMResult();
+		ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
+		transformer.transform(source, result);
+		Element rootElement = (Element) result.getNode().getFirstChild();
+		Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
+		Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
+		Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+	}
 
 }

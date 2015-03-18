@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,54 +43,54 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
  */
 public class MessageDispatcherServletIntegrationTest {
 
-    private static Server jettyServer;
+	private static Server jettyServer;
 
-    private static String url;
+	private static String url;
 
-    private MessageFactory messageFactory;
+	private MessageFactory messageFactory;
 
-    private SOAPConnectionFactory connectionFactory;
+	private SOAPConnectionFactory connectionFactory;
 
-    @BeforeClass
-    public static void startJetty() throws Exception {
-        int port = FreePortScanner.getFreePort();
-        url = "http://localhost:" + port;
-        jettyServer = new Server(port);
-        Context jettyContext = new Context(jettyServer, "/");
-        String resourceBase =
-                new File(MessageDispatcherServletIntegrationTest.class.getResource("WEB-INF").toURI()).getParent();
-        jettyContext.setResourceBase(resourceBase);
-        ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
-        servletHolder.setName("sws");
-        jettyContext.addServlet(servletHolder, "/");
-        jettyServer.start();
-    }
+	@BeforeClass
+	public static void startJetty() throws Exception {
+		int port = FreePortScanner.getFreePort();
+		url = "http://localhost:" + port;
+		jettyServer = new Server(port);
+		Context jettyContext = new Context(jettyServer, "/");
+		String resourceBase =
+				new File(MessageDispatcherServletIntegrationTest.class.getResource("WEB-INF").toURI()).getParent();
+		jettyContext.setResourceBase(resourceBase);
+		ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
+		servletHolder.setName("sws");
+		jettyContext.addServlet(servletHolder, "/");
+		jettyServer.start();
+	}
 
-    @Before
-    public void setUpSaaj() throws SOAPException {
-        messageFactory = MessageFactory.newInstance();
-        connectionFactory = SOAPConnectionFactory.newInstance();
-    }
+	@Before
+	public void setUpSaaj() throws SOAPException {
+		messageFactory = MessageFactory.newInstance();
+		connectionFactory = SOAPConnectionFactory.newInstance();
+	}
 
-    @AfterClass
-    public static void stopJetty() throws Exception {
-        if (jettyServer.isRunning()) {
-            jettyServer.stop();
-        }
-    }
+	@AfterClass
+	public static void stopJetty() throws Exception {
+		if (jettyServer.isRunning()) {
+			jettyServer.stop();
+		}
+	}
 
-    @Test
-    public void echo() throws SOAPException {
-        SOAPMessage request = messageFactory.createMessage();
-        SOAPElement element = request.getSOAPBody().addChildElement(new QName(EchoPayloadEndpoint.NAMESPACE, EchoPayloadEndpoint.LOCAL_PART));
-        element.setTextContent("Hello World");
+	@Test
+	public void echo() throws SOAPException {
+		SOAPMessage request = messageFactory.createMessage();
+		SOAPElement element = request.getSOAPBody().addChildElement(new QName(EchoPayloadEndpoint.NAMESPACE, EchoPayloadEndpoint.LOCAL_PART));
+		element.setTextContent("Hello World");
 
-        SOAPConnection connection = connectionFactory.createConnection();
+		SOAPConnection connection = connectionFactory.createConnection();
 
-        SOAPMessage response = connection.call(request, url);
+		SOAPMessage response = connection.call(request, url);
 
-        assertXMLEqual(request.getSOAPPart(), response.getSOAPPart());
-    }
+		assertXMLEqual(request.getSOAPPart(), response.getSOAPPart());
+	}
 
 
 }

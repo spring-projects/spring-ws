@@ -29,32 +29,32 @@ import javax.xml.namespace.QName;
  */
 public interface SoapFault extends SoapElement {
 
-    /** Returns the fault code. */
-    QName getFaultCode();
+	/** Returns the fault code. */
+	QName getFaultCode();
 
-    /**
-     * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
-     * fault reason for the default locale.
-     */
-    String getFaultStringOrReason();
+	/**
+	 * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
+	 * fault reason for the default locale.
+	 */
+	String getFaultStringOrReason();
 
-    /** Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP 1.2, this returns the role. */
-    String getFaultActorOrRole();
+	/** Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP 1.2, this returns the role. */
+	String getFaultActorOrRole();
 
-    /** Sets the fault actor. For SOAP 1.1, this sets the actor. For SOAP 1.2, this sets the role. */
-    void setFaultActorOrRole(String faultActor);
+	/** Sets the fault actor. For SOAP 1.1, this sets the actor. For SOAP 1.2, this sets the role. */
+	void setFaultActorOrRole(String faultActor);
 
-    /**
-     * Returns the optional detail element for this {@code SoapFault}.
-     *
-     * @return a fault detail
-     */
-    SoapFaultDetail getFaultDetail();
+	/**
+	 * Returns the optional detail element for this {@code SoapFault}.
+	 *
+	 * @return a fault detail
+	 */
+	SoapFaultDetail getFaultDetail();
 
-    /**
-     * Creates an optional {@code SoapFaultDetail} object and assigns it to this fault.
-     *
-     * @return the created detail
-     */
-    SoapFaultDetail addFaultDetail();
+	/**
+	 * Creates an optional {@code SoapFaultDetail} object and assigns it to this fault.
+	 *
+	 * @return the created detail
+	 */
+	SoapFaultDetail addFaultDetail();
 }

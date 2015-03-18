@@ -37,44 +37,44 @@ import org.springframework.ws.stream.StreamingPayload;
  */
 abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 
-    private final Payload payload;
+	private final Payload payload;
 
-    protected AxiomSoapBody(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
-        super(axiomBody, axiomFactory);
-        if (payloadCaching) {
-            payload = new CachingPayload(axiomBody, axiomFactory);
-        }
-        else {
-            payload = new NonCachingPayload(axiomBody, axiomFactory);
-        }
-    }
+	protected AxiomSoapBody(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
+		super(axiomBody, axiomFactory);
+		if (payloadCaching) {
+			payload = new CachingPayload(axiomBody, axiomFactory);
+		}
+		else {
+			payload = new NonCachingPayload(axiomBody, axiomFactory);
+		}
+	}
 
-    @Override
-    public Source getPayloadSource() {
-        return payload.getSource();
-    }
+	@Override
+	public Source getPayloadSource() {
+		return payload.getSource();
+	}
 
-    @Override
-    public Result getPayloadResult() {
-        return payload.getResult();
-    }
+	@Override
+	public Result getPayloadResult() {
+		return payload.getResult();
+	}
 
-    @Override
-    public boolean hasFault() {
-        return getAxiomBody().hasFault();
-    }
+	@Override
+	public boolean hasFault() {
+		return getAxiomBody().hasFault();
+	}
 
-    protected final SOAPBody getAxiomBody() {
-        return (SOAPBody) getAxiomElement();
-    }
+	protected final SOAPBody getAxiomBody() {
+		return (SOAPBody) getAxiomElement();
+	}
 
-    public void setStreamingPayload(StreamingPayload payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        OMDataSource dataSource = new StreamingOMDataSource(payload);
-        OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, payload.getName());
+	public void setStreamingPayload(StreamingPayload payload) {
+		Assert.notNull(payload, "'payload' must not be null");
+		OMDataSource dataSource = new StreamingOMDataSource(payload);
+		OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, payload.getName());
 
-        SOAPBody soapBody = getAxiomBody();
-        AxiomUtils.removeContents(soapBody);
-        soapBody.addChild(payloadElement);
-    }
+		SOAPBody soapBody = getAxiomBody();
+		AxiomUtils.removeContents(soapBody);
+		soapBody.addChild(payloadElement);
+	}
 }

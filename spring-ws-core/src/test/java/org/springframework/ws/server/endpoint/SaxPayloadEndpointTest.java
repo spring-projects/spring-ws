@@ -30,70 +30,70 @@ import static org.junit.Assert.fail;
 
 public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
-    @Override
-    protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
-        return new AbstractSaxPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+		return new AbstractSaxPayloadEndpoint() {
 
-            @Override
-            protected Source getResponse(ContentHandler contentHandler) {
-                return null;
-            }
+			@Override
+			protected Source getResponse(ContentHandler contentHandler) {
+				return null;
+			}
 
-            @Override
-            protected ContentHandler createContentHandler() {
-                return new DefaultHandler();
-            }
-        };
-    }
+			@Override
+			protected ContentHandler createContentHandler() {
+				return new DefaultHandler();
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createResponseEndpoint() throws Exception {
-        return new AbstractSaxPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+		return new AbstractSaxPayloadEndpoint() {
 
-            @Override
-            protected ContentHandler createContentHandler() {
-                return new TestContentHandler();
-            }
+			@Override
+			protected ContentHandler createContentHandler() {
+				return new TestContentHandler();
+			}
 
-            @Override
-            protected Source getResponse(ContentHandler contentHandler) {
-                return new StringSource(RESPONSE);
-            }
-        };
-    }
+			@Override
+			protected Source getResponse(ContentHandler contentHandler) {
+				return new StringSource(RESPONSE);
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
-        return new AbstractSaxPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+		return new AbstractSaxPayloadEndpoint() {
 
-            @Override
-            protected ContentHandler createContentHandler() throws Exception {
-                fail("Not expected");
-                return null;
-            }
+			@Override
+			protected ContentHandler createContentHandler() throws Exception {
+				fail("Not expected");
+				return null;
+			}
 
-            @Override
-            protected Source getResponse(ContentHandler contentHandler) throws Exception {
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Source getResponse(ContentHandler contentHandler) throws Exception {
+				return null;
+			}
+		};
+	}
 
-    private static class TestContentHandler extends DefaultHandler {
+	private static class TestContentHandler extends DefaultHandler {
 
-        @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException {
-            assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
-            assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
-            assertEquals("Invalid namespace", NAMESPACE_URI, uri);
-        }
+		@Override
+		public void endElement(String uri, String localName, String qName) throws SAXException {
+			assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
+			assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
+			assertEquals("Invalid namespace", NAMESPACE_URI, uri);
+		}
 
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes)
-                throws SAXException {
-            assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
-            assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
-            assertEquals("Invalid namespace", NAMESPACE_URI, uri);
-        }
-    }
+		@Override
+		public void startElement(String uri, String localName, String qName, Attributes attributes)
+				throws SAXException {
+			assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
+			assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
+			assertEquals("Invalid namespace", NAMESPACE_URI, uri);
+		}
+	}
 }

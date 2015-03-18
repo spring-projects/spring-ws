@@ -33,14 +33,14 @@ import org.w3c.dom.Node;
  */
 public interface NodeMapper<T> {
 
-    /**
-     * Maps a single node to an arbitrary object.
-     *
-     * @param node    the node to map
-     * @param nodeNum the number of the current node
-     * @return object for the current node
-     * @throws DOMException in case of DOM errors
-     */
-    T mapNode(Node node, int nodeNum) throws DOMException;
+	/**
+	 * Maps a single node to an arbitrary object.
+	 *
+	 * @param node	  the node to map
+	 * @param nodeNum the number of the current node
+	 * @return object for the current node
+	 * @throws DOMException in case of DOM errors
+	 */
+	T mapNode(Node node, int nodeNum) throws DOMException;
 
 }

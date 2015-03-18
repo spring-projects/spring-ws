@@ -40,44 +40,44 @@ import org.springframework.ws.stream.StreamingPayload;
  */
 class StreamingOMDataSource implements OMDataSource {
 
-    private final StreamingPayload payload;
+	private final StreamingPayload payload;
 
-    StreamingOMDataSource(StreamingPayload payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        this.payload = payload;
-    }
+	StreamingOMDataSource(StreamingPayload payload) {
+		Assert.notNull(payload, "'payload' must not be null");
+		this.payload = payload;
+	}
 
-    @Override
-    public void serialize(OutputStream output, OMOutputFormat format) throws XMLStreamException {
-        XMLStreamWriter streamWriter;
-        if (format != null && StringUtils.hasLength(format.getCharSetEncoding())) {
-            streamWriter = StAXUtils.createXMLStreamWriter(output, format.getCharSetEncoding());
-        }
-        else {
-            streamWriter = StAXUtils.createXMLStreamWriter(output);
-        }
-        serialize(streamWriter);
-    }
+	@Override
+	public void serialize(OutputStream output, OMOutputFormat format) throws XMLStreamException {
+		XMLStreamWriter streamWriter;
+		if (format != null && StringUtils.hasLength(format.getCharSetEncoding())) {
+			streamWriter = StAXUtils.createXMLStreamWriter(output, format.getCharSetEncoding());
+		}
+		else {
+			streamWriter = StAXUtils.createXMLStreamWriter(output);
+		}
+		serialize(streamWriter);
+	}
 
-    @Override
-    public void serialize(Writer writer, OMOutputFormat format) throws XMLStreamException {
-        XMLStreamWriter streamWriter = StAXUtils.createXMLStreamWriter(writer);
-        serialize(streamWriter);
-    }
+	@Override
+	public void serialize(Writer writer, OMOutputFormat format) throws XMLStreamException {
+		XMLStreamWriter streamWriter = StAXUtils.createXMLStreamWriter(writer);
+		serialize(streamWriter);
+	}
 
-    @Override
-    public void serialize(XMLStreamWriter xmlWriter) throws XMLStreamException {
-        payload.writeTo(xmlWriter);
-        xmlWriter.flush();
-    }
+	@Override
+	public void serialize(XMLStreamWriter xmlWriter) throws XMLStreamException {
+		payload.writeTo(xmlWriter);
+		xmlWriter.flush();
+	}
 
-    @Override
-    public XMLStreamReader getReader() throws XMLStreamException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        serialize(bos, null);
+	@Override
+	public XMLStreamReader getReader() throws XMLStreamException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		serialize(bos, null);
 
-        ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-        return StAXUtils.createXMLStreamReader(bis);
-    }
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		return StAXUtils.createXMLStreamReader(bis);
+	}
 
 }

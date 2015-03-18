@@ -26,49 +26,49 @@ import static org.junit.Assert.assertNull;
 
 public class MockStrategiesHelperTest {
 
-    @Test
-    public void none() {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
+	@Test
+	public void none() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
-        MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        assertNull(helper.getStrategy(IMyBean.class));
-    }
+		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+		assertNull(helper.getStrategy(IMyBean.class));
+	}
 
-    @Test
-    public void one() {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("myBean", MyBean.class);
+	@Test
+	public void one() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("myBean", MyBean.class);
 
-        MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        assertNotNull(helper.getStrategy(IMyBean.class));
-    }
+		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+		assertNotNull(helper.getStrategy(IMyBean.class));
+	}
 
-    @Test(expected = BeanInitializationException.class)
-    public void many() {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("myBean1", MyBean.class);
-        applicationContext.registerSingleton("myBean2", MyBean.class);
+	@Test(expected = BeanInitializationException.class)
+	public void many() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("myBean1", MyBean.class);
+		applicationContext.registerSingleton("myBean2", MyBean.class);
 
-        MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        helper.getStrategy(IMyBean.class);
-    }
-    
-    @Test
-    public void noneWithDefault() {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-
-
-        MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-        assertNotNull(helper.getStrategy(IMyBean.class, MyBean.class));
-    }
+		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+		helper.getStrategy(IMyBean.class);
+	}
+	
+	@Test
+	public void noneWithDefault() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
 
-    public interface IMyBean {
+		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+		assertNotNull(helper.getStrategy(IMyBean.class, MyBean.class));
+	}
 
-    }
 
-    public static class MyBean implements IMyBean {
+	public interface IMyBean {
 
-    }
+	}
+
+	public static class MyBean implements IMyBean {
+
+	}
 
 }

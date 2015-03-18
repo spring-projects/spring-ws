@@ -28,11 +28,11 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface FaultMessageResolver {
 
-    /**
-     * Try to resolve the given fault message that got received.
-     *
-     * @param message the fault message
-     */
-    void resolveFault(WebServiceMessage message) throws IOException;
+	/**
+	 * Try to resolve the given fault message that got received.
+	 *
+	 * @param message the fault message
+	 */
+	void resolveFault(WebServiceMessage message) throws IOException;
 
 }

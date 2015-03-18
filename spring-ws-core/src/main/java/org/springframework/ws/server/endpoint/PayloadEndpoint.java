@@ -28,12 +28,12 @@ import javax.xml.transform.Source;
  */
 public interface PayloadEndpoint {
 
-    /**
-     * Invokes the endpoint with the given request payload, and possibly returns a response.
-     *
-     * @param request the payload of the request message, may be {@code null}
-     * @return the payload of the response message, may be {@code null} to indicate no response
-     * @throws Exception if an exception occurs
-     */
-    Source invoke(Source request) throws Exception;
+	/**
+	 * Invokes the endpoint with the given request payload, and possibly returns a response.
+	 *
+	 * @param request the payload of the request message, may be {@code null}
+	 * @return the payload of the response message, may be {@code null} to indicate no response
+	 * @throws Exception if an exception occurs
+	 */
+	Source invoke(Source request) throws Exception;
 }

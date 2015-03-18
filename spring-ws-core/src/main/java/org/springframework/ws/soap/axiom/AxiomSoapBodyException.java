@@ -25,15 +25,15 @@ import org.springframework.ws.soap.SoapEnvelopeException;
 @SuppressWarnings("serial")
 public class AxiomSoapBodyException extends SoapEnvelopeException {
 
-    public AxiomSoapBodyException(String msg) {
-        super(msg);
-    }
+	public AxiomSoapBodyException(String msg) {
+		super(msg);
+	}
 
-    public AxiomSoapBodyException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AxiomSoapBodyException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public AxiomSoapBodyException(Throwable ex) {
-        super(ex);
-    }
+	public AxiomSoapBodyException(Throwable ex) {
+		super(ex);
+	}
 }

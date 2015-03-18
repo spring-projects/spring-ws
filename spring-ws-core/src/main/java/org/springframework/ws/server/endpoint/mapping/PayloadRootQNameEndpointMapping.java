@@ -48,15 +48,15 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 @Deprecated
 public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 
-    private static TransformerFactory transformerFactory;
+	private static TransformerFactory transformerFactory;
 
-    static {
-        transformerFactory = TransformerFactory.newInstance();
-    }
+	static {
+		transformerFactory = TransformerFactory.newInstance();
+	}
 
-    @Override
-    protected QName resolveQName(MessageContext messageContext) throws TransformerException {
-        return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
-    }
+	@Override
+	protected QName resolveQName(MessageContext messageContext) throws TransformerException {
+		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
+	}
 
 }

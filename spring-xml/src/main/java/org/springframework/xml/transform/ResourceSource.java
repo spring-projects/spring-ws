@@ -33,21 +33,21 @@ import org.xml.sax.XMLReader;
  */
 public class ResourceSource extends SAXSource {
 
-    /**
-     * Initializes a new instance of the {@code ResourceSource} with the given resource.
-     *
-     * @param content the content
-     */
-    public ResourceSource(Resource content) throws IOException {
-        super(SaxUtils.createInputSource(content));
-    }
+	/**
+	 * Initializes a new instance of the {@code ResourceSource} with the given resource.
+	 *
+	 * @param content the content
+	 */
+	public ResourceSource(Resource content) throws IOException {
+		super(SaxUtils.createInputSource(content));
+	}
 
-    /**
-     * Initializes a new instance of the {@code ResourceSource} with the given {@link XMLReader} and resource.
-     *
-     * @param content the content
-     */
-    public ResourceSource(XMLReader reader, Resource content) throws IOException {
-        super(reader, SaxUtils.createInputSource(content));
-    }
+	/**
+	 * Initializes a new instance of the {@code ResourceSource} with the given {@link XMLReader} and resource.
+	 *
+	 * @param content the content
+	 */
+	public ResourceSource(XMLReader reader, Resource content) throws IOException {
+		super(reader, SaxUtils.createInputSource(content));
+	}
 }

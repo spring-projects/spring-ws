@@ -55,186 +55,186 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 @Deprecated
 public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender
-        implements InitializingBean, DisposableBean {
+		implements InitializingBean, DisposableBean {
 
-    private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
+	private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
 
-    private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
+	private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
 
-    private HttpClient httpClient;
+	private HttpClient httpClient;
 
-    private Credentials credentials;
+	private Credentials credentials;
 
-    private AuthScope authScope;
+	private AuthScope authScope;
 
-    /**
-     * Create a new instance of the {@code CommonsHttpMessageSender} with a default {@link HttpClient} that uses a
-     * default {@link MultiThreadedHttpConnectionManager}.
-     */
-    public CommonsHttpMessageSender() {
-        httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
-        setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS);
-        setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
-    }
+	/**
+	 * Create a new instance of the {@code CommonsHttpMessageSender} with a default {@link HttpClient} that uses a
+	 * default {@link MultiThreadedHttpConnectionManager}.
+	 */
+	public CommonsHttpMessageSender() {
+		httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS);
+		setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
+	}
 
-    /**
-     * Create a new instance of the {@code CommonsHttpMessageSender} with the given  {@link HttpClient} instance.
-     *
-     * @param httpClient the HttpClient instance to use for this sender
-     */
-    public CommonsHttpMessageSender(HttpClient httpClient) {
-        Assert.notNull(httpClient, "httpClient must not be null");
-        this.httpClient = httpClient;
-    }
+	/**
+	 * Create a new instance of the {@code CommonsHttpMessageSender} with the given	 {@link HttpClient} instance.
+	 *
+	 * @param httpClient the HttpClient instance to use for this sender
+	 */
+	public CommonsHttpMessageSender(HttpClient httpClient) {
+		Assert.notNull(httpClient, "httpClient must not be null");
+		this.httpClient = httpClient;
+	}
 
-    /** Returns the {@code HttpClient} used by this message sender. */
-    public HttpClient getHttpClient() {
-        return httpClient;
-    }
+	/** Returns the {@code HttpClient} used by this message sender. */
+	public HttpClient getHttpClient() {
+		return httpClient;
+	}
 
-    /** Set the {@code HttpClient} used by this message sender. */
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
+	/** Set the {@code HttpClient} used by this message sender. */
+	public void setHttpClient(HttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
 
-    /** Returns the credentials to be used. */
-    public Credentials getCredentials() {
-        return credentials;
-    }
+	/** Returns the credentials to be used. */
+	public Credentials getCredentials() {
+		return credentials;
+	}
 
-    /**
-     * Sets the credentials to be used. If not set, no authentication is done.
-     *
-     * @see UsernamePasswordCredentials
-     * @see NTCredentials
-     */
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
+	/**
+	 * Sets the credentials to be used. If not set, no authentication is done.
+	 *
+	 * @see UsernamePasswordCredentials
+	 * @see NTCredentials
+	 */
+	public void setCredentials(Credentials credentials) {
+		this.credentials = credentials;
+	}
 
-    /**
-     * Sets the timeout until a connection is etablished. A value of 0 means <em>never</em> timeout.
-     *
-     * @param timeout the timeout value in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
-     */
-    public void setConnectionTimeout(int timeout) {
-        if (timeout < 0) {
-            throw new IllegalArgumentException("timeout must be a non-negative value");
-        }
-        getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
-    }
+	/**
+	 * Sets the timeout until a connection is etablished. A value of 0 means <em>never</em> timeout.
+	 *
+	 * @param timeout the timeout value in milliseconds
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
+	 */
+	public void setConnectionTimeout(int timeout) {
+		if (timeout < 0) {
+			throw new IllegalArgumentException("timeout must be a non-negative value");
+		}
+		getHttpClient().getHttpConnectionManager().getParams().setConnectionTimeout(timeout);
+	}
 
-    /**
-     * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
-     *
-     * @param timeout the timeout value in milliseconds
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
-     */
-    public void setReadTimeout(int timeout) {
-        if (timeout < 0) {
-            throw new IllegalArgumentException("timeout must be a non-negative value");
-        }
-        getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
-    }
+	/**
+	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
+	 *
+	 * @param timeout the timeout value in milliseconds
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
+	 */
+	public void setReadTimeout(int timeout) {
+		if (timeout < 0) {
+			throw new IllegalArgumentException("timeout must be a non-negative value");
+		}
+		getHttpClient().getHttpConnectionManager().getParams().setSoTimeout(timeout);
+	}
 
-    /**
-     * Sets the maximum number of connections allowed for the underlying HttpClient.
-     *
-     * @param maxTotalConnections the maximum number of connections allowed
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxTotalConnections(int)
-     */
-    public void setMaxTotalConnections(int maxTotalConnections) {
-        if (maxTotalConnections <= 0) {
-            throw new IllegalArgumentException("maxTotalConnections must be a positive value");
-        }
-        getHttpClient().getHttpConnectionManager().getParams().setMaxTotalConnections(maxTotalConnections);
-    }
+	/**
+	 * Sets the maximum number of connections allowed for the underlying HttpClient.
+	 *
+	 * @param maxTotalConnections the maximum number of connections allowed
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxTotalConnections(int)
+	 */
+	public void setMaxTotalConnections(int maxTotalConnections) {
+		if (maxTotalConnections <= 0) {
+			throw new IllegalArgumentException("maxTotalConnections must be a positive value");
+		}
+		getHttpClient().getHttpConnectionManager().getParams().setMaxTotalConnections(maxTotalConnections);
+	}
 
-    /**
-     * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
-     * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
-     * <pre>
-     * https://www.example.com=1
-     * http://www.example.com:8080=7
-     * www.springframework.org=10
-     * *=5
-     * </pre>
-     * The host can be specified as hostname, or as URI (with scheme and port). The special host name {@code *} can be
-     * used to specify {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
-     *
-     * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
-     * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxConnectionsPerHost(org.apache.commons.httpclient.HostConfiguration,
-     *      int)
-     */
-    public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URIException {
-        for (String host : maxConnectionsPerHost.keySet()) {
-            HostConfiguration hostConfiguration = new HostConfiguration();
-            if ("*".equals(host)) {
-                hostConfiguration = HostConfiguration.ANY_HOST_CONFIGURATION;
-            }
-            else if (host.startsWith("http://")) {
-                HttpURL httpURL = new HttpURL(host);
-                hostConfiguration.setHost(httpURL);
-            }
-            else if (host.startsWith("https://")) {
-                HttpsURL httpsURL = new HttpsURL(host);
-                hostConfiguration.setHost(httpsURL);
-            }
-            else {
-                hostConfiguration.setHost(host);
-            }
-            int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.get(host));
-            getHttpClient().getHttpConnectionManager().getParams()
-                    .setMaxConnectionsPerHost(hostConfiguration, maxHostConnections);
-        }
-    }
+	/**
+	 * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
+	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
+	 * <pre>
+	 * https://www.example.com=1
+	 * http://www.example.com:8080=7
+	 * www.springframework.org=10
+	 * *=5
+	 * </pre>
+	 * The host can be specified as hostname, or as URI (with scheme and port). The special host name {@code *} can be
+	 * used to specify {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
+	 *
+	 * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
+	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxConnectionsPerHost(org.apache.commons.httpclient.HostConfiguration,
+	 *		int)
+	 */
+	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URIException {
+		for (String host : maxConnectionsPerHost.keySet()) {
+			HostConfiguration hostConfiguration = new HostConfiguration();
+			if ("*".equals(host)) {
+				hostConfiguration = HostConfiguration.ANY_HOST_CONFIGURATION;
+			}
+			else if (host.startsWith("http://")) {
+				HttpURL httpURL = new HttpURL(host);
+				hostConfiguration.setHost(httpURL);
+			}
+			else if (host.startsWith("https://")) {
+				HttpsURL httpsURL = new HttpsURL(host);
+				hostConfiguration.setHost(httpsURL);
+			}
+			else {
+				hostConfiguration.setHost(host);
+			}
+			int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.get(host));
+			getHttpClient().getHttpConnectionManager().getParams()
+					.setMaxConnectionsPerHost(hostConfiguration, maxHostConnections);
+		}
+	}
 
-    /**
-     * Returns the authentication scope to be used. Only used when the {@code credentials} property has been set.
-     *
-     * <p>By default, the {@link AuthScope#ANY} is returned.
-     */
-    public AuthScope getAuthScope() {
-        return authScope != null ? authScope : AuthScope.ANY;
-    }
+	/**
+	 * Returns the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 *
+	 * <p>By default, the {@link AuthScope#ANY} is returned.
+	 */
+	public AuthScope getAuthScope() {
+		return authScope != null ? authScope : AuthScope.ANY;
+	}
 
-    /**
-     * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
-     *
-     * <p>By default, the {@link AuthScope#ANY} is used.
-     *
-     * @see #setCredentials(Credentials)
-     */
-    public void setAuthScope(AuthScope authScope) {
-        this.authScope = authScope;
-    }
+	/**
+	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 *
+	 * <p>By default, the {@link AuthScope#ANY} is used.
+	 *
+	 * @see #setCredentials(Credentials)
+	 */
+	public void setAuthScope(AuthScope authScope) {
+		this.authScope = authScope;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (getCredentials() != null) {
-            getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
-            getHttpClient().getParams().setAuthenticationPreemptive(true);
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (getCredentials() != null) {
+			getHttpClient().getState().setCredentials(getAuthScope(), getCredentials());
+			getHttpClient().getParams().setAuthenticationPreemptive(true);
+		}
+	}
 
-    @Override
-    public void destroy() throws Exception {
-        HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
-        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
-            ((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
-        }
-    }
+	@Override
+	public void destroy() throws Exception {
+		HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
+		if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
+			((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
+		}
+	}
 
-    @Override
-    public WebServiceConnection createConnection(URI uri) throws IOException {
-        PostMethod postMethod = new PostMethod(uri.toString());
-        if (isAcceptGzipEncoding()) {
-            postMethod.addRequestHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
-                    HttpTransportConstants.CONTENT_ENCODING_GZIP);
-        }
-        return new CommonsHttpConnection(getHttpClient(), postMethod);
-    }
+	@Override
+	public WebServiceConnection createConnection(URI uri) throws IOException {
+		PostMethod postMethod = new PostMethod(uri.toString());
+		if (isAcceptGzipEncoding()) {
+			postMethod.addRequestHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+					HttpTransportConstants.CONTENT_ENCODING_GZIP);
+		}
+		return new CommonsHttpConnection(getHttpClient(), postMethod);
+	}
 
 }
 

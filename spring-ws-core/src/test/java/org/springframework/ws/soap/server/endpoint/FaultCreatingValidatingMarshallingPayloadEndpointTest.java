@@ -45,160 +45,160 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    private ResourceBundleMessageSource messageSource;
+	private ResourceBundleMessageSource messageSource;
 
-    @Before
-    public void setUp() throws Exception {
-        this.messageSource = new ResourceBundleMessageSource();
-        this.messageSource.setBasename("org.springframework.ws.soap.server.endpoint.messages");
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage request = messageFactory.createMessage();
-        request.getSOAPBody().addBodyElement(new QName("http://www.springframework.org/spring-ws", "request"));
-        messageContext =
-                new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
-    }
+	@Before
+	public void setUp() throws Exception {
+		this.messageSource = new ResourceBundleMessageSource();
+		this.messageSource.setBasename("org.springframework.ws.soap.server.endpoint.messages");
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage request = messageFactory.createMessage();
+		request.getSOAPBody().addBodyElement(new QName("http://www.springframework.org/spring-ws", "request"));
+		messageContext =
+				new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+	}
 
-    @Test
-    public void testValidationIncorrect() throws Exception {
-        Person p = new Person("", -1);
-        PersonMarshaller marshaller = new PersonMarshaller(p);
+	@Test
+	public void testValidationIncorrect() throws Exception {
+		Person p = new Person("", -1);
+		PersonMarshaller marshaller = new PersonMarshaller(p);
 
-        AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
-                new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
+		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
+				new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
-                    @Override
-                    protected Object invokeInternal(Object requestObject) throws Exception {
-                        Assert.fail("No expected");
-                        return null;
-                    }
-                };
-        endpoint.setValidator(new PersonValidator());
-        endpoint.setMessageSource(messageSource);
-        endpoint.setMarshaller(marshaller);
-        endpoint.setUnmarshaller(marshaller);
+					@Override
+					protected Object invokeInternal(Object requestObject) throws Exception {
+						Assert.fail("No expected");
+						return null;
+					}
+				};
+		endpoint.setValidator(new PersonValidator());
+		endpoint.setMessageSource(messageSource);
+		endpoint.setMarshaller(marshaller);
+		endpoint.setUnmarshaller(marshaller);
 
-        endpoint.invoke(messageContext);
+		endpoint.invoke(messageContext);
 
-        SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
-        Assert.assertTrue("Response has no fault", response.getSOAPBody().hasFault());
-        SOAPFault fault = response.getSOAPBody().getFault();
-        Assert.assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
-                fault.getFaultCodeAsQName());
-        Assert.assertEquals("Invalid fault string", endpoint.getFaultStringOrReason(), fault.getFaultString());
-        Detail detail = fault.getDetail();
-        Assert.assertNotNull("No detail", detail);
-        Iterator<?> iterator = detail.getDetailEntries();
-        Assert.assertTrue("No detail entry", iterator.hasNext());
-        DetailEntry detailEntry = (DetailEntry) iterator.next();
-        Assert.assertEquals("Invalid detail entry name",
-                new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
-        Assert.assertEquals("Invalid detail entry text", "Name is required", detailEntry.getTextContent());
-        Assert.assertTrue("No detail entry", iterator.hasNext());
-        detailEntry = (DetailEntry) iterator.next();
-        Assert.assertEquals("Invalid detail entry name",
-                new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
-        Assert.assertEquals("Invalid detail entry text", "Age Cannot be negative", detailEntry.getTextContent());
-        Assert.assertFalse("Too many detail entries", iterator.hasNext());
-    }
+		SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
+		Assert.assertTrue("Response has no fault", response.getSOAPBody().hasFault());
+		SOAPFault fault = response.getSOAPBody().getFault();
+		Assert.assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
+				fault.getFaultCodeAsQName());
+		Assert.assertEquals("Invalid fault string", endpoint.getFaultStringOrReason(), fault.getFaultString());
+		Detail detail = fault.getDetail();
+		Assert.assertNotNull("No detail", detail);
+		Iterator<?> iterator = detail.getDetailEntries();
+		Assert.assertTrue("No detail entry", iterator.hasNext());
+		DetailEntry detailEntry = (DetailEntry) iterator.next();
+		Assert.assertEquals("Invalid detail entry name",
+				new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
+		Assert.assertEquals("Invalid detail entry text", "Name is required", detailEntry.getTextContent());
+		Assert.assertTrue("No detail entry", iterator.hasNext());
+		detailEntry = (DetailEntry) iterator.next();
+		Assert.assertEquals("Invalid detail entry name",
+				new QName("http://springframework.org/spring-ws", "ValidationError"), detailEntry.getElementQName());
+		Assert.assertEquals("Invalid detail entry text", "Age Cannot be negative", detailEntry.getTextContent());
+		Assert.assertFalse("Too many detail entries", iterator.hasNext());
+	}
 
-    @Test
-    public void testValidationCorrect() throws Exception {
-        Person p = new Person("John", 42);
-        PersonMarshaller marshaller = new PersonMarshaller(p);
-        AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
-                new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
+	@Test
+	public void testValidationCorrect() throws Exception {
+		Person p = new Person("John", 42);
+		PersonMarshaller marshaller = new PersonMarshaller(p);
+		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
+				new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
-                    @Override
-                    protected Object invokeInternal(Object requestObject) throws Exception {
-                        return null;
-                    }
-                };
-        endpoint.setValidator(new PersonValidator());
-        endpoint.setMessageSource(messageSource);
-        endpoint.setMarshaller(marshaller);
-        endpoint.setUnmarshaller(marshaller);
+					@Override
+					protected Object invokeInternal(Object requestObject) throws Exception {
+						return null;
+					}
+				};
+		endpoint.setValidator(new PersonValidator());
+		endpoint.setMessageSource(messageSource);
+		endpoint.setMarshaller(marshaller);
+		endpoint.setUnmarshaller(marshaller);
 
-        endpoint.invoke(messageContext);
+		endpoint.invoke(messageContext);
 
-        SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
-        Assert.assertFalse("Response has fault", response.getSOAPBody().hasFault());
-    }
+		SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
+		Assert.assertFalse("Response has fault", response.getSOAPBody().hasFault());
+	}
 
-    private static class PersonValidator implements Validator {
+	private static class PersonValidator implements Validator {
 
-        @Override
-        public boolean supports(Class<?> clazz) {
-            return Person.class.equals(clazz);
-        }
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return Person.class.equals(clazz);
+		}
 
-        @Override
-        public void validate(Object obj, Errors e) {
-            ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
-            Person p = (Person) obj;
-            if (p.getAge() < 0) {
-                e.rejectValue("age", "age.negativevalue");
-            }
-            else if (p.getAge() > 110) {
-                e.rejectValue("age", "too.darn.old");
-            }
-        }
-    }
+		@Override
+		public void validate(Object obj, Errors e) {
+			ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
+			Person p = (Person) obj;
+			if (p.getAge() < 0) {
+				e.rejectValue("age", "age.negativevalue");
+			}
+			else if (p.getAge() > 110) {
+				e.rejectValue("age", "too.darn.old");
+			}
+		}
+	}
 
-    private static class Person {
+	private static class Person {
 
-        private String name;
+		private String name;
 
-        private int age;
+		private int age;
 
-        private Person(String name, int age) {
-            this.name = name;
-            this.age = age;
-        }
+		private Person(String name, int age) {
+			this.name = name;
+			this.age = age;
+		}
 
-        public String getName() {
-            return name;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-        public int getAge() {
-            return age;
-        }
+		public int getAge() {
+			return age;
+		}
 
-        public void setAge(int age) {
-            this.age = age;
-        }
+		public void setAge(int age) {
+			this.age = age;
+		}
 
-        public String toString() {
-            return "Person{" + name + "," + age + "}";
-        }
-    }
+		public String toString() {
+			return "Person{" + name + "," + age + "}";
+		}
+	}
 
-    private static class PersonMarshaller implements Unmarshaller, Marshaller {
+	private static class PersonMarshaller implements Unmarshaller, Marshaller {
 
-        private final Person person;
+		private final Person person;
 
-        private PersonMarshaller(Person person) {
-            this.person = person;
-        }
+		private PersonMarshaller(Person person) {
+			this.person = person;
+		}
 
-        @Override
-        public Object unmarshal(Source source) throws XmlMappingException, IOException {
-            return person;
-        }
+		@Override
+		public Object unmarshal(Source source) throws XmlMappingException, IOException {
+			return person;
+		}
 
-        @Override
-        public boolean supports(Class<?> clazz) {
-            return Person.class.equals(clazz);
-        }
+		@Override
+		public boolean supports(Class<?> clazz) {
+			return Person.class.equals(clazz);
+		}
 
-        @Override
-        public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
-        }
-    }
+		@Override
+		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+		}
+	}
 
 }

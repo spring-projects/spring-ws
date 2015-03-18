@@ -39,43 +39,43 @@ import com.sun.mail.imap.IMAPFolder;
  */
 public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 
-    private MessageCountListener messageCountListener;
+	private MessageCountListener messageCountListener;
 
-    @Override
-    protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
-        Assert.isInstanceOf(IMAPFolder.class, folder);
-        IMAPFolder imapFolder = (IMAPFolder) folder;
-        // retrieve unseen messages before we enter the blocking idle call
-        if (searchForNewMessages(folder).length > 0) {
-            return;
-        }
-        if (messageCountListener == null) {
-            createMessageCountListener();
-        }
-        folder.addMessageCountListener(messageCountListener);
-        try {
-            imapFolder.idle();
-        }
-        finally {
-            folder.removeMessageCountListener(messageCountListener);
-        }
-    }
+	@Override
+	protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
+		Assert.isInstanceOf(IMAPFolder.class, folder);
+		IMAPFolder imapFolder = (IMAPFolder) folder;
+		// retrieve unseen messages before we enter the blocking idle call
+		if (searchForNewMessages(folder).length > 0) {
+			return;
+		}
+		if (messageCountListener == null) {
+			createMessageCountListener();
+		}
+		folder.addMessageCountListener(messageCountListener);
+		try {
+			imapFolder.idle();
+		}
+		finally {
+			folder.removeMessageCountListener(messageCountListener);
+		}
+	}
 
-    private void createMessageCountListener() {
-        messageCountListener = new MessageCountAdapter() {
-            @Override
-            public void messagesAdded(MessageCountEvent e) {
-                Message[] messages = e.getMessages();
-                for (Message message : messages) {
-                    try {
-                        // this will return the flow to the idle call, above
-                        message.getLineCount();
-                    }
-                    catch (MessagingException ex) {
-                        // ignore
-                    }
-                }
-            }
-        };
-    }
+	private void createMessageCountListener() {
+		messageCountListener = new MessageCountAdapter() {
+			@Override
+			public void messagesAdded(MessageCountEvent e) {
+				Message[] messages = e.getMessages();
+				for (Message message : messages) {
+					try {
+						// this will return the flow to the idle call, above
+						message.getLineCount();
+					}
+					catch (MessagingException ex) {
+						// ignore
+					}
+				}
+			}
+		};
+	}
 }

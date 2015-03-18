@@ -34,40 +34,40 @@ import org.apache.axiom.soap.SOAPFactory;
 
 public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSupport {
 
-    protected static final String NAMESPACE_URI = "http://springframework.org/ws";
+	protected static final String NAMESPACE_URI = "http://springframework.org/ws";
 
-    protected static final String LOCAL_NAME = "request";
+	protected static final String LOCAL_NAME = "request";
 
-    protected static final String XML = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
+	protected static final String XML = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
-    protected MessageContext createSaajMessageContext() throws javax.xml.soap.SOAPException {
-        javax.xml.soap.MessageFactory saajFactory = javax.xml.soap.MessageFactory.newInstance();
-        javax.xml.soap.SOAPMessage saajMessage = saajFactory.createMessage();
-        saajMessage.getSOAPBody().addChildElement(LOCAL_NAME, "", NAMESPACE_URI);
-        return new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(saajFactory));
-    }
+	protected MessageContext createSaajMessageContext() throws javax.xml.soap.SOAPException {
+		javax.xml.soap.MessageFactory saajFactory = javax.xml.soap.MessageFactory.newInstance();
+		javax.xml.soap.SOAPMessage saajMessage = saajFactory.createMessage();
+		saajMessage.getSOAPBody().addChildElement(LOCAL_NAME, "", NAMESPACE_URI);
+		return new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(saajFactory));
+	}
 
-    protected MessageContext createMockMessageContext() throws TransformerException {
-        MockWebServiceMessage request = new MockWebServiceMessage(new StringSource(XML));
-        return new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-    }
+	protected MessageContext createMockMessageContext() throws TransformerException {
+		MockWebServiceMessage request = new MockWebServiceMessage(new StringSource(XML));
+		return new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+	}
 
-    protected MessageContext createCachingAxiomMessageContext() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
-        transform(new StringSource(XML), request.getPayloadResult());
-        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-        soapMessageFactory.afterPropertiesSet();
-        return new DefaultMessageContext(request, soapMessageFactory);
-    }
+	protected MessageContext createCachingAxiomMessageContext() throws Exception {
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
+		transform(new StringSource(XML), request.getPayloadResult());
+		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+		soapMessageFactory.afterPropertiesSet();
+		return new DefaultMessageContext(request, soapMessageFactory);
+	}
 
-    protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
-        transform(new StringSource(XML), request.getPayloadResult());
-        AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-        soapMessageFactory.setPayloadCaching(false);
-        soapMessageFactory.afterPropertiesSet();
-        return new DefaultMessageContext(request, soapMessageFactory);
-    }
+	protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
+		transform(new StringSource(XML), request.getPayloadResult());
+		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+		soapMessageFactory.setPayloadCaching(false);
+		soapMessageFactory.afterPropertiesSet();
+		return new DefaultMessageContext(request, soapMessageFactory);
+	}
 }

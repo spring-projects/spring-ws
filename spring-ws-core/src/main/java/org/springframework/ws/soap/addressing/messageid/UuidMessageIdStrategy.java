@@ -32,16 +32,16 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class UuidMessageIdStrategy implements MessageIdStrategy {
 
-    public static final String PREFIX = "urn:uuid:";
+	public static final String PREFIX = "urn:uuid:";
 
-    /** Returns {@code false}. */
-    @Override
-    public boolean isDuplicate(URI messageId) {
-        return false;
-    }
+	/** Returns {@code false}. */
+	@Override
+	public boolean isDuplicate(URI messageId) {
+		return false;
+	}
 
-    @Override
-    public URI newMessageId(SoapMessage message) {
-        return URI.create(PREFIX + UUID.randomUUID().toString());
-    }
+	@Override
+	public URI newMessageId(SoapMessage message) {
+		return URI.create(PREFIX + UUID.randomUUID().toString());
+	}
 }

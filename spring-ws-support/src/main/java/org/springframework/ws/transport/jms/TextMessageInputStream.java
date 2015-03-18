@@ -33,20 +33,20 @@ import org.springframework.util.Assert;
  */
 class TextMessageInputStream extends FilterInputStream {
 
-    TextMessageInputStream(TextMessage message, String encoding) throws IOException {
-        super(createInputStream(message, encoding));
-    }
+	TextMessageInputStream(TextMessage message, String encoding) throws IOException {
+		super(createInputStream(message, encoding));
+	}
 
-    private static InputStream createInputStream(TextMessage message, String encoding) throws IOException {
-        Assert.notNull(message, "'message' must not be null");
-        Assert.notNull(encoding, "'encoding' must not be null");
-        try {
-            String text = message.getText();
-            byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
-            return new ByteArrayInputStream(contents);
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
+	private static InputStream createInputStream(TextMessage message, String encoding) throws IOException {
+		Assert.notNull(message, "'message' must not be null");
+		Assert.notNull(encoding, "'encoding' must not be null");
+		try {
+			String text = message.getText();
+			byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
+			return new ByteArrayInputStream(contents);
+		}
+		catch (JMSException ex) {
+			throw new JmsTransportException(ex);
+		}
+	}
 }

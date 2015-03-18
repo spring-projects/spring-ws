@@ -40,64 +40,64 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractXwssMessageInterceptorTestCase {
 
-    protected XwsSecurityInterceptor interceptor;
+	protected XwsSecurityInterceptor interceptor;
 
-    private MessageFactory messageFactory;
+	private MessageFactory messageFactory;
 
-    private Map<String, String> namespaces;
+	private Map<String, String> namespaces;
 
-    @Before
-    public final void setUp() throws Exception {
-        interceptor = new XwsSecurityInterceptor();
-        messageFactory = MessageFactory.newInstance();
-        namespaces = new HashMap<String, String>(4);
-        namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
-        namespaces.put("wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-        namespaces.put("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
-        namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-        namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
-        onSetup();
-    }
+	@Before
+	public final void setUp() throws Exception {
+		interceptor = new XwsSecurityInterceptor();
+		messageFactory = MessageFactory.newInstance();
+		namespaces = new HashMap<String, String>(4);
+		namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
+		namespaces.put("wsse", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+		namespaces.put("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+		namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
+		namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
+		onSetup();
+	}
 
-    protected void assertXpathEvaluatesTo(String message,
-                                          String expectedValue,
-                                          String xpathExpression,
-                                          SOAPMessage soapMessage) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        Document document = soapMessage.getSOAPPart();
-        String actualValue = expression.evaluateAsString(document);
-        Assert.assertEquals(message, expectedValue, actualValue);
-    }
+	protected void assertXpathEvaluatesTo(String message,
+										  String expectedValue,
+										  String xpathExpression,
+										  SOAPMessage soapMessage) {
+		XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
+		Document document = soapMessage.getSOAPPart();
+		String actualValue = expression.evaluateAsString(document);
+		Assert.assertEquals(message, expectedValue, actualValue);
+	}
 
-    protected void assertXpathExists(String message, String xpathExpression, SOAPMessage soapMessage) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        Document document = soapMessage.getSOAPPart();
-        Node node = expression.evaluateAsNode(document);
-        Assert.assertNotNull(message, node);
-    }
+	protected void assertXpathExists(String message, String xpathExpression, SOAPMessage soapMessage) {
+		XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
+		Document document = soapMessage.getSOAPPart();
+		Node node = expression.evaluateAsNode(document);
+		Assert.assertNotNull(message, node);
+	}
 
-    protected void assertXpathNotExists(String message, String xpathExpression, SOAPMessage soapMessage) {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
-        Document document = soapMessage.getSOAPPart();
-        Node node = expression.evaluateAsNode(document);
-        Assert.assertNull(message, node);
-    }
+	protected void assertXpathNotExists(String message, String xpathExpression, SOAPMessage soapMessage) {
+		XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
+		Document document = soapMessage.getSOAPPart();
+		Node node = expression.evaluateAsNode(document);
+		Assert.assertNull(message, node);
+	}
 
-    protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
-        MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.addHeader("Content-Type", "text/xml");
-        Resource resource = new ClassPathResource(fileName, getClass());
-        InputStream is = resource.getInputStream();
-        try {
-            assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
-            is = resource.getInputStream();
-            return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-        }
-        finally {
-            is.close();
-        }
-    }
+	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
+		MimeHeaders mimeHeaders = new MimeHeaders();
+		mimeHeaders.addHeader("Content-Type", "text/xml");
+		Resource resource = new ClassPathResource(fileName, getClass());
+		InputStream is = resource.getInputStream();
+		try {
+			assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
+			is = resource.getInputStream();
+			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+		}
+		finally {
+			is.close();
+		}
+	}
 
-    protected void onSetup() throws Exception {
-    }
+	protected void onSetup() throws Exception {
+	}
 }

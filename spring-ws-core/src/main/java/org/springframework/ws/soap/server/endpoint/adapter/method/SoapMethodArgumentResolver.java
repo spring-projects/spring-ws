@@ -34,33 +34,33 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        Class<?> parameterType = parameter.getParameterType();
-        return SoapMessage.class.equals(parameterType) || SoapBody.class.equals(parameterType) ||
-                SoapEnvelope.class.equals(parameterType) || SoapHeader.class.equals(parameterType);
-    }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		Class<?> parameterType = parameter.getParameterType();
+		return SoapMessage.class.equals(parameterType) || SoapBody.class.equals(parameterType) ||
+				SoapEnvelope.class.equals(parameterType) || SoapHeader.class.equals(parameterType);
+	}
 
-    @Override
-    public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
-        Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-        SoapMessage request = (SoapMessage) messageContext.getRequest();
+	@Override
+	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
+		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
+		SoapMessage request = (SoapMessage) messageContext.getRequest();
 
-        Class<?> parameterType = parameter.getParameterType();
+		Class<?> parameterType = parameter.getParameterType();
 
-        if (SoapMessage.class.equals(parameterType)) {
-            return request;
-        }
-        else if (SoapBody.class.equals(parameterType)) {
-            return request.getSoapBody();
-        }
-        else if (SoapEnvelope.class.equals(parameterType)) {
-            return request.getEnvelope();
-        }
-        else if (SoapHeader.class.equals(parameterType)) {
-            return request.getSoapHeader();
-        }
-        // should not happen
-        throw new UnsupportedOperationException();
-    }
+		if (SoapMessage.class.equals(parameterType)) {
+			return request;
+		}
+		else if (SoapBody.class.equals(parameterType)) {
+			return request.getSoapBody();
+		}
+		else if (SoapEnvelope.class.equals(parameterType)) {
+			return request.getEnvelope();
+		}
+		else if (SoapHeader.class.equals(parameterType)) {
+			return request.getSoapHeader();
+		}
+		// should not happen
+		throw new UnsupportedOperationException();
+	}
 }

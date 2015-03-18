@@ -40,140 +40,140 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  */
 abstract class Jaxp13XPathExpressionFactory {
 
-    private static XPathFactory xpathFactory = XPathFactory.newInstance();
+	private static XPathFactory xpathFactory = XPathFactory.newInstance();
 
-    /**
-     * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression.
-     *
-     * @param expression the XPath expression
-     * @return the compiled {@code XPathExpression}
-     * @throws XPathParseException when the given expression cannot be parsed
-     */
-    static XPathExpression createXPathExpression(String expression) {
-        try {
-            XPath xpath = createXPath();
-            javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
-            return new Jaxp13XPathExpression(xpathExpression);
-        }
-        catch (XPathExpressionException ex) {
-            throw new org.springframework.xml.xpath.XPathParseException(
-                    "Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
-        }
-    }
+	/**
+	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression.
+	 *
+	 * @param expression the XPath expression
+	 * @return the compiled {@code XPathExpression}
+	 * @throws XPathParseException when the given expression cannot be parsed
+	 */
+	static XPathExpression createXPathExpression(String expression) {
+		try {
+			XPath xpath = createXPath();
+			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
+			return new Jaxp13XPathExpression(xpathExpression);
+		}
+		catch (XPathExpressionException ex) {
+			throw new org.springframework.xml.xpath.XPathParseException(
+					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
+		}
+	}
 
-    /**
-     * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression and namespaces.
-     *
-     * @param expression the XPath expression
-     * @param namespaces the namespaces
-     * @return the compiled {@code XPathExpression}
-     * @throws XPathParseException when the given expression cannot be parsed
-     */
-    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
-        try {
-            XPath xpath = createXPath();
-            SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-            namespaceContext.setBindings(namespaces);
-            xpath.setNamespaceContext(namespaceContext);
-            javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
-            return new Jaxp13XPathExpression(xpathExpression);
-        }
-        catch (XPathExpressionException ex) {
-            throw new org.springframework.xml.xpath.XPathParseException(
-                    "Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
-        }
-    }
+	/**
+	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression and namespaces.
+	 *
+	 * @param expression the XPath expression
+	 * @param namespaces the namespaces
+	 * @return the compiled {@code XPathExpression}
+	 * @throws XPathParseException when the given expression cannot be parsed
+	 */
+	public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
+		try {
+			XPath xpath = createXPath();
+			SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
+			namespaceContext.setBindings(namespaces);
+			xpath.setNamespaceContext(namespaceContext);
+			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
+			return new Jaxp13XPathExpression(xpathExpression);
+		}
+		catch (XPathExpressionException ex) {
+			throw new org.springframework.xml.xpath.XPathParseException(
+					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
+		}
+	}
 
-    private static synchronized XPath createXPath() {
-        return xpathFactory.newXPath();
-    }
-    
+	private static synchronized XPath createXPath() {
+		return xpathFactory.newXPath();
+	}
 
-    /** JAXP 1.3 implementation of the {@code XPathExpression} interface. */
-    private static class Jaxp13XPathExpression implements XPathExpression {
 
-        private final javax.xml.xpath.XPathExpression xpathExpression;
+	/** JAXP 1.3 implementation of the {@code XPathExpression} interface. */
+	private static class Jaxp13XPathExpression implements XPathExpression {
 
-        private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression) {
-            this.xpathExpression = xpathExpression;
-        }
+		private final javax.xml.xpath.XPathExpression xpathExpression;
 
-        @Override
-        public String evaluateAsString(Node node) {
-            return (String) evaluate(node, XPathConstants.STRING);
-        }
+		private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression) {
+			this.xpathExpression = xpathExpression;
+		}
 
-        @Override
-        public List<Node> evaluateAsNodeList(Node node) {
-            NodeList nodeList = (NodeList) evaluate(node, XPathConstants.NODESET);
-            return toNodeList(nodeList);
-        }
+		@Override
+		public String evaluateAsString(Node node) {
+			return (String) evaluate(node, XPathConstants.STRING);
+		}
 
-        private Object evaluate(Node node, QName returnType) {
-            try {
-                // XPathExpression is not thread-safe
-                synchronized (xpathExpression) {
-                    return xpathExpression.evaluate(node, returnType);
-                }
-            }
-            catch (XPathExpressionException ex) {
-                throw new XPathException("Could not evaluate XPath expression:" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public List<Node> evaluateAsNodeList(Node node) {
+			NodeList nodeList = (NodeList) evaluate(node, XPathConstants.NODESET);
+			return toNodeList(nodeList);
+		}
 
-        private List<Node> toNodeList(NodeList nodeList) {
-            List<Node> result = new ArrayList<Node>(nodeList.getLength());
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                result.add(nodeList.item(i));
-            }
-            return result;
-        }
+		private Object evaluate(Node node, QName returnType) {
+			try {
+				// XPathExpression is not thread-safe
+				synchronized (xpathExpression) {
+					return xpathExpression.evaluate(node, returnType);
+				}
+			}
+			catch (XPathExpressionException ex) {
+				throw new XPathException("Could not evaluate XPath expression:" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public double evaluateAsNumber(Node node) {
-            return (Double) evaluate(node, XPathConstants.NUMBER);
-        }
+		private List<Node> toNodeList(NodeList nodeList) {
+			List<Node> result = new ArrayList<Node>(nodeList.getLength());
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				result.add(nodeList.item(i));
+			}
+			return result;
+		}
 
-        @Override
-        public boolean evaluateAsBoolean(Node node) {
-            return (Boolean) evaluate(node, XPathConstants.BOOLEAN);
-        }
+		@Override
+		public double evaluateAsNumber(Node node) {
+			return (Double) evaluate(node, XPathConstants.NUMBER);
+		}
 
-        @Override
-        public Node evaluateAsNode(Node node) {
-            return (Node) evaluate(node, XPathConstants.NODE);
-        }
+		@Override
+		public boolean evaluateAsBoolean(Node node) {
+			return (Boolean) evaluate(node, XPathConstants.BOOLEAN);
+		}
 
-        @Override
-        public <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
-            Node result = (Node) evaluate(node, XPathConstants.NODE);
-            if (result != null) {
-                try {
-                    return nodeMapper.mapNode(result, 0);
-                }
-                catch (DOMException ex) {
-                    throw new XPathException("Mapping resulted in DOMException", ex);
-                }
-            }
-            else {
-                return null;
-            }
-        }
+		@Override
+		public Node evaluateAsNode(Node node) {
+			return (Node) evaluate(node, XPathConstants.NODE);
+		}
 
-        @Override
-        public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
-            NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
-            List<T> results = new ArrayList<T>(nodes.getLength());
-            for (int i = 0; i < nodes.getLength(); i++) {
-                try {
-                    results.add(nodeMapper.mapNode(nodes.item(i), i));
-                }
-                catch (DOMException ex) {
-                    throw new XPathException("Mapping resulted in DOMException", ex);
-                }
-            }
-            return results;
-        }
-    }
+		@Override
+		public <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
+			Node result = (Node) evaluate(node, XPathConstants.NODE);
+			if (result != null) {
+				try {
+					return nodeMapper.mapNode(result, 0);
+				}
+				catch (DOMException ex) {
+					throw new XPathException("Mapping resulted in DOMException", ex);
+				}
+			}
+			else {
+				return null;
+			}
+		}
+
+		@Override
+		public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
+			NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
+			List<T> results = new ArrayList<T>(nodes.getLength());
+			for (int i = 0; i < nodes.getLength(); i++) {
+				try {
+					results.add(nodeMapper.mapNode(nodes.item(i), i));
+				}
+				catch (DOMException ex) {
+					throw new XPathException("Mapping resulted in DOMException", ex);
+				}
+			}
+			return results;
+		}
+	}
 
 }

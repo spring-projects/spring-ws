@@ -27,23 +27,23 @@ import javax.xml.transform.TransformerException;
 @SuppressWarnings("serial")
 public class WebServiceTransformerException extends WebServiceClientException {
 
-    /**
-     * Create a new instance of the {@code WebServiceTransformerException} class.
-     *
-     * @param msg the detail message
-     */
-    public WebServiceTransformerException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceTransformerException} class.
+	 *
+	 * @param msg the detail message
+	 */
+	public WebServiceTransformerException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new instance of the {@code WebServiceTransformerException} class.
-     *
-     * @param msg the detail message
-     * @param ex  the root {@link Throwable exception}
-     */
-    public WebServiceTransformerException(String msg, TransformerException ex) {
-        super(msg, ex);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceTransformerException} class.
+	 *
+	 * @param msg the detail message
+	 * @param ex  the root {@link Throwable exception}
+	 */
+	public WebServiceTransformerException(String msg, TransformerException ex) {
+		super(msg, ex);
+	}
 
 }

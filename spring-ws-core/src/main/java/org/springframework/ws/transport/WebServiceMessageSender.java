@@ -33,21 +33,21 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface WebServiceMessageSender {
 
-    /**
-     * Create a new {@link WebServiceConnection} to the specified URI.
-     *
-     * @param uri the URI to open a connection to
-     * @return the new connection
-     * @throws IOException in case of I/O errors
-     */
-    WebServiceConnection createConnection(URI uri) throws IOException;
+	/**
+	 * Create a new {@link WebServiceConnection} to the specified URI.
+	 *
+	 * @param uri the URI to open a connection to
+	 * @return the new connection
+	 * @throws IOException in case of I/O errors
+	 */
+	WebServiceConnection createConnection(URI uri) throws IOException;
 
-    /**
-     * Does this {@link WebServiceMessageSender} support the supplied URI?
-     *
-     * @param uri the URI to be checked
-     * @return {@code true} if this {@code WebServiceMessageSender} supports the supplied URI
-     */
-    boolean supports(URI uri);
+	/**
+	 * Does this {@link WebServiceMessageSender} support the supplied URI?
+	 *
+	 * @param uri the URI to be checked
+	 * @return {@code true} if this {@code WebServiceMessageSender} supports the supplied URI
+	 */
+	boolean supports(URI uri);
 
 }

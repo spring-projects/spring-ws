@@ -29,41 +29,41 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractMessageContext implements MessageContext {
 
-    /**
-     * Keys are {@code Strings}, values are {@code Objects}. Lazily initialized by
-     * {@code getProperties()}.
-     */
-    private Map<String, Object> properties;
+	/**
+	 * Keys are {@code Strings}, values are {@code Objects}. Lazily initialized by
+	 * {@code getProperties()}.
+	 */
+	private Map<String, Object> properties;
 
-    @Override
-    public boolean containsProperty(String name) {
-        return getProperties().containsKey(name);
-    }
+	@Override
+	public boolean containsProperty(String name) {
+		return getProperties().containsKey(name);
+	}
 
-    @Override
-    public Object getProperty(String name) {
-        return getProperties().get(name);
-    }
+	@Override
+	public Object getProperty(String name) {
+		return getProperties().get(name);
+	}
 
-    @Override
-    public String[] getPropertyNames() {
-        return StringUtils.toStringArray(getProperties().keySet());
-    }
+	@Override
+	public String[] getPropertyNames() {
+		return StringUtils.toStringArray(getProperties().keySet());
+	}
 
-    @Override
-    public void removeProperty(String name) {
-        getProperties().remove(name);
-    }
+	@Override
+	public void removeProperty(String name) {
+		getProperties().remove(name);
+	}
 
-    @Override
-    public void setProperty(String name, Object value) {
-        getProperties().put(name, value);
-    }
+	@Override
+	public void setProperty(String name, Object value) {
+		getProperties().put(name, value);
+	}
 
-    private Map<String, Object> getProperties() {
-        if (properties == null) {
-            properties = new HashMap<String, Object>();
-        }
-        return properties;
-    }
+	private Map<String, Object> getProperties() {
+		if (properties == null) {
+			properties = new HashMap<String, Object>();
+		}
+		return properties;
+	}
 }

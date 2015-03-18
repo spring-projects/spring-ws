@@ -25,26 +25,26 @@ import org.springframework.util.Assert;
 
 public class MockTransportOutputStream extends TransportOutputStream {
 
-    private Map<String, String> headers = new HashMap<String, String>();
+	private Map<String, String> headers = new HashMap<String, String>();
 
-    private OutputStream outputStream;
+	private OutputStream outputStream;
 
-    public MockTransportOutputStream(OutputStream outputStream) {
-        Assert.notNull(outputStream, "outputStream must not be null");
-        this.outputStream = outputStream;
-    }
+	public MockTransportOutputStream(OutputStream outputStream) {
+		Assert.notNull(outputStream, "outputStream must not be null");
+		this.outputStream = outputStream;
+	}
 
-    @Override
-    protected OutputStream createOutputStream() throws IOException {
-        return outputStream;
-    }
+	@Override
+	protected OutputStream createOutputStream() throws IOException {
+		return outputStream;
+	}
 
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
 
-    @Override
-    public void addHeader(String name, String value) throws IOException {
-        headers.put(name, value);
-    }
+	@Override
+	public void addHeader(String name, String value) throws IOException {
+		headers.put(name, value);
+	}
 }

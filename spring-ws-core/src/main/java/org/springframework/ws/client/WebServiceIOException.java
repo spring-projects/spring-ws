@@ -27,23 +27,23 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public class WebServiceIOException extends WebServiceClientException {
 
-    /**
-     * Create a new instance of the {@code WebServiceIOException} class.
-     *
-     * @param msg the detail message
-     */
-    public WebServiceIOException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceIOException} class.
+	 *
+	 * @param msg the detail message
+	 */
+	public WebServiceIOException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new instance of the {@code WebServiceIOException} class.
-     *
-     * @param msg the detail message
-     * @param ex  the root {@link IOException}
-     */
-    public WebServiceIOException(String msg, IOException ex) {
-        super(msg, ex);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceIOException} class.
+	 *
+	 * @param msg the detail message
+	 * @param ex  the root {@link IOException}
+	 */
+	public WebServiceIOException(String msg, IOException ex) {
+		super(msg, ex);
+	}
 
 }

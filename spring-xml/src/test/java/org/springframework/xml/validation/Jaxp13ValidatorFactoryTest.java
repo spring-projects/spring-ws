@@ -22,8 +22,8 @@ import org.springframework.core.io.Resource;
 
 public class Jaxp13ValidatorFactoryTest extends AbstractValidatorFactoryTestCase {
 
-    @Override
-    protected XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
-        return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-    }
+	@Override
+	protected XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
+		return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
+	}
 }

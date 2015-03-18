@@ -29,14 +29,14 @@ import org.springframework.ws.client.WebServiceFaultException;
  */
 public class SimpleFaultMessageResolver implements FaultMessageResolver {
 
-    /** Throws a new {@code WebServiceFaultException}. */
-    @Override
-    public void resolveFault(WebServiceMessage message) {
-        if (message instanceof FaultAwareWebServiceMessage) {
-            throw new WebServiceFaultException((FaultAwareWebServiceMessage) message);
-        }
-        else {
-            throw new WebServiceFaultException("Message has unknown fault: " + message);
-        }
-    }
+	/** Throws a new {@code WebServiceFaultException}. */
+	@Override
+	public void resolveFault(WebServiceMessage message) {
+		if (message instanceof FaultAwareWebServiceMessage) {
+			throw new WebServiceFaultException((FaultAwareWebServiceMessage) message);
+		}
+		else {
+			throw new WebServiceFaultException("Message has unknown fault: " + message);
+		}
+	}
 }

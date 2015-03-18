@@ -30,56 +30,56 @@ import org.springframework.xml.transform.StringSource;
 /** @author Arjen Poutsma */
 public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
-    @Override
-    protected AbstractPayloadSourceMethodProcessor createProcessor() {
-        return new SourcePayloadMethodProcessor();
-    }
+	@Override
+	protected AbstractPayloadSourceMethodProcessor createProcessor() {
+		return new SourcePayloadMethodProcessor();
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-        return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), 0),
-                new MethodParameter(getClass().getMethod("dom", DOMSource.class), 0),
-                new MethodParameter(getClass().getMethod("sax", SAXSource.class), 0),
-                new MethodParameter(getClass().getMethod("stream", StreamSource.class), 0),
-                new MethodParameter(getClass().getMethod("stax", StAXSource.class), 0)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
+		return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), 0),
+				new MethodParameter(getClass().getMethod("dom", DOMSource.class), 0),
+				new MethodParameter(getClass().getMethod("sax", SAXSource.class), 0),
+				new MethodParameter(getClass().getMethod("stream", StreamSource.class), 0),
+				new MethodParameter(getClass().getMethod("stax", StAXSource.class), 0)};
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
-        return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), -1),
-                new MethodParameter(getClass().getMethod("dom", DOMSource.class), -1),
-                new MethodParameter(getClass().getMethod("sax", SAXSource.class), -1),
-                new MethodParameter(getClass().getMethod("stream", StreamSource.class), -1),
-        new MethodParameter(getClass().getMethod("stax", StAXSource.class), -1)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
+		return new MethodParameter[]{new MethodParameter(getClass().getMethod("source", Source.class), -1),
+				new MethodParameter(getClass().getMethod("dom", DOMSource.class), -1),
+				new MethodParameter(getClass().getMethod("sax", SAXSource.class), -1),
+				new MethodParameter(getClass().getMethod("stream", StreamSource.class), -1),
+		new MethodParameter(getClass().getMethod("stax", StAXSource.class), -1)};
+	}
 
-    @Override
-    protected Object getReturnValue(MethodParameter returnType) throws Exception {
-        return new StringSource(XML);
-    }
+	@Override
+	protected Object getReturnValue(MethodParameter returnType) throws Exception {
+		return new StringSource(XML);
+	}
 
-    @ResponsePayload
-    public Source source(@RequestPayload Source source) {
-        return source;
-    }
+	@ResponsePayload
+	public Source source(@RequestPayload Source source) {
+		return source;
+	}
 
-    @ResponsePayload
-    public DOMSource dom(@RequestPayload DOMSource source) {
-        return source;
-    }
+	@ResponsePayload
+	public DOMSource dom(@RequestPayload DOMSource source) {
+		return source;
+	}
 
-    @ResponsePayload
-    public SAXSource sax(@RequestPayload SAXSource source) {
-        return source;
-    }
+	@ResponsePayload
+	public SAXSource sax(@RequestPayload SAXSource source) {
+		return source;
+	}
 
-    @ResponsePayload
-    public StreamSource stream(@RequestPayload StreamSource source) {
-        return source;
-    }
+	@ResponsePayload
+	public StreamSource stream(@RequestPayload StreamSource source) {
+		return source;
+	}
 
-    @ResponsePayload
-    public StAXSource stax(@RequestPayload StAXSource source) {
-        return source;
-    }
+	@ResponsePayload
+	public StAXSource stax(@RequestPayload StAXSource source) {
+		return source;
+	}
 }

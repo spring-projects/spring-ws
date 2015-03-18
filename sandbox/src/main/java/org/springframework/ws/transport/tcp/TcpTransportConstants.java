@@ -23,7 +23,7 @@ package org.springframework.ws.transport.tcp;
  */
 public interface TcpTransportConstants {
 
-    /** The "tcp" URI scheme. */
-    String TCP_URI_SCHEME = "tcp";
+	/** The "tcp" URI scheme. */
+	String TCP_URI_SCHEME = "tcp";
 
 }

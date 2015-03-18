@@ -32,23 +32,23 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface EndpointAdapter {
 
-    /**
-     * Does this {@code EndpointAdapter} support the given {@code endpoint}?
-     *
-     * <p>Typical {@code EndpointAdapters} will base the decision on the endpoint type.
-     *
-     * @param endpoint endpoint object to check
-     * @return {@code true} if this {@code EndpointAdapter} supports the supplied {@code endpoint}
-     */
-    boolean supports(Object endpoint);
+	/**
+	 * Does this {@code EndpointAdapter} support the given {@code endpoint}?
+	 *
+	 * <p>Typical {@code EndpointAdapters} will base the decision on the endpoint type.
+	 *
+	 * @param endpoint endpoint object to check
+	 * @return {@code true} if this {@code EndpointAdapter} supports the supplied {@code endpoint}
+	 */
+	boolean supports(Object endpoint);
 
-    /**
-     * Use the given {@code endpoint} to handle the request.
-     *
-     * @param messageContext the current message context
-     * @param endpoint       the endpoint to use. This object must have previously been passed to the {@link
-     *                       #supports(Object)} method of this interface, which must have returned {@code true}
-     * @throws Exception in case of errors
-     */
-    void invoke(MessageContext messageContext, Object endpoint) throws Exception;
+	/**
+	 * Use the given {@code endpoint} to handle the request.
+	 *
+	 * @param messageContext the current message context
+	 * @param endpoint		 the endpoint to use. This object must have previously been passed to the {@link
+	 *						 #supports(Object)} method of this interface, which must have returned {@code true}
+	 * @throws Exception in case of errors
+	 */
+	void invoke(MessageContext messageContext, Object endpoint) throws Exception;
 }

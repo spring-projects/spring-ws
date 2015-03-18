@@ -29,45 +29,45 @@ import org.junit.Test;
 
 public class SuffixBasedPortTypesProviderTest {
 
-    private SuffixBasedPortTypesProvider provider;
+	private SuffixBasedPortTypesProvider provider;
 
-    private Definition definition;
+	private Definition definition;
 
-    @Before
-    public void setUp() throws Exception {
-        provider = new SuffixBasedPortTypesProvider();
-        WSDLFactory factory = WSDLFactory.newInstance();
-        definition = factory.newDefinition();
-    }
+	@Before
+	public void setUp() throws Exception {
+		provider = new SuffixBasedPortTypesProvider();
+		WSDLFactory factory = WSDLFactory.newInstance();
+		definition = factory.newDefinition();
+	}
 
-    @Test
-    public void testAddPortTypes() throws Exception {
-        String namespace = "http://springframework.org/spring-ws";
-        definition.addNamespace("tns", namespace);
-        definition.setTargetNamespace(namespace);
+	@Test
+	public void testAddPortTypes() throws Exception {
+		String namespace = "http://springframework.org/spring-ws";
+		definition.addNamespace("tns", namespace);
+		definition.setTargetNamespace(namespace);
 
-        Message message = definition.createMessage();
-        message.setQName(new QName(namespace, "OperationRequest"));
-        definition.addMessage(message);
+		Message message = definition.createMessage();
+		message.setQName(new QName(namespace, "OperationRequest"));
+		definition.addMessage(message);
 
-        message = definition.createMessage();
-        message.setQName(new QName(namespace, "OperationResponse"));
-        definition.addMessage(message);
+		message = definition.createMessage();
+		message.setQName(new QName(namespace, "OperationResponse"));
+		definition.addMessage(message);
 
-        message = definition.createMessage();
-        message.setQName(new QName(namespace, "OperationFault"));
-        definition.addMessage(message);
+		message = definition.createMessage();
+		message.setQName(new QName(namespace, "OperationFault"));
+		definition.addMessage(message);
 
-        provider.setPortTypeName("PortType");
-        provider.addPortTypes(definition);
+		provider.setPortTypeName("PortType");
+		provider.addPortTypes(definition);
 
-        PortType portType = definition.getPortType(new QName(namespace, "PortType"));
-        Assert.assertNotNull("No port type created", portType);
+		PortType portType = definition.getPortType(new QName(namespace, "PortType"));
+		Assert.assertNotNull("No port type created", portType);
 
-        Operation operation = portType.getOperation("Operation", "OperationRequest", "OperationResponse");
-        Assert.assertNotNull("No operation created", operation);
-        Assert.assertNotNull("No input created", operation.getInput());
-        Assert.assertNotNull("No output created", operation.getOutput());
-        Assert.assertFalse("No fault created", operation.getFaults().isEmpty());
-    }
+		Operation operation = portType.getOperation("Operation", "OperationRequest", "OperationResponse");
+		Assert.assertNotNull("No operation created", operation);
+		Assert.assertNotNull("No input created", operation.getInput());
+		Assert.assertNotNull("No output created", operation.getOutput());
+		Assert.assertFalse("No fault created", operation.getFaults().isEmpty());
+	}
 }

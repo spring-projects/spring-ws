@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,61 +34,61 @@ import org.w3c.dom.Document;
  */
 public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 
-    /** Returns the {@code SoapEnvelope} associated with this {@code SoapMessage}. */
-    SoapEnvelope getEnvelope() throws SoapEnvelopeException;
+	/** Returns the {@code SoapEnvelope} associated with this {@code SoapMessage}. */
+	SoapEnvelope getEnvelope() throws SoapEnvelopeException;
 
-    /**
-     * Get the SOAP Action for this message, or {@code null} if not present.
-     *
-     * @return the SOAP Action.
-     */
-    String getSoapAction();
+	/**
+	 * Get the SOAP Action for this message, or {@code null} if not present.
+	 *
+	 * @return the SOAP Action.
+	 */
+	String getSoapAction();
 
-    /**
-     * Sets the SOAP Action for this message.
-     *
-     * @param soapAction the SOAP Action.
-     */
-    void setSoapAction(String soapAction);
+	/**
+	 * Sets the SOAP Action for this message.
+	 *
+	 * @param soapAction the SOAP Action.
+	 */
+	void setSoapAction(String soapAction);
 
-    /**
-     * Returns the {@code SoapBody} associated with this {@code SoapMessage}. This is a convenience method for
-     * {@code getEnvelope().getBody()}.
-     *
-     * @see SoapEnvelope#getBody()
-     */
-    SoapBody getSoapBody() throws SoapBodyException;
+	/**
+	 * Returns the {@code SoapBody} associated with this {@code SoapMessage}. This is a convenience method for
+	 * {@code getEnvelope().getBody()}.
+	 *
+	 * @see SoapEnvelope#getBody()
+	 */
+	SoapBody getSoapBody() throws SoapBodyException;
 
-    /**
-     * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a convenience method
-     * for {@code getEnvelope().getHeader()}.
-     *
-     * @see SoapEnvelope#getHeader()
-     */
-    SoapHeader getSoapHeader() throws SoapHeaderException;
+	/**
+	 * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a convenience method
+	 * for {@code getEnvelope().getHeader()}.
+	 *
+	 * @see SoapEnvelope#getHeader()
+	 */
+	SoapHeader getSoapHeader() throws SoapHeaderException;
 
-    /**
-     * Returns the SOAP version of this message. This can be either SOAP 1.1 or SOAP 1.2.
-     *
-     * @return the SOAP version
-     * @see SoapVersion#SOAP_11
-     * @see SoapVersion#SOAP_12
-     */
-    SoapVersion getVersion();
+	/**
+	 * Returns the SOAP version of this message. This can be either SOAP 1.1 or SOAP 1.2.
+	 *
+	 * @return the SOAP version
+	 * @see SoapVersion#SOAP_11
+	 * @see SoapVersion#SOAP_12
+	 */
+	SoapVersion getVersion();
 
-    /**
-     * Returns this message as a {@link Document}.
-     *
-     * Depending on the underlying implementation, this Document may be 'live' or not.
-     * @return this soap message as a DOM document
-     */
-    Document getDocument();
+	/**
+	 * Returns this message as a {@link Document}.
+	 *
+	 * Depending on the underlying implementation, this Document may be 'live' or not.
+	 * @return this soap message as a DOM document
+	 */
+	Document getDocument();
 
-    /**
-     * Sets the contents of the message to the given {@link Document}.
-     *
-     * @param document the soap message as a DOM document
-     */
-    void setDocument(Document document);
+	/**
+	 * Sets the contents of the message to the given {@link Document}.
+	 *
+	 * @param document the soap message as a DOM document
+	 */
+	void setDocument(Document document);
 
 }

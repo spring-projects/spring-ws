@@ -22,21 +22,21 @@ import org.junit.Test;
 
 public class XPathExpressionFactoryBeanTest {
 
-    private XPathExpressionFactoryBean factoryBean;
+	private XPathExpressionFactoryBean factoryBean;
 
-    @Before
-    public void setUp() throws Exception {
-        factoryBean = new XPathExpressionFactoryBean();
-    }
+	@Before
+	public void setUp() throws Exception {
+		factoryBean = new XPathExpressionFactoryBean();
+	}
 
-    @Test
-    public void testFactoryBean() throws Exception {
-        factoryBean.setExpression("/root");
-        factoryBean.afterPropertiesSet();
-        Object result = factoryBean.getObject();
-        Assert.assertNotNull("No result obtained", result);
-        Assert.assertTrue("No XPathExpression returned", result instanceof XPathExpression);
-        Assert.assertTrue("Not a singleton", factoryBean.isSingleton());
-        Assert.assertEquals("Not a XPathExpresison", XPathExpression.class, factoryBean.getObjectType());
-    }
+	@Test
+	public void testFactoryBean() throws Exception {
+		factoryBean.setExpression("/root");
+		factoryBean.afterPropertiesSet();
+		Object result = factoryBean.getObject();
+		Assert.assertNotNull("No result obtained", result);
+		Assert.assertTrue("No XPathExpression returned", result instanceof XPathExpression);
+		Assert.assertTrue("Not a singleton", factoryBean.isSingleton());
+		Assert.assertEquals("Not a XPathExpresison", XPathExpression.class, factoryBean.getObjectType());
+	}
 }

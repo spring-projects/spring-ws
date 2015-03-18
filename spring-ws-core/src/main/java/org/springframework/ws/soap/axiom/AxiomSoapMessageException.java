@@ -25,11 +25,11 @@ import org.springframework.ws.soap.SoapMessageException;
 @SuppressWarnings("serial")
 public class AxiomSoapMessageException extends SoapMessageException {
 
-    public AxiomSoapMessageException(String msg) {
-        super(msg);
-    }
+	public AxiomSoapMessageException(String msg) {
+		super(msg);
+	}
 
-    public AxiomSoapMessageException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public AxiomSoapMessageException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

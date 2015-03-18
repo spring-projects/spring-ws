@@ -25,13 +25,13 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapMessageCreationException extends SoapMessageException {
 
-    /** Constructor for {@code SoapMessageCreationException}. */
-    public SoapMessageCreationException(String msg) {
-        super(msg);
-    }
+	/** Constructor for {@code SoapMessageCreationException}. */
+	public SoapMessageCreationException(String msg) {
+		super(msg);
+	}
 
-    /** Constructor for {@code SoapMessageCreationException}. */
-    public SoapMessageCreationException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	/** Constructor for {@code SoapMessageCreationException}. */
+	public SoapMessageCreationException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

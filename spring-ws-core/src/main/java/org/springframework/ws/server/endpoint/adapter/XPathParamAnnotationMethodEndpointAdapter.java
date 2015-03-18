@@ -58,126 +58,126 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  * @author Arjen Poutsma
  * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *             org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
- *             XPathParamMethodArgumentResolver}.
+ *			   org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
+ *			   XPathParamMethodArgumentResolver}.
  */
 @Deprecated
 public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEndpointAdapter
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private XPathFactory xpathFactory;
+	private XPathFactory xpathFactory;
 
-    private Map<String, String> namespaces;
+	private Map<String, String> namespaces;
 
-    /** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
+	/** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
+	public void setNamespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        xpathFactory = XPathFactory.newInstance();
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		xpathFactory = XPathFactory.newInstance();
+	}
 
-    /** Supports methods with @XPathParam parameters, and return either {@code Source} or nothing. */
-    @Override
-    protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
-        Method method = methodEndpoint.getMethod();
-        if (!(Source.class.isAssignableFrom(method.getReturnType()) || Void.TYPE.equals(method.getReturnType()))) {
-            return false;
-        }
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (getXPathParamAnnotation(method, i) == null || !isSupportedType(parameterTypes[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
+	/** Supports methods with @XPathParam parameters, and return either {@code Source} or nothing. */
+	@Override
+	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
+		Method method = methodEndpoint.getMethod();
+		if (!(Source.class.isAssignableFrom(method.getReturnType()) || Void.TYPE.equals(method.getReturnType()))) {
+			return false;
+		}
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			if (getXPathParamAnnotation(method, i) == null || !isSupportedType(parameterTypes[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-    private XPathParam getXPathParamAnnotation(Method method, int paramIdx) {
-        Annotation[][] paramAnnotations = method.getParameterAnnotations();
-        for (int annIdx = 0; annIdx < paramAnnotations[paramIdx].length; annIdx++) {
-            if (paramAnnotations[paramIdx][annIdx].annotationType().equals(XPathParam.class)) {
-                return (XPathParam) paramAnnotations[paramIdx][annIdx];
-            }
-        }
-        return null;
-    }
+	private XPathParam getXPathParamAnnotation(Method method, int paramIdx) {
+		Annotation[][] paramAnnotations = method.getParameterAnnotations();
+		for (int annIdx = 0; annIdx < paramAnnotations[paramIdx].length; annIdx++) {
+			if (paramAnnotations[paramIdx][annIdx].annotationType().equals(XPathParam.class)) {
+				return (XPathParam) paramAnnotations[paramIdx][annIdx];
+			}
+		}
+		return null;
+	}
 
-    private boolean isSupportedType(Class<?> clazz) {
-        return Boolean.class.isAssignableFrom(clazz) || Boolean.TYPE.isAssignableFrom(clazz) ||
-                Double.class.isAssignableFrom(clazz) || Double.TYPE.isAssignableFrom(clazz) ||
-                Node.class.isAssignableFrom(clazz) || NodeList.class.isAssignableFrom(clazz) ||
-                String.class.isAssignableFrom(clazz);
-    }
+	private boolean isSupportedType(Class<?> clazz) {
+		return Boolean.class.isAssignableFrom(clazz) || Boolean.TYPE.isAssignableFrom(clazz) ||
+				Double.class.isAssignableFrom(clazz) || Double.TYPE.isAssignableFrom(clazz) ||
+				Node.class.isAssignableFrom(clazz) || NodeList.class.isAssignableFrom(clazz) ||
+				String.class.isAssignableFrom(clazz);
+	}
 
-    @Override
-    protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        Element payloadElement = getRootElement(messageContext.getRequest().getPayloadSource());
-        Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
-        Object result = methodEndpoint.invoke(args);
-        if (result != null && result instanceof Source) {
-            Source responseSource = (Source) result;
-            WebServiceMessage response = messageContext.getResponse();
-            transform(responseSource, response.getPayloadResult());
-        }
-    }
+	@Override
+	protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
+		Element payloadElement = getRootElement(messageContext.getRequest().getPayloadSource());
+		Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
+		Object result = methodEndpoint.invoke(args);
+		if (result != null && result instanceof Source) {
+			Source responseSource = (Source) result;
+			WebServiceMessage response = messageContext.getResponse();
+			transform(responseSource, response.getPayloadResult());
+		}
+	}
 
-    private Object[] getMethodArguments(Element payloadElement, Method method) throws XPathExpressionException {
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        XPath xpath = createXPath();
-        Object[] args = new Object[parameterTypes.length];
-        for (int i = 0; i < parameterTypes.length; i++) {
-            String expression = getXPathParamAnnotation(method, i).value();
-            QName conversionType;
-            if (Boolean.class.isAssignableFrom(parameterTypes[i]) || Boolean.TYPE.isAssignableFrom(parameterTypes[i])) {
-                conversionType = XPathConstants.BOOLEAN;
-            }
-            else
-            if (Double.class.isAssignableFrom(parameterTypes[i]) || Double.TYPE.isAssignableFrom(parameterTypes[i])) {
-                conversionType = XPathConstants.NUMBER;
-            }
-            else if (Node.class.isAssignableFrom(parameterTypes[i])) {
-                conversionType = XPathConstants.NODE;
-            }
-            else if (NodeList.class.isAssignableFrom(parameterTypes[i])) {
-                conversionType = XPathConstants.NODESET;
-            }
-            else if (String.class.isAssignableFrom(parameterTypes[i])) {
-                conversionType = XPathConstants.STRING;
-            }
-            else {
-                throw new IllegalArgumentException("Invalid parameter type [" + parameterTypes[i] + "]. " +
-                        "Supported are: Boolean, Double, Node, NodeList, and String.");
-            }
-            args[i] = xpath.evaluate(expression, payloadElement, conversionType);
-        }
-        return args;
-    }
+	private Object[] getMethodArguments(Element payloadElement, Method method) throws XPathExpressionException {
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		XPath xpath = createXPath();
+		Object[] args = new Object[parameterTypes.length];
+		for (int i = 0; i < parameterTypes.length; i++) {
+			String expression = getXPathParamAnnotation(method, i).value();
+			QName conversionType;
+			if (Boolean.class.isAssignableFrom(parameterTypes[i]) || Boolean.TYPE.isAssignableFrom(parameterTypes[i])) {
+				conversionType = XPathConstants.BOOLEAN;
+			}
+			else
+			if (Double.class.isAssignableFrom(parameterTypes[i]) || Double.TYPE.isAssignableFrom(parameterTypes[i])) {
+				conversionType = XPathConstants.NUMBER;
+			}
+			else if (Node.class.isAssignableFrom(parameterTypes[i])) {
+				conversionType = XPathConstants.NODE;
+			}
+			else if (NodeList.class.isAssignableFrom(parameterTypes[i])) {
+				conversionType = XPathConstants.NODESET;
+			}
+			else if (String.class.isAssignableFrom(parameterTypes[i])) {
+				conversionType = XPathConstants.STRING;
+			}
+			else {
+				throw new IllegalArgumentException("Invalid parameter type [" + parameterTypes[i] + "]. " +
+						"Supported are: Boolean, Double, Node, NodeList, and String.");
+			}
+			args[i] = xpath.evaluate(expression, payloadElement, conversionType);
+		}
+		return args;
+	}
 
-    private synchronized XPath createXPath() {
-        XPath xpath = xpathFactory.newXPath();
-        if (namespaces != null) {
-            SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-            namespaceContext.setBindings(namespaces);
-            xpath.setNamespaceContext(namespaceContext);
-        }
-        return xpath;
-    }
+	private synchronized XPath createXPath() {
+		XPath xpath = xpathFactory.newXPath();
+		if (namespaces != null) {
+			SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
+			namespaceContext.setBindings(namespaces);
+			xpath.setNamespaceContext(namespaceContext);
+		}
+		return xpath;
+	}
 
-    /**
-     * Returns the root element of the given source.
-     *
-     * @param source the source to get the root element from
-     * @return the root element
-     */
-    private Element getRootElement(Source source) throws TransformerException {
-        DOMResult domResult = new DOMResult();
-        transform(source, domResult);
-        Document document = (Document) domResult.getNode();
-        return document.getDocumentElement();
-    }
+	/**
+	 * Returns the root element of the given source.
+	 *
+	 * @param source the source to get the root element from
+	 * @return the root element
+	 */
+	private Element getRootElement(Source source) throws TransformerException {
+		DOMResult domResult = new DOMResult();
+		transform(source, domResult);
+		Document document = (Document) domResult.getNode();
+		return document.getDocumentElement();
+	}
 
 
 }

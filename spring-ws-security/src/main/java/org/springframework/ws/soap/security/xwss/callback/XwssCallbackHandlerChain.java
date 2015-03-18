@@ -37,126 +37,126 @@ import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
  */
 public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 
-    public XwssCallbackHandlerChain(CallbackHandler[] callbackHandlers) {
-        super(callbackHandlers);
-    }
+	public XwssCallbackHandlerChain(CallbackHandler[] callbackHandlers) {
+		super(callbackHandlers);
+	}
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof CertificateValidationCallback) {
-            handleCertificateValidationCallback((CertificateValidationCallback) callback);
-        }
-        else if (callback instanceof PasswordValidationCallback) {
-            handlePasswordValidationCallback((PasswordValidationCallback) callback);
-        }
-        else if (callback instanceof TimestampValidationCallback) {
-            handleTimestampValidationCallback((TimestampValidationCallback) callback);
-        }
-        else {
-            super.handleInternal(callback);
-        }
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof CertificateValidationCallback) {
+			handleCertificateValidationCallback((CertificateValidationCallback) callback);
+		}
+		else if (callback instanceof PasswordValidationCallback) {
+			handlePasswordValidationCallback((PasswordValidationCallback) callback);
+		}
+		else if (callback instanceof TimestampValidationCallback) {
+			handleTimestampValidationCallback((TimestampValidationCallback) callback);
+		}
+		else {
+			super.handleInternal(callback);
+		}
+	}
 
-    private void handleCertificateValidationCallback(CertificateValidationCallback callback) {
-        callback.setValidator(new CertificateValidatorChain(callback));
-    }
+	private void handleCertificateValidationCallback(CertificateValidationCallback callback) {
+		callback.setValidator(new CertificateValidatorChain(callback));
+	}
 
-    private void handlePasswordValidationCallback(PasswordValidationCallback callback) {
-        callback.setValidator(new PasswordValidatorChain(callback));
-    }
+	private void handlePasswordValidationCallback(PasswordValidationCallback callback) {
+		callback.setValidator(new PasswordValidatorChain(callback));
+	}
 
-    private void handleTimestampValidationCallback(TimestampValidationCallback callback) {
-        callback.setValidator(new TimestampValidatorChain(callback));
-    }
+	private void handleTimestampValidationCallback(TimestampValidationCallback callback) {
+		callback.setValidator(new TimestampValidatorChain(callback));
+	}
 
-    private class TimestampValidatorChain implements TimestampValidationCallback.TimestampValidator {
+	private class TimestampValidatorChain implements TimestampValidationCallback.TimestampValidator {
 
-        private TimestampValidationCallback callback;
+		private TimestampValidationCallback callback;
 
-        private TimestampValidatorChain(TimestampValidationCallback callback) {
-            this.callback = callback;
-        }
+		private TimestampValidatorChain(TimestampValidationCallback callback) {
+			this.callback = callback;
+		}
 
-        @Override
-        public void validate(TimestampValidationCallback.Request request)
-                throws TimestampValidationCallback.TimestampValidationException {
-            for (int i = 0; i < getCallbackHandlers().length; i++) {
-                CallbackHandler callbackHandler = getCallbackHandlers()[i];
-                try {
-                    callbackHandler.handle(new Callback[]{callback});
-                    callback.getResult();
-                }
-                catch (IOException e) {
-                    throw new TimestampValidationCallback.TimestampValidationException(e);
-                }
-                catch (UnsupportedCallbackException e) {
-                    // ignore
-                }
-            }
-        }
-    }
+		@Override
+		public void validate(TimestampValidationCallback.Request request)
+				throws TimestampValidationCallback.TimestampValidationException {
+			for (int i = 0; i < getCallbackHandlers().length; i++) {
+				CallbackHandler callbackHandler = getCallbackHandlers()[i];
+				try {
+					callbackHandler.handle(new Callback[]{callback});
+					callback.getResult();
+				}
+				catch (IOException e) {
+					throw new TimestampValidationCallback.TimestampValidationException(e);
+				}
+				catch (UnsupportedCallbackException e) {
+					// ignore
+				}
+			}
+		}
+	}
 
-    private class PasswordValidatorChain implements PasswordValidationCallback.PasswordValidator {
+	private class PasswordValidatorChain implements PasswordValidationCallback.PasswordValidator {
 
-        private PasswordValidationCallback callback;
+		private PasswordValidationCallback callback;
 
-        private PasswordValidatorChain(PasswordValidationCallback callback) {
-            this.callback = callback;
-        }
+		private PasswordValidatorChain(PasswordValidationCallback callback) {
+			this.callback = callback;
+		}
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            boolean allUnsupported = true;
-            for (int i = 0; i < getCallbackHandlers().length; i++) {
-                CallbackHandler callbackHandler = getCallbackHandlers()[i];
-                try {
-                    callbackHandler.handle(new Callback[]{callback});
-                    allUnsupported = false;
-                    if (!callback.getResult()) {
-                        return false;
-                    }
-                }
-                catch (IOException e) {
-                    throw new PasswordValidationCallback.PasswordValidationException(e);
-                }
-                catch (UnsupportedCallbackException e) {
-                    // ignore
-                }
-            }
-            return !allUnsupported;
-        }
-    }
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			boolean allUnsupported = true;
+			for (int i = 0; i < getCallbackHandlers().length; i++) {
+				CallbackHandler callbackHandler = getCallbackHandlers()[i];
+				try {
+					callbackHandler.handle(new Callback[]{callback});
+					allUnsupported = false;
+					if (!callback.getResult()) {
+						return false;
+					}
+				}
+				catch (IOException e) {
+					throw new PasswordValidationCallback.PasswordValidationException(e);
+				}
+				catch (UnsupportedCallbackException e) {
+					// ignore
+				}
+			}
+			return !allUnsupported;
+		}
+	}
 
-    private class CertificateValidatorChain implements CertificateValidationCallback.CertificateValidator {
+	private class CertificateValidatorChain implements CertificateValidationCallback.CertificateValidator {
 
-        private CertificateValidationCallback callback;
+		private CertificateValidationCallback callback;
 
-        private CertificateValidatorChain(CertificateValidationCallback callback) {
-            this.callback = callback;
-        }
+		private CertificateValidatorChain(CertificateValidationCallback callback) {
+			this.callback = callback;
+		}
 
-        @Override
-        public boolean validate(X509Certificate certificate)
-                throws CertificateValidationCallback.CertificateValidationException {
-            boolean allUnsupported = true;
-            for (int i = 0; i < getCallbackHandlers().length; i++) {
-                CallbackHandler callbackHandler = getCallbackHandlers()[i];
-                try {
-                    callbackHandler.handle(new Callback[]{callback});
-                    allUnsupported = false;
-                    if (!callback.getResult()) {
-                        return false;
-                    }
-                }
-                catch (IOException e) {
-                    throw new CertificateValidationCallback.CertificateValidationException(e);
-                }
-                catch (UnsupportedCallbackException e) {
-                    // ignore
-                }
-            }
-            return !allUnsupported;
-        }
-    }
+		@Override
+		public boolean validate(X509Certificate certificate)
+				throws CertificateValidationCallback.CertificateValidationException {
+			boolean allUnsupported = true;
+			for (int i = 0; i < getCallbackHandlers().length; i++) {
+				CallbackHandler callbackHandler = getCallbackHandlers()[i];
+				try {
+					callbackHandler.handle(new Callback[]{callback});
+					allUnsupported = false;
+					if (!callback.getResult()) {
+						return false;
+					}
+				}
+				catch (IOException e) {
+					throw new CertificateValidationCallback.CertificateValidationException(e);
+				}
+				catch (UnsupportedCallbackException e) {
+					// ignore
+				}
+			}
+			return !allUnsupported;
+		}
+	}
 }

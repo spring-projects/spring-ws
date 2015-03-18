@@ -25,15 +25,15 @@ import org.springframework.ws.soap.SoapEnvelopeException;
 @SuppressWarnings("serial")
 public class SaajSoapEnvelopeException extends SoapEnvelopeException {
 
-    public SaajSoapEnvelopeException(String msg) {
-        super(msg);
-    }
+	public SaajSoapEnvelopeException(String msg) {
+		super(msg);
+	}
 
-    public SaajSoapEnvelopeException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajSoapEnvelopeException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SaajSoapEnvelopeException(Throwable ex) {
-        super(ex);
-    }
+	public SaajSoapEnvelopeException(Throwable ex) {
+		super(ex);
+	}
 }

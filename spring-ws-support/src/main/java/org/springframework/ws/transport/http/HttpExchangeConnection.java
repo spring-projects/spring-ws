@@ -45,137 +45,137 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @since 1.5.0
  */
 public class HttpExchangeConnection extends AbstractReceiverConnection
-        implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
+		implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
 
-    private final HttpExchange httpExchange;
+	private final HttpExchange httpExchange;
 
-    private ByteArrayOutputStream responseBuffer;
+	private ByteArrayOutputStream responseBuffer;
 
-    private int responseStatusCode = HttpTransportConstants.STATUS_ACCEPTED;
+	private int responseStatusCode = HttpTransportConstants.STATUS_ACCEPTED;
 
-    private boolean chunkedEncoding;
+	private boolean chunkedEncoding;
 
-    /** Constructs a new exchange connection with the given {@code HttpExchange}. */
-    protected HttpExchangeConnection(HttpExchange httpExchange) {
-        Assert.notNull(httpExchange, "'httpExchange' must not be null");
-        this.httpExchange = httpExchange;
-    }
+	/** Constructs a new exchange connection with the given {@code HttpExchange}. */
+	protected HttpExchangeConnection(HttpExchange httpExchange) {
+		Assert.notNull(httpExchange, "'httpExchange' must not be null");
+		this.httpExchange = httpExchange;
+	}
 
-    /** Returns the {@code HttpExchange} for this connection. */
-    public HttpExchange getHttpExchange() {
-        return httpExchange;
-    }
+	/** Returns the {@code HttpExchange} for this connection. */
+	public HttpExchange getHttpExchange() {
+		return httpExchange;
+	}
 
-    @Override
-    public URI getUri() throws URISyntaxException {
-        return httpExchange.getRequestURI();
-    }
+	@Override
+	public URI getUri() throws URISyntaxException {
+		return httpExchange.getRequestURI();
+	}
 
-    void setChunkedEncoding(boolean chunkedEncoding) {
-        this.chunkedEncoding = chunkedEncoding;
-    }
+	void setChunkedEncoding(boolean chunkedEncoding) {
+		this.chunkedEncoding = chunkedEncoding;
+	}
 
-    @Override
-    public void endpointNotFound() {
-        responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
-    }
+	@Override
+	public void endpointNotFound() {
+		responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
+	}
 
-    /*
-     * Errors
-     */
+	/*
+	 * Errors
+	 */
 
-    @Override
-    public boolean hasError() throws IOException {
-        return false;
-    }
+	@Override
+	public boolean hasError() throws IOException {
+		return false;
+	}
 
-    @Override
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
+	@Override
+	public String getErrorMessage() throws IOException {
+		return null;
+	}
 
-    /*
-     * Receiving request
-     */
+	/*
+	 * Receiving request
+	 */
 
-    @Override
-    protected Iterator<String> getRequestHeaderNames() throws IOException {
-        return httpExchange.getRequestHeaders().keySet().iterator();
-    }
+	@Override
+	protected Iterator<String> getRequestHeaderNames() throws IOException {
+		return httpExchange.getRequestHeaders().keySet().iterator();
+	}
 
-    @Override
-    protected Iterator<String> getRequestHeaders(String name) throws IOException {
-        List<String> headers = httpExchange.getRequestHeaders().get(name);
-        return headers != null ? headers.iterator() : Collections.<String>emptyList().iterator();
-    }
+	@Override
+	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+		List<String> headers = httpExchange.getRequestHeaders().get(name);
+		return headers != null ? headers.iterator() : Collections.<String>emptyList().iterator();
+	}
 
-    @Override
-    protected InputStream getRequestInputStream() throws IOException {
-        return httpExchange.getRequestBody();
-    }
+	@Override
+	protected InputStream getRequestInputStream() throws IOException {
+		return httpExchange.getRequestBody();
+	}
 
-    /*
-     * Sending response
-     */
+	/*
+	 * Sending response
+	 */
 
-    @Override
-    protected void addResponseHeader(String name, String value) throws IOException {
-        httpExchange.getResponseHeaders().add(name, value);
-    }
+	@Override
+	protected void addResponseHeader(String name, String value) throws IOException {
+		httpExchange.getResponseHeaders().add(name, value);
+	}
 
-    @Override
-    protected OutputStream getResponseOutputStream() throws IOException {
-        if (chunkedEncoding) {
-            httpExchange.sendResponseHeaders(responseStatusCode, 0);
-            return httpExchange.getResponseBody();
-        }
-        else {
-            if (responseBuffer == null) {
-                responseBuffer = new ByteArrayOutputStream();
-            }
-            return responseBuffer;
-        }
-    }
+	@Override
+	protected OutputStream getResponseOutputStream() throws IOException {
+		if (chunkedEncoding) {
+			httpExchange.sendResponseHeaders(responseStatusCode, 0);
+			return httpExchange.getResponseBody();
+		}
+		else {
+			if (responseBuffer == null) {
+				responseBuffer = new ByteArrayOutputStream();
+			}
+			return responseBuffer;
+		}
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        if (!chunkedEncoding) {
-            byte[] buf = responseBuffer.toByteArray();
-            httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
-            OutputStream responseBody = httpExchange.getResponseBody();
-            FileCopyUtils.copy(buf, responseBody);
-        }
-        responseBuffer = null;
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		if (!chunkedEncoding) {
+			byte[] buf = responseBuffer.toByteArray();
+			httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
+			OutputStream responseBody = httpExchange.getResponseBody();
+			FileCopyUtils.copy(buf, responseBody);
+		}
+		responseBuffer = null;
+	}
 
-    @Override
-    public void onClose() throws IOException {
-        if (responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED ||
-                responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {
-            httpExchange.sendResponseHeaders(responseStatusCode, -1);
-        }
-        httpExchange.close();
-    }
+	@Override
+	public void onClose() throws IOException {
+		if (responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED ||
+				responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {
+			httpExchange.sendResponseHeaders(responseStatusCode, -1);
+		}
+		httpExchange.close();
+	}
 
-    /*
-     * Faults
-     */
+	/*
+	 * Faults
+	 */
 
-    @Override
-    public boolean hasFault() throws IOException {
-        return responseStatusCode == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
-    }
+	@Override
+	public boolean hasFault() throws IOException {
+		return responseStatusCode == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+	}
 
-    @Override
-    @Deprecated
-    public void setFault(boolean fault) throws IOException {
-        if (fault) {
-            responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
-        }
-        else {
-            responseStatusCode = HttpTransportConstants.STATUS_OK;
-        }
-    }
+	@Override
+	@Deprecated
+	public void setFault(boolean fault) throws IOException {
+		if (fault) {
+			responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+		}
+		else {
+			responseStatusCode = HttpTransportConstants.STATUS_OK;
+		}
+	}
 
 	@Override
 	public void setFaultCode(QName faultCode) throws IOException {

@@ -39,71 +39,71 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  */
 class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 
-    SaajSoap12Header(SOAPHeader header) {
-        super(header);
-    }
+	SaajSoap12Header(SOAPHeader header) {
+		super(header);
+	}
 
-    @Override
-    public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
-        try {
-	        SOAPHeaderElement headerElement =
-			        getSaajHeader().addNotUnderstoodHeaderElement(headerName);
-            return new SaajSoapHeaderElement(headerElement);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
+		try {
+			SOAPHeaderElement headerElement =
+					getSaajHeader().addNotUnderstoodHeaderElement(headerName);
+			return new SaajSoapHeaderElement(headerElement);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
-        try {
-	        SOAPHeaderElement headerElement =
-			        getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
-            return new SaajSoapHeaderElement(headerElement);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
+		try {
+			SOAPHeaderElement headerElement =
+					getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
+			return new SaajSoapHeaderElement(headerElement);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
-            throws SoapHeaderException {
-        List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
-	    Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
-        while (iterator.hasNext()) {
-            SOAPHeaderElement saajHeaderElement = iterator.next();
-            String headerRole = saajHeaderElement.getRole();
-            if (shouldProcess(headerRole, roles, isUltimateDestination)) {
-                result.add(saajHeaderElement);
-            }
-        }
-        return new SaajSoapHeaderElementIterator(result.iterator());
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
+			throws SoapHeaderException {
+		List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
+		while (iterator.hasNext()) {
+			SOAPHeaderElement saajHeaderElement = iterator.next();
+			String headerRole = saajHeaderElement.getRole();
+			if (shouldProcess(headerRole, roles, isUltimateDestination)) {
+				result.add(saajHeaderElement);
+			}
+		}
+		return new SaajSoapHeaderElementIterator(result.iterator());
 
-    }
+	}
 
-    private boolean shouldProcess(String headerRole, String[] roles, boolean isUltimateDestination) {
-        if (!StringUtils.hasLength(headerRole)) {
-            return true;
-        }
-        if (SOAPConstants.URI_SOAP_1_2_ROLE_NEXT.equals(headerRole)) {
-            return true;
-        }
-        if (SOAPConstants.URI_SOAP_1_2_ROLE_ULTIMATE_RECEIVER.equals(headerRole)) {
-            return isUltimateDestination;
-        }
-        if (SOAPConstants.URI_SOAP_1_2_ROLE_NONE.equals(headerRole)) {
-            return false;
-        }
-        if (!ObjectUtils.isEmpty(roles)) {
-            for (String role : roles) {
-                if (role.equals(headerRole)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	private boolean shouldProcess(String headerRole, String[] roles, boolean isUltimateDestination) {
+		if (!StringUtils.hasLength(headerRole)) {
+			return true;
+		}
+		if (SOAPConstants.URI_SOAP_1_2_ROLE_NEXT.equals(headerRole)) {
+			return true;
+		}
+		if (SOAPConstants.URI_SOAP_1_2_ROLE_ULTIMATE_RECEIVER.equals(headerRole)) {
+			return isUltimateDestination;
+		}
+		if (SOAPConstants.URI_SOAP_1_2_ROLE_NONE.equals(headerRole)) {
+			return false;
+		}
+		if (!ObjectUtils.isEmpty(roles)) {
+			for (String role : roles) {
+				if (role.equals(headerRole)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

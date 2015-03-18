@@ -48,70 +48,70 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvider {
 
-    /** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
-    public static final String DEFAULT_WSDL_LOCATION_EXPRESSION =
-            "/wsdl:definitions/wsdl:service/wsdl:port/soap:address/@location";
+	/** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
+	public static final String DEFAULT_WSDL_LOCATION_EXPRESSION =
+			"/wsdl:definitions/wsdl:service/wsdl:port/soap:address/@location";
 
-    private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-    private Map<String, String> expressionNamespaces = new HashMap<String, String>();
+	private Map<String, String> expressionNamespaces = new HashMap<String, String>();
 
-    private XPathExpression locationXPathExpression;
+	private XPathExpression locationXPathExpression;
 
-    private Resource wsdlResource;
+	private Resource wsdlResource;
 
-    public Wsdl11DestinationProvider() {
-        expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
-        expressionNamespaces.put("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
-        expressionNamespaces.put("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
+	public Wsdl11DestinationProvider() {
+		expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
+		expressionNamespaces.put("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
+		expressionNamespaces.put("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
 
-        locationXPathExpression = XPathExpressionFactory
-                .createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION, expressionNamespaces);
-    }
+		locationXPathExpression = XPathExpressionFactory
+				.createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION, expressionNamespaces);
+	}
 
-    /** Sets a WSDL location from which the service destination {@code URI} will be resolved. */
-    public void setWsdl(Resource wsdlResource) {
-        Assert.notNull(wsdlResource, "'wsdl' must not be null");
-        Assert.isTrue(wsdlResource.exists(), wsdlResource + " does not exist");
-        this.wsdlResource = wsdlResource;
-    }
+	/** Sets a WSDL location from which the service destination {@code URI} will be resolved. */
+	public void setWsdl(Resource wsdlResource) {
+		Assert.notNull(wsdlResource, "'wsdl' must not be null");
+		Assert.isTrue(wsdlResource.exists(), wsdlResource + " does not exist");
+		this.wsdlResource = wsdlResource;
+	}
 
-    /**
-     * Sets the XPath expression to use when extracting the service location {@code URI} from a WSDL.
-     *
-     * <p>The expression can use the following bound prefixes: <blockquote> <table> <tr><th>Prefix</th><th>Namespace</th></tr>
-     * <tr><td>{@code wsdl}</td><td>{@code http://schemas.xmlsoap.org/wsdl/}</td></tr>
-     * <tr><td>{@code soap}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap/}</td></tr>
-     * <tr><td>{@code soap12}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap12/}</td></tr>
-     * </table></blockquote>
-     *
-     * <p>Defaults to {@link #DEFAULT_WSDL_LOCATION_EXPRESSION}.
-     */
-    public void setLocationExpression(String expression) {
-        Assert.hasText(expression, "'expression' must not be empty");
-        locationXPathExpression = XPathExpressionFactory
-                .createXPathExpression(expression, expressionNamespaces);
-    }
+	/**
+	 * Sets the XPath expression to use when extracting the service location {@code URI} from a WSDL.
+	 *
+	 * <p>The expression can use the following bound prefixes: <blockquote> <table> <tr><th>Prefix</th><th>Namespace</th></tr>
+	 * <tr><td>{@code wsdl}</td><td>{@code http://schemas.xmlsoap.org/wsdl/}</td></tr>
+	 * <tr><td>{@code soap}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap/}</td></tr>
+	 * <tr><td>{@code soap12}</td><td>{@code http://schemas.xmlsoap.org/wsdl/soap12/}</td></tr>
+	 * </table></blockquote>
+	 *
+	 * <p>Defaults to {@link #DEFAULT_WSDL_LOCATION_EXPRESSION}.
+	 */
+	public void setLocationExpression(String expression) {
+		Assert.hasText(expression, "'expression' must not be empty");
+		locationXPathExpression = XPathExpressionFactory
+				.createXPathExpression(expression, expressionNamespaces);
+	}
 
-    @Override
-    protected URI lookupDestination() {
-        try {
-            DOMResult result = new DOMResult();
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.transform(new ResourceSource(wsdlResource), result);
-            Document definitionDocument = (Document) result.getNode();
-            String location = locationXPathExpression.evaluateAsString(definitionDocument);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Found location [" + location + "] in " + wsdlResource);
-            }
-            return location != null ? URI.create(location) : null;
-        }
-        catch (IOException ex) {
-            throw new WebServiceIOException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
-        }
-        catch (TransformerException ex) {
-            throw new WebServiceTransformerException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
-        }
-    }
+	@Override
+	protected URI lookupDestination() {
+		try {
+			DOMResult result = new DOMResult();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.transform(new ResourceSource(wsdlResource), result);
+			Document definitionDocument = (Document) result.getNode();
+			String location = locationXPathExpression.evaluateAsString(definitionDocument);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Found location [" + location + "] in " + wsdlResource);
+			}
+			return location != null ? URI.create(location) : null;
+		}
+		catch (IOException ex) {
+			throw new WebServiceIOException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
+		}
+		catch (TransformerException ex) {
+			throw new WebServiceTransformerException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
+		}
+	}
 
 }

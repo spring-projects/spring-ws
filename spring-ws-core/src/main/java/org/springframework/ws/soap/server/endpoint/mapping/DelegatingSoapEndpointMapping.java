@@ -43,54 +43,54 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  */
 public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndpointMapping {
 
-    private EndpointMapping delegate;
+	private EndpointMapping delegate;
 
-    private String[] actorsOrRoles;
+	private String[] actorsOrRoles;
 
-    private boolean isUltimateReceiver = true;
+	private boolean isUltimateReceiver = true;
 
-    /** Sets the delegate {@code EndpointMapping} to resolve the endpoint with. */
-    public void setDelegate(EndpointMapping delegate) {
-        this.delegate = delegate;
-    }
+	/** Sets the delegate {@code EndpointMapping} to resolve the endpoint with. */
+	public void setDelegate(EndpointMapping delegate) {
+		this.delegate = delegate;
+	}
 
-    @Override
-    public final void setActorOrRole(String actorOrRole) {
-        Assert.notNull(actorOrRole, "actorOrRole must not be null");
-        actorsOrRoles = new String[]{actorOrRole};
-    }
+	@Override
+	public final void setActorOrRole(String actorOrRole) {
+		Assert.notNull(actorOrRole, "actorOrRole must not be null");
+		actorsOrRoles = new String[]{actorOrRole};
+	}
 
-    @Override
-    public final void setActorsOrRoles(String[] actorsOrRoles) {
-        Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
-        this.actorsOrRoles = actorsOrRoles;
-    }
+	@Override
+	public final void setActorsOrRoles(String[] actorsOrRoles) {
+		Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
+		this.actorsOrRoles = actorsOrRoles;
+	}
 
-    @Override
-    public final void setUltimateReceiver(boolean ultimateReceiver) {
-        isUltimateReceiver = ultimateReceiver;
-    }
+	@Override
+	public final void setUltimateReceiver(boolean ultimateReceiver) {
+		isUltimateReceiver = ultimateReceiver;
+	}
 
-    /**
-     * Creates a new {@code SoapEndpointInvocationChain} based on the delegate endpoint, the delegate interceptors,
-     * and set actors/roles.
-     *
-     * @see #setActorsOrRoles(String[])
-     */
-    @Override
-    public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
-        EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
-        if (delegateChain != null) {
-            return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
-                    actorsOrRoles, isUltimateReceiver);
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Creates a new {@code SoapEndpointInvocationChain} based on the delegate endpoint, the delegate interceptors,
+	 * and set actors/roles.
+	 *
+	 * @see #setActorsOrRoles(String[])
+	 */
+	@Override
+	public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+		EndpointInvocationChain delegateChain = delegate.getEndpoint(messageContext);
+		if (delegateChain != null) {
+			return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),
+					actorsOrRoles, isUltimateReceiver);
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(delegate, "delegate is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(delegate, "delegate is required");
+	}
 }

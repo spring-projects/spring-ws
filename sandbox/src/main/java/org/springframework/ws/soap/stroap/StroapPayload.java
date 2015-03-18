@@ -26,12 +26,12 @@ import javax.xml.stream.XMLStreamException;
  */
 abstract class StroapPayload {
 
-    public abstract QName getName();
+	public abstract QName getName();
 
-    public abstract XMLEventReader getEventReader();
+	public abstract XMLEventReader getEventReader();
 
-    public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
-        eventWriter.add(getEventReader());
-    }
+	public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
+		eventWriter.add(getEventReader());
+	}
 
 }

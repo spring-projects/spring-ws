@@ -26,13 +26,13 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface SmartEndpointInterceptor extends EndpointInterceptor {
 
-    /**
-     * Indicates whether this interceptor should intercept the given message context.
-     *
-     * @param messageContext contains the incoming request message
-     * @param endpoint       chosen endpoint to invoke
-     * @return {@code true} to indicate that this interceptor applies; {@code false} otherwise
-     */
-    boolean shouldIntercept(MessageContext messageContext, Object endpoint);
+	/**
+	 * Indicates whether this interceptor should intercept the given message context.
+	 *
+	 * @param messageContext contains the incoming request message
+	 * @param endpoint		 chosen endpoint to invoke
+	 * @return {@code true} to indicate that this interceptor applies; {@code false} otherwise
+	 */
+	boolean shouldIntercept(MessageContext messageContext, Object endpoint);
 
 }

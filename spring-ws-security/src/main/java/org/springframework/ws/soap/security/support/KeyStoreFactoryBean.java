@@ -42,94 +42,94 @@ import org.springframework.util.StringUtils;
  */
 public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(KeyStoreFactoryBean.class);
+	private static final Log logger = LogFactory.getLog(KeyStoreFactoryBean.class);
 
-    private KeyStore keyStore;
+	private KeyStore keyStore;
 
-    private String type;
+	private String type;
 
-    private String provider;
+	private String provider;
 
-    private Resource location;
+	private Resource location;
 
-    private char[] password;
+	private char[] password;
 
-    /**
-     * Sets the location of the key store to use. If this is not set, a new, empty key store will be used.
-     *
-     * @see KeyStore#load(java.io.InputStream,char[])
-     */
-    public void setLocation(Resource location) {
-        this.location = location;
-    }
+	/**
+	 * Sets the location of the key store to use. If this is not set, a new, empty key store will be used.
+	 *
+	 * @see KeyStore#load(java.io.InputStream,char[])
+	 */
+	public void setLocation(Resource location) {
+		this.location = location;
+	}
 
-    /**
-     * Sets the password to use for integrity checking. If this property is not set, then integrity checking is not
-     * performed.
-     */
-    public void setPassword(String password) {
-        if (password != null) {
-            this.password = password.toCharArray();
-        }
-    }
+	/**
+	 * Sets the password to use for integrity checking. If this property is not set, then integrity checking is not
+	 * performed.
+	 */
+	public void setPassword(String password) {
+		if (password != null) {
+			this.password = password.toCharArray();
+		}
+	}
 
-    /** Sets the provider of the key store to use. If this is not set, the default is used. */
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
+	/** Sets the provider of the key store to use. If this is not set, the default is used. */
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 
-    /**
-     * Sets the type of the {@code KeyStore} to use. If this is not set, the default is used.
-     *
-     * @see KeyStore#getDefaultType()
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
+	/**
+	 * Sets the type of the {@code KeyStore} to use. If this is not set, the default is used.
+	 *
+	 * @see KeyStore#getDefaultType()
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
 
-    @Override
-    public KeyStore getObject() {
-        return keyStore;
-    }
+	@Override
+	public KeyStore getObject() {
+		return keyStore;
+	}
 
-    @Override
-    public Class<KeyStore> getObjectType() {
-        return KeyStore.class;
-    }
+	@Override
+	public Class<KeyStore> getObjectType() {
+		return KeyStore.class;
+	}
 
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 
-    @Override
-    public final void afterPropertiesSet() throws GeneralSecurityException, IOException {
-        if (StringUtils.hasLength(provider) && StringUtils.hasLength(type)) {
-            keyStore = KeyStore.getInstance(type, provider);
-        }
-        else if (StringUtils.hasLength(type)) {
-            keyStore = KeyStore.getInstance(type);
-        }
-        else {
-            keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        }
-        InputStream is = null;
-        try {
-            if (location != null && location.exists()) {
-                is = location.getInputStream();
-                if (logger.isInfoEnabled()) {
-                    logger.info("Loading key store from " + location);
-                }
-            }
-            else if (logger.isWarnEnabled()) {
-                logger.warn("Creating empty key store");
-            }
-            keyStore.load(is, password);
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-    }
+	@Override
+	public final void afterPropertiesSet() throws GeneralSecurityException, IOException {
+		if (StringUtils.hasLength(provider) && StringUtils.hasLength(type)) {
+			keyStore = KeyStore.getInstance(type, provider);
+		}
+		else if (StringUtils.hasLength(type)) {
+			keyStore = KeyStore.getInstance(type);
+		}
+		else {
+			keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		}
+		InputStream is = null;
+		try {
+			if (location != null && location.exists()) {
+				is = location.getInputStream();
+				if (logger.isInfoEnabled()) {
+					logger.info("Loading key store from " + location);
+				}
+			}
+			else if (logger.isWarnEnabled()) {
+				logger.warn("Creating empty key store");
+			}
+			keyStore.load(is, password);
+		}
+		finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+	}
 }

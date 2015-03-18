@@ -26,59 +26,59 @@ import javax.security.auth.x500.X500Principal;
 
 public class CertificateLoginModule implements LoginModule {
 
-    private Subject subject;
+	private Subject subject;
 
-    private boolean loginSuccessful = false;
+	private boolean loginSuccessful = false;
 
-    @Override
-    public boolean abort() {
-        return true;
-    }
+	@Override
+	public boolean abort() {
+		return true;
+	}
 
-    @Override
-    public boolean commit() {
-        if (!loginSuccessful) {
-            subject.getPrincipals().clear();
-            subject.getPrivateCredentials().clear();
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean commit() {
+		if (!loginSuccessful) {
+			subject.getPrincipals().clear();
+			subject.getPrivateCredentials().clear();
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public void initialize(Subject subject,
-                           CallbackHandler callbackHandler,
-                           java.util.Map sharedState,
-                           java.util.Map options) {
-        this.subject = subject;
-    }
+	@Override
+	public void initialize(Subject subject,
+						   CallbackHandler callbackHandler,
+						   java.util.Map sharedState,
+						   java.util.Map options) {
+		this.subject = subject;
+	}
 
-    @Override
-    public boolean login() throws LoginException {
-        if (subject == null) {
-            return false;
-        }
+	@Override
+	public boolean login() throws LoginException {
+		if (subject == null) {
+			return false;
+		}
 
-        String name = getName(subject);
+		String name = getName(subject);
 
-        loginSuccessful = "CN=Arjen Poutsma,OU=Spring-WS,O=Interface21,L=Amsterdam,ST=Unknown,C=NL".equals(name);
-        return loginSuccessful;
-    }
+		loginSuccessful = "CN=Arjen Poutsma,OU=Spring-WS,O=Interface21,L=Amsterdam,ST=Unknown,C=NL".equals(name);
+		return loginSuccessful;
+	}
 
-    @Override
-    public boolean logout() {
-        subject.getPrincipals().clear();
-        subject.getPrivateCredentials().clear();
-        return true;
-    }
+	@Override
+	public boolean logout() {
+		subject.getPrincipals().clear();
+		subject.getPrivateCredentials().clear();
+		return true;
+	}
 
-    private String getName(Subject subject) {
-        for (Iterator iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
-            Principal principal = (Principal) iterator.next();
-            if (principal instanceof X500Principal) {
-                return principal.getName();
-            }
-        }
-        return null;
-    }
+	private String getName(Subject subject) {
+		for (Iterator iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
+			Principal principal = (Principal) iterator.next();
+			if (principal instanceof X500Principal) {
+				return principal.getName();
+			}
+		}
+		return null;
+	}
 }

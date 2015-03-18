@@ -32,43 +32,43 @@ import static org.junit.Assert.assertNull;
 
 public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTestCase {
 
-    private PayloadEndpoint endpoint;
+	private PayloadEndpoint endpoint;
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    @Before
-    public void createEndpoint() throws Exception {
-        endpoint = createResponseEndpoint();
-        transformer = TransformerFactory.newInstance().newTransformer();
-    }
+	@Before
+	public void createEndpoint() throws Exception {
+		endpoint = createResponseEndpoint();
+		transformer = TransformerFactory.newInstance().newTransformer();
+	}
 
-    @Test
-    public void testNoResponse() throws Exception {
-        endpoint = createNoResponseEndpoint();
-        StringSource requestSource = new StringSource(REQUEST);
-        Source resultSource = endpoint.invoke(requestSource);
-        assertNull("Response source returned", resultSource);
-    }
+	@Test
+	public void testNoResponse() throws Exception {
+		endpoint = createNoResponseEndpoint();
+		StringSource requestSource = new StringSource(REQUEST);
+		Source resultSource = endpoint.invoke(requestSource);
+		assertNull("Response source returned", resultSource);
+	}
 
-    @Test
-    public void testNoRequest() throws Exception {
-        endpoint = createNoRequestEndpoint();
-        Source resultSource = endpoint.invoke(null);
-        assertNull("Response source returned", resultSource);
-    }
+	@Test
+	public void testNoRequest() throws Exception {
+		endpoint = createNoRequestEndpoint();
+		Source resultSource = endpoint.invoke(null);
+		assertNull("Response source returned", resultSource);
+	}
 
-    @Override
-    protected final void testSource(Source requestSource) throws Exception {
-        Source responseSource = endpoint.invoke(requestSource);
-        assertNotNull("No response source returned", responseSource);
-        StringResult result = new StringResult();
-        transformer.transform(responseSource, result);
-        assertXMLEqual(RESPONSE, result.toString());
-    }
+	@Override
+	protected final void testSource(Source requestSource) throws Exception {
+		Source responseSource = endpoint.invoke(requestSource);
+		assertNotNull("No response source returned", responseSource);
+		StringResult result = new StringResult();
+		transformer.transform(responseSource, result);
+		assertXMLEqual(RESPONSE, result.toString());
+	}
 
-    protected abstract PayloadEndpoint createNoResponseEndpoint() throws Exception;
+	protected abstract PayloadEndpoint createNoResponseEndpoint() throws Exception;
 
-    protected abstract PayloadEndpoint createResponseEndpoint() throws Exception;
+	protected abstract PayloadEndpoint createResponseEndpoint() throws Exception;
 
-    protected abstract PayloadEndpoint createNoRequestEndpoint() throws Exception;
+	protected abstract PayloadEndpoint createNoRequestEndpoint() throws Exception;
 }

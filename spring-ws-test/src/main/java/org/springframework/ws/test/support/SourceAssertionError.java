@@ -35,66 +35,66 @@ import org.springframework.xml.transform.TransformerHelper;
 @SuppressWarnings("serial")
 public class SourceAssertionError extends AssertionError {
 
-    private final String sourceLabel;
+	private final String sourceLabel;
 
-    private final Source source;
+	private final Source source;
 
-    private final TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 
-    /**
-     * Creates a new instance of the {@code SourceAssertionError} class with the given parameters.
-     */
-    public SourceAssertionError(String detailMessage, String sourceLabel, Source source) {
-        super(detailMessage);
-        this.sourceLabel = sourceLabel;
-        this.source = source;
-    }
+	/**
+	 * Creates a new instance of the {@code SourceAssertionError} class with the given parameters.
+	 */
+	public SourceAssertionError(String detailMessage, String sourceLabel, Source source) {
+		super(detailMessage);
+		this.sourceLabel = sourceLabel;
+		this.source = source;
+	}
 
-    /**
-     * Returns the source context of this error.
-     * @return the source
-     */
-    public Source getSource() {
-        return source;
-    }
+	/**
+	 * Returns the source context of this error.
+	 * @return the source
+	 */
+	public Source getSource() {
+		return source;
+	}
 
-    @Override
-    public String getMessage() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(super.getMessage());
-        String sourceString = getSourceString();
-        if (sourceString != null) {
-            String newLine = System.getProperty("line.separator");
-            builder.append(newLine);
-            String label = sourceLabel != null ? sourceLabel : "Source";
-            builder.append(label);
-            builder.append(": ");
-            builder.append(sourceString);
-        }
-        return builder.toString();
-    }
+	@Override
+	public String getMessage() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(super.getMessage());
+		String sourceString = getSourceString();
+		if (sourceString != null) {
+			String newLine = System.getProperty("line.separator");
+			builder.append(newLine);
+			String label = sourceLabel != null ? sourceLabel : "Source";
+			builder.append(label);
+			builder.append(": ");
+			builder.append(sourceString);
+		}
+		return builder.toString();
+	}
 
-    private String getSourceString() {
-        if (source != null) {
-            try {
-                StringResult result = new StringResult();
-                Transformer transformer = createNonIndentingTransformer();
-                transformer.transform(source, result);
-                return result.toString();
-            }
-            catch (TransformerException ex) {
-                // Ignore
-            }
-        }
-        return null;
-    }
+	private String getSourceString() {
+		if (source != null) {
+			try {
+				StringResult result = new StringResult();
+				Transformer transformer = createNonIndentingTransformer();
+				transformer.transform(source, result);
+				return result.toString();
+			}
+			catch (TransformerException ex) {
+				// Ignore
+			}
+		}
+		return null;
+	}
 
-    private Transformer createNonIndentingTransformer() throws TransformerConfigurationException {
-        Transformer transformer = transformerHelper.createTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.setOutputProperty(OutputKeys.INDENT, "no");
-        return transformer;
-    }
+	private Transformer createNonIndentingTransformer() throws TransformerConfigurationException {
+		Transformer transformer = transformerHelper.createTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		transformer.setOutputProperty(OutputKeys.INDENT, "no");
+		return transformer;
+	}
 
 
 }

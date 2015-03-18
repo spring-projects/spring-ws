@@ -40,19 +40,19 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  */
 public class WebServiceMessageListener extends JmsMessageReceiver implements SessionAwareMessageListener<Message> {
 
-    @Override
-    public void onMessage(Message message, Session session) throws JMSException {
-        try {
-            handleMessage(message, session);
-        }
-        catch (JmsTransportException ex) {
-            throw ex.getJmsException();
-        }
-        catch (Exception ex) {
-            JMSException jmsException = new JMSException(ex.getMessage());
-            jmsException.setLinkedException(ex);
-            throw jmsException;
-        }
-    }
+	@Override
+	public void onMessage(Message message, Session session) throws JMSException {
+		try {
+			handleMessage(message, session);
+		}
+		catch (JmsTransportException ex) {
+			throw ex.getJmsException();
+		}
+		catch (Exception ex) {
+			JMSException jmsException = new JMSException(ex.getMessage());
+			jmsException.setLinkedException(ex);
+			throw jmsException;
+		}
+	}
 
 }

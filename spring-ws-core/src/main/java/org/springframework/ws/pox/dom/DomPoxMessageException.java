@@ -27,11 +27,11 @@ import org.springframework.ws.pox.PoxMessageException;
 @SuppressWarnings("serial")
 public class DomPoxMessageException extends PoxMessageException {
 
-    public DomPoxMessageException(String msg) {
-        super(msg);
-    }
+	public DomPoxMessageException(String msg) {
+		super(msg);
+	}
 
-    public DomPoxMessageException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public DomPoxMessageException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

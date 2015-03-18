@@ -36,72 +36,72 @@ import org.springframework.ws.soap.SoapHeader;
  */
 class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 
-    boolean payloadCaching;
+	boolean payloadCaching;
 
-    private AxiomSoapBody body;
+	private AxiomSoapBody body;
 
-    private final boolean langAttributeOnSoap11FaultString;
+	private final boolean langAttributeOnSoap11FaultString;
 
-    AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope,
-                      SOAPFactory axiomFactory,
-                      boolean payloadCaching,
-                      boolean langAttributeOnSoap11FaultString) {
-        super(axiomEnvelope, axiomFactory);
-        this.payloadCaching = payloadCaching;
-        this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
-    }
+	AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope,
+					  SOAPFactory axiomFactory,
+					  boolean payloadCaching,
+					  boolean langAttributeOnSoap11FaultString) {
+		super(axiomEnvelope, axiomFactory);
+		this.payloadCaching = payloadCaching;
+		this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
+	}
 
-    @Override
-    public SoapHeader getHeader() {
-        try {
-            if (getAxiomEnvelope().getHeader() == null) {
-                return null;
-            }
-            else {
-                SOAPHeader axiomHeader = getAxiomEnvelope().getHeader();
-                String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
-                if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    return new AxiomSoap11Header(axiomHeader, getAxiomFactory());
-                }
-                else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    return new AxiomSoap12Header(axiomHeader, getAxiomFactory());
-                }
-                else {
-                    throw new AxiomSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
-                }
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeader getHeader() {
+		try {
+			if (getAxiomEnvelope().getHeader() == null) {
+				return null;
+			}
+			else {
+				SOAPHeader axiomHeader = getAxiomEnvelope().getHeader();
+				String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
+				if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
+					return new AxiomSoap11Header(axiomHeader, getAxiomFactory());
+				}
+				else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
+					return new AxiomSoap12Header(axiomHeader, getAxiomFactory());
+				}
+				else {
+					throw new AxiomSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
+				}
+			}
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    public SoapBody getBody() {
-        if (body == null) {
-            try {
-                SOAPBody axiomBody = getAxiomEnvelope().getBody();
-                String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
-                if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    body = new AxiomSoap11Body(axiomBody, getAxiomFactory(), payloadCaching,
-                            langAttributeOnSoap11FaultString);
-                }
-                else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
-                    body = new AxiomSoap12Body(axiomBody, getAxiomFactory(), payloadCaching);
-                }
-                else {
-                    throw new AxiomSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
-                }
-            }
-            catch (OMException ex) {
-                throw new AxiomSoapBodyException(ex);
-            }
-        }
-        return body;
-    }
+	@Override
+	public SoapBody getBody() {
+		if (body == null) {
+			try {
+				SOAPBody axiomBody = getAxiomEnvelope().getBody();
+				String namespaceURI = getAxiomEnvelope().getNamespace().getNamespaceURI();
+				if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
+					body = new AxiomSoap11Body(axiomBody, getAxiomFactory(), payloadCaching,
+							langAttributeOnSoap11FaultString);
+				}
+				else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(namespaceURI)) {
+					body = new AxiomSoap12Body(axiomBody, getAxiomFactory(), payloadCaching);
+				}
+				else {
+					throw new AxiomSoapEnvelopeException("Unknown SOAP namespace \"" + namespaceURI + "\"");
+				}
+			}
+			catch (OMException ex) {
+				throw new AxiomSoapBodyException(ex);
+			}
+		}
+		return body;
+	}
 
-    protected SOAPEnvelope getAxiomEnvelope() {
-        return (SOAPEnvelope) getAxiomElement();
-    }
+	protected SOAPEnvelope getAxiomEnvelope() {
+		return (SOAPEnvelope) getAxiomElement();
+	}
 
 }

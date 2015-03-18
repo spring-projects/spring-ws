@@ -32,23 +32,23 @@ import org.springframework.ws.WebServiceMessage;
  */
 public abstract class DiffMatcher implements WebServiceMessageMatcher {
 
-    static {
-        XMLUnit.setIgnoreWhitespace(true);
-    }
+	static {
+		XMLUnit.setIgnoreWhitespace(true);
+	}
 
-    @Override
-    public final void match(WebServiceMessage message) throws IOException, AssertionError {
-        Diff diff = createDiff(message);
-        assertTrue("Messages are different, " + diff.toString(), diff.similar(), "Payload", message.getPayloadSource());
-    }
+	@Override
+	public final void match(WebServiceMessage message) throws IOException, AssertionError {
+		Diff diff = createDiff(message);
+		assertTrue("Messages are different, " + diff.toString(), diff.similar(), "Payload", message.getPayloadSource());
+	}
 
-    /**
-     * Creates a {@link Diff} for the given message.
-     *
-     * @param message the message
-     * @return the diff
-     * @throws Exception in case of errors
-     */
-    protected abstract Diff createDiff(WebServiceMessage message);
+	/**
+	 * Creates a {@link Diff} for the given message.
+	 *
+	 * @param message the message
+	 * @return the diff
+	 * @throws Exception in case of errors
+	 */
+	protected abstract Diff createDiff(WebServiceMessage message);
 
 }

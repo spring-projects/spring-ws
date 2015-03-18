@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,9 +26,9 @@ import org.xml.sax.SAXParseException;
  */
 public interface ValidationErrorHandler extends ErrorHandler {
 
-    /**
-     * Returns the errors collected by this error handler.
-     * @return the errors
-     */
-    SAXParseException[] getErrors();
+	/**
+	 * Returns the errors collected by this error handler.
+	 * @return the errors
+	 */
+	SAXParseException[] getErrors();
 }

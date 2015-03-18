@@ -40,85 +40,85 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
-    /**
-     * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
-     * an {@code UnsupportedCallbackException} for others.
-     *
-     * @throws UnsupportedCallbackException when the callback is not supported
-     */
-    @Override
-    protected final void handleInternal(Callback callback) throws UnsupportedCallbackException {
-        if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-            if (validationCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
-                validationCallback.setValidator(new JaasPlainTextPasswordValidator());
-                return;
-            }
-        }
-        throw new UnsupportedCallbackException(callback);
-    }
+	/**
+	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
+	 * an {@code UnsupportedCallbackException} for others.
+	 *
+	 * @throws UnsupportedCallbackException when the callback is not supported
+	 */
+	@Override
+	protected final void handleInternal(Callback callback) throws UnsupportedCallbackException {
+		if (callback instanceof PasswordValidationCallback) {
+			PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
+			if (validationCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
+				validationCallback.setValidator(new JaasPlainTextPasswordValidator());
+				return;
+			}
+		}
+		throw new UnsupportedCallbackException(callback);
+	}
 
-    private class JaasPlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
+	private class JaasPlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
-                    (PasswordValidationCallback.PlainTextPasswordRequest) request;
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
+					(PasswordValidationCallback.PlainTextPasswordRequest) request;
 
-            final String username = plainTextRequest.getUsername();
-            final String password = plainTextRequest.getPassword();
+			final String username = plainTextRequest.getUsername();
+			final String password = plainTextRequest.getPassword();
 
-            LoginContext loginContext;
-            try {
-                loginContext = new LoginContext(getLoginContextName(), new AbstractCallbackHandler() {
+			LoginContext loginContext;
+			try {
+				loginContext = new LoginContext(getLoginContextName(), new AbstractCallbackHandler() {
 
-                    @Override
-                    protected void handleInternal(Callback callback) throws UnsupportedCallbackException {
-                        if (callback instanceof NameCallback) {
-                            ((NameCallback) callback).setName(username);
-                        }
-                        else if (callback instanceof PasswordCallback) {
-                            ((PasswordCallback) callback).setPassword(password.toCharArray());
-                        }
-                        else {
-                            throw new UnsupportedCallbackException(callback);
-                        }
-                    }
-                });
-            }
-            catch (LoginException ex) {
-                throw new PasswordValidationCallback.PasswordValidationException(ex);
-            }
-            catch (SecurityException ex) {
-                throw new PasswordValidationCallback.PasswordValidationException(ex);
-            }
+					@Override
+					protected void handleInternal(Callback callback) throws UnsupportedCallbackException {
+						if (callback instanceof NameCallback) {
+							((NameCallback) callback).setName(username);
+						}
+						else if (callback instanceof PasswordCallback) {
+							((PasswordCallback) callback).setPassword(password.toCharArray());
+						}
+						else {
+							throw new UnsupportedCallbackException(callback);
+						}
+					}
+				});
+			}
+			catch (LoginException ex) {
+				throw new PasswordValidationCallback.PasswordValidationException(ex);
+			}
+			catch (SecurityException ex) {
+				throw new PasswordValidationCallback.PasswordValidationException(ex);
+			}
 
-            try {
-                loginContext.login();
-                Subject subject = loginContext.getSubject();
-                if (!subject.getPrincipals().isEmpty()) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Authentication request for user '" + username + "' successful");
-                    }
-                    return true;
-                }
-                else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Authentication request for user '" + username + "' failed");
-                    }
-                    return false;
-                }
-            }
-            catch (LoginException ex) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication request for user '" + username + "' failed");
-                }
-                return false;
-            }
-        }
+			try {
+				loginContext.login();
+				Subject subject = loginContext.getSubject();
+				if (!subject.getPrincipals().isEmpty()) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Authentication request for user '" + username + "' successful");
+					}
+					return true;
+				}
+				else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Authentication request for user '" + username + "' failed");
+					}
+					return false;
+				}
+			}
+			catch (LoginException ex) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication request for user '" + username + "' failed");
+				}
+				return false;
+			}
+		}
 
 
-    }
+	}
 }
 

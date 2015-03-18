@@ -39,65 +39,65 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
  */
 public class JaasCertificateValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
-    /**
-     * Handles  {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
-     * others
-     *
-     * @throws UnsupportedCallbackException when the callback is not supported
-     */
-    @Override
-    protected final void handleInternal(Callback callback) throws UnsupportedCallbackException {
-        if (callback instanceof CertificateValidationCallback) {
-            ((CertificateValidationCallback) callback).setValidator(new JaasCertificateValidator());
-        }
-        else {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	/**
+	 * Handles	{@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
+	 * others
+	 *
+	 * @throws UnsupportedCallbackException when the callback is not supported
+	 */
+	@Override
+	protected final void handleInternal(Callback callback) throws UnsupportedCallbackException {
+		if (callback instanceof CertificateValidationCallback) {
+			((CertificateValidationCallback) callback).setValidator(new JaasCertificateValidator());
+		}
+		else {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 
-    private class JaasCertificateValidator implements CertificateValidationCallback.CertificateValidator {
+	private class JaasCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
-        @Override
-        public boolean validate(X509Certificate certificate)
-                throws CertificateValidationCallback.CertificateValidationException {
-            Subject subject = new Subject();
-            subject.getPrincipals().add(certificate.getSubjectX500Principal());
-            LoginContext loginContext;
-            try {
-                loginContext = new LoginContext(getLoginContextName(), subject);
-            }
-            catch (LoginException ex) {
-                throw new CertificateValidationCallback.CertificateValidationException(ex);
-            }
-            catch (SecurityException ex) {
-                throw new CertificateValidationCallback.CertificateValidationException(ex);
-            }
+		@Override
+		public boolean validate(X509Certificate certificate)
+				throws CertificateValidationCallback.CertificateValidationException {
+			Subject subject = new Subject();
+			subject.getPrincipals().add(certificate.getSubjectX500Principal());
+			LoginContext loginContext;
+			try {
+				loginContext = new LoginContext(getLoginContextName(), subject);
+			}
+			catch (LoginException ex) {
+				throw new CertificateValidationCallback.CertificateValidationException(ex);
+			}
+			catch (SecurityException ex) {
+				throw new CertificateValidationCallback.CertificateValidationException(ex);
+			}
 
-            try {
-                loginContext.login();
-                Subject subj = loginContext.getSubject();
-                if (!subj.getPrincipals().isEmpty()) {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Authentication request for certificate with DN [" +
-                                certificate.getSubjectX500Principal().getName() + "] successful");
-                    }
-                    return true;
-                }
-                else {
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Authentication request for certificate with DN [" +
-                                certificate.getSubjectX500Principal().getName() + "] failed");
-                    }
-                    return false;
-                }
-            }
-            catch (LoginException ex) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication request for certificate with DN [" +
-                            certificate.getSubjectX500Principal().getName() + "] failed");
-                }
-                return false;
-            }
-        }
-    }
+			try {
+				loginContext.login();
+				Subject subj = loginContext.getSubject();
+				if (!subj.getPrincipals().isEmpty()) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Authentication request for certificate with DN [" +
+								certificate.getSubjectX500Principal().getName() + "] successful");
+					}
+					return true;
+				}
+				else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Authentication request for certificate with DN [" +
+								certificate.getSubjectX500Principal().getName() + "] failed");
+					}
+					return false;
+				}
+			}
+			catch (LoginException ex) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication request for certificate with DN [" +
+							certificate.getSubjectX500Principal().getName() + "] failed");
+				}
+				return false;
+			}
+		}
+	}
 }

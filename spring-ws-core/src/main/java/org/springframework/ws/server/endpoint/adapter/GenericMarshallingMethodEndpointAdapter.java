@@ -36,78 +36,78 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * @author Arjen Poutsma
  * @since 1.0.2
  * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *             org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
- *             MarshallingPayloadMethodProcessor}.
+ *			   org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
+ *			   MarshallingPayloadMethodProcessor}.
  */
 @Deprecated
 public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEndpointAdapter {
 
-    /**
-     * Creates a new {@code GenericMarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link
-     * Unmarshaller} must be injected using properties.
-     *
-     * @see #setMarshaller(org.springframework.oxm.Marshaller)
-     * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
-     */
-    public GenericMarshallingMethodEndpointAdapter() {
-    }
+	/**
+	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link
+	 * Unmarshaller} must be injected using properties.
+	 *
+	 * @see #setMarshaller(org.springframework.oxm.Marshaller)
+	 * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
+	 */
+	public GenericMarshallingMethodEndpointAdapter() {
+	}
 
-    /**
-     * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link
-     * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
-     * unmarshalling. Otherwise, an exception is thrown.
-     *
-     * <p>Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
-     * so that you can safely use this constructor.
-     *
-     * @param marshaller object used as marshaller and unmarshaller
-     * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
-     *                                  interface
-     */
-    public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller) {
-        super(marshaller);
-    }
+	/**
+	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link
+	 * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
+	 * unmarshalling. Otherwise, an exception is thrown.
+	 *
+	 * <p>Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
+	 * so that you can safely use this constructor.
+	 *
+	 * @param marshaller object used as marshaller and unmarshaller
+	 * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
+	 *									interface
+	 */
+	public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller) {
+		super(marshaller);
+	}
 
-    /**
-     * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
-     *
-     * @param marshaller   the marshaller to use
-     * @param unmarshaller the unmarshaller to use
-     */
-    public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
-        super(marshaller, unmarshaller);
-    }
+	/**
+	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
+	 *
+	 * @param marshaller   the marshaller to use
+	 * @param unmarshaller the unmarshaller to use
+	 */
+	public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
+		super(marshaller, unmarshaller);
+	}
 
-    @Override
-    protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
-        Method method = methodEndpoint.getMethod();
-        return supportsReturnType(method) && supportsParameters(method);
-    }
+	@Override
+	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
+		Method method = methodEndpoint.getMethod();
+		return supportsReturnType(method) && supportsParameters(method);
+	}
 
-    private boolean supportsReturnType(Method method) {
-        if (Void.TYPE.equals(method.getReturnType())) {
-            return true;
-        }
-        else {
-            if (getMarshaller() instanceof GenericMarshaller) {
-                return ((GenericMarshaller) getMarshaller()).supports(method.getGenericReturnType());
-            }
-            else {
-                return getMarshaller().supports(method.getReturnType());
-            }
-        }
-    }
+	private boolean supportsReturnType(Method method) {
+		if (Void.TYPE.equals(method.getReturnType())) {
+			return true;
+		}
+		else {
+			if (getMarshaller() instanceof GenericMarshaller) {
+				return ((GenericMarshaller) getMarshaller()).supports(method.getGenericReturnType());
+			}
+			else {
+				return getMarshaller().supports(method.getReturnType());
+			}
+		}
+	}
 
-    private boolean supportsParameters(Method method) {
-        if (method.getParameterTypes().length != 1) {
-            return false;
-        }
-        else if (getUnmarshaller() instanceof GenericUnmarshaller) {
-            GenericUnmarshaller genericUnmarshaller = (GenericUnmarshaller) getUnmarshaller();
-            return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
-        }
-        else {
-            return getUnmarshaller().supports(method.getParameterTypes()[0]);
-        }
-    }
+	private boolean supportsParameters(Method method) {
+		if (method.getParameterTypes().length != 1) {
+			return false;
+		}
+		else if (getUnmarshaller() instanceof GenericUnmarshaller) {
+			GenericUnmarshaller genericUnmarshaller = (GenericUnmarshaller) getUnmarshaller();
+			return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
+		}
+		else {
+			return getUnmarshaller().supports(method.getParameterTypes()[0]);
+		}
+	}
 }

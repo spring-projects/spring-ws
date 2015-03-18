@@ -27,23 +27,23 @@ import org.springframework.ws.WebServiceException;
 @SuppressWarnings("serial")
 public abstract class WebServiceClientException extends WebServiceException {
 
-    /**
-     * Create a new instance of the {@code WebServiceClientException} class.
-     *
-     * @param msg the detail message
-     */
-    public WebServiceClientException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceClientException} class.
+	 *
+	 * @param msg the detail message
+	 */
+	public WebServiceClientException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new instance of the {@code WebServiceClientException} class.
-     *
-     * @param msg the detail message
-     * @param ex  the root {@link Throwable exception}
-     */
-    public WebServiceClientException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceClientException} class.
+	 *
+	 * @param msg the detail message
+	 * @param ex  the root {@link Throwable exception}
+	 */
+	public WebServiceClientException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
 }

@@ -27,11 +27,11 @@ import org.springframework.xml.XmlException;
 @SuppressWarnings("serial")
 public class XmlValidationException extends XmlException {
 
-    public XmlValidationException(String s) {
-        super(s);
-    }
+	public XmlValidationException(String s) {
+		super(s);
+	}
 
-    public XmlValidationException(String s, Throwable throwable) {
-        super(s, throwable);
-    }
+	public XmlValidationException(String s, Throwable throwable) {
+		super(s, throwable);
+	}
 }

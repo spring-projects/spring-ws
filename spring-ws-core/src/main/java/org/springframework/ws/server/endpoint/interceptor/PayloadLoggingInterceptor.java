@@ -35,9 +35,9 @@ import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
  */
 public class PayloadLoggingInterceptor extends AbstractLoggingInterceptor {
 
-    @Override
-    protected Source getSource(WebServiceMessage message) {
-        return message.getPayloadSource();
-    }
+	@Override
+	protected Source getSource(WebServiceMessage message) {
+		return message.getPayloadSource();
+	}
 
 }

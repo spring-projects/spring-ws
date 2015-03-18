@@ -40,183 +40,183 @@ import org.springframework.xml.transform.ResourceSource;
  */
 public abstract class ResponseCreators {
 
-    private ResponseCreators() {
-    }
+	private ResponseCreators() {
+	}
 
-    // Payload
+	// Payload
 
-    /**
-     * Respond with the given {@link javax.xml.transform.Source} XML as payload response.
-     *
-     * @param payload the response payload
-     * @return the response callback
-     */
-    public static ResponseCreator withPayload(Source payload) {
-        Assert.notNull(payload, "'payload' must not be null");
-        return new WebServiceMessageCreatorAdapter(new PayloadMessageCreator(payload));
-    }
+	/**
+	 * Respond with the given {@link javax.xml.transform.Source} XML as payload response.
+	 *
+	 * @param payload the response payload
+	 * @return the response callback
+	 */
+	public static ResponseCreator withPayload(Source payload) {
+		Assert.notNull(payload, "'payload' must not be null");
+		return new WebServiceMessageCreatorAdapter(new PayloadMessageCreator(payload));
+	}
 
-    /**
-     * Respond with the given {@link org.springframework.core.io.Resource} XML as payload response.
-     *
-     * @param payload the response payload
-     * @return the response callback
-     */
-    public static ResponseCreator withPayload(Resource payload) throws IOException {
-        Assert.notNull(payload, "'payload' must not be null");
-        return withPayload(new ResourceSource(payload));
-    }
+	/**
+	 * Respond with the given {@link org.springframework.core.io.Resource} XML as payload response.
+	 *
+	 * @param payload the response payload
+	 * @return the response callback
+	 */
+	public static ResponseCreator withPayload(Resource payload) throws IOException {
+		Assert.notNull(payload, "'payload' must not be null");
+		return withPayload(new ResourceSource(payload));
+	}
 
-    // Error/Exception
-    
-    /**
-     * Respond with an error.
-     *
-     * @param errorMessage the error message
-     * @return the response callback
-     * @see org.springframework.ws.transport.WebServiceConnection#hasError()
-     * @see org.springframework.ws.transport.WebServiceConnection#getErrorMessage()
-     */
-    public static ResponseCreator withError(String errorMessage) {
-        Assert.hasLength(errorMessage, "'errorMessage' must not be empty");
-        return new ErrorResponseCreator(errorMessage);
-    }
+	// Error/Exception
+	
+	/**
+	 * Respond with an error.
+	 *
+	 * @param errorMessage the error message
+	 * @return the response callback
+	 * @see org.springframework.ws.transport.WebServiceConnection#hasError()
+	 * @see org.springframework.ws.transport.WebServiceConnection#getErrorMessage()
+	 */
+	public static ResponseCreator withError(String errorMessage) {
+		Assert.hasLength(errorMessage, "'errorMessage' must not be empty");
+		return new ErrorResponseCreator(errorMessage);
+	}
 
-    /**
-     * Respond with an {@link java.io.IOException}.
-     *
-     * @param ioException the exception to be thrown
-     * @return the response callback
-     */
-    public static ResponseCreator withException(IOException ioException) {
-        Assert.notNull(ioException, "'ioException' must not be null");
-        return new ExceptionResponseCreator(ioException);
-    }
+	/**
+	 * Respond with an {@link java.io.IOException}.
+	 *
+	 * @param ioException the exception to be thrown
+	 * @return the response callback
+	 */
+	public static ResponseCreator withException(IOException ioException) {
+		Assert.notNull(ioException, "'ioException' must not be null");
+		return new ExceptionResponseCreator(ioException);
+	}
 
-    /**
-     * Respond with an {@link RuntimeException}.
-     *
-     * @param ex the runtime exception to be thrown
-     * @return the response callback
-     */
-    public static ResponseCreator withException(RuntimeException ex) {
-        Assert.notNull(ex, "'ex' must not be null");
-        return new ExceptionResponseCreator(ex);
-    }
+	/**
+	 * Respond with an {@link RuntimeException}.
+	 *
+	 * @param ex the runtime exception to be thrown
+	 * @return the response callback
+	 */
+	public static ResponseCreator withException(RuntimeException ex) {
+		Assert.notNull(ex, "'ex' must not be null");
+		return new ExceptionResponseCreator(ex);
+	}
 
-    // SOAP
+	// SOAP
 
-    /**
-     * Respond with the given {@link javax.xml.transform.Source} XML as SOAP envelope response.
-     *
-     * @param soapEnvelope the response SOAP envelope
-     * @return the response callback
-     * @since 2.1.1
-     */
-    public static ResponseCreator withSoapEnvelope(Source soapEnvelope) {
-        Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
-        return new WebServiceMessageCreatorAdapter(new SoapEnvelopeMessageCreator(soapEnvelope));
-    }
+	/**
+	 * Respond with the given {@link javax.xml.transform.Source} XML as SOAP envelope response.
+	 *
+	 * @param soapEnvelope the response SOAP envelope
+	 * @return the response callback
+	 * @since 2.1.1
+	 */
+	public static ResponseCreator withSoapEnvelope(Source soapEnvelope) {
+		Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
+		return new WebServiceMessageCreatorAdapter(new SoapEnvelopeMessageCreator(soapEnvelope));
+	}
 
-    /**
-     * Respond with the given {@link org.springframework.core.io.Resource} XML as SOAP envelope response.
-     *
-     * @param soapEnvelope the response SOAP envelope
-     * @return the response callback
-     * @since 2.1.1
-     */
-    public static ResponseCreator withSoapEnvelope(Resource soapEnvelope) throws IOException {
-        Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
-        return withSoapEnvelope(new ResourceSource(soapEnvelope));
-    }
+	/**
+	 * Respond with the given {@link org.springframework.core.io.Resource} XML as SOAP envelope response.
+	 *
+	 * @param soapEnvelope the response SOAP envelope
+	 * @return the response callback
+	 * @since 2.1.1
+	 */
+	public static ResponseCreator withSoapEnvelope(Resource soapEnvelope) throws IOException {
+		Assert.notNull(soapEnvelope, "'soapEnvelope' must not be null");
+		return withSoapEnvelope(new ResourceSource(soapEnvelope));
+	}
 
 
-    /**
-     * Respond with a {@code MustUnderstand} fault.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @see SoapBody#addMustUnderstandFault(String, java.util.Locale)
-     */
-    public static ResponseCreator withMustUnderstandFault(final String faultStringOrReason, final Locale locale) {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addMustUnderstandFault(faultStringOrReason, locale);
-            }
-        };
-    }
+	/**
+	 * Respond with a {@code MustUnderstand} fault.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @see SoapBody#addMustUnderstandFault(String, java.util.Locale)
+	 */
+	public static ResponseCreator withMustUnderstandFault(final String faultStringOrReason, final Locale locale) {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		return new SoapFaultResponseCreator() {
+			@Override
+			public void addSoapFault(SoapBody soapBody) {
+				soapBody.addMustUnderstandFault(faultStringOrReason, locale);
+			}
+		};
+	}
 
-    /**
-     * Respond with a {@code Client} (SOAP 1.1) or {@code Sender} (SOAP 1.2) fault.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
-     */
-    public static ResponseCreator withClientOrSenderFault(final String faultStringOrReason, final Locale locale) {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addClientOrSenderFault(faultStringOrReason, locale);
-            }
-        };
-    }
+	/**
+	 * Respond with a {@code Client} (SOAP 1.1) or {@code Sender} (SOAP 1.2) fault.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
+	 */
+	public static ResponseCreator withClientOrSenderFault(final String faultStringOrReason, final Locale locale) {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		return new SoapFaultResponseCreator() {
+			@Override
+			public void addSoapFault(SoapBody soapBody) {
+				soapBody.addClientOrSenderFault(faultStringOrReason, locale);
+			}
+		};
+	}
 
-    /**
-     * Respond with a {@code Server} (SOAP 1.1) or {@code Receiver} (SOAP 1.2) fault.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String, Locale)
-     */
-    public static ResponseCreator withServerOrReceiverFault(final String faultStringOrReason, final Locale locale) {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addServerOrReceiverFault(faultStringOrReason, locale);
-            }
-        };
-    }
+	/**
+	 * Respond with a {@code Server} (SOAP 1.1) or {@code Receiver} (SOAP 1.2) fault.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String, Locale)
+	 */
+	public static ResponseCreator withServerOrReceiverFault(final String faultStringOrReason, final Locale locale) {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		return new SoapFaultResponseCreator() {
+			@Override
+			public void addSoapFault(SoapBody soapBody) {
+				soapBody.addServerOrReceiverFault(faultStringOrReason, locale);
+			}
+		};
+	}
 
-    /**
-     * Respond with a {@code VersionMismatch} fault.
-     *
-     * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
-     * @param locale              the language of faultStringOrReason. Optional for SOAP 1.1
-     * @see org.springframework.ws.soap.SoapBody#addVersionMismatchFault(String, Locale)
-     */
-    public static ResponseCreator withVersionMismatchFault(final String faultStringOrReason, final Locale locale) {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        return new SoapFaultResponseCreator() {
-            @Override
-            public void addSoapFault(SoapBody soapBody) {
-                soapBody.addVersionMismatchFault(faultStringOrReason, locale);
-            }
-        };
-    }
+	/**
+	 * Respond with a {@code VersionMismatch} fault.
+	 *
+	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
+	 * @param locale			  the language of faultStringOrReason. Optional for SOAP 1.1
+	 * @see org.springframework.ws.soap.SoapBody#addVersionMismatchFault(String, Locale)
+	 */
+	public static ResponseCreator withVersionMismatchFault(final String faultStringOrReason, final Locale locale) {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		return new SoapFaultResponseCreator() {
+			@Override
+			public void addSoapFault(SoapBody soapBody) {
+				soapBody.addVersionMismatchFault(faultStringOrReason, locale);
+			}
+		};
+	}
 
-    /**
-     * Adapts a {@link WebServiceMessageCreator} to the {@link ResponseCreator} contract.
-     */
-    private static class WebServiceMessageCreatorAdapter implements ResponseCreator {
+	/**
+	 * Adapts a {@link WebServiceMessageCreator} to the {@link ResponseCreator} contract.
+	 */
+	private static class WebServiceMessageCreatorAdapter implements ResponseCreator {
 
-        private final WebServiceMessageCreator adaptee;
+		private final WebServiceMessageCreator adaptee;
 
-        private WebServiceMessageCreatorAdapter(WebServiceMessageCreator adaptee) {
-            this.adaptee = adaptee;
-        }
+		private WebServiceMessageCreatorAdapter(WebServiceMessageCreator adaptee) {
+			this.adaptee = adaptee;
+		}
 
-        @Override
-        public WebServiceMessage createResponse(URI uri,
-                                                WebServiceMessage request,
-                                                WebServiceMessageFactory messageFactory) throws IOException {
-            return adaptee.createMessage(messageFactory);
-        }
-    }
+		@Override
+		public WebServiceMessage createResponse(URI uri,
+												WebServiceMessage request,
+												WebServiceMessageFactory messageFactory) throws IOException {
+			return adaptee.createMessage(messageFactory);
+		}
+	}
 
 
 }

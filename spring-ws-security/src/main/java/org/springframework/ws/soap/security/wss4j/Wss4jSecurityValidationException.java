@@ -28,12 +28,12 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 @SuppressWarnings("serial")
 public class Wss4jSecurityValidationException extends WsSecurityValidationException {
 
-    public Wss4jSecurityValidationException(String msg) {
-        super(msg);
-    }
+	public Wss4jSecurityValidationException(String msg) {
+		super(msg);
+	}
 
-    public Wss4jSecurityValidationException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public Wss4jSecurityValidationException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
 }

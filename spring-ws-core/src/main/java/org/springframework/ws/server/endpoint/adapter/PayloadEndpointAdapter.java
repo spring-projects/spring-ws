@@ -38,19 +38,19 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public class PayloadEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
 
-    @Override
-    public boolean supports(Object endpoint) {
-        return endpoint instanceof PayloadEndpoint;
-    }
+	@Override
+	public boolean supports(Object endpoint) {
+		return endpoint instanceof PayloadEndpoint;
+	}
 
-    @Override
-    public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
-        PayloadEndpoint payloadEndpoint = (PayloadEndpoint) endpoint;
-        Source requestSource = messageContext.getRequest().getPayloadSource();
-        Source responseSource = payloadEndpoint.invoke(requestSource);
-        if (responseSource != null) {
-            WebServiceMessage response = messageContext.getResponse();
-            transform(responseSource, response.getPayloadResult());
-        }
-    }
+	@Override
+	public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
+		PayloadEndpoint payloadEndpoint = (PayloadEndpoint) endpoint;
+		Source requestSource = messageContext.getRequest().getPayloadSource();
+		Source responseSource = payloadEndpoint.invoke(requestSource);
+		if (responseSource != null) {
+			WebServiceMessage response = messageContext.getResponse();
+			transform(responseSource, response.getPayloadResult());
+		}
+	}
 }

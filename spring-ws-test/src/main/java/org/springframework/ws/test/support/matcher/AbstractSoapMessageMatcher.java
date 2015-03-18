@@ -34,19 +34,19 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public abstract class AbstractSoapMessageMatcher implements WebServiceMessageMatcher {
 
-    @Override
-    public final void match(WebServiceMessage message) throws IOException, AssertionError {
-        assertTrue("Message is not a SOAP message", message instanceof SoapMessage);
-        match((SoapMessage) message);
-    }
+	@Override
+	public final void match(WebServiceMessage message) throws IOException, AssertionError {
+		assertTrue("Message is not a SOAP message", message instanceof SoapMessage);
+		match((SoapMessage) message);
+	}
 
-    /**
-     * Abstract template method that gets invoked from {@link #match(WebServiceMessage)} if the given message is a
-     * {@link SoapMessage}.
-     *
-     * @param soapMessage the soap message
-     * @throws IOException    in case of I/O errors
-     * @throws AssertionError if expectations are not met
-     */
-    protected abstract void match(SoapMessage soapMessage) throws IOException, AssertionError;
+	/**
+	 * Abstract template method that gets invoked from {@link #match(WebServiceMessage)} if the given message is a
+	 * {@link SoapMessage}.
+	 *
+	 * @param soapMessage the soap message
+	 * @throws IOException	  in case of I/O errors
+	 * @throws AssertionError if expectations are not met
+	 */
+	protected abstract void match(SoapMessage soapMessage) throws IOException, AssertionError;
 }

@@ -36,55 +36,55 @@ import org.junit.Ignore;
 @Ignore
 public class TcpMessageReceiverIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
 
-    private WebServiceMessageFactory messageFactory;
+	private WebServiceMessageFactory messageFactory;
 
-    private WebServiceMessageSender messageSender;
+	private WebServiceMessageSender messageSender;
 
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
+	public void setMessageFactory(WebServiceMessageFactory messageFactory) {
+		this.messageFactory = messageFactory;
+	}
 
-    public void setMessageSender(WebServiceMessageSender messageSender) {
-        this.messageSender = messageSender;
-    }
+	public void setMessageSender(WebServiceMessageSender messageSender) {
+		this.messageSender = messageSender;
+	}
 
-    public static final String REQUEST =
-            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'\n" +
-                    "                   SOAP-ENV:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>\n" +
-                    "    <SOAP-ENV:Body>\n" +
-                    "        <m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
-                    "            <symbol>DIS</symbol>\n" + "        </m:GetLastTradePrice>\n" +
-                    "    </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
+	public static final String REQUEST =
+			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'\n" +
+					"					SOAP-ENV:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>\n" +
+					"	 <SOAP-ENV:Body>\n" +
+					"		 <m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
+					"			 <symbol>DIS</symbol>\n" + "		</m:GetLastTradePrice>\n" +
+					"	 </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
-    public void testServer() throws IOException, InterruptedException {
-        Socket socket = new Socket("localhost", TcpMessageReceiver.DEFAULT_PORT);
-        Writer writer;
-        BufferedReader reader;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
-            writer.write(REQUEST);
-            writer.flush();
-            socket.shutdownOutput();
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        }
-        finally {
-            socket.close();
-        }
-    }
+	public void testServer() throws IOException, InterruptedException {
+		Socket socket = new Socket("localhost", TcpMessageReceiver.DEFAULT_PORT);
+		Writer writer;
+		BufferedReader reader;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+			writer.write(REQUEST);
+			writer.flush();
+			socket.shutdownOutput();
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+			String line;
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+		}
+		finally {
+			socket.close();
+		}
+	}
 
-    public void testTemplate() throws Exception {
-        WebServiceTemplate template = new WebServiceTemplate(messageFactory);
-        template.setMessageSender(messageSender);
-        template.sendSourceAndReceiveToResult("tcp://localhost", new StringSource(REQUEST),
-                new StreamResult(System.out));
-    }
+	public void testTemplate() throws Exception {
+		WebServiceTemplate template = new WebServiceTemplate(messageFactory);
+		template.setMessageSender(messageSender);
+		template.sendSourceAndReceiveToResult("tcp://localhost", new StringSource(REQUEST),
+				new StreamResult(System.out));
+	}
 
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:/org/springframework/ws/transport/tcp/applicationContext.xml"};
-    }
+	protected String[] getConfigLocations() {
+		return new String[]{"classpath:/org/springframework/ws/transport/tcp/applicationContext.xml"};
+	}
 
 }

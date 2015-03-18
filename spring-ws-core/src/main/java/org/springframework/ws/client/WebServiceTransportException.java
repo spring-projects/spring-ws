@@ -27,23 +27,23 @@ import org.springframework.ws.transport.TransportException;
 @SuppressWarnings("serial")
 public class WebServiceTransportException extends WebServiceIOException {
 
-    /**
-     * Create a new instance of the {@code WebServiceTransportException} class.
-     *
-     * @param msg the detail message
-     */
-    public WebServiceTransportException(String msg) {
-        super(msg);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceTransportException} class.
+	 *
+	 * @param msg the detail message
+	 */
+	public WebServiceTransportException(String msg) {
+		super(msg);
+	}
 
-    /**
-     * Create a new instance of the {@code WebServiceTransportException} class.
-     *
-     * @param msg the detail message
-     * @param ex  the root {@link TransportException}
-     */
-    public WebServiceTransportException(String msg, TransportException ex) {
-        super(msg, ex);
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceTransportException} class.
+	 *
+	 * @param msg the detail message
+	 * @param ex  the root {@link TransportException}
+	 */
+	public WebServiceTransportException(String msg, TransportException ex) {
+		super(msg, ex);
+	}
 
 }

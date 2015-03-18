@@ -30,31 +30,31 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class TransformerHelperTest {
 
-    private TransformerHelper helper;
+	private TransformerHelper helper;
 
-    @Before
-    public void setUp() throws Exception {
-        helper = new TransformerHelper();
-    }
+	@Before
+	public void setUp() throws Exception {
+		helper = new TransformerHelper();
+	}
 
-    @Test
-    public void defaultTransformerFactory() throws TransformerException, IOException, SAXException {
-        doTest();
-    }
+	@Test
+	public void defaultTransformerFactory() throws TransformerException, IOException, SAXException {
+		doTest();
+	}
 
-    @Test
-    public void customTransformerFactory() throws TransformerException, IOException, SAXException {
-        helper.setTransformerFactoryClass(TransformerFactoryImpl.class);
-        doTest();
-    }
+	@Test
+	public void customTransformerFactory() throws TransformerException, IOException, SAXException {
+		helper.setTransformerFactoryClass(TransformerFactoryImpl.class);
+		doTest();
+	}
 
-    private void doTest() throws TransformerException, SAXException, IOException {
-        String xml = "<root xmlns='http://springframework.org/spring-ws'><child>text</child></root>";
-        Source source = new StringSource(xml);
-        Result result = new StringResult();
+	private void doTest() throws TransformerException, SAXException, IOException {
+		String xml = "<root xmlns='http://springframework.org/spring-ws'><child>text</child></root>";
+		Source source = new StringSource(xml);
+		Result result = new StringResult();
 
-        helper.transform(source, result);
+		helper.transform(source, result);
 
-        assertXMLEqual(xml, result.toString());
-    }
+		assertXMLEqual(xml, result.toString());
+	}
 }

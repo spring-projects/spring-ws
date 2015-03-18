@@ -27,106 +27,106 @@ import org.springframework.context.Lifecycle;
  * @since 1.5.0
  */
 public abstract class AbstractStandaloneMessageReceiver extends SimpleWebServiceMessageReceiverObjectSupport
-        implements Lifecycle, DisposableBean {
+		implements Lifecycle, DisposableBean {
 
-    private volatile boolean active = false;
+	private volatile boolean active = false;
 
-    private boolean autoStartup = true;
+	private boolean autoStartup = true;
 
-    private boolean running = false;
+	private boolean running = false;
 
-    private final Object lifecycleMonitor = new Object();
+	private final Object lifecycleMonitor = new Object();
 
-    /** Return whether this server is currently active, that is, whether it has been set up but not shut down yet. */
-    public final boolean isActive() {
-        synchronized (lifecycleMonitor) {
-            return active;
-        }
-    }
+	/** Return whether this server is currently active, that is, whether it has been set up but not shut down yet. */
+	public final boolean isActive() {
+		synchronized (lifecycleMonitor) {
+			return active;
+		}
+	}
 
-    /** Return whether this server is currently running, that is, whether it has been started and not stopped yet. */
-    @Override
-    public final boolean isRunning() {
-        synchronized (lifecycleMonitor) {
-            return running;
-        }
-    }
+	/** Return whether this server is currently running, that is, whether it has been started and not stopped yet. */
+	@Override
+	public final boolean isRunning() {
+		synchronized (lifecycleMonitor) {
+			return running;
+		}
+	}
 
-    /**
-     * Set whether to automatically start the receiver after initialization.
-     *
-     * <p>Default is {@code true}; set this to {@code false} to allow for manual startup.
-     */
-    public void setAutoStartup(boolean autoStartup) {
-        this.autoStartup = autoStartup;
-    }
+	/**
+	 * Set whether to automatically start the receiver after initialization.
+	 *
+	 * <p>Default is {@code true}; set this to {@code false} to allow for manual startup.
+	 */
+	public void setAutoStartup(boolean autoStartup) {
+		this.autoStartup = autoStartup;
+	}
 
-    /** Calls {@link #activate()} when the BeanFactory initializes the receiver instance. */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        activate();
-    }
+	/** Calls {@link #activate()} when the BeanFactory initializes the receiver instance. */
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		activate();
+	}
 
-    /** Calls {@link #shutdown()} when the BeanFactory destroys the receiver instance. */
-    @Override
-    public void destroy() {
-        shutdown();
-    }
+	/** Calls {@link #shutdown()} when the BeanFactory destroys the receiver instance. */
+	@Override
+	public void destroy() {
+		shutdown();
+	}
 
-    /**
-     * Initialize this server. Starts the server if {@link #setAutoStartup(boolean) autoStartup} hasn't been turned
-     * off.
-     */
-    public final void activate() throws Exception {
-        synchronized (lifecycleMonitor) {
-            active = true;
-        }
-        onActivate();
-        if (autoStartup) {
-            start();
-        }
-    }
+	/**
+	 * Initialize this server. Starts the server if {@link #setAutoStartup(boolean) autoStartup} hasn't been turned
+	 * off.
+	 */
+	public final void activate() throws Exception {
+		synchronized (lifecycleMonitor) {
+			active = true;
+		}
+		onActivate();
+		if (autoStartup) {
+			start();
+		}
+	}
 
-    /** Start this server. */
-    @Override
-    public final void start() {
-        synchronized (lifecycleMonitor) {
-            running = true;
-        }
-        onStart();
-    }
+	/** Start this server. */
+	@Override
+	public final void start() {
+		synchronized (lifecycleMonitor) {
+			running = true;
+		}
+		onStart();
+	}
 
-    /** Stop this server. */
-    @Override
-    public final void stop() {
-        synchronized (lifecycleMonitor) {
-            running = false;
-        }
-        onStop();
-    }
+	/** Stop this server. */
+	@Override
+	public final void stop() {
+		synchronized (lifecycleMonitor) {
+			running = false;
+		}
+		onStop();
+	}
 
-    /** Shut down this server. */
-    public final void shutdown() {
-        synchronized (lifecycleMonitor) {
-            running = false;
-            active = false;
-        }
-        onShutdown();
-    }
+	/** Shut down this server. */
+	public final void shutdown() {
+		synchronized (lifecycleMonitor) {
+			running = false;
+			active = false;
+		}
+		onShutdown();
+	}
 
-    /**
-     * Template method invoked when {@link #activate()} is invoked.
-     *
-     * @throws Exception in case of errors
-     */
-    protected abstract void onActivate() throws Exception;
+	/**
+	 * Template method invoked when {@link #activate()} is invoked.
+	 *
+	 * @throws Exception in case of errors
+	 */
+	protected abstract void onActivate() throws Exception;
 
-    /** Template method invoked when {@link #start()} is invoked. */
-    protected abstract void onStart();
+	/** Template method invoked when {@link #start()} is invoked. */
+	protected abstract void onStart();
 
-    /** Template method invoked when {@link #stop()} is invoked. */
-    protected abstract void onStop();
+	/** Template method invoked when {@link #stop()} is invoked. */
+	protected abstract void onStop();
 
-    /** Template method invoked when {@link #shutdown()} is invoked. */
-    protected abstract void onShutdown();
+	/** Template method invoked when {@link #shutdown()} is invoked. */
+	protected abstract void onShutdown();
 }

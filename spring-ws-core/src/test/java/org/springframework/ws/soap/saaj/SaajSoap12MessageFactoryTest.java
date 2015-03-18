@@ -24,9 +24,9 @@ import org.springframework.ws.soap.soap12.AbstractSoap12MessageFactoryTestCase;
 
 public class SaajSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryTestCase {
 
-    @Override
-    protected WebServiceMessageFactory createMessageFactory() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        return new SaajSoapMessageFactory(messageFactory);
-    }
+	@Override
+	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		return new SaajSoapMessageFactory(messageFactory);
+	}
 }

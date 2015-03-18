@@ -52,108 +52,108 @@ import org.springframework.xml.transform.TransformerHelper;
  */
 public class XPathParamMethodArgumentResolver implements MethodArgumentResolver {
 
-    private final XPathFactory xpathFactory = createXPathFactory();
+	private final XPathFactory xpathFactory = createXPathFactory();
 
-    private TransformerHelper transformerHelper = new TransformerHelper();
+	private TransformerHelper transformerHelper = new TransformerHelper();
 
-    private ConversionService conversionService = new DefaultConversionService();
+	private ConversionService conversionService = new DefaultConversionService();
 
-    /**
-     * Sets the conversion service to use.
-     *
-     * <p>Defaults to the {@linkplain ConversionServiceFactory#createDefaultConversionService() default conversion
-     * service}.
-     */
-    public void setConversionService(ConversionService conversionService) {
-        this.conversionService = conversionService;
-    }
+	/**
+	 * Sets the conversion service to use.
+	 *
+	 * <p>Defaults to the {@linkplain ConversionServiceFactory#createDefaultConversionService() default conversion
+	 * service}.
+	 */
+	public void setConversionService(ConversionService conversionService) {
+		this.conversionService = conversionService;
+	}
 
-    public void setTransformerHelper(TransformerHelper transformerHelper) {
-        this.transformerHelper = transformerHelper;
-    }
+	public void setTransformerHelper(TransformerHelper transformerHelper) {
+		this.transformerHelper = transformerHelper;
+	}
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        if (parameter.getParameterAnnotation(XPathParam.class) == null) {
-            return false;
-        }
-        Class<?> parameterType = parameter.getParameterType();
-        if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType) ||
-                Double.class.equals(parameterType) || Double.TYPE.equals(parameterType) ||
-                Node.class.isAssignableFrom(parameterType) || NodeList.class.isAssignableFrom(parameterType) ||
-                String.class.isAssignableFrom(parameterType)) {
-            return true;
-        }
-        else {
-            return conversionService.canConvert(String.class, parameterType);
-        }
-    }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		if (parameter.getParameterAnnotation(XPathParam.class) == null) {
+			return false;
+		}
+		Class<?> parameterType = parameter.getParameterType();
+		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType) ||
+				Double.class.equals(parameterType) || Double.TYPE.equals(parameterType) ||
+				Node.class.isAssignableFrom(parameterType) || NodeList.class.isAssignableFrom(parameterType) ||
+				String.class.isAssignableFrom(parameterType)) {
+			return true;
+		}
+		else {
+			return conversionService.canConvert(String.class, parameterType);
+		}
+	}
 
-    @Override
-    public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
-            throws TransformerException, XPathExpressionException {
-        Class<?> parameterType = parameter.getParameterType();
-        QName evaluationReturnType = getReturnType(parameterType);
-        boolean useConversionService = false;
-        if (evaluationReturnType == null) {
-            evaluationReturnType = XPathConstants.STRING;
-            useConversionService = true;
-        }
+	@Override
+	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
+			throws TransformerException, XPathExpressionException {
+		Class<?> parameterType = parameter.getParameterType();
+		QName evaluationReturnType = getReturnType(parameterType);
+		boolean useConversionService = false;
+		if (evaluationReturnType == null) {
+			evaluationReturnType = XPathConstants.STRING;
+			useConversionService = true;
+		}
 
-        XPath xpath = createXPath();
-        xpath.setNamespaceContext(NamespaceUtils.getNamespaceContext(parameter.getMethod()));
+		XPath xpath = createXPath();
+		xpath.setNamespaceContext(NamespaceUtils.getNamespaceContext(parameter.getMethod()));
 
-        Element rootElement = getRootElement(messageContext.getRequest().getPayloadSource());
-        String expression = parameter.getParameterAnnotation(XPathParam.class).value();
-        Object result = xpath.evaluate(expression, rootElement, evaluationReturnType);
-        return useConversionService ? conversionService.convert(result, parameterType) : result;
-    }
+		Element rootElement = getRootElement(messageContext.getRequest().getPayloadSource());
+		String expression = parameter.getParameterAnnotation(XPathParam.class).value();
+		Object result = xpath.evaluate(expression, rootElement, evaluationReturnType);
+		return useConversionService ? conversionService.convert(result, parameterType) : result;
+	}
 
-    private QName getReturnType(Class<?> parameterType) {
-        if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType)) {
-            return XPathConstants.BOOLEAN;
-        }
-        else if (Double.class.equals(parameterType) || Double.TYPE.equals(parameterType)) {
-            return XPathConstants.NUMBER;
-        }
-        else if (Node.class.equals(parameterType)) {
-            return XPathConstants.NODE;
-        }
-        else if (NodeList.class.equals(parameterType)) {
-            return XPathConstants.NODESET;
-        }
-        else if (String.class.equals(parameterType)) {
-            return XPathConstants.STRING;
-        }
-        else {
-            return null;
-        }
-    }
+	private QName getReturnType(Class<?> parameterType) {
+		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType)) {
+			return XPathConstants.BOOLEAN;
+		}
+		else if (Double.class.equals(parameterType) || Double.TYPE.equals(parameterType)) {
+			return XPathConstants.NUMBER;
+		}
+		else if (Node.class.equals(parameterType)) {
+			return XPathConstants.NODE;
+		}
+		else if (NodeList.class.equals(parameterType)) {
+			return XPathConstants.NODESET;
+		}
+		else if (String.class.equals(parameterType)) {
+			return XPathConstants.STRING;
+		}
+		else {
+			return null;
+		}
+	}
 
-    private XPath createXPath() {
-        synchronized (xpathFactory) {
-            return xpathFactory.newXPath();
-        }
-    }
+	private XPath createXPath() {
+		synchronized (xpathFactory) {
+			return xpathFactory.newXPath();
+		}
+	}
 
-    private Element getRootElement(Source source) throws TransformerException {
-        DOMResult domResult = new DOMResult();
-        transformerHelper.transform(source, domResult);
-        Document document = (Document) domResult.getNode();
-        return document.getDocumentElement();
-    }
+	private Element getRootElement(Source source) throws TransformerException {
+		DOMResult domResult = new DOMResult();
+		transformerHelper.transform(source, domResult);
+		Document document = (Document) domResult.getNode();
+		return document.getDocumentElement();
+	}
 
-    /**
-     * Create a {@code XPathFactory} that this resolver will use to create {@link XPath} objects.
-     *
-     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
-     * so this method will only be called once.
-     *
-     * @return the created factory
-     */
-    protected XPathFactory createXPathFactory() {
-        return XPathFactory.newInstance();
-    }
+	/**
+	 * Create a {@code XPathFactory} that this resolver will use to create {@link XPath} objects.
+	 *
+	 * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+	 * so this method will only be called once.
+	 *
+	 * @return the created factory
+	 */
+	protected XPathFactory createXPathFactory() {
+		return XPathFactory.newInstance();
+	}
 
 
 }

@@ -29,32 +29,32 @@ import org.junit.Test;
 
 public class SoapActionEndpointMappingTest {
 
-    private SoapActionEndpointMapping mapping;
+	private SoapActionEndpointMapping mapping;
 
-    private MessageContext context;
+	private MessageContext context;
 
-    @Before
-    public void setUp() throws Exception {
-        mapping = new SoapActionEndpointMapping();
-        context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
-    }
+	@Before
+	public void setUp() throws Exception {
+		mapping = new SoapActionEndpointMapping();
+		context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
+	}
 
-    @Test
-    public void testGetLookupKeyForMessage() throws Exception {
-        String soapAction = "http://springframework.org/spring-ws/SoapAction";
-        ((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-        Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
-    }
+	@Test
+	public void testGetLookupKeyForMessage() throws Exception {
+		String soapAction = "http://springframework.org/spring-ws/SoapAction";
+		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
+		Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+	}
 
-    @Test
-    public void testGetLookupKeyForMessageQuoted() throws Exception {
-        String soapAction = "http://springframework.org/spring-ws/SoapAction";
-        ((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-        Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
-    }
+	@Test
+	public void testGetLookupKeyForMessageQuoted() throws Exception {
+		String soapAction = "http://springframework.org/spring-ws/SoapAction";
+		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
+		Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+	}
 
-    @Test
-    public void testValidateLookupKey() throws Exception {
-        Assert.assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
-    }
+	@Test
+	public void testValidateLookupKey() throws Exception {
+		Assert.assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
+	}
 }

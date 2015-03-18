@@ -32,30 +32,30 @@ import org.springframework.ws.soap.SoapFaultException;
  */
 public interface Soap11Body extends SoapBody {
 
-    /**
-     * Adds a SOAP 1.1 <faultCode>Fault</faultCode> to the body with a localized message. Adding a fault removes the
-     * current content of the body.
-     *
-     * @param faultCode         the fully qualified fault faultCode
-     * @param faultString       the faultString
-     * @param faultStringLocale the faultString locale. May be {@code null}
-     * @return the added <faultCode>Soap11Fault</faultCode>
-     * @throws IllegalArgumentException if the fault faultCode is not fully qualified
-     */
-    Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) throws SoapFaultException;
+	/**
+	 * Adds a SOAP 1.1 <faultCode>Fault</faultCode> to the body with a localized message. Adding a fault removes the
+	 * current content of the body.
+	 *
+	 * @param faultCode			the fully qualified fault faultCode
+	 * @param faultString		the faultString
+	 * @param faultStringLocale the faultString locale. May be {@code null}
+	 * @return the added <faultCode>Soap11Fault</faultCode>
+	 * @throws IllegalArgumentException if the fault faultCode is not fully qualified
+	 */
+	Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) throws SoapFaultException;
 
-    @Override
-    Soap11Fault getFault();
+	@Override
+	Soap11Fault getFault();
 
-    @Override
-    Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	@Override
+	Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    @Override
-    Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	@Override
+	Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    @Override
-    Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	@Override
+	Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 
-    @Override
-    Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	@Override
+	Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
 }

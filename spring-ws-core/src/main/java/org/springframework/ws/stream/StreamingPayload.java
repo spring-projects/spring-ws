@@ -29,19 +29,19 @@ import javax.xml.stream.XMLStreamWriter;
  */
 public interface StreamingPayload {
 
-    /**
-     * Returns the qualified name of the payload.
-     *
-     * @return the qualified name
-     */
-    QName getName();
+	/**
+	 * Returns the qualified name of the payload.
+	 *
+	 * @return the qualified name
+	 */
+	QName getName();
 
-    /**
-     * Writes this payload to the given {@link XMLStreamWriter}.
-     *
-     * @param streamWriter the stream writer to write to
-     * @throws XMLStreamException in case of errors
-     */
-    void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException;
+	/**
+	 * Writes this payload to the given {@link XMLStreamWriter}.
+	 *
+	 * @param streamWriter the stream writer to write to
+	 * @throws XMLStreamException in case of errors
+	 */
+	void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException;
 
 }

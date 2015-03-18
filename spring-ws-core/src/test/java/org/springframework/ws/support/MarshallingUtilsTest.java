@@ -36,90 +36,90 @@ import static org.easymock.EasyMock.*;
 
 public class MarshallingUtilsTest {
 
-    @Test
-    public void testUnmarshal() throws Exception {
-        Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
-        WebServiceMessage messageMock = createMock(WebServiceMessage.class);
+	@Test
+	public void testUnmarshal() throws Exception {
+		Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
+		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
 
-        Source source = new StringSource("");
-        Object unmarshalled = new Object();
-        expect(messageMock.getPayloadSource()).andReturn(source);
-        expect(unmarshallerMock.unmarshal(source)).andReturn(unmarshalled);
+		Source source = new StringSource("");
+		Object unmarshalled = new Object();
+		expect(messageMock.getPayloadSource()).andReturn(source);
+		expect(unmarshallerMock.unmarshal(source)).andReturn(unmarshalled);
 
-        replay(unmarshallerMock, messageMock);
+		replay(unmarshallerMock, messageMock);
 
-        Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
-        Assert.assertEquals("Invalid unmarshalled object", unmarshalled, result);
+		Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
+		Assert.assertEquals("Invalid unmarshalled object", unmarshalled, result);
 
-        verify(unmarshallerMock, messageMock);
-    }
+		verify(unmarshallerMock, messageMock);
+	}
 
-    @Test
-    public void testUnmarshalMime() throws Exception {
-        MimeUnmarshaller unmarshallerMock = createMock(MimeUnmarshaller.class);
-        MimeMessage messageMock = createMock(MimeMessage.class);
+	@Test
+	public void testUnmarshalMime() throws Exception {
+		MimeUnmarshaller unmarshallerMock = createMock(MimeUnmarshaller.class);
+		MimeMessage messageMock = createMock(MimeMessage.class);
 
-        Source source = new StringSource("");
-        Object unmarshalled = new Object();
-        expect(messageMock.getPayloadSource()).andReturn(source);
-        expect(unmarshallerMock.unmarshal(eq(source), isA(MimeContainer.class))).andReturn(unmarshalled);
+		Source source = new StringSource("");
+		Object unmarshalled = new Object();
+		expect(messageMock.getPayloadSource()).andReturn(source);
+		expect(unmarshallerMock.unmarshal(eq(source), isA(MimeContainer.class))).andReturn(unmarshalled);
 
-        replay(unmarshallerMock, messageMock);
+		replay(unmarshallerMock, messageMock);
 
-        Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
-        Assert.assertEquals("Invalid unmarshalled object", unmarshalled, result);
+		Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
+		Assert.assertEquals("Invalid unmarshalled object", unmarshalled, result);
 
-        verify(unmarshallerMock, messageMock);
-    }
+		verify(unmarshallerMock, messageMock);
+	}
 
-    @Test
-    public void testUnmarshalNoPayload() throws Exception {
-        Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
-        MimeMessage messageMock = createMock(MimeMessage.class);
+	@Test
+	public void testUnmarshalNoPayload() throws Exception {
+		Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
+		MimeMessage messageMock = createMock(MimeMessage.class);
 
-        expect(messageMock.getPayloadSource()).andReturn(null);
+		expect(messageMock.getPayloadSource()).andReturn(null);
 
-        replay(unmarshallerMock, messageMock);
+		replay(unmarshallerMock, messageMock);
 
-        Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
-        Assert.assertNull("Invalid unmarshalled object", result);
+		Object result = MarshallingUtils.unmarshal(unmarshallerMock, messageMock);
+		Assert.assertNull("Invalid unmarshalled object", result);
 
-        verify(unmarshallerMock, messageMock);
-    }
+		verify(unmarshallerMock, messageMock);
+	}
 
-    @Test
-    public void testMarshal() throws Exception {
-        Marshaller marshallerMock = createMock(Marshaller.class);
-        WebServiceMessage messageMock = createMock(WebServiceMessage.class);
+	@Test
+	public void testMarshal() throws Exception {
+		Marshaller marshallerMock = createMock(Marshaller.class);
+		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
 
-        Result result = new StringResult();
-        Object marshalled = new Object();
-        expect(messageMock.getPayloadResult()).andReturn(result);
-        marshallerMock.marshal(marshalled, result);
+		Result result = new StringResult();
+		Object marshalled = new Object();
+		expect(messageMock.getPayloadResult()).andReturn(result);
+		marshallerMock.marshal(marshalled, result);
 
-        replay(marshallerMock, messageMock);
+		replay(marshallerMock, messageMock);
 
-        MarshallingUtils.marshal(marshallerMock, marshalled, messageMock);
+		MarshallingUtils.marshal(marshallerMock, marshalled, messageMock);
 
-        verify(marshallerMock, messageMock);
-    }
+		verify(marshallerMock, messageMock);
+	}
 
-    @Test
-    public void testMarshalMime() throws Exception {
-        MimeMarshaller marshallerMock = createMock(MimeMarshaller.class);
-        MimeMessage messageMock = createMock(MimeMessage.class);
+	@Test
+	public void testMarshalMime() throws Exception {
+		MimeMarshaller marshallerMock = createMock(MimeMarshaller.class);
+		MimeMessage messageMock = createMock(MimeMessage.class);
 
-        Result result = new StringResult();
-        Object marshalled = new Object();
-        expect(messageMock.getPayloadResult()).andReturn(result);
-        marshallerMock.marshal(eq(marshalled), eq(result), isA(MimeContainer.class));
+		Result result = new StringResult();
+		Object marshalled = new Object();
+		expect(messageMock.getPayloadResult()).andReturn(result);
+		marshallerMock.marshal(eq(marshalled), eq(result), isA(MimeContainer.class));
 
-        replay(marshallerMock, messageMock);
+		replay(marshallerMock, messageMock);
 
-        MarshallingUtils.marshal(marshallerMock, marshalled, messageMock);
+		MarshallingUtils.marshal(marshallerMock, marshalled, messageMock);
 
-        verify(marshallerMock, messageMock);
-    }
+		verify(marshallerMock, messageMock);
+	}
 
 
 }

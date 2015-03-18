@@ -88,404 +88,404 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
-    public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
+	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
-    private static final String SAML_ISSUER_PROPERTY_NAME = "Wss4jSecurityInterceptor.samlIssuer";
+	private static final String SAML_ISSUER_PROPERTY_NAME = "Wss4jSecurityInterceptor.samlIssuer";
 
-    private int securementAction;
+	private int securementAction;
 
-    private String securementActions;
+	private String securementActions;
 
-    private List<Integer> securementActionsVector;
+	private List<Integer> securementActionsVector;
 
-    private String securementUsername;
+	private String securementUsername;
 
-    private CallbackHandler validationCallbackHandler;
+	private CallbackHandler validationCallbackHandler;
 
-    private int validationAction;
+	private int validationAction;
 
-    private String validationActions;
+	private String validationActions;
 
-    private List<Integer> validationActionsVector;
+	private List<Integer> validationActionsVector;
 
-    private String validationActor;
+	private String validationActor;
 
-    private Crypto validationDecryptionCrypto;
+	private Crypto validationDecryptionCrypto;
 
-    private Crypto validationSignatureCrypto;
+	private Crypto validationSignatureCrypto;
 
-    private boolean timestampStrict = true;
+	private boolean timestampStrict = true;
 
-    private boolean enableSignatureConfirmation;
+	private boolean enableSignatureConfirmation;
 
-    private int validationTimeToLive = 300;
+	private int validationTimeToLive = 300;
 
-    private int securementTimeToLive = 300;
+	private int securementTimeToLive = 300;
 
 	private int futureTimeToLive = 60;
 
 	private SAMLIssuer samlIssuer;
-    
-    private WSSConfig wssConfig;
+	
+	private WSSConfig wssConfig;
 
-    private final Wss4jHandler handler = new Wss4jHandler();
+	private final Wss4jHandler handler = new Wss4jHandler();
 
-    private final WSSecurityEngine securityEngine = new WSSecurityEngine();
+	private final WSSecurityEngine securityEngine = new WSSecurityEngine();
 
-    private boolean enableRevocation;
+	private boolean enableRevocation;
 
-    private boolean bspCompliant;
+	private boolean bspCompliant;
 
-    private boolean securementUseDerivedKey;
+	private boolean securementUseDerivedKey;
 
-    // To maintain same behavior as default, this flag is set to true
-    private boolean removeSecurityHeader = true;
+	// To maintain same behavior as default, this flag is set to true
+	private boolean removeSecurityHeader = true;
 
-    public void setSecurementActions(String securementActions) {
-        this.securementActions = securementActions;
-        securementActionsVector = new ArrayList<Integer>();
-        try {
-            securementAction = WSSecurityUtil.decodeAction(securementActions, securementActionsVector);
-        }
-        catch (WSSecurityException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
+	public void setSecurementActions(String securementActions) {
+		this.securementActions = securementActions;
+		securementActionsVector = new ArrayList<Integer>();
+		try {
+			securementAction = WSSecurityUtil.decodeAction(securementActions, securementActionsVector);
+		}
+		catch (WSSecurityException ex) {
+			throw new IllegalArgumentException(ex);
+		}
+	}
 
-    /**
-     * The actor name of the {@code wsse:Security} header.
-     *
-     * <p>If this parameter is omitted, the actor name is not set.
-     *
-     * <p>The value of the actor or role has to match the receiver's setting or may contain standard values.
-     */
-    public void setSecurementActor(String securementActor) {
-        handler.setOption(WSHandlerConstants.ACTOR, securementActor);
-    }
+	/**
+	 * The actor name of the {@code wsse:Security} header.
+	 *
+	 * <p>If this parameter is omitted, the actor name is not set.
+	 *
+	 * <p>The value of the actor or role has to match the receiver's setting or may contain standard values.
+	 */
+	public void setSecurementActor(String securementActor) {
+		handler.setOption(WSHandlerConstants.ACTOR, securementActor);
+	}
 
-    public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
-        handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
-    }
+	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
+		handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
+	}
 
-    /** Sets the key name that needs to be sent for encryption. */
-    public void setSecurementEncryptionEmbeddedKeyName(String securementEncryptionEmbeddedKeyName) {
-        handler.setOption(WSHandlerConstants.ENC_KEY_NAME, securementEncryptionEmbeddedKeyName);
-    }
+	/** Sets the key name that needs to be sent for encryption. */
+	public void setSecurementEncryptionEmbeddedKeyName(String securementEncryptionEmbeddedKeyName) {
+		handler.setOption(WSHandlerConstants.ENC_KEY_NAME, securementEncryptionEmbeddedKeyName);
+	}
 
-    /**
-     * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-     * {@code IssuerSerial}. For possible encryption key identifier types refer to {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption {@code IssuerSerial},
-     * {@code X509KeyIdentifier},  {@code DirectReference}, {@code Thumbprint},
-     * {@code SKIKeyIdentifier}, and {@code EmbeddedKeyName} are valid only.
-     */
-    public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
-        handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
-    }
+	/**
+	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
+	 * {@code IssuerSerial}. For possible encryption key identifier types refer to {@link
+	 * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption {@code IssuerSerial},
+	 * {@code X509KeyIdentifier},  {@code DirectReference}, {@code Thumbprint},
+	 * {@code SKIKeyIdentifier}, and {@code EmbeddedKeyName} are valid only.
+	 */
+	public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
+		handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
+	}
 
-    /**
-     * Defines which algorithm to use to encrypt the generated symmetric key. Currently WSS4J supports {@link
-     * WSConstants#KEYTRANSPORT_RSA15} and {@link WSConstants#KEYTRANSPORT_RSAOEP}.
-     */
-    public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
-        handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
-    }
+	/**
+	 * Defines which algorithm to use to encrypt the generated symmetric key. Currently WSS4J supports {@link
+	 * WSConstants#KEYTRANSPORT_RSA15} and {@link WSConstants#KEYTRANSPORT_RSAOEP}.
+	 */
+	public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
+		handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
+	}
 
-    /**
-     * Property to define which parts of the request shall be encrypted.
-     *
-     * <p>The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
-     * An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede
-     * each element name.
-     *
-     * <p>The encryption mode specifier is either {@code{Content}} or {@code{Element}}. Please refer to the W3C
-     * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
-     * defaults to {@code Content} if it is omitted. Example of a list:
-     * <pre>
-     * &lt;property name="securementEncryptionParts"
-     *   value="{Content}{http://example.org/paymentv2}CreditCard;
-     *             {Element}{}UserName" />
-     * </pre>
-     * The the first entry of the list identifies the element {@code CreditCard} in the namespace
-     * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
-     * namespace identifier, and the encryption modifier are case sensitive.
-     *
-     * <p>The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
-     * {@code Content} and the namespace is set to the SOAP namespace.
-     *
-     * <p>An empty encryption mode defaults to {@code Content}, an empty namespace identifier defaults to the SOAP
-     * namespace. The second line of the example defines {@code Element} as encryption mode for an
-     * {@code UserName} element in the SOAP namespace.
-     *
-     * <p>To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
-     * sensitive string)
-     *
-     * <p>If no list is specified, the handler encrypts the SOAP Body in {@code Content} mode by default.
-     */
-    public void setSecurementEncryptionParts(String securementEncryptionParts) {
-        handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
-    }
+	/**
+	 * Property to define which parts of the request shall be encrypted.
+	 *
+	 * <p>The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
+	 * An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede
+	 * each element name.
+	 *
+	 * <p>The encryption mode specifier is either {@code{Content}} or {@code{Element}}. Please refer to the W3C
+	 * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
+	 * defaults to {@code Content} if it is omitted. Example of a list:
+	 * <pre>
+	 * &lt;property name="securementEncryptionParts"
+	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
+	 *			   {Element}{}UserName" />
+	 * </pre>
+	 * The the first entry of the list identifies the element {@code CreditCard} in the namespace
+	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
+	 * namespace identifier, and the encryption modifier are case sensitive.
+	 *
+	 * <p>The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
+	 * {@code Content} and the namespace is set to the SOAP namespace.
+	 *
+	 * <p>An empty encryption mode defaults to {@code Content}, an empty namespace identifier defaults to the SOAP
+	 * namespace. The second line of the example defines {@code Element} as encryption mode for an
+	 * {@code UserName} element in the SOAP namespace.
+	 *
+	 * <p>To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
+	 * sensitive string)
+	 *
+	 * <p>If no list is specified, the handler encrypts the SOAP Body in {@code Content} mode by default.
+	 */
+	public void setSecurementEncryptionParts(String securementEncryptionParts) {
+		handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
+	}
 
-    /**
-     * Defines which symmetric encryption algorithm to use. WSS4J supports the following alorithms: {@link
-     * WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128}, {@link WSConstants#AES_256}, and {@link
-     * WSConstants#AES_192}. Except for AES 192 all of these algorithms are required by the XML Encryption
-     * specification.
-     */
-    public void setSecurementEncryptionSymAlgorithm(String securementEncryptionSymAlgorithm) {
-        this.handler.setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
-    }
+	/**
+	 * Defines which symmetric encryption algorithm to use. WSS4J supports the following alorithms: {@link
+	 * WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128}, {@link WSConstants#AES_256}, and {@link
+	 * WSConstants#AES_192}. Except for AES 192 all of these algorithms are required by the XML Encryption
+	 * specification.
+	 */
+	public void setSecurementEncryptionSymAlgorithm(String securementEncryptionSymAlgorithm) {
+		this.handler.setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
+	}
 
-    /**
-     * The user's name for encryption.
-     *
-     * <p>The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
-     *
-     * <p>If this parameter is not set, then the encryption function falls back to the {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the certificate.
-     *
-     * <p>If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define
-     * the username. The application can then use the standard user and password functions (see example at {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP authentication functions.
-     *
-     * <p>Encryption only does not authenticate a user / sender, therefore it does not need a password.
-     *
-     * <p>Placing the username of the encryption certificate in the configuration file is not a security risk, because the
-     * public key of that certificate is used only.
-     */
-    public void setSecurementEncryptionUser(String securementEncryptionUser) {
-        handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
-    }
+	/**
+	 * The user's name for encryption.
+	 *
+	 * <p>The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
+	 *
+	 * <p>If this parameter is not set, then the encryption function falls back to the {@link
+	 * org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the certificate.
+	 *
+	 * <p>If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define
+	 * the username. The application can then use the standard user and password functions (see example at {@link
+	 * org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP authentication functions.
+	 *
+	 * <p>Encryption only does not authenticate a user / sender, therefore it does not need a password.
+	 *
+	 * <p>Placing the username of the encryption certificate in the configuration file is not a security risk, because the
+	 * public key of that certificate is used only.
+	 */
+	public void setSecurementEncryptionUser(String securementEncryptionUser) {
+		handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
+	}
 
-    public void setSecurementPassword(String securementPassword) {
-        this.handler.setSecurementPassword(securementPassword);
-    }
+	public void setSecurementPassword(String securementPassword) {
+		this.handler.setSecurementPassword(securementPassword);
+	}
 
-    /**
-     * Specific parameter for UsernameToken action to define the encoding of the passowrd.
-     *
-     * <p>The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
-     *
-     * <p>The default setting is PW_DIGEST.
-     */
-    public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
-        handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
-    }
+	/**
+	 * Specific parameter for UsernameToken action to define the encoding of the passowrd.
+	 *
+	 * <p>The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
+	 *
+	 * <p>The default setting is PW_DIGEST.
+	 */
+	public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
+		handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
+	}
 
-    /**
-     * Defines which signature algorithm to use.
-     * @see WSConstants#RSA
-     * @see WSConstants#DSA
-     */
-    public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
-        handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
-    }
+	/**
+	 * Defines which signature algorithm to use.
+	 * @see WSConstants#RSA
+	 * @see WSConstants#DSA
+	 */
+	public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
+		handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
+	}
 
-    /**
-     * Defines which signature digest algorithm to use.
-     */
-    public void setSecurementSignatureDigestAlgorithm(String digestAlgorithm) {
-        handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
-    }
+	/**
+	 * Defines which signature digest algorithm to use.
+	 */
+	public void setSecurementSignatureDigestAlgorithm(String digestAlgorithm) {
+		handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
+	}
 
-    public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
-        handler.setSecurementSignatureCrypto(securementSignatureCrypto);
-    }
+	public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
+		handler.setSecurementSignatureCrypto(securementSignatureCrypto);
+	}
 
-    /**
-     * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-     * {@code IssuerSerial}. For possible signature key identifier types refer to {@link
-     * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature {@code IssuerSerial} and
-     * {@code DirectReference} are valid only.
-     */
-    public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
-        handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
-    }
+	/**
+	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
+	 * {@code IssuerSerial}. For possible signature key identifier types refer to {@link
+	 * org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature {@code IssuerSerial} and
+	 * {@code DirectReference} are valid only.
+	 */
+	public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
+		handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
+	}
 
-    /**
-     * Property to define which parts of the request shall be signed.
-     *
-     * <p>Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
-     * string.
-     *
-     * <p>If this property is not specified the handler signs the SOAP Body by default.
-     *
-     * <p>The WS Security specifications define several formats to transfer the signature tokens (certificates) or
-     * references to these tokens. Thus, the plain element name {@code Token} signs the token and takes care of the
-     * different formats.
-     *
-     * <p>To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
-     * <pre>
-     * &lt;property name="securementSignatureParts"
-     *   value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
-     * </pre>
-     * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
-     * sensitive string)
-     *
-     * <p>If there is no other element in the request with a local name of {@code Body} then the SOAP namespace
-     * identifier can be empty ({@code{}}).
-     */
-    public void setSecurementSignatureParts(String securementSignatureParts) {
-        handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
-    }
+	/**
+	 * Property to define which parts of the request shall be signed.
+	 *
+	 * <p>Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
+	 * string.
+	 *
+	 * <p>If this property is not specified the handler signs the SOAP Body by default.
+	 *
+	 * <p>The WS Security specifications define several formats to transfer the signature tokens (certificates) or
+	 * references to these tokens. Thus, the plain element name {@code Token} signs the token and takes care of the
+	 * different formats.
+	 *
+	 * <p>To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
+	 * <pre>
+	 * &lt;property name="securementSignatureParts"
+	 *	 value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
+	 * </pre>
+	 * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
+	 * sensitive string)
+	 *
+	 * <p>If there is no other element in the request with a local name of {@code Body} then the SOAP namespace
+	 * identifier can be empty ({@code{}}).
+	 */
+	public void setSecurementSignatureParts(String securementSignatureParts) {
+		handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
+	}
 
-    /**
-     * The user's name for signature.
-     *
-     * <p>This name is used as the alias name in the keystore to get user's
-     * certificate and private key to perform signing.
-     *
-     * <p>If this parameter is not set, then the signature
-     * function falls back to the alias specified by {@link #setSecurementUsername(String)}.
-     *
-     */
-    public void setSecurementSignatureUser(String securementSignatureUser) {
-        handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
-    }
+	/**
+	 * The user's name for signature.
+	 *
+	 * <p>This name is used as the alias name in the keystore to get user's
+	 * certificate and private key to perform signing.
+	 *
+	 * <p>If this parameter is not set, then the signature
+	 * function falls back to the alias specified by {@link #setSecurementUsername(String)}.
+	 *
+	 */
+	public void setSecurementSignatureUser(String securementSignatureUser) {
+		handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
+	}
 
-    /** Sets the username for securement username token or/and the alias of the private key for securement signature */
-    public void setSecurementUsername(String securementUsername) {
-        this.securementUsername = securementUsername;
-    }
+	/** Sets the username for securement username token or/and the alias of the private key for securement signature */
+	public void setSecurementUsername(String securementUsername) {
+		this.securementUsername = securementUsername;
+	}
 
-    /** Sets the time to live on the outgoing message */
-    public void setSecurementTimeToLive(int securementTimeToLive) {
-        if (securementTimeToLive <= 0) {
-            throw new IllegalArgumentException("timeToLive must be positive");
-        }
-        this.securementTimeToLive = securementTimeToLive;
-    }
+	/** Sets the time to live on the outgoing message */
+	public void setSecurementTimeToLive(int securementTimeToLive) {
+		if (securementTimeToLive <= 0) {
+			throw new IllegalArgumentException("timeToLive must be positive");
+		}
+		this.securementTimeToLive = securementTimeToLive;
+	}
 
-    /**
-     * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is {@code true}.
-     */
-    public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
-        this.securementUseDerivedKey = securementUseDerivedKey;
-    }
+	/**
+	 * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is {@code true}.
+	 */
+	public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
+		this.securementUseDerivedKey = securementUseDerivedKey;
+	}
 
-    /** Sets the server-side time to live */
-    public void setValidationTimeToLive(int validationTimeToLive) {
-        if (validationTimeToLive <= 0) {
-            throw new IllegalArgumentException("timeToLive must be positive");
-        }
-        this.validationTimeToLive = validationTimeToLive;
-    }
+	/** Sets the server-side time to live */
+	public void setValidationTimeToLive(int validationTimeToLive) {
+		if (validationTimeToLive <= 0) {
+			throw new IllegalArgumentException("timeToLive must be positive");
+		}
+		this.validationTimeToLive = validationTimeToLive;
+	}
 
-    /** Sets the validation actions to be executed by the interceptor. */
-    public void setValidationActions(String actions) {
-        this.validationActions = actions;
-        try {
-            validationActionsVector = new ArrayList<Integer>();
-            validationAction = WSSecurityUtil.decodeAction(actions, validationActionsVector);
-        }
-        catch (WSSecurityException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
+	/** Sets the validation actions to be executed by the interceptor. */
+	public void setValidationActions(String actions) {
+		this.validationActions = actions;
+		try {
+			validationActionsVector = new ArrayList<Integer>();
+			validationAction = WSSecurityUtil.decodeAction(actions, validationActionsVector);
+		}
+		catch (WSSecurityException ex) {
+			throw new IllegalArgumentException(ex);
+		}
+	}
 
-    public void setValidationActor(String validationActor) {
-        this.validationActor = validationActor;
-    }
+	public void setValidationActor(String validationActor) {
+		this.validationActor = validationActor;
+	}
 
-    /**
-     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when validating messages.
-     *
-     * @see #setValidationCallbackHandlers(CallbackHandler[])
-     */
-    public void setValidationCallbackHandler(CallbackHandler callbackHandler) {
-        this.validationCallbackHandler = callbackHandler;
-    }
+	/**
+	 * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when validating messages.
+	 *
+	 * @see #setValidationCallbackHandlers(CallbackHandler[])
+	 */
+	public void setValidationCallbackHandler(CallbackHandler callbackHandler) {
+		this.validationCallbackHandler = callbackHandler;
+	}
 
-    /**
-     * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when validating messages.
-     *
-     * @see #setValidationCallbackHandler(CallbackHandler)
-     */
-    public void setValidationCallbackHandlers(CallbackHandler[] callbackHandler) {
-        this.validationCallbackHandler = new CallbackHandlerChain(callbackHandler);
-    }
+	/**
+	 * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when validating messages.
+	 *
+	 * @see #setValidationCallbackHandler(CallbackHandler)
+	 */
+	public void setValidationCallbackHandlers(CallbackHandler[] callbackHandler) {
+		this.validationCallbackHandler = new CallbackHandlerChain(callbackHandler);
+	}
 
-    /** Sets the Crypto to use to decrypt incoming messages */
-    public void setValidationDecryptionCrypto(Crypto decryptionCrypto) {
-        this.validationDecryptionCrypto = decryptionCrypto;
-    }
+	/** Sets the Crypto to use to decrypt incoming messages */
+	public void setValidationDecryptionCrypto(Crypto decryptionCrypto) {
+		this.validationDecryptionCrypto = decryptionCrypto;
+	}
 
-    /** Sets the Crypto to use to verify the signature of incoming messages */
-    public void setValidationSignatureCrypto(Crypto signatureCrypto) {
-        this.validationSignatureCrypto = signatureCrypto;
-    }
+	/** Sets the Crypto to use to verify the signature of incoming messages */
+	public void setValidationSignatureCrypto(Crypto signatureCrypto) {
+		this.validationSignatureCrypto = signatureCrypto;
+	}
 
-    /** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
-    public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
-        handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
-        this.enableSignatureConfirmation = enableSignatureConfirmation;
-    }
+	/** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
+	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
+		handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
+		this.enableSignatureConfirmation = enableSignatureConfirmation;
+	}
 
-    /** Sets if the generated timestamp header's precision is in milliseconds. */
-    public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
-        handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
-    }
+	/** Sets if the generated timestamp header's precision is in milliseconds. */
+	public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
+		handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
+	}
 
-    /** Sets whether or not timestamp verification is done with the server-side time to live */
-    public void setTimestampStrict(boolean timestampStrict) {
-        this.timestampStrict = timestampStrict;
-    }
+	/** Sets whether or not timestamp verification is done with the server-side time to live */
+	public void setTimestampStrict(boolean timestampStrict) {
+		this.timestampStrict = timestampStrict;
+	}
 
-    /**
-     * Enables the {@code mustUnderstand} attribute on WS-Security headers on outgoing messages. Default is
-     * {@code true}.
-     */
-    public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
-        handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
-    }
+	/**
+	 * Enables the {@code mustUnderstand} attribute on WS-Security headers on outgoing messages. Default is
+	 * {@code true}.
+	 */
+	public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
+		handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
+	}
 
-    /**
-     * Sets the additional elements in {@code UsernameToken}s.
-     *
-     * <p>The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
-     * a separated by spaces.
-     *
-     * <p>The list may contain the names {@code Nonce} and {@code Created} only (case sensitive). Use this option
-     * if the password type is {@code passwordText} and the handler shall add the {@code Nonce} and/or
-     * {@code Created} elements.
-     */
-    public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
-        handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
-    }
-    
-    /**
-     * Sets the web service specification settings.
-     * <p>
-     * The default settings follow the latest OASIS and changing anything might violate the OASIS specs.
-     *  
-     * @param config web service security configuration or {@code null} to use default settings
-     */
-    public void setWssConfig(WSSConfig config) {
-    	securityEngine.setWssConfig(config);
-    	wssConfig = config;
-    }
+	/**
+	 * Sets the additional elements in {@code UsernameToken}s.
+	 *
+	 * <p>The value of this parameter is a list of element names that are added to the UsernameToken. The names of the list
+	 * a separated by spaces.
+	 *
+	 * <p>The list may contain the names {@code Nonce} and {@code Created} only (case sensitive). Use this option
+	 * if the password type is {@code passwordText} and the handler shall add the {@code Nonce} and/or
+	 * {@code Created} elements.
+	 */
+	public void setSecurementUsernameTokenElements(String securementUsernameTokenElements) {
+		handler.setOption(WSHandlerConstants.ADD_UT_ELEMENTS, securementUsernameTokenElements);
+	}
+	
+	/**
+	 * Sets the web service specification settings.
+	 * <p>
+	 * The default settings follow the latest OASIS and changing anything might violate the OASIS specs.
+	 *	
+	 * @param config web service security configuration or {@code null} to use default settings
+	 */
+	public void setWssConfig(WSSConfig config) {
+		securityEngine.setWssConfig(config);
+		wssConfig = config;
+	}
 
-    /**
-     * Set whether to enable CRL checking or not when verifying trust in a certificate.
-     */
-    public void setEnableRevocation(boolean enableRevocation) {
-        this.enableRevocation = enableRevocation;
-    }
+	/**
+	 * Set whether to enable CRL checking or not when verifying trust in a certificate.
+	 */
+	public void setEnableRevocation(boolean enableRevocation) {
+		this.enableRevocation = enableRevocation;
+	}
 
-    /**
-     * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
-     */
-    public void setBspCompliant(boolean bspCompliant) {
-	    this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
-        this.bspCompliant = bspCompliant;
-    }
+	/**
+	 * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
+	 */
+	public void setBspCompliant(boolean bspCompliant) {
+		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
+		this.bspCompliant = bspCompliant;
+	}
 
-    /**
-     * Sets the location of the SAML properties file. The file should be available on the classpath.
-     */
-    public void setSamlProperties(String location) {
-        handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location);
-    }
+	/**
+	 * Sets the location of the SAML properties file. The file should be available on the classpath.
+	 */
+	public void setSamlProperties(String location) {
+		handler.setOption(WSHandlerConstants.SAML_PROP_FILE, location);
+	}
 
 	/**
 	 * Sets the time in seconds in the future within which the Created time of an
@@ -506,253 +506,253 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.samlIssuer = samlIssuer;
 	}
 
-    public boolean getRemoveSecurityHeader() {
-        return removeSecurityHeader;
-    }
+	public boolean getRemoveSecurityHeader() {
+		return removeSecurityHeader;
+	}
 
-    public void setRemoveSecurityHeader(boolean removeSecurityHeader) {
-        this.removeSecurityHeader = removeSecurityHeader;
-    }
+	public void setRemoveSecurityHeader(boolean removeSecurityHeader) {
+		this.removeSecurityHeader = removeSecurityHeader;
+	}
 
-    @Override
+	@Override
 	public void afterPropertiesSet() throws Exception {
-        Assert.isTrue(validationActions != null || securementActions != null,
-                "validationActions or securementActions are required");
-        if (validationActions != null) {
-            if ((validationAction & WSConstants.UT) != 0) {
-                Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
-            }
+		Assert.isTrue(validationActions != null || securementActions != null,
+				"validationActions or securementActions are required");
+		if (validationActions != null) {
+			if ((validationAction & WSConstants.UT) != 0) {
+				Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
+			}
 
-            if ((validationAction & WSConstants.SIGN) != 0) {
-                Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
-            }
-        }
-        // securement actions are not to be validated at start up as they could
-        // be configured dynamically via the message context
+			if ((validationAction & WSConstants.SIGN) != 0) {
+				Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
+			}
+		}
+		// securement actions are not to be validated at start up as they could
+		// be configured dynamically via the message context
 
-        // allow for qualified password types for .Net interoperability
-        securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
-        securityEngine.getWssConfig().setWsiBSPCompliant(bspCompliant);
-    }
+		// allow for qualified password types for .Net interoperability
+		securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
+		securityEngine.getWssConfig().setWsiBSPCompliant(bspCompliant);
+	}
 
-    @Override
-    protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
-            throws WsSecuritySecurementException {
-        if (securementAction == WSConstants.NO_SECURITY && !enableSignatureConfirmation) {
-            return;
-        }
-        if (logger.isDebugEnabled()) {
-            logger.debug("Securing message [" + soapMessage + "] with actions [" + securementActions + "]");
-        }
-        RequestData requestData = initializeRequestData(messageContext);
+	@Override
+	protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+			throws WsSecuritySecurementException {
+		if (securementAction == WSConstants.NO_SECURITY && !enableSignatureConfirmation) {
+			return;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Securing message [" + soapMessage + "] with actions [" + securementActions + "]");
+		}
+		RequestData requestData = initializeRequestData(messageContext);
 
-        Document envelopeAsDocument = soapMessage.getDocument();
-        try {
-            // In case on signature confirmation with no other securement
-            // action, we need to pass an empty securementActionsVector to avoid
-            // NPE
-            if (securementAction == WSConstants.NO_SECURITY) {
-                securementActionsVector = new ArrayList<Integer>(0);
-            }
+		Document envelopeAsDocument = soapMessage.getDocument();
+		try {
+			// In case on signature confirmation with no other securement
+			// action, we need to pass an empty securementActionsVector to avoid
+			// NPE
+			if (securementAction == WSConstants.NO_SECURITY) {
+				securementActionsVector = new ArrayList<Integer>(0);
+			}
 
-            handler.doSenderAction(securementAction, envelopeAsDocument, requestData, securementActionsVector, false);
-        }
-        catch (WSSecurityException ex) {
-            throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
-        }
+			handler.doSenderAction(securementAction, envelopeAsDocument, requestData, securementActionsVector, false);
+		}
+		catch (WSSecurityException ex) {
+			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
+		}
 
-        soapMessage.setDocument(envelopeAsDocument);
-    }
+		soapMessage.setDocument(envelopeAsDocument);
+	}
 
-    /**
-     * Creates and initializes a request data for the given message context.
-     *
-     * @param messageContext the message context
-     * @return the request data
-     */
-    protected RequestData initializeRequestData(MessageContext messageContext) {
-        RequestData requestData = new RequestData();
-        requestData.setMsgContext(messageContext);
+	/**
+	 * Creates and initializes a request data for the given message context.
+	 *
+	 * @param messageContext the message context
+	 * @return the request data
+	 */
+	protected RequestData initializeRequestData(MessageContext messageContext) {
+		RequestData requestData = new RequestData();
+		requestData.setMsgContext(messageContext);
 
-        // reads securementUsername first from the context then from the property
-        String contextUsername = (String) messageContext.getProperty(SECUREMENT_USER_PROPERTY_NAME);
-        if (StringUtils.hasLength(contextUsername)) {
-            requestData.setUsername(contextUsername);
-        }
-        else {
-            requestData.setUsername(securementUsername);
-        }
+		// reads securementUsername first from the context then from the property
+		String contextUsername = (String) messageContext.getProperty(SECUREMENT_USER_PROPERTY_NAME);
+		if (StringUtils.hasLength(contextUsername)) {
+			requestData.setUsername(contextUsername);
+		}
+		else {
+			requestData.setUsername(securementUsername);
+		}
 
-        requestData.setTimeToLive(securementTimeToLive);
+		requestData.setTimeToLive(securementTimeToLive);
 
-        requestData.setUseDerivedKey(securementUseDerivedKey);
-        
-        requestData.setWssConfig(wssConfig);
+		requestData.setUseDerivedKey(securementUseDerivedKey);
+		
+		requestData.setWssConfig(wssConfig);
 
-	    messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
+		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
 
-	    messageContext.setProperty(SAML_ISSUER_PROPERTY_NAME, samlIssuer);
+		messageContext.setProperty(SAML_ISSUER_PROPERTY_NAME, samlIssuer);
 
-        return requestData;
-    }
+		return requestData;
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
-            throws WsSecurityValidationException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
-        }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+			throws WsSecurityValidationException {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
+		}
 
-        if (validationAction == WSConstants.NO_SECURITY) {
-            return;
-        }
+		if (validationAction == WSConstants.NO_SECURITY) {
+			return;
+		}
 
-        Document envelopeAsDocument = soapMessage.getDocument();
+		Document envelopeAsDocument = soapMessage.getDocument();
 
-        // Header processing
+		// Header processing
 
-        try {
-            List<WSSecurityEngineResult> results = securityEngine
-                    .processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
-                            validationSignatureCrypto, validationDecryptionCrypto);
+		try {
+			List<WSSecurityEngineResult> results = securityEngine
+					.processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
+							validationSignatureCrypto, validationDecryptionCrypto);
 
-            // Results verification
-            if (CollectionUtils.isEmpty(results)) {
-                throw new Wss4jSecurityValidationException("No WS-Security header found");
-            }
+			// Results verification
+			if (CollectionUtils.isEmpty(results)) {
+				throw new Wss4jSecurityValidationException("No WS-Security header found");
+			}
 
-            checkResults(results, validationActionsVector);
+			checkResults(results, validationActionsVector);
 
-            // puts the results in the context
-            // useful for Signature Confirmation
-            updateContextWithResults(messageContext, results);
+			// puts the results in the context
+			// useful for Signature Confirmation
+			updateContextWithResults(messageContext, results);
 
-            verifyCertificateTrust(results);
+			verifyCertificateTrust(results);
 
-            verifyTimestamp(results);
+			verifyTimestamp(results);
 
-            processPrincipal(results);
-        }
-        catch (WSSecurityException ex) {
-            throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
-        }
+			processPrincipal(results);
+		}
+		catch (WSSecurityException ex) {
+			throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
+		}
 
-        soapMessage.setDocument(envelopeAsDocument);
+		soapMessage.setDocument(envelopeAsDocument);
 
-        if (this.getRemoveSecurityHeader()) {
-            soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
-        }
-    }
+		if (this.getRemoveSecurityHeader()) {
+			soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+		}
+	}
 
-    /**
-     * Checks whether the received headers match the configured validation actions. Subclasses could override this method
-     * for custom verification behavior.
-     *
-     *
-     * @param results the results of the validation function
-     * @param validationActions the decoded validation actions
-     * @throws Wss4jSecurityValidationException if the results are deemed invalid
-     */
-    protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
-            throws Wss4jSecurityValidationException {
-        if (!handler.checkReceiverResultsAnyOrder(results, validationActions)) {
-            throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
-        }
-    }
+	/**
+	 * Checks whether the received headers match the configured validation actions. Subclasses could override this method
+	 * for custom verification behavior.
+	 *
+	 *
+	 * @param results the results of the validation function
+	 * @param validationActions the decoded validation actions
+	 * @throws Wss4jSecurityValidationException if the results are deemed invalid
+	 */
+	protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
+			throws Wss4jSecurityValidationException {
+		if (!handler.checkReceiverResultsAnyOrder(results, validationActions)) {
+			throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+		}
+	}
 
-    /**
-     * Puts the results of WS-Security headers processing in the message context. Some actions like Signature
-     * Confirmation require this.
-     */
-    @SuppressWarnings("unchecked")
-    private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
-        List<WSHandlerResult> handlerResults;
-        if ((handlerResults = (List<WSHandlerResult>) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
-            handlerResults = new ArrayList<WSHandlerResult>();
-            messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
-        }
-        WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
-        handlerResults.add(0, rResult);
-        messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
-    }
+	/**
+	 * Puts the results of WS-Security headers processing in the message context. Some actions like Signature
+	 * Confirmation require this.
+	 */
+	@SuppressWarnings("unchecked")
+	private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
+		List<WSHandlerResult> handlerResults;
+		if ((handlerResults = (List<WSHandlerResult>) messageContext.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+			handlerResults = new ArrayList<WSHandlerResult>();
+			messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
+		}
+		WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
+		handlerResults.add(0, rResult);
+		messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
+	}
 
-    /** Verifies the trust of a certificate. */
-    protected void verifyCertificateTrust(List<WSSecurityEngineResult> results) throws WSSecurityException {
-        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
+	/** Verifies the trust of a certificate. */
+	protected void verifyCertificateTrust(List<WSSecurityEngineResult> results) throws WSSecurityException {
+		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
 
-        if (actionResult != null) {
-            X509Certificate returnCert =
-                    (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
-            Credential credential = new Credential();
-            credential.setCertificates(new X509Certificate[] { returnCert});
+		if (actionResult != null) {
+			X509Certificate returnCert =
+					(X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
+			Credential credential = new Credential();
+			credential.setCertificates(new X509Certificate[] { returnCert});
 
-            RequestData requestData = new RequestData();
-            requestData.setSigCrypto(validationSignatureCrypto);
-            requestData.setEnableRevocation(enableRevocation);
+			RequestData requestData = new RequestData();
+			requestData.setSigCrypto(validationSignatureCrypto);
+			requestData.setEnableRevocation(enableRevocation);
 
-            SignatureTrustValidator validator = new SignatureTrustValidator();
-            validator.validate(credential, requestData);
-        }
-    }
+			SignatureTrustValidator validator = new SignatureTrustValidator();
+			validator.validate(credential, requestData);
+		}
+	}
 
-    /** Verifies the timestamp. */
-    protected void verifyTimestamp(List<WSSecurityEngineResult> results) throws WSSecurityException {
-        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
+	/** Verifies the timestamp. */
+	protected void verifyTimestamp(List<WSSecurityEngineResult> results) throws WSSecurityException {
+		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
 
-        if (actionResult != null) {
-            Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
-            if (timestamp != null && timestampStrict) {
-                Credential credential = new Credential();
-                credential.setTimestamp(timestamp);
+		if (actionResult != null) {
+			Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
+			if (timestamp != null && timestampStrict) {
+				Credential credential = new Credential();
+				credential.setTimestamp(timestamp);
 
-                RequestData requestData = new RequestData();
-                WSSConfig config = new WSSConfig();
-                config.setTimeStampTTL(validationTimeToLive);
-                config.setTimeStampStrict(timestampStrict);
-	            config.setTimeStampFutureTTL(futureTimeToLive);
-                requestData.setWssConfig(config);
+				RequestData requestData = new RequestData();
+				WSSConfig config = new WSSConfig();
+				config.setTimeStampTTL(validationTimeToLive);
+				config.setTimeStampStrict(timestampStrict);
+				config.setTimeStampFutureTTL(futureTimeToLive);
+				requestData.setWssConfig(config);
 
-                TimestampValidator validator = new TimestampValidator();
-                validator.validate(credential, requestData);
-            }
-        }
-    }
+				TimestampValidator validator = new TimestampValidator();
+				validator.validate(credential, requestData);
+			}
+		}
+	}
 
-    private void processPrincipal(List<WSSecurityEngineResult> results) {
-        WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
+	private void processPrincipal(List<WSSecurityEngineResult> results) {
+		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
 
-        if (actionResult != null) {
-            Principal principal = (Principal) actionResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
-            if (principal != null && principal instanceof WSUsernameTokenPrincipal) {
-                WSUsernameTokenPrincipal usernameTokenPrincipal = (WSUsernameTokenPrincipal) principal;
-                UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
-                try {
-                    validationCallbackHandler.handle(new Callback[]{callback});
-                }
-                catch (IOException ex) {
-                    logger.warn("Principal callback resulted in IOException", ex);
-                }
-                catch (UnsupportedCallbackException ex) {
-                    // ignore
-                }
-            }
-        }
-    }
+		if (actionResult != null) {
+			Principal principal = (Principal) actionResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
+			if (principal != null && principal instanceof WSUsernameTokenPrincipal) {
+				WSUsernameTokenPrincipal usernameTokenPrincipal = (WSUsernameTokenPrincipal) principal;
+				UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
+				try {
+					validationCallbackHandler.handle(new Callback[]{callback});
+				}
+				catch (IOException ex) {
+					logger.warn("Principal callback resulted in IOException", ex);
+				}
+				catch (UnsupportedCallbackException ex) {
+					// ignore
+				}
+			}
+		}
+	}
 
-    @Override
-    protected void cleanUp() {
-        if (validationCallbackHandler != null) {
-            try {
-                CleanupCallback cleanupCallback = new CleanupCallback();
-                validationCallbackHandler.handle(new Callback[]{cleanupCallback});
-            }
-            catch (IOException ex) {
-                logger.warn("Cleanup callback resulted in IOException", ex);
-            }
-            catch (UnsupportedCallbackException ex) {
-                // ignore
-            }
-        }
-    }
+	@Override
+	protected void cleanUp() {
+		if (validationCallbackHandler != null) {
+			try {
+				CleanupCallback cleanupCallback = new CleanupCallback();
+				validationCallbackHandler.handle(new Callback[]{cleanupCallback});
+			}
+			catch (IOException ex) {
+				logger.warn("Cleanup callback resulted in IOException", ex);
+			}
+			catch (UnsupportedCallbackException ex) {
+				// ignore
+			}
+		}
+	}
 }

@@ -35,78 +35,78 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 
 public class Addressing10 extends AbstractAddressingVersion {
 
-    private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
+	private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
 
-    @Override
-    public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
-        Assert.notNull(map.getAction(), "'Action' is required");
-        super.addAddressingHeaders(message, map);
-    }
+	@Override
+	public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
+		Assert.notNull(map.getAction(), "'Action' is required");
+		super.addAddressingHeaders(message, map);
+	}
 
-    @Override
-    public boolean hasRequiredProperties(MessageAddressingProperties map) {
-        if (map.getAction() == null) {
-            return false;
-        }
-        if (map.getReplyTo() != null || map.getFaultTo() != null) {
-            return map.getMessageId() != null;
-        }
-        return true;
+	@Override
+	public boolean hasRequiredProperties(MessageAddressingProperties map) {
+		if (map.getAction() == null) {
+			return false;
+		}
+		if (map.getReplyTo() != null || map.getFaultTo() != null) {
+			return map.getMessageId() != null;
+		}
+		return true;
 
-    }
+	}
 
-    @Override
-    protected String getNamespaceUri() {
-        return NAMESPACE_URI;
-    }
+	@Override
+	protected String getNamespaceUri() {
+		return NAMESPACE_URI;
+	}
 
-    @Override
-    protected QName getReferencePropertiesName() {
-        return null;
-    }
+	@Override
+	protected QName getReferencePropertiesName() {
+		return null;
+	}
 
-    @Override
-    protected URI getDefaultTo() {
-        return getAnonymous();
-    }
+	@Override
+	protected URI getDefaultTo() {
+		return getAnonymous();
+	}
 
-    @Override
-    protected EndpointReference getDefaultReplyTo(EndpointReference from) {
-        return new EndpointReference(getAnonymous());
-    }
+	@Override
+	protected EndpointReference getDefaultReplyTo(EndpointReference from) {
+		return new EndpointReference(getAnonymous());
+	}
 
-    @Override
-    protected final URI getAnonymous() {
-        return URI.create(NAMESPACE_URI + "/anonymous");
-    }
+	@Override
+	protected final URI getAnonymous() {
+		return URI.create(NAMESPACE_URI + "/anonymous");
+	}
 
-    @Override
-    protected final URI getNone() {
-        return URI.create(NAMESPACE_URI + "/none");
-    }
+	@Override
+	protected final URI getNone() {
+		return URI.create(NAMESPACE_URI + "/none");
+	}
 
-    @Override
-    protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-	    return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired",
-			    getNamespacePrefix());
-    }
+	@Override
+	protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
+		return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired",
+				getNamespacePrefix());
+	}
 
-    @Override
-    protected final String getMessageAddressingHeaderRequiredFaultReason() {
-        return "A required header representing a Message Addressing Property is not present";
-    }
+	@Override
+	protected final String getMessageAddressingHeaderRequiredFaultReason() {
+		return "A required header representing a Message Addressing Property is not present";
+	}
 
-    @Override
-    protected QName getInvalidAddressingHeaderFaultSubcode() {
-	    return new QName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
-    }
+	@Override
+	protected QName getInvalidAddressingHeaderFaultSubcode() {
+		return new QName(NAMESPACE_URI, "InvalidAddressingHeader", getNamespacePrefix());
+	}
 
-    @Override
-    protected String getInvalidAddressingHeaderFaultReason() {
-        return "A header representing a Message Addressing Property is not valid and the message cannot be processed";
-    }
+	@Override
+	protected String getInvalidAddressingHeaderFaultReason() {
+		return "A header representing a Message Addressing Property is not valid and the message cannot be processed";
+	}
 
-    public String toString() {
-        return "WS-Addressing 1.0";
-    }
+	public String toString() {
+		return "WS-Addressing 1.0";
+	}
 }

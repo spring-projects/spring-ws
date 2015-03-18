@@ -23,12 +23,12 @@ import org.springframework.ws.test.integration.CustomerCountResponse;
 
 public class CustomerClient extends WebServiceGatewaySupport {
 
-    public int getCustomerCount() {
-        CustomerCountRequest request = new CustomerCountRequest();
-        request.setCustomerName("John Doe");
+	public int getCustomerCount() {
+		CustomerCountRequest request = new CustomerCountRequest();
+		request.setCustomerName("John Doe");
 
-        CustomerCountResponse response = (CustomerCountResponse) getWebServiceTemplate().marshalSendAndReceive(request);
-        return response.getCustomerCount();
-    }
+		CustomerCountResponse response = (CustomerCountResponse) getWebServiceTemplate().marshalSendAndReceive(request);
+		return response.getCustomerCount();
+	}
 
 }

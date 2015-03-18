@@ -56,33 +56,33 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * &#064;ContextConfiguration("applicationContext.xml")
  * public class MyWebServiceClientIntegrationTest {
  *
- *   // MyWebServiceClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
- *   &#064;Autowired
- *   private MyWebServiceClient client;
+ *	 // MyWebServiceClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
+ *	 &#064;Autowired
+ *	 private MyWebServiceClient client;
  *
- *   private MockWebServiceServer mockServer;
+ *	 private MockWebServiceServer mockServer;
  *
- *   &#064;Before
- *   public void createServer() throws Exception {
- *     <strong>mockServer = MockWebServiceServer.createServer(client)</strong>;
- *   }
+ *	 &#064;Before
+ *	 public void createServer() throws Exception {
+ *	   <strong>mockServer = MockWebServiceServer.createServer(client)</strong>;
+ *	 }
  * 
- *   &#064;Test
- *   public void getCustomerCount() throws Exception {
- *     Source expectedRequestPayload =
- *       new StringSource("&lt;customerCountRequest xmlns=\"http://springframework.org/spring-ws/test\" /&gt;");
- *     Source responsePayload = new StringSource("&lt;customerCountResponse xmlns='http://springframework.org/spring-ws/test'&gt;" +
- *       "&lt;customerCount&gt;10&lt;/customerCount&gt;" +
- *       "&lt;/customerCountResponse&gt;");
+ *	 &#064;Test
+ *	 public void getCustomerCount() throws Exception {
+ *	   Source expectedRequestPayload =
+ *		 new StringSource("&lt;customerCountRequest xmlns=\"http://springframework.org/spring-ws/test\" /&gt;");
+ *	   Source responsePayload = new StringSource("&lt;customerCountResponse xmlns='http://springframework.org/spring-ws/test'&gt;" +
+ *		 "&lt;customerCount&gt;10&lt;/customerCount&gt;" +
+ *		 "&lt;/customerCountResponse&gt;");
  *
- *     <strong>mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));</strong>
+ *	   <strong>mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));</strong>
  *
- *     // client.getCustomerCount() uses the WebServiceTemplate
- *     int customerCount = client.getCustomerCount();
- *     assertEquals(10, response.getCustomerCount());
+ *	   // client.getCustomerCount() uses the WebServiceTemplate
+ *	   int customerCount = client.getCustomerCount();
+ *	   assertEquals(10, response.getCustomerCount());
  *
- *     <strong>mockServer.verify();</strong>
- *   }
+ *	   <strong>mockServer.verify();</strong>
+ *	 }
  * }
  * </pre></blockquote>
  *
@@ -92,87 +92,87 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  */
 public class MockWebServiceServer {
 
-    private final MockWebServiceMessageSender mockMessageSender;
+	private final MockWebServiceMessageSender mockMessageSender;
 
-    private MockWebServiceServer(MockWebServiceMessageSender mockMessageSender) {
-        Assert.notNull(mockMessageSender, "'mockMessageSender' must not be null");
-        this.mockMessageSender = mockMessageSender;
-    }
+	private MockWebServiceServer(MockWebServiceMessageSender mockMessageSender) {
+		Assert.notNull(mockMessageSender, "'mockMessageSender' must not be null");
+		this.mockMessageSender = mockMessageSender;
+	}
 
-    /**
-     * Creates a {@code MockWebServiceServer} instance based on the given {@link WebServiceTemplate}.
-     *
-     * @param webServiceTemplate the web service template
-     * @return the created server
-     */
-    public static MockWebServiceServer createServer(WebServiceTemplate webServiceTemplate) {
-        Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
+	/**
+	 * Creates a {@code MockWebServiceServer} instance based on the given {@link WebServiceTemplate}.
+	 *
+	 * @param webServiceTemplate the web service template
+	 * @return the created server
+	 */
+	public static MockWebServiceServer createServer(WebServiceTemplate webServiceTemplate) {
+		Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
 
-        MockWebServiceMessageSender mockMessageSender = new MockWebServiceMessageSender();
-        webServiceTemplate.setMessageSender(mockMessageSender);
+		MockWebServiceMessageSender mockMessageSender = new MockWebServiceMessageSender();
+		webServiceTemplate.setMessageSender(mockMessageSender);
 
-        return new MockWebServiceServer(mockMessageSender);
-    }
+		return new MockWebServiceServer(mockMessageSender);
+	}
 
-    /**
-     * Creates a {@code MockWebServiceServer} instance based on the given {@link WebServiceGatewaySupport}.
-     *
-     * @param gatewaySupport the client class
-     * @return the created server
-     */
-    public static MockWebServiceServer createServer(WebServiceGatewaySupport gatewaySupport) {
-        Assert.notNull(gatewaySupport, "'gatewaySupport' must not be null");
-        return createServer(gatewaySupport.getWebServiceTemplate());
-    }
+	/**
+	 * Creates a {@code MockWebServiceServer} instance based on the given {@link WebServiceGatewaySupport}.
+	 *
+	 * @param gatewaySupport the client class
+	 * @return the created server
+	 */
+	public static MockWebServiceServer createServer(WebServiceGatewaySupport gatewaySupport) {
+		Assert.notNull(gatewaySupport, "'gatewaySupport' must not be null");
+		return createServer(gatewaySupport.getWebServiceTemplate());
+	}
 
-    /**
-     * Creates a {@code MockWebServiceServer} instance based on the given {@link ApplicationContext}.
-     *
-     * <p>This factory method will try and find a configured {@link WebServiceTemplate} in the given application context.
-     * If no template can be found, it will try and find a {@link WebServiceGatewaySupport}, and use its configured
-     * template. If neither can be found, an exception is thrown.
-     *
-     * @param applicationContext the application context to base the client on
-     * @return the created server
-     * @throws IllegalArgumentException if the given application context contains neither a {@link WebServiceTemplate}
-     *                                  nor a {@link WebServiceGatewaySupport}.
-     */
-    public static MockWebServiceServer createServer(ApplicationContext applicationContext) {
-        MockStrategiesHelper strategiesHelper = new MockStrategiesHelper(applicationContext);
-        WebServiceTemplate webServiceTemplate = strategiesHelper.getStrategy(WebServiceTemplate.class);
-        if (webServiceTemplate != null) {
-            return createServer(webServiceTemplate);
-        }
-        WebServiceGatewaySupport gatewaySupport = strategiesHelper.getStrategy(WebServiceGatewaySupport.class);
-        if (gatewaySupport != null) {
-            return createServer(gatewaySupport);
-        }
-        throw new IllegalArgumentException(
-                "Could not find either WebServiceTemplate or WebServiceGatewaySupport in application context");
-    }
+	/**
+	 * Creates a {@code MockWebServiceServer} instance based on the given {@link ApplicationContext}.
+	 *
+	 * <p>This factory method will try and find a configured {@link WebServiceTemplate} in the given application context.
+	 * If no template can be found, it will try and find a {@link WebServiceGatewaySupport}, and use its configured
+	 * template. If neither can be found, an exception is thrown.
+	 *
+	 * @param applicationContext the application context to base the client on
+	 * @return the created server
+	 * @throws IllegalArgumentException if the given application context contains neither a {@link WebServiceTemplate}
+	 *									nor a {@link WebServiceGatewaySupport}.
+	 */
+	public static MockWebServiceServer createServer(ApplicationContext applicationContext) {
+		MockStrategiesHelper strategiesHelper = new MockStrategiesHelper(applicationContext);
+		WebServiceTemplate webServiceTemplate = strategiesHelper.getStrategy(WebServiceTemplate.class);
+		if (webServiceTemplate != null) {
+			return createServer(webServiceTemplate);
+		}
+		WebServiceGatewaySupport gatewaySupport = strategiesHelper.getStrategy(WebServiceGatewaySupport.class);
+		if (gatewaySupport != null) {
+			return createServer(gatewaySupport);
+		}
+		throw new IllegalArgumentException(
+				"Could not find either WebServiceTemplate or WebServiceGatewaySupport in application context");
+	}
 
-    /**
-     * Records an expectation specified by the given {@link RequestMatcher}. Returns a {@link ResponseActions} object
-     * that allows for creating the response, or to set up more expectations.
-     *
-     * @param requestMatcher the request matcher expected
-     * @return the response actions
-     */
-    public ResponseActions expect(RequestMatcher requestMatcher) {
-        MockSenderConnection connection = mockMessageSender.expectNewConnection();
-        connection.addRequestMatcher(requestMatcher);
-        return connection;
-    }
+	/**
+	 * Records an expectation specified by the given {@link RequestMatcher}. Returns a {@link ResponseActions} object
+	 * that allows for creating the response, or to set up more expectations.
+	 *
+	 * @param requestMatcher the request matcher expected
+	 * @return the response actions
+	 */
+	public ResponseActions expect(RequestMatcher requestMatcher) {
+		MockSenderConnection connection = mockMessageSender.expectNewConnection();
+		connection.addRequestMatcher(requestMatcher);
+		return connection;
+	}
 
-    /**
-     * Verifies that all expectations were met.
-     *
-     * @throws AssertionError in case of unmet expectations
-     */
-    public void verify() {
-        mockMessageSender.verifyConnections();
-    }
-    
+	/**
+	 * Verifies that all expectations were met.
+	 *
+	 * @throws AssertionError in case of unmet expectations
+	 */
+	public void verify() {
+		mockMessageSender.verifyConnections();
+	}
+	
 
 
 

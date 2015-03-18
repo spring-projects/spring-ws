@@ -34,29 +34,29 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
  */
 abstract class SaajSoapBody extends SaajSoapElement<SOAPBody> implements SoapBody {
 
-    public SaajSoapBody(SOAPBody body) {
-        super(body);
-    }
+	public SaajSoapBody(SOAPBody body) {
+		super(body);
+	}
 
-    @Override
-    public Source getPayloadSource() {
-        SOAPElement bodyElement = SaajUtils.getFirstBodyElement(getSaajBody());
-        return bodyElement != null ? new DOMSource(bodyElement) : null;
-    }
+	@Override
+	public Source getPayloadSource() {
+		SOAPElement bodyElement = SaajUtils.getFirstBodyElement(getSaajBody());
+		return bodyElement != null ? new DOMSource(bodyElement) : null;
+	}
 
-    @Override
-    public Result getPayloadResult() {
-	    getSaajBody().removeContents();
-	    return new DOMResult(getSaajBody());
-    }
+	@Override
+	public Result getPayloadResult() {
+		getSaajBody().removeContents();
+		return new DOMResult(getSaajBody());
+	}
 
-    @Override
-    public boolean hasFault() {
-	    return getSaajBody().hasFault();
-    }
+	@Override
+	public boolean hasFault() {
+		return getSaajBody().hasFault();
+	}
 
-    protected SOAPBody getSaajBody() {
-        return getSaajElement();
-    }
+	protected SOAPBody getSaajBody() {
+		return getSaajElement();
+	}
 
 }

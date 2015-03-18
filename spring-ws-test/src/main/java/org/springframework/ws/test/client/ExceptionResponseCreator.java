@@ -31,25 +31,25 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 class ExceptionResponseCreator implements ResponseCreator {
 
-    private final Exception exception;
+	private final Exception exception;
 
-    ExceptionResponseCreator(IOException exception) {
-        this.exception = exception;
-    }
+	ExceptionResponseCreator(IOException exception) {
+		this.exception = exception;
+	}
 
-    ExceptionResponseCreator(RuntimeException exception) {
-        this.exception = exception;
-    }
+	ExceptionResponseCreator(RuntimeException exception) {
+		this.exception = exception;
+	}
 
-    @Override
-    public WebServiceMessage createResponse(URI uri,
-                                            WebServiceMessage request,
-                                            WebServiceMessageFactory factory) throws IOException {
-        if (exception instanceof IOException) {
-            throw (IOException) exception;
-        }
-        else {
-            throw (RuntimeException) exception;
-        }
-    }
+	@Override
+	public WebServiceMessage createResponse(URI uri,
+											WebServiceMessage request,
+											WebServiceMessageFactory factory) throws IOException {
+		if (exception instanceof IOException) {
+			throw (IOException) exception;
+		}
+		else {
+			throw (RuntimeException) exception;
+		}
+	}
 }

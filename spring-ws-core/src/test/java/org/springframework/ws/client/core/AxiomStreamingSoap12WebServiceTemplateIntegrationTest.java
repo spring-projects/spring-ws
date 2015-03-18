@@ -30,7 +30,7 @@ public class AxiomStreamingSoap12WebServiceTemplateIntegrationTest
 	public SoapMessageFactory createMessageFactory() throws Exception {
 		AxiomSoapMessageFactory axiomFactory = new AxiomSoapMessageFactory();
 		axiomFactory.setSoapVersion(SoapVersion.SOAP_12);
-	    axiomFactory.setPayloadCaching(false);
+		axiomFactory.setPayloadCaching(false);
 		return axiomFactory;
 	}
 }

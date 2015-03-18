@@ -27,15 +27,15 @@ import org.w3c.dom.Element;
 
 public class StringSourceTest {
 
-    @Test
-    public void testStringSource() throws TransformerException {
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        String content = "<prefix:content xmlns:prefix='namespace'/>";
-        DOMResult result = new DOMResult();
-        transformer.transform(new StringSource(content), result);
-        Element rootElement = (Element) result.getNode().getFirstChild();
-        Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
-        Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-        Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
-    }
+	@Test
+	public void testStringSource() throws TransformerException {
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		String content = "<prefix:content xmlns:prefix='namespace'/>";
+		DOMResult result = new DOMResult();
+		transformer.transform(new StringSource(content), result);
+		Element rootElement = (Element) result.getNode().getFirstChild();
+		Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
+		Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
+		Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+	}
 }

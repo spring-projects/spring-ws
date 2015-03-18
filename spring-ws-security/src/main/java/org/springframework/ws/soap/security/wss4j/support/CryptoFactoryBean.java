@@ -44,151 +44,151 @@ import org.springframework.util.Assert;
  */
 public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAware, InitializingBean {
 
-    private Properties configuration = new Properties();
+	private Properties configuration = new Properties();
 
-    private ClassLoader classLoader;
+	private ClassLoader classLoader;
 
-    private Crypto crypto;
+	private Crypto crypto;
 
-    private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.ws.security.crypto.provider";
+	private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.ws.security.crypto.provider";
 
-    /**
-     * Sets the configuration of the Crypto. Setting this property overrides all previously set configuration, through
-     * the type-safe properties
-     *
-     * @see org.apache.ws.security.components.crypto.CryptoFactory#getInstance(java.util.Properties)
-     */
-    public void setConfiguration(Properties properties) {
-        Assert.notNull(properties, "'properties' must not be null");
-        this.configuration.putAll(properties);
-    }
+	/**
+	 * Sets the configuration of the Crypto. Setting this property overrides all previously set configuration, through
+	 * the type-safe properties
+	 *
+	 * @see org.apache.ws.security.components.crypto.CryptoFactory#getInstance(java.util.Properties)
+	 */
+	public void setConfiguration(Properties properties) {
+		Assert.notNull(properties, "'properties' must not be null");
+		this.configuration.putAll(properties);
+	}
 
-    /**
-     * Sets the {@link org.apache.ws.security.components.crypto.Crypto} provider name. Defaults to {@link
-     * org.apache.ws.security.components.crypto.Merlin}.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.provider} property.
-     *
-     * @param cryptoProviderClass the crypto provider class
-     */
-    public void setCryptoProvider(Class<? extends Crypto> cryptoProviderClass) {
-        this.configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, cryptoProviderClass.getName());
-    }
+	/**
+	 * Sets the {@link org.apache.ws.security.components.crypto.Crypto} provider name. Defaults to {@link
+	 * org.apache.ws.security.components.crypto.Merlin}.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.provider} property.
+	 *
+	 * @param cryptoProviderClass the crypto provider class
+	 */
+	public void setCryptoProvider(Class<? extends Crypto> cryptoProviderClass) {
+		this.configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, cryptoProviderClass.getName());
+	}
 
-    /**
-     * Sets the location of the key store to be loaded in the {@link org.apache.ws.security.components.crypto.Crypto}
-     * instance.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.file} property.
-     *
-     * @param location the key store location
-     * @throws java.io.IOException when the resource cannot be opened
-     */
-    public void setKeyStoreLocation(Resource location) throws IOException {
-        String resourcePath = getResourcePath(location);
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", resourcePath);
-    }
+	/**
+	 * Sets the location of the key store to be loaded in the {@link org.apache.ws.security.components.crypto.Crypto}
+	 * instance.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.file} property.
+	 *
+	 * @param location the key store location
+	 * @throws java.io.IOException when the resource cannot be opened
+	 */
+	public void setKeyStoreLocation(Resource location) throws IOException {
+		String resourcePath = getResourcePath(location);
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", resourcePath);
+	}
 
-    private String getResourcePath(Resource resource) throws IOException {
-        try {
-            return resource.getFile().getAbsolutePath();
-        }
-        catch (IOException ex) {
-            if (resource instanceof ClassPathResource) {
-                ClassPathResource classPathResource = (ClassPathResource) resource;
-                return classPathResource.getPath();
-            }
-            else {
-                throw ex;
-            }
-        }
-    }
+	private String getResourcePath(Resource resource) throws IOException {
+		try {
+			return resource.getFile().getAbsolutePath();
+		}
+		catch (IOException ex) {
+			if (resource instanceof ClassPathResource) {
+				ClassPathResource classPathResource = (ClassPathResource) resource;
+				return classPathResource.getPath();
+			}
+			else {
+				throw ex;
+			}
+		}
+	}
 
-    /**
-     * Sets the key store provider.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.provider} property.
-     *
-     * @param provider the key store provider
-     */
-    public void setKeyStoreProvider(String provider) {
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.provider", provider);
-    }
+	/**
+	 * Sets the key store provider.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.provider} property.
+	 *
+	 * @param provider the key store provider
+	 */
+	public void setKeyStoreProvider(String provider) {
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.provider", provider);
+	}
 
-    /**
-     * Sets the key store password. Defaults to {@code security}.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.password} property.
-     *
-     * @param password the key store password
-     */
-    public void setKeyStorePassword(String password) {
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", password);
-    }
+	/**
+	 * Sets the key store password. Defaults to {@code security}.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.password} property.
+	 *
+	 * @param password the key store password
+	 */
+	public void setKeyStorePassword(String password) {
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", password);
+	}
 
-    /**
-     * Sets the key store type. Defaults to {@link java.security.KeyStore#getDefaultType()}.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.type} property.
-     *
-     * @param type the key store type
-     */
-    public void setKeyStoreType(String type) {
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", type);
-    }
+	/**
+	 * Sets the key store type. Defaults to {@link java.security.KeyStore#getDefaultType()}.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.type} property.
+	 *
+	 * @param type the key store type
+	 */
+	public void setKeyStoreType(String type) {
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", type);
+	}
 
-    /**
-     * Sets the trust store password. Defaults to {@code changeit}.
-     *
-     * <p>WSS4J crypto uses the standard J2SE trust store, i.e. {@code $JAVA_HOME/lib/security/cacerts}.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.cacerts.password} property.
-     *
-     * @param password the trust store password
-     */
-    public void setTrustStorePassword(String password) {
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.cacerts.password", password);
-    }
+	/**
+	 * Sets the trust store password. Defaults to {@code changeit}.
+	 *
+	 * <p>WSS4J crypto uses the standard J2SE trust store, i.e. {@code $JAVA_HOME/lib/security/cacerts}.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.cacerts.password} property.
+	 *
+	 * @param password the trust store password
+	 */
+	public void setTrustStorePassword(String password) {
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.cacerts.password", password);
+	}
 
-    /**
-     * Sets the alias name of the default certificate which has been specified as a property. This should be the
-     * certificate that is used for signature and encryption. This alias corresponds to the certificate that should be
-     * used whenever KeyInfo is not present in a signed or an encrypted message.
-     *
-     * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.alias} property.
-     *
-     * @param defaultX509Alias alias name of the default X509 certificate
-     */
-    public void setDefaultX509Alias(String defaultX509Alias) {
-        this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.alias", defaultX509Alias);
-    }
+	/**
+	 * Sets the alias name of the default certificate which has been specified as a property. This should be the
+	 * certificate that is used for signature and encryption. This alias corresponds to the certificate that should be
+	 * used whenever KeyInfo is not present in a signed or an encrypted message.
+	 *
+	 * <p>This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.keystore.alias} property.
+	 *
+	 * @param defaultX509Alias alias name of the default X509 certificate
+	 */
+	public void setDefaultX509Alias(String defaultX509Alias) {
+		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.alias", defaultX509Alias);
+	}
 
-    @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
+	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (!configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
-            configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
-        }
-        this.crypto = CryptoFactory.getInstance(configuration, classLoader);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (!configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
+			configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
+		}
+		this.crypto = CryptoFactory.getInstance(configuration, classLoader);
+	}
 
-    @Override
-    public Class<Crypto> getObjectType() {
-        return Crypto.class;
-    }
+	@Override
+	public Class<Crypto> getObjectType() {
+		return Crypto.class;
+	}
 
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 
-    @Override
-    public Crypto getObject() throws Exception {
-        return crypto;
-    }
+	@Override
+	public Crypto getObject() throws Exception {
+		return crypto;
+	}
 
 }

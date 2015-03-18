@@ -22,15 +22,15 @@ import org.springframework.ws.soap.SoapBodyException;
 @SuppressWarnings("serial")
 public class SaajSoapBodyException extends SoapBodyException {
 
-    public SaajSoapBodyException(String msg) {
-        super(msg);
-    }
+	public SaajSoapBodyException(String msg) {
+		super(msg);
+	}
 
-    public SaajSoapBodyException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajSoapBodyException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SaajSoapBodyException(Throwable ex) {
-        super(ex);
-    }
+	public SaajSoapBodyException(Throwable ex) {
+		super(ex);
+	}
 }

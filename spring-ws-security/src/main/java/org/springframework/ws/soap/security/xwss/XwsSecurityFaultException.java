@@ -29,7 +29,7 @@ import org.springframework.ws.soap.security.WsSecurityFaultException;
 @SuppressWarnings("serial")
 public class XwsSecurityFaultException extends WsSecurityFaultException {
 
-    public XwsSecurityFaultException(QName faultCode, String faultString, String faultActor) {
-        super(faultCode, faultString, faultActor);
-    }
+	public XwsSecurityFaultException(QName faultCode, String faultString, String faultActor) {
+		super(faultCode, faultString, faultActor);
+	}
 }

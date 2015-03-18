@@ -23,10 +23,10 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 
 public class AxiomSoap11MessageTest extends AbstractSoap11MessageTestCase {
 
-    @Override
-    protected SoapMessage createSoapMessage() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        return new AxiomSoapMessage(axiomFactory);
-    }
+	@Override
+	protected SoapMessage createSoapMessage() throws Exception {
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		return new AxiomSoapMessage(axiomFactory);
+	}
 
 }

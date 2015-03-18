@@ -26,23 +26,23 @@ import static org.junit.Assert.assertNotNull;
 
 public class MockWebServiceClientTest {
 
-    @Test
-    public void createServerApplicationContext() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("messageDispatcher", SoapMessageDispatcher.class);
-        applicationContext.registerSingleton("messageFactory", SaajSoapMessageFactory.class);
-        applicationContext.refresh();
+	@Test
+	public void createServerApplicationContext() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("messageDispatcher", SoapMessageDispatcher.class);
+		applicationContext.registerSingleton("messageFactory", SaajSoapMessageFactory.class);
+		applicationContext.refresh();
 
-        MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
-        assertNotNull(client);
-    }
-    
-    @Test
-    public void createServerApplicationContextDefaults() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.refresh();
+		MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
+		assertNotNull(client);
+	}
+	
+	@Test
+	public void createServerApplicationContextDefaults() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.refresh();
 
-        MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
-        assertNotNull(client);
-    }
+		MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
+		assertNotNull(client);
+	}
 }

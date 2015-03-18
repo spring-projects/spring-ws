@@ -25,11 +25,11 @@ import org.springframework.ws.soap.SoapMessageCreationException;
 @SuppressWarnings("serial")
 public class SaajSoapMessageCreationException extends SoapMessageCreationException {
 
-    public SaajSoapMessageCreationException(String msg) {
-        super(msg);
-    }
+	public SaajSoapMessageCreationException(String msg) {
+		super(msg);
+	}
 
-    public SaajSoapMessageCreationException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajSoapMessageCreationException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

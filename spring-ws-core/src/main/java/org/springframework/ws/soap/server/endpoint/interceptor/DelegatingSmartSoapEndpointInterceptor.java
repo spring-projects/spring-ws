@@ -30,25 +30,25 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
  * @since 2.0
  */
 public class DelegatingSmartSoapEndpointInterceptor extends DelegatingSmartEndpointInterceptor
-        implements SmartSoapEndpointInterceptor {
+		implements SmartSoapEndpointInterceptor {
 
-    /**
-     * Creates a new instance of the {@code DelegatingSmartSoapEndpointInterceptor} with the given delegate.
-     *
-     * @param delegate the endpoint interceptor to delegate to.
-     */
-    public DelegatingSmartSoapEndpointInterceptor(EndpointInterceptor delegate) {
-        super(delegate);
-    }
+	/**
+	 * Creates a new instance of the {@code DelegatingSmartSoapEndpointInterceptor} with the given delegate.
+	 *
+	 * @param delegate the endpoint interceptor to delegate to.
+	 */
+	public DelegatingSmartSoapEndpointInterceptor(EndpointInterceptor delegate) {
+		super(delegate);
+	}
 
-    @Override
-    public boolean understands(SoapHeaderElement header) {
-        EndpointInterceptor delegate = getDelegate();
-        if (delegate instanceof SoapEndpointInterceptor) {
-            return ((SoapEndpointInterceptor) delegate).understands(header);
-        }
-        else {
-            return false;
-        }
-    }
+	@Override
+	public boolean understands(SoapHeaderElement header) {
+		EndpointInterceptor delegate = getDelegate();
+		if (delegate instanceof SoapEndpointInterceptor) {
+			return ((SoapEndpointInterceptor) delegate).understands(header);
+		}
+		else {
+			return false;
+		}
+	}
 }

@@ -24,19 +24,19 @@ import org.junit.Test;
 
 public class UuidMessageIdStrategyTest {
 
-    private MessageIdStrategy strategy;
+	private MessageIdStrategy strategy;
 
-    @Before
-    public final void setUp() throws Exception {
-        strategy = new UuidMessageIdStrategy();
-    }
+	@Before
+	public final void setUp() throws Exception {
+		strategy = new UuidMessageIdStrategy();
+	}
 
-    @Test
-    public void testStrategy() {
-        URI messageId1 = strategy.newMessageId(null);
-        Assert.assertNotNull("Empty messageId", messageId1);
-        URI messageId2 = strategy.newMessageId(null);
-        Assert.assertNotNull("Empty messageId", messageId2);
-        Assert.assertFalse("Equal messageIds", messageId1.equals(messageId2));
-    }
+	@Test
+	public void testStrategy() {
+		URI messageId1 = strategy.newMessageId(null);
+		Assert.assertNotNull("Empty messageId", messageId1);
+		URI messageId2 = strategy.newMessageId(null);
+		Assert.assertNotNull("Empty messageId", messageId2);
+		Assert.assertFalse("Equal messageIds", messageId1.equals(messageId2));
+	}
 }

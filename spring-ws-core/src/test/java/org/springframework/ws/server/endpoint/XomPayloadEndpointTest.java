@@ -22,51 +22,51 @@ import static org.junit.Assert.*;
 
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
-    @Override
-    protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
-        return new AbstractXomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+		return new AbstractXomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement) throws Exception {
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement) throws Exception {
+				return null;
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createResponseEndpoint() throws Exception {
-        return new AbstractXomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+		return new AbstractXomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement) throws Exception {
-                assertNotNull("No requestElement passed", requestElement);
-                assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
-                assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
-                return new Element(RESPONSE_ELEMENT, NAMESPACE_URI);
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement) throws Exception {
+				assertNotNull("No requestElement passed", requestElement);
+				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
+				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+				return new Element(RESPONSE_ELEMENT, NAMESPACE_URI);
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
-        return new AbstractXomPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+		return new AbstractXomPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement) throws Exception {
-                assertNull("RequestElement passed", requestElement);
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement) throws Exception {
+				assertNull("RequestElement passed", requestElement);
+				return null;
+			}
+		};
+	}
 
-    @Override
-    public void testStaxSourceEventReader() throws Exception {
-        // overriden, because XOM doesn't not support it
-    }
+	@Override
+	public void testStaxSourceEventReader() throws Exception {
+		// overriden, because XOM doesn't not support it
+	}
 
-    @Override
-    public void testStaxSourceStreamReader() throws Exception {
-        // overriden, because XOM doesn't not support it
-    }
+	@Override
+	public void testStaxSourceStreamReader() throws Exception {
+		// overriden, because XOM doesn't not support it
+	}
 
 }

@@ -23,14 +23,14 @@ import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;
 
 public class AxiomSoap11HeaderTest extends AbstractSoap11HeaderTestCase {
 
-    @Override
-    protected SoapHeader createSoapHeader() throws Exception {
-        SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-        AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
-        return axiomSoapMessage.getSoapHeader();
-    }
+	@Override
+	protected SoapHeader createSoapHeader() throws Exception {
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
+		return axiomSoapMessage.getSoapHeader();
+	}
 
-    @Override
-    public void testGetResult() throws Exception {
-    }
+	@Override
+	public void testGetResult() throws Exception {
+	}
 }

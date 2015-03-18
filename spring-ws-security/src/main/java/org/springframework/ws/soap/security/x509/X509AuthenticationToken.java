@@ -30,50 +30,50 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Luke Taylor
  */
 public class X509AuthenticationToken extends AbstractAuthenticationToken {
-    //~ Instance fields ================================================================================================
+	//~ Instance fields ================================================================================================
 
-    private static final long serialVersionUID = 1L;
-    private Object principal;
-    private X509Certificate credentials;
+	private static final long serialVersionUID = 1L;
+	private Object principal;
+	private X509Certificate credentials;
 
-    //~ Constructors ===================================================================================================
+	//~ Constructors ===================================================================================================
 
-    /**
-     * Used for an authentication request.  The {@link org.springframework.security.core.Authentication#isAuthenticated()} will return
-     * {@code false}.
-     *
-     * @param credentials the certificate
-     */
-    public X509AuthenticationToken(X509Certificate credentials) {
-        super(null);
-        this.credentials = credentials;
-    }
+	/**
+	 * Used for an authentication request.	The {@link org.springframework.security.core.Authentication#isAuthenticated()} will return
+	 * {@code false}.
+	 *
+	 * @param credentials the certificate
+	 */
+	public X509AuthenticationToken(X509Certificate credentials) {
+		super(null);
+		this.credentials = credentials;
+	}
 
-    /**
-     * Used for an authentication response object. The {@link org.springframework.security.core.Authentication#isAuthenticated()}
-     * will return {@code true}.
-     *
-     * @param principal the principal, which is generally a
-     *        {@code UserDetails}
-     * @param credentials the certificate
-     * @param authorities the authorities
-     */
-    public X509AuthenticationToken(Object principal, X509Certificate credentials, Collection<? extends GrantedAuthority> authorities) {
-        super(authorities);
-        this.principal = principal;
-        this.credentials = credentials;
-        setAuthenticated(true);
-    }
+	/**
+	 * Used for an authentication response object. The {@link org.springframework.security.core.Authentication#isAuthenticated()}
+	 * will return {@code true}.
+	 *
+	 * @param principal the principal, which is generally a
+	 *		  {@code UserDetails}
+	 * @param credentials the certificate
+	 * @param authorities the authorities
+	 */
+	public X509AuthenticationToken(Object principal, X509Certificate credentials, Collection<? extends GrantedAuthority> authorities) {
+		super(authorities);
+		this.principal = principal;
+		this.credentials = credentials;
+		setAuthenticated(true);
+	}
 
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    @Override
-    public Object getCredentials() {
-        return credentials;
-    }
+	@Override
+	public Object getCredentials() {
+		return credentials;
+	}
 
-    @Override
-    public Object getPrincipal() {
-        return principal;
-    }
+	@Override
+	public Object getPrincipal() {
+		return principal;
+	}
 }

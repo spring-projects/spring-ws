@@ -22,8 +22,8 @@ import org.springframework.ws.server.endpoint.PayloadEndpoint;
 
 public class EchoPayloadEndpoint implements PayloadEndpoint {
 
-    @Override
-    public Source invoke(Source request) throws Exception {
-        return request;
-    }
+	@Override
+	public Source invoke(Source request) throws Exception {
+		return request;
+	}
 }

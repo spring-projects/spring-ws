@@ -34,61 +34,61 @@ import org.springframework.ws.soap.SoapElement;
  */
 class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 
-    private final T element;
+	private final T element;
 
-    SaajSoapElement(T element) {
-        Assert.notNull(element, "element must not be null");
-        this.element = element;
-    }
+	SaajSoapElement(T element) {
+		Assert.notNull(element, "element must not be null");
+		this.element = element;
+	}
 
-    @Override
-    public Source getSource() {
-	    return new DOMSource(element);
-    }
+	@Override
+	public Source getSource() {
+		return new DOMSource(element);
+	}
 
-    @Override
-    public QName getName() {
-	    return element.getElementQName();
-    }
+	@Override
+	public QName getName() {
+		return element.getElementQName();
+	}
 
-    @Override
-    public void addAttribute(QName name, String value) {
-        try {
-	        element.addAttribute(name, value);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapElementException(ex);
-        }
-    }
+	@Override
+	public void addAttribute(QName name, String value) {
+		try {
+			element.addAttribute(name, value);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public void removeAttribute(QName name) {
-	    element.removeAttribute(name);
-    }
+	@Override
+	public void removeAttribute(QName name) {
+		element.removeAttribute(name);
+	}
 
-    @Override
-    public String getAttributeValue(QName name) {
-	    return element.getAttributeValue(name);
-    }
+	@Override
+	public String getAttributeValue(QName name) {
+		return element.getAttributeValue(name);
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<QName> getAllAttributes() {
-	    return element.getAllAttributesAsQNames();
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<QName> getAllAttributes() {
+		return element.getAllAttributesAsQNames();
+	}
 
-    @Override
-    public void addNamespaceDeclaration(String prefix, String namespaceUri) {
-        try {
-	        element.addNamespaceDeclaration(prefix, namespaceUri);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapElementException(ex);
-        }
-    }
+	@Override
+	public void addNamespaceDeclaration(String prefix, String namespaceUri) {
+		try {
+			element.addNamespaceDeclaration(prefix, namespaceUri);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapElementException(ex);
+		}
+	}
 
-    protected final T getSaajElement() {
-        return element;
-    }
+	protected final T getSaajElement() {
+		return element;
+	}
 
 }

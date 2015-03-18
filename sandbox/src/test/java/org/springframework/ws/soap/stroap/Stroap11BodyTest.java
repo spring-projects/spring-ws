@@ -21,17 +21,17 @@ import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
 
 public class Stroap11BodyTest extends AbstractSoap11BodyTestCase {
 
-    @Override
-    protected SoapBody createSoapBody() throws Exception {
-        StroapMessageFactory messageFactory = new StroapMessageFactory();
-        return new Stroap11Body(messageFactory);
-    }
+	@Override
+	protected SoapBody createSoapBody() throws Exception {
+		StroapMessageFactory messageFactory = new StroapMessageFactory();
+		return new Stroap11Body(messageFactory);
+	}
 
-    @Override
-    public void testAddFaultWithDetail() throws Exception {
-    }
+	@Override
+	public void testAddFaultWithDetail() throws Exception {
+	}
 
-    @Override
-    public void testAddFaultWithDetailResult() throws Exception {
-    }
+	@Override
+	public void testAddFaultWithDetailResult() throws Exception {
+	}
 }

@@ -41,176 +41,176 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 
-    private int order = Integer.MAX_VALUE;  // default: same as non-Ordered
+	private int order = Integer.MAX_VALUE;	// default: same as non-Ordered
 
-    private Object defaultEndpoint;
+	private Object defaultEndpoint;
 
-    private EndpointInterceptor[] interceptors;
+	private EndpointInterceptor[] interceptors;
 
-    private SmartEndpointInterceptor[] smartInterceptors;
+	private SmartEndpointInterceptor[] smartInterceptors;
 
-    /**
-     * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
-     *
-     * @return array of endpoint interceptors, or {@code null} if none
-     */
-    public EndpointInterceptor[] getInterceptors() {
-        return interceptors;
-    }
+	/**
+	 * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
+	 *
+	 * @return array of endpoint interceptors, or {@code null} if none
+	 */
+	public EndpointInterceptor[] getInterceptors() {
+		return interceptors;
+	}
 
-    /**
-     * Sets the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
-     *
-     * @param interceptors array of endpoint interceptors, or {@code null} if none
-     */
-    public final void setInterceptors(EndpointInterceptor[] interceptors) {
-        this.interceptors = interceptors;
-    }
+	/**
+	 * Sets the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
+	 *
+	 * @param interceptors array of endpoint interceptors, or {@code null} if none
+	 */
+	public final void setInterceptors(EndpointInterceptor[] interceptors) {
+		this.interceptors = interceptors;
+	}
 
-    @Override
-    public final int getOrder() {
-        return order;
-    }
+	@Override
+	public final int getOrder() {
+		return order;
+	}
 
-    /**
-     * Specify the order value for this mapping.
-     *
-     * <p>Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
-     *
-     * @see org.springframework.core.Ordered#getOrder()
-     */
-    public final void setOrder(int order) {
-        this.order = order;
-    }
+	/**
+	 * Specify the order value for this mapping.
+	 *
+	 * <p>Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+	 *
+	 * @see org.springframework.core.Ordered#getOrder()
+	 */
+	public final void setOrder(int order) {
+		this.order = order;
+	}
 
-    /**
-     * Initializes the interceptors.
-     *
-     * @see #initInterceptors()
-     */
-    @Override
-    protected void initApplicationContext() throws BeansException {
-        initInterceptors();
-    }
+	/**
+	 * Initializes the interceptors.
+	 *
+	 * @see #initInterceptors()
+	 */
+	@Override
+	protected void initApplicationContext() throws BeansException {
+		initInterceptors();
+	}
 
-    /**
-     * Initialize the specified interceptors, adapting them where necessary.
-     *
-     * @see #setInterceptors
-     */
-    protected void initInterceptors() {
-        Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
-                .beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
-        if (!smartInterceptors.isEmpty()) {
-            this.smartInterceptors =
-                    smartInterceptors.values().toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
-        }
-    }
+	/**
+	 * Initialize the specified interceptors, adapting them where necessary.
+	 *
+	 * @see #setInterceptors
+	 */
+	protected void initInterceptors() {
+		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
+				.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
+		if (!smartInterceptors.isEmpty()) {
+			this.smartInterceptors =
+					smartInterceptors.values().toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+		}
+	}
 
-    /**
-     * Look up an endpoint for the given message context, falling back to the default endpoint if no specific one is
-     * found.
-     *
-     * @return the looked up endpoint instance, or the default endpoint
-     * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
-     */
-    @Override
-    public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
-        Object endpoint = getEndpointInternal(messageContext);
-        if (endpoint == null) {
-            endpoint = defaultEndpoint;
-        }
-        if (endpoint == null) {
-            return null;
-        }
-        if (endpoint instanceof String) {
-            String endpointName = (String) endpoint;
-            endpoint = resolveStringEndpoint(endpointName);
-            if (endpoint == null) {
-                return null;
-            }
-        }
+	/**
+	 * Look up an endpoint for the given message context, falling back to the default endpoint if no specific one is
+	 * found.
+	 *
+	 * @return the looked up endpoint instance, or the default endpoint
+	 * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
+	 */
+	@Override
+	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+		Object endpoint = getEndpointInternal(messageContext);
+		if (endpoint == null) {
+			endpoint = defaultEndpoint;
+		}
+		if (endpoint == null) {
+			return null;
+		}
+		if (endpoint instanceof String) {
+			String endpointName = (String) endpoint;
+			endpoint = resolveStringEndpoint(endpointName);
+			if (endpoint == null) {
+				return null;
+			}
+		}
 
-        List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
-        if (this.interceptors != null) {
-            interceptors.addAll(Arrays.asList(this.interceptors));
-        }
+		List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
+		if (this.interceptors != null) {
+			interceptors.addAll(Arrays.asList(this.interceptors));
+		}
 
-        if (this.smartInterceptors != null) {
-            for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
-                if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
-                    interceptors.add(smartInterceptor);
-                }
-            }
-        }
+		if (this.smartInterceptors != null) {
+			for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+				if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
+					interceptors.add(smartInterceptor);
+				}
+			}
+		}
 
-        return createEndpointInvocationChain(messageContext, endpoint,
-                interceptors.toArray(new EndpointInterceptor[interceptors.size()]));
-    }
+		return createEndpointInvocationChain(messageContext, endpoint,
+				interceptors.toArray(new EndpointInterceptor[interceptors.size()]));
+	}
 
-    /**
-     * Creates a new {@code EndpointInvocationChain} based on the given message context, endpoint, and
-     * interceptors. Default implementation creates a simple {@code EndpointInvocationChain} based on the set
-     * interceptors.
-     *
-     * @param endpoint     the endpoint
-     * @param interceptors the endpoint interceptors
-     * @return the created invocation chain
-     * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
-     */
-    protected EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
-                                                                    Object endpoint,
-                                                                    EndpointInterceptor[] interceptors) {
-        return new EndpointInvocationChain(endpoint, interceptors);
-    }
+	/**
+	 * Creates a new {@code EndpointInvocationChain} based on the given message context, endpoint, and
+	 * interceptors. Default implementation creates a simple {@code EndpointInvocationChain} based on the set
+	 * interceptors.
+	 *
+	 * @param endpoint	   the endpoint
+	 * @param interceptors the endpoint interceptors
+	 * @return the created invocation chain
+	 * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
+	 */
+	protected EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
+																	Object endpoint,
+																	EndpointInterceptor[] interceptors) {
+		return new EndpointInvocationChain(endpoint, interceptors);
+	}
 
-    /**
-     * Returns the default endpoint for this endpoint mapping.
-     *
-     * @return the default endpoint mapping, or null if none
-     */
-    protected final Object getDefaultEndpoint() {
-        return defaultEndpoint;
-    }
+	/**
+	 * Returns the default endpoint for this endpoint mapping.
+	 *
+	 * @return the default endpoint mapping, or null if none
+	 */
+	protected final Object getDefaultEndpoint() {
+		return defaultEndpoint;
+	}
 
-    /**
-     * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
-     * found.
-     *
-     * <p>Default is {@code null}, indicating no default endpoint.
-     *
-     * @param defaultEndpoint the default endpoint, or null if none
-     */
-    public final void setDefaultEndpoint(Object defaultEndpoint) {
-        this.defaultEndpoint = defaultEndpoint;
-    }
+	/**
+	 * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
+	 * found.
+	 *
+	 * <p>Default is {@code null}, indicating no default endpoint.
+	 *
+	 * @param defaultEndpoint the default endpoint, or null if none
+	 */
+	public final void setDefaultEndpoint(Object defaultEndpoint) {
+		this.defaultEndpoint = defaultEndpoint;
+	}
 
-    /**
-     * Resolves an endpoint string. If the given string can is a bean name, it is resolved using the application
-     * context.
-     *
-     * @param endpointName the endpoint name
-     * @return the resolved endpoint, or {@code null} if the name could not be resolved
-     */
-    protected Object resolveStringEndpoint(String endpointName) {
-        if (getApplicationContext().containsBean(endpointName)) {
-            return getApplicationContext().getBean(endpointName);
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Resolves an endpoint string. If the given string can is a bean name, it is resolved using the application
+	 * context.
+	 *
+	 * @param endpointName the endpoint name
+	 * @return the resolved endpoint, or {@code null} if the name could not be resolved
+	 */
+	protected Object resolveStringEndpoint(String endpointName) {
+		if (getApplicationContext().containsBean(endpointName)) {
+			return getApplicationContext().getBean(endpointName);
+		}
+		else {
+			return null;
+		}
+	}
 
-    /**
-     * Lookup an endpoint for the given request, returning {@code null} if no specific one is found. This template
-     * method is called by getEndpoint, a {@code null} return value will lead to the default handler, if one is
-     * set.
-     *
-     * <p>The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
-     * {@code beanName#method}, in which case the method is resolved.
-     *
-     * @return the looked up endpoint instance, or null
-     * @throws Exception if there is an error
-     */
-    protected abstract Object getEndpointInternal(MessageContext messageContext) throws Exception;
+	/**
+	 * Lookup an endpoint for the given request, returning {@code null} if no specific one is found. This template
+	 * method is called by getEndpoint, a {@code null} return value will lead to the default handler, if one is
+	 * set.
+	 *
+	 * <p>The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
+	 * {@code beanName#method}, in which case the method is resolved.
+	 *
+	 * @return the looked up endpoint instance, or null
+	 * @throws Exception if there is an error
+	 */
+	protected abstract Object getEndpointInternal(MessageContext messageContext) throws Exception;
 }

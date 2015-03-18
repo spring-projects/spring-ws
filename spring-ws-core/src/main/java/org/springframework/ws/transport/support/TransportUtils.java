@@ -31,26 +31,26 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public abstract class TransportUtils {
 
-    private static final Log logger = LogFactory.getLog(TransportUtils.class);
+	private static final Log logger = LogFactory.getLog(TransportUtils.class);
 
-    /**
-     * Close the given {@link WebServiceConnection} and ignore any thrown exception. This is useful for typical
-     * {@code finally} blocks.
-     *
-     * @param connection the web service connection to close (may be {@code null})
-     */
-    public static void closeConnection(WebServiceConnection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-            }
-            catch (IOException ex) {
-                logger.debug("Could not close WebServiceConnection", ex);
-            }
-            catch (Throwable ex) {
-                logger.debug("Unexpected exception on closing WebServiceConnection", ex);
-            }
-        }
-    }
+	/**
+	 * Close the given {@link WebServiceConnection} and ignore any thrown exception. This is useful for typical
+	 * {@code finally} blocks.
+	 *
+	 * @param connection the web service connection to close (may be {@code null})
+	 */
+	public static void closeConnection(WebServiceConnection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			}
+			catch (IOException ex) {
+				logger.debug("Could not close WebServiceConnection", ex);
+			}
+			catch (Throwable ex) {
+				logger.debug("Unexpected exception on closing WebServiceConnection", ex);
+			}
+		}
+	}
 
 }

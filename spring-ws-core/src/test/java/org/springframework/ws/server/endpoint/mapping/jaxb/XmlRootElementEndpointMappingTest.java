@@ -27,26 +27,26 @@ import static org.junit.Assert.assertEquals;
 
 public class XmlRootElementEndpointMappingTest {
 
-    private XmlRootElementEndpointMapping mapping;
+	private XmlRootElementEndpointMapping mapping;
 
-    @Before
-    public void createMapping() throws NoSuchMethodException {
-        mapping = new XmlRootElementEndpointMapping();
-    }
+	@Before
+	public void createMapping() throws NoSuchMethodException {
+		mapping = new XmlRootElementEndpointMapping();
+	}
 
-    @Test
-    public void rootElement() throws NoSuchMethodException {
-        Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
-        QName name = mapping.getLookupKeyForMethod(rootElement);
-        assertEquals(new QName("myNamespace", "myRoot"), name);
-    }
+	@Test
+	public void rootElement() throws NoSuchMethodException {
+		Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
+		QName name = mapping.getLookupKeyForMethod(rootElement);
+		assertEquals(new QName("myNamespace", "myRoot"), name);
+	}
 
-    public void rootElement(MyRootElement rootElement) {
-    }
+	public void rootElement(MyRootElement rootElement) {
+	}
 
-    @XmlRootElement(name = "myRoot", namespace = "myNamespace")
-    public static class MyRootElement {
+	@XmlRootElement(name = "myRoot", namespace = "myNamespace")
+	public static class MyRootElement {
 
-    }
+	}
 
 }

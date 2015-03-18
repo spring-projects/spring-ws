@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,45 +37,45 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class XPathExpressionFactory {
 
-    private static final Log logger = LogFactory.getLog(XPathExpressionFactory.class);
+	private static final Log logger = LogFactory.getLog(XPathExpressionFactory.class);
 
-    /**
-     * Create a compiled XPath expression using the given string.
-     *
-     * @param expression the XPath expression
-     * @return the compiled XPath expression
-     * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
-     * @throws XPathParseException   if the given expression cannot be parsed
-     */
-    public static XPathExpression createXPathExpression(String expression)
-            throws IllegalStateException, XPathParseException {
-        return createXPathExpression(expression, Collections.<String, String>emptyMap());
-    }
+	/**
+	 * Create a compiled XPath expression using the given string.
+	 *
+	 * @param expression the XPath expression
+	 * @return the compiled XPath expression
+	 * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
+	 * @throws XPathParseException	 if the given expression cannot be parsed
+	 */
+	public static XPathExpression createXPathExpression(String expression)
+			throws IllegalStateException, XPathParseException {
+		return createXPathExpression(expression, Collections.<String, String>emptyMap());
+	}
 
-    /**
-     * Create a compiled XPath expression using the given string and namespaces. The namespace map should consist of
-     * string prefixes mapped to string namespaces.
-     *
-     * @param expression the XPath expression
-     * @param namespaces a map that binds string prefixes to string namespaces
-     * @return the compiled XPath expression
-     * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
-     * @throws XPathParseException   if the given expression cannot be parsed
-     */
-    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
-            throws IllegalStateException, XPathParseException {
-        Assert.hasLength(expression, "expression is empty");
-        if (namespaces == null) {
-            namespaces = Collections.emptyMap();
-        }
-        try {
-            logger.trace("Creating [javax.xml.xpath.XPathExpression]");
-            return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
-        }
-        catch (XPathException e) {
-            throw e;
-        }
-    }
+	/**
+	 * Create a compiled XPath expression using the given string and namespaces. The namespace map should consist of
+	 * string prefixes mapped to string namespaces.
+	 *
+	 * @param expression the XPath expression
+	 * @param namespaces a map that binds string prefixes to string namespaces
+	 * @return the compiled XPath expression
+	 * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
+	 * @throws XPathParseException	 if the given expression cannot be parsed
+	 */
+	public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
+			throws IllegalStateException, XPathParseException {
+		Assert.hasLength(expression, "expression is empty");
+		if (namespaces == null) {
+			namespaces = Collections.emptyMap();
+		}
+		try {
+			logger.trace("Creating [javax.xml.xpath.XPathExpression]");
+			return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
+		}
+		catch (XPathException e) {
+			throw e;
+		}
+	}
 
 
 }

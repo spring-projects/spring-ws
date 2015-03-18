@@ -24,26 +24,26 @@ import org.junit.Test;
 
 public class SimpleUsernamePasswordCallbackHandlerTest {
 
-    private SimpleUsernamePasswordCallbackHandler handler;
+	private SimpleUsernamePasswordCallbackHandler handler;
 
-    @Before
-    public void setUp() throws Exception {
-        handler = new SimpleUsernamePasswordCallbackHandler();
-        handler.setUsername("Bert");
-        handler.setPassword("Ernie");
-    }
+	@Before
+	public void setUp() throws Exception {
+		handler = new SimpleUsernamePasswordCallbackHandler();
+		handler.setUsername("Bert");
+		handler.setPassword("Ernie");
+	}
 
-    @Test
-    public void testUsernameCallback() throws Exception {
-        UsernameCallback usernameCallback = new UsernameCallback();
-        handler.handleInternal(usernameCallback);
-        Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
-    }
+	@Test
+	public void testUsernameCallback() throws Exception {
+		UsernameCallback usernameCallback = new UsernameCallback();
+		handler.handleInternal(usernameCallback);
+		Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+	}
 
-    @Test
-    public void testPasswordCallback() throws Exception {
-        PasswordCallback passwordCallback = new PasswordCallback();
-        handler.handleInternal(passwordCallback);
-        Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
-    }
+	@Test
+	public void testPasswordCallback() throws Exception {
+		PasswordCallback passwordCallback = new PasswordCallback();
+		handler.handleInternal(passwordCallback);
+		Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+	}
 }

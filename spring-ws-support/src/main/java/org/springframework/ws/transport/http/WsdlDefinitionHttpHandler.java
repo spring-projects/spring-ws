@@ -37,47 +37,47 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implements HttpHandler, InitializingBean {
 
-    private static final String CONTENT_TYPE = "text/xml";
+	private static final String CONTENT_TYPE = "text/xml";
 
-    private WsdlDefinition definition;
+	private WsdlDefinition definition;
 
-    public WsdlDefinitionHttpHandler() {
-    }
+	public WsdlDefinitionHttpHandler() {
+	}
 
-    public WsdlDefinitionHttpHandler(WsdlDefinition definition) {
-        this.definition = definition;
-    }
+	public WsdlDefinitionHttpHandler(WsdlDefinition definition) {
+		this.definition = definition;
+	}
 
-    public void setDefinition(WsdlDefinition definition) {
-        this.definition = definition;
-    }
+	public void setDefinition(WsdlDefinition definition) {
+		this.definition = definition;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(definition, "'definition' is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(definition, "'definition' is required");
+	}
 
-    @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        try {
-            if (HttpTransportConstants.METHOD_GET.equals(httpExchange.getRequestMethod())) {
-                Headers headers = httpExchange.getResponseHeaders();
-                headers.set(HttpTransportConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                transform(definition.getSource(), new StreamResult(os));
-                byte[] buf = os.toByteArray();
-                httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_OK, buf.length);
-                FileCopyUtils.copy(buf, httpExchange.getResponseBody());
-            }
-            else {
-                httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
-            }
-        }
-        catch (TransformerException ex) {
-            logger.error(ex, ex);
-        }
-        finally {
-            httpExchange.close();
-        }
-    }
+	@Override
+	public void handle(HttpExchange httpExchange) throws IOException {
+		try {
+			if (HttpTransportConstants.METHOD_GET.equals(httpExchange.getRequestMethod())) {
+				Headers headers = httpExchange.getResponseHeaders();
+				headers.set(HttpTransportConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				transform(definition.getSource(), new StreamResult(os));
+				byte[] buf = os.toByteArray();
+				httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_OK, buf.length);
+				FileCopyUtils.copy(buf, httpExchange.getResponseBody());
+			}
+			else {
+				httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
+			}
+		}
+		catch (TransformerException ex) {
+			logger.error(ex, ex);
+		}
+		finally {
+			httpExchange.close();
+		}
+	}
 }

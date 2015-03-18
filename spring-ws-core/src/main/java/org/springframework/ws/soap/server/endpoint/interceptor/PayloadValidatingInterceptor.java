@@ -41,15 +41,15 @@ import org.springframework.ws.WebServiceMessage;
  */
 public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatingInterceptor {
 
-    /** Returns the payload source of the given message. */
-    @Override
-    protected Source getValidationRequestSource(WebServiceMessage request) {
-        return request.getPayloadSource();
-    }
+	/** Returns the payload source of the given message. */
+	@Override
+	protected Source getValidationRequestSource(WebServiceMessage request) {
+		return request.getPayloadSource();
+	}
 
-    /** Returns the payload source of the given message. */
-    @Override
-    protected Source getValidationResponseSource(WebServiceMessage response) {
-        return response.getPayloadSource();
-    }
+	/** Returns the payload source of the given message. */
+	@Override
+	protected Source getValidationResponseSource(WebServiceMessage response) {
+		return response.getPayloadSource();
+	}
 }

@@ -59,51 +59,51 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
 
-    private String expressionString;
+	private String expressionString;
 
-    private XPathExpression expression;
+	private XPathExpression expression;
 
-    private Map<String, String> namespaces;
+	private Map<String, String> namespaces;
 
-    private TransformerFactory transformerFactory;
+	private TransformerFactory transformerFactory;
 
-    /** Sets the XPath expression to be used. */
-    public void setExpression(String expression) {
-        expressionString = expression;
-    }
+	/** Sets the XPath expression to be used. */
+	public void setExpression(String expression) {
+		expressionString = expression;
+	}
 
-    /** Sets the namespaces bindings used in the expression. Keys are prefixes, values are namespaces. */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
+	/** Sets the namespaces bindings used in the expression. Keys are prefixes, values are namespaces. */
+	public void setNamespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(expressionString, "expression is required");
-        if (namespaces == null) {
-            expression = XPathExpressionFactory.createXPathExpression(expressionString);
-        }
-        else {
-            expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
-        }
-        transformerFactory = TransformerFactory.newInstance();
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(expressionString, "expression is required");
+		if (namespaces == null) {
+			expression = XPathExpressionFactory.createXPathExpression(expressionString);
+		}
+		else {
+			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
+		}
+		transformerFactory = TransformerFactory.newInstance();
+	}
 
-    @Override
-    protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
-        return expression.evaluateAsString(payloadElement);
-    }
+	@Override
+	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
+		return expression.evaluateAsString(payloadElement);
+	}
 
-    private Element getMessagePayloadElement(WebServiceMessage message) throws TransformerException {
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMResult domResult = new DOMResult();
-        transformer.transform(message.getPayloadSource(), domResult);
-        return (Element) domResult.getNode().getFirstChild();
-    }
+	private Element getMessagePayloadElement(WebServiceMessage message) throws TransformerException {
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMResult domResult = new DOMResult();
+		transformer.transform(message.getPayloadSource(), domResult);
+		return (Element) domResult.getNode().getFirstChild();
+	}
 
-    @Override
-    protected boolean validateLookupKey(String key) {
-        return StringUtils.hasLength(key);
-    }
+	@Override
+	protected boolean validateLookupKey(String key) {
+		return StringUtils.hasLength(key);
+	}
 }

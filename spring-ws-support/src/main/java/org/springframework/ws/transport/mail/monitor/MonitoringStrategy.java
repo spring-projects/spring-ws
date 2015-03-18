@@ -28,20 +28,20 @@ import javax.mail.MessagingException;
  */
 public interface MonitoringStrategy {
 
-    /**
-     * Monitors the given folder, and returns any new messages when they arrive.
-     *
-     * @param folder the folder in which to look for new messages
-     * @return the new messages
-     * @throws MessagingException   in case of JavaMail errors
-     * @throws InterruptedException if a thread is interrupted
-     */
-    Message[] monitor(Folder folder) throws MessagingException, InterruptedException;
+	/**
+	 * Monitors the given folder, and returns any new messages when they arrive.
+	 *
+	 * @param folder the folder in which to look for new messages
+	 * @return the new messages
+	 * @throws MessagingException	in case of JavaMail errors
+	 * @throws InterruptedException if a thread is interrupted
+	 */
+	Message[] monitor(Folder folder) throws MessagingException, InterruptedException;
 
-    /**
-     * Returns the folder open mode to be used by this strategy. Can be either {@link Folder#READ_ONLY} or {@link
-     * Folder#READ_WRITE}.
-     */
-    int getFolderOpenMode();
+	/**
+	 * Returns the folder open mode to be used by this strategy. Can be either {@link Folder#READ_ONLY} or {@link
+	 * Folder#READ_WRITE}.
+	 */
+	int getFolderOpenMode();
 
 }

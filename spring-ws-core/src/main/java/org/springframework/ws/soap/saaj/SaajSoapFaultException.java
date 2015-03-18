@@ -25,15 +25,15 @@ import org.springframework.ws.soap.SoapFaultException;
 @SuppressWarnings("serial")
 public class SaajSoapFaultException extends SoapFaultException {
 
-    public SaajSoapFaultException(String msg) {
-        super(msg);
-    }
+	public SaajSoapFaultException(String msg) {
+		super(msg);
+	}
 
-    public SaajSoapFaultException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajSoapFaultException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SaajSoapFaultException(Throwable ex) {
-        super(ex);
-    }
+	public SaajSoapFaultException(Throwable ex) {
+		super(ex);
+	}
 }

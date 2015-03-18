@@ -34,41 +34,41 @@ import static org.junit.Assert.assertTrue;
 
 public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
-    @Override
-    protected AbstractPayloadSourceMethodProcessor createProcessor() {
-        return new DomPayloadMethodProcessor();
-    }
+	@Override
+	protected AbstractPayloadSourceMethodProcessor createProcessor() {
+		return new DomPayloadMethodProcessor();
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-        return new MethodParameter[]{
-                new MethodParameter(getClass().getMethod("element", Element.class), 0)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
+		return new MethodParameter[]{
+				new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
-        return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
+		return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
+	}
 
-    @Override
-    protected void testArgument(Object argument, MethodParameter parameter) {
-        assertTrue("argument not a element", argument instanceof Element);
-        Element element = (Element) argument;
-        assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-        assertEquals("Invalid local name", LOCAL_NAME, element.getLocalName());
-    }
+	@Override
+	protected void testArgument(Object argument, MethodParameter parameter) {
+		assertTrue("argument not a element", argument instanceof Element);
+		Element element = (Element) argument;
+		assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
+		assertEquals("Invalid local name", LOCAL_NAME, element.getLocalName());
+	}
 
-    @Override
-    protected Element getReturnValue(MethodParameter returnType) throws ParserConfigurationException {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        return document.createElementNS(NAMESPACE_URI, LOCAL_NAME);
-    }
+	@Override
+	protected Element getReturnValue(MethodParameter returnType) throws ParserConfigurationException {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.newDocument();
+		return document.createElementNS(NAMESPACE_URI, LOCAL_NAME);
+	}
 
-    @ResponsePayload
-    public Element element(@RequestPayload Element element) {
-        return element;
-    }
+	@ResponsePayload
+	public Element element(@RequestPayload Element element) {
+		return element;
+	}
 
 }

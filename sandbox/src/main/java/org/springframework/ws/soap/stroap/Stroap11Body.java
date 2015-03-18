@@ -30,67 +30,67 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
  */
 class Stroap11Body extends StroapBody implements Soap11Body {
 
-    private static final String ENVELOPE_NAMESPACE_URI = "http://schemas.xmlsoap.org/soap/envelope/";
+	private static final String ENVELOPE_NAMESPACE_URI = "http://schemas.xmlsoap.org/soap/envelope/";
 
-    private QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client", DEFAULT_PREFIX);
+	private QName CLIENT_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Client", DEFAULT_PREFIX);
 
-    private QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server", DEFAULT_PREFIX);
+	private QName SERVER_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "Server", DEFAULT_PREFIX);
 
-    private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand", DEFAULT_PREFIX);
+	private QName MUST_UNDERSTAND_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "MustUnderstand", DEFAULT_PREFIX);
 
-    private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch", DEFAULT_PREFIX);
+	private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch", DEFAULT_PREFIX);
 
-    Stroap11Body(StroapMessageFactory messageFactory) {
-        super(messageFactory);
-    }
+	Stroap11Body(StroapMessageFactory messageFactory) {
+		super(messageFactory);
+	}
 
-    Stroap11Body(StartElement startElement, StroapPayload payload, StroapMessageFactory messageFactory) {
-        super(startElement, payload, messageFactory);
-    }
+	Stroap11Body(StartElement startElement, StroapPayload payload, StroapMessageFactory messageFactory) {
+		super(startElement, payload, messageFactory);
+	}
 
-    @Override
-    public Soap11Fault getFault() {
-        return (Soap11Fault) super.getFault();
-    }
+	@Override
+	public Soap11Fault getFault() {
+		return (Soap11Fault) super.getFault();
+	}
 
-    public Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
-        Stroap11Fault fault =
-                new Stroap11Fault(MUST_UNDERSTAND_FAULT_NAME, "SOAP Must Understand Error", null, getMessageFactory());
-        setFault(fault);
-        return fault;
-    }
+	public Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
+		Stroap11Fault fault =
+				new Stroap11Fault(MUST_UNDERSTAND_FAULT_NAME, "SOAP Must Understand Error", null, getMessageFactory());
+		setFault(fault);
+		return fault;
+	}
 
-    public Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        Stroap11Fault fault = new Stroap11Fault(CLIENT_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
-        setFault(fault);
-        return fault;
-    }
+	public Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		Stroap11Fault fault = new Stroap11Fault(CLIENT_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
+		setFault(fault);
+		return fault;
+	}
 
-    public Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        Stroap11Fault fault = new Stroap11Fault(SERVER_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
-        setFault(fault);
-        return fault;
-    }
+	public Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		Stroap11Fault fault = new Stroap11Fault(SERVER_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
+		setFault(fault);
+		return fault;
+	}
 
-    public Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
-        Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
-        Stroap11Fault fault =
-                new Stroap11Fault(VERSION_MISMATCH_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
-        setFault(fault);
-        return fault;
-    }
+	public Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException {
+		Assert.hasLength(faultStringOrReason, "'faultStringOrReason' must not be empty");
+		Stroap11Fault fault =
+				new Stroap11Fault(VERSION_MISMATCH_FAULT_NAME, faultStringOrReason, null, getMessageFactory());
+		setFault(fault);
+		return fault;
+	}
 
-    public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale)
-            throws SoapFaultException {
-        Assert.notNull(faultCode, "'faultCode' must not be null");
-        Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
-        Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
-        Assert.hasLength(faultString, "'faultString' must not be empty");
+	public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale)
+			throws SoapFaultException {
+		Assert.notNull(faultCode, "'faultCode' must not be null");
+		Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
+		Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
+		Assert.hasLength(faultString, "'faultString' must not be empty");
 
-        Stroap11Fault fault = new Stroap11Fault(faultCode, faultString, faultStringLocale, getMessageFactory());
-        setFault(fault);
-        return fault;
-    }
+		Stroap11Fault fault = new Stroap11Fault(faultCode, faultString, faultStringLocale, getMessageFactory());
+		setFault(fault);
+		return fault;
+	}
 }

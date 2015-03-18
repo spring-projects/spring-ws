@@ -30,16 +30,16 @@ import org.springframework.ws.soap.SoapHeaderException;
  */
 public interface Soap11Header extends SoapHeader {
 
-    /**
-     * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed
-     * for the given actors. Headers target to the "next" actor or role will always be included.
-     *
-     * @param actors an array of actors to search for
-     * @return an iterator over all the header elements that contain the specified actors
-     * @throws SoapHeaderException if the headers cannot be returned
-     * @see SoapHeaderElement
-     */
-    Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) throws SoapHeaderException;
+	/**
+	 * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed
+	 * for the given actors. Headers target to the "next" actor or role will always be included.
+	 *
+	 * @param actors an array of actors to search for
+	 * @return an iterator over all the header elements that contain the specified actors
+	 * @throws SoapHeaderException if the headers cannot be returned
+	 * @see SoapHeaderElement
+	 */
+	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) throws SoapHeaderException;
 
 
 }

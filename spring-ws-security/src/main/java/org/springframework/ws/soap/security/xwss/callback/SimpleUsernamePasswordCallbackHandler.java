@@ -40,51 +40,51 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class SimpleUsernamePasswordCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
-    private String username;
+	private String username;
 
-    private String password;
+	private String password;
 
 
-    /**
-     * Constructs an empty instance of the {@code SimpleUsernamePasswordCallbackHandler}.
-     */
-    public SimpleUsernamePasswordCallbackHandler() {
-    }
+	/**
+	 * Constructs an empty instance of the {@code SimpleUsernamePasswordCallbackHandler}.
+	 */
+	public SimpleUsernamePasswordCallbackHandler() {
+	}
 
-    /**
-     * Constructs an instance of the {@code SimpleUsernamePasswordCallbackHandler} with the given name and password.
-     */
-    public SimpleUsernamePasswordCallbackHandler(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+	/**
+	 * Constructs an instance of the {@code SimpleUsernamePasswordCallbackHandler} with the given name and password.
+	 */
+	public SimpleUsernamePasswordCallbackHandler(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.hasLength(username, "username must be set");
-        Assert.hasLength(password, "password must be set");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.hasLength(username, "username must be set");
+		Assert.hasLength(password, "password must be set");
+	}
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof UsernameCallback) {
-            UsernameCallback usernameCallback = (UsernameCallback) callback;
-            usernameCallback.setUsername(username);
-        }
-        else if (callback instanceof PasswordCallback) {
-            PasswordCallback passwordCallback = (PasswordCallback) callback;
-            passwordCallback.setPassword(password);
-        }
-        else {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof UsernameCallback) {
+			UsernameCallback usernameCallback = (UsernameCallback) callback;
+			usernameCallback.setUsername(username);
+		}
+		else if (callback instanceof PasswordCallback) {
+			PasswordCallback passwordCallback = (PasswordCallback) callback;
+			passwordCallback.setPassword(password);
+		}
+		else {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 }

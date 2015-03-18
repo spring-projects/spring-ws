@@ -68,230 +68,230 @@ import org.xml.sax.SAXException;
  */
 public class StroapMessage extends AbstractSoapMessage implements StreamingWebServiceMessage {
 
-    private final MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
+	private final MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
 
-    private StroapEnvelope envelope;
+	private StroapEnvelope envelope;
 
-    private final StroapMessageFactory messageFactory;
+	private final StroapMessageFactory messageFactory;
 
-    private final StartDocument startDocument;
+	private final StartDocument startDocument;
 
-    private final EndDocument endDocument;
+	private final EndDocument endDocument;
 
-    public StroapMessage(StroapMessageFactory messageFactory) {
-        this(null, null, messageFactory);
-    }
+	public StroapMessage(StroapMessageFactory messageFactory) {
+		this(null, null, messageFactory);
+	}
 
-    public StroapMessage(MultiValueMap<String, String> mimeHeaders,
-                         StroapEnvelope envelope,
-                         StroapMessageFactory messageFactory) {
-        Assert.notNull(messageFactory, "'messageFactory' must not be null");
-        this.messageFactory = messageFactory;
-        if (mimeHeaders != null) {
-            this.mimeHeaders.putAll(mimeHeaders);
-        }
-        this.envelope = envelope != null ? envelope : new StroapEnvelope(messageFactory);
-        if (!this.mimeHeaders.containsKey(TransportConstants.HEADER_CONTENT_TYPE)) {
-            this.mimeHeaders
-                    .set(TransportConstants.HEADER_CONTENT_TYPE, messageFactory.getSoapVersion().getContentType());
-        }
-        if (!this.mimeHeaders.containsKey(TransportConstants.HEADER_ACCEPT)) {
-            this.mimeHeaders.set(TransportConstants.HEADER_ACCEPT, messageFactory.getSoapVersion().getContentType());
-        }
-        this.startDocument = messageFactory.getEventFactory().createStartDocument();
-        this.endDocument = messageFactory.getEventFactory().createEndDocument();
-    }
+	public StroapMessage(MultiValueMap<String, String> mimeHeaders,
+						 StroapEnvelope envelope,
+						 StroapMessageFactory messageFactory) {
+		Assert.notNull(messageFactory, "'messageFactory' must not be null");
+		this.messageFactory = messageFactory;
+		if (mimeHeaders != null) {
+			this.mimeHeaders.putAll(mimeHeaders);
+		}
+		this.envelope = envelope != null ? envelope : new StroapEnvelope(messageFactory);
+		if (!this.mimeHeaders.containsKey(TransportConstants.HEADER_CONTENT_TYPE)) {
+			this.mimeHeaders
+					.set(TransportConstants.HEADER_CONTENT_TYPE, messageFactory.getSoapVersion().getContentType());
+		}
+		if (!this.mimeHeaders.containsKey(TransportConstants.HEADER_ACCEPT)) {
+			this.mimeHeaders.set(TransportConstants.HEADER_ACCEPT, messageFactory.getSoapVersion().getContentType());
+		}
+		this.startDocument = messageFactory.getEventFactory().createStartDocument();
+		this.endDocument = messageFactory.getEventFactory().createEndDocument();
+	}
 
-    static StroapMessage build(InputStream inputStream, StroapMessageFactory messageFactory)
-            throws XMLStreamException, IOException {
-        MultiValueMap<String, String> mimeHeaders = parseMimeHeaders(inputStream);
-        XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(inputStream);
-        StroapEnvelope envelope = StroapEnvelope.build(eventReader, messageFactory);
-        return new StroapMessage(mimeHeaders, envelope, messageFactory);
-    }
+	static StroapMessage build(InputStream inputStream, StroapMessageFactory messageFactory)
+			throws XMLStreamException, IOException {
+		MultiValueMap<String, String> mimeHeaders = parseMimeHeaders(inputStream);
+		XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(inputStream);
+		StroapEnvelope envelope = StroapEnvelope.build(eventReader, messageFactory);
+		return new StroapMessage(mimeHeaders, envelope, messageFactory);
+	}
 
-    private static MultiValueMap<String, String> parseMimeHeaders(InputStream inputStream) throws IOException {
-        MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
-        if (inputStream instanceof TransportInputStream) {
-            TransportInputStream transportInputStream = (TransportInputStream) inputStream;
-            for (Iterator<String> headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
-                String headerName = headerNames.next();
-                for (Iterator<String> headerValues = transportInputStream.getHeaders(headerName);
-                     headerValues.hasNext();) {
-                    String headerValue = headerValues.next();
-                    StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
-                    while (tokenizer.hasMoreTokens()) {
-                        mimeHeaders.add(headerName, tokenizer.nextToken().trim());
-                    }
-                }
-            }
-        }
-        return mimeHeaders;
-    }
+	private static MultiValueMap<String, String> parseMimeHeaders(InputStream inputStream) throws IOException {
+		MultiValueMap<String, String> mimeHeaders = new LinkedMultiValueMap<String, String>();
+		if (inputStream instanceof TransportInputStream) {
+			TransportInputStream transportInputStream = (TransportInputStream) inputStream;
+			for (Iterator<String> headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
+				String headerName = headerNames.next();
+				for (Iterator<String> headerValues = transportInputStream.getHeaders(headerName);
+					 headerValues.hasNext();) {
+					String headerValue = headerValues.next();
+					StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
+					while (tokenizer.hasMoreTokens()) {
+						mimeHeaders.add(headerName, tokenizer.nextToken().trim());
+					}
+				}
+			}
+		}
+		return mimeHeaders;
+	}
 
-    public SoapEnvelope getEnvelope() throws SoapEnvelopeException {
-        return envelope;
-    }
+	public SoapEnvelope getEnvelope() throws SoapEnvelopeException {
+		return envelope;
+	}
 
-    public void setStreamingPayload(StreamingPayload payload) {
-        StroapBody soapBody = (StroapBody) getSoapBody();
-        soapBody.setStreamingPayload(payload);
-    }
+	public void setStreamingPayload(StreamingPayload payload) {
+		StroapBody soapBody = (StroapBody) getSoapBody();
+		soapBody.setStreamingPayload(payload);
+	}
 
-    public String getSoapAction() {
-        String soapAction = mimeHeaders.getFirst(TransportConstants.HEADER_SOAP_ACTION);
-        return StringUtils.hasLength(soapAction) ? soapAction : TransportConstants.EMPTY_SOAP_ACTION;
-    }
+	public String getSoapAction() {
+		String soapAction = mimeHeaders.getFirst(TransportConstants.HEADER_SOAP_ACTION);
+		return StringUtils.hasLength(soapAction) ? soapAction : TransportConstants.EMPTY_SOAP_ACTION;
+	}
 
-    public void setSoapAction(String soapAction) {
-        soapAction = SoapUtils.escapeAction(soapAction);
-        mimeHeaders.set(TransportConstants.HEADER_SOAP_ACTION, soapAction);
-    }
+	public void setSoapAction(String soapAction) {
+		soapAction = SoapUtils.escapeAction(soapAction);
+		mimeHeaders.set(TransportConstants.HEADER_SOAP_ACTION, soapAction);
+	}
 
-    @Override
-    public SoapVersion getVersion() {
-        return messageFactory.getSoapVersion();
-    }
+	@Override
+	public SoapVersion getVersion() {
+		return messageFactory.getSoapVersion();
+	}
 
-    public Document getDocument() {
-        try {
-            DocumentBuilder documentBuilder = messageFactory.getDocumentBuilderFactory().newDocumentBuilder();
-            try {
-                Document result = documentBuilder.newDocument();
-                DOMResult domResult = new DOMResult(result);
-                XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(domResult);
-                eventWriter.add(startDocument);
-                envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
-                eventWriter.add(endDocument);
-                eventWriter.flush();
-                return result;
-            }
-            catch (XMLStreamException ignored) {
-                // ignored
-            }
-            catch (UnsupportedOperationException ignored) {
-                // ignored
-            }
+	public Document getDocument() {
+		try {
+			DocumentBuilder documentBuilder = messageFactory.getDocumentBuilderFactory().newDocumentBuilder();
+			try {
+				Document result = documentBuilder.newDocument();
+				DOMResult domResult = new DOMResult(result);
+				XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(domResult);
+				eventWriter.add(startDocument);
+				envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
+				eventWriter.add(endDocument);
+				eventWriter.flush();
+				return result;
+			}
+			catch (XMLStreamException ignored) {
+				// ignored
+			}
+			catch (UnsupportedOperationException ignored) {
+				// ignored
+			}
 
-            // XMLOutputFactory does not support DOMResults, so let's do it the hard way
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            writeTo(bos);
+			// XMLOutputFactory does not support DOMResults, so let's do it the hard way
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			writeTo(bos);
 
-            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-            return documentBuilder.parse(bis);
-        }
-        catch (ParserConfigurationException ex) {
-            throw new StroapMessageException("Could not create DocumentBuilderFactory", ex);
-        }
-        catch (SAXException ex) {
-            throw new StroapMessageException("Could not save message as Document", ex);
-        }
-        catch (IOException ex) {
-            throw new StroapMessageException("Could not save message as Document", ex);
-        }
-    }
+			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+			return documentBuilder.parse(bis);
+		}
+		catch (ParserConfigurationException ex) {
+			throw new StroapMessageException("Could not create DocumentBuilderFactory", ex);
+		}
+		catch (SAXException ex) {
+			throw new StroapMessageException("Could not save message as Document", ex);
+		}
+		catch (IOException ex) {
+			throw new StroapMessageException("Could not save message as Document", ex);
+		}
+	}
 
-    public void setDocument(Document document) {
-        try {
-            try {
-                DOMSource domSource = new DOMSource(document);
-                XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(domSource);
-                this.envelope = StroapEnvelope.build(eventReader, messageFactory);
-                return;
-            }
-            catch (XMLStreamException ignored) {
-                // ignored
-            }
-            catch (UnsupportedOperationException ignored) {
-                // ignored
-            }
-            // XMLInputFactory does not support DOMSources, so let's do it the hard way
-            DOMImplementation implementation = document.getImplementation();
-            Assert.isInstanceOf(DOMImplementationLS.class, implementation);
+	public void setDocument(Document document) {
+		try {
+			try {
+				DOMSource domSource = new DOMSource(document);
+				XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(domSource);
+				this.envelope = StroapEnvelope.build(eventReader, messageFactory);
+				return;
+			}
+			catch (XMLStreamException ignored) {
+				// ignored
+			}
+			catch (UnsupportedOperationException ignored) {
+				// ignored
+			}
+			// XMLInputFactory does not support DOMSources, so let's do it the hard way
+			DOMImplementation implementation = document.getImplementation();
+			Assert.isInstanceOf(DOMImplementationLS.class, implementation);
 
-            DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
-            LSOutput output = loadSaveImplementation.createLSOutput();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            output.setByteStream(bos);
+			DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
+			LSOutput output = loadSaveImplementation.createLSOutput();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			output.setByteStream(bos);
 
-            LSSerializer serializer = loadSaveImplementation.createLSSerializer();
-            serializer.write(document, output);
+			LSSerializer serializer = loadSaveImplementation.createLSSerializer();
+			serializer.write(document, output);
 
-            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-            XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(bis);
-            this.envelope = StroapEnvelope.build(eventReader, messageFactory);
-        }
-        catch (XMLStreamException ex) {
-            throw new StroapMessageException("Could not read Document", ex);
-        }
-    }
+			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+			XMLEventReader eventReader = messageFactory.getInputFactory().createXMLEventReader(bis);
+			this.envelope = StroapEnvelope.build(eventReader, messageFactory);
+		}
+		catch (XMLStreamException ex) {
+			throw new StroapMessageException("Could not read Document", ex);
+		}
+	}
 
-    public void writeTo(OutputStream outputStream) throws IOException {
-        if (outputStream instanceof TransportOutputStream) {
-            TransportOutputStream tos = (TransportOutputStream) outputStream;
-            for (Map.Entry<String, List<String>> entry : mimeHeaders.entrySet()) {
-                String name = entry.getKey();
-                for (String value : entry.getValue()) {
-                    tos.addHeader(name, value);
-                }
-            }
-        }
-        try {
-            XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(outputStream);
-            eventWriter.add(startDocument);
-            envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
-            eventWriter.add(endDocument);
-            eventWriter.flush();
-        }
-        catch (XMLStreamException ex) {
-            throw new StroapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
-        }
-    }
+	public void writeTo(OutputStream outputStream) throws IOException {
+		if (outputStream instanceof TransportOutputStream) {
+			TransportOutputStream tos = (TransportOutputStream) outputStream;
+			for (Map.Entry<String, List<String>> entry : mimeHeaders.entrySet()) {
+				String name = entry.getKey();
+				for (String value : entry.getValue()) {
+					tos.addHeader(name, value);
+				}
+			}
+		}
+		try {
+			XMLEventWriter eventWriter = messageFactory.getOutputFactory().createXMLEventWriter(outputStream);
+			eventWriter.add(startDocument);
+			envelope.writeTo(new NoStartEndDocumentWriter(eventWriter));
+			eventWriter.add(endDocument);
+			eventWriter.flush();
+		}
+		catch (XMLStreamException ex) {
+			throw new StroapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
+		}
+	}
 
-    public boolean isXopPackage() {
-        return false;
-    }
+	public boolean isXopPackage() {
+		return false;
+	}
 
-    public boolean convertToXopPackage() {
-        return false;
-    }
+	public boolean convertToXopPackage() {
+		return false;
+	}
 
-    public Attachment getAttachment(String contentId) throws AttachmentException {
-        throw new UnsupportedOperationException();
-    }
+	public Attachment getAttachment(String contentId) throws AttachmentException {
+		throw new UnsupportedOperationException();
+	}
 
-    public Iterator<Attachment> getAttachments() throws AttachmentException {
-        return Collections.<Attachment>emptyList().iterator();
-    }
+	public Iterator<Attachment> getAttachments() throws AttachmentException {
+		return Collections.<Attachment>emptyList().iterator();
+	}
 
-    public Attachment addAttachment(String contentId, DataHandler dataHandler) {
-        throw new UnsupportedOperationException();
-    }
+	public Attachment addAttachment(String contentId, DataHandler dataHandler) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder("StroapMessage");
-        StroapBody body = (StroapBody) envelope.getBody();
-        if (body != null) {
-            builder.append(' ');
-            builder.append(body.getPayloadName());
-        }
-        return builder.toString();
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder("StroapMessage");
+		StroapBody body = (StroapBody) envelope.getBody();
+		if (body != null) {
+			builder.append(' ');
+			builder.append(body.getPayloadName());
+		}
+		return builder.toString();
+	}
 
-    private static class NoStartEndDocumentWriter extends AbstractXMLEventWriter {
+	private static class NoStartEndDocumentWriter extends AbstractXMLEventWriter {
 
-        private final XMLEventWriter delegate;
+		private final XMLEventWriter delegate;
 
-        private NoStartEndDocumentWriter(XMLEventWriter delegate) {
-            this.delegate = delegate;
-        }
+		private NoStartEndDocumentWriter(XMLEventWriter delegate) {
+			this.delegate = delegate;
+		}
 
-        public void add(XMLEvent event) throws XMLStreamException {
-            if (!event.isStartDocument() && !event.isEndDocument()) {
-                delegate.add(event);
-            }
-        }
-    }
+		public void add(XMLEvent event) throws XMLStreamException {
+			if (!event.isStartDocument() && !event.isEndDocument()) {
+				delegate.add(event);
+			}
+		}
+	}
 
 }

@@ -29,30 +29,30 @@ import static org.junit.Assert.assertTrue;
 
 public class MessageContextMethodArgumentResolverTest {
 
-    private MessageContextMethodArgumentResolver resolver;
+	private MessageContextMethodArgumentResolver resolver;
 
-    private MethodParameter supported;
+	private MethodParameter supported;
 
-    @Before
-    public void setUp() throws NoSuchMethodException {
-        resolver = new MessageContextMethodArgumentResolver();
-        supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
-    }
+	@Before
+	public void setUp() throws NoSuchMethodException {
+		resolver = new MessageContextMethodArgumentResolver();
+		supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
+	}
 
-    @Test
-    public void supportsParameter() throws Exception {
-        assertTrue("resolver does not support MessageContext", resolver.supportsParameter(supported));
-    }
+	@Test
+	public void supportsParameter() throws Exception {
+		assertTrue("resolver does not support MessageContext", resolver.supportsParameter(supported));
+	}
 
-    @Test
-    public void resolveArgument() throws Exception {
-        MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	@Test
+	public void resolveArgument() throws Exception {
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-        MessageContext result = resolver.resolveArgument(messageContext, supported);
-        assertSame("Invalid message context returned", messageContext, result);
-    }
+		MessageContext result = resolver.resolveArgument(messageContext, supported);
+		assertSame("Invalid message context returned", messageContext, result);
+	}
 
-    public void supported(MessageContext messageContext) {
-    }
+	public void supported(MessageContext messageContext) {
+	}
 
 }

@@ -30,31 +30,31 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public abstract class SpringSecurityUtils {
 
-    /**
-     * Checks the validity of a user's account and credentials.
-     * @param user the user to check
-     * @throws AccountExpiredException if the account has expired
-     * @throws CredentialsExpiredException if the credentials have expired
-     * @throws DisabledException if the account is disabled
-     * @throws LockedException if the account is locked
-     */
-    @SuppressWarnings("deprecation")
-    public static void checkUserValidity(UserDetails user)
-            throws AccountExpiredException, CredentialsExpiredException, DisabledException, LockedException {
-        if (!user.isAccountNonLocked()) {
-            throw new LockedException("User account is locked", user);
-        }
+	/**
+	 * Checks the validity of a user's account and credentials.
+	 * @param user the user to check
+	 * @throws AccountExpiredException if the account has expired
+	 * @throws CredentialsExpiredException if the credentials have expired
+	 * @throws DisabledException if the account is disabled
+	 * @throws LockedException if the account is locked
+	 */
+	@SuppressWarnings("deprecation")
+	public static void checkUserValidity(UserDetails user)
+			throws AccountExpiredException, CredentialsExpiredException, DisabledException, LockedException {
+		if (!user.isAccountNonLocked()) {
+			throw new LockedException("User account is locked", user);
+		}
 
-        if (!user.isEnabled()) {
-            throw new DisabledException("User is disabled", user);
-        }
+		if (!user.isEnabled()) {
+			throw new DisabledException("User is disabled", user);
+		}
 
-        if (!user.isAccountNonExpired()) {
-            throw new AccountExpiredException("User account has expired", user);
-        }
+		if (!user.isAccountNonExpired()) {
+			throw new AccountExpiredException("User account has expired", user);
+		}
 
-        if (!user.isCredentialsNonExpired()) {
-            throw new CredentialsExpiredException("User credentials have expired", user);
-        }
-    }
+		if (!user.isCredentialsNonExpired()) {
+			throw new CredentialsExpiredException("User credentials have expired", user);
+		}
+	}
 }

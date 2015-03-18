@@ -33,86 +33,86 @@ import org.springframework.util.Assert;
  */
 public abstract class TransportInputStream extends InputStream {
 
-    private InputStream inputStream;
+	private InputStream inputStream;
 
-    protected TransportInputStream() {
-    }
+	protected TransportInputStream() {
+	}
 
-    private InputStream getInputStream() throws IOException {
-        if (inputStream == null) {
-            inputStream = createInputStream();
-            Assert.notNull(inputStream, "inputStream must not be null");
-        }
-        return inputStream;
-    }
+	private InputStream getInputStream() throws IOException {
+		if (inputStream == null) {
+			inputStream = createInputStream();
+			Assert.notNull(inputStream, "inputStream must not be null");
+		}
+		return inputStream;
+	}
 
-    @Override
-    public void close() throws IOException {
-        getInputStream().close();
-    }
+	@Override
+	public void close() throws IOException {
+		getInputStream().close();
+	}
 
-    @Override
-    public int available() throws IOException {
-        return getInputStream().available();
-    }
+	@Override
+	public int available() throws IOException {
+		return getInputStream().available();
+	}
 
-    @Override
-    public synchronized void mark(int readlimit) {
-        try {
-            getInputStream().mark(readlimit);
-        }
-        catch (IOException e) {
-            // ignored
-        }
-    }
+	@Override
+	public synchronized void mark(int readlimit) {
+		try {
+			getInputStream().mark(readlimit);
+		}
+		catch (IOException e) {
+			// ignored
+		}
+	}
 
-    @Override
-    public boolean markSupported() {
-        try {
-            return getInputStream().markSupported();
-        }
-        catch (IOException e) {
-            return false;
-        }
-    }
+	@Override
+	public boolean markSupported() {
+		try {
+			return getInputStream().markSupported();
+		}
+		catch (IOException e) {
+			return false;
+		}
+	}
 
-    @Override
-    public int read(byte b[]) throws IOException {
-        return getInputStream().read(b);
-    }
+	@Override
+	public int read(byte b[]) throws IOException {
+		return getInputStream().read(b);
+	}
 
-    @Override
-    public int read(byte b[], int off, int len) throws IOException {
-        return getInputStream().read(b, off, len);
-    }
+	@Override
+	public int read(byte b[], int off, int len) throws IOException {
+		return getInputStream().read(b, off, len);
+	}
 
-    @Override
-    public synchronized void reset() throws IOException {
-        getInputStream().reset();
-    }
+	@Override
+	public synchronized void reset() throws IOException {
+		getInputStream().reset();
+	}
 
-    @Override
-    public long skip(long n) throws IOException {
-        return getInputStream().skip(n);
-    }
+	@Override
+	public long skip(long n) throws IOException {
+		return getInputStream().skip(n);
+	}
 
-    @Override
-    public int read() throws IOException {
-        return getInputStream().read();
-    }
+	@Override
+	public int read() throws IOException {
+		return getInputStream().read();
+	}
 
-    /** Returns the input stream to read from. */
-    protected abstract InputStream createInputStream() throws IOException;
+	/** Returns the input stream to read from. */
+	protected abstract InputStream createInputStream() throws IOException;
 
-    /**
-     * Returns an iteration over all the header names this stream contains. Returns an empty {@code Iterator} if
-     * there are no headers.
-     */
-    public abstract Iterator<String> getHeaderNames() throws IOException;
+	/**
+	 * Returns an iteration over all the header names this stream contains. Returns an empty {@code Iterator} if
+	 * there are no headers.
+	 */
+	public abstract Iterator<String> getHeaderNames() throws IOException;
 
-    /**
-     * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
-     * if there are no headers of the specified name.
-     */
-    public abstract Iterator<String> getHeaders(String name) throws IOException;
+	/**
+	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
+	 * if there are no headers of the specified name.
+	 */
+	public abstract Iterator<String> getHeaders(String name) throws IOException;
 }

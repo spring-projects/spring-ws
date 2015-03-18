@@ -31,53 +31,53 @@ import org.springframework.util.Assert;
  */
 public abstract class TransportOutputStream extends OutputStream {
 
-    private OutputStream outputStream;
+	private OutputStream outputStream;
 
-    protected TransportOutputStream() {
-    }
+	protected TransportOutputStream() {
+	}
 
-    private OutputStream getOutputStream() throws IOException {
-        if (outputStream == null) {
-            outputStream = createOutputStream();
-            Assert.notNull(outputStream, "outputStream must not be null");
-        }
-        return outputStream;
-    }
+	private OutputStream getOutputStream() throws IOException {
+		if (outputStream == null) {
+			outputStream = createOutputStream();
+			Assert.notNull(outputStream, "outputStream must not be null");
+		}
+		return outputStream;
+	}
 
-    @Override
-    public void close() throws IOException {
-        getOutputStream().close();
-    }
+	@Override
+	public void close() throws IOException {
+		getOutputStream().close();
+	}
 
-    @Override
-    public void flush() throws IOException {
-        getOutputStream().flush();
-    }
+	@Override
+	public void flush() throws IOException {
+		getOutputStream().flush();
+	}
 
-    @Override
-    public void write(byte b[]) throws IOException {
-        getOutputStream().write(b);
-    }
+	@Override
+	public void write(byte b[]) throws IOException {
+		getOutputStream().write(b);
+	}
 
-    @Override
-    public void write(byte b[], int off, int len) throws IOException {
-        getOutputStream().write(b, off, len);
-    }
+	@Override
+	public void write(byte b[], int off, int len) throws IOException {
+		getOutputStream().write(b, off, len);
+	}
 
-    @Override
-    public void write(int b) throws IOException {
-        getOutputStream().write(b);
-    }
+	@Override
+	public void write(int b) throws IOException {
+		getOutputStream().write(b);
+	}
 
-    /**
-     * Adds a header with the given name and value. This method can be called multiple times, to allow for headers with
-     * multiple values.
-     *
-     * @param name  the name of the header
-     * @param value the value of the header
-     */
-    public abstract void addHeader(String name, String value) throws IOException;
+	/**
+	 * Adds a header with the given name and value. This method can be called multiple times, to allow for headers with
+	 * multiple values.
+	 *
+	 * @param name	the name of the header
+	 * @param value the value of the header
+	 */
+	public abstract void addHeader(String name, String value) throws IOException;
 
-    /** Returns the output stream to write to. */
-    protected abstract OutputStream createOutputStream() throws IOException;
+	/** Returns the output stream to write to. */
+	protected abstract OutputStream createOutputStream() throws IOException;
 }

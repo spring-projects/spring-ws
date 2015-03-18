@@ -32,77 +32,77 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTestCase {
 
-    private static final String SOAP_ACTION = "\"http://test\"";
+	private static final String SOAP_ACTION = "\"http://test\"";
 
-    private Properties users;
+	private Properties users;
 
-    private Wss4jSecurityInterceptor interceptor;
+	private Wss4jSecurityInterceptor interceptor;
 
-    @Override
-    protected void onSetup() throws Exception {
-        users = new Properties();
-        users.setProperty("Bert", "Ernie");
-        interceptor = new Wss4jSecurityInterceptor();
-        interceptor.setValidationActions("UsernameToken");
-        interceptor.setSecurementActions("UsernameToken");
-        interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
-        SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
-        callbackHandler.setUsers(users);
-        interceptor.setValidationCallbackHandler(callbackHandler);
+	@Override
+	protected void onSetup() throws Exception {
+		users = new Properties();
+		users.setProperty("Bert", "Ernie");
+		interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setValidationActions("UsernameToken");
+		interceptor.setSecurementActions("UsernameToken");
+		interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
+		SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
+		callbackHandler.setUsers(users);
+		interceptor.setValidationCallbackHandler(callbackHandler);
 
-        interceptor.afterPropertiesSet();
-    }
+		interceptor.afterPropertiesSet();
+	}
 
-    @Test
-    public void testPreserveSoapActionOnValidation() throws Exception {
-        SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
-        message.setSoapAction(SOAP_ACTION);
-        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-        interceptor.validateMessage(message, messageContext);
+	@Test
+	public void testPreserveSoapActionOnValidation() throws Exception {
+		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
+		message.setSoapAction(SOAP_ACTION);
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		interceptor.validateMessage(message, messageContext);
 
-        assertNotNull("Soap Action must not be null", message.getSoapAction());
-        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
-    }
+		assertNotNull("Soap Action must not be null", message.getSoapAction());
+		assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+	}
 
-    @Test
-    public void testPreserveSoap12ActionOnValidation() throws Exception {
-        SoapMessage message = loadSoap12Message("usernameTokenPlainText-soap12.xml");
-        message.setSoapAction(SOAP_ACTION);
-        WebServiceMessageFactory messageFactory = getSoap12MessageFactory();
-        MessageContext messageContext = new DefaultMessageContext(message, messageFactory);
-        interceptor.validateMessage(message, messageContext);
+	@Test
+	public void testPreserveSoap12ActionOnValidation() throws Exception {
+		SoapMessage message = loadSoap12Message("usernameTokenPlainText-soap12.xml");
+		message.setSoapAction(SOAP_ACTION);
+		WebServiceMessageFactory messageFactory = getSoap12MessageFactory();
+		MessageContext messageContext = new DefaultMessageContext(message, messageFactory);
+		interceptor.validateMessage(message, messageContext);
 
-        assertNotNull("Soap Action must not be null", message.getSoapAction());
-        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
-    }
+		assertNotNull("Soap Action must not be null", message.getSoapAction());
+		assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+	}
 
-    @Test
-    public void testPreserveSoapActionOnSecurement() throws Exception {
-        SoapMessage message = loadSoap11Message("empty-soap.xml");
-        message.setSoapAction(SOAP_ACTION);
-        interceptor.setSecurementUsername("Bert");
-        interceptor.setSecurementPassword("Ernie");
-        MessageContext messageContext = getSoap11MessageContext(message);
-        interceptor.secureMessage(message, messageContext);
+	@Test
+	public void testPreserveSoapActionOnSecurement() throws Exception {
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		message.setSoapAction(SOAP_ACTION);
+		interceptor.setSecurementUsername("Bert");
+		interceptor.setSecurementPassword("Ernie");
+		MessageContext messageContext = getSoap11MessageContext(message);
+		interceptor.secureMessage(message, messageContext);
 
-        assertNotNull("Soap Action must not be null", message.getSoapAction());
-        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+		assertNotNull("Soap Action must not be null", message.getSoapAction());
+		assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
 
-    }
+	}
 
-    @Test
-    public void testPreserveSoap12ActionOnSecurement() throws Exception {
-        SoapMessage message = loadSoap12Message("empty-soap12.xml");
-        message.setSoapAction(SOAP_ACTION);
-        interceptor.setSecurementUsername("Bert");
-        interceptor.setSecurementPassword("Ernie");
-        MessageContext messageContext = getSoap12MessageContext(message);
-        interceptor.secureMessage(message, messageContext);
+	@Test
+	public void testPreserveSoap12ActionOnSecurement() throws Exception {
+		SoapMessage message = loadSoap12Message("empty-soap12.xml");
+		message.setSoapAction(SOAP_ACTION);
+		interceptor.setSecurementUsername("Bert");
+		interceptor.setSecurementPassword("Ernie");
+		MessageContext messageContext = getSoap12MessageContext(message);
+		interceptor.secureMessage(message, messageContext);
 
-        assertNotNull("Soap Action must not be null", message.getSoapAction());
-        assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
+		assertNotNull("Soap Action must not be null", message.getSoapAction());
+		assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
 
-    }
+	}
 
 
 }

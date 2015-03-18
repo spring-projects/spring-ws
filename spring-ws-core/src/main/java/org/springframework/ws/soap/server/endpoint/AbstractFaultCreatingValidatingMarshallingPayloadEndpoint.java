@@ -46,136 +46,136 @@ import org.springframework.ws.soap.SoapMessage;
  */
 @Deprecated
 public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
-        extends org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint implements MessageSourceAware {
-
-    /**
-     * Default SOAP Fault Detail name used when a global validation error occur on the request.
-     *
-     * @see #setDetailElementName(javax.xml.namespace.QName)
-     */
-    public static final QName DEFAULT_DETAIL_ELEMENT_NAME =
-		    new QName("http://springframework.org/spring-ws", "ValidationError",
-				    "spring-ws");
+		extends org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint implements MessageSourceAware {
 
 	/**
-     * Default SOAP Fault string used when a validation errors occur on the request.
-     *
-     * @see #setFaultStringOrReason(String)
-     */
-    public static final String DEFAULT_FAULTSTRING_OR_REASON = "Validation error";
+	 * Default SOAP Fault Detail name used when a global validation error occur on the request.
+	 *
+	 * @see #setDetailElementName(javax.xml.namespace.QName)
+	 */
+	public static final QName DEFAULT_DETAIL_ELEMENT_NAME =
+			new QName("http://springframework.org/spring-ws", "ValidationError",
+					"spring-ws");
 
-    private boolean addValidationErrorDetail = true;
+	/**
+	 * Default SOAP Fault string used when a validation errors occur on the request.
+	 *
+	 * @see #setFaultStringOrReason(String)
+	 */
+	public static final String DEFAULT_FAULTSTRING_OR_REASON = "Validation error";
 
-    private QName detailElementName = DEFAULT_DETAIL_ELEMENT_NAME;
+	private boolean addValidationErrorDetail = true;
 
-    private String faultStringOrReason = DEFAULT_FAULTSTRING_OR_REASON;
+	private QName detailElementName = DEFAULT_DETAIL_ELEMENT_NAME;
 
-    private Locale faultStringOrReasonLocale = Locale.ENGLISH;
+	private String faultStringOrReason = DEFAULT_FAULTSTRING_OR_REASON;
 
-    private MessageSource messageSource;
+	private Locale faultStringOrReasonLocale = Locale.ENGLISH;
 
-    /**
-     * Returns whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
-     * will contain the exact validation errors. It is only added when the underlying message is a
-     * {@code SoapMessage}. Defaults to {@code true}.
-     *
-     * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
-     */
-    public boolean getAddValidationErrorDetail() {
-        return addValidationErrorDetail;
-    }
+	private MessageSource messageSource;
 
-    /**
-     * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail
-     * element will contain the exact validation errors. It is only added when the underlying message is a
-     * {@code SoapMessage}. Defaults to {@code true}.
-     *
-     * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
-     */
-    public void setAddValidationErrorDetail(boolean addValidationErrorDetail) {
-        this.addValidationErrorDetail = addValidationErrorDetail;
-    }
+	/**
+	 * Returns whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
+	 * will contain the exact validation errors. It is only added when the underlying message is a
+	 * {@code SoapMessage}. Defaults to {@code true}.
+	 *
+	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
+	 */
+	public boolean getAddValidationErrorDetail() {
+		return addValidationErrorDetail;
+	}
 
-    /** Returns the fault detail element name when validation errors occur on the request. */
-    public QName getDetailElementName() {
-        return detailElementName;
-    }
+	/**
+	 * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail
+	 * element will contain the exact validation errors. It is only added when the underlying message is a
+	 * {@code SoapMessage}. Defaults to {@code true}.
+	 *
+	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
+	 */
+	public void setAddValidationErrorDetail(boolean addValidationErrorDetail) {
+		this.addValidationErrorDetail = addValidationErrorDetail;
+	}
 
-    /**
-     * Sets the fault detail element name when validation errors occur on the request. Defaults to
-     * {@code DEFAULT_DETAIL_ELEMENT_NAME}.
-     *
-     * @see #DEFAULT_DETAIL_ELEMENT_NAME
-     */
-    public void setDetailElementName(QName detailElementName) {
-        this.detailElementName = detailElementName;
-    }
+	/** Returns the fault detail element name when validation errors occur on the request. */
+	public QName getDetailElementName() {
+		return detailElementName;
+	}
 
-    /** Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. */
-    public String getFaultStringOrReason() {
-        return faultStringOrReason;
-    }
+	/**
+	 * Sets the fault detail element name when validation errors occur on the request. Defaults to
+	 * {@code DEFAULT_DETAIL_ELEMENT_NAME}.
+	 *
+	 * @see #DEFAULT_DETAIL_ELEMENT_NAME
+	 */
+	public void setDetailElementName(QName detailElementName) {
+		this.detailElementName = detailElementName;
+	}
 
-    /**
-     * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request.
-     * It is only added when the underlying message is a {@code SoapMessage}. Defaults to
-     * {@code DEFAULT_FAULTSTRING_OR_REASON}.
-     *
-     * @see #DEFAULT_FAULTSTRING_OR_REASON
-     */
-    public void setFaultStringOrReason(String faultStringOrReason) {
-        this.faultStringOrReason = faultStringOrReason;
-    }
+	/** Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. */
+	public String getFaultStringOrReason() {
+		return faultStringOrReason;
+	}
 
-    /** Returns the locale for SOAP fault reason and validation message resolution. */
-    public Locale getFaultLocale() {
-        return faultStringOrReasonLocale;
-    }
+	/**
+	 * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request.
+	 * It is only added when the underlying message is a {@code SoapMessage}. Defaults to
+	 * {@code DEFAULT_FAULTSTRING_OR_REASON}.
+	 *
+	 * @see #DEFAULT_FAULTSTRING_OR_REASON
+	 */
+	public void setFaultStringOrReason(String faultStringOrReason) {
+		this.faultStringOrReason = faultStringOrReason;
+	}
 
-    /**
-     * Sets the locale for SOAP fault reason and validation messages.  It is only added when the underlying message is a
-     * {@code SoapMessage}. Defaults to English.
-     *
-     * @see java.util.Locale#ENGLISH
-     */
-    public void setFaultStringOrReasonLocale(Locale faultStringOrReasonLocale) {
-        this.faultStringOrReasonLocale = faultStringOrReasonLocale;
-    }
+	/** Returns the locale for SOAP fault reason and validation message resolution. */
+	public Locale getFaultLocale() {
+		return faultStringOrReasonLocale;
+	}
 
-    @Override
-    public final void setMessageSource(MessageSource messageSource) {
-        this.messageSource = messageSource;
-    }
+	/**
+	 * Sets the locale for SOAP fault reason and validation messages.  It is only added when the underlying message is a
+	 * {@code SoapMessage}. Defaults to English.
+	 *
+	 * @see java.util.Locale#ENGLISH
+	 */
+	public void setFaultStringOrReasonLocale(Locale faultStringOrReasonLocale) {
+		this.faultStringOrReasonLocale = faultStringOrReasonLocale;
+	}
 
-    /**
-     * This implementation logs all errors, returns {@code false}, and creates a {@link
-     * SoapBody#addClientOrSenderFault(String,Locale) client or sender} {@link SoapFault}, adding a {@link
-     * SoapFaultDetail} with all errors if the {@code addValidationErrorDetail} property is {@code true}.
-     *
-     * @param messageContext the message context
-     * @param errors         the validation errors
-     * @return {@code true} to continue processing the request, {@code false} (the default) otherwise
-     * @see Errors#getAllErrors()
-     */
-    @Override
-    protected final boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
-        for (ObjectError objectError : errors.getAllErrors()) {
-            String msg = messageSource.getMessage(objectError, getFaultLocale());
-            logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
-        }
-        if (messageContext.getResponse() instanceof SoapMessage) {
-            SoapMessage response = (SoapMessage) messageContext.getResponse();
-            SoapBody body = response.getSoapBody();
-            SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultLocale());
-            if (getAddValidationErrorDetail()) {
-                SoapFaultDetail detail = fault.addFaultDetail();
-                for (ObjectError objectError : errors.getAllErrors()) {
-                    String msg = messageSource.getMessage(objectError, getFaultLocale());
-                    SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
-                    detailElement.addText(msg);
-                }
-            }
-        }
-        return false;
-    }
+	@Override
+	public final void setMessageSource(MessageSource messageSource) {
+		this.messageSource = messageSource;
+	}
+
+	/**
+	 * This implementation logs all errors, returns {@code false}, and creates a {@link
+	 * SoapBody#addClientOrSenderFault(String,Locale) client or sender} {@link SoapFault}, adding a {@link
+	 * SoapFaultDetail} with all errors if the {@code addValidationErrorDetail} property is {@code true}.
+	 *
+	 * @param messageContext the message context
+	 * @param errors		 the validation errors
+	 * @return {@code true} to continue processing the request, {@code false} (the default) otherwise
+	 * @see Errors#getAllErrors()
+	 */
+	@Override
+	protected final boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
+		for (ObjectError objectError : errors.getAllErrors()) {
+			String msg = messageSource.getMessage(objectError, getFaultLocale());
+			logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
+		}
+		if (messageContext.getResponse() instanceof SoapMessage) {
+			SoapMessage response = (SoapMessage) messageContext.getResponse();
+			SoapBody body = response.getSoapBody();
+			SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultLocale());
+			if (getAddValidationErrorDetail()) {
+				SoapFaultDetail detail = fault.addFaultDetail();
+				for (ObjectError objectError : errors.getAllErrors()) {
+					String msg = messageSource.getMessage(objectError, getFaultLocale());
+					SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
+					detailElement.addText(msg);
+				}
+			}
+		}
+		return false;
+	}
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,64 +32,64 @@ import org.springframework.util.ClassUtils;
  */
 public abstract class JaxpVersion {
 
-    /**
-     * Constant identifying JAXP 1.0.
-     */
-    public static final int JAXP_10 = 0;
+	/**
+	 * Constant identifying JAXP 1.0.
+	 */
+	public static final int JAXP_10 = 0;
 
-    /**
-     * Constant identifying JAXP 1.1.
-     */
-    public static final int JAXP_11 = 1;
+	/**
+	 * Constant identifying JAXP 1.1.
+	 */
+	public static final int JAXP_11 = 1;
 
-    /**
-     * Constant identifying JAXP 1.3.
-     */
-    public static final int JAXP_13 = 3;
+	/**
+	 * Constant identifying JAXP 1.3.
+	 */
+	public static final int JAXP_13 = 3;
 
-    /**
-     * Constant identifying JAXP 1.4.
-     */
-    public static final int JAXP_14 = 4;
+	/**
+	 * Constant identifying JAXP 1.4.
+	 */
+	public static final int JAXP_14 = 4;
 
-    private static final String JAXP_14_CLASS_NAME = "javax.xml.transform.stax.StAXSource";
+	private static final String JAXP_14_CLASS_NAME = "javax.xml.transform.stax.StAXSource";
 
-    private static int jaxpVersion;
+	private static int jaxpVersion;
 
-    static {
-        ClassLoader classLoader = JaxpVersion.class.getClassLoader();
-        try {
-            ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
-            jaxpVersion = JAXP_14;
-        }
-        catch (ClassNotFoundException ex) {
-            // leave 1.3 as default (it's either 1.3 or unknown)
-            jaxpVersion = JAXP_13;
-        }
-    }
+	static {
+		ClassLoader classLoader = JaxpVersion.class.getClassLoader();
+		try {
+			ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
+			jaxpVersion = JAXP_14;
+		}
+		catch (ClassNotFoundException ex) {
+			// leave 1.3 as default (it's either 1.3 or unknown)
+			jaxpVersion = JAXP_13;
+		}
+	}
 
-    /**
-     * Gets the JAXP version. This means we can do things like if {@code (getJaxpVersion() < JAXP_13)}.
-     *
-     * @return a code comparable to the JAXP_XX codes in this class
-     * @see #JAXP_10
-     * @see #JAXP_11
-     * @see #JAXP_13
-     * @see #JAXP_14
-     */
-    public static int getJaxpVersion() {
-        return jaxpVersion;
-    }
+	/**
+	 * Gets the JAXP version. This means we can do things like if {@code (getJaxpVersion() < JAXP_13)}.
+	 *
+	 * @return a code comparable to the JAXP_XX codes in this class
+	 * @see #JAXP_10
+	 * @see #JAXP_11
+	 * @see #JAXP_13
+	 * @see #JAXP_14
+	 */
+	public static int getJaxpVersion() {
+		return jaxpVersion;
+	}
 
-    /**
-     * Convenience method to determine if the current JAXP version is at least 1.4 (packaged with JDK 1.6).
-     *
-     * @return {@code true} if the current JAXP version is at least JAXP 1.4
-     * @see #getJaxpVersion()
-     * @see #JAXP_14
-     */
-    public static boolean isAtLeastJaxp14() {
-        return getJaxpVersion() >= JAXP_14;
-    }
+	/**
+	 * Convenience method to determine if the current JAXP version is at least 1.4 (packaged with JDK 1.6).
+	 *
+	 * @return {@code true} if the current JAXP version is at least JAXP 1.4
+	 * @see #getJaxpVersion()
+	 * @see #JAXP_14
+	 */
+	public static boolean isAtLeastJaxp14() {
+		return getJaxpVersion() >= JAXP_14;
+	}
 
 }

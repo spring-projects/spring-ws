@@ -24,32 +24,32 @@ import org.springframework.ws.server.EndpointInterceptor;
  */
 public class MyInterceptor implements EndpointInterceptor {
 
-    private int order;
+	private int order;
 
-    public int getOrder() {
-        return order;
-    }
+	public int getOrder() {
+		return order;
+	}
 
-    public void setOrder(int order) {
-        this.order = order;
-    }
+	public void setOrder(int order) {
+		this.order = order;
+	}
 
-    @Override
-    public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	@Override
+	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    @Override
-    public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	@Override
+	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    @Override
-    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	@Override
+	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
-    }
+	@Override
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	}
 }

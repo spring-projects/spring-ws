@@ -33,13 +33,13 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  */
 public class MessageEndpointAdapter implements EndpointAdapter {
 
-    @Override
-    public boolean supports(Object endpoint) {
-        return endpoint instanceof MessageEndpoint;
-    }
+	@Override
+	public boolean supports(Object endpoint) {
+		return endpoint instanceof MessageEndpoint;
+	}
 
-    @Override
-    public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
-        ((MessageEndpoint) endpoint).invoke(messageContext);
-    }
+	@Override
+	public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
+		((MessageEndpoint) endpoint).invoke(messageContext);
+	}
 }

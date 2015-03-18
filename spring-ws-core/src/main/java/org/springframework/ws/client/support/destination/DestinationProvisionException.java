@@ -27,11 +27,11 @@ import org.springframework.ws.client.WebServiceClientException;
 @SuppressWarnings("serial")
 public class DestinationProvisionException extends WebServiceClientException {
 
-    public DestinationProvisionException(String msg) {
-        super(msg);
-    }
+	public DestinationProvisionException(String msg) {
+		super(msg);
+	}
 
-    public DestinationProvisionException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public DestinationProvisionException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

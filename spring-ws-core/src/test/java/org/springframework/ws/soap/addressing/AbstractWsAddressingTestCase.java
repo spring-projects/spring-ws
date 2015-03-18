@@ -33,31 +33,31 @@ import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractWsAddressingTestCase {
 
-    protected MessageFactory messageFactory;
+	protected MessageFactory messageFactory;
 
-    @Before
-    public void createMessageFactory() throws Exception {
-        messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        XMLUnit.setIgnoreWhitespace(true);
-    }
+	@Before
+	public void createMessageFactory() throws Exception {
+		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		XMLUnit.setIgnoreWhitespace(true);
+	}
 
 
-    protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
-        MimeHeaders mimeHeaders = new MimeHeaders();
-        mimeHeaders.addHeader("Content-Type", " application/soap+xml");
-        InputStream is = AbstractWsAddressingTestCase.class.getResourceAsStream(fileName);
-        assertNotNull("Could not load " + fileName, is);
-        try {
-            return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-        }
-        finally {
-            is.close();
-        }
-    }
+	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
+		MimeHeaders mimeHeaders = new MimeHeaders();
+		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
+		InputStream is = AbstractWsAddressingTestCase.class.getResourceAsStream(fileName);
+		assertNotNull("Could not load " + fileName, is);
+		try {
+			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+		}
+		finally {
+			is.close();
+		}
+	}
 
-    protected void assertXMLEqual(String message, SaajSoapMessage expected, SaajSoapMessage result) {
-        Document expectedDocument = expected.getSaajMessage().getSOAPPart();
-        Document resultDocument = result.getSaajMessage().getSOAPPart();
-        org.custommonkey.xmlunit.XMLAssert.assertXMLEqual(message, expectedDocument, resultDocument);
-    }
+	protected void assertXMLEqual(String message, SaajSoapMessage expected, SaajSoapMessage result) {
+		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
+		Document resultDocument = result.getSaajMessage().getSOAPPart();
+		org.custommonkey.xmlunit.XMLAssert.assertXMLEqual(message, expectedDocument, resultDocument);
+	}
 }

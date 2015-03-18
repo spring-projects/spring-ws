@@ -29,6 +29,6 @@ import javax.wsdl.WSDLException;
  */
 public interface PortTypesProvider {
 
-    void addPortTypes(Definition definition) throws WSDLException;
+	void addPortTypes(Definition definition) throws WSDLException;
 
 }

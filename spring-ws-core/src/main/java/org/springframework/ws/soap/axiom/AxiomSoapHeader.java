@@ -39,106 +39,106 @@ import org.springframework.ws.soap.SoapHeaderException;
  */
 abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 
-    AxiomSoapHeader(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
-        super(axiomHeader, axiomFactory);
-    }
+	AxiomSoapHeader(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
+		super(axiomHeader, axiomFactory);
+	}
 
-    @Override
-    public Result getResult() {
-        return new AxiomResult(getAxiomHeader(), getAxiomFactory());
-    }
+	@Override
+	public Result getResult() {
+		return new AxiomResult(getAxiomHeader(), getAxiomFactory());
+	}
 
-    @Override
-    public SoapHeaderElement addHeaderElement(QName name) {
-        try {
-	        OMNamespace namespace =
-                    getAxiomFactory().createOMNamespace(name.getNamespaceURI(),
-		                    name.getPrefix());
-            SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
-            return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addHeaderElement(QName name) {
+		try {
+			OMNamespace namespace =
+					getAxiomFactory().createOMNamespace(name.getNamespaceURI(),
+							name.getPrefix());
+			SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
+			return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    public void removeHeaderElement(QName name) throws SoapHeaderException {
-        try {
-            OMElement element = getAxiomHeader().getFirstChildWithName(name);
-            if (element != null) {
-                element.detach();
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public void removeHeaderElement(QName name) throws SoapHeaderException {
+		try {
+			OMElement element = getAxiomHeader().getFirstChildWithName(name);
+			if (element != null) {
+				element.detach();
+			}
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String role) {
-        try {
-            return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineMustUnderstandHeaderBlocks(role));
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String role) {
+		try {
+			return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineMustUnderstandHeaderBlocks(role));
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineAllHeaderElements() {
-        try {
-            return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineAllHeaderBlocks());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineAllHeaderElements() {
+		try {
+			return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineAllHeaderBlocks());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
-        try {
-            return new AxiomSoapHeaderElementIterator(getAxiomHeader().getChildrenWithName(name));
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
+		try {
+			return new AxiomSoapHeaderElementIterator(getAxiomHeader().getChildrenWithName(name));
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    protected SOAPHeader getAxiomHeader() {
-        return (SOAPHeader) getAxiomElement();
-    }
+	protected SOAPHeader getAxiomHeader() {
+		return (SOAPHeader) getAxiomElement();
+	}
 
-    protected class AxiomSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
+	protected class AxiomSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
 
-        private final Iterator<SOAPHeaderBlock> axiomIterator;
+		private final Iterator<SOAPHeaderBlock> axiomIterator;
 
-        protected AxiomSoapHeaderElementIterator(Iterator<SOAPHeaderBlock> axiomIterator) {
-            this.axiomIterator = axiomIterator;
-        }
+		protected AxiomSoapHeaderElementIterator(Iterator<SOAPHeaderBlock> axiomIterator) {
+			this.axiomIterator = axiomIterator;
+		}
 
-        @Override
-        public boolean hasNext() {
-            return axiomIterator.hasNext();
-        }
+		@Override
+		public boolean hasNext() {
+			return axiomIterator.hasNext();
+		}
 
-        @Override
-        public SoapHeaderElement next() {
-            try {
-                SOAPHeaderBlock axiomHeaderBlock = axiomIterator.next();
-                return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
-            }
-            catch (OMException ex) {
-                throw new AxiomSoapHeaderException(ex);
-            }
-        }
+		@Override
+		public SoapHeaderElement next() {
+			try {
+				SOAPHeaderBlock axiomHeaderBlock = axiomIterator.next();
+				return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
+			}
+			catch (OMException ex) {
+				throw new AxiomSoapHeaderException(ex);
+			}
+		}
 
-        @Override
-        public void remove() {
-            axiomIterator.remove();
-        }
-    }
+		@Override
+		public void remove() {
+			axiomIterator.remove();
+		}
+	}
 }

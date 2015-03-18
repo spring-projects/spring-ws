@@ -29,102 +29,102 @@ import java.util.Iterator;
  */
 public abstract class AbstractSenderConnection extends AbstractWebServiceConnection {
 
-    private TransportOutputStream requestOutputStream;
+	private TransportOutputStream requestOutputStream;
 
-    private TransportInputStream responseInputStream;
+	private TransportInputStream responseInputStream;
 
-    @Override
-    protected final TransportOutputStream createTransportOutputStream() throws IOException {
-        if (requestOutputStream == null) {
-            requestOutputStream = new RequestTransportOutputStream();
-        }
-        return requestOutputStream;
-    }
+	@Override
+	protected final TransportOutputStream createTransportOutputStream() throws IOException {
+		if (requestOutputStream == null) {
+			requestOutputStream = new RequestTransportOutputStream();
+		}
+		return requestOutputStream;
+	}
 
-    @Override
-    protected final TransportInputStream createTransportInputStream() throws IOException {
-        if (hasResponse()) {
-            if (responseInputStream == null) {
-                responseInputStream = new ResponseTransportInputStream();
-            }
-            return responseInputStream;
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	protected final TransportInputStream createTransportInputStream() throws IOException {
+		if (hasResponse()) {
+			if (responseInputStream == null) {
+				responseInputStream = new ResponseTransportInputStream();
+			}
+			return responseInputStream;
+		}
+		else {
+			return null;
+		}
+	}
 
-    /**
-     * Template method invoked from {@link #close()}. Default implementation is empty.
-     *
-     * @throws IOException if an I/O error occurs when closing this connection
-     */
-    @Override
-    protected void onClose() throws IOException {
-    }
+	/**
+	 * Template method invoked from {@link #close()}. Default implementation is empty.
+	 *
+	 * @throws IOException if an I/O error occurs when closing this connection
+	 */
+	@Override
+	protected void onClose() throws IOException {
+	}
 
-    /** Indicates whether this connection has a response. */
-    protected abstract boolean hasResponse() throws IOException;
+	/** Indicates whether this connection has a response. */
+	protected abstract boolean hasResponse() throws IOException;
 
-    /**
-     * Adds a request header with the given name and value. This method can be called multiple times, to allow for
-     * headers with multiple values.
-     *
-     * @param name  the name of the header
-     * @param value the value of the header
-     */
-    protected abstract void addRequestHeader(String name, String value) throws IOException;
+	/**
+	 * Adds a request header with the given name and value. This method can be called multiple times, to allow for
+	 * headers with multiple values.
+	 *
+	 * @param name	the name of the header
+	 * @param value the value of the header
+	 */
+	protected abstract void addRequestHeader(String name, String value) throws IOException;
 
-    /** Returns the output stream to write the request to. */
-    protected abstract OutputStream getRequestOutputStream() throws IOException;
+	/** Returns the output stream to write the request to. */
+	protected abstract OutputStream getRequestOutputStream() throws IOException;
 
-    /**
-     * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
-     * there are no headers.
-     */
-    protected abstract Iterator<String> getResponseHeaderNames() throws IOException;
+	/**
+	 * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
+	 * there are no headers.
+	 */
+	protected abstract Iterator<String> getResponseHeaderNames() throws IOException;
 
-    /**
-     * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
-     * if there are no headers of the specified name.
-     */
-    protected abstract Iterator<String> getResponseHeaders(String name) throws IOException;
+	/**
+	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
+	 * if there are no headers of the specified name.
+	 */
+	protected abstract Iterator<String> getResponseHeaders(String name) throws IOException;
 
-    /** Returns the input stream to read the response from. */
-    protected abstract InputStream getResponseInputStream() throws IOException;
+	/** Returns the input stream to read the response from. */
+	protected abstract InputStream getResponseInputStream() throws IOException;
 
-    /** Implementation of {@code TransportInputStream} for receiving-side connections. */
-    class RequestTransportOutputStream extends TransportOutputStream {
+	/** Implementation of {@code TransportInputStream} for receiving-side connections. */
+	class RequestTransportOutputStream extends TransportOutputStream {
 
-        @Override
-        public void addHeader(String name, String value) throws IOException {
-            addRequestHeader(name, value);
-        }
+		@Override
+		public void addHeader(String name, String value) throws IOException {
+			addRequestHeader(name, value);
+		}
 
-        @Override
-        protected OutputStream createOutputStream() throws IOException {
-            return getRequestOutputStream();
-        }
-    }
+		@Override
+		protected OutputStream createOutputStream() throws IOException {
+			return getRequestOutputStream();
+		}
+	}
 
-    /** Implementation of {@link TransportInputStream} for client-side HTTP. */
-    class ResponseTransportInputStream extends TransportInputStream {
+	/** Implementation of {@link TransportInputStream} for client-side HTTP. */
+	class ResponseTransportInputStream extends TransportInputStream {
 
-        @Override
-        protected InputStream createInputStream() throws IOException {
-            return getResponseInputStream();
-        }
+		@Override
+		protected InputStream createInputStream() throws IOException {
+			return getResponseInputStream();
+		}
 
-        @Override
-        public Iterator<String> getHeaderNames() throws IOException {
-            return getResponseHeaderNames();
-        }
+		@Override
+		public Iterator<String> getHeaderNames() throws IOException {
+			return getResponseHeaderNames();
+		}
 
-        @Override
-        public Iterator<String> getHeaders(String name) throws IOException {
-            return getResponseHeaders(name);
-        }
+		@Override
+		public Iterator<String> getHeaders(String name) throws IOException {
+			return getResponseHeaders(name);
+		}
 
-    }
+	}
 
 }

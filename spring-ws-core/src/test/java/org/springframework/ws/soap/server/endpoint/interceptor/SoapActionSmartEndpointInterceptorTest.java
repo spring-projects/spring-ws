@@ -31,46 +31,46 @@ import static org.junit.Assert.assertTrue;
 
 public class SoapActionSmartEndpointInterceptorTest {
 
-    private EndpointInterceptor delegate;
+	private EndpointInterceptor delegate;
 
-    private String soapAction;
+	private String soapAction;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    @Before
-    public void setUp() {
-        delegate = new EndpointInterceptorAdapter();
+	@Before
+	public void setUp() {
+		delegate = new EndpointInterceptorAdapter();
 
-        soapAction = "http://springframework.org/spring-ws";
+		soapAction = "http://springframework.org/spring-ws";
 
-        SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
-        messageFactory.afterPropertiesSet();
-        SaajSoapMessage request = messageFactory.createWebServiceMessage();
-        request.setSoapAction(soapAction);
-        messageContext = new DefaultMessageContext(request, messageFactory);
-    }
+		SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
+		messageFactory.afterPropertiesSet();
+		SaajSoapMessage request = messageFactory.createWebServiceMessage();
+		request.setSoapAction(soapAction);
+		messageContext = new DefaultMessageContext(request, messageFactory);
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void neitherNamespaceNorLocalPart() {
-        new SoapActionSmartEndpointInterceptor(delegate, null);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void neitherNamespaceNorLocalPart() {
+		new SoapActionSmartEndpointInterceptor(delegate, null);
+	}
 
-    @Test
-    public void shouldInterceptMatch() throws Exception {
-        SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(delegate, soapAction);
+	@Test
+	public void shouldInterceptMatch() throws Exception {
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(delegate, soapAction);
 
-        boolean result = interceptor.shouldIntercept(messageContext, null);
-        assertTrue("Interceptor should apply", result);
-    }
+		boolean result = interceptor.shouldIntercept(messageContext, null);
+		assertTrue("Interceptor should apply", result);
+	}
 
-    @Test
-    public void shouldInterceptNonMatch() throws Exception {
-        SoapActionSmartEndpointInterceptor interceptor =
-                new SoapActionSmartEndpointInterceptor(delegate, "http://springframework.org/other");
+	@Test
+	public void shouldInterceptNonMatch() throws Exception {
+		SoapActionSmartEndpointInterceptor interceptor =
+				new SoapActionSmartEndpointInterceptor(delegate, "http://springframework.org/other");
 
-        boolean result = interceptor.shouldIntercept(messageContext, null);
-        assertFalse("Interceptor should apply", result);
-    }
+		boolean result = interceptor.shouldIntercept(messageContext, null);
+		assertFalse("Interceptor should apply", result);
+	}
 
 
 }

@@ -42,73 +42,73 @@ import org.springframework.ws.transport.support.FreePortScanner;
 
 public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
-    @Override
-    protected AbstractHttpWebServiceMessageSender createMessageSender() {
-        return new CommonsHttpMessageSender();
-    }
+	@Override
+	protected AbstractHttpWebServiceMessageSender createMessageSender() {
+		return new CommonsHttpMessageSender();
+	}
 
-    @Test
-    public void testMaxConnections() throws URISyntaxException, URIException {
-        CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
-        messageSender.setMaxTotalConnections(2);
-        Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
-        maxConnectionsPerHost.put("https://www.example.com", "1");
-        maxConnectionsPerHost.put("http://www.example.com:8080", "7");
-        maxConnectionsPerHost.put("www.springframework.org", "10");
-        maxConnectionsPerHost.put("*", "5");
-        messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
-    }
+	@Test
+	public void testMaxConnections() throws URISyntaxException, URIException {
+		CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
+		messageSender.setMaxTotalConnections(2);
+		Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
+		maxConnectionsPerHost.put("https://www.example.com", "1");
+		maxConnectionsPerHost.put("http://www.example.com:8080", "7");
+		maxConnectionsPerHost.put("www.springframework.org", "10");
+		maxConnectionsPerHost.put("*", "5");
+		messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
+	}
 
-    @Test
-    public void testContextClose() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        int port = FreePortScanner.getFreePort();
-        Server jettyServer = new Server(port);
-        Context jettyContext = new Context(jettyServer, "/");
-        jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
-        jettyServer.start();
-        WebServiceConnection connection = null;
-        try {
+	@Test
+	public void testContextClose() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		int port = FreePortScanner.getFreePort();
+		Server jettyServer = new Server(port);
+		Context jettyContext = new Context(jettyServer, "/");
+		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
+		jettyServer.start();
+		WebServiceConnection connection = null;
+		try {
 
-            StaticApplicationContext appContext = new StaticApplicationContext();
-            appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
-            appContext.refresh();
+			StaticApplicationContext appContext = new StaticApplicationContext();
+			appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
+			appContext.refresh();
 
-            CommonsHttpMessageSender messageSender = appContext
-                    .getBean("messageSender", CommonsHttpMessageSender.class);
-            connection = messageSender.createConnection(new URI("http://localhost:" + port));
+			CommonsHttpMessageSender messageSender = appContext
+					.getBean("messageSender", CommonsHttpMessageSender.class);
+			connection = messageSender.createConnection(new URI("http://localhost:" + port));
 
-            appContext.close();
+			appContext.close();
 
-            connection.send(new SaajSoapMessage(messageFactory.createMessage()));
-            connection.receive(new SaajSoapMessageFactory(messageFactory));
-        }
-        finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (IOException ex) {
-                    // ignore
-                }
-            }
-            if (jettyServer.isRunning()) {
-                jettyServer.stop();
-            }
-        }
+			connection.send(new SaajSoapMessage(messageFactory.createMessage()));
+			connection.receive(new SaajSoapMessageFactory(messageFactory));
+		}
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (IOException ex) {
+					// ignore
+				}
+			}
+			if (jettyServer.isRunning()) {
+				jettyServer.stop();
+			}
+		}
 
-    }
+	}
 
 	@SuppressWarnings("serial")
-    private class EchoServlet extends HttpServlet {
+	private class EchoServlet extends HttpServlet {
 
-        @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
-                throws ServletException, IOException {
-            response.setContentType("text/xml");
-            FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
+		@Override
+		protected void doPost(HttpServletRequest request, HttpServletResponse response)
+				throws ServletException, IOException {
+			response.setContentType("text/xml");
+			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
 
-        }
-    }
+		}
+	}
 
 
 }

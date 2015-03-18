@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,43 +39,43 @@ import org.w3c.dom.Node;
  */
 public class JDomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        return supports(parameter);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		return supports(parameter);
+	}
 
-    @Override
-    protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
-        if (requestPayload instanceof DOMSource) {
-            Node node = ((DOMSource) requestPayload).getNode();
-            DOMBuilder domBuilder = new DOMBuilder();
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                return domBuilder.build((org.w3c.dom.Element) node);
-            }
-            else if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                Document document = domBuilder.build((org.w3c.dom.Document) node);
-                return document.getRootElement();
-            }
-        }
-        // we have no other option than to transform
-        JDOMResult jdomResult = new JDOMResult();
-        transform(requestPayload, jdomResult);
-        return jdomResult.getDocument().getRootElement();
-    }
+	@Override
+	protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
+		if (requestPayload instanceof DOMSource) {
+			Node node = ((DOMSource) requestPayload).getNode();
+			DOMBuilder domBuilder = new DOMBuilder();
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				return domBuilder.build((org.w3c.dom.Element) node);
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				Document document = domBuilder.build((org.w3c.dom.Document) node);
+				return document.getRootElement();
+			}
+		}
+		// we have no other option than to transform
+		JDOMResult jdomResult = new JDOMResult();
+		transform(requestPayload, jdomResult);
+		return jdomResult.getDocument().getRootElement();
+	}
 
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        return supports(returnType);
-    }
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		return supports(returnType);
+	}
 
-    @Override
-    protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
-        Element returnedElement = (Element) returnValue;
-        return new JDOMSource(returnedElement);
-    }
+	@Override
+	protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
+		Element returnedElement = (Element) returnValue;
+		return new JDOMSource(returnedElement);
+	}
 
-    private boolean supports(MethodParameter parameter) {
-        return Element.class.equals(parameter.getParameterType());
-    }
+	private boolean supports(MethodParameter parameter) {
+		return Element.class.equals(parameter.getParameterType());
+	}
 
 }

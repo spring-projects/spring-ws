@@ -29,26 +29,26 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface MethodReturnValueHandler {
 
-    /**
-     * Indicates whether the given {@linkplain MethodParameter method return type} is supported by this handler.
-     *
-     * @param returnType the method return type to check
-     * @return {@code true} if this handler supports the supplied return type; {@code false} otherwise
-     */
-    boolean supportsReturnType(MethodParameter returnType);
+	/**
+	 * Indicates whether the given {@linkplain MethodParameter method return type} is supported by this handler.
+	 *
+	 * @param returnType the method return type to check
+	 * @return {@code true} if this handler supports the supplied return type; {@code false} otherwise
+	 */
+	boolean supportsReturnType(MethodParameter returnType);
 
-    /**
-     * Handles the given return value.
-     *
-     * @param messageContext the current message context
-     * @param returnType     the return type to handle. This type must have previously been passed to the {@link
-     *                       #supportsReturnType(MethodParameter)} method of this interface, which must have returned
-     *                       {@code true}.
-     * @param returnValue    the return value to handle
-     * @throws Exception in case of errors
-     */
-    void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-            throws Exception;
+	/**
+	 * Handles the given return value.
+	 *
+	 * @param messageContext the current message context
+	 * @param returnType	 the return type to handle. This type must have previously been passed to the {@link
+	 *						 #supportsReturnType(MethodParameter)} method of this interface, which must have returned
+	 *						 {@code true}.
+	 * @param returnValue	 the return value to handle
+	 * @throws Exception in case of errors
+	 */
+	void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+			throws Exception;
 
 
 }

@@ -47,134 +47,134 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  */
 public class XmppSenderConnection extends AbstractSenderConnection {
 
-    private final Message requestMessage;
+	private final Message requestMessage;
 
-    private final XMPPConnection connection;
+	private final XMPPConnection connection;
 
-    private Message responseMessage;
+	private Message responseMessage;
 
-    private String messageEncoding;
+	private String messageEncoding;
 
-    private long receiveTimeout;
+	private long receiveTimeout;
 
-    protected XmppSenderConnection(XMPPConnection connection, String to, String thread) {
-        Assert.notNull(connection, "'connection' must not be null");
-        Assert.hasLength(to, "'to' must not be empty");
-        Assert.hasLength(thread, "'thread' must not be empty");
-        this.connection = connection;
-        this.requestMessage = new Message(to, Message.Type.chat);
-        this.requestMessage.setThread(thread);
-    }
+	protected XmppSenderConnection(XMPPConnection connection, String to, String thread) {
+		Assert.notNull(connection, "'connection' must not be null");
+		Assert.hasLength(to, "'to' must not be empty");
+		Assert.hasLength(thread, "'thread' must not be empty");
+		this.connection = connection;
+		this.requestMessage = new Message(to, Message.Type.chat);
+		this.requestMessage.setThread(thread);
+	}
 
-    /** Returns the request message for this connection. */
-    public Message getRequestMessage() {
-        return requestMessage;
-    }
+	/** Returns the request message for this connection. */
+	public Message getRequestMessage() {
+		return requestMessage;
+	}
 
-    /** Returns the response message, if any, for this connection. */
-    public Message getResponseMessage() {
-        return responseMessage;
-    }
+	/** Returns the response message, if any, for this connection. */
+	public Message getResponseMessage() {
+		return responseMessage;
+	}
 
-    /*
-     * Package-friendly setters
-     */
+	/*
+	 * Package-friendly setters
+	 */
 
-    void setMessageEncoding(String messageEncoding) {
-        this.messageEncoding = messageEncoding;
-    }
+	void setMessageEncoding(String messageEncoding) {
+		this.messageEncoding = messageEncoding;
+	}
 
-    void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
-    }
+	void setReceiveTimeout(long receiveTimeout) {
+		this.receiveTimeout = receiveTimeout;
+	}
 
-    /*
-    * URI
-    */
+	/*
+	* URI
+	*/
 
-    @Override
-    public URI getUri() throws URISyntaxException {
-        return XmppTransportUtils.toUri(requestMessage);
-    }
+	@Override
+	public URI getUri() throws URISyntaxException {
+		return XmppTransportUtils.toUri(requestMessage);
+	}
 
-    /*
-     * Errors
-     */
+	/*
+	 * Errors
+	 */
 
-    @Override
-    public boolean hasError() {
-        return XmppTransportUtils.hasError(responseMessage);
-    }
+	@Override
+	public boolean hasError() {
+		return XmppTransportUtils.hasError(responseMessage);
+	}
 
-    @Override
-    public String getErrorMessage() {
-        return XmppTransportUtils.getErrorMessage(responseMessage);
-    }
+	@Override
+	public String getErrorMessage() {
+		return XmppTransportUtils.getErrorMessage(responseMessage);
+	}
 
-    /*
-     * Sending
-     */
+	/*
+	 * Sending
+	 */
 
-    @Override
-    protected void addRequestHeader(String name, String value) {
-        XmppTransportUtils.addHeader(requestMessage, name, value);
-    }
+	@Override
+	protected void addRequestHeader(String name, String value) {
+		XmppTransportUtils.addHeader(requestMessage, name, value);
+	}
 
-    @Override
-    protected OutputStream getRequestOutputStream() throws IOException {
-        return new MessageOutputStream(requestMessage, messageEncoding);
-    }
+	@Override
+	protected OutputStream getRequestOutputStream() throws IOException {
+		return new MessageOutputStream(requestMessage, messageEncoding);
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        requestMessage.setFrom(connection.getUser());
-        connection.sendPacket(requestMessage);
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		requestMessage.setFrom(connection.getUser());
+		connection.sendPacket(requestMessage);
+	}
 
-    /*
-     * Receiving
-     */
+	/*
+	 * Receiving
+	 */
 
-    @Override
-    protected void onReceiveBeforeRead() throws IOException {
-        PacketFilter packetFilter = createPacketFilter();
+	@Override
+	protected void onReceiveBeforeRead() throws IOException {
+		PacketFilter packetFilter = createPacketFilter();
 
-        PacketCollector collector = connection.createPacketCollector(packetFilter);
-        Packet packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
-        if (packet instanceof Message) {
-            responseMessage = (Message) packet;
-        }
-        else if (packet != null) {
-            throw new IllegalArgumentException(
-                    "Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
-        }
-    }
+		PacketCollector collector = connection.createPacketCollector(packetFilter);
+		Packet packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
+		if (packet instanceof Message) {
+			responseMessage = (Message) packet;
+		}
+		else if (packet != null) {
+			throw new IllegalArgumentException(
+					"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
+		}
+	}
 
-    private PacketFilter createPacketFilter() {
-        AndFilter andFilter = new AndFilter();
-        andFilter.addFilter(new PacketTypeFilter(Message.class));
-        andFilter.addFilter(new ThreadFilter(requestMessage.getThread()));
-        return andFilter;
-    }
+	private PacketFilter createPacketFilter() {
+		AndFilter andFilter = new AndFilter();
+		andFilter.addFilter(new PacketTypeFilter(Message.class));
+		andFilter.addFilter(new ThreadFilter(requestMessage.getThread()));
+		return andFilter;
+	}
 
-    @Override
-    protected boolean hasResponse() throws IOException {
-        return responseMessage != null;
-    }
+	@Override
+	protected boolean hasResponse() throws IOException {
+		return responseMessage != null;
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaderNames() {
-        return XmppTransportUtils.getHeaderNames(responseMessage);
-    }
+	@Override
+	protected Iterator<String> getResponseHeaderNames() {
+		return XmppTransportUtils.getHeaderNames(responseMessage);
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaders(String name) throws IOException {
-        return XmppTransportUtils.getHeaders(responseMessage, name);
-    }
+	@Override
+	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+		return XmppTransportUtils.getHeaders(responseMessage, name);
+	}
 
-    @Override
-    protected InputStream getResponseInputStream() throws IOException {
-        return new MessageInputStream(responseMessage, messageEncoding);
-    }
+	@Override
+	protected InputStream getResponseInputStream() throws IOException {
+		return new MessageInputStream(responseMessage, messageEncoding);
+	}
 
 }

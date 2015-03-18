@@ -39,83 +39,83 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  */
 public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler implements InitializingBean {
 
-    private String privateKeyPassword;
+	private String privateKeyPassword;
 
-    private char[] symmetricKeyPassword;
+	private char[] symmetricKeyPassword;
 
-    private KeyStore keyStore;
+	private KeyStore keyStore;
 
-    /** Sets the key store to use if a symmetric key name is embedded. */
-    public void setKeyStore(KeyStore keyStore) {
-        this.keyStore = keyStore;
-    }
+	/** Sets the key store to use if a symmetric key name is embedded. */
+	public void setKeyStore(KeyStore keyStore) {
+		this.keyStore = keyStore;
+	}
 
-    /**
-     * Sets the password used to retrieve private keys from the keystore. This property is required for decryption based
-     * on private keys, and signing.
-     */
-    public void setPrivateKeyPassword(String privateKeyPassword) {
-        if (privateKeyPassword != null) {
-            this.privateKeyPassword = privateKeyPassword;
-        }
-    }
+	/**
+	 * Sets the password used to retrieve private keys from the keystore. This property is required for decryption based
+	 * on private keys, and signing.
+	 */
+	public void setPrivateKeyPassword(String privateKeyPassword) {
+		if (privateKeyPassword != null) {
+			this.privateKeyPassword = privateKeyPassword;
+		}
+	}
 
-    /**
-     * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it defaults to
-     * the private key password.
-     *
-     * @see #setPrivateKeyPassword(String)
-     */
-    public void setSymmetricKeyPassword(String symmetricKeyPassword) {
-        if (symmetricKeyPassword != null) {
-            this.symmetricKeyPassword = symmetricKeyPassword.toCharArray();
-        }
-    }
+	/**
+	 * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it defaults to
+	 * the private key password.
+	 *
+	 * @see #setPrivateKeyPassword(String)
+	 */
+	public void setSymmetricKeyPassword(String symmetricKeyPassword) {
+		if (symmetricKeyPassword != null) {
+			this.symmetricKeyPassword = symmetricKeyPassword.toCharArray();
+		}
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (keyStore == null) {
-            loadDefaultKeyStore();
-        }
-        if (symmetricKeyPassword == null) {
-            symmetricKeyPassword = privateKeyPassword.toCharArray();
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (keyStore == null) {
+			loadDefaultKeyStore();
+		}
+		if (symmetricKeyPassword == null) {
+			symmetricKeyPassword = privateKeyPassword.toCharArray();
+		}
+	}
 
-    @Override
-    protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-        callback.setPassword(privateKeyPassword);
-    }
+	@Override
+	protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		callback.setPassword(privateKeyPassword);
+	}
 
 
-    @Override
-    protected void handleSecretKey(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-        try {
-            String identifier = callback.getIdentifier();
-            Key key = keyStore.getKey(identifier, symmetricKeyPassword);
-            if (key instanceof SecretKey) {
-                callback.setKey(key.getEncoded());
-            }
-            else {
-                logger.error("Key [" + key + "] is not a javax.crypto.SecretKey");
-            }
-        }
-        catch (GeneralSecurityException ex) {
-            logger.error("Could not obtain symmetric key", ex);
-        }
-    }
+	@Override
+	protected void handleSecretKey(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		try {
+			String identifier = callback.getIdentifier();
+			Key key = keyStore.getKey(identifier, symmetricKeyPassword);
+			if (key instanceof SecretKey) {
+				callback.setKey(key.getEncoded());
+			}
+			else {
+				logger.error("Key [" + key + "] is not a javax.crypto.SecretKey");
+			}
+		}
+		catch (GeneralSecurityException ex) {
+			logger.error("Could not obtain symmetric key", ex);
+		}
+	}
 
-    /** Loads the key store indicated by system properties. Delegates to {@link KeyStoreUtils#loadDefaultKeyStore()}. */
-    protected void loadDefaultKeyStore() {
-        try {
-            keyStore = KeyStoreUtils.loadDefaultKeyStore();
-            if (logger.isDebugEnabled()) {
-                logger.debug("Loaded default key store");
-            }
-        }
-        catch (Exception ex) {
-            logger.warn("Could not open default key store", ex);
-        }
-    }
+	/** Loads the key store indicated by system properties. Delegates to {@link KeyStoreUtils#loadDefaultKeyStore()}. */
+	protected void loadDefaultKeyStore() {
+		try {
+			keyStore = KeyStoreUtils.loadDefaultKeyStore();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Loaded default key store");
+			}
+		}
+		catch (Exception ex) {
+			logger.warn("Could not open default key store", ex);
+		}
+	}
 
 }

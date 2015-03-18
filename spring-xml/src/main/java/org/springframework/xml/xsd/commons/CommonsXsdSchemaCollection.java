@@ -60,225 +60,225 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  */
 public class CommonsXsdSchemaCollection implements XsdSchemaCollection, InitializingBean, ResourceLoaderAware {
 
-    private static final Log logger = LogFactory.getLog(CommonsXsdSchemaCollection.class);
+	private static final Log logger = LogFactory.getLog(CommonsXsdSchemaCollection.class);
 
-    private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
+	private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 
-    private final List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
+	private final List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
 
-    private Resource[] xsdResources;
+	private Resource[] xsdResources;
 
-    private boolean inline = false;
+	private boolean inline = false;
 
-    private URIResolver uriResolver = new ClasspathUriResolver();
+	private URIResolver uriResolver = new ClasspathUriResolver();
 
-    private ResourceLoader resourceLoader;
+	private ResourceLoader resourceLoader;
 
-    /**
-     * Constructs a new, empty instance of the {@code CommonsXsdSchemaCollection}.
-     *
-     * <p>A subsequent call to the {@link #setXsds(Resource[])} is required.
-     */
-    public CommonsXsdSchemaCollection() {
-    }
+	/**
+	 * Constructs a new, empty instance of the {@code CommonsXsdSchemaCollection}.
+	 *
+	 * <p>A subsequent call to the {@link #setXsds(Resource[])} is required.
+	 */
+	public CommonsXsdSchemaCollection() {
+	}
 
-    /**
-     * Constructs a new instance of the {@code CommonsXsdSchemaCollection} based on the given resources.
-     *
-     * @param resources the schema resources to load
-     */
-    public CommonsXsdSchemaCollection(Resource[] resources) {
-        this.xsdResources = resources;
-    }
+	/**
+	 * Constructs a new instance of the {@code CommonsXsdSchemaCollection} based on the given resources.
+	 *
+	 * @param resources the schema resources to load
+	 */
+	public CommonsXsdSchemaCollection(Resource[] resources) {
+		this.xsdResources = resources;
+	}
 
-    /**
-     * Sets the schema resources to be loaded.
-     *
-     * @param xsdResources the schema resources to be loaded
-     */
-    public void setXsds(Resource[] xsdResources) {
-        this.xsdResources = xsdResources;
-    }
+	/**
+	 * Sets the schema resources to be loaded.
+	 *
+	 * @param xsdResources the schema resources to be loaded
+	 */
+	public void setXsds(Resource[] xsdResources) {
+		this.xsdResources = xsdResources;
+	}
 
-    /**
-     * Defines whether included schemas should be inlined into the including schema.
-     *
-     * <p>Defaults to {@code false}.
-     */
-    public void setInline(boolean inline) {
-        this.inline = inline;
-    }
+	/**
+	 * Defines whether included schemas should be inlined into the including schema.
+	 *
+	 * <p>Defaults to {@code false}.
+	 */
+	public void setInline(boolean inline) {
+		this.inline = inline;
+	}
 
-    /**
-     * Sets the WS-Commons uri resolver to use when resolving (relative) schemas.
-     *
-     * <p>Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
-     */
-    public void setUriResolver(URIResolver uriResolver) {
-        Assert.notNull(uriResolver, "'uriResolver' must not be null");
-        this.uriResolver = uriResolver;
-    }
+	/**
+	 * Sets the WS-Commons uri resolver to use when resolving (relative) schemas.
+	 *
+	 * <p>Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
+	 */
+	public void setUriResolver(URIResolver uriResolver) {
+		Assert.notNull(uriResolver, "'uriResolver' must not be null");
+		this.uriResolver = uriResolver;
+	}
 
-    @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
-    }
+	@Override
+	public void setResourceLoader(ResourceLoader resourceLoader) {
+		this.resourceLoader = resourceLoader;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws IOException {
-        Assert.notEmpty(xsdResources, "'xsds' must not be empty");
+	@Override
+	public void afterPropertiesSet() throws IOException {
+		Assert.notEmpty(xsdResources, "'xsds' must not be empty");
 
-        schemaCollection.setSchemaResolver(uriResolver);
+		schemaCollection.setSchemaResolver(uriResolver);
 
-        Set<XmlSchema> processedIncludes = new HashSet<XmlSchema>();
-        Set<XmlSchema> processedImports = new HashSet<XmlSchema>();
+		Set<XmlSchema> processedIncludes = new HashSet<XmlSchema>();
+		Set<XmlSchema> processedImports = new HashSet<XmlSchema>();
 
-        for (Resource xsdResource : xsdResources) {
-            Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
-            try {
-                XmlSchema xmlSchema =
-                        schemaCollection.read(SaxUtils.createInputSource(xsdResource));
-                xmlSchemas.add(xmlSchema);
+		for (Resource xsdResource : xsdResources) {
+			Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
+			try {
+				XmlSchema xmlSchema =
+						schemaCollection.read(SaxUtils.createInputSource(xsdResource));
+				xmlSchemas.add(xmlSchema);
 
-                if (inline) {
-                    inlineIncludes(xmlSchema, processedIncludes, processedImports);
-                    findImports(xmlSchema, processedImports, processedIncludes);
-                }
-            }
-            catch (Exception ex) {
-                throw new CommonsXsdSchemaException("Schema [" + xsdResource + "] could not be loaded", ex);
-            }
-        }
-        if (logger.isInfoEnabled()) {
-            logger.info("Loaded " + StringUtils.arrayToCommaDelimitedString(xsdResources));
-        }
+				if (inline) {
+					inlineIncludes(xmlSchema, processedIncludes, processedImports);
+					findImports(xmlSchema, processedImports, processedIncludes);
+				}
+			}
+			catch (Exception ex) {
+				throw new CommonsXsdSchemaException("Schema [" + xsdResource + "] could not be loaded", ex);
+			}
+		}
+		if (logger.isInfoEnabled()) {
+			logger.info("Loaded " + StringUtils.arrayToCommaDelimitedString(xsdResources));
+		}
 
-    }
+	}
 
-    @Override
-    public XsdSchema[] getXsdSchemas() {
-        XsdSchema[] result = new XsdSchema[xmlSchemas.size()];
-        for (int i = 0; i < xmlSchemas.size(); i++) {
-            XmlSchema xmlSchema = xmlSchemas.get(i);
-            result[i] = new CommonsXsdSchema(xmlSchema, schemaCollection);
-        }
-        return result;
-    }
+	@Override
+	public XsdSchema[] getXsdSchemas() {
+		XsdSchema[] result = new XsdSchema[xmlSchemas.size()];
+		for (int i = 0; i < xmlSchemas.size(); i++) {
+			XmlSchema xmlSchema = xmlSchemas.get(i);
+			result[i] = new CommonsXsdSchema(xmlSchema, schemaCollection);
+		}
+		return result;
+	}
 
-    @Override
-    public XmlValidator createValidator() {
-	    try {
-		    Resource[] resources = new Resource[xmlSchemas.size()];
-		    for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
-			    XmlSchema xmlSchema = xmlSchemas.get(i);
-			    String sourceUri = xmlSchema.getSourceURI();
-			    if (StringUtils.hasLength(sourceUri)) {
-				    resources[i] = new UrlResource(sourceUri);
-			    }
-		    }
-		    return XmlValidatorFactory
-				    .createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
-	    } catch (IOException ex) {
-		    throw new CommonsXsdSchemaException(ex.getMessage(), ex);
-	    }
-    }
+	@Override
+	public XmlValidator createValidator() {
+		try {
+			Resource[] resources = new Resource[xmlSchemas.size()];
+			for (int i = xmlSchemas.size() - 1; i >= 0; i--) {
+				XmlSchema xmlSchema = xmlSchemas.get(i);
+				String sourceUri = xmlSchema.getSourceURI();
+				if (StringUtils.hasLength(sourceUri)) {
+					resources[i] = new UrlResource(sourceUri);
+				}
+			}
+			return XmlValidatorFactory
+					.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
+		} catch (IOException ex) {
+			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
+		}
+	}
 
-    private void inlineIncludes(XmlSchema schema, Set<XmlSchema> processedIncludes, Set<XmlSchema> processedImports) {
-        processedIncludes.add(schema);
+	private void inlineIncludes(XmlSchema schema, Set<XmlSchema> processedIncludes, Set<XmlSchema> processedImports) {
+		processedIncludes.add(schema);
 
-        List<XmlSchemaObject> schemaItems = schema.getItems();
-        for (int i = 0; i < schemaItems.size(); i++) {
-            XmlSchemaObject schemaObject = schemaItems.get(i);
-            if (schemaObject instanceof XmlSchemaInclude) {
-                XmlSchema includedSchema = ((XmlSchemaInclude) schemaObject).getSchema();
-                if (!processedIncludes.contains(includedSchema)) {
-                    inlineIncludes(includedSchema, processedIncludes, processedImports);
-                    findImports(includedSchema, processedImports, processedIncludes);
-                    List<XmlSchemaObject> includeItems = includedSchema.getItems();
-                    for (XmlSchemaObject includedItem : includeItems) {
-                        schemaItems.add(includedItem);
-                    }
-                }
-                // remove the <include/>
-                schemaItems.remove(i);
-                i--;
-            }
-        }
-    }
+		List<XmlSchemaObject> schemaItems = schema.getItems();
+		for (int i = 0; i < schemaItems.size(); i++) {
+			XmlSchemaObject schemaObject = schemaItems.get(i);
+			if (schemaObject instanceof XmlSchemaInclude) {
+				XmlSchema includedSchema = ((XmlSchemaInclude) schemaObject).getSchema();
+				if (!processedIncludes.contains(includedSchema)) {
+					inlineIncludes(includedSchema, processedIncludes, processedImports);
+					findImports(includedSchema, processedImports, processedIncludes);
+					List<XmlSchemaObject> includeItems = includedSchema.getItems();
+					for (XmlSchemaObject includedItem : includeItems) {
+						schemaItems.add(includedItem);
+					}
+				}
+				// remove the <include/>
+				schemaItems.remove(i);
+				i--;
+			}
+		}
+	}
 
-    private void findImports(XmlSchema schema, Set<XmlSchema> processedImports, Set<XmlSchema> processedIncludes) {
-        processedImports.add(schema);
-        List<XmlSchemaExternal> externals = schema.getExternals();
-        for (XmlSchemaExternal external : externals) {
-            if (external instanceof XmlSchemaImport) {
-                XmlSchemaImport schemaImport = (XmlSchemaImport) external;
-                XmlSchema importedSchema = schemaImport.getSchema();
-                if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) &&
-                        importedSchema != null && !processedImports.contains(importedSchema)) {
-                    inlineIncludes(importedSchema, processedIncludes, processedImports);
-                    findImports(importedSchema, processedImports, processedIncludes);
-                    xmlSchemas.add(importedSchema);
-                }
-                // remove the schemaLocation
-                external.setSchemaLocation(null);
-            }
-        }
-    }
+	private void findImports(XmlSchema schema, Set<XmlSchema> processedImports, Set<XmlSchema> processedIncludes) {
+		processedImports.add(schema);
+		List<XmlSchemaExternal> externals = schema.getExternals();
+		for (XmlSchemaExternal external : externals) {
+			if (external instanceof XmlSchemaImport) {
+				XmlSchemaImport schemaImport = (XmlSchemaImport) external;
+				XmlSchema importedSchema = schemaImport.getSchema();
+				if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) &&
+						importedSchema != null && !processedImports.contains(importedSchema)) {
+					inlineIncludes(importedSchema, processedIncludes, processedImports);
+					findImports(importedSchema, processedImports, processedIncludes);
+					xmlSchemas.add(importedSchema);
+				}
+				// remove the schemaLocation
+				external.setSchemaLocation(null);
+			}
+		}
+	}
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("CommonsXsdSchemaCollection");
-        builder.append('{');
-        for (int i = 0; i < xmlSchemas.size(); i++) {
-            XmlSchema schema = xmlSchemas.get(i);
-            builder.append(schema.getTargetNamespace());
-            if (i < xmlSchemas.size() - 1) {
-                builder.append(',');
-            }
-        }
-        builder.append('}');
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder("CommonsXsdSchemaCollection");
+		builder.append('{');
+		for (int i = 0; i < xmlSchemas.size(); i++) {
+			XmlSchema schema = xmlSchemas.get(i);
+			builder.append(schema.getTargetNamespace());
+			if (i < xmlSchemas.size() - 1) {
+				builder.append(',');
+			}
+		}
+		builder.append('}');
+		return builder.toString();
+	}
 
-    private class ClasspathUriResolver extends DefaultURIResolver {
+	private class ClasspathUriResolver extends DefaultURIResolver {
 
-        @Override
-        public InputSource resolveEntity(String namespace, String schemaLocation, String baseUri) {
-            if (resourceLoader != null) {
-                Resource resource = resourceLoader.getResource(schemaLocation);
-                if (resource.exists()) {
-                    return createInputSource(resource);
-                }
-                else if (StringUtils.hasLength(baseUri)) {
-                    // let's try and find it relative to the baseUri, see SWS-413
-                    try {
-                        Resource baseUriResource = new UrlResource(baseUri);
-                        resource = baseUriResource.createRelative(schemaLocation);
-                        if (resource.exists()) {
-                            return createInputSource(resource);
-                        }
-                    }
-                    catch (IOException e) {
-                        // fall through
-                    }
-                }
-                // let's try and find it on the classpath, see SWS-362
-                String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
-                resource = resourceLoader.getResource(classpathLocation);
-                if (resource.exists()) {
-                    return createInputSource(resource);
-                }
-            }
-            return super.resolveEntity(namespace, schemaLocation, baseUri);
-        }
+		@Override
+		public InputSource resolveEntity(String namespace, String schemaLocation, String baseUri) {
+			if (resourceLoader != null) {
+				Resource resource = resourceLoader.getResource(schemaLocation);
+				if (resource.exists()) {
+					return createInputSource(resource);
+				}
+				else if (StringUtils.hasLength(baseUri)) {
+					// let's try and find it relative to the baseUri, see SWS-413
+					try {
+						Resource baseUriResource = new UrlResource(baseUri);
+						resource = baseUriResource.createRelative(schemaLocation);
+						if (resource.exists()) {
+							return createInputSource(resource);
+						}
+					}
+					catch (IOException e) {
+						// fall through
+					}
+				}
+				// let's try and find it on the classpath, see SWS-362
+				String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
+				resource = resourceLoader.getResource(classpathLocation);
+				if (resource.exists()) {
+					return createInputSource(resource);
+				}
+			}
+			return super.resolveEntity(namespace, schemaLocation, baseUri);
+		}
 
-        private InputSource createInputSource(Resource resource) {
-            try {
-                return SaxUtils.createInputSource(resource);
-            }
-            catch (IOException ex) {
-                throw new CommonsXsdSchemaException("Could not resolve location", ex);
-            }
-        }
-    }
+		private InputSource createInputSource(Resource resource) {
+			try {
+				return SaxUtils.createInputSource(resource);
+			}
+			catch (IOException ex) {
+				throw new CommonsXsdSchemaException("Could not resolve location", ex);
+			}
+		}
+	}
 
 }

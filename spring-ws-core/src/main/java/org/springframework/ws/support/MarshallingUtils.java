@@ -37,82 +37,82 @@ import org.springframework.ws.mime.MimeMessage;
  */
 public abstract class MarshallingUtils {
 
-    private MarshallingUtils() {
-    }
+	private MarshallingUtils() {
+	}
 
-    /**
-     * Unmarshals the payload of the given message using the provided {@link Unmarshaller}.
-     *
-     * <p>If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns
-     * {@code null}), this method will return {@code null}.
-     *
-     * @param unmarshaller the unmarshaller
-     * @param message      the message of which the payload is to be unmarshalled
-     * @return the unmarshalled object
-     * @throws IOException in case of I/O errors
-     */
-    public static Object unmarshal(Unmarshaller unmarshaller, WebServiceMessage message) throws IOException {
-        Source payload = message.getPayloadSource();
-        if (payload == null) {
-            return null;
-        }
-        else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
-            MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
-            MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
-            return mimeUnmarshaller.unmarshal(payload, container);
-        }
-        else {
-            return unmarshaller.unmarshal(payload);
-        }
-    }
+	/**
+	 * Unmarshals the payload of the given message using the provided {@link Unmarshaller}.
+	 *
+	 * <p>If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns
+	 * {@code null}), this method will return {@code null}.
+	 *
+	 * @param unmarshaller the unmarshaller
+	 * @param message	   the message of which the payload is to be unmarshalled
+	 * @return the unmarshalled object
+	 * @throws IOException in case of I/O errors
+	 */
+	public static Object unmarshal(Unmarshaller unmarshaller, WebServiceMessage message) throws IOException {
+		Source payload = message.getPayloadSource();
+		if (payload == null) {
+			return null;
+		}
+		else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
+			MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
+			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
+			return mimeUnmarshaller.unmarshal(payload, container);
+		}
+		else {
+			return unmarshaller.unmarshal(payload);
+		}
+	}
 
-    /**
-     * Marshals the given object to the payload of the given message using the provided {@link Marshaller}.
-     *
-     * @param marshaller the marshaller
-     * @param graph      the root of the object graph to marshal
-     * @param message    the message of which the payload is to be unmarshalled
-     * @throws IOException in case of I/O errors
-     */
-    public static void marshal(Marshaller marshaller, Object graph, WebServiceMessage message) throws IOException {
-        if (marshaller instanceof MimeMarshaller && message instanceof MimeMessage) {
-            MimeMarshaller mimeMarshaller = (MimeMarshaller) marshaller;
-            MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
-            mimeMarshaller.marshal(graph, message.getPayloadResult(), container);
-        }
-        else {
-            marshaller.marshal(graph, message.getPayloadResult());
-        }
-    }
+	/**
+	 * Marshals the given object to the payload of the given message using the provided {@link Marshaller}.
+	 *
+	 * @param marshaller the marshaller
+	 * @param graph		 the root of the object graph to marshal
+	 * @param message	 the message of which the payload is to be unmarshalled
+	 * @throws IOException in case of I/O errors
+	 */
+	public static void marshal(Marshaller marshaller, Object graph, WebServiceMessage message) throws IOException {
+		if (marshaller instanceof MimeMarshaller && message instanceof MimeMessage) {
+			MimeMarshaller mimeMarshaller = (MimeMarshaller) marshaller;
+			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
+			mimeMarshaller.marshal(graph, message.getPayloadResult(), container);
+		}
+		else {
+			marshaller.marshal(graph, message.getPayloadResult());
+		}
+	}
 
-    private static class MimeMessageContainer implements MimeContainer {
+	private static class MimeMessageContainer implements MimeContainer {
 
-        private final MimeMessage mimeMessage;
+		private final MimeMessage mimeMessage;
 
-        public MimeMessageContainer(MimeMessage mimeMessage) {
-            this.mimeMessage = mimeMessage;
-        }
+		public MimeMessageContainer(MimeMessage mimeMessage) {
+			this.mimeMessage = mimeMessage;
+		}
 
-        @Override
-        public boolean isXopPackage() {
-            return mimeMessage.isXopPackage();
-        }
+		@Override
+		public boolean isXopPackage() {
+			return mimeMessage.isXopPackage();
+		}
 
-        @Override
-        public boolean convertToXopPackage() {
-            return mimeMessage.convertToXopPackage();
-        }
+		@Override
+		public boolean convertToXopPackage() {
+			return mimeMessage.convertToXopPackage();
+		}
 
-        @Override
-        public void addAttachment(String contentId, DataHandler dataHandler) {
-            mimeMessage.addAttachment(contentId, dataHandler);
-        }
+		@Override
+		public void addAttachment(String contentId, DataHandler dataHandler) {
+			mimeMessage.addAttachment(contentId, dataHandler);
+		}
 
-        @Override
-        public DataHandler getAttachment(String contentId) {
-            Attachment attachment = mimeMessage.getAttachment(contentId);
-            return attachment != null ? attachment.getDataHandler() : null;
-        }
-    }
+		@Override
+		public DataHandler getAttachment(String contentId) {
+			Attachment attachment = mimeMessage.getAttachment(contentId);
+			return attachment != null ? attachment.getDataHandler() : null;
+		}
+	}
 
 }

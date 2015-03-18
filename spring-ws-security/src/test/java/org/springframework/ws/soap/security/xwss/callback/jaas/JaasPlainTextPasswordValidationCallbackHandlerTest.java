@@ -23,33 +23,33 @@ import org.junit.Test;
 
 public class JaasPlainTextPasswordValidationCallbackHandlerTest {
 
-    private JaasPlainTextPasswordValidationCallbackHandler callbackHandler;
+	private JaasPlainTextPasswordValidationCallbackHandler callbackHandler;
 
-    @Before
-    public void setUp() throws Exception {
-        System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
-        callbackHandler = new JaasPlainTextPasswordValidationCallbackHandler();
-        callbackHandler.setLoginContextName("PlainText");
-    }
+	@Before
+	public void setUp() throws Exception {
+		System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
+		callbackHandler = new JaasPlainTextPasswordValidationCallbackHandler();
+		callbackHandler.setLoginContextName("PlainText");
+	}
 
-    @Test
-    public void testAuthenticateUserPlainTextValid() throws Exception {
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Not authenticated", authenticated);
-    }
+	@Test
+	public void testAuthenticateUserPlainTextValid() throws Exception {
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Not authenticated", authenticated);
+	}
 
-    @Test
-    public void testAuthenticateUserPlainTextInvalid() throws Exception {
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
-    }
+	@Test
+	public void testAuthenticateUserPlainTextInvalid() throws Exception {
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
+	}
 
 }

@@ -34,11 +34,11 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Luke Taylor
  */
 public interface X509UserCache {
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    UserDetails getUserFromCache(X509Certificate userCertificate);
+	UserDetails getUserFromCache(X509Certificate userCertificate);
 
-    void putUserInCache(X509Certificate key, UserDetails user);
+	void putUserInCache(X509Certificate key, UserDetails user);
 
-    void removeUserFromCache(X509Certificate key);
+	void removeUserFromCache(X509Certificate key);
 }

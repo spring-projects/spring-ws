@@ -38,40 +38,40 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
-    @Override
-    public WebServiceConnection createConnection(URI uri) throws IOException {
-        URL url = uri.toURL();
-        URLConnection connection = url.openConnection();
-        if (!(connection instanceof HttpURLConnection)) {
-            throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
-        }
-        else {
-            HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-            prepareConnection(httpURLConnection);
-            return new HttpUrlConnection(httpURLConnection);
-        }
-    }
+	@Override
+	public WebServiceConnection createConnection(URI uri) throws IOException {
+		URL url = uri.toURL();
+		URLConnection connection = url.openConnection();
+		if (!(connection instanceof HttpURLConnection)) {
+			throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
+		}
+		else {
+			HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
+			prepareConnection(httpURLConnection);
+			return new HttpUrlConnection(httpURLConnection);
+		}
+	}
 
-    /**
-     * Template method for preparing the given {@link java.net.HttpURLConnection}.
-     *
-     * <p>The default implementation prepares the connection for input and output, sets the HTTP method to POST, disables
-     * caching, and sets the {@code Accept-Encoding} header to gzip, if {@linkplain #setAcceptGzipEncoding(boolean)
-     * applicable}.
-     *
-     * @param connection the connection to prepare
-     * @throws IOException in case of I/O errors
-     */
-    protected void prepareConnection(HttpURLConnection connection) throws IOException {
-        connection.setRequestMethod(HttpTransportConstants.METHOD_POST);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
-        if (isAcceptGzipEncoding()) {
-            connection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
-                    HttpTransportConstants.CONTENT_ENCODING_GZIP);
-        }
-    }
+	/**
+	 * Template method for preparing the given {@link java.net.HttpURLConnection}.
+	 *
+	 * <p>The default implementation prepares the connection for input and output, sets the HTTP method to POST, disables
+	 * caching, and sets the {@code Accept-Encoding} header to gzip, if {@linkplain #setAcceptGzipEncoding(boolean)
+	 * applicable}.
+	 *
+	 * @param connection the connection to prepare
+	 * @throws IOException in case of I/O errors
+	 */
+	protected void prepareConnection(HttpURLConnection connection) throws IOException {
+		connection.setRequestMethod(HttpTransportConstants.METHOD_POST);
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+		if (isAcceptGzipEncoding()) {
+			connection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+					HttpTransportConstants.CONTENT_ENCODING_GZIP);
+		}
+	}
 
 
 }

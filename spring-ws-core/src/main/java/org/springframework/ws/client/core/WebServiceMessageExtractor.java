@@ -37,15 +37,15 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface WebServiceMessageExtractor<T> {
 
-    /**
-     * Process the data in the given {@code WebServiceMessage}, creating a corresponding result object.
-     *
-     * @param message the message to extract data from (possibly a {@code SoapMessage})
-     * @return an arbitrary result object, or {@code null} if none (the extractor will typically be stateful in the
-     *         latter case)
-     * @throws IOException          in case of I/O errors
-     * @throws TransformerException in case of transformation errors
-     */
-    T extractData(WebServiceMessage message) throws IOException, TransformerException;
+	/**
+	 * Process the data in the given {@code WebServiceMessage}, creating a corresponding result object.
+	 *
+	 * @param message the message to extract data from (possibly a {@code SoapMessage})
+	 * @return an arbitrary result object, or {@code null} if none (the extractor will typically be stateful in the
+	 *		   latter case)
+	 * @throws IOException			in case of I/O errors
+	 * @throws TransformerException in case of transformation errors
+	 */
+	T extractData(WebServiceMessage message) throws IOException, TransformerException;
 
 }

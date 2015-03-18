@@ -38,18 +38,18 @@ import javax.xml.XMLConstants;
 @Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
 public @interface Namespace {
 
-    /**
-     * Signifies the prefix of the namespace.
-     *
-     * @see #uri()
-     */
-    String prefix() default XMLConstants.DEFAULT_NS_PREFIX;
+	/**
+	 * Signifies the prefix of the namespace.
+	 *
+	 * @see #uri()
+	 */
+	String prefix() default XMLConstants.DEFAULT_NS_PREFIX;
 
-    /**
-     * Signifies the URI of the namespace.
-     *
-     * @see #prefix()
-     */
-    String uri();
+	/**
+	 * Signifies the URI of the namespace.
+	 *
+	 * @see #prefix()
+	 */
+	String uri();
 
 }

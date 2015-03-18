@@ -63,37 +63,37 @@ import org.springframework.xml.namespace.QNameEditor;
  */
 public class SoapFaultDefinitionEditor extends PropertyEditorSupport {
 
-    private static final int FAULT_CODE_INDEX = 0;
+	private static final int FAULT_CODE_INDEX = 0;
 
-    private static final int FAULT_STRING_INDEX = 1;
+	private static final int FAULT_STRING_INDEX = 1;
 
-    private static final int FAULT_STRING_LOCALE_INDEX = 2;
+	private static final int FAULT_STRING_LOCALE_INDEX = 2;
 
-    @Override
-    public void setAsText(String text) throws IllegalArgumentException {
-        if (!StringUtils.hasLength(text)) {
-            setValue(null);
-        }
-        else {
-            String[] tokens = StringUtils.commaDelimitedListToStringArray(text);
-            if (tokens.length < FAULT_STRING_INDEX) {
-                throw new IllegalArgumentException("Invalid amount of comma delimited values in [" + text +
-                        "]: SoapFaultDefinitionEditor requires at least 1");
-            }
-            SoapFaultDefinition definition = new SoapFaultDefinition();
-            QNameEditor qNameEditor = new QNameEditor();
-            qNameEditor.setAsText(tokens[FAULT_CODE_INDEX].trim());
-            definition.setFaultCode((QName) qNameEditor.getValue());
-            if (tokens.length > 1) {
-                definition.setFaultStringOrReason(tokens[FAULT_STRING_INDEX].trim());
-                if (tokens.length > 2) {
-                    LocaleEditor localeEditor = new LocaleEditor();
-                    localeEditor.setAsText(tokens[FAULT_STRING_LOCALE_INDEX].trim());
-                    definition.setLocale((Locale) localeEditor.getValue());
-                }
-            }
-            setValue(definition);
-        }
-    }
+	@Override
+	public void setAsText(String text) throws IllegalArgumentException {
+		if (!StringUtils.hasLength(text)) {
+			setValue(null);
+		}
+		else {
+			String[] tokens = StringUtils.commaDelimitedListToStringArray(text);
+			if (tokens.length < FAULT_STRING_INDEX) {
+				throw new IllegalArgumentException("Invalid amount of comma delimited values in [" + text +
+						"]: SoapFaultDefinitionEditor requires at least 1");
+			}
+			SoapFaultDefinition definition = new SoapFaultDefinition();
+			QNameEditor qNameEditor = new QNameEditor();
+			qNameEditor.setAsText(tokens[FAULT_CODE_INDEX].trim());
+			definition.setFaultCode((QName) qNameEditor.getValue());
+			if (tokens.length > 1) {
+				definition.setFaultStringOrReason(tokens[FAULT_STRING_INDEX].trim());
+				if (tokens.length > 2) {
+					LocaleEditor localeEditor = new LocaleEditor();
+					localeEditor.setAsText(tokens[FAULT_STRING_LOCALE_INDEX].trim());
+					definition.setLocale((Locale) localeEditor.getValue());
+				}
+			}
+			setValue(definition);
+		}
+	}
 
 }

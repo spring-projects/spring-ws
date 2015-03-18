@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -28,29 +28,29 @@ import org.junit.Test;
 
 public class KeyStoreCallbackHandlerTest {
 
-    private KeyStoreCallbackHandler callbackHandler;
+	private KeyStoreCallbackHandler callbackHandler;
 
-    private WSPasswordCallback callback;
+	private WSPasswordCallback callback;
 
-    @Before
-    public void setUp() throws Exception {
-        callbackHandler = new KeyStoreCallbackHandler();
-        callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
+	@Before
+	public void setUp() throws Exception {
+		callbackHandler = new KeyStoreCallbackHandler();
+		callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
 
-        KeyStoreFactoryBean factory = new KeyStoreFactoryBean();
-        factory.setLocation(new ClassPathResource("private.jks"));
-        factory.setPassword("123456");
-        factory.setType("JCEKS");
-        factory.afterPropertiesSet();
-        KeyStore keyStore = factory.getObject();
-        callbackHandler.setKeyStore(keyStore);
-        callbackHandler.setSymmetricKeyPassword("123456");
-    }
+		KeyStoreFactoryBean factory = new KeyStoreFactoryBean();
+		factory.setLocation(new ClassPathResource("private.jks"));
+		factory.setPassword("123456");
+		factory.setType("JCEKS");
+		factory.afterPropertiesSet();
+		KeyStore keyStore = factory.getObject();
+		callbackHandler.setKeyStore(keyStore);
+		callbackHandler.setSymmetricKeyPassword("123456");
+	}
 
-    @Test
-    public void testHandleKeyName() throws Exception {
-        callbackHandler.handleInternal(callback);
-        Assert.assertNotNull("symmetric key must not be null", callback.getKey());
-    }
+	@Test
+	public void testHandleKeyName() throws Exception {
+		callbackHandler.handleInternal(callback);
+		Assert.assertNotNull("symmetric key must not be null", callback.getKey());
+	}
 
 }

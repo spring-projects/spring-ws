@@ -31,32 +31,32 @@ import static org.easymock.EasyMock.*;
 
 public class DelegatingSoapEndpointMappingTest {
 
-    private DelegatingSoapEndpointMapping endpointMapping;
+	private DelegatingSoapEndpointMapping endpointMapping;
 
-    private EndpointMapping mock;
+	private EndpointMapping mock;
 
-    @Before
-    public void setUp() throws Exception {
-        endpointMapping = new DelegatingSoapEndpointMapping();
-        mock = createMock(EndpointMapping.class);
-        endpointMapping.setDelegate(mock);
-    }
+	@Before
+	public void setUp() throws Exception {
+		endpointMapping = new DelegatingSoapEndpointMapping();
+		mock = createMock(EndpointMapping.class);
+		endpointMapping.setDelegate(mock);
+	}
 
-    @Test
-    public void testGetEndpointMapping() throws Exception {
-        String role = "http://www.springframework.org/spring-ws/role";
-        endpointMapping.setActorOrRole(role);
-        MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
-        EndpointInvocationChain delegateChain = new EndpointInvocationChain(new Object());
-        expect(mock.getEndpoint(context)).andReturn(delegateChain);
+	@Test
+	public void testGetEndpointMapping() throws Exception {
+		String role = "http://www.springframework.org/spring-ws/role";
+		endpointMapping.setActorOrRole(role);
+		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		EndpointInvocationChain delegateChain = new EndpointInvocationChain(new Object());
+		expect(mock.getEndpoint(context)).andReturn(delegateChain);
 
-        replay(mock);
+		replay(mock);
 
-        SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) endpointMapping.getEndpoint(context);
-        Assert.assertNotNull("No chain returned", resultChain);
-        Assert.assertEquals("Invalid ampount of roles returned", 1, resultChain.getActorsOrRoles().length);
-        Assert.assertEquals("Invalid role returned", role, resultChain.getActorsOrRoles()[0]);
+		SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) endpointMapping.getEndpoint(context);
+		Assert.assertNotNull("No chain returned", resultChain);
+		Assert.assertEquals("Invalid ampount of roles returned", 1, resultChain.getActorsOrRoles().length);
+		Assert.assertEquals("Invalid role returned", role, resultChain.getActorsOrRoles()[0]);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 }

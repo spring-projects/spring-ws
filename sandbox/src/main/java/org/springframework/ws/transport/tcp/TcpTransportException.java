@@ -23,15 +23,15 @@ import org.springframework.ws.transport.TransportException;
 /** @author Arjen Poutsma */
 public class TcpTransportException extends TransportException {
 
-    public TcpTransportException(String msg) {
-        super(msg);
-    }
+	public TcpTransportException(String msg) {
+		super(msg);
+	}
 
-    public TcpTransportException(String msg, IOException ex) {
-        super(msg + ": " + ex.getMessage());
-    }
+	public TcpTransportException(String msg, IOException ex) {
+		super(msg + ": " + ex.getMessage());
+	}
 
-    public TcpTransportException(IOException ex) {
-        super(ex.getMessage());
-    }
+	public TcpTransportException(IOException ex) {
+		super(ex.getMessage());
+	}
 }

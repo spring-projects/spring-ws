@@ -28,12 +28,12 @@ import org.springframework.ws.soap.security.WsSecuritySecurementException;
 @SuppressWarnings("serial")
 public class Wss4jSecuritySecurementException extends WsSecuritySecurementException {
 
-    public Wss4jSecuritySecurementException(String msg) {
-        super(msg);
-    }
+	public Wss4jSecuritySecurementException(String msg) {
+		super(msg);
+	}
 
-    public Wss4jSecuritySecurementException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public Wss4jSecuritySecurementException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
 }

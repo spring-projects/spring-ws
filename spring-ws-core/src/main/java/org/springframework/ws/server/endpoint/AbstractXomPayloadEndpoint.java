@@ -66,273 +66,273 @@ import org.springframework.xml.transform.TraxUtils;
 @SuppressWarnings("Since15")
 public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
-    @Override
-    public final Source invoke(Source request) throws Exception {
-        Element requestElement = null;
-        if (request != null) {
-            XomSourceCallback sourceCallback = new XomSourceCallback();
-            try {
-                TraxUtils.doWithSource(request, sourceCallback);
-            }
-            catch (XomParsingException ex) {
-                throw (ParsingException) ex.getCause();
-            }
-            requestElement = sourceCallback.element;
-        }
-        Element responseElement = invokeInternal(requestElement);
-        return responseElement != null ? convertResponse(responseElement) : null;
-    }
+	@Override
+	public final Source invoke(Source request) throws Exception {
+		Element requestElement = null;
+		if (request != null) {
+			XomSourceCallback sourceCallback = new XomSourceCallback();
+			try {
+				TraxUtils.doWithSource(request, sourceCallback);
+			}
+			catch (XomParsingException ex) {
+				throw (ParsingException) ex.getCause();
+			}
+			requestElement = sourceCallback.element;
+		}
+		Element responseElement = invokeInternal(requestElement);
+		return responseElement != null ? convertResponse(responseElement) : null;
+	}
 
-    private Source convertResponse(Element responseElement) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Serializer serializer = createSerializer(os);
-        Document document = responseElement.getDocument();
-        if (document == null) {
-            document = new Document(responseElement);
-        }
-        serializer.write(document);
-        byte[] bytes = os.toByteArray();
-        return new StreamSource(new ByteArrayInputStream(bytes));
-    }
+	private Source convertResponse(Element responseElement) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		Serializer serializer = createSerializer(os);
+		Document document = responseElement.getDocument();
+		if (document == null) {
+			document = new Document(responseElement);
+		}
+		serializer.write(document);
+		byte[] bytes = os.toByteArray();
+		return new StreamSource(new ByteArrayInputStream(bytes));
+	}
 
-    /**
-     * Creates a {@link Serializer} to be used for writing the response to.
-     *
-     * <p>Default implementation uses the UTF-8 encoding and does not set any options, but this may be changed in
-     * subclasses.
-     *
-     * @param outputStream the output stream to serialize to
-     * @return the serializer
-     */
-    protected Serializer createSerializer(OutputStream outputStream) {
-        return new Serializer(outputStream);
-    }
+	/**
+	 * Creates a {@link Serializer} to be used for writing the response to.
+	 *
+	 * <p>Default implementation uses the UTF-8 encoding and does not set any options, but this may be changed in
+	 * subclasses.
+	 *
+	 * @param outputStream the output stream to serialize to
+	 * @return the serializer
+	 */
+	protected Serializer createSerializer(OutputStream outputStream) {
+		return new Serializer(outputStream);
+	}
 
-    /**
-     * Template method. Subclasses must implement this. Offers the request payload as a XOM {@code Element}, and
-     * allows subclasses to return a response {@code Element}.
-     *
-     * @param requestElement the contents of the SOAP message as XOM element
-     * @return the response element. Can be {@code null} to specify no response.
-     */
-    protected abstract Element invokeInternal(Element requestElement) throws Exception;
+	/**
+	 * Template method. Subclasses must implement this. Offers the request payload as a XOM {@code Element}, and
+	 * allows subclasses to return a response {@code Element}.
+	 *
+	 * @param requestElement the contents of the SOAP message as XOM element
+	 * @return the response element. Can be {@code null} to specify no response.
+	 */
+	protected abstract Element invokeInternal(Element requestElement) throws Exception;
 
-    private static class XomSourceCallback implements TraxUtils.SourceCallback {
+	private static class XomSourceCallback implements TraxUtils.SourceCallback {
 
-        private Element element;
+		private Element element;
 
-        @Override
-        public void domSource(Node node) {
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                element = DOMConverter.convert((org.w3c.dom.Element) node);
-            }
-            else if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                Document document = DOMConverter.convert((org.w3c.dom.Document) node);
-                element = document.getRootElement();
-            }
-            else {
-                throw new IllegalArgumentException("DOMSource contains neither Document nor Element");
-            }
-        }
+		@Override
+		public void domSource(Node node) {
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				element = DOMConverter.convert((org.w3c.dom.Element) node);
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				Document document = DOMConverter.convert((org.w3c.dom.Document) node);
+				element = document.getRootElement();
+			}
+			else {
+				throw new IllegalArgumentException("DOMSource contains neither Document nor Element");
+			}
+		}
 
-        @Override
-        public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException {
-            try {
-                Builder builder = new Builder(reader);
-                Document document;
-                if (inputSource.getByteStream() != null) {
-                    document = builder.build(inputSource.getByteStream());
-                }
-                else if (inputSource.getCharacterStream() != null) {
-                    document = builder.build(inputSource.getCharacterStream());
-                }
-                else {
-                    throw new IllegalArgumentException(
-                            "InputSource in SAXSource contains neither byte stream nor character stream");
-                }
-                element = document.getRootElement();
-            }
-            catch (ValidityException ex) {
-                throw new XomParsingException(ex);
-            }
-            catch (ParsingException ex) {
-                throw new XomParsingException(ex);
-            }
-        }
+		@Override
+		public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException {
+			try {
+				Builder builder = new Builder(reader);
+				Document document;
+				if (inputSource.getByteStream() != null) {
+					document = builder.build(inputSource.getByteStream());
+				}
+				else if (inputSource.getCharacterStream() != null) {
+					document = builder.build(inputSource.getCharacterStream());
+				}
+				else {
+					throw new IllegalArgumentException(
+							"InputSource in SAXSource contains neither byte stream nor character stream");
+				}
+				element = document.getRootElement();
+			}
+			catch (ValidityException ex) {
+				throw new XomParsingException(ex);
+			}
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
+			}
+		}
 
-        @Override
-        public void staxSource(XMLEventReader eventReader) throws XMLStreamException {
-            throw new IllegalArgumentException("XMLEventReader not supported");
-        }
+		@Override
+		public void staxSource(XMLEventReader eventReader) throws XMLStreamException {
+			throw new IllegalArgumentException("XMLEventReader not supported");
+		}
 
-        @Override
-        public void staxSource(XMLStreamReader streamReader) throws XMLStreamException {
-            Document document = StaxStreamConverter.convert(streamReader);
-            element = document.getRootElement();
-        }
+		@Override
+		public void staxSource(XMLStreamReader streamReader) throws XMLStreamException {
+			Document document = StaxStreamConverter.convert(streamReader);
+			element = document.getRootElement();
+		}
 
-        @Override
-        public void streamSource(InputStream inputStream) throws IOException {
-            try {
-                Builder builder = new Builder();
-                Document document = builder.build(inputStream);
-                element = document.getRootElement();
-            }
-            catch (ParsingException ex) {
-                throw new XomParsingException(ex);
-            }
-        }
+		@Override
+		public void streamSource(InputStream inputStream) throws IOException {
+			try {
+				Builder builder = new Builder();
+				Document document = builder.build(inputStream);
+				element = document.getRootElement();
+			}
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
+			}
+		}
 
-        @Override
-        public void streamSource(Reader reader) throws IOException {
-            try {
-                Builder builder = new Builder();
-                Document document = builder.build(reader);
-                element = document.getRootElement();
-            }
-            catch (ParsingException ex) {
-                throw new XomParsingException(ex);
-            }
-        }
+		@Override
+		public void streamSource(Reader reader) throws IOException {
+			try {
+				Builder builder = new Builder();
+				Document document = builder.build(reader);
+				element = document.getRootElement();
+			}
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
+			}
+		}
 
-        @Override
-        public void source(String systemId) throws Exception {
-            try {
-                Builder builder = new Builder();
-                Document document = builder.build(systemId);
-                element = document.getRootElement();
-            }
-            catch (ParsingException ex) {
-                throw new XomParsingException(ex);
-            }
-        }
-    }
+		@Override
+		public void source(String systemId) throws Exception {
+			try {
+				Builder builder = new Builder();
+				Document document = builder.build(systemId);
+				element = document.getRootElement();
+			}
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
+			}
+		}
+	}
 
 	@SuppressWarnings("serial")
-    private static class XomParsingException extends NestedRuntimeException {
+	private static class XomParsingException extends NestedRuntimeException {
 
-        private XomParsingException(ParsingException ex) {
-            super(ex.getMessage(), ex);
-        }
-    }
+		private XomParsingException(ParsingException ex) {
+			super(ex.getMessage(), ex);
+		}
+	}
 
-    private static class StaxStreamConverter {
+	private static class StaxStreamConverter {
 
-        private static Document convert(XMLStreamReader streamReader) throws XMLStreamException {
-            NodeFactory nodeFactory = new NodeFactory();
-            Document document = null;
-            Element element = null;
-            ParentNode parent = null;
-            boolean documentFinished = false;
-            while (streamReader.hasNext()) {
-                int event = streamReader.next();
-                switch (event) {
-                    case XMLStreamConstants.START_DOCUMENT:
-                        document = nodeFactory.startMakingDocument();
-                        parent = document;
-                        break;
-                    case XMLStreamConstants.END_DOCUMENT:
-                        nodeFactory.finishMakingDocument(document);
-                        documentFinished = true;
-                        break;
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (document == null) {
-                            document = nodeFactory.startMakingDocument();
-                            parent = document;
-                        }
-                        String name = QNameUtils.toQualifiedName(streamReader.getName());
-                        if (element == null) {
-                            element = nodeFactory.makeRootElement(name, streamReader.getNamespaceURI());
-                            document.setRootElement(element);
-                        }
-                        else {
-                            element = nodeFactory.startMakingElement(name, streamReader.getNamespaceURI());
-                            parent.appendChild(element);
-                        }
-                        convertNamespaces(streamReader, element);
-                        convertAttributes(streamReader, nodeFactory);
-                        parent = element;
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        nodeFactory.finishMakingElement(element);
-                        parent = parent.getParent();
-                        break;
-                    case XMLStreamConstants.ATTRIBUTE:
-                        convertAttributes(streamReader, nodeFactory);
-                        break;
-                    case XMLStreamConstants.CHARACTERS:
-                        nodeFactory.makeText(streamReader.getText());
-                        break;
-                    case XMLStreamConstants.COMMENT:
-                        nodeFactory.makeComment(streamReader.getText());
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (!documentFinished) {
-                nodeFactory.finishMakingDocument(document);
-            }
-            return document;
-        }
+		private static Document convert(XMLStreamReader streamReader) throws XMLStreamException {
+			NodeFactory nodeFactory = new NodeFactory();
+			Document document = null;
+			Element element = null;
+			ParentNode parent = null;
+			boolean documentFinished = false;
+			while (streamReader.hasNext()) {
+				int event = streamReader.next();
+				switch (event) {
+					case XMLStreamConstants.START_DOCUMENT:
+						document = nodeFactory.startMakingDocument();
+						parent = document;
+						break;
+					case XMLStreamConstants.END_DOCUMENT:
+						nodeFactory.finishMakingDocument(document);
+						documentFinished = true;
+						break;
+					case XMLStreamConstants.START_ELEMENT:
+						if (document == null) {
+							document = nodeFactory.startMakingDocument();
+							parent = document;
+						}
+						String name = QNameUtils.toQualifiedName(streamReader.getName());
+						if (element == null) {
+							element = nodeFactory.makeRootElement(name, streamReader.getNamespaceURI());
+							document.setRootElement(element);
+						}
+						else {
+							element = nodeFactory.startMakingElement(name, streamReader.getNamespaceURI());
+							parent.appendChild(element);
+						}
+						convertNamespaces(streamReader, element);
+						convertAttributes(streamReader, nodeFactory);
+						parent = element;
+						break;
+					case XMLStreamConstants.END_ELEMENT:
+						nodeFactory.finishMakingElement(element);
+						parent = parent.getParent();
+						break;
+					case XMLStreamConstants.ATTRIBUTE:
+						convertAttributes(streamReader, nodeFactory);
+						break;
+					case XMLStreamConstants.CHARACTERS:
+						nodeFactory.makeText(streamReader.getText());
+						break;
+					case XMLStreamConstants.COMMENT:
+						nodeFactory.makeComment(streamReader.getText());
+						break;
+					default:
+						break;
+				}
+			}
+			if (!documentFinished) {
+				nodeFactory.finishMakingDocument(document);
+			}
+			return document;
+		}
 
-        private static void convertNamespaces(XMLStreamReader streamReader, Element element) {
-            for (int i = 0; i < streamReader.getNamespaceCount(); i++) {
-                String uri = streamReader.getNamespaceURI(i);
-                String prefix = streamReader.getNamespacePrefix(i);
+		private static void convertNamespaces(XMLStreamReader streamReader, Element element) {
+			for (int i = 0; i < streamReader.getNamespaceCount(); i++) {
+				String uri = streamReader.getNamespaceURI(i);
+				String prefix = streamReader.getNamespacePrefix(i);
 
-                element.addNamespaceDeclaration(prefix, uri);
-            }
+				element.addNamespaceDeclaration(prefix, uri);
+			}
 
-        }
+		}
 
-        private static void convertAttributes(XMLStreamReader streamReader, NodeFactory nodeFactory) {
-            for (int i = 0; i < streamReader.getAttributeCount(); i++) {
-                String name = QNameUtils.toQualifiedName(streamReader.getAttributeName(i));
-                String uri = streamReader.getAttributeNamespace(i);
-                String value = streamReader.getAttributeValue(i);
-                Attribute.Type type = convertAttributeType(streamReader.getAttributeType(i));
+		private static void convertAttributes(XMLStreamReader streamReader, NodeFactory nodeFactory) {
+			for (int i = 0; i < streamReader.getAttributeCount(); i++) {
+				String name = QNameUtils.toQualifiedName(streamReader.getAttributeName(i));
+				String uri = streamReader.getAttributeNamespace(i);
+				String value = streamReader.getAttributeValue(i);
+				Attribute.Type type = convertAttributeType(streamReader.getAttributeType(i));
 
-                nodeFactory.makeAttribute(name, uri, value, type);
-            }
-        }
+				nodeFactory.makeAttribute(name, uri, value, type);
+			}
+		}
 
-        private static Attribute.Type convertAttributeType(String type) {
-            type = type.toUpperCase(Locale.ENGLISH);
-            if ("CDATA".equals(type)) {
-                return Attribute.Type.CDATA;
-            }
-            else if ("ENTITIES".equals(type)) {
-                return Attribute.Type.ENTITIES;
-            }
-            else if ("ENTITY".equals(type)) {
-                return Attribute.Type.ENTITY;
-            }
-            else if ("ENUMERATION".equals(type)) {
-                return Attribute.Type.ENUMERATION;
-            }
-            else if ("ID".equals(type)) {
-                return Attribute.Type.ID;
-            }
-            else if ("IDREF".equals(type)) {
-                return Attribute.Type.IDREF;
-            }
-            else if ("IDREFS".equals(type)) {
-                return Attribute.Type.IDREFS;
-            }
-            else if ("NMTOKEN".equals(type)) {
-                return Attribute.Type.NMTOKEN;
-            }
-            else if ("NMTOKENS".equals(type)) {
-                return Attribute.Type.NMTOKENS;
-            }
-            else if ("NOTATION".equals(type)) {
-                return Attribute.Type.NOTATION;
-            }
-            else {
-                return Attribute.Type.UNDECLARED;
-            }
-        }
+		private static Attribute.Type convertAttributeType(String type) {
+			type = type.toUpperCase(Locale.ENGLISH);
+			if ("CDATA".equals(type)) {
+				return Attribute.Type.CDATA;
+			}
+			else if ("ENTITIES".equals(type)) {
+				return Attribute.Type.ENTITIES;
+			}
+			else if ("ENTITY".equals(type)) {
+				return Attribute.Type.ENTITY;
+			}
+			else if ("ENUMERATION".equals(type)) {
+				return Attribute.Type.ENUMERATION;
+			}
+			else if ("ID".equals(type)) {
+				return Attribute.Type.ID;
+			}
+			else if ("IDREF".equals(type)) {
+				return Attribute.Type.IDREF;
+			}
+			else if ("IDREFS".equals(type)) {
+				return Attribute.Type.IDREFS;
+			}
+			else if ("NMTOKEN".equals(type)) {
+				return Attribute.Type.NMTOKEN;
+			}
+			else if ("NMTOKENS".equals(type)) {
+				return Attribute.Type.NMTOKENS;
+			}
+			else if ("NOTATION".equals(type)) {
+				return Attribute.Type.NOTATION;
+			}
+			else {
+				return Attribute.Type.UNDECLARED;
+			}
+		}
 
-    }
+	}
 }

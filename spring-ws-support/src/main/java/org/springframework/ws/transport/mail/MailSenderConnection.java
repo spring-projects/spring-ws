@@ -65,280 +65,280 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
 public class MailSenderConnection extends AbstractSenderConnection {
 
-    private static final Log logger = LogFactory.getLog(MailSenderConnection.class);
+	private static final Log logger = LogFactory.getLog(MailSenderConnection.class);
 
-    private final Session session;
+	private final Session session;
 
-    private MimeMessage requestMessage;
+	private MimeMessage requestMessage;
 
-    private Message responseMessage;
+	private Message responseMessage;
 
-    private String requestContentType;
+	private String requestContentType;
 
-    private boolean deleteAfterReceive = false;
+	private boolean deleteAfterReceive = false;
 
-    private final URLName storeUri;
+	private final URLName storeUri;
 
-    private final URLName transportUri;
+	private final URLName transportUri;
 
-    private ByteArrayOutputStream requestBuffer;
+	private ByteArrayOutputStream requestBuffer;
 
-    private InternetAddress from;
+	private InternetAddress from;
 
-    private final InternetAddress to;
+	private final InternetAddress to;
 
-    private String subject;
+	private String subject;
 
-    private final long receiveTimeout;
+	private final long receiveTimeout;
 
-    private Store store;
+	private Store store;
 
-    private Folder folder;
+	private Folder folder;
 
-    /** Constructs a new Mail connection with the given parameters. */
-    protected MailSenderConnection(Session session,
-                                   URLName transportUri,
-                                   URLName storeUri,
-                                   InternetAddress to,
-                                   long receiveTimeout) {
-        Assert.notNull(session, "'session' must not be null");
-        Assert.notNull(transportUri, "'transportUri' must not be null");
-        Assert.notNull(storeUri, "'storeUri' must not be null");
-        Assert.notNull(to, "'to' must not be null");
-        this.session = session;
-        this.transportUri = transportUri;
-        this.storeUri = storeUri;
-        this.to = to;
-        this.receiveTimeout = receiveTimeout;
-    }
+	/** Constructs a new Mail connection with the given parameters. */
+	protected MailSenderConnection(Session session,
+								   URLName transportUri,
+								   URLName storeUri,
+								   InternetAddress to,
+								   long receiveTimeout) {
+		Assert.notNull(session, "'session' must not be null");
+		Assert.notNull(transportUri, "'transportUri' must not be null");
+		Assert.notNull(storeUri, "'storeUri' must not be null");
+		Assert.notNull(to, "'to' must not be null");
+		this.session = session;
+		this.transportUri = transportUri;
+		this.storeUri = storeUri;
+		this.to = to;
+		this.receiveTimeout = receiveTimeout;
+	}
 
-    /** Returns the request message for this connection. */
-    public Message getRequestMessage() {
-        return requestMessage;
-    }
+	/** Returns the request message for this connection. */
+	public Message getRequestMessage() {
+		return requestMessage;
+	}
 
-    /** Returns the response message, if any, for this connection. */
-    public Message getResponseMessage() {
-        return responseMessage;
-    }
+	/** Returns the response message, if any, for this connection. */
+	public Message getResponseMessage() {
+		return responseMessage;
+	}
 
-    /*
-     * Package-friendly setters
-     */
+	/*
+	 * Package-friendly setters
+	 */
 
-    void setFrom(InternetAddress from) {
-        this.from = from;
-    }
+	void setFrom(InternetAddress from) {
+		this.from = from;
+	}
 
-    void setSubject(String subject) {
-        this.subject = subject;
-    }
+	void setSubject(String subject) {
+		this.subject = subject;
+	}
 
-    /*
-     * URI
-     */
-    @Override
-    public URI getUri() throws URISyntaxException {
-        return MailTransportUtils.toUri(to, subject);
-    }
+	/*
+	 * URI
+	 */
+	@Override
+	public URI getUri() throws URISyntaxException {
+		return MailTransportUtils.toUri(to, subject);
+	}
 
-    /*
-    * Sending
-    */
-    @Override
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        try {
-            requestMessage = new MimeMessage(session);
-            requestMessage.setRecipient(Message.RecipientType.TO, to);
-            requestMessage.setSentDate(new Date());
-            if (from != null) {
-                requestMessage.setFrom(from);
-            }
-            if (subject != null) {
-                requestMessage.setSubject(subject);
-            }
-            requestBuffer = new ByteArrayOutputStream();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	/*
+	* Sending
+	*/
+	@Override
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+		try {
+			requestMessage = new MimeMessage(session);
+			requestMessage.setRecipient(Message.RecipientType.TO, to);
+			requestMessage.setSentDate(new Date());
+			if (from != null) {
+				requestMessage.setFrom(from);
+			}
+			if (subject != null) {
+				requestMessage.setSubject(subject);
+			}
+			requestBuffer = new ByteArrayOutputStream();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected void addRequestHeader(String name, String value) throws IOException {
-        try {
-            requestMessage.addHeader(name, value);
-            if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
-                requestContentType = value;
-            }
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected void addRequestHeader(String name, String value) throws IOException {
+		try {
+			requestMessage.addHeader(name, value);
+			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
+				requestContentType = value;
+			}
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected OutputStream getRequestOutputStream() throws IOException {
-        return requestBuffer;
-    }
+	@Override
+	protected OutputStream getRequestOutputStream() throws IOException {
+		return requestBuffer;
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        Transport transport = null;
-        try {
-            requestMessage.setDataHandler(
-                    new DataHandler(new ByteArrayDataSource(requestContentType, requestBuffer.toByteArray())));
-            transport = session.getTransport(transportUri);
-            transport.connect();
-            requestMessage.saveChanges();
-            transport.sendMessage(requestMessage, requestMessage.getAllRecipients());
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-        finally {
-            MailTransportUtils.closeService(transport);
-        }
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		Transport transport = null;
+		try {
+			requestMessage.setDataHandler(
+					new DataHandler(new ByteArrayDataSource(requestContentType, requestBuffer.toByteArray())));
+			transport = session.getTransport(transportUri);
+			transport.connect();
+			requestMessage.saveChanges();
+			transport.sendMessage(requestMessage, requestMessage.getAllRecipients());
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+		finally {
+			MailTransportUtils.closeService(transport);
+		}
+	}
 
-    /*
-     * Receiving
-     */
+	/*
+	 * Receiving
+	 */
 
-    @Override
-    protected void onReceiveBeforeRead() throws IOException {
-        try {
-            String requestMessageId = requestMessage.getMessageID();
-            Assert.hasLength(requestMessageId, "No Message-ID found on request message [" + requestMessage + "]");
-            try {
-                Thread.sleep(receiveTimeout);
-            }
-            catch (InterruptedException e) {
-                // Re-interrupt current thread, to allow other threads to react.
-                Thread.currentThread().interrupt();
-            }
-            openFolder();
-            SearchTerm searchTerm = new HeaderTerm(MailTransportConstants.HEADER_IN_REPLY_TO, requestMessageId);
-            Message[] responses = folder.search(searchTerm);
-            if (responses.length > 0) {
-                if (responses.length > 1) {
-                    logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
-                }
-                responseMessage = responses[0];
-            }
-            if (deleteAfterReceive) {
-                responseMessage.setFlag(Flags.Flag.DELETED, true);
-            }
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected void onReceiveBeforeRead() throws IOException {
+		try {
+			String requestMessageId = requestMessage.getMessageID();
+			Assert.hasLength(requestMessageId, "No Message-ID found on request message [" + requestMessage + "]");
+			try {
+				Thread.sleep(receiveTimeout);
+			}
+			catch (InterruptedException e) {
+				// Re-interrupt current thread, to allow other threads to react.
+				Thread.currentThread().interrupt();
+			}
+			openFolder();
+			SearchTerm searchTerm = new HeaderTerm(MailTransportConstants.HEADER_IN_REPLY_TO, requestMessageId);
+			Message[] responses = folder.search(searchTerm);
+			if (responses.length > 0) {
+				if (responses.length > 1) {
+					logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
+				}
+				responseMessage = responses[0];
+			}
+			if (deleteAfterReceive) {
+				responseMessage.setFlag(Flags.Flag.DELETED, true);
+			}
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    private void openFolder() throws MessagingException {
-        store = session.getStore(storeUri);
-        store.connect();
-        folder = store.getFolder(storeUri);
-        if (folder == null || !folder.exists()) {
-            throw new IllegalStateException("No default folder to receive from");
-        }
-        if (deleteAfterReceive) {
-            folder.open(Folder.READ_WRITE);
-        }
-        else {
-            folder.open(Folder.READ_ONLY);
-        }
-    }
+	private void openFolder() throws MessagingException {
+		store = session.getStore(storeUri);
+		store.connect();
+		folder = store.getFolder(storeUri);
+		if (folder == null || !folder.exists()) {
+			throw new IllegalStateException("No default folder to receive from");
+		}
+		if (deleteAfterReceive) {
+			folder.open(Folder.READ_WRITE);
+		}
+		else {
+			folder.open(Folder.READ_ONLY);
+		}
+	}
 
-    @Override
-    protected boolean hasResponse() throws IOException {
-        return responseMessage != null;
-    }
+	@Override
+	protected boolean hasResponse() throws IOException {
+		return responseMessage != null;
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaderNames() throws IOException {
-        try {
-            List<String> headers = new ArrayList<String>();
-            Enumeration<?> enumeration = responseMessage.getAllHeaders();
-            while (enumeration.hasMoreElements()) {
-                Header header = (Header) enumeration.nextElement();
-                headers.add(header.getName());
-            }
-            return headers.iterator();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected Iterator<String> getResponseHeaderNames() throws IOException {
+		try {
+			List<String> headers = new ArrayList<String>();
+			Enumeration<?> enumeration = responseMessage.getAllHeaders();
+			while (enumeration.hasMoreElements()) {
+				Header header = (Header) enumeration.nextElement();
+				headers.add(header.getName());
+			}
+			return headers.iterator();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaders(String name) throws IOException {
-        try {
-            String[] headers = responseMessage.getHeader(name);
-            return Arrays.asList(headers).iterator();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
+	@Override
+	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+		try {
+			String[] headers = responseMessage.getHeader(name);
+			return Arrays.asList(headers).iterator();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
 
-        }
-    }
+		}
+	}
 
-    @Override
-    protected InputStream getResponseInputStream() throws IOException {
-        try {
-            return responseMessage.getDataHandler().getInputStream();
-        }
-        catch (MessagingException ex) {
-            throw new MailTransportException(ex);
-        }
-    }
+	@Override
+	protected InputStream getResponseInputStream() throws IOException {
+		try {
+			return responseMessage.getDataHandler().getInputStream();
+		}
+		catch (MessagingException ex) {
+			throw new MailTransportException(ex);
+		}
+	}
 
-    @Override
-    public boolean hasError() throws IOException {
-        return false;
-    }
+	@Override
+	public boolean hasError() throws IOException {
+		return false;
+	}
 
-    @Override
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
+	@Override
+	public String getErrorMessage() throws IOException {
+		return null;
+	}
 
-    @Override
-    public void onClose() throws IOException {
-        MailTransportUtils.closeFolder(folder, deleteAfterReceive);
-        MailTransportUtils.closeService(store);
-    }
+	@Override
+	public void onClose() throws IOException {
+		MailTransportUtils.closeFolder(folder, deleteAfterReceive);
+		MailTransportUtils.closeService(store);
+	}
 
-    private class ByteArrayDataSource implements DataSource {
+	private class ByteArrayDataSource implements DataSource {
 
-        private byte[] data;
+		private byte[] data;
 
-        private String contentType;
+		private String contentType;
 
-        public ByteArrayDataSource(String contentType, byte[] data) {
-            this.data = data;
-            this.contentType = contentType;
-        }
+		public ByteArrayDataSource(String contentType, byte[] data) {
+			this.data = data;
+			this.contentType = contentType;
+		}
 
-        @Override
-        public InputStream getInputStream() throws IOException {
-            return new ByteArrayInputStream(data);
-        }
+		@Override
+		public InputStream getInputStream() throws IOException {
+			return new ByteArrayInputStream(data);
+		}
 
-        @Override
-        public OutputStream getOutputStream() throws IOException {
-            throw new UnsupportedOperationException();
-        }
+		@Override
+		public OutputStream getOutputStream() throws IOException {
+			throw new UnsupportedOperationException();
+		}
 
-        @Override
-        public String getContentType() {
-            return contentType;
-        }
+		@Override
+		public String getContentType() {
+			return contentType;
+		}
 
-        @Override
-        public String getName() {
-            return "ByteArrayDataSource";
-        }
-    }
+		@Override
+		public String getName() {
+			return "ByteArrayDataSource";
+		}
+	}
 
 }

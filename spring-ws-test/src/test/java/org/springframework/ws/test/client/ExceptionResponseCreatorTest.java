@@ -22,17 +22,17 @@ import org.junit.Test;
 
 public class ExceptionResponseCreatorTest {
 
-    @Test(expected = IOException.class)
-    public void ioException() throws Exception {
-        ExceptionResponseCreator callback = new ExceptionResponseCreator(new IOException());
+	@Test(expected = IOException.class)
+	public void ioException() throws Exception {
+		ExceptionResponseCreator callback = new ExceptionResponseCreator(new IOException());
 
-        callback.createResponse(null, null, null);
-    }
+		callback.createResponse(null, null, null);
+	}
 
-    @Test(expected = RuntimeException.class)
-    public void runtimeException() throws Exception {
-        ExceptionResponseCreator callback = new ExceptionResponseCreator(new RuntimeException());
+	@Test(expected = RuntimeException.class)
+	public void runtimeException() throws Exception {
+		ExceptionResponseCreator callback = new ExceptionResponseCreator(new RuntimeException());
 
-        callback.createResponse(null, null, null);
-    }
+		callback.createResponse(null, null, null);
+	}
 }

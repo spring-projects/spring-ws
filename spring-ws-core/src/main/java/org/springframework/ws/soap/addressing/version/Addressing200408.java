@@ -30,82 +30,82 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/Submission/2004/SUBM-ws-addressing-20040810/">Web Services Addressing, August
- *      2004</a>
+ *		2004</a>
  * @since 1.5.0
  */
 public class Addressing200408 extends AbstractAddressingVersion {
 
-    private static final String NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
+	private static final String NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2004/08/addressing";
 
-    @Override
-    public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
-        Assert.notNull(map.getAction(), "'Action' is required");
-        Assert.notNull(map.getTo(), "'To' is required");
-        super.addAddressingHeaders(message, map);
-    }
+	@Override
+	public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
+		Assert.notNull(map.getAction(), "'Action' is required");
+		Assert.notNull(map.getTo(), "'To' is required");
+		super.addAddressingHeaders(message, map);
+	}
 
-    @Override
-    public boolean hasRequiredProperties(MessageAddressingProperties map) {
-        if (map.getTo() == null) {
-            return false;
-        }
-        if (map.getAction() == null) {
-            return false;
-        }
-        if (map.getReplyTo() != null || map.getFaultTo() != null) {
-            return map.getMessageId() != null;
-        }
-        return true;
-    }
+	@Override
+	public boolean hasRequiredProperties(MessageAddressingProperties map) {
+		if (map.getTo() == null) {
+			return false;
+		}
+		if (map.getAction() == null) {
+			return false;
+		}
+		if (map.getReplyTo() != null || map.getFaultTo() != null) {
+			return map.getMessageId() != null;
+		}
+		return true;
+	}
 
-    @Override
-    protected final URI getAnonymous() {
-        return URI.create(NAMESPACE_URI + "/role/anonymous");
-    }
+	@Override
+	protected final URI getAnonymous() {
+		return URI.create(NAMESPACE_URI + "/role/anonymous");
+	}
 
-    @Override
-    protected final String getInvalidAddressingHeaderFaultReason() {
-        return "A message information header is not valid and the message cannot be processed.";
-    }
+	@Override
+	protected final String getInvalidAddressingHeaderFaultReason() {
+		return "A message information header is not valid and the message cannot be processed.";
+	}
 
-    @Override
-    protected final QName getInvalidAddressingHeaderFaultSubcode() {
-	    return new QName(NAMESPACE_URI, "InvalidMessageInformationHeader",
-			    getNamespacePrefix());
-    }
+	@Override
+	protected final QName getInvalidAddressingHeaderFaultSubcode() {
+		return new QName(NAMESPACE_URI, "InvalidMessageInformationHeader",
+				getNamespacePrefix());
+	}
 
-    @Override
-    protected final String getMessageAddressingHeaderRequiredFaultReason() {
-        return "A required message information header, To, MessageID, or Action, is not present.";
-    }
+	@Override
+	protected final String getMessageAddressingHeaderRequiredFaultReason() {
+		return "A required message information header, To, MessageID, or Action, is not present.";
+	}
 
-    @Override
-    protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-	    return new QName(NAMESPACE_URI, "MessageInformationHeaderRequired",
-			    getNamespacePrefix());
-    }
+	@Override
+	protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
+		return new QName(NAMESPACE_URI, "MessageInformationHeaderRequired",
+				getNamespacePrefix());
+	}
 
-    @Override
-    protected final String getNamespaceUri() {
-        return NAMESPACE_URI;
-    }
+	@Override
+	protected final String getNamespaceUri() {
+		return NAMESPACE_URI;
+	}
 
-    @Override
-    protected URI getDefaultTo() {
-        return null;
-    }
+	@Override
+	protected URI getDefaultTo() {
+		return null;
+	}
 
-    @Override
-    protected final EndpointReference getDefaultReplyTo(EndpointReference from) {
-        return from;
-    }
+	@Override
+	protected final EndpointReference getDefaultReplyTo(EndpointReference from) {
+		return from;
+	}
 
-    @Override
-    protected final URI getNone() {
-        return null;
-    }
+	@Override
+	protected final URI getNone() {
+		return null;
+	}
 
-    public String toString() {
-        return "WS-Addressing August 2004";
-    }
+	public String toString() {
+		return "WS-Addressing August 2004";
+	}
 }

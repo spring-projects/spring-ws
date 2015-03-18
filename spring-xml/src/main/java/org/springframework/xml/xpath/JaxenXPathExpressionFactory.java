@@ -36,144 +36,144 @@ import org.w3c.dom.Node;
  */
 abstract class JaxenXPathExpressionFactory {
 
-    /**
-     * Creates a Jaxen {@code XPathExpression} from the given string expression.
-     *
-     * @param expression the XPath expression
-     * @return the compiled {@code XPathExpression}
-     * @throws XPathParseException when the given expression cannot be parsed
-     */
-    static XPathExpression createXPathExpression(String expression) {
-        try {
-            XPath xpath = new DOMXPath(expression);
-            return new JaxenXpathExpression(xpath);
-        }
-        catch (JaxenException ex) {
-            throw new org.springframework.xml.xpath.XPathParseException(
-                    "Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
-        }
-    }
+	/**
+	 * Creates a Jaxen {@code XPathExpression} from the given string expression.
+	 *
+	 * @param expression the XPath expression
+	 * @return the compiled {@code XPathExpression}
+	 * @throws XPathParseException when the given expression cannot be parsed
+	 */
+	static XPathExpression createXPathExpression(String expression) {
+		try {
+			XPath xpath = new DOMXPath(expression);
+			return new JaxenXpathExpression(xpath);
+		}
+		catch (JaxenException ex) {
+			throw new org.springframework.xml.xpath.XPathParseException(
+					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
+		}
+	}
 
-    /**
-     * Creates a Jaxen {@code XPathExpression} from the given string expression and prefixes.
-     *
-     * @param expression the XPath expression
-     * @param namespaces the namespaces
-     * @return the compiled {@code XPathExpression}
-     * @throws XPathParseException when the given expression cannot be parsed
-     */
-    public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
-        try {
-            XPath xpath = new DOMXPath(expression);
-            xpath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
-            return new JaxenXpathExpression(xpath);
-        }
-        catch (JaxenException ex) {
-            throw new org.springframework.xml.xpath.XPathParseException(
-                    "Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
-        }
-    }
+	/**
+	 * Creates a Jaxen {@code XPathExpression} from the given string expression and prefixes.
+	 *
+	 * @param expression the XPath expression
+	 * @param namespaces the namespaces
+	 * @return the compiled {@code XPathExpression}
+	 * @throws XPathParseException when the given expression cannot be parsed
+	 */
+	public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
+		try {
+			XPath xpath = new DOMXPath(expression);
+			xpath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
+			return new JaxenXpathExpression(xpath);
+		}
+		catch (JaxenException ex) {
+			throw new org.springframework.xml.xpath.XPathParseException(
+					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
+		}
+	}
 
-    /** Jaxen implementation of the {@code XPathExpression} interface. */
-    private static class JaxenXpathExpression implements XPathExpression {
+	/** Jaxen implementation of the {@code XPathExpression} interface. */
+	private static class JaxenXpathExpression implements XPathExpression {
 
-        private XPath xpath;
+		private XPath xpath;
 
-        private JaxenXpathExpression(XPath xpath) {
-            this.xpath = xpath;
-        }
+		private JaxenXpathExpression(XPath xpath) {
+			this.xpath = xpath;
+		}
 
-        @Override
-        public Node evaluateAsNode(Node node) {
-            try {
-                return (Node) xpath.selectSingleNode(node);
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public Node evaluateAsNode(Node node) {
+			try {
+				return (Node) xpath.selectSingleNode(node);
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public boolean evaluateAsBoolean(Node node) {
-            try {
-                return xpath.booleanValueOf(node);
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public boolean evaluateAsBoolean(Node node) {
+			try {
+				return xpath.booleanValueOf(node);
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public double evaluateAsNumber(Node node) {
-            try {
-                return xpath.numberValueOf(node).doubleValue();
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public double evaluateAsNumber(Node node) {
+			try {
+				return xpath.numberValueOf(node).doubleValue();
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public String evaluateAsString(Node node) {
-            try {
-                return xpath.stringValueOf(node);
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public String evaluateAsString(Node node) {
+			try {
+				return xpath.stringValueOf(node);
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        @SuppressWarnings("unchecked")
-        public List<Node> evaluateAsNodeList(Node node) {
-            try {
-                return xpath.selectNodes(node);
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		@SuppressWarnings("unchecked")
+		public List<Node> evaluateAsNodeList(Node node) {
+			try {
+				return xpath.selectNodes(node);
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
-            try {
-                Node result = (Node) xpath.selectSingleNode(context);
-                if (result != null) {
-                    try {
-                        return nodeMapper.mapNode(result, 0);
-                    }
-                    catch (DOMException ex) {
-                        throw new XPathException("Mapping resulted in DOMException", ex);
-                    }
-                }
-                else {
-                    return null;
-                }
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
+		@Override
+		public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
+			try {
+				Node result = (Node) xpath.selectSingleNode(context);
+				if (result != null) {
+					try {
+						return nodeMapper.mapNode(result, 0);
+					}
+					catch (DOMException ex) {
+						throw new XPathException("Mapping resulted in DOMException", ex);
+					}
+				}
+				else {
+					return null;
+				}
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
 
-        @Override
-        public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
-            try {
-                List<?> nodes = xpath.selectNodes(context);
-                List<T> results = new ArrayList<T>(nodes.size());
-                for (int i = 0; i < nodes.size(); i++) {
-                    Node node = (Node) nodes.get(i);
-                    try {
-                        results.add(nodeMapper.mapNode(node, i));
-                    }
-                    catch (DOMException ex) {
-                        throw new XPathException("Mapping resulted in DOMException", ex);
-                    }
-                }
-                return results;
-            }
-            catch (JaxenException ex) {
-                throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
-            }
-        }
-    }
+		@Override
+		public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
+			try {
+				List<?> nodes = xpath.selectNodes(context);
+				List<T> results = new ArrayList<T>(nodes.size());
+				for (int i = 0; i < nodes.size(); i++) {
+					Node node = (Node) nodes.get(i);
+					try {
+						results.add(nodeMapper.mapNode(node, i));
+					}
+					catch (DOMException ex) {
+						throw new XPathException("Mapping resulted in DOMException", ex);
+					}
+				}
+				return results;
+			}
+			catch (JaxenException ex) {
+				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+			}
+		}
+	}
 }

@@ -42,68 +42,68 @@ import org.w3c.dom.Element;
  */
 class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
 
-    private static final boolean commonsSchemaPresent = ClassUtils.isPresent("org.apache.ws.commons.schema.XmlSchema",
-            DynamicWsdlBeanDefinitionParser.class.getClassLoader());
+	private static final boolean commonsSchemaPresent = ClassUtils.isPresent("org.apache.ws.commons.schema.XmlSchema",
+			DynamicWsdlBeanDefinitionParser.class.getClassLoader());
 
-    @Override
-    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        Object source = parserContext.extractSource(element);
+	@Override
+	protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
+		Object source = parserContext.extractSource(element);
 
-        BeanDefinitionBuilder wsdlBuilder = BeanDefinitionBuilder.rootBeanDefinition(DefaultWsdl11Definition.class);
-        wsdlBuilder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-        wsdlBuilder.getRawBeanDefinition().setSource(source);
+		BeanDefinitionBuilder wsdlBuilder = BeanDefinitionBuilder.rootBeanDefinition(DefaultWsdl11Definition.class);
+		wsdlBuilder.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		wsdlBuilder.getRawBeanDefinition().setSource(source);
 
-        addProperty(element, wsdlBuilder, "portTypeName");
-        addProperty(element, wsdlBuilder, "targetNamespace");
-        addProperty(element, wsdlBuilder, "requestSuffix");
-        addProperty(element, wsdlBuilder, "responseSuffix");
-        addProperty(element, wsdlBuilder, "faultSuffix");
-        addProperty(element, wsdlBuilder, "createSoap11Binding");
-        addProperty(element, wsdlBuilder, "createSoap12Binding");
-        addProperty(element, wsdlBuilder, "transportUri");
-        addProperty(element, wsdlBuilder, "locationUri");
-        addProperty(element, wsdlBuilder, "serviceName");
+		addProperty(element, wsdlBuilder, "portTypeName");
+		addProperty(element, wsdlBuilder, "targetNamespace");
+		addProperty(element, wsdlBuilder, "requestSuffix");
+		addProperty(element, wsdlBuilder, "responseSuffix");
+		addProperty(element, wsdlBuilder, "faultSuffix");
+		addProperty(element, wsdlBuilder, "createSoap11Binding");
+		addProperty(element, wsdlBuilder, "createSoap12Binding");
+		addProperty(element, wsdlBuilder, "transportUri");
+		addProperty(element, wsdlBuilder, "locationUri");
+		addProperty(element, wsdlBuilder, "serviceName");
 
-        List<Element> schemas = DomUtils.getChildElementsByTagName(element, "xsd");
-        if (commonsSchemaPresent) {
-            RootBeanDefinition collectionDef = createBeanDefinition(CommonsXsdSchemaCollection.class, source);
-            collectionDef.getPropertyValues().addPropertyValue("inline", "true");
-            ManagedList<String> xsds = new ManagedList<String>();
-            xsds.setSource(source);
-            for (Element schema : schemas) {
-                xsds.add(schema.getAttribute("location"));
-            }
-            collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
-            String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
-            wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
-        }
-        else {
-            if (schemas.size() > 1) {
-                throw new IllegalArgumentException(
-                        "Multiple <xsd/> elements requires Commons XMLSchema." +
-                                "Please put Commons XMLSchema on the classpath.");
-            }
-            RootBeanDefinition schemaDef = createBeanDefinition(SimpleXsdSchema.class, source);
-            Element schema = schemas.iterator().next();
-            schemaDef.getPropertyValues().addPropertyValue("xsd", schema.getAttribute("location"));
-            String schemaName = parserContext.getReaderContext().registerWithGeneratedName(schemaDef);
-            wsdlBuilder.addPropertyReference("schema", schemaName);
-        }
-        return wsdlBuilder.getBeanDefinition();
-    }
+		List<Element> schemas = DomUtils.getChildElementsByTagName(element, "xsd");
+		if (commonsSchemaPresent) {
+			RootBeanDefinition collectionDef = createBeanDefinition(CommonsXsdSchemaCollection.class, source);
+			collectionDef.getPropertyValues().addPropertyValue("inline", "true");
+			ManagedList<String> xsds = new ManagedList<String>();
+			xsds.setSource(source);
+			for (Element schema : schemas) {
+				xsds.add(schema.getAttribute("location"));
+			}
+			collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
+			String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
+			wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
+		}
+		else {
+			if (schemas.size() > 1) {
+				throw new IllegalArgumentException(
+						"Multiple <xsd/> elements requires Commons XMLSchema." +
+								"Please put Commons XMLSchema on the classpath.");
+			}
+			RootBeanDefinition schemaDef = createBeanDefinition(SimpleXsdSchema.class, source);
+			Element schema = schemas.iterator().next();
+			schemaDef.getPropertyValues().addPropertyValue("xsd", schema.getAttribute("location"));
+			String schemaName = parserContext.getReaderContext().registerWithGeneratedName(schemaDef);
+			wsdlBuilder.addPropertyReference("schema", schemaName);
+		}
+		return wsdlBuilder.getBeanDefinition();
+	}
 
-    private void addProperty(Element element, BeanDefinitionBuilder builder, String propertyName) {
-        String propertyValue = element.getAttribute(propertyName);
-        if (StringUtils.hasText(propertyValue)) {
-            builder.addPropertyValue(propertyName, propertyValue);
-        }
-    }
+	private void addProperty(Element element, BeanDefinitionBuilder builder, String propertyName) {
+		String propertyValue = element.getAttribute(propertyName);
+		if (StringUtils.hasText(propertyValue)) {
+			builder.addPropertyValue(propertyName, propertyValue);
+		}
+	}
 
-    private RootBeanDefinition createBeanDefinition(Class<?> beanClass, Object source) {
-        RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
-        beanDefinition.setSource(source);
-        beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
-        return beanDefinition;
-    }
+	private RootBeanDefinition createBeanDefinition(Class<?> beanClass, Object source) {
+		RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
+		beanDefinition.setSource(source);
+		beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		return beanDefinition;
+	}
 
 }

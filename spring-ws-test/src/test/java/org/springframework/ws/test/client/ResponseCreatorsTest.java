@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,41 +41,41 @@ import static org.junit.Assert.*;
 
 public class ResponseCreatorsTest {
 
-    private final TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 
-    private SaajSoapMessageFactory messageFactory;
+	private SaajSoapMessageFactory messageFactory;
 
-    @Before
-    public void createMessageFactory() {
-        messageFactory = new SaajSoapMessageFactory();
-        messageFactory.afterPropertiesSet();
-    }
+	@Before
+	public void createMessageFactory() {
+		messageFactory = new SaajSoapMessageFactory();
+		messageFactory.afterPropertiesSet();
+	}
 
-    @Test
-    public void withPayloadSource() throws Exception {
-        String payload = "<payload xmlns='http://springframework.org'/>";
-        ResponseCreator responseCreator = ResponseCreators.withPayload(new StringSource(payload));
+	@Test
+	public void withPayloadSource() throws Exception {
+		String payload = "<payload xmlns='http://springframework.org'/>";
+		ResponseCreator responseCreator = ResponseCreators.withPayload(new StringSource(payload));
 
-        WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-        assertXMLEqual(payload, getPayloadAsString(response));
+		assertXMLEqual(payload, getPayloadAsString(response));
 
-    }
+	}
 
-    @Test
-    public void withPayloadResource() throws Exception {
-        String payload = "<payload xmlns='http://springframework.org'/>";
-        ResponseCreator responseCreator =
-                ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes("UTF-8")));
+	@Test
+	public void withPayloadResource() throws Exception {
+		String payload = "<payload xmlns='http://springframework.org'/>";
+		ResponseCreator responseCreator =
+				ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes("UTF-8")));
 
-        WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-        assertXMLEqual(payload, getPayloadAsString(response));
-    }
-    
-    @Test
-    public void withSoapEnvelopeSource() throws Exception {
-    	StringBuilder xmlBuilder = new StringBuilder();
+		assertXMLEqual(payload, getPayloadAsString(response));
+	}
+	
+	@Test
+	public void withSoapEnvelopeSource() throws Exception {
+		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
 		xmlBuilder.append("<soap:Header><header xmlns='http://springframework.org'/></soap:Header>");
@@ -83,13 +83,13 @@ public class ResponseCreatorsTest {
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new StringSource(envelope));
-        WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
-        assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
-    }
-    
-    @Test
-    public void withSoapEnvelopeResource() throws Exception {
-    	StringBuilder xmlBuilder = new StringBuilder();
+		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
+	}
+	
+	@Test
+	public void withSoapEnvelopeResource() throws Exception {
+		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
 		xmlBuilder.append("<soap:Header><header xmlns='http://springframework.org'/></soap:Header>");
@@ -97,88 +97,88 @@ public class ResponseCreatorsTest {
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new ByteArrayResource(envelope.getBytes("UTF-8")));
-        WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
-        assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
-    }
+		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
+	}
 
-    @Test
-    public void withIOException() throws Exception {
-        IOException expected = new IOException("Foo");
-        ResponseCreator responseCreator = ResponseCreators.withException(expected);
+	@Test
+	public void withIOException() throws Exception {
+		IOException expected = new IOException("Foo");
+		ResponseCreator responseCreator = ResponseCreators.withException(expected);
 
-        try {
-            responseCreator.createResponse(null, null, null);
-        }
-        catch (IOException actual) {
-            assertSame(expected, actual);
-        }
-    }
-    
-    @Test
-    public void withRuntimeException() throws Exception {
-        RuntimeException expected = new RuntimeException("Foo");
-        ResponseCreator responseCreator = ResponseCreators.withException(expected);
+		try {
+			responseCreator.createResponse(null, null, null);
+		}
+		catch (IOException actual) {
+			assertSame(expected, actual);
+		}
+	}
+	
+	@Test
+	public void withRuntimeException() throws Exception {
+		RuntimeException expected = new RuntimeException("Foo");
+		ResponseCreator responseCreator = ResponseCreators.withException(expected);
 
-        try {
-            responseCreator.createResponse(null, null, null);
-        }
-        catch (RuntimeException actual) {
-            assertSame(expected, actual);
-        }
-    }
+		try {
+			responseCreator.createResponse(null, null, null);
+		}
+		catch (RuntimeException actual) {
+			assertSame(expected, actual);
+		}
+	}
 
-    @Test
-    public void withMustUnderstandFault() throws Exception {
-        String faultString = "Foo";
-        ResponseCreator responseCreator = ResponseCreators.withMustUnderstandFault(faultString, Locale.ENGLISH);
+	@Test
+	public void withMustUnderstandFault() throws Exception {
+		String faultString = "Foo";
+		ResponseCreator responseCreator = ResponseCreators.withMustUnderstandFault(faultString, Locale.ENGLISH);
 
-        testFault(responseCreator, faultString, SoapVersion.SOAP_11.getMustUnderstandFaultName());
-    }
+		testFault(responseCreator, faultString, SoapVersion.SOAP_11.getMustUnderstandFaultName());
+	}
 
-    @Test
-    public void withClientOrSenderFault() throws Exception {
-        String faultString = "Foo";
-        ResponseCreator responseCreator = ResponseCreators.withClientOrSenderFault(faultString, Locale.ENGLISH);
+	@Test
+	public void withClientOrSenderFault() throws Exception {
+		String faultString = "Foo";
+		ResponseCreator responseCreator = ResponseCreators.withClientOrSenderFault(faultString, Locale.ENGLISH);
 
-        testFault(responseCreator, faultString, SoapVersion.SOAP_11.getClientOrSenderFaultName());
-    }
+		testFault(responseCreator, faultString, SoapVersion.SOAP_11.getClientOrSenderFaultName());
+	}
 
-    @Test
-    public void withServerOrReceiverFault() throws Exception {
-        String faultString = "Foo";
-        ResponseCreator responseCreator = ResponseCreators.withServerOrReceiverFault(faultString, Locale.ENGLISH);
+	@Test
+	public void withServerOrReceiverFault() throws Exception {
+		String faultString = "Foo";
+		ResponseCreator responseCreator = ResponseCreators.withServerOrReceiverFault(faultString, Locale.ENGLISH);
 
-        testFault(responseCreator, faultString, SoapVersion.SOAP_11.getServerOrReceiverFaultName());
-    }
+		testFault(responseCreator, faultString, SoapVersion.SOAP_11.getServerOrReceiverFaultName());
+	}
 
-    @Test
-    public void withVersionMismatchFault() throws Exception {
-        String faultString = "Foo";
-        ResponseCreator responseCreator = ResponseCreators.withVersionMismatchFault(faultString, Locale.ENGLISH);
+	@Test
+	public void withVersionMismatchFault() throws Exception {
+		String faultString = "Foo";
+		ResponseCreator responseCreator = ResponseCreators.withVersionMismatchFault(faultString, Locale.ENGLISH);
 
-        testFault(responseCreator, faultString, SoapVersion.SOAP_11.getVersionMismatchFaultName());
-    }
-    
-    private void testFault(ResponseCreator responseCreator, String faultString, QName faultCode) throws IOException {
-        SoapMessage response = (SoapMessage) responseCreator.createResponse(null, null, messageFactory);
+		testFault(responseCreator, faultString, SoapVersion.SOAP_11.getVersionMismatchFaultName());
+	}
+	
+	private void testFault(ResponseCreator responseCreator, String faultString, QName faultCode) throws IOException {
+		SoapMessage response = (SoapMessage) responseCreator.createResponse(null, null, messageFactory);
 
-        assertTrue("Response has no fault", response.hasFault());
-        Soap11Fault soapFault = (Soap11Fault) response.getSoapBody().getFault();
-        assertEquals("Response has invalid fault code", faultCode, soapFault.getFaultCode());
-        assertEquals("Response has invalid fault string", faultString, soapFault.getFaultStringOrReason());
-        assertEquals("Response has invalid fault locale", Locale.ENGLISH, soapFault.getFaultStringLocale());
-    }
+		assertTrue("Response has no fault", response.hasFault());
+		Soap11Fault soapFault = (Soap11Fault) response.getSoapBody().getFault();
+		assertEquals("Response has invalid fault code", faultCode, soapFault.getFaultCode());
+		assertEquals("Response has invalid fault string", faultString, soapFault.getFaultStringOrReason());
+		assertEquals("Response has invalid fault locale", Locale.ENGLISH, soapFault.getFaultStringLocale());
+	}
 
-    private String getPayloadAsString(WebServiceMessage message) throws TransformerException {
-        Result result = new StringResult();
-        transformerHelper.transform(message.getPayloadSource(), result);
-        return result.toString();
-    }
-    
-    private String getSoapEnvelopeAsString(SoapMessage message) throws TransformerException {
-    	DOMSource source = new DOMSource(message.getDocument());
-        Result result = new StringResult();
-        transformerHelper.transform(source, result);
-        return result.toString();
-    }
+	private String getPayloadAsString(WebServiceMessage message) throws TransformerException {
+		Result result = new StringResult();
+		transformerHelper.transform(message.getPayloadSource(), result);
+		return result.toString();
+	}
+	
+	private String getSoapEnvelopeAsString(SoapMessage message) throws TransformerException {
+		DOMSource source = new DOMSource(message.getDocument());
+		Result result = new StringResult();
+		transformerHelper.transform(source, result);
+		return result.toString();
+	}
 }

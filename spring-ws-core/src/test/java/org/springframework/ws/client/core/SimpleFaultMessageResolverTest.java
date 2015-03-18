@@ -27,29 +27,29 @@ import static org.easymock.EasyMock.*;
 
 public class SimpleFaultMessageResolverTest {
 
-    private SimpleFaultMessageResolver resolver;
+	private SimpleFaultMessageResolver resolver;
 
-    @Before
-    public void setUp() throws Exception {
-        resolver = new SimpleFaultMessageResolver();
-    }
+	@Before
+	public void setUp() throws Exception {
+		resolver = new SimpleFaultMessageResolver();
+	}
 
-    @Test
-    public void testResolveFault() throws Exception {
-        FaultAwareWebServiceMessage messageMock = createMock(FaultAwareWebServiceMessage.class);
-        String message = "message";
-        expect(messageMock.getFaultReason()).andReturn(message);
+	@Test
+	public void testResolveFault() throws Exception {
+		FaultAwareWebServiceMessage messageMock = createMock(FaultAwareWebServiceMessage.class);
+		String message = "message";
+		expect(messageMock.getFaultReason()).andReturn(message);
 
-        replay(messageMock);
+		replay(messageMock);
 
-        try {
-            resolver.resolveFault(messageMock);
-            Assert.fail("WebServiceFaultExcpetion expected");
-        }
-        catch (WebServiceFaultException ex) {
-            // expected
-            Assert.assertEquals("Invalid exception message", message, ex.getMessage());
-        }
-        verify(messageMock);
-    }
+		try {
+			resolver.resolveFault(messageMock);
+			Assert.fail("WebServiceFaultExcpetion expected");
+		}
+		catch (WebServiceFaultException ex) {
+			// expected
+			Assert.assertEquals("Invalid exception message", message, ex.getMessage());
+		}
+		verify(messageMock);
+	}
 }

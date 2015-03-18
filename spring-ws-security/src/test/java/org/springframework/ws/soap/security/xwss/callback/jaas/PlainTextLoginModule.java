@@ -30,110 +30,110 @@ import javax.security.auth.spi.LoginModule;
 
 public class PlainTextLoginModule implements LoginModule {
 
-    private Subject subject;
+	private Subject subject;
 
-    private CallbackHandler callbackHandler;
+	private CallbackHandler callbackHandler;
 
-    private boolean success;
+	private boolean success;
 
-    private List<Principal> principals = new ArrayList<Principal>();
+	private List<Principal> principals = new ArrayList<Principal>();
 
-    @Override
-    public boolean abort() {
-        success = false;
-        logout();
-        return true;
-    }
+	@Override
+	public boolean abort() {
+		success = false;
+		logout();
+		return true;
+	}
 
-    @Override
-    public boolean commit() throws LoginException {
-        if (success) {
-            if (subject.isReadOnly()) {
-                throw new LoginException("Subject is read-only");
-            }
-            try {
-                subject.getPrincipals().addAll(principals);
-                principals.clear();
-                return true;
-            }
-            catch (Exception e) {
-                throw new LoginException(e.getMessage());
-            }
-        }
-        else {
-            principals.clear();
-        }
-        return true;
-    }
+	@Override
+	public boolean commit() throws LoginException {
+		if (success) {
+			if (subject.isReadOnly()) {
+				throw new LoginException("Subject is read-only");
+			}
+			try {
+				subject.getPrincipals().addAll(principals);
+				principals.clear();
+				return true;
+			}
+			catch (Exception e) {
+				throw new LoginException(e.getMessage());
+			}
+		}
+		else {
+			principals.clear();
+		}
+		return true;
+	}
 
-    @Override
-    public void initialize(Subject subject,
-                           CallbackHandler callbackHandler,
-                           java.util.Map sharedState,
-                           java.util.Map options) {
-        this.subject = subject;
-        this.callbackHandler = callbackHandler;
-    }
+	@Override
+	public void initialize(Subject subject,
+						   CallbackHandler callbackHandler,
+						   java.util.Map sharedState,
+						   java.util.Map options) {
+		this.subject = subject;
+		this.callbackHandler = callbackHandler;
+	}
 
-    @Override
-    public boolean login() throws LoginException {
-        if (callbackHandler == null) {
-            return false;
-        }
-        try {
-            NameCallback nameCallback = new NameCallback("Username: ");
-            PasswordCallback passwordCallback = new PasswordCallback("Password: ", false);
-            Callback[] callbacks = new Callback[]{nameCallback, passwordCallback};
+	@Override
+	public boolean login() throws LoginException {
+		if (callbackHandler == null) {
+			return false;
+		}
+		try {
+			NameCallback nameCallback = new NameCallback("Username: ");
+			PasswordCallback passwordCallback = new PasswordCallback("Password: ", false);
+			Callback[] callbacks = new Callback[]{nameCallback, passwordCallback};
 
-            callbackHandler.handle(callbacks);
+			callbackHandler.handle(callbacks);
 
-            String username = nameCallback.getName();
-            String password = new String(passwordCallback.getPassword());
+			String username = nameCallback.getName();
+			String password = new String(passwordCallback.getPassword());
 
-            ((PasswordCallback) callbacks[1]).clearPassword();
+			((PasswordCallback) callbacks[1]).clearPassword();
 
-            success = validate(username, password);
+			success = validate(username, password);
 
-            callbacks[0] = null;
-            callbacks[1] = null;
+			callbacks[0] = null;
+			callbacks[1] = null;
 
-            if (!success) {
-                throw new LoginException("Authentication failed: Password does not match");
-            }
+			if (!success) {
+				throw new LoginException("Authentication failed: Password does not match");
+			}
 
-            return true;
-        }
-        catch (LoginException ex) {
-            throw ex;
-        }
-        catch (Exception ex) {
-            success = false;
-            throw new LoginException(ex.getMessage());
-        }
-    }
+			return true;
+		}
+		catch (LoginException ex) {
+			throw ex;
+		}
+		catch (Exception ex) {
+			success = false;
+			throw new LoginException(ex.getMessage());
+		}
+	}
 
-    private boolean validate(String username, String password) {
-        if ("Bert".equals(username) && "Ernie".equals(password)) {
-            this.principals.add(new SimplePrincipal(username));
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+	private boolean validate(String username, String password) {
+		if ("Bert".equals(username) && "Ernie".equals(password)) {
+			this.principals.add(new SimplePrincipal(username));
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 
-    @Override
-    public boolean logout() {
-        principals.clear();
+	@Override
+	public boolean logout() {
+		principals.clear();
 
-        Iterator iterator = subject.getPrincipals(SimplePrincipal.class).iterator();
-        while (iterator.hasNext()) {
-            SimplePrincipal principal = (SimplePrincipal) iterator.next();
-            subject.getPrincipals().remove(principal);
-        }
+		Iterator iterator = subject.getPrincipals(SimplePrincipal.class).iterator();
+		while (iterator.hasNext()) {
+			SimplePrincipal principal = (SimplePrincipal) iterator.next();
+			subject.getPrincipals().remove(principal);
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 
 }

@@ -29,6 +29,6 @@ import javax.wsdl.WSDLException;
  */
 public interface MessagesProvider {
 
-    void addMessages(Definition definition) throws WSDLException;
+	void addMessages(Definition definition) throws WSDLException;
 
 }

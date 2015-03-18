@@ -37,24 +37,24 @@ import javax.xml.namespace.QName;
 @Inherited
 public @interface SoapFault {
 
-    /** The fault code. */
-    FaultCode faultCode();
+	/** The fault code. */
+	FaultCode faultCode();
 
-    /**
-     * The custom fault code, to be used if {@link #faultCode()} is set to {@link FaultCode#CUSTOM}.
-     *
-     * <p>The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
-     * namespace is optional.
-     *
-     * <p>Note that custom Fault Codes are only supported on SOAP 1.1.
-     */
-    String customFaultCode() default "";
+	/**
+	 * The custom fault code, to be used if {@link #faultCode()} is set to {@link FaultCode#CUSTOM}.
+	 *
+	 * <p>The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
+	 * namespace is optional.
+	 *
+	 * <p>Note that custom Fault Codes are only supported on SOAP 1.1.
+	 */
+	String customFaultCode() default "";
 
-    /** The fault string or reason text. By default, it is set to the exception message. */
-    String faultStringOrReason() default "";
+	/** The fault string or reason text. By default, it is set to the exception message. */
+	String faultStringOrReason() default "";
 
-    /** The fault string locale. By default, it is English. */
-    String locale() default "en";
+	/** The fault string locale. By default, it is English. */
+	String locale() default "en";
 
 
 }

@@ -36,31 +36,31 @@ import org.w3c.dom.Element;
 @Deprecated
 class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-    private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-            "org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter";
+	private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
+			"org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter";
 
-    @Override
-    protected boolean shouldGenerateIdAsFallback() {
-        return true;
-    }
+	@Override
+	protected boolean shouldGenerateIdAsFallback() {
+		return true;
+	}
 
-    @Override
-    protected String getBeanClassName(Element element) {
-        return XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
-    }
+	@Override
+	protected String getBeanClassName(Element element) {
+		return XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
+	}
 
-    @Override
-    protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
-        List<Element> namespaceElements = DomUtils.getChildElementsByTagName(element, "namespace");
-        if (!namespaceElements.isEmpty()) {
-            Properties namespaces = new Properties();
-            for (Element namespaceElement : namespaceElements) {
-                String prefix = namespaceElement.getAttribute("prefix");
-                String uri = namespaceElement.getAttribute("uri");
-                namespaces.setProperty(prefix, uri);
-            }
-            beanDefinitionBuilder.addPropertyValue("namespaces", namespaces);
-        }
-    }
+	@Override
+	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
+		List<Element> namespaceElements = DomUtils.getChildElementsByTagName(element, "namespace");
+		if (!namespaceElements.isEmpty()) {
+			Properties namespaces = new Properties();
+			for (Element namespaceElement : namespaceElements) {
+				String prefix = namespaceElement.getAttribute("prefix");
+				String uri = namespaceElement.getAttribute("uri");
+				namespaces.setProperty(prefix, uri);
+			}
+			beanDefinitionBuilder.addPropertyValue("namespaces", namespaces);
+		}
+	}
 
 }

@@ -40,60 +40,60 @@ import org.springframework.xml.transform.ResourceSource;
  */
 public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
 
-    private Resource wsdlResource;
+	private Resource wsdlResource;
 
-    /**
-     * Create a new instance of the {@link SimpleWsdl11Definition} class.
-     *
-     * <p>A subsequent call to the {@link #setWsdl(Resource)} method is required.
-     */
-    public SimpleWsdl11Definition() {
-    }
+	/**
+	 * Create a new instance of the {@link SimpleWsdl11Definition} class.
+	 *
+	 * <p>A subsequent call to the {@link #setWsdl(Resource)} method is required.
+	 */
+	public SimpleWsdl11Definition() {
+	}
 
-    /**
-     * Create a new instance of the  {@link SimpleWsdl11Definition} class with the specified resource.
-     *
-     * @param wsdlResource the WSDL resource; must not be {@code null}
-     * @throws IllegalArgumentException if the supplied {@code wsdlResource} is {@code null}
-     */
-    public SimpleWsdl11Definition(Resource wsdlResource) {
-        Assert.notNull(wsdlResource, "wsdlResource must not be null");
-        this.wsdlResource = wsdlResource;
-    }
+	/**
+	 * Create a new instance of the	 {@link SimpleWsdl11Definition} class with the specified resource.
+	 *
+	 * @param wsdlResource the WSDL resource; must not be {@code null}
+	 * @throws IllegalArgumentException if the supplied {@code wsdlResource} is {@code null}
+	 */
+	public SimpleWsdl11Definition(Resource wsdlResource) {
+		Assert.notNull(wsdlResource, "wsdlResource must not be null");
+		this.wsdlResource = wsdlResource;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(this.wsdlResource, "wsdl is required");
-        Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exist");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(this.wsdlResource, "wsdl is required");
+		Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exist");
+	}
 
-    @Override
-    public Source getSource() {
-        try {
-            XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-            xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-            return new ResourceSource(xmlReader, wsdlResource);
-        }
-        catch (SAXException ex) {
-            throw new WsdlDefinitionException("Could not create XMLReader", ex);
-        }
-        catch (IOException ex) {
-            throw new WsdlDefinitionException("Could not create source from " + this.wsdlResource, ex);
-        }
-    }
+	@Override
+	public Source getSource() {
+		try {
+			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+			return new ResourceSource(xmlReader, wsdlResource);
+		}
+		catch (SAXException ex) {
+			throw new WsdlDefinitionException("Could not create XMLReader", ex);
+		}
+		catch (IOException ex) {
+			throw new WsdlDefinitionException("Could not create source from " + this.wsdlResource, ex);
+		}
+	}
 
-    /**
-     * Set the WSDL resource to be exposed by calls to this instances' {@link #getSource()} method.
-     *
-     * @param wsdlResource the WSDL resource
-     */
-    public void setWsdl(Resource wsdlResource) {
-        this.wsdlResource = wsdlResource;
-    }
+	/**
+	 * Set the WSDL resource to be exposed by calls to this instances' {@link #getSource()} method.
+	 *
+	 * @param wsdlResource the WSDL resource
+	 */
+	public void setWsdl(Resource wsdlResource) {
+		this.wsdlResource = wsdlResource;
+	}
 
-    public String toString() {
-        return "SimpleWsdl11Definition " + wsdlResource;
-    }
+	public String toString() {
+		return "SimpleWsdl11Definition " + wsdlResource;
+	}
 
 
 }

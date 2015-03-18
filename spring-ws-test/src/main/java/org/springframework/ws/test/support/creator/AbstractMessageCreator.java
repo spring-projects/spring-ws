@@ -32,20 +32,20 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public abstract class AbstractMessageCreator implements WebServiceMessageCreator {
 
-    @Override
-    public final WebServiceMessage createMessage(WebServiceMessageFactory messageFactory) throws IOException {
-        WebServiceMessage message = messageFactory.createWebServiceMessage();
-        doWithMessage(message);
-        return message;
-    }
+	@Override
+	public final WebServiceMessage createMessage(WebServiceMessageFactory messageFactory) throws IOException {
+		WebServiceMessage message = messageFactory.createWebServiceMessage();
+		doWithMessage(message);
+		return message;
+	}
 
-    /**
-     * Abstract template method, invoked by {@link #createMessage(WebServiceMessageFactory)} after a message has been
-     * created.
-     *
-     * @param message the message
-     * @throws IOException in case of I/O errors
-     */
-    protected abstract void doWithMessage(WebServiceMessage message) throws IOException;
+	/**
+	 * Abstract template method, invoked by {@link #createMessage(WebServiceMessageFactory)} after a message has been
+	 * created.
+	 *
+	 * @param message the message
+	 * @throws IOException in case of I/O errors
+	 */
+	protected abstract void doWithMessage(WebServiceMessage message) throws IOException;
 
 }

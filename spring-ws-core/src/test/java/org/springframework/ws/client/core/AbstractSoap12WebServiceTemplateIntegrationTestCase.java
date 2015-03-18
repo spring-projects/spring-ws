@@ -70,30 +70,30 @@ import org.springframework.xml.transform.StringSource;
 
 public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 
-    private static Server jettyServer;
+	private static Server jettyServer;
 
-    private static String baseUrl;
+	private static String baseUrl;
 
 
-    private WebServiceTemplate template;
+	private WebServiceTemplate template;
 
-    private String messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+	private String messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
-    @BeforeClass
-    public static void startJetty() throws Exception {
-        int port = FreePortScanner.getFreePort();
-        baseUrl = "http://localhost:" + port;
-        jettyServer = new Server(port);
-        Context jettyContext = new Context(jettyServer, "/");
-        jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
-        jettyContext.addServlet(new ServletHolder(new SoapReceiverFaultServlet()), "/soap/receiverFault");
-        jettyContext.addServlet(new ServletHolder(new SoapSenderFaultServlet()), "/soap/senderFault");
-        jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
-        jettyContext.addServlet(new ServletHolder(new AttachmentsServlet()), "/soap/attachment");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
-        jettyServer.start();
-    }
+	@BeforeClass
+	public static void startJetty() throws Exception {
+		int port = FreePortScanner.getFreePort();
+		baseUrl = "http://localhost:" + port;
+		jettyServer = new Server(port);
+		Context jettyContext = new Context(jettyServer, "/");
+		jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
+		jettyContext.addServlet(new ServletHolder(new SoapReceiverFaultServlet()), "/soap/receiverFault");
+		jettyContext.addServlet(new ServletHolder(new SoapSenderFaultServlet()), "/soap/senderFault");
+		jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
+		jettyContext.addServlet(new ServletHolder(new AttachmentsServlet()), "/soap/attachment");
+		jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
+		jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
+		jettyServer.start();
+	}
 
 	@AfterClass
 	public static void stopJetty() throws Exception {
@@ -102,17 +102,17 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 		}
 	}
 
-    /**
-     * A workaround for the faulty XmlDataContentHandler in the SAAJ RI, which cannot handle mime types such as
-     * "text/xml; charset=UTF-8", causing issues with Axiom. We basically reset the command map
-     */
-    @Before
-    public void removeXmlDataContentHandler() throws SOAPException {
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage message = messageFactory.createMessage();
-        message.createAttachmentPart();
-        CommandMap.setDefaultCommandMap(new MailcapCommandMap());
-    }
+	/**
+	 * A workaround for the faulty XmlDataContentHandler in the SAAJ RI, which cannot handle mime types such as
+	 * "text/xml; charset=UTF-8", causing issues with Axiom. We basically reset the command map
+	 */
+	@Before
+	public void removeXmlDataContentHandler() throws SOAPException {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage message = messageFactory.createMessage();
+		message.createAttachmentPart();
+		CommandMap.setDefaultCommandMap(new MailcapCommandMap());
+	}
 
 	@Before
 	public void createWebServiceTemplate() throws Exception {
@@ -124,290 +124,290 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 	public abstract SoapMessageFactory createMessageFactory() throws Exception;
 
 	@Test
-    public void sendSourceAndReceiveToResult() throws SAXException, IOException {
-        StringResult result = new StringResult();
-        boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
-                new StringSource(messagePayload), result);
-        Assert.assertTrue("Invalid result", b);
-        assertXMLEqual(messagePayload, result.toString());
-    }
+	public void sendSourceAndReceiveToResult() throws SAXException, IOException {
+		StringResult result = new StringResult();
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
+				new StringSource(messagePayload), result);
+		Assert.assertTrue("Invalid result", b);
+		assertXMLEqual(messagePayload, result.toString());
+	}
 
 	@Test
-    public void sendSourceAndReceiveToResultNoResponse() {
-        boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
-                new StringSource(messagePayload), new StringResult());
-        Assert.assertFalse("Invalid result", b);
-    }
+	public void sendSourceAndReceiveToResultNoResponse() {
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
+				new StringSource(messagePayload), new StringResult());
+		Assert.assertFalse("Invalid result", b);
+	}
 
 	@Test
-    public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
-        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        final Object requestObject = new Object();
-        Marshaller marshaller = new Marshaller() {
+	public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
+		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		final Object requestObject = new Object();
+		Marshaller marshaller = new Marshaller() {
 
-            @Override
-            public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
-                Assert.assertEquals("Invalid object", graph, requestObject);
-                try {
-                    transformer.transform(new StringSource(messagePayload), result);
-                }
-                catch (TransformerException e) {
-                    Assert.fail(e.getMessage());
-                }
-            }
+			@Override
+			public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+				Assert.assertEquals("Invalid object", graph, requestObject);
+				try {
+					transformer.transform(new StringSource(messagePayload), result);
+				}
+				catch (TransformerException e) {
+					Assert.fail(e.getMessage());
+				}
+			}
 
-            @Override
-            public boolean supports(Class<?> clazz) {
-                Assert.assertEquals("Invalid class", Object.class, clazz);
-                return true;
-            }
-        };
-        final Object responseObject = new Object();
-        Unmarshaller unmarshaller = new Unmarshaller() {
+			@Override
+			public boolean supports(Class<?> clazz) {
+				Assert.assertEquals("Invalid class", Object.class, clazz);
+				return true;
+			}
+		};
+		final Object responseObject = new Object();
+		Unmarshaller unmarshaller = new Unmarshaller() {
 
-            @Override
-            public Object unmarshal(Source source) throws XmlMappingException, IOException {
-                return responseObject;
-            }
+			@Override
+			public Object unmarshal(Source source) throws XmlMappingException, IOException {
+				return responseObject;
+			}
 
-            @Override
-            public boolean supports(Class<?> clazz) {
-                Assert.assertEquals("Invalid class", Object.class, clazz);
-                return true;
-            }
-        };
-        template.setMarshaller(marshaller);
-        template.setUnmarshaller(unmarshaller);
-        Object result = template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
-        Assert.assertEquals("Invalid response object", responseObject, result);
-    }
-
-	@Test
-    public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
-        final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        final Object requestObject = new Object();
-        Marshaller marshaller = new Marshaller() {
-
-            @Override
-            public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
-                Assert.assertEquals("Invalid object", graph, requestObject);
-                try {
-                    transformer.transform(new StringSource(messagePayload), result);
-                }
-                catch (TransformerException e) {
-                    Assert.fail(e.getMessage());
-                }
-            }
-
-            @Override
-            public boolean supports(Class<?> clazz) {
-                Assert.assertEquals("Invalid class", Object.class, clazz);
-                return true;
-            }
-        };
-        template.setMarshaller(marshaller);
-        Object result = template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
-        Assert.assertNull("Invalid response object", result);
-    }
+			@Override
+			public boolean supports(Class<?> clazz) {
+				Assert.assertEquals("Invalid class", Object.class, clazz);
+				return true;
+			}
+		};
+		template.setMarshaller(marshaller);
+		template.setUnmarshaller(unmarshaller);
+		Object result = template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
+		Assert.assertEquals("Invalid response object", responseObject, result);
+	}
 
 	@Test
-    public void notFound() {
-        try {
-            template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-                    new StringSource(messagePayload), new StringResult());
-            Assert.fail("WebServiceTransportException expected");
-        }
-        catch (WebServiceTransportException ex) {
-            //expected
-        }
-    }
+	public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
+		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		final Object requestObject = new Object();
+		Marshaller marshaller = new Marshaller() {
+
+			@Override
+			public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+				Assert.assertEquals("Invalid object", graph, requestObject);
+				try {
+					transformer.transform(new StringSource(messagePayload), result);
+				}
+				catch (TransformerException e) {
+					Assert.fail(e.getMessage());
+				}
+			}
+
+			@Override
+			public boolean supports(Class<?> clazz) {
+				Assert.assertEquals("Invalid class", Object.class, clazz);
+				return true;
+			}
+		};
+		template.setMarshaller(marshaller);
+		Object result = template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
+		Assert.assertNull("Invalid response object", result);
+	}
 
 	@Test
-    public void receiverFault() {
-        Result result = new StringResult();
-        try {
-            template.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload),
-                    result);
-            Assert.fail("SoapFaultClientException expected");
-        }
-        catch (SoapFaultClientException ex) {
-            //expected
-        }
-    }
+	public void notFound() {
+		try {
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
+					new StringSource(messagePayload), new StringResult());
+			Assert.fail("WebServiceTransportException expected");
+		}
+		catch (WebServiceTransportException ex) {
+			//expected
+		}
+	}
 
 	@Test
-    public void senderFault() {
-        Result result = new StringResult();
-        try {
-            template.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload),
-                    result);
-            Assert.fail("SoapFaultClientException expected");
-        }
-        catch (SoapFaultClientException ex) {
-            //expected
-        }
-    }
+	public void receiverFault() {
+		Result result = new StringResult();
+		try {
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload),
+					result);
+			Assert.fail("SoapFaultClientException expected");
+		}
+		catch (SoapFaultClientException ex) {
+			//expected
+		}
+	}
 
 	@Test
-    public void attachment() {
-        template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload),
-                new WebServiceMessageCallback() {
+	public void senderFault() {
+		Result result = new StringResult();
+		try {
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload),
+					result);
+			Assert.fail("SoapFaultClientException expected");
+		}
+		catch (SoapFaultClientException ex) {
+			//expected
+		}
+	}
 
-                    @Override
-                    public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
-                        SoapMessage soapMessage = (SoapMessage) message;
-                        final String attachmentContent = "content";
-                        soapMessage.addAttachment("attachment-1",
-                                new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
-                    }
-                }, new StringResult());
-    }
+	@Test
+	public void attachment() {
+		template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload),
+				new WebServiceMessageCallback() {
 
-    /** Servlet that returns and error message for a given status code. */
-    @SuppressWarnings("serial")
-    private static class ErrorServlet extends HttpServlet {
+					@Override
+					public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+						SoapMessage soapMessage = (SoapMessage) message;
+						final String attachmentContent = "content";
+						soapMessage.addAttachment("attachment-1",
+								new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
+					}
+				}, new StringResult());
+	}
 
-        private int sc;
+	/** Servlet that returns and error message for a given status code. */
+	@SuppressWarnings("serial")
+	private static class ErrorServlet extends HttpServlet {
 
-        private ErrorServlet(int sc) {
-            this.sc = sc;
-        }
+		private int sc;
 
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            resp.sendError(sc);
-        }
-    }
+		private ErrorServlet(int sc) {
+			this.sc = sc;
+		}
+
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			resp.sendError(sc);
+		}
+	}
 
 	/** Abstract SOAP Servlet */
 	@SuppressWarnings("serial")
-    private abstract static class AbstractSoapServlet extends HttpServlet {
+	private abstract static class AbstractSoapServlet extends HttpServlet {
 
-        protected MessageFactory messageFactory = null;
+		protected MessageFactory messageFactory = null;
 
-        @Override
-        public void init(ServletConfig servletConfig) throws ServletException {
-            super.init(servletConfig);
-            try {
-                messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-            }
-            catch (SOAPException ex) {
-                throw new ServletException("Unable to create message factory" + ex.getMessage());
-            }
-        }
+		@Override
+		public void init(ServletConfig servletConfig) throws ServletException {
+			super.init(servletConfig);
+			try {
+				messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+			}
+			catch (SOAPException ex) {
+				throw new ServletException("Unable to create message factory" + ex.getMessage());
+			}
+		}
 
-        @Override
-        public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            try {
-                MimeHeaders headers = getHeaders(req);
-                SOAPMessage request = messageFactory.createMessage(headers, req.getInputStream());
-                SOAPMessage reply = onMessage(request);
-	            if (reply != null) {
-		            reply.saveChanges();
-		            SOAPBody replyBody = reply.getSOAPBody();
-		            if (!replyBody.hasFault()) {
-			            resp.setStatus(HttpServletResponse.SC_OK);
-		            }
-		            else {
-			            if (replyBody.getFault().getFaultCodeAsQName()
-					            .equals(SOAPConstants.SOAP_SENDER_FAULT)) {
-				            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		@Override
+		public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			try {
+				MimeHeaders headers = getHeaders(req);
+				SOAPMessage request = messageFactory.createMessage(headers, req.getInputStream());
+				SOAPMessage reply = onMessage(request);
+				if (reply != null) {
+					reply.saveChanges();
+					SOAPBody replyBody = reply.getSOAPBody();
+					if (!replyBody.hasFault()) {
+						resp.setStatus(HttpServletResponse.SC_OK);
+					}
+					else {
+						if (replyBody.getFault().getFaultCodeAsQName()
+								.equals(SOAPConstants.SOAP_SENDER_FAULT)) {
+							resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-			            }
-			            else {
-				            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			            }
-		            }
-		            putHeaders(reply.getMimeHeaders(), resp);
-		            reply.writeTo(resp.getOutputStream());
-	            }
-                else {
-                    resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-                }
-            }
-            catch (Exception ex) {
-                throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
-            }
-        }
+						}
+						else {
+							resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						}
+					}
+					putHeaders(reply.getMimeHeaders(), resp);
+					reply.writeTo(resp.getOutputStream());
+				}
+				else {
+					resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+				}
+			}
+			catch (Exception ex) {
+				throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
+			}
+		}
 
-        private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
-            Enumeration<?> enumeration = httpServletRequest.getHeaderNames();
-            MimeHeaders headers = new MimeHeaders();
-            while (enumeration.hasMoreElements()) {
-                String headerName = (String) enumeration.nextElement();
-                String headerValue = httpServletRequest.getHeader(headerName);
-                StringTokenizer values = new StringTokenizer(headerValue, ",");
-                while (values.hasMoreTokens()) {
-                    headers.addHeader(headerName, values.nextToken().trim());
-                }
-            }
-            return headers;
-        }
+		private MimeHeaders getHeaders(HttpServletRequest httpServletRequest) {
+			Enumeration<?> enumeration = httpServletRequest.getHeaderNames();
+			MimeHeaders headers = new MimeHeaders();
+			while (enumeration.hasMoreElements()) {
+				String headerName = (String) enumeration.nextElement();
+				String headerValue = httpServletRequest.getHeader(headerName);
+				StringTokenizer values = new StringTokenizer(headerValue, ",");
+				while (values.hasMoreTokens()) {
+					headers.addHeader(headerName, values.nextToken().trim());
+				}
+			}
+			return headers;
+		}
 
-        private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
-            Iterator<?> it = headers.getAllHeaders();
-            while (it.hasNext()) {
-                MimeHeader header = (MimeHeader) it.next();
-                String[] values = headers.getHeader(header.getName());
-	            for (String value : values) {
-		            res.addHeader(header.getName(), value);
-	            }
-            }
-        }
+		private void putHeaders(MimeHeaders headers, HttpServletResponse res) {
+			Iterator<?> it = headers.getAllHeaders();
+			while (it.hasNext()) {
+				MimeHeader header = (MimeHeader) it.next();
+				String[] values = headers.getHeader(header.getName());
+				for (String value : values) {
+					res.addHeader(header.getName(), value);
+				}
+			}
+		}
 
-        protected abstract SOAPMessage onMessage(SOAPMessage message) throws SOAPException;
-    }
-
-	@SuppressWarnings("serial")
-    private static class EchoSoapServlet extends AbstractSoapServlet {
-
-        @Override
-        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            return message;
-        }
-    }
+		protected abstract SOAPMessage onMessage(SOAPMessage message) throws SOAPException;
+	}
 
 	@SuppressWarnings("serial")
-    private static class NoResponseSoapServlet extends AbstractSoapServlet {
+	private static class EchoSoapServlet extends AbstractSoapServlet {
 
-        @Override
-        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            return null;
-        }
-    }
-
-	@SuppressWarnings("serial")
-    private static class SoapReceiverFaultServlet extends AbstractSoapServlet {
-
-        @Override
-        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            SOAPMessage response = messageFactory.createMessage();
-            SOAPBody body = response.getSOAPBody();
-            body.addFault(SOAPConstants.SOAP_RECEIVER_FAULT, "Receiver Fault");
-            return response;
-        }
-    }
+		@Override
+		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+			return message;
+		}
+	}
 
 	@SuppressWarnings("serial")
-    private static class SoapSenderFaultServlet extends AbstractSoapServlet {
+	private static class NoResponseSoapServlet extends AbstractSoapServlet {
 
-        @Override
-        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            SOAPMessage response = messageFactory.createMessage();
-            SOAPBody body = response.getSOAPBody();
-            body.addFault(SOAPConstants.SOAP_SENDER_FAULT, "Sender Fault");
-            return response;
-        }
-    }
+		@Override
+		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+			return null;
+		}
+	}
 
 	@SuppressWarnings("serial")
-    private static class AttachmentsServlet extends AbstractSoapServlet {
+	private static class SoapReceiverFaultServlet extends AbstractSoapServlet {
 
-        @Override
-        protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
-            assertEquals("No attachments found", 1, message.countAttachments());
-            return null;
-        }
-    }
+		@Override
+		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+			SOAPMessage response = messageFactory.createMessage();
+			SOAPBody body = response.getSOAPBody();
+			body.addFault(SOAPConstants.SOAP_RECEIVER_FAULT, "Receiver Fault");
+			return response;
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private static class SoapSenderFaultServlet extends AbstractSoapServlet {
+
+		@Override
+		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+			SOAPMessage response = messageFactory.createMessage();
+			SOAPBody body = response.getSOAPBody();
+			body.addFault(SOAPConstants.SOAP_SENDER_FAULT, "Sender Fault");
+			return response;
+		}
+	}
+
+	@SuppressWarnings("serial")
+	private static class AttachmentsServlet extends AbstractSoapServlet {
+
+		@Override
+		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
+			assertEquals("No attachments found", 1, message.countAttachments());
+			return null;
+		}
+	}
 
 }

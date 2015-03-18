@@ -42,31 +42,31 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 @ContextConfiguration("integration-test.xml")
 public class ClientIntegrationTest {
 
-    @Autowired
-    private CustomerClient client;
+	@Autowired
+	private CustomerClient client;
 
-    private MockWebServiceServer mockServer;
+	private MockWebServiceServer mockServer;
 
-    @Before
-    public void createServer() throws Exception {
-        mockServer = MockWebServiceServer.createServer(client);
-    }
+	@Before
+	public void createServer() throws Exception {
+		mockServer = MockWebServiceServer.createServer(client);
+	}
 
-    @Test
-    public void basic() throws Exception {
-        Source expectedRequestPayload = new StringSource(
-                "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
-                        "<customerName>John Doe</customerName>" + "</customerCountRequest>");
-        Source responsePayload = new StringSource(
-                "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
-                        "<customerCount>10</customerCount>" + "</customerCountResponse>");
+	@Test
+	public void basic() throws Exception {
+		Source expectedRequestPayload = new StringSource(
+				"<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+						"<customerName>John Doe</customerName>" + "</customerCountRequest>");
+		Source responsePayload = new StringSource(
+				"<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+						"<customerCount>10</customerCount>" + "</customerCountResponse>");
 
-        mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
+		mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
-        int result = client.getCustomerCount();
-        assertEquals(10, result);
+		int result = client.getCustomerCount();
+		assertEquals(10, result);
 
-        mockServer.verify();
-    }
+		mockServer.verify();
+	}
 
 }

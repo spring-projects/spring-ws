@@ -23,43 +23,43 @@ import static org.junit.Assert.*;
 
 public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
-    @Override
-    protected PayloadEndpoint createResponseEndpoint() {
-        return new AbstractDom4jPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createResponseEndpoint() {
+		return new AbstractDom4jPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-                assertNotNull("No requestElement passed", requestElement);
-                assertNotNull("No responseDocument passed", responseDocument);
-                assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getName());
-                assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
-                return responseDocument.addElement(RESPONSE_ELEMENT, NAMESPACE_URI);
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+				assertNotNull("No requestElement passed", requestElement);
+				assertNotNull("No responseDocument passed", responseDocument);
+				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getName());
+				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+				return responseDocument.addElement(RESPONSE_ELEMENT, NAMESPACE_URI);
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
-        return new AbstractDom4jPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+		return new AbstractDom4jPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+				return null;
+			}
+		};
+	}
 
-    @Override
-    protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
-        return new AbstractDom4jPayloadEndpoint() {
+	@Override
+	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+		return new AbstractDom4jPayloadEndpoint() {
 
-            @Override
-            protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-                assertNull("RequestElement passed", requestElement);
-                return null;
-            }
-        };
-    }
+			@Override
+			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+				assertNull("RequestElement passed", requestElement);
+				return null;
+			}
+		};
+	}
 
 
 }

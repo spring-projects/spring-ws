@@ -33,42 +33,42 @@ import org.springframework.ws.stream.StreamingPayload;
  */
 class StreamingStroapPayload extends StroapPayload {
 
-    private final StreamingPayload payload;
+	private final StreamingPayload payload;
 
-    private final StroapMessageFactory messageFactory;
+	private final StroapMessageFactory messageFactory;
 
-    StreamingStroapPayload(StreamingPayload payload, StroapMessageFactory messageFactory) {
-        Assert.notNull(payload, "'payload' must not be null");
-        Assert.notNull(messageFactory, "'messageFactory' must not be null");
+	StreamingStroapPayload(StreamingPayload payload, StroapMessageFactory messageFactory) {
+		Assert.notNull(payload, "'payload' must not be null");
+		Assert.notNull(messageFactory, "'messageFactory' must not be null");
 
-        this.payload = payload;
-        this.messageFactory = messageFactory;
-    }
+		this.payload = payload;
+		this.messageFactory = messageFactory;
+	}
 
-    @Override
-    public QName getName() {
-        return payload.getName();
-    }
+	@Override
+	public QName getName() {
+		return payload.getName();
+	}
 
-    @Override
-    public XMLEventReader getEventReader() {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            XMLStreamWriter streamWriter = messageFactory.getOutputFactory().createXMLStreamWriter(bos);
-            payload.writeTo(streamWriter);
-            streamWriter.flush();
-            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-            return messageFactory.getInputFactory().createXMLEventReader(bis);
-        }
-        catch (XMLStreamException ex) {
-            throw new StroapBodyException(ex);
-        }
-    }
+	@Override
+	public XMLEventReader getEventReader() {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			XMLStreamWriter streamWriter = messageFactory.getOutputFactory().createXMLStreamWriter(bos);
+			payload.writeTo(streamWriter);
+			streamWriter.flush();
+			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+			return messageFactory.getInputFactory().createXMLEventReader(bis);
+		}
+		catch (XMLStreamException ex) {
+			throw new StroapBodyException(ex);
+		}
+	}
 
-    @Override
-    public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
-        XMLStreamWriter streamWriter = StaxUtils.createEventStreamWriter(eventWriter, messageFactory.getEventFactory());
-        payload.writeTo(streamWriter);
-    }
+	@Override
+	public void writeTo(XMLEventWriter eventWriter) throws XMLStreamException {
+		XMLStreamWriter streamWriter = StaxUtils.createEventStreamWriter(eventWriter, messageFactory.getEventFactory());
+		payload.writeTo(streamWriter);
+	}
 
 }

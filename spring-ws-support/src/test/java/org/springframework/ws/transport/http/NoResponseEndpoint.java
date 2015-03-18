@@ -22,7 +22,7 @@ import org.springframework.ws.server.endpoint.MessageEndpoint;
 /** @author Arjen Poutsma */
 public class NoResponseEndpoint implements MessageEndpoint {
 
-    @Override
-    public void invoke(MessageContext messageContext) throws Exception {
-    }
+	@Override
+	public void invoke(MessageContext messageContext) throws Exception {
+	}
 }

@@ -31,27 +31,27 @@ import static org.easymock.EasyMock.*;
  */
 public class WebServiceMessageMatcherAdapterTest {
 
-    private WebServiceMessage message;
+	private WebServiceMessage message;
 
-    private WebServiceMessageMatcher adaptee;
+	private WebServiceMessageMatcher adaptee;
 
-    private WebServiceMessageMatcherAdapter adapter;
+	private WebServiceMessageMatcherAdapter adapter;
 
-    @Before
-    public void setUp() throws Exception {
-        message = createMock(WebServiceMessage.class);
-        adaptee = createMock(WebServiceMessageMatcher.class);
-        adapter = new WebServiceMessageMatcherAdapter(adaptee);
-    }
-    
-    @Test
-    public void match() throws IOException {
-        adaptee.match(message);
+	@Before
+	public void setUp() throws Exception {
+		message = createMock(WebServiceMessage.class);
+		adaptee = createMock(WebServiceMessageMatcher.class);
+		adapter = new WebServiceMessageMatcherAdapter(adaptee);
+	}
+	
+	@Test
+	public void match() throws IOException {
+		adaptee.match(message);
 
-        replay(message, adaptee);
+		replay(message, adaptee);
 
-        adapter.match(null, message);
+		adapter.match(null, message);
 
-        verify(message, adaptee);
-    }
+		verify(message, adaptee);
+	}
 }

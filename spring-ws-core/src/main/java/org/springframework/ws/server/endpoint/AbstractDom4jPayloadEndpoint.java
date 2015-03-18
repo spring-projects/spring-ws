@@ -45,72 +45,72 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 @Deprecated
 public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupport implements PayloadEndpoint {
 
-    private boolean alwaysTransform = false;
+	private boolean alwaysTransform = false;
 
-    /**
-     * Set if the request {@link Source} should always be transformed into a new {@link DocumentResult}.
-     *
-     * <p>Default is {@code false}, which is faster.
-     */
-    public void setAlwaysTransform(boolean alwaysTransform) {
-        this.alwaysTransform = alwaysTransform;
-    }
+	/**
+	 * Set if the request {@link Source} should always be transformed into a new {@link DocumentResult}.
+	 *
+	 * <p>Default is {@code false}, which is faster.
+	 */
+	public void setAlwaysTransform(boolean alwaysTransform) {
+		this.alwaysTransform = alwaysTransform;
+	}
 
-    @Override
-    public final Source invoke(Source request) throws Exception {
-        Element requestElement = null;
-        if (request != null) {
-            DocumentResult dom4jResult = new DocumentResult();
-            transform(request, dom4jResult);
-            requestElement = dom4jResult.getDocument().getRootElement();
-        }
-        Document responseDocument = DocumentHelper.createDocument();
-        Element responseElement = invokeInternal(requestElement, responseDocument);
-        return responseElement != null ? new DocumentSource(responseElement) : null;
-    }
+	@Override
+	public final Source invoke(Source request) throws Exception {
+		Element requestElement = null;
+		if (request != null) {
+			DocumentResult dom4jResult = new DocumentResult();
+			transform(request, dom4jResult);
+			requestElement = dom4jResult.getDocument().getRootElement();
+		}
+		Document responseDocument = DocumentHelper.createDocument();
+		Element responseElement = invokeInternal(requestElement, responseDocument);
+		return responseElement != null ? new DocumentSource(responseElement) : null;
+	}
 
-    /**
-     * Returns the payload element of the given source.
-     *
-     * <p>Default implementation checks whether the source is a {@link javax.xml.transform.dom.DOMSource}, and uses a
-     * {@link org.jdom.input.DOMBuilder} to create a JDOM {@link org.jdom.Element}. In all other cases, or when
-     * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the source is transformed into a
-     * {@link org.jdom.transform.JDOMResult}, which is more expensive. If the passed source is {@code null}, {@code
-     * null} is returned.
-     *
-     * @param source the source to return the root element of; can be {@code null}
-     * @return the document element
-     * @throws javax.xml.transform.TransformerException
-     *          in case of errors
-     */
-    protected Element getDocumentElement(Source source) throws TransformerException {
-        if (source == null) {
-            return null;
-        }
-        if (!alwaysTransform && source instanceof DOMSource) {
-            Node node = ((DOMSource) source).getNode();
-            if (node.getNodeType() == Node.DOCUMENT_NODE) {
-                DOMReader domReader = new DOMReader();
-                Document document = domReader.read((org.w3c.dom.Document) node);
-                return document.getRootElement();
-            }
-        }
-        // we have no other option than to transform
-        DocumentResult dom4jResult = new DocumentResult();
-        transform(source, dom4jResult);
-        return dom4jResult.getDocument().getRootElement();
-    }
+	/**
+	 * Returns the payload element of the given source.
+	 *
+	 * <p>Default implementation checks whether the source is a {@link javax.xml.transform.dom.DOMSource}, and uses a
+	 * {@link org.jdom.input.DOMBuilder} to create a JDOM {@link org.jdom.Element}. In all other cases, or when
+	 * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the source is transformed into a
+	 * {@link org.jdom.transform.JDOMResult}, which is more expensive. If the passed source is {@code null}, {@code
+	 * null} is returned.
+	 *
+	 * @param source the source to return the root element of; can be {@code null}
+	 * @return the document element
+	 * @throws javax.xml.transform.TransformerException
+	 *			in case of errors
+	 */
+	protected Element getDocumentElement(Source source) throws TransformerException {
+		if (source == null) {
+			return null;
+		}
+		if (!alwaysTransform && source instanceof DOMSource) {
+			Node node = ((DOMSource) source).getNode();
+			if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				DOMReader domReader = new DOMReader();
+				Document document = domReader.read((org.w3c.dom.Document) node);
+				return document.getRootElement();
+			}
+		}
+		// we have no other option than to transform
+		DocumentResult dom4jResult = new DocumentResult();
+		transform(source, dom4jResult);
+		return dom4jResult.getDocument().getRootElement();
+	}
 
-    /**
-     * Template method. Subclasses must implement this. Offers the request payload as a dom4j {@code Element}, and
-     * allows subclasses to return a response {@code Element}.
-     *
-     * <p>The given dom4j {@code Document} is to be used for constructing a response element, by using
-     * {@code addElement}.
-     *
-     * @param requestElement   the contents of the SOAP message as dom4j elements
-     * @param responseDocument a dom4j document to be used for constructing a response
-     * @return the response element. Can be {@code null} to specify no response.
-     */
-    protected abstract Element invokeInternal(Element requestElement, Document responseDocument) throws Exception;
+	/**
+	 * Template method. Subclasses must implement this. Offers the request payload as a dom4j {@code Element}, and
+	 * allows subclasses to return a response {@code Element}.
+	 *
+	 * <p>The given dom4j {@code Document} is to be used for constructing a response element, by using
+	 * {@code addElement}.
+	 *
+	 * @param requestElement   the contents of the SOAP message as dom4j elements
+	 * @param responseDocument a dom4j document to be used for constructing a response
+	 * @return the response element. Can be {@code null} to specify no response.
+	 */
+	protected abstract Element invokeInternal(Element requestElement, Document responseDocument) throws Exception;
 }

@@ -40,63 +40,63 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration("jms-receiver-applicationContext.xml")
 public class WebServiceMessageListenerIntegrationTest {
 
-    private static final String CONTENT =
-            "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<SOAP-ENV:Body>\n" +
-                    "<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
-                    "<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String CONTENT =
+			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<SOAP-ENV:Body>\n" +
+					"<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
+					"<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-    @Autowired
-    private JmsTemplate jmsTemplate;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 
-    @Resource
-    private Queue responseQueue;
+	@Resource
+	private Queue responseQueue;
 
-    @Resource
-    private Queue requestQueue;
+	@Resource
+	private Queue requestQueue;
 
-    @Autowired
-    private Topic requestTopic;
+	@Autowired
+	private Topic requestTopic;
 
 
-    @Test
-    public void testReceiveQueueBytesMessage() throws Exception {
-        final byte[] b = CONTENT.getBytes("UTF-8");
-        jmsTemplate.send(requestQueue, new MessageCreator() {
-            public Message createMessage(Session session) throws JMSException {
-                BytesMessage request = session.createBytesMessage();
-                request.setJMSReplyTo(responseQueue);
-                request.writeBytes(b);
-                return request;
-            }
-        });
-        BytesMessage response = (BytesMessage) jmsTemplate.receive(responseQueue);
-        assertNotNull("No response received", response);
-    }
+	@Test
+	public void testReceiveQueueBytesMessage() throws Exception {
+		final byte[] b = CONTENT.getBytes("UTF-8");
+		jmsTemplate.send(requestQueue, new MessageCreator() {
+			public Message createMessage(Session session) throws JMSException {
+				BytesMessage request = session.createBytesMessage();
+				request.setJMSReplyTo(responseQueue);
+				request.writeBytes(b);
+				return request;
+			}
+		});
+		BytesMessage response = (BytesMessage) jmsTemplate.receive(responseQueue);
+		assertNotNull("No response received", response);
+	}
 
-    @Test
-    public void testReceiveQueueTextMessage() throws Exception {
-        jmsTemplate.send(requestQueue, new MessageCreator() {
-            public Message createMessage(Session session) throws JMSException {
-                TextMessage request = session.createTextMessage(CONTENT);
-                request.setJMSReplyTo(responseQueue);
-                return request;
-            }
-        });
-        TextMessage response = (TextMessage) jmsTemplate.receive(responseQueue);
-        assertNotNull("No response received", response);
-    }
+	@Test
+	public void testReceiveQueueTextMessage() throws Exception {
+		jmsTemplate.send(requestQueue, new MessageCreator() {
+			public Message createMessage(Session session) throws JMSException {
+				TextMessage request = session.createTextMessage(CONTENT);
+				request.setJMSReplyTo(responseQueue);
+				return request;
+			}
+		});
+		TextMessage response = (TextMessage) jmsTemplate.receive(responseQueue);
+		assertNotNull("No response received", response);
+	}
 
-    @Test
-    public void testReceiveTopic() throws Exception {
-        final byte[] b = CONTENT.getBytes("UTF-8");
-        jmsTemplate.send(requestTopic, new MessageCreator() {
-            public Message createMessage(Session session) throws JMSException {
-                BytesMessage request = session.createBytesMessage();
-                request.writeBytes(b);
-                return request;
-            }
-        });
-        Thread.sleep(100);
-    }
+	@Test
+	public void testReceiveTopic() throws Exception {
+		final byte[] b = CONTENT.getBytes("UTF-8");
+		jmsTemplate.send(requestTopic, new MessageCreator() {
+			public Message createMessage(Session session) throws JMSException {
+				BytesMessage request = session.createBytesMessage();
+				request.writeBytes(b);
+				return request;
+			}
+		});
+		Thread.sleep(100);
+	}
 
 }

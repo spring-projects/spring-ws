@@ -39,75 +39,75 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 
 	private KeyManager[] keyManagers;
 
-    private KeyStore keyStore;
+	private KeyStore keyStore;
 
-    private String algorithm;
+	private String algorithm;
 
-    private String provider;
+	private String provider;
 
-    private char[] password;
+	private char[] password;
 
-    /**
-     * Sets the password to use for integrity checking. If this property is not set, then integrity checking is not
-     * performed.
-     */
-    public void setPassword(String password) {
-        if (password != null) {
-            this.password = password.toCharArray();
-        }
-    }
+	/**
+	 * Sets the password to use for integrity checking. If this property is not set, then integrity checking is not
+	 * performed.
+	 */
+	public void setPassword(String password) {
+		if (password != null) {
+			this.password = password.toCharArray();
+		}
+	}
 
-    /**
-     * Sets the provider of the key manager to use. If this is not set, the default is used.
-     */
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
+	/**
+	 * Sets the provider of the key manager to use. If this is not set, the default is used.
+	 */
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
 
-    /**
-     * Sets the algorithm of the {@code KeyManager} to use. If this is not set, the default is used.
-     *
-     * @see KeyManagerFactory#getDefaultAlgorithm()
-     */
-    public void setAlgorithm(String algorithm) {
-        this.algorithm = algorithm;
-    }
+	/**
+	 * Sets the algorithm of the {@code KeyManager} to use. If this is not set, the default is used.
+	 *
+	 * @see KeyManagerFactory#getDefaultAlgorithm()
+	 */
+	public void setAlgorithm(String algorithm) {
+		this.algorithm = algorithm;
+	}
 
-    /**
-     * Sets the source of key material.
-     *
-     * @see KeyManagerFactory#init(KeyStore, char[])
-     */
-    public void setKeyStore(KeyStore keyStore) {
-        this.keyStore = keyStore;
-    }
+	/**
+	 * Sets the source of key material.
+	 *
+	 * @see KeyManagerFactory#init(KeyStore, char[])
+	 */
+	public void setKeyStore(KeyStore keyStore) {
+		this.keyStore = keyStore;
+	}
 
-    @Override
-    public KeyManager[] getObject() throws Exception {
-        return keyManagers;
-    }
+	@Override
+	public KeyManager[] getObject() throws Exception {
+		return keyManagers;
+	}
 
-    @Override
-    public Class<?> getObjectType() {
-        return KeyManager[].class;
-    }
+	@Override
+	public Class<?> getObjectType() {
+		return KeyManager[].class;
+	}
 
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        String algorithm =
-                StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		String algorithm =
+				StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
 
-        KeyManagerFactory keyManagerFactory =
-                StringUtils.hasLength(this.provider) ? KeyManagerFactory.getInstance(algorithm, this.provider) :
-                        KeyManagerFactory.getInstance(algorithm);
+		KeyManagerFactory keyManagerFactory =
+				StringUtils.hasLength(this.provider) ? KeyManagerFactory.getInstance(algorithm, this.provider) :
+						KeyManagerFactory.getInstance(algorithm);
 
-        keyManagerFactory.init(keyStore, password);
+		keyManagerFactory.init(keyStore, password);
 
-	    this.keyManagers = keyManagerFactory.getKeyManagers();
-    }
+		this.keyManagers = keyManagerFactory.getKeyManagers();
+	}
 }

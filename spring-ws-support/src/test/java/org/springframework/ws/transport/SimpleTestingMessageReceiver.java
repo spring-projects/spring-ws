@@ -24,12 +24,12 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 
 public class SimpleTestingMessageReceiver extends TransformerObjectSupport implements WebServiceMessageReceiver {
 
-    @Override
-    public void receive(MessageContext messageContext) throws Exception {
-        Assert.notNull(messageContext, "MessageContext is null");
-        logger.info("Received " + messageContext.getRequest());
-        Transformer transformer = createTransformer();
-        transformer.transform(messageContext.getRequest().getPayloadSource(),
-                messageContext.getResponse().getPayloadResult());
-    }
+	@Override
+	public void receive(MessageContext messageContext) throws Exception {
+		Assert.notNull(messageContext, "MessageContext is null");
+		logger.info("Received " + messageContext.getRequest());
+		Transformer transformer = createTransformer();
+		transformer.transform(messageContext.getRequest().getPayloadSource(),
+				messageContext.getResponse().getPayloadResult());
+	}
 }

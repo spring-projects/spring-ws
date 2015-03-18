@@ -31,67 +31,67 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  */
 public class DelegatingSmartEndpointInterceptor implements SmartEndpointInterceptor {
 
-    private final EndpointInterceptor delegate;
+	private final EndpointInterceptor delegate;
 
-    /**
-     * Creates a new instance of the {@code DelegatingSmartEndpointInterceptor} with the given delegate.
-     *
-     * @param delegate the endpoint interceptor to delegate to.
-     */
-    public DelegatingSmartEndpointInterceptor(EndpointInterceptor delegate) {
-        Assert.notNull(delegate, "'delegate' must not be null");
-        this.delegate = delegate;
-    }
+	/**
+	 * Creates a new instance of the {@code DelegatingSmartEndpointInterceptor} with the given delegate.
+	 *
+	 * @param delegate the endpoint interceptor to delegate to.
+	 */
+	public DelegatingSmartEndpointInterceptor(EndpointInterceptor delegate) {
+		Assert.notNull(delegate, "'delegate' must not be null");
+		this.delegate = delegate;
+	}
 
-    /**
-     * Returns the delegate.
-     * @return the delegate
-     */
-    public EndpointInterceptor getDelegate() {
-        return delegate;
-    }
+	/**
+	 * Returns the delegate.
+	 * @return the delegate
+	 */
+	public EndpointInterceptor getDelegate() {
+		return delegate;
+	}
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
-     */
-    @Override
-    public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
-        WebServiceMessage request = messageContext.getRequest();
-        return request != null && shouldIntercept(request, endpoint);
-    }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
+	 */
+	@Override
+	public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
+		WebServiceMessage request = messageContext.getRequest();
+		return request != null && shouldIntercept(request, endpoint);
+	}
 
-    /**
-     * Indicates whether this interceptor should intercept the given request message.
-     *
-     * <p>This implementation always returns {@code true}.
-     *
-     * @param request  the request message
-     * @param endpoint chosen endpoint to invoke
-     * @return {@code true} to indicate that this interceptor applies; {@code false} otherwise
-     */
-    protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
-        return true;
-    }
+	/**
+	 * Indicates whether this interceptor should intercept the given request message.
+	 *
+	 * <p>This implementation always returns {@code true}.
+	 *
+	 * @param request  the request message
+	 * @param endpoint chosen endpoint to invoke
+	 * @return {@code true} to indicate that this interceptor applies; {@code false} otherwise
+	 */
+	protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
+		return true;
+	}
 
-    @Override
-    public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        return getDelegate().handleRequest(messageContext, endpoint);
-    }
+	@Override
+	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
+		return getDelegate().handleRequest(messageContext, endpoint);
+	}
 
-    @Override
-    public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        return getDelegate().handleResponse(messageContext, endpoint);
-    }
+	@Override
+	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+		return getDelegate().handleResponse(messageContext, endpoint);
+	}
 
-    @Override
-    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return getDelegate().handleFault(messageContext, endpoint);
-    }
+	@Override
+	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+		return getDelegate().handleFault(messageContext, endpoint);
+	}
 
-    @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
-        getDelegate().afterCompletion(messageContext, endpoint, ex);
-    }
+	@Override
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+		getDelegate().afterCompletion(messageContext, endpoint, ex);
+	}
 }

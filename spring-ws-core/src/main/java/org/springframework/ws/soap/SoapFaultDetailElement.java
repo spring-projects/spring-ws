@@ -28,9 +28,9 @@ import javax.xml.transform.Result;
  */
 public interface SoapFaultDetailElement extends SoapElement {
 
-    /** Returns a {@code Result} that allows for writing to the <strong>contents</strong> of the detail element. */
-    Result getResult();
+	/** Returns a {@code Result} that allows for writing to the <strong>contents</strong> of the detail element. */
+	Result getResult();
 
-    /** Adds a new text node to this element. */
-    void addText(String text);
+	/** Adds a new text node to this element. */
+	void addText(String text);
 }

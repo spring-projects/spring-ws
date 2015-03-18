@@ -34,50 +34,50 @@ import org.springframework.ws.mime.Attachment;
  */
 class SaajAttachment implements Attachment {
 
-    private final AttachmentPart saajAttachment;
+	private final AttachmentPart saajAttachment;
 
-    public SaajAttachment(AttachmentPart saajAttachment) {
-        Assert.notNull(saajAttachment, "saajAttachment must not be null");
-        this.saajAttachment = saajAttachment;
-    }
+	public SaajAttachment(AttachmentPart saajAttachment) {
+		Assert.notNull(saajAttachment, "saajAttachment must not be null");
+		this.saajAttachment = saajAttachment;
+	}
 
-    @Override
-    public String getContentId() {
-        return saajAttachment.getContentId();
-    }
+	@Override
+	public String getContentId() {
+		return saajAttachment.getContentId();
+	}
 
-    @Override
-    public String getContentType() {
-        return saajAttachment.getContentType();
-    }
+	@Override
+	public String getContentType() {
+		return saajAttachment.getContentType();
+	}
 
-    @Override
-    public InputStream getInputStream() throws IOException {
-        try {
-            return saajAttachment.getDataHandler().getInputStream();
-        }
-        catch (SOAPException ex) {
-            throw new SaajAttachmentException(ex);
-        }
-    }
+	@Override
+	public InputStream getInputStream() throws IOException {
+		try {
+			return saajAttachment.getDataHandler().getInputStream();
+		}
+		catch (SOAPException ex) {
+			throw new SaajAttachmentException(ex);
+		}
+	}
 
-    @Override
-    public long getSize() {
-        try {
-            return saajAttachment.getSize();
-        }
-        catch (SOAPException ex) {
-            throw new SaajAttachmentException(ex);
-        }
-    }
+	@Override
+	public long getSize() {
+		try {
+			return saajAttachment.getSize();
+		}
+		catch (SOAPException ex) {
+			throw new SaajAttachmentException(ex);
+		}
+	}
 
-    @Override
-    public DataHandler getDataHandler() {
-        try {
-            return saajAttachment.getDataHandler();
-        }
-        catch (SOAPException ex) {
-            throw new SaajAttachmentException(ex);
-        }
-    }
+	@Override
+	public DataHandler getDataHandler() {
+		try {
+			return saajAttachment.getDataHandler();
+		}
+		catch (SOAPException ex) {
+			throw new SaajAttachmentException(ex);
+		}
+	}
 }

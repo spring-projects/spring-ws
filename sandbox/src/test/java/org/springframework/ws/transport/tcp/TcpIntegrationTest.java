@@ -27,21 +27,21 @@ import org.junit.Ignore;
 @Ignore
 public class TcpIntegrationTest extends AbstractDependencyInjectionSpringContextTests {
 
-    private WebServiceTemplate webServiceTemplate;
+	private WebServiceTemplate webServiceTemplate;
 
-    protected String[] getConfigLocations() {
-        return new String[]{"classpath:org/springframework/ws/transport/tcp/tcp-applicationContext.xml"};
-    }
+	protected String[] getConfigLocations() {
+		return new String[]{"classpath:org/springframework/ws/transport/tcp/tcp-applicationContext.xml"};
+	}
 
-    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
+	public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+		this.webServiceTemplate = webServiceTemplate;
+	}
 
-    public void testJmsTransport() throws Exception {
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-        StringResult result = new StringResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-        XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
-        applicationContext.close();
-    }
+	public void testJmsTransport() throws Exception {
+		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+		StringResult result = new StringResult();
+		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+		applicationContext.close();
+	}
 }

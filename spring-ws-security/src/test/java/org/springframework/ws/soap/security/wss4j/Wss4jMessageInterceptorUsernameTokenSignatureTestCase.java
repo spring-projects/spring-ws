@@ -24,22 +24,22 @@ import org.w3c.dom.Document;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTestCase extends Wss4jTestCase {
 
-    @Test
-    public void testAddUsernameTokenSignature() throws Exception {
-        Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
-        interceptor.setSecurementActions("UsernameTokenSignature");
-        interceptor.setSecurementUsername("Bert");
-        interceptor.setSecurementPassword("Ernie");
-        interceptor.afterPropertiesSet();
-        SoapMessage message = loadSoap11Message("empty-soap.xml");
-        MessageContext context = getSoap11MessageContext(message);
-        interceptor.secureMessage(message, context);
+	@Test
+	public void testAddUsernameTokenSignature() throws Exception {
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setSecurementActions("UsernameTokenSignature");
+		interceptor.setSecurementUsername("Bert");
+		interceptor.setSecurementPassword("Ernie");
+		interceptor.afterPropertiesSet();
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext context = getSoap11MessageContext(message);
+		interceptor.secureMessage(message, context);
 
-        Document doc = getDocument(message);
-        assertXpathEvaluatesTo("Invalid Username", "Bert",
-                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
-        assertXpathExists("Invalid Password",
-                "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']/text()",
-                doc);
-    }
+		Document doc = getDocument(message);
+		assertXpathEvaluatesTo("Invalid Username", "Bert",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
+		assertXpathExists("Invalid Password",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']/text()",
+				doc);
+	}
 }

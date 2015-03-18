@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,107 +39,107 @@ import static org.junit.Assert.fail;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
-    private Transformer transformer;
+	private Transformer transformer;
 
-    @Override
-    protected WebServiceMessageFactory createMessageFactory() throws Exception {
-        transformer = TransformerFactory.newInstance().newTransformer();
+	@Override
+	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+		transformer = TransformerFactory.newInstance().newTransformer();
 
-        AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
-        factory.afterPropertiesSet();
-        return factory;
-    }
+		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
+		factory.afterPropertiesSet();
+		return factory;
+	}
 
-    @Override
-    public void testCreateSoapMessageIllFormedXml() throws Exception {
-        // Axiom parses the contents of XML lazily, so it will not throw an InvalidXmlException when a message is parsed
-        throw new InvalidXmlException(null, null);
-    }
+	@Override
+	public void testCreateSoapMessageIllFormedXml() throws Exception {
+		// Axiom parses the contents of XML lazily, so it will not throw an InvalidXmlException when a message is parsed
+		throw new InvalidXmlException(null, null);
+	}
 
-    @Test
-    public void testGetCharsetEncoding() {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+	@Test
+	public void testGetCharsetEncoding() {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 
-        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("text/html; charset=utf-8"));
-        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=text/xml; charset=utf-8"));
-        assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""));
-    }
+		assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("text/html; charset=utf-8"));
+		assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=text/xml; charset=utf-8"));
+		assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""));
+	}
 
-    @Test
-    public void testRepetitiveReadCaching() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(true);
-        messageFactory.afterPropertiesSet();
+	@Test
+	public void testRepetitiveReadCaching() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(true);
+		messageFactory.afterPropertiesSet();
 
-        String xml = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
-                "<root xmlns='http://springframework.org/spring-ws'><child /></root>" +
-                "</soapenv:Body></soapenv:Envelope>";
-        TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
-        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		String xml = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+				"<root xmlns='http://springframework.org/spring-ws'><child /></root>" +
+				"</soapenv:Body></soapenv:Envelope>";
+		TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 
-        StringResult result = new StringResult();
-        transformer.transform(message.getPayloadSource(), result);
-        transformer.transform(message.getPayloadSource(), result);
-    }
+		StringResult result = new StringResult();
+		transformer.transform(message.getPayloadSource(), result);
+		transformer.transform(message.getPayloadSource(), result);
+	}
 
-    @Test
-    public void testRepetitiveReadNoCaching() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        messageFactory.afterPropertiesSet();
+	@Test
+	public void testRepetitiveReadNoCaching() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		messageFactory.afterPropertiesSet();
 
-        String xml = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
-                "<root xmlns='http://springframework.org/spring-ws'><child /></root>" +
-                "</soapenv:Body></soapenv:Envelope>";
-        TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
-        WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		String xml = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+				"<root xmlns='http://springframework.org/spring-ws'><child /></root>" +
+				"</soapenv:Body></soapenv:Envelope>";
+		TransportInputStream tis = new MockTransportInputStream(new ByteArrayInputStream(xml.getBytes()));
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 
-        StringResult result = new StringResult();
-        transformer.transform(message.getPayloadSource(), result);
-        try {
-            transformer.transform(message.getPayloadSource(), result);
-            fail("TransformerException expected");
-        }
-        catch (TransformerException expected) {
-            // ignore
-        }
-    }
+		StringResult result = new StringResult();
+		transformer.transform(message.getPayloadSource(), result);
+		try {
+			transformer.transform(message.getPayloadSource(), result);
+			fail("TransformerException expected");
+		}
+		catch (TransformerException expected) {
+			// ignore
+		}
+	}
 
-    /**
-     * See http://jira.springframework.org/browse/SWS-502
-     */
-    @Test
-    public void testSWS502() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        messageFactory.afterPropertiesSet();
+	/**
+	 * See http://jira.springframework.org/browse/SWS-502
+	 */
+	@Test
+	public void testSWS502() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		messageFactory.afterPropertiesSet();
 
-        String envelope =
-                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><soapenv:Body>" +
-                        "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
-                        "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
-                        "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
-                        "<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
-                        "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
-                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>" +
-                        "</soapenv:Body></soapenv:Envelope>";
+		String envelope =
+				"<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><soapenv:Body>" +
+						"<ns1:sendMessageResponse xmlns:ns1='urn:Sole' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
+						"<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
+						"<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
+						"<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
+						"<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
+						"</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>" +
+						"</soapenv:Body></soapenv:Envelope>";
 
-        InputStream inputStream = new ByteArrayInputStream(envelope.getBytes("UTF-8"));
-        AxiomSoapMessage message = messageFactory.createWebServiceMessage(new MockTransportInputStream(inputStream));
+		InputStream inputStream = new ByteArrayInputStream(envelope.getBytes("UTF-8"));
+		AxiomSoapMessage message = messageFactory.createWebServiceMessage(new MockTransportInputStream(inputStream));
 
-        StringResult result = new StringResult();
-        transformer.transform(message.getPayloadSource(), result);
+		StringResult result = new StringResult();
+		transformer.transform(message.getPayloadSource(), result);
 
-        XMLUnit.setIgnoreWhitespace(true);
-        String expectedPayload =
-                "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
-                        "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
-                        "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
-                        "<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
-                        "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
-                        "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
-        XMLAssert.assertXMLEqual(expectedPayload, result.toString());
+		XMLUnit.setIgnoreWhitespace(true);
+		String expectedPayload =
+				"<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
+						"<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
+						"<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" +
+						"<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
+						"<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
+						"</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
+		XMLAssert.assertXMLEqual(expectedPayload, result.toString());
 
-    }
+	}
 
 }

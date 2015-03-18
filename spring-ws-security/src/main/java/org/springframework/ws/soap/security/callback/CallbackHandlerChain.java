@@ -30,30 +30,30 @@ import javax.security.auth.callback.UnsupportedCallbackException;
  */
 public class CallbackHandlerChain extends AbstractCallbackHandler {
 
-    private final CallbackHandler[] callbackHandlers;
+	private final CallbackHandler[] callbackHandlers;
 
-    public CallbackHandlerChain(CallbackHandler[] callbackHandlers) {
-        this.callbackHandlers = callbackHandlers;
-    }
+	public CallbackHandlerChain(CallbackHandler[] callbackHandlers) {
+		this.callbackHandlers = callbackHandlers;
+	}
 
-    public CallbackHandler[] getCallbackHandlers() {
-        return callbackHandlers;
-    }
+	public CallbackHandler[] getCallbackHandlers() {
+		return callbackHandlers;
+	}
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        boolean allUnsupported = true;
-        for (CallbackHandler callbackHandler : callbackHandlers) {
-            try {
-                callbackHandler.handle(new Callback[]{callback});
-                allUnsupported = false;
-            }
-            catch (UnsupportedCallbackException ex) {
-                // if an UnsupportedCallbackException occurs, go to the next handler
-            }
-        }
-        if (allUnsupported) {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		boolean allUnsupported = true;
+		for (CallbackHandler callbackHandler : callbackHandlers) {
+			try {
+				callbackHandler.handle(new Callback[]{callback});
+				allUnsupported = false;
+			}
+			catch (UnsupportedCallbackException ex) {
+				// if an UnsupportedCallbackException occurs, go to the next handler
+			}
+		}
+		if (allUnsupported) {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 }

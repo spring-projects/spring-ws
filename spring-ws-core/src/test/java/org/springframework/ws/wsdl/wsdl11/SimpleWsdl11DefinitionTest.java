@@ -24,17 +24,17 @@ import org.junit.Test;
 
 public class SimpleWsdl11DefinitionTest {
 
-    private SimpleWsdl11Definition definition;
+	private SimpleWsdl11Definition definition;
 
-    @Before
-    public void setUp() throws Exception {
-        definition = new SimpleWsdl11Definition();
-        definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
-        definition.afterPropertiesSet();
-    }
+	@Before
+	public void setUp() throws Exception {
+		definition = new SimpleWsdl11Definition();
+		definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
+		definition.afterPropertiesSet();
+	}
 
-    @Test
-    public void testGetSource() throws Exception {
-        Assert.assertNotNull("No source returned", definition.getSource());
-    }
+	@Test
+	public void testGetSource() throws Exception {
+		Assert.assertNotNull("No source returned", definition.getSource());
+	}
 }

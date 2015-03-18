@@ -36,68 +36,68 @@ import org.springframework.core.io.Resource;
  */
 abstract class Jaxp13ValidatorFactory {
 
-    static XmlValidator createValidator(Resource[] resources, String schemaLanguage) throws IOException {
-        try {
-            Schema schema = SchemaLoaderUtils.loadSchema(resources, schemaLanguage);
-            return new Jaxp13Validator(schema);
-        }
-        catch (SAXException ex) {
-            throw new XmlValidationException("Could not create Schema: " + ex.getMessage(), ex);
-        }
-    }
+	static XmlValidator createValidator(Resource[] resources, String schemaLanguage) throws IOException {
+		try {
+			Schema schema = SchemaLoaderUtils.loadSchema(resources, schemaLanguage);
+			return new Jaxp13Validator(schema);
+		}
+		catch (SAXException ex) {
+			throw new XmlValidationException("Could not create Schema: " + ex.getMessage(), ex);
+		}
+	}
 
-    private static class Jaxp13Validator implements XmlValidator {
+	private static class Jaxp13Validator implements XmlValidator {
 
-        private Schema schema;
+		private Schema schema;
 
-        public Jaxp13Validator(Schema schema) {
-            this.schema = schema;
-        }
+		public Jaxp13Validator(Schema schema) {
+			this.schema = schema;
+		}
 
-        @Override
-        public SAXParseException[] validate(Source source) throws IOException {
-            return validate(source, null);
-        }
+		@Override
+		public SAXParseException[] validate(Source source) throws IOException {
+			return validate(source, null);
+		}
 
-        @Override
-        public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
-            if (errorHandler == null) {
-                errorHandler = new DefaultValidationErrorHandler();
-            }
-            Validator validator = schema.newValidator();
-            validator.setErrorHandler(errorHandler);
-            try {
-                validator.validate(source);
-                return errorHandler.getErrors();
-            }
-            catch (SAXException ex) {
-                throw new XmlValidationException("Could not validate source: " + ex.getMessage(), ex);
-            }
-        }
-    }
+		@Override
+		public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
+			if (errorHandler == null) {
+				errorHandler = new DefaultValidationErrorHandler();
+			}
+			Validator validator = schema.newValidator();
+			validator.setErrorHandler(errorHandler);
+			try {
+				validator.validate(source);
+				return errorHandler.getErrors();
+			}
+			catch (SAXException ex) {
+				throw new XmlValidationException("Could not validate source: " + ex.getMessage(), ex);
+			}
+		}
+	}
 
-    /** {@code ErrorHandler} implementation that stores errors and fatal errors in a list. */
-    private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
+	/** {@code ErrorHandler} implementation that stores errors and fatal errors in a list. */
+	private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
-        private List<SAXParseException> errors = new ArrayList<SAXParseException>();
+		private List<SAXParseException> errors = new ArrayList<SAXParseException>();
 
-        @Override
-        public SAXParseException[] getErrors() {
-            return errors.toArray(new SAXParseException[errors.size()]);
-        }
+		@Override
+		public SAXParseException[] getErrors() {
+			return errors.toArray(new SAXParseException[errors.size()]);
+		}
 
-        @Override
-        public void warning(SAXParseException ex) throws SAXException {
-        }
+		@Override
+		public void warning(SAXParseException ex) throws SAXException {
+		}
 
-        @Override
-        public void error(SAXParseException ex) throws SAXException {
-            errors.add(ex);
-        }
+		@Override
+		public void error(SAXParseException ex) throws SAXException {
+			errors.add(ex);
+		}
 
-        @Override
-        public void fatalError(SAXParseException ex) throws SAXException {
-            errors.add(ex);
-        }
-    }
+		@Override
+		public void fatalError(SAXParseException ex) throws SAXException {
+			errors.add(ex);
+		}
+	}
 }

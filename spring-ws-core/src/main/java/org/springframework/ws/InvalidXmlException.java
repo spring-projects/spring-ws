@@ -26,7 +26,7 @@ package org.springframework.ws;
 @SuppressWarnings("serial")
 public final class InvalidXmlException extends WebServiceException {
 
-    public InvalidXmlException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public InvalidXmlException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

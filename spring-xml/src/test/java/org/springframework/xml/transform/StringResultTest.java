@@ -29,15 +29,15 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class StringResultTest {
 
-    @Test
-    public void testStringResult() throws Exception {
-        Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-        Element element = document.createElementNS("namespace", "prefix:localName");
-        document.appendChild(element);
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        StringResult result = new StringResult();
-        transformer.transform(new DOMSource(document), result);
-        assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());
-    }
+	@Test
+	public void testStringResult() throws Exception {
+		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Element element = document.createElementNS("namespace", "prefix:localName");
+		document.appendChild(element);
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		StringResult result = new StringResult();
+		transformer.transform(new DOMSource(document), result);
+		assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());
+	}
 
 }

@@ -37,54 +37,54 @@ import static org.junit.Assert.*;
 
 public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCase {
 
-    private SimpleActionEndpointMapping mapping;
+	private SimpleActionEndpointMapping mapping;
 
-    private Endpoint1 endpoint1;
+	private Endpoint1 endpoint1;
 
-    @Before
-    public void createMappings() throws Exception {
-        mapping = new SimpleActionEndpointMapping();
-        Map<String, Object> map = new HashMap<String, Object>();
-        endpoint1 = new Endpoint1();
-        Endpoint2 endpoint2 = new Endpoint2();
-        map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
-        map.put("http://example.com/fabrikam/mail/Add", endpoint2);
-        mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
-        mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
-        mapping.setAddress(new URI("mailto:fabrikam@example.com"));
-        mapping.setActionMap(map);
-        mapping.afterPropertiesSet();
-    }
+	@Before
+	public void createMappings() throws Exception {
+		mapping = new SimpleActionEndpointMapping();
+		Map<String, Object> map = new HashMap<String, Object>();
+		endpoint1 = new Endpoint1();
+		Endpoint2 endpoint2 = new Endpoint2();
+		map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
+		map.put("http://example.com/fabrikam/mail/Add", endpoint2);
+		mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
+		mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
+		mapping.setAddress(new URI("mailto:fabrikam@example.com"));
+		mapping.setActionMap(map);
+		mapping.afterPropertiesSet();
+	}
 
-    @Test
-    public void testMatch() throws Exception {
-        SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+	@Test
+	public void testMatch() throws Exception {
+		SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
 
-        EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
-        assertNotNull("No endpoint returned", endpoint);
-        assertEquals("Invalid endpoint returned", endpoint1, endpoint.getEndpoint());
-        EndpointInterceptor[] interceptors = endpoint.getInterceptors();
-        assertEquals("Invalid amount of interceptors returned", 3, interceptors.length);
-        assertTrue("Invalid first interceptor", interceptors[0] instanceof PayloadLoggingInterceptor);
-        assertTrue("Invalid first interceptor", interceptors[1] instanceof AddressingEndpointInterceptor);
-        assertTrue("Invalid first interceptor", interceptors[2] instanceof PayloadValidatingInterceptor);
-    }
+		EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
+		assertNotNull("No endpoint returned", endpoint);
+		assertEquals("Invalid endpoint returned", endpoint1, endpoint.getEndpoint());
+		EndpointInterceptor[] interceptors = endpoint.getInterceptors();
+		assertEquals("Invalid amount of interceptors returned", 3, interceptors.length);
+		assertTrue("Invalid first interceptor", interceptors[0] instanceof PayloadLoggingInterceptor);
+		assertTrue("Invalid first interceptor", interceptors[1] instanceof AddressingEndpointInterceptor);
+		assertTrue("Invalid first interceptor", interceptors[2] instanceof PayloadValidatingInterceptor);
+	}
 
-    @Test
-    public void testNoMatch() throws Exception {
-        SaajSoapMessage message = loadSaajMessage("200408/response-no-message-id.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+	@Test
+	public void testNoMatch() throws Exception {
+		SaajSoapMessage message = loadSaajMessage("200408/response-no-message-id.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
 
-        EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
-        assertNull("Endpoint returned", endpoint);
-    }
+		EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
+		assertNull("Endpoint returned", endpoint);
+	}
 
-    private static class Endpoint1 {
+	private static class Endpoint1 {
 
-    }
+	}
 
-    private static class Endpoint2 {
+	private static class Endpoint2 {
 
-    }
+	}
 }

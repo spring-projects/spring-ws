@@ -23,15 +23,15 @@ import org.springframework.ws.soap.SoapBodyException;
  */
 public class StroapBodyException extends SoapBodyException {
 
-    public StroapBodyException(String msg) {
-        super(msg);
-    }
+	public StroapBodyException(String msg) {
+		super(msg);
+	}
 
-    public StroapBodyException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public StroapBodyException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public StroapBodyException(Throwable ex) {
-        super(ex);
-    }
+	public StroapBodyException(Throwable ex) {
+		super(ex);
+	}
 }

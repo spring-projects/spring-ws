@@ -52,260 +52,260 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 public class MockWebServiceServerTest {
 
-    private WebServiceTemplate template;
+	private WebServiceTemplate template;
 
-    private MockWebServiceServer server;
+	private MockWebServiceServer server;
 
-    @Before
-    public void setUp() throws Exception {
-        template = new WebServiceTemplate();
-        template.setDefaultUri("http://example.com");
+	@Before
+	public void setUp() throws Exception {
+		template = new WebServiceTemplate();
+		template.setDefaultUri("http://example.com");
 
-        server = MockWebServiceServer.createServer(template);
-    }
+		server = MockWebServiceServer.createServer(template);
+	}
 
-    @Test
-    public void createServerWebServiceTemplate() throws Exception {
-        WebServiceTemplate template = new WebServiceTemplate();
+	@Test
+	public void createServerWebServiceTemplate() throws Exception {
+		WebServiceTemplate template = new WebServiceTemplate();
 
-        MockWebServiceServer server = MockWebServiceServer.createServer(template);
-        assertNotNull(server);
-    }
+		MockWebServiceServer server = MockWebServiceServer.createServer(template);
+		assertNotNull(server);
+	}
 
-    @Test
-    public void createServerGatewaySupport() throws Exception {
-        MyClient client = new MyClient();
+	@Test
+	public void createServerGatewaySupport() throws Exception {
+		MyClient client = new MyClient();
 
-        MockWebServiceServer server = MockWebServiceServer.createServer(client);
-        assertNotNull(server);
-    }
+		MockWebServiceServer server = MockWebServiceServer.createServer(client);
+		assertNotNull(server);
+	}
 
-    @Test
-    public void createServerApplicationContextWebServiceTemplate() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("webServiceTemplate", WebServiceTemplate.class);
-        applicationContext.refresh();
-
-        MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
-        assertNotNull(server);
-    }
-
-    @Test
-    public void createServerApplicationContextWebServiceGatewaySupport() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("myClient", MyClient.class);
-        applicationContext.refresh();
+	@Test
+	public void createServerApplicationContextWebServiceTemplate() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("webServiceTemplate", WebServiceTemplate.class);
+		applicationContext.refresh();
+
+		MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
+		assertNotNull(server);
+	}
+
+	@Test
+	public void createServerApplicationContextWebServiceGatewaySupport() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("myClient", MyClient.class);
+		applicationContext.refresh();
 
-        MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
-        assertNotNull(server);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void createServerApplicationContextEmpty() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.refresh();
-
-        MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
-        assertNotNull(server);
-    }
+		MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
+		assertNotNull(server);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createServerApplicationContextEmpty() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.refresh();
+
+		MockWebServiceServer server = MockWebServiceServer.createServer(applicationContext);
+		assertNotNull(server);
+	}
 
-    @Test
-    public void mocks() throws Exception {
-        URI uri = URI.create("http://example.com");
+	@Test
+	public void mocks() throws Exception {
+		URI uri = URI.create("http://example.com");
 
-        RequestMatcher requestMatcher1 = createStrictMock("requestMatcher1", RequestMatcher.class);
-        RequestMatcher requestMatcher2 = createStrictMock("requestMatcher2", RequestMatcher.class);
-        ResponseCreator responseCreator = createStrictMock(ResponseCreator.class);
+		RequestMatcher requestMatcher1 = createStrictMock("requestMatcher1", RequestMatcher.class);
+		RequestMatcher requestMatcher2 = createStrictMock("requestMatcher2", RequestMatcher.class);
+		ResponseCreator responseCreator = createStrictMock(ResponseCreator.class);
 
-        SaajSoapMessage response = new SaajSoapMessageFactory(MessageFactory.newInstance()).createWebServiceMessage();
+		SaajSoapMessage response = new SaajSoapMessageFactory(MessageFactory.newInstance()).createWebServiceMessage();
 
-        requestMatcher1.match(eq(uri), isA(SaajSoapMessage.class));
-        requestMatcher2.match(eq(uri), isA(SaajSoapMessage.class));
-        expect(responseCreator.createResponse(eq(uri), isA(SaajSoapMessage.class), isA(SaajSoapMessageFactory.class)))
-                .andReturn(response);
+		requestMatcher1.match(eq(uri), isA(SaajSoapMessage.class));
+		requestMatcher2.match(eq(uri), isA(SaajSoapMessage.class));
+		expect(responseCreator.createResponse(eq(uri), isA(SaajSoapMessage.class), isA(SaajSoapMessageFactory.class)))
+				.andReturn(response);
 
-        replay(requestMatcher1, requestMatcher2, responseCreator);
-
-        server.expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCreator);
-        template.sendSourceAndReceiveToResult(uri.toString(), new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-
-        verify(requestMatcher1, requestMatcher2, responseCreator);
-    }
+		replay(requestMatcher1, requestMatcher2, responseCreator);
+
+		server.expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCreator);
+		template.sendSourceAndReceiveToResult(uri.toString(), new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+
+		verify(requestMatcher1, requestMatcher2, responseCreator);
+	}
 
-    @Test
-    public void payloadMatch() throws Exception {
-        Source request = new StringSource("<request xmlns='http://example.com'/>");
-        Source response = new StringSource("<response xmlns='http://example.com'/>");
-
-        server.expect(payload(request)).andRespond(withPayload(response));
+	@Test
+	public void payloadMatch() throws Exception {
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		server.expect(payload(request)).andRespond(withPayload(response));
 
-        StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(request, result);
-        assertXMLEqual(result.toString(), response.toString());
-    }
+		StringResult result = new StringResult();
+		template.sendSourceAndReceiveToResult(request, result);
+		assertXMLEqual(result.toString(), response.toString());
+	}
 
-    @Test(expected = AssertionError.class)
-    public void payloadNonMatch() throws Exception {
-        Source expected = new StringSource("<request xmlns='http://example.com'/>");
+	@Test(expected = AssertionError.class)
+	public void payloadNonMatch() throws Exception {
+		Source expected = new StringSource("<request xmlns='http://example.com'/>");
 
-        server.expect(payload(expected));
+		server.expect(payload(expected));
 
-        StringResult result = new StringResult();
-        String actual = "<request xmlns='http://other.com'/>";
-        template.sendSourceAndReceiveToResult(new StringSource(actual), result);
-    }
+		StringResult result = new StringResult();
+		String actual = "<request xmlns='http://other.com'/>";
+		template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+	}
 
-    @Test
-    public void soapHeaderMatch() throws Exception {
-        final QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
-
-        server.expect(soapHeader(soapHeaderName));
-
-        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
-                new WebServiceMessageCallback() {
-                    public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
-                        SoapMessage soapMessage = (SoapMessage) message;
-                        soapMessage.getSoapHeader().addHeaderElement(soapHeaderName);
-                    }
-                }, new StringResult());
-    }
+	@Test
+	public void soapHeaderMatch() throws Exception {
+		final QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
+
+		server.expect(soapHeader(soapHeaderName));
+
+		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+				new WebServiceMessageCallback() {
+					public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+						SoapMessage soapMessage = (SoapMessage) message;
+						soapMessage.getSoapHeader().addHeaderElement(soapHeaderName);
+					}
+				}, new StringResult());
+	}
 
-    @Test(expected = AssertionError.class)
-    public void soapHeaderNonMatch() throws Exception {
-        QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
+	@Test(expected = AssertionError.class)
+	public void soapHeaderNonMatch() throws Exception {
+		QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
 
-        server.expect(soapHeader(soapHeaderName));
+		server.expect(soapHeader(soapHeaderName));
 
-        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-    }
+		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+	}
 
-    @Test
-    public void connectionMatch() throws Exception {
-        String uri = "http://example.com";
-        server.expect(connectionTo(uri));
+	@Test
+	public void connectionMatch() throws Exception {
+		String uri = "http://example.com";
+		server.expect(connectionTo(uri));
 
-        template.sendSourceAndReceiveToResult(uri, new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-    }
-
-    @Test(expected = AssertionError.class)
-    public void connectionNonMatch() throws Exception {
-        String expected = "http://expected.com";
-        server.expect(connectionTo(expected));
-
-        String actual = "http://actual.com";
-        template.sendSourceAndReceiveToResult(actual, new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-    }
+		template.sendSourceAndReceiveToResult(uri, new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+	}
+
+	@Test(expected = AssertionError.class)
+	public void connectionNonMatch() throws Exception {
+		String expected = "http://expected.com";
+		server.expect(connectionTo(expected));
+
+		String actual = "http://actual.com";
+		template.sendSourceAndReceiveToResult(actual, new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+	}
 
-    @Test(expected = AssertionError.class)
-    public void unexpectedConnection() throws Exception {
-        Source request = new StringSource("<request xmlns='http://example.com'/>");
-        Source response = new StringSource("<response xmlns='http://example.com'/>");
+	@Test(expected = AssertionError.class)
+	public void unexpectedConnection() throws Exception {
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-        server.expect(payload(request)).andRespond(withPayload(response));
-
-        template.sendSourceAndReceiveToResult(request, new StringResult());
-        template.sendSourceAndReceiveToResult(request, new StringResult());
-    }
+		server.expect(payload(request)).andRespond(withPayload(response));
+
+		template.sendSourceAndReceiveToResult(request, new StringResult());
+		template.sendSourceAndReceiveToResult(request, new StringResult());
+	}
 
-    @Test
-    public void xsdMatch() throws Exception {
-        Resource schema = new ByteArrayResource(
-                "<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+	@Test
+	public void xsdMatch() throws Exception {
+		Resource schema = new ByteArrayResource(
+				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
 
-        server.expect(validPayload(schema));
+		server.expect(validPayload(schema));
 
-        StringResult result = new StringResult();
-        String actual = "<request xmlns='http://example.com'/>";
-        template.sendSourceAndReceiveToResult(new StringSource(actual), result);
-    }
+		StringResult result = new StringResult();
+		String actual = "<request xmlns='http://example.com'/>";
+		template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+	}
 
-    @Test(expected = AssertionError.class)
-    public void xsdNonMatch() throws Exception {
-        Resource schema = new ByteArrayResource(
-                "<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+	@Test(expected = AssertionError.class)
+	public void xsdNonMatch() throws Exception {
+		Resource schema = new ByteArrayResource(
+				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
 
-        server.expect(validPayload(schema));
+		server.expect(validPayload(schema));
 
-        StringResult result = new StringResult();
-        String actual = "<request2 xmlns='http://example.com'/>";
-        template.sendSourceAndReceiveToResult(new StringSource(actual), result);
-    }
+		StringResult result = new StringResult();
+		String actual = "<request2 xmlns='http://example.com'/>";
+		template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+	}
 
-    @Test
-    public void xpathExistsMatch() throws Exception {
-        final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
+	@Test
+	public void xpathExistsMatch() throws Exception {
+		final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
-        server.expect(xpath("/ns:request", ns).exists());
+		server.expect(xpath("/ns:request", ns).exists());
 
-        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-    }
+		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+	}
 
-    @Test(expected = AssertionError.class)
-    public void xpathExistsNonMatch() throws Exception {
-        final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
+	@Test(expected = AssertionError.class)
+	public void xpathExistsNonMatch() throws Exception {
+		final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
-        server.expect(xpath("/ns:foo", ns).exists());
+		server.expect(xpath("/ns:foo", ns).exists());
 
-        template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
-                new StringResult());
-    }
+		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+				new StringResult());
+	}
 
-    @Test
-    public void anythingMatch() throws Exception {
-        Source request = new StringSource("<request xmlns='http://example.com'/>");
-        Source response = new StringSource("<response xmlns='http://example.com'/>");
+	@Test
+	public void anythingMatch() throws Exception {
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-        server.expect(anything()).andRespond(withPayload(response));
+		server.expect(anything()).andRespond(withPayload(response));
 
-        StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(request, result);
-        assertXMLEqual(result.toString(), response.toString());
+		StringResult result = new StringResult();
+		template.sendSourceAndReceiveToResult(request, result);
+		assertXMLEqual(result.toString(), response.toString());
 
-        server.verify();
-    }
+		server.verify();
+	}
 
-    @Test(expected = IllegalStateException.class)
-    public void recordWhenReplay() throws Exception {
-        Source request = new StringSource("<request xmlns='http://example.com'/>");
-        Source response = new StringSource("<response xmlns='http://example.com'/>");
+	@Test(expected = IllegalStateException.class)
+	public void recordWhenReplay() throws Exception {
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-        server.expect(anything()).andRespond(withPayload(response));
-        server.expect(anything()).andRespond(withPayload(response));
+		server.expect(anything()).andRespond(withPayload(response));
+		server.expect(anything()).andRespond(withPayload(response));
 
-        StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(request, result);
-        assertXMLEqual(result.toString(), response.toString());
+		StringResult result = new StringResult();
+		template.sendSourceAndReceiveToResult(request, result);
+		assertXMLEqual(result.toString(), response.toString());
 
-        server.expect(anything()).andRespond(withPayload(response));
-    }
+		server.expect(anything()).andRespond(withPayload(response));
+	}
 
-    @Test(expected = AssertionError.class)
-    public void verifyFailure() throws Exception {
-        server.expect(anything());
-        server.verify();
-    }
+	@Test(expected = AssertionError.class)
+	public void verifyFailure() throws Exception {
+		server.expect(anything());
+		server.verify();
+	}
 
-    @Test
-    public void verifyOnly() throws Exception {
-        server.verify();
-    }
+	@Test
+	public void verifyOnly() throws Exception {
+		server.verify();
+	}
 
-    @Test(expected = SoapFaultClientException.class)
-    public void fault() throws Exception {
-        Source request = new StringSource("<request xmlns='http://example.com'/>");
+	@Test(expected = SoapFaultClientException.class)
+	public void fault() throws Exception {
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
 
-        server.expect(anything()).andRespond(withClientOrSenderFault("reason", Locale.ENGLISH));
+		server.expect(anything()).andRespond(withClientOrSenderFault("reason", Locale.ENGLISH));
 
-        StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(request, result);
-    }
-       
-    public static class MyClient extends WebServiceGatewaySupport {
+		StringResult result = new StringResult();
+		template.sendSourceAndReceiveToResult(request, result);
+	}
+	   
+	public static class MyClient extends WebServiceGatewaySupport {
 
-    }
+	}
 }

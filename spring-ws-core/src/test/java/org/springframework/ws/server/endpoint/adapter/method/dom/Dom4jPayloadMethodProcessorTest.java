@@ -32,38 +32,38 @@ import static org.junit.Assert.assertTrue;
 public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
    @Override
-    protected AbstractPayloadSourceMethodProcessor createProcessor() {
-        return new Dom4jPayloadMethodProcessor();
-    }
+	protected AbstractPayloadSourceMethodProcessor createProcessor() {
+		return new Dom4jPayloadMethodProcessor();
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-        return new MethodParameter[]{
-                new MethodParameter(getClass().getMethod("element", Element.class), 0)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
+		return new MethodParameter[]{
+				new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+	}
 
-    @Override
-    protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
-        return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
-    }
+	@Override
+	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
+		return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
+	}
 
-    @Override
-    protected void testArgument(Object argument, MethodParameter parameter) {
-        assertTrue("argument not a element", argument instanceof Element);
-        Element element = (Element) argument;
-        assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-        assertEquals("Invalid local name", LOCAL_NAME, element.getName());
-    }
+	@Override
+	protected void testArgument(Object argument, MethodParameter parameter) {
+		assertTrue("argument not a element", argument instanceof Element);
+		Element element = (Element) argument;
+		assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
+		assertEquals("Invalid local name", LOCAL_NAME, element.getName());
+	}
 
-    @Override
-    protected Element getReturnValue(MethodParameter returnType) {
-        Document document = DocumentHelper.createDocument();
-        return document.addElement(LOCAL_NAME, NAMESPACE_URI);
-    }
+	@Override
+	protected Element getReturnValue(MethodParameter returnType) {
+		Document document = DocumentHelper.createDocument();
+		return document.addElement(LOCAL_NAME, NAMESPACE_URI);
+	}
 
-    @ResponsePayload
-    public Element element(@RequestPayload Element element) {
-        return element;
-    }
+	@ResponsePayload
+	public Element element(@RequestPayload Element element) {
+		return element;
+	}
 
 }

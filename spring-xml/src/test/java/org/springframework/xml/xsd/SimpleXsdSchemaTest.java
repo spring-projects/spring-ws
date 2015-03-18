@@ -20,11 +20,11 @@ import org.springframework.core.io.Resource;
 
 public class SimpleXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
-    @Override
-    protected XsdSchema createSchema(Resource resource) throws Exception {
-        SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-        schema.afterPropertiesSet();
-        return schema;
-    }
+	@Override
+	protected XsdSchema createSchema(Resource resource) throws Exception {
+		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+		schema.afterPropertiesSet();
+		return schema;
+	}
 
 }

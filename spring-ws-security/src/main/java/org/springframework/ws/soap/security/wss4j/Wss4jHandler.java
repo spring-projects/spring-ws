@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,87 +36,87 @@ import org.w3c.dom.Document;
  */
 class Wss4jHandler extends WSHandler {
 
-    /** Keys are constants from {@link WSHandlerConstants}; values are strings. */
-    private Properties options = new Properties();
+	/** Keys are constants from {@link WSHandlerConstants}; values are strings. */
+	private Properties options = new Properties();
 
-    private String securementPassword;
+	private String securementPassword;
 
-    private Crypto securementEncryptionCrypto;
+	private Crypto securementEncryptionCrypto;
 
-    private Crypto securementSignatureCrypto;
+	private Crypto securementSignatureCrypto;
 
-    Wss4jHandler() {
-        // set up default handler properties
-        options.setProperty(WSHandlerConstants.MUST_UNDERSTAND, Boolean.toString(true));
-        options.setProperty(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
-    }
+	Wss4jHandler() {
+		// set up default handler properties
+		options.setProperty(WSHandlerConstants.MUST_UNDERSTAND, Boolean.toString(true));
+		options.setProperty(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
+	}
 
-    @Override
-    protected boolean checkReceiverResultsAnyOrder(List<WSSecurityEngineResult> wsResult, List<Integer> actions) {
-        return super.checkReceiverResultsAnyOrder(wsResult, actions);
-    }
+	@Override
+	protected boolean checkReceiverResultsAnyOrder(List<WSSecurityEngineResult> wsResult, List<Integer> actions) {
+		return super.checkReceiverResultsAnyOrder(wsResult, actions);
+	}
 
-    void setOption(String key, String value) {
-        options.setProperty(key, value);
-    }
+	void setOption(String key, String value) {
+		options.setProperty(key, value);
+	}
 
-    void setOption(String key, boolean value) {
-        options.setProperty(key, Boolean.toString(value));
-    }
+	void setOption(String key, boolean value) {
+		options.setProperty(key, Boolean.toString(value));
+	}
 
-    @Override
-    public Object getOption(String key) {
-        return options.getProperty(key);
-    }
+	@Override
+	public Object getOption(String key) {
+		return options.getProperty(key);
+	}
 
-    void setSecurementPassword(String securementPassword) {
-        this.securementPassword = securementPassword;
-    }
+	void setSecurementPassword(String securementPassword) {
+		this.securementPassword = securementPassword;
+	}
 
-    void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
-        this.securementEncryptionCrypto = securementEncryptionCrypto;
-    }
+	void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
+		this.securementEncryptionCrypto = securementEncryptionCrypto;
+	}
 
-    void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
-        this.securementSignatureCrypto = securementSignatureCrypto;
-    }
+	void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
+		this.securementSignatureCrypto = securementSignatureCrypto;
+	}
 
-    @Override
-    public String getPassword(Object msgContext) {
-        return securementPassword;
-    }
+	@Override
+	public String getPassword(Object msgContext) {
+		return securementPassword;
+	}
 
-    @Override
-    public Object getProperty(Object msgContext, String key) {
-        return ((MessageContext) msgContext).getProperty(key);
-    }
+	@Override
+	public Object getProperty(Object msgContext, String key) {
+		return ((MessageContext) msgContext).getProperty(key);
+	}
 
-    @Override
-    protected Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
-        return securementEncryptionCrypto;
-    }
+	@Override
+	protected Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
+		return securementEncryptionCrypto;
+	}
 
-    @Override
-    public Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
-        return securementSignatureCrypto;
-    }
+	@Override
+	public Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
+		return securementSignatureCrypto;
+	}
 
-    @Override
-    public void setPassword(Object msgContext, String password) {
-        securementPassword = password;
-    }
+	@Override
+	public void setPassword(Object msgContext, String password) {
+		securementPassword = password;
+	}
 
-    @Override
-    public void setProperty(Object msgContext, String key, Object value) {
-        ((MessageContext) msgContext).setProperty(key, value);
-    }
+	@Override
+	public void setProperty(Object msgContext, String key, Object value) {
+		((MessageContext) msgContext).setProperty(key, value);
+	}
 
-    @Override
-    protected void doSenderAction(int doAction,
-                                  Document doc,
-                                  RequestData reqData,
-                                  List<Integer> actions,
-                                  boolean isRequest) throws WSSecurityException {
-        super.doSenderAction(doAction, doc, reqData, actions, isRequest);
-    }
+	@Override
+	protected void doSenderAction(int doAction,
+								  Document doc,
+								  RequestData reqData,
+								  List<Integer> actions,
+								  boolean isRequest) throws WSSecurityException {
+		super.doSenderAction(doAction, doc, reqData, actions, isRequest);
+	}
 }

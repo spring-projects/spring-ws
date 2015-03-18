@@ -38,29 +38,29 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  */
 public class SchemaValidatingMatcher implements WebServiceMessageMatcher {
 
-    private final XmlValidator xmlValidator;
+	private final XmlValidator xmlValidator;
 
-    /**
-     * Creates a {@code SchemaValidatingMatcher} based on the given schema resource(s).
-     *
-     * @param schema         the schema
-     * @param furtherSchemas further schemas, if necessary
-     * @throws IOException in case of I/O errors
-     */
-    public SchemaValidatingMatcher(Resource schema, Resource... furtherSchemas) throws IOException {
-        Assert.notNull(schema, "'schema' must not be null");
-        Resource[] joinedSchemas = new Resource[furtherSchemas.length + 1];
-        joinedSchemas[0] = schema;
-        System.arraycopy(furtherSchemas, 0, joinedSchemas, 1, furtherSchemas.length);
-        xmlValidator = XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
+	/**
+	 * Creates a {@code SchemaValidatingMatcher} based on the given schema resource(s).
+	 *
+	 * @param schema		 the schema
+	 * @param furtherSchemas further schemas, if necessary
+	 * @throws IOException in case of I/O errors
+	 */
+	public SchemaValidatingMatcher(Resource schema, Resource... furtherSchemas) throws IOException {
+		Assert.notNull(schema, "'schema' must not be null");
+		Resource[] joinedSchemas = new Resource[furtherSchemas.length + 1];
+		joinedSchemas[0] = schema;
+		System.arraycopy(furtherSchemas, 0, joinedSchemas, 1, furtherSchemas.length);
+		xmlValidator = XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
 
-    }
+	}
 
-    @Override
-    public void match(WebServiceMessage message) throws IOException, AssertionError {
-        SAXParseException[] exceptions = xmlValidator.validate(message.getPayloadSource());
-        if (!ObjectUtils.isEmpty(exceptions)) {
-            fail("XML is not valid: " + Arrays.toString(exceptions), "Payload", message.getPayloadSource());
-        }
-    }
+	@Override
+	public void match(WebServiceMessage message) throws IOException, AssertionError {
+		SAXParseException[] exceptions = xmlValidator.validate(message.getPayloadSource());
+		if (!ObjectUtils.isEmpty(exceptions)) {
+			fail("XML is not valid: " + Arrays.toString(exceptions), "Payload", message.getPayloadSource());
+		}
+	}
 }

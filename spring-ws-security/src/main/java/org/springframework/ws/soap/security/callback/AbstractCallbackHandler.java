@@ -32,25 +32,25 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class AbstractCallbackHandler implements CallbackHandler {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    protected AbstractCallbackHandler() {
-    }
+	protected AbstractCallbackHandler() {
+	}
 
-    /**
-     * Iterates over the given callbacks, and calls {@code handleInternal} for each of them.
-     *
-     * @param callbacks the callbacks
-     * @see #handleInternal(javax.security.auth.callback.Callback)
-     */
-    @Override
-    public final void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        for (Callback callback : callbacks) {
-            handleInternal(callback);
-        }
-    }
+	/**
+	 * Iterates over the given callbacks, and calls {@code handleInternal} for each of them.
+	 *
+	 * @param callbacks the callbacks
+	 * @see #handleInternal(javax.security.auth.callback.Callback)
+	 */
+	@Override
+	public final void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+		for (Callback callback : callbacks) {
+			handleInternal(callback);
+		}
+	}
 
-    /** Template method that should be implemented by subclasses. */
-    protected abstract void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException;
+	/** Template method that should be implemented by subclasses. */
+	protected abstract void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException;
 }

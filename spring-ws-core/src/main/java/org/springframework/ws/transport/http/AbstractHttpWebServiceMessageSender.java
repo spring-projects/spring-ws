@@ -32,35 +32,35 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  */
 public abstract class AbstractHttpWebServiceMessageSender implements WebServiceMessageSender {
 
-    /**
-     * Logger available to subclasses.
-     */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/**
+	 * Logger available to subclasses.
+	 */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    private boolean acceptGzipEncoding = true;
+	private boolean acceptGzipEncoding = true;
 
-    /**
-     * Return whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header
-     * with {@code gzip} as value.
-     */
-    public boolean isAcceptGzipEncoding() {
-        return acceptGzipEncoding;
-    }
+	/**
+	 * Return whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header
+	 * with {@code gzip} as value.
+	 */
+	public boolean isAcceptGzipEncoding() {
+		return acceptGzipEncoding;
+	}
 
-    /**
-     * Set whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header with
-     * {@code gzip} as value.
-     *
-     * <p>Default is {@code true}. Turn this flag off if you do not want GZIP response compression even if enabled on
-     * the HTTP server.
-     */
-    public void setAcceptGzipEncoding(boolean acceptGzipEncoding) {
-        this.acceptGzipEncoding = acceptGzipEncoding;
-    }
+	/**
+	 * Set whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header with
+	 * {@code gzip} as value.
+	 *
+	 * <p>Default is {@code true}. Turn this flag off if you do not want GZIP response compression even if enabled on
+	 * the HTTP server.
+	 */
+	public void setAcceptGzipEncoding(boolean acceptGzipEncoding) {
+		this.acceptGzipEncoding = acceptGzipEncoding;
+	}
 
-    @Override
-    public boolean supports(URI uri) {
-        return uri.getScheme().equals(HttpTransportConstants.HTTP_URI_SCHEME) ||
-                uri.getScheme().equals(HttpTransportConstants.HTTPS_URI_SCHEME);
-    }
+	@Override
+	public boolean supports(URI uri) {
+		return uri.getScheme().equals(HttpTransportConstants.HTTP_URI_SCHEME) ||
+				uri.getScheme().equals(HttpTransportConstants.HTTPS_URI_SCHEME);
+	}
 }

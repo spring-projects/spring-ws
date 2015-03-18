@@ -22,14 +22,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(namespace = "http://springframework.org/spring-ws")
 public class CustomerCountRequest {
 
-    private String customerName;
+	private String customerName;
 
-    @XmlElement(namespace = "http://springframework.org/spring-ws")
-    public String getCustomerName() {
-        return customerName;
-    }
+	@XmlElement(namespace = "http://springframework.org/spring-ws")
+	public String getCustomerName() {
+		return customerName;
+	}
 
-    public void setCustomerName(String name) {
-        this.customerName = name;
-    }
+	public void setCustomerName(String name) {
+		this.customerName = name;
+	}
 }

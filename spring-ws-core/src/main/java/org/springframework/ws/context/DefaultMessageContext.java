@@ -31,70 +31,70 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public class DefaultMessageContext extends AbstractMessageContext {
 
-    private final WebServiceMessageFactory messageFactory;
+	private final WebServiceMessageFactory messageFactory;
 
-    private final WebServiceMessage request;
+	private final WebServiceMessage request;
 
-    private WebServiceMessage response;
+	private WebServiceMessage response;
 
-    /** Construct a new, empty instance of the {@code DefaultMessageContext} with the given message factory. */
-    public DefaultMessageContext(WebServiceMessageFactory messageFactory) {
-        this(messageFactory.createWebServiceMessage(), messageFactory);
-    }
+	/** Construct a new, empty instance of the {@code DefaultMessageContext} with the given message factory. */
+	public DefaultMessageContext(WebServiceMessageFactory messageFactory) {
+		this(messageFactory.createWebServiceMessage(), messageFactory);
+	}
 
-    /**
-     * Construct a new instance of the {@code DefaultMessageContext} with the given request message and message
-     * factory.
-     */
-    public DefaultMessageContext(WebServiceMessage request, WebServiceMessageFactory messageFactory) {
-        Assert.notNull(request, "request must not be null");
-        Assert.notNull(messageFactory, "messageFactory must not be null");
-        this.request = request;
-        this.messageFactory = messageFactory;
-    }
+	/**
+	 * Construct a new instance of the {@code DefaultMessageContext} with the given request message and message
+	 * factory.
+	 */
+	public DefaultMessageContext(WebServiceMessage request, WebServiceMessageFactory messageFactory) {
+		Assert.notNull(request, "request must not be null");
+		Assert.notNull(messageFactory, "messageFactory must not be null");
+		this.request = request;
+		this.messageFactory = messageFactory;
+	}
 
-    @Override
-    public WebServiceMessage getRequest() {
-        return request;
-    }
+	@Override
+	public WebServiceMessage getRequest() {
+		return request;
+	}
 
-    @Override
-    public boolean hasResponse() {
-        return response != null;
-    }
+	@Override
+	public boolean hasResponse() {
+		return response != null;
+	}
 
-    @Override
-    public WebServiceMessage getResponse() {
-        if (response == null) {
-            response = messageFactory.createWebServiceMessage();
-        }
-        return response;
-    }
+	@Override
+	public WebServiceMessage getResponse() {
+		if (response == null) {
+			response = messageFactory.createWebServiceMessage();
+		}
+		return response;
+	}
 
-    @Override
-    public void setResponse(WebServiceMessage response) {
-        checkForResponse();
-        this.response = response;
-    }
+	@Override
+	public void setResponse(WebServiceMessage response) {
+		checkForResponse();
+		this.response = response;
+	}
 
-    @Override
-    public void clearResponse() {
-        response = null;
-    }
+	@Override
+	public void clearResponse() {
+		response = null;
+	}
 
-    @Override
-    public void readResponse(InputStream inputStream) throws IOException {
-        checkForResponse();
-        response = messageFactory.createWebServiceMessage(inputStream);
-    }
+	@Override
+	public void readResponse(InputStream inputStream) throws IOException {
+		checkForResponse();
+		response = messageFactory.createWebServiceMessage(inputStream);
+	}
 
-    public WebServiceMessageFactory getMessageFactory() {
-        return messageFactory;
-    }
+	public WebServiceMessageFactory getMessageFactory() {
+		return messageFactory;
+	}
 
-    private void checkForResponse() throws IllegalStateException {
-        if (response != null) {
-            throw new IllegalStateException("Response message already created");
-        }
-    }
+	private void checkForResponse() throws IllegalStateException {
+		if (response != null) {
+			throw new IllegalStateException("Response message already created");
+		}
+	}
 }

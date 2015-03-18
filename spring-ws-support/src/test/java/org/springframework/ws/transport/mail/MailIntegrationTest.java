@@ -36,28 +36,28 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration("mail-applicationContext.xml")
 public class MailIntegrationTest {
 
-    @Autowired
-    private WebServiceTemplate webServiceTemplate;
+	@Autowired
+	private WebServiceTemplate webServiceTemplate;
 
-    @Autowired
-    private GenericApplicationContext applicationContext;
+	@Autowired
+	private GenericApplicationContext applicationContext;
 
-    @After
-    public void clearMailbox() throws Exception {
-        Mailbox.clearAll();
-    }
+	@After
+	public void clearMailbox() throws Exception {
+		Mailbox.clearAll();
+	}
 
 
-    @Test
-    public void testMailTransport() throws Exception {
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-        StringResult result = new StringResult();
-        webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-        applicationContext.close();
-        assertEquals("Server mail message not deleted", 0, Mailbox.get("server@example.com").size());
-        assertEquals("No client mail message received", 1, Mailbox.get("client@example.com").size());
-        XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+	@Test
+	public void testMailTransport() throws Exception {
+		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+		StringResult result = new StringResult();
+		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+		applicationContext.close();
+		assertEquals("Server mail message not deleted", 0, Mailbox.get("server@example.com").size());
+		assertEquals("No client mail message received", 1, Mailbox.get("client@example.com").size());
+		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
 
-    }
+	}
 
 }

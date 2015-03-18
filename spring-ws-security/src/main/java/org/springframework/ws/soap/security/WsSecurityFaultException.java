@@ -27,32 +27,32 @@ import javax.xml.namespace.QName;
 @SuppressWarnings("serial")
 public abstract class WsSecurityFaultException extends WsSecurityException {
 
-    private QName faultCode;
+	private QName faultCode;
 
-    private String faultString;
+	private String faultString;
 
-    private String faultActor;
+	private String faultActor;
 
-    /** Construct a new {@code WsSecurityFaultException} with the given fault code, string, and actor. */
-    public WsSecurityFaultException(QName faultCode, String faultString, String faultActor) {
-        super(faultString);
-        this.faultCode = faultCode;
-        this.faultString = faultString;
-        this.faultActor = faultActor;
-    }
+	/** Construct a new {@code WsSecurityFaultException} with the given fault code, string, and actor. */
+	public WsSecurityFaultException(QName faultCode, String faultString, String faultActor) {
+		super(faultString);
+		this.faultCode = faultCode;
+		this.faultString = faultString;
+		this.faultActor = faultActor;
+	}
 
-    /** Returns the fault code for the exception. */
-    public QName getFaultCode() {
-        return faultCode;
-    }
+	/** Returns the fault code for the exception. */
+	public QName getFaultCode() {
+		return faultCode;
+	}
 
-    /** Returns the fault string for the exception. */
-    public String getFaultString() {
-        return faultString;
-    }
+	/** Returns the fault string for the exception. */
+	public String getFaultString() {
+		return faultString;
+	}
 
-    /** Returns the fault actor for the exception. */
-    public String getFaultActor() {
-        return faultActor;
-    }
+	/** Returns the fault actor for the exception. */
+	public String getFaultActor() {
+		return faultActor;
+	}
 }

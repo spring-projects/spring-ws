@@ -45,66 +45,66 @@ import org.w3c.dom.DOMImplementation;
  */
 public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-    private DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
+	private DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        return supports(parameter);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		return supports(parameter);
+	}
 
-    @Override
-    protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
-            throws TransformerException, IOException, ParsingException {
-        if (requestPayload instanceof DOMSource) {
-            org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
-            if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
-                return DOMConverter.convert((org.w3c.dom.Element) node);
-            }
-            else if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
-                Document document = DOMConverter.convert((org.w3c.dom.Document) node);
-                return document.getRootElement();
-            }
-        }
-        // we have no other option than to transform
-        ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-        Builder builder = new Builder();
-        Document document = builder.build(bis);
-        return document.getRootElement();
-    }
+	@Override
+	protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
+			throws TransformerException, IOException, ParsingException {
+		if (requestPayload instanceof DOMSource) {
+			org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
+			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
+				return DOMConverter.convert((org.w3c.dom.Element) node);
+			}
+			else if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
+				Document document = DOMConverter.convert((org.w3c.dom.Document) node);
+				return document.getRootElement();
+			}
+		}
+		// we have no other option than to transform
+		ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
+		Builder builder = new Builder();
+		Document document = builder.build(bis);
+		return document.getRootElement();
+	}
 
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        return supports(returnType);
-    }
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		return supports(returnType);
+	}
 
-    @Override
-    protected Source createResponsePayload(MethodParameter returnType, Object returnValue)
-            throws ParserConfigurationException {
-        Element returnedElement = (Element) returnValue;
-        Document document = returnedElement.getDocument();
-        if (document == null) {
-            document = new Document(returnedElement);
-        }
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        DOMImplementation domImplementation = documentBuilder.getDOMImplementation();
-        org.w3c.dom.Document w3cDocument = DOMConverter.convert(document, domImplementation);
-        return new DOMSource(w3cDocument);
-    }
+	@Override
+	protected Source createResponsePayload(MethodParameter returnType, Object returnValue)
+			throws ParserConfigurationException {
+		Element returnedElement = (Element) returnValue;
+		Document document = returnedElement.getDocument();
+		if (document == null) {
+			document = new Document(returnedElement);
+		}
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		DOMImplementation domImplementation = documentBuilder.getDOMImplementation();
+		org.w3c.dom.Document w3cDocument = DOMConverter.convert(document, domImplementation);
+		return new DOMSource(w3cDocument);
+	}
 
-    private boolean supports(MethodParameter parameter) {
-        return Element.class.equals(parameter.getParameterType());
-    }
+	private boolean supports(MethodParameter parameter) {
+		return Element.class.equals(parameter.getParameterType());
+	}
 
-    /**
-     * Create a {@code DocumentBuilderFactory} that this resolver will use to create response payloads.
-     *
-     * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
-     * so this method will only be called once.
-     *
-     * @return the created factory
-     */
-    protected DocumentBuilderFactory createDocumentBuilderFactory() {
-        return DocumentBuilderFactory.newInstance();
-    }
+	/**
+	 * Create a {@code DocumentBuilderFactory} that this resolver will use to create response payloads.
+	 *
+	 * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
+	 * so this method will only be called once.
+	 *
+	 * @return the created factory
+	 */
+	protected DocumentBuilderFactory createDocumentBuilderFactory() {
+		return DocumentBuilderFactory.newInstance();
+	}
 
 }

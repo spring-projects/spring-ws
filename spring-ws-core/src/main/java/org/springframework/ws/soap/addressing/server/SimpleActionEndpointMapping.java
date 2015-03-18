@@ -50,87 +50,87 @@ import org.springframework.beans.BeansException;
  */
 public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
-    // contents will be copied over to endpointMap
-    private final Map<URI, Object> actionMap = new HashMap<URI, Object>();
+	// contents will be copied over to endpointMap
+	private final Map<URI, Object> actionMap = new HashMap<URI, Object>();
 
-    private URI address;
+	private URI address;
 
-    /**
-     * Map action URIs to endpoint bean names. This is the typical way of configuring this EndpointMapping.
-     *
-     * @param mappings properties with URLs as keys and bean names as values
-     * @see #setActionMap(java.util.Map)
-     */
-    public void setMappings(Properties mappings) throws URISyntaxException {
-        setActionMap(mappings);
-    }
+	/**
+	 * Map action URIs to endpoint bean names. This is the typical way of configuring this EndpointMapping.
+	 *
+	 * @param mappings properties with URLs as keys and bean names as values
+	 * @see #setActionMap(java.util.Map)
+	 */
+	public void setMappings(Properties mappings) throws URISyntaxException {
+		setActionMap(mappings);
+	}
 
-    /**
-     * Set a Map with action URIs as keys and handler beans (or handler bean names) as values. Convenient for population
-     * with bean references.
-     *
-     * @param actionMap map with action URIs as keys and beans as values
-     * @see #setMappings
-     */
-    public void setActionMap(Map<?, Object> actionMap) throws URISyntaxException {
-        for (Map.Entry<?, Object> entry : actionMap.entrySet()) {
-            URI action;
-            if (entry.getKey() instanceof String) {
-                action = new URI((String) entry.getKey());
-            }
-            else if (entry.getKey() instanceof URI) {
-                action = (URI) entry.getKey();
-            }
-            else {
-                throw new IllegalArgumentException("Invalid key [" + entry.getKey() + "]; expected String or URI");
-            }
-            this.actionMap.put(action, entry.getValue());
-        }
-    }
+	/**
+	 * Set a Map with action URIs as keys and handler beans (or handler bean names) as values. Convenient for population
+	 * with bean references.
+	 *
+	 * @param actionMap map with action URIs as keys and beans as values
+	 * @see #setMappings
+	 */
+	public void setActionMap(Map<?, Object> actionMap) throws URISyntaxException {
+		for (Map.Entry<?, Object> entry : actionMap.entrySet()) {
+			URI action;
+			if (entry.getKey() instanceof String) {
+				action = new URI((String) entry.getKey());
+			}
+			else if (entry.getKey() instanceof URI) {
+				action = (URI) entry.getKey();
+			}
+			else {
+				throw new IllegalArgumentException("Invalid key [" + entry.getKey() + "]; expected String or URI");
+			}
+			this.actionMap.put(action, entry.getValue());
+		}
+	}
 
-    /**
-     * Set the address property. If set, value of this property is compared to the {@link
-     * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
-     * incominging message.
-     *
-     * @param address the address URI
-     */
-    public void setAddress(URI address) {
-        this.address = address;
-    }
+	/**
+	 * Set the address property. If set, value of this property is compared to the {@link
+	 * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
+	 * incominging message.
+	 *
+	 * @param address the address URI
+	 */
+	public void setAddress(URI address) {
+		this.address = address;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
-        registerEndpoints(actionMap);
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		super.afterPropertiesSet();
+		registerEndpoints(actionMap);
+	}
 
-    /**
-     * Register all endpoints specified in the action map.
-     *
-     * @param actionMap Map with action URIs as keys and endppint beans or bean names as values
-     * @throws BeansException        if an endpoint couldn't be registered
-     * @throws IllegalStateException if there is a conflicting endpoint registered
-     */
-    protected void registerEndpoints(Map<URI, Object> actionMap) throws BeansException {
-        if (actionMap.isEmpty()) {
-            logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
-        }
-        else {
-            for (Map.Entry<URI, Object> entry : actionMap.entrySet()) {
-                URI action = entry.getKey();
-                Object endpoint = entry.getValue();
-                // Remove whitespace from endpoint bean name.
-                if (endpoint instanceof String) {
-                    endpoint = ((String) endpoint).trim();
-                }
-                registerEndpoint(action, endpoint);
-            }
-        }
-    }
+	/**
+	 * Register all endpoints specified in the action map.
+	 *
+	 * @param actionMap Map with action URIs as keys and endppint beans or bean names as values
+	 * @throws BeansException		 if an endpoint couldn't be registered
+	 * @throws IllegalStateException if there is a conflicting endpoint registered
+	 */
+	protected void registerEndpoints(Map<URI, Object> actionMap) throws BeansException {
+		if (actionMap.isEmpty()) {
+			logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
+		}
+		else {
+			for (Map.Entry<URI, Object> entry : actionMap.entrySet()) {
+				URI action = entry.getKey();
+				Object endpoint = entry.getValue();
+				// Remove whitespace from endpoint bean name.
+				if (endpoint instanceof String) {
+					endpoint = ((String) endpoint).trim();
+				}
+				registerEndpoint(action, endpoint);
+			}
+		}
+	}
 
-    @Override
-    protected URI getEndpointAddress(Object endpoint) {
-        return address;
-    }
+	@Override
+	protected URI getEndpointAddress(Object endpoint) {
+		return address;
+	}
 }

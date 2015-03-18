@@ -36,22 +36,22 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * @author Arjen Poutsma
  * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *             org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver
- *             MessageContextMethodArgumentResolver}.
+ *			   org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver
+ *			   MessageContextMethodArgumentResolver}.
  */
 @Deprecated
 public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 
-    @Override
-    protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
-        Method method = methodEndpoint.getMethod();
-        return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1 &&
-                MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
-    }
+	@Override
+	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
+		Method method = methodEndpoint.getMethod();
+		return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1 &&
+				MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
+	}
 
-    @Override
-    protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-        methodEndpoint.invoke(messageContext);
-    }
+	@Override
+	protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
+		methodEndpoint.invoke(messageContext);
+	}
 
 }

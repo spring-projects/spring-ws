@@ -59,268 +59,268 @@ import static org.easymock.EasyMock.*;
 
 public class TraxUtilsTest {
 
-    @Test
-    public void testGetDocument() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
-        Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(document)));
-        Element element = document.createElement("element");
-        document.appendChild(element);
-        Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(element)));
-    }
+	@Test
+	public void testGetDocument() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.newDocument();
+		Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(document)));
+		Element element = document.createElement("element");
+		document.appendChild(element);
+		Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(element)));
+	}
 
-    @Test
-    public void testDoWithDomSource() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
+	@Test
+	public void testDoWithDomSource() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.newDocument();
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.domSource(document);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.domSource(document);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(new DOMSource(document), mock);
+		TraxUtils.doWithSource(new DOMSource(document), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithDomResult() throws Exception {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.newDocument();
+	@Test
+	public void testDoWithDomResult() throws Exception {
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document document = documentBuilder.newDocument();
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.domResult(document);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.domResult(document);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithResult(new DOMResult(document), mock);
+		TraxUtils.doWithResult(new DOMResult(document), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithSaxSource() throws Exception {
-        XMLReader reader = XMLReaderFactory.createXMLReader();
-        InputSource inputSource = new InputSource();
+	@Test
+	public void testDoWithSaxSource() throws Exception {
+		XMLReader reader = XMLReaderFactory.createXMLReader();
+		InputSource inputSource = new InputSource();
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.saxSource(reader, inputSource);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.saxSource(reader, inputSource);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(new SAXSource(reader, inputSource), mock);
+		TraxUtils.doWithSource(new SAXSource(reader, inputSource), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithSaxResult() throws Exception {
-        ContentHandler contentHandler = new DefaultHandler();
-        LexicalHandler lexicalHandler = new DefaultHandler2();
+	@Test
+	public void testDoWithSaxResult() throws Exception {
+		ContentHandler contentHandler = new DefaultHandler();
+		LexicalHandler lexicalHandler = new DefaultHandler2();
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.saxResult(contentHandler, lexicalHandler);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.saxResult(contentHandler, lexicalHandler);
 
-        replay(mock);
+		replay(mock);
 
-        SAXResult result = new SAXResult(contentHandler);
-        result.setLexicalHandler(lexicalHandler);
-        TraxUtils.doWithResult(result, mock);
+		SAXResult result = new SAXResult(contentHandler);
+		result.setLexicalHandler(lexicalHandler);
+		TraxUtils.doWithResult(result, mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStaxSourceEventReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
+	@Test
+	public void testDoWithStaxSourceEventReader() throws Exception {
+		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.staxSource(eventReader);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.staxSource(eventReader);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(StaxUtils.createStaxSource(eventReader), mock);
+		TraxUtils.doWithSource(StaxUtils.createStaxSource(eventReader), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStaxResultEventWriter() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
+	@Test
+	public void testDoWithStaxResultEventWriter() throws Exception {
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.staxResult(eventWriter);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.staxResult(eventWriter);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithResult(StaxUtils.createStaxResult(eventWriter), mock);
+		TraxUtils.doWithResult(StaxUtils.createStaxResult(eventWriter), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStaxSourceStreamReader() throws Exception {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
+	@Test
+	public void testDoWithStaxSourceStreamReader() throws Exception {
+		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.staxSource(streamReader);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.staxSource(streamReader);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(StaxUtils.createStaxSource(streamReader), mock);
+		TraxUtils.doWithSource(StaxUtils.createStaxSource(streamReader), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStaxResultStreamWriter() throws Exception {
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
+	@Test
+	public void testDoWithStaxResultStreamWriter() throws Exception {
+		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+		XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.staxResult(streamWriter);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.staxResult(streamWriter);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithResult(StaxUtils.createStaxResult(streamWriter), mock);
+		TraxUtils.doWithResult(StaxUtils.createStaxResult(streamWriter), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStreamSourceInputStream() throws Exception {
-        byte[] xml = "<element/>".getBytes("UTF-8");
-        InputStream inputStream = new ByteArrayInputStream(xml);
+	@Test
+	public void testDoWithStreamSourceInputStream() throws Exception {
+		byte[] xml = "<element/>".getBytes("UTF-8");
+		InputStream inputStream = new ByteArrayInputStream(xml);
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.streamSource(inputStream);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.streamSource(inputStream);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(new StreamSource(inputStream), mock);
+		TraxUtils.doWithSource(new StreamSource(inputStream), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStreamResultOutputStream() throws Exception {
-        OutputStream outputStream = new ByteArrayOutputStream();
+	@Test
+	public void testDoWithStreamResultOutputStream() throws Exception {
+		OutputStream outputStream = new ByteArrayOutputStream();
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.streamResult(outputStream);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.streamResult(outputStream);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithResult(new StreamResult(outputStream), mock);
+		TraxUtils.doWithResult(new StreamResult(outputStream), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStreamSourceReader() throws Exception {
-        String xml = "<element/>";
-        Reader reader = new StringReader(xml);
+	@Test
+	public void testDoWithStreamSourceReader() throws Exception {
+		String xml = "<element/>";
+		Reader reader = new StringReader(xml);
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.streamSource(reader);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.streamSource(reader);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(new StreamSource(reader), mock);
+		TraxUtils.doWithSource(new StreamSource(reader), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithStreamResultWriter() throws Exception {
-        Writer writer = new StringWriter();
+	@Test
+	public void testDoWithStreamResultWriter() throws Exception {
+		Writer writer = new StringWriter();
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.streamResult(writer);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.streamResult(writer);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithResult(new StreamResult(writer), mock);
+		TraxUtils.doWithResult(new StreamResult(writer), mock);
 
-        verify(mock);
-    }
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithSystemIdSource() throws Exception {
-        String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
+	@Test
+	public void testDoWithSystemIdSource() throws Exception {
+		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
-        TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
-        mock.source(systemId);
+		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
+		mock.source(systemId);
 
-        replay(mock);
+		replay(mock);
 
-        TraxUtils.doWithSource(new StreamSource(systemId), mock);
+		TraxUtils.doWithSource(new StreamSource(systemId), mock);
 
-        verify(mock);
-    }
-    
-    @Test
-    public void testDoWithSystemIdResult() throws Exception {
-        String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
+		verify(mock);
+	}
 
-        TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
-        mock.result(systemId);
+	@Test
+	public void testDoWithSystemIdResult() throws Exception {
+		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
-        replay(mock);
+		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
+		mock.result(systemId);
 
-        TraxUtils.doWithResult(new StreamResult(systemId), mock);
+		replay(mock);
 
-        verify(mock);
-    }
+		TraxUtils.doWithResult(new StreamResult(systemId), mock);
 
+		verify(mock);
+	}
 
-    @Test
-    public void testDoWithInvalidSource() throws Exception {
-        Source source = new Source() {
 
-            public void setSystemId(String systemId) {
-            }
+	@Test
+	public void testDoWithInvalidSource() throws Exception {
+		Source source = new Source() {
 
-            public String getSystemId() {
-                return null;
-            }
-        };
+			public void setSystemId(String systemId) {
+			}
 
-        try {
-            TraxUtils.doWithSource(source, null);
-            Assert.fail("IllegalArgumentException expected");
-        }
-        catch (IllegalArgumentException ex) {
-            // expected
-        }
-    }
+			public String getSystemId() {
+				return null;
+			}
+		};
 
-    @Test
-    public void testDoWithInvalidResult() throws Exception {
-        Result result = new Result() {
+		try {
+			TraxUtils.doWithSource(source, null);
+			Assert.fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException ex) {
+			// expected
+		}
+	}
 
-            public void setSystemId(String systemId) {
-            }
+	@Test
+	public void testDoWithInvalidResult() throws Exception {
+		Result result = new Result() {
 
-            public String getSystemId() {
-                return null;
-            }
-        };
+			public void setSystemId(String systemId) {
+			}
 
-        try {
-            TraxUtils.doWithResult(result, null);
-            Assert.fail("IllegalArgumentException expected");
-        }
-        catch (IllegalArgumentException ex) {
-            // expected
-        }
-    }
+			public String getSystemId() {
+				return null;
+			}
+		};
+
+		try {
+			TraxUtils.doWithResult(result, null);
+			Assert.fail("IllegalArgumentException expected");
+		}
+		catch (IllegalArgumentException ex) {
+			// expected
+		}
+	}
 }

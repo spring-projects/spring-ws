@@ -31,34 +31,34 @@ import javax.mail.MessagingException;
  */
 public class PollingMonitoringStrategy extends AbstractMonitoringStrategy {
 
-    /** Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute). */
-    public static final long DEFAULT_POLLING_FREQUENCY = 1000 * 60;
+	/** Defines the default polling frequency. Set to 1000 * 60 milliseconds (i.e. 1 minute). */
+	public static final long DEFAULT_POLLING_FREQUENCY = 1000 * 60;
 
-    private long pollingInterval = DEFAULT_POLLING_FREQUENCY;
+	private long pollingInterval = DEFAULT_POLLING_FREQUENCY;
 
-    /**
-     * Sets the interval used in between message polls, <strong>in milliseconds</strong>. The default is 1000 * 60 ms,
-     * that is 1 minute.
-     */
-    public void setPollingInterval(long pollingInterval) {
-        this.pollingInterval = pollingInterval;
-    }
+	/**
+	 * Sets the interval used in between message polls, <strong>in milliseconds</strong>. The default is 1000 * 60 ms,
+	 * that is 1 minute.
+	 */
+	public void setPollingInterval(long pollingInterval) {
+		this.pollingInterval = pollingInterval;
+	}
 
-    @Override
-    protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
-        Thread.sleep(pollingInterval);
-        afterSleep(folder);
-    }
+	@Override
+	protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
+		Thread.sleep(pollingInterval);
+		afterSleep(folder);
+	}
 
-    /**
-     * Invoked after the {@link Thread#sleep(long)} method has been invoked. This implementation calls {@link
-     * Folder#getMessageCount()}, to force new messages to be seen.
-     *
-     * @param folder the folder to check for new messages
-     * @throws MessagingException in case of JavaMail errors
-     */
-    protected void afterSleep(Folder folder) throws MessagingException {
-        folder.getMessageCount();
-    }
+	/**
+	 * Invoked after the {@link Thread#sleep(long)} method has been invoked. This implementation calls {@link
+	 * Folder#getMessageCount()}, to force new messages to be seen.
+	 *
+	 * @param folder the folder to check for new messages
+	 * @throws MessagingException in case of JavaMail errors
+	 */
+	protected void afterSleep(Folder folder) throws MessagingException {
+		folder.getMessageCount();
+	}
 
 }

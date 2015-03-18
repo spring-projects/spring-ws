@@ -37,78 +37,78 @@ import javax.wsdl.WSDLException;
  */
 public class SoapProvider implements BindingsProvider, ServicesProvider {
 
-    private final Soap11Provider soap11BindingProvider = new Soap11Provider();
+	private final Soap11Provider soap11BindingProvider = new Soap11Provider();
 
-    private final Soap12Provider soap12BindingProvider = new Soap12Provider();
+	private final Soap12Provider soap12BindingProvider = new Soap12Provider();
 
-    private boolean createSoap11Binding = true;
+	private boolean createSoap11Binding = true;
 
-    private boolean createSoap12Binding = false;
+	private boolean createSoap12Binding = false;
 
-    /**
-     * Indicates whether a SOAP 1.1 binding should be created.
-     *
-     * <p>Defaults to {@code true}.
-     */
-    public void setCreateSoap11Binding(boolean createSoap11Binding) {
-        this.createSoap11Binding = createSoap11Binding;
-    }
+	/**
+	 * Indicates whether a SOAP 1.1 binding should be created.
+	 *
+	 * <p>Defaults to {@code true}.
+	 */
+	public void setCreateSoap11Binding(boolean createSoap11Binding) {
+		this.createSoap11Binding = createSoap11Binding;
+	}
 
-    /**
-     * Indicates whether a SOAP 1.2 binding should be created.
-     *
-     * <p>Defaults to {@code false}.
-     */
-    public void setCreateSoap12Binding(boolean createSoap12Binding) {
-        this.createSoap12Binding = createSoap12Binding;
-    }
+	/**
+	 * Indicates whether a SOAP 1.2 binding should be created.
+	 *
+	 * <p>Defaults to {@code false}.
+	 */
+	public void setCreateSoap12Binding(boolean createSoap12Binding) {
+		this.createSoap12Binding = createSoap12Binding;
+	}
 
-    /**
-     * Sets the SOAP Actions for this binding. Keys are {@link javax.wsdl.BindingOperation#getName() binding operation
-     * names}; values are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
-     *
-     * @param soapActions the soap
-     */
-    public void setSoapActions(Properties soapActions) {
-        soap11BindingProvider.setSoapActions(soapActions);
-        soap12BindingProvider.setSoapActions(soapActions);
-    }
+	/**
+	 * Sets the SOAP Actions for this binding. Keys are {@link javax.wsdl.BindingOperation#getName() binding operation
+	 * names}; values are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
+	 *
+	 * @param soapActions the soap
+	 */
+	public void setSoapActions(Properties soapActions) {
+		soap11BindingProvider.setSoapActions(soapActions);
+		soap12BindingProvider.setSoapActions(soapActions);
+	}
 
-    /** Sets the value used for the binding transport attribute value. Defaults to HTTP. */
-    public void setTransportUri(String transportUri) {
-        soap11BindingProvider.setTransportUri(transportUri);
-        soap12BindingProvider.setTransportUri(transportUri);
-    }
+	/** Sets the value used for the binding transport attribute value. Defaults to HTTP. */
+	public void setTransportUri(String transportUri) {
+		soap11BindingProvider.setTransportUri(transportUri);
+		soap12BindingProvider.setTransportUri(transportUri);
+	}
 
-    /** Sets the value used for the SOAP Address location attribute value. */
-    public void setLocationUri(String locationUri) {
-        soap11BindingProvider.setLocationUri(locationUri);
-        soap12BindingProvider.setLocationUri(locationUri);
-    }
+	/** Sets the value used for the SOAP Address location attribute value. */
+	public void setLocationUri(String locationUri) {
+		soap11BindingProvider.setLocationUri(locationUri);
+		soap12BindingProvider.setLocationUri(locationUri);
+	}
 
-    /** Sets the service name. */
-    public void setServiceName(String serviceName) {
-        soap11BindingProvider.setServiceName(serviceName);
-        soap12BindingProvider.setServiceName(serviceName);
-    }
+	/** Sets the service name. */
+	public void setServiceName(String serviceName) {
+		soap11BindingProvider.setServiceName(serviceName);
+		soap12BindingProvider.setServiceName(serviceName);
+	}
 
-    @Override
-    public void addBindings(Definition definition) throws WSDLException {
-        if (createSoap11Binding) {
-            soap11BindingProvider.addBindings(definition);
-        }
-        if (createSoap12Binding) {
-            soap12BindingProvider.addBindings(definition);
-        }
-    }
+	@Override
+	public void addBindings(Definition definition) throws WSDLException {
+		if (createSoap11Binding) {
+			soap11BindingProvider.addBindings(definition);
+		}
+		if (createSoap12Binding) {
+			soap12BindingProvider.addBindings(definition);
+		}
+	}
 
-    @Override
-    public void addServices(Definition definition) throws WSDLException {
-        if (createSoap11Binding) {
-            soap11BindingProvider.addServices(definition);
-        }
-        if (createSoap12Binding) {
-            soap12BindingProvider.addServices(definition);
-        }
-    }
+	@Override
+	public void addServices(Definition definition) throws WSDLException {
+		if (createSoap11Binding) {
+			soap11BindingProvider.addServices(definition);
+		}
+		if (createSoap12Binding) {
+			soap12BindingProvider.addServices(definition);
+		}
+	}
 }

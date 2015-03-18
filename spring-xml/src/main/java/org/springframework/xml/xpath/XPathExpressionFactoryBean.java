@@ -35,45 +35,45 @@ import org.springframework.util.CollectionUtils;
  */
 public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>, InitializingBean {
 
-    private Map<String, String> namespaces;
+	private Map<String, String> namespaces;
 
-    private String expressionString;
+	private String expressionString;
 
-    private XPathExpression expression;
+	private XPathExpression expression;
 
-    /** Sets the XPath expression. Setting this property is required. */
-    public void setExpression(String expression) {
-        expressionString = expression;
-    }
+	/** Sets the XPath expression. Setting this property is required. */
+	public void setExpression(String expression) {
+		expressionString = expression;
+	}
 
-    /** Sets the namespaces for the expressions. The given properties binds string prefixes to string namespaces. */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
+	/** Sets the namespaces for the expressions. The given properties binds string prefixes to string namespaces. */
+	public void setNamespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws IllegalStateException, XPathParseException {
-        Assert.notNull(expressionString, "expression is required");
-        if (CollectionUtils.isEmpty(namespaces)) {
-            expression = XPathExpressionFactory.createXPathExpression(expressionString);
-        }
-        else {
-            expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws IllegalStateException, XPathParseException {
+		Assert.notNull(expressionString, "expression is required");
+		if (CollectionUtils.isEmpty(namespaces)) {
+			expression = XPathExpressionFactory.createXPathExpression(expressionString);
+		}
+		else {
+			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
+		}
+	}
 
-    @Override
-    public XPathExpression getObject() throws Exception {
-        return expression;
-    }
+	@Override
+	public XPathExpression getObject() throws Exception {
+		return expression;
+	}
 
-    @Override
-    public Class<? extends XPathExpression> getObjectType() {
-        return XPathExpression.class;
-    }
+	@Override
+	public Class<? extends XPathExpression> getObjectType() {
+		return XPathExpression.class;
+	}
 
-    @Override
-    public boolean isSingleton() {
-        return true;
-    }
+	@Override
+	public boolean isSingleton() {
+		return true;
+	}
 }

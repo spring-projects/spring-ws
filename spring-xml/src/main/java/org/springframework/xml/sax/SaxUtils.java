@@ -34,37 +34,37 @@ import org.xml.sax.InputSource;
  */
 public abstract class SaxUtils {
 
-    private static final Log logger = LogFactory.getLog(SaxUtils.class);
+	private static final Log logger = LogFactory.getLog(SaxUtils.class);
 
-    /**
-     * Creates a SAX {@code InputSource} from the given resource. Sets the system identifier to the resource's
-     * {@code URL}, if available.
-     *
-     * @param resource the resource
-     * @return the input source created from the resource
-     * @throws IOException if an I/O exception occurs
-     * @see InputSource#setSystemId(String)
-     * @see #getSystemId(org.springframework.core.io.Resource)
-     */
-    public static InputSource createInputSource(Resource resource) throws IOException {
-        InputSource inputSource = new InputSource(resource.getInputStream());
-        inputSource.setSystemId(getSystemId(resource));
-        return inputSource;
-    }
+	/**
+	 * Creates a SAX {@code InputSource} from the given resource. Sets the system identifier to the resource's
+	 * {@code URL}, if available.
+	 *
+	 * @param resource the resource
+	 * @return the input source created from the resource
+	 * @throws IOException if an I/O exception occurs
+	 * @see InputSource#setSystemId(String)
+	 * @see #getSystemId(org.springframework.core.io.Resource)
+	 */
+	public static InputSource createInputSource(Resource resource) throws IOException {
+		InputSource inputSource = new InputSource(resource.getInputStream());
+		inputSource.setSystemId(getSystemId(resource));
+		return inputSource;
+	}
 
-    /** Retrieves the URL from the given resource as System ID. Returns {@code null} if it cannot be opened. */
-    public static String getSystemId(Resource resource) {
-        try {
-            return new URI(resource.getURL().toExternalForm()).toString();
-        }
-        catch (IOException ex) {
-            logger.debug("Could not get System ID from [" + resource + "], ex");
-            return null;
-        }
-        catch (URISyntaxException e) {
-            logger.debug("Could not get System ID from [" + resource + "], ex");
-            return null;
-        }
-    }
+	/** Retrieves the URL from the given resource as System ID. Returns {@code null} if it cannot be opened. */
+	public static String getSystemId(Resource resource) {
+		try {
+			return new URI(resource.getURL().toExternalForm()).toString();
+		}
+		catch (IOException ex) {
+			logger.debug("Could not get System ID from [" + resource + "], ex");
+			return null;
+		}
+		catch (URISyntaxException e) {
+			logger.debug("Could not get System ID from [" + resource + "], ex");
+			return null;
+		}
+	}
 
 }

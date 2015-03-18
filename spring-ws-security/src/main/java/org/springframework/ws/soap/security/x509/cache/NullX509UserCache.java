@@ -28,16 +28,16 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Luke Taylor
  */
 public class NullX509UserCache implements X509UserCache {
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    @Override
-    public UserDetails getUserFromCache(X509Certificate certificate) {
-        return null;
-    }
+	@Override
+	public UserDetails getUserFromCache(X509Certificate certificate) {
+		return null;
+	}
 
-    @Override
-    public void putUserInCache(X509Certificate certificate, UserDetails user) {}
+	@Override
+	public void putUserInCache(X509Certificate certificate, UserDetails user) {}
 
-    @Override
-    public void removeUserFromCache(X509Certificate certificate) {}
+	@Override
+	public void removeUserFromCache(X509Certificate certificate) {}
 }

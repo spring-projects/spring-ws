@@ -33,75 +33,75 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 public class JaxWsProviderEndpointAdapterTest extends TestCase {
 
-    private JaxWsProviderEndpointAdapter adapter;
+	private JaxWsProviderEndpointAdapter adapter;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        adapter = new JaxWsProviderEndpointAdapter();
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SOAPMessage request = messageFactory.createMessage();
-        request.getSOAPBody().addBodyElement(new QName("http://springframework.org/spring-ws", "content"));
-        messageContext =
-                new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
-    }
+	@Override
+	protected void setUp() throws Exception {
+		adapter = new JaxWsProviderEndpointAdapter();
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage request = messageFactory.createMessage();
+		request.getSOAPBody().addBodyElement(new QName("http://springframework.org/spring-ws", "content"));
+		messageContext =
+				new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+	}
 
-    public void testSupports() throws Exception {
-        MyMessageProvider messageProvider = new MyMessageProvider();
-        assertTrue("Does not support message provider", adapter.supports(messageProvider));
-        MySourceProvider sourceProvider = new MySourceProvider();
-        assertTrue("Does not support source provider", adapter.supports(sourceProvider));
-        MyDefaultProvider defaultProvider = new MyDefaultProvider();
-        assertTrue("Does not support source provider", adapter.supports(defaultProvider));
-    }
+	public void testSupports() throws Exception {
+		MyMessageProvider messageProvider = new MyMessageProvider();
+		assertTrue("Does not support message provider", adapter.supports(messageProvider));
+		MySourceProvider sourceProvider = new MySourceProvider();
+		assertTrue("Does not support source provider", adapter.supports(sourceProvider));
+		MyDefaultProvider defaultProvider = new MyDefaultProvider();
+		assertTrue("Does not support source provider", adapter.supports(defaultProvider));
+	}
 
-    public void testInvokeMessageProvider() throws Exception {
-        MyMessageProvider provider = new MyMessageProvider();
-        adapter.invoke(messageContext, provider);
-        assertTrue("No response", messageContext.hasResponse());
-        SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
-        SaajSoapMessage response = (SaajSoapMessage) messageContext.getResponse();
-        assertEquals("Invalid response", request.getSaajMessage(), response.getSaajMessage());
-    }
+	public void testInvokeMessageProvider() throws Exception {
+		MyMessageProvider provider = new MyMessageProvider();
+		adapter.invoke(messageContext, provider);
+		assertTrue("No response", messageContext.hasResponse());
+		SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
+		SaajSoapMessage response = (SaajSoapMessage) messageContext.getResponse();
+		assertEquals("Invalid response", request.getSaajMessage(), response.getSaajMessage());
+	}
 
-    public void testInvokeSourceProvider() throws Exception {
-        MySourceProvider provider = new MySourceProvider();
-        adapter.invoke(messageContext, provider);
-        assertTrue("No response", messageContext.hasResponse());
-    }
+	public void testInvokeSourceProvider() throws Exception {
+		MySourceProvider provider = new MySourceProvider();
+		adapter.invoke(messageContext, provider);
+		assertTrue("No response", messageContext.hasResponse());
+	}
 
-    public void testInvokeDefaultProvider() throws Exception {
-        MyDefaultProvider provider = new MyDefaultProvider();
-        adapter.invoke(messageContext, provider);
-        assertTrue("No response", messageContext.hasResponse());
-    }
+	public void testInvokeDefaultProvider() throws Exception {
+		MyDefaultProvider provider = new MyDefaultProvider();
+		adapter.invoke(messageContext, provider);
+		assertTrue("No response", messageContext.hasResponse());
+	}
 
-    @WebServiceProvider
-    @ServiceMode(Service.Mode.MESSAGE)
-    private static class MyMessageProvider implements Provider<SOAPMessage> {
+	@WebServiceProvider
+	@ServiceMode(Service.Mode.MESSAGE)
+	private static class MyMessageProvider implements Provider<SOAPMessage> {
 
-        public SOAPMessage invoke(SOAPMessage request) {
-            return request;
-        }
-    }
+		public SOAPMessage invoke(SOAPMessage request) {
+			return request;
+		}
+	}
 
-    @WebServiceProvider
-    @ServiceMode(value = Service.Mode.PAYLOAD)
-    private static class MySourceProvider implements Provider<Source> {
+	@WebServiceProvider
+	@ServiceMode(value = Service.Mode.PAYLOAD)
+	private static class MySourceProvider implements Provider<Source> {
 
-        public Source invoke(Source request) {
-            return request;
-        }
-    }
+		public Source invoke(Source request) {
+			return request;
+		}
+	}
 
-    @WebServiceProvider
-    private static class MyDefaultProvider implements Provider<Source> {
+	@WebServiceProvider
+	private static class MyDefaultProvider implements Provider<Source> {
 
-        public Source invoke(Source request) {
-            return request;
-        }
-    }
+		public Source invoke(Source request) {
+			return request;
+		}
+	}
 
 
 }

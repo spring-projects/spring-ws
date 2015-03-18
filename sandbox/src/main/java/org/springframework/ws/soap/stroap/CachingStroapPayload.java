@@ -32,36 +32,36 @@ import org.springframework.xml.stream.ListBasedXMLEventReader;
  */
 class CachingStroapPayload extends StroapPayload {
 
-    private final List<XMLEvent> events = new LinkedList<XMLEvent>();
+	private final List<XMLEvent> events = new LinkedList<XMLEvent>();
 
-    CachingStroapPayload() {
-    }
+	CachingStroapPayload() {
+	}
 
-    CachingStroapPayload(XMLEventReader eventReader) throws XMLStreamException {
-        Assert.notNull(eventReader, "'eventReader' must not be null");
-        XMLEventWriter eventWriter = getEventWriter();
-        eventWriter.add(eventReader);
-    }
+	CachingStroapPayload(XMLEventReader eventReader) throws XMLStreamException {
+		Assert.notNull(eventReader, "'eventReader' must not be null");
+		XMLEventWriter eventWriter = getEventWriter();
+		eventWriter.add(eventReader);
+	}
 
-    @Override
-    public QName getName() {
-        if (!events.isEmpty()) {
-            XMLEvent event = events.get(0);
-            if (event.isStartElement()) {
-                return event.asStartElement().getName();
-            }
-        }
-        return null;
-    }
+	@Override
+	public QName getName() {
+		if (!events.isEmpty()) {
+			XMLEvent event = events.get(0);
+			if (event.isStartElement()) {
+				return event.asStartElement().getName();
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public XMLEventReader getEventReader() {
-        return new ListBasedXMLEventReader(events);
-    }
+	@Override
+	public XMLEventReader getEventReader() {
+		return new ListBasedXMLEventReader(events);
+	}
 
-    public XMLEventWriter getEventWriter() {
-        events.clear();
-        return new CachingXMLEventWriter(events);
-    }
+	public XMLEventWriter getEventWriter() {
+		events.clear();
+		return new CachingXMLEventWriter(events);
+	}
 
 }

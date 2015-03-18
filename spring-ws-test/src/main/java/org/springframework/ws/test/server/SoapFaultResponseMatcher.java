@@ -36,31 +36,31 @@ import org.springframework.ws.soap.SoapVersion;
  */
 abstract class SoapFaultResponseMatcher implements ResponseMatcher {
 
-    private final String expectedFaultStringOrReason;
+	private final String expectedFaultStringOrReason;
 
-    SoapFaultResponseMatcher(String expectedFaultStringOrReason) {
-        this.expectedFaultStringOrReason = expectedFaultStringOrReason;
-    }
+	SoapFaultResponseMatcher(String expectedFaultStringOrReason) {
+		this.expectedFaultStringOrReason = expectedFaultStringOrReason;
+	}
 
-    @Override
-    public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-        assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
-        SoapMessage soapResponse = (SoapMessage) response;
-        SoapBody responseBody = soapResponse.getSoapBody();
-        assertTrue("Response has no SOAP Body", responseBody != null);
-        assertTrue("Response has no SOAP Fault", responseBody.hasFault());
-        SoapFault soapFault = responseBody.getFault();
-        QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
-        assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
-        if (expectedFaultStringOrReason != null) {
-            assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
-                    soapFault.getFaultStringOrReason());
-        }
-    }
+	@Override
+	public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
+		assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
+		SoapMessage soapResponse = (SoapMessage) response;
+		SoapBody responseBody = soapResponse.getSoapBody();
+		assertTrue("Response has no SOAP Body", responseBody != null);
+		assertTrue("Response has no SOAP Fault", responseBody.hasFault());
+		SoapFault soapFault = responseBody.getFault();
+		QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
+		assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
+		if (expectedFaultStringOrReason != null) {
+			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
+					soapFault.getFaultStringOrReason());
+		}
+	}
 
-    /**
-     * Returns the SOAP fault code to check for, given the SOAP version.
-     */
-    protected abstract QName getExpectedFaultCode(SoapVersion version);
+	/**
+	 * Returns the SOAP fault code to check for, given the SOAP version.
+	 */
+	protected abstract QName getExpectedFaultCode(SoapVersion version);
 
 }

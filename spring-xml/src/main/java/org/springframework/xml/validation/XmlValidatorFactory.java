@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,61 +39,61 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class XmlValidatorFactory {
 
-    private static final Log logger = LogFactory.getLog(XmlValidatorFactory.class);
+	private static final Log logger = LogFactory.getLog(XmlValidatorFactory.class);
 
-    /** Constant that defines a W3C XML Schema. */
-    public static final String SCHEMA_W3C_XML = "http://www.w3.org/2001/XMLSchema";
+	/** Constant that defines a W3C XML Schema. */
+	public static final String SCHEMA_W3C_XML = "http://www.w3.org/2001/XMLSchema";
 
-    /** Constant that defines a RELAX NG Schema. */
-    public static final String SCHEMA_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
+	/** Constant that defines a RELAX NG Schema. */
+	public static final String SCHEMA_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
 
-    /**
-     * Create a {@link XmlValidator} with the given schema resource and schema language type. The schema language must
-     * be one of the {@code SCHEMA_XXX} constants.
-     *
-     * @param schemaResource a resource that locates the schema to validate against
-     * @param schemaLanguage the language of the schema
-     * @return a validator
-     * @throws IOException              if the schema resource cannot be read
-     * @throws IllegalArgumentException if the schema language is not supported
-     * @throws IllegalStateException    if JAXP 1.0 cannot be located
-     * @throws XmlValidationException   if a {@code XmlValidator} cannot be created
-     * @see #SCHEMA_RELAX_NG
-     * @see #SCHEMA_W3C_XML
-     */
-    public static XmlValidator createValidator(Resource schemaResource, String schemaLanguage) throws IOException {
-        return createValidator(new Resource[]{schemaResource}, schemaLanguage);
-    }
+	/**
+	 * Create a {@link XmlValidator} with the given schema resource and schema language type. The schema language must
+	 * be one of the {@code SCHEMA_XXX} constants.
+	 *
+	 * @param schemaResource a resource that locates the schema to validate against
+	 * @param schemaLanguage the language of the schema
+	 * @return a validator
+	 * @throws IOException				if the schema resource cannot be read
+	 * @throws IllegalArgumentException if the schema language is not supported
+	 * @throws IllegalStateException	if JAXP 1.0 cannot be located
+	 * @throws XmlValidationException	if a {@code XmlValidator} cannot be created
+	 * @see #SCHEMA_RELAX_NG
+	 * @see #SCHEMA_W3C_XML
+	 */
+	public static XmlValidator createValidator(Resource schemaResource, String schemaLanguage) throws IOException {
+		return createValidator(new Resource[]{schemaResource}, schemaLanguage);
+	}
 
-    /**
-     * Create a {@link XmlValidator} with the given schema resources and schema language type. The schema language must
-     * be one of the {@code SCHEMA_XXX} constants.
-     *
-     * @param schemaResources an array of resource that locate the schemas to validate against
-     * @param schemaLanguage  the language of the schemas
-     * @return a validator
-     * @throws IOException              if the schema resource cannot be read
-     * @throws IllegalArgumentException if the schema language is not supported
-     * @throws IllegalStateException    if JAXP 1.0 cannot be located
-     * @throws XmlValidationException   if a {@code XmlValidator} cannot be created
-     * @see #SCHEMA_RELAX_NG
-     * @see #SCHEMA_W3C_XML
-     */
-    public static XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
-        Assert.notEmpty(schemaResources, "No resources given");
-        Assert.hasLength(schemaLanguage, "No schema language provided");
-        Assert.isTrue(SCHEMA_W3C_XML.equals(schemaLanguage) || SCHEMA_RELAX_NG.equals(schemaLanguage),
-                "Invalid schema language: " + schemaLanguage);
-        for (Resource schemaResource : schemaResources) {
-            Assert.isTrue(schemaResource.exists(), "schema [" + schemaResource + "] does not exist");
-        }
-        if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
-            logger.trace("Creating JAXP 1.3 XmlValidator");
-            return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-        }
-        else {
-            throw new IllegalStateException("Could not locate JAXP 1.3.");
-        }
-    }
+	/**
+	 * Create a {@link XmlValidator} with the given schema resources and schema language type. The schema language must
+	 * be one of the {@code SCHEMA_XXX} constants.
+	 *
+	 * @param schemaResources an array of resource that locate the schemas to validate against
+	 * @param schemaLanguage  the language of the schemas
+	 * @return a validator
+	 * @throws IOException				if the schema resource cannot be read
+	 * @throws IllegalArgumentException if the schema language is not supported
+	 * @throws IllegalStateException	if JAXP 1.0 cannot be located
+	 * @throws XmlValidationException	if a {@code XmlValidator} cannot be created
+	 * @see #SCHEMA_RELAX_NG
+	 * @see #SCHEMA_W3C_XML
+	 */
+	public static XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {
+		Assert.notEmpty(schemaResources, "No resources given");
+		Assert.hasLength(schemaLanguage, "No schema language provided");
+		Assert.isTrue(SCHEMA_W3C_XML.equals(schemaLanguage) || SCHEMA_RELAX_NG.equals(schemaLanguage),
+				"Invalid schema language: " + schemaLanguage);
+		for (Resource schemaResource : schemaResources) {
+			Assert.isTrue(schemaResource.exists(), "schema [" + schemaResource + "] does not exist");
+		}
+		if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
+			logger.trace("Creating JAXP 1.3 XmlValidator");
+			return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
+		}
+		else {
+			throw new IllegalStateException("Could not locate JAXP 1.3.");
+		}
+	}
 
 }

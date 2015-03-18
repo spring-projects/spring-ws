@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -42,35 +42,35 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	
 	private final Source expected;
 
-    private final TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 
-    static {
-        XMLUnit.setIgnoreWhitespace(true);
-    }
+	static {
+		XMLUnit.setIgnoreWhitespace(true);
+	}
 
-    public SoapEnvelopeDiffMatcher(Source expected) {
-        Assert.notNull(expected, "'expected' must not be null");
-        this.expected = expected;
-    }
-    
-    @Override
-    protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
-    	Document actualDocument = soapMessage.getDocument();
-        Document expectedDocument = createDocumentFromSource(expected);
-    	Diff diff = new Diff(expectedDocument, actualDocument);
-        assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
-    }
+	public SoapEnvelopeDiffMatcher(Source expected) {
+		Assert.notNull(expected, "'expected' must not be null");
+		this.expected = expected;
+	}
+	
+	@Override
+	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
+		Document actualDocument = soapMessage.getDocument();
+		Document expectedDocument = createDocumentFromSource(expected);
+		Diff diff = new Diff(expectedDocument, actualDocument);
+		assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
+	}
 
 	private Document createDocumentFromSource(Source source) {
-        try {
-            DOMResult result = new DOMResult();
-            transformerHelper.transform(source, result);
-            return (Document) result.getNode();
-        }
-        catch (TransformerException ex) {
-            fail("Could not transform source to DOMResult" + ex.getMessage());
-            return null;
-        }
-    }
+		try {
+			DOMResult result = new DOMResult();
+			transformerHelper.transform(source, result);
+			return (Document) result.getNode();
+		}
+		catch (TransformerException ex) {
+			fail("Could not transform source to DOMResult" + ex.getMessage());
+			return null;
+		}
+	}
 
 }

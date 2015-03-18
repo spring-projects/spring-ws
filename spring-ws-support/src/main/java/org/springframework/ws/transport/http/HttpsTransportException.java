@@ -25,11 +25,11 @@ package org.springframework.ws.transport.http;
 @SuppressWarnings("serial")
 public class HttpsTransportException extends HttpTransportException {
 
-    public HttpsTransportException(String msg) {
-        super(msg);
-    }
+	public HttpsTransportException(String msg) {
+		super(msg);
+	}
 
-    public HttpsTransportException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
+	public HttpsTransportException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
 }

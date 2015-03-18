@@ -39,32 +39,32 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class SpringUsernamePasswordCallbackHandler extends AbstractCallbackHandler {
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof UsernameCallback) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getName() != null) {
-                UsernameCallback usernameCallback = (UsernameCallback) callback;
-                usernameCallback.setUsername(authentication.getName());
-                return;
-            }
-            else {
-                logger.warn(
-                        "Cannot handle UsernameCallback: Spring Security SecurityContext contains no Authentication");
-            }
-        }
-        else if (callback instanceof PasswordCallback) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.getName() != null) {
-                PasswordCallback passwordCallback = (PasswordCallback) callback;
-                passwordCallback.setPassword(authentication.getCredentials().toString());
-                return;
-            }
-            else {
-                logger.warn(
-                        "Canot handle PasswordCallback: Spring Security SecurityContext contains no Authentication");
-            }
-        }
-        throw new UnsupportedCallbackException(callback);
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof UsernameCallback) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication != null && authentication.getName() != null) {
+				UsernameCallback usernameCallback = (UsernameCallback) callback;
+				usernameCallback.setUsername(authentication.getName());
+				return;
+			}
+			else {
+				logger.warn(
+						"Cannot handle UsernameCallback: Spring Security SecurityContext contains no Authentication");
+			}
+		}
+		else if (callback instanceof PasswordCallback) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication != null && authentication.getName() != null) {
+				PasswordCallback passwordCallback = (PasswordCallback) callback;
+				passwordCallback.setPassword(authentication.getCredentials().toString());
+				return;
+			}
+			else {
+				logger.warn(
+						"Canot handle PasswordCallback: Spring Security SecurityContext contains no Authentication");
+			}
+		}
+		throw new UnsupportedCallbackException(callback);
+	}
 }

@@ -30,27 +30,27 @@ import org.springframework.ws.client.WebServiceClientException;
 @SuppressWarnings("serial")
 public class WebServiceValidationException extends WebServiceClientException {
 
-    private SAXParseException[] validationErrors;
+	private SAXParseException[] validationErrors;
 
-    /**
-     * Create a new instance of the {@code WebServiceValidationException} class.
-     */
-    public WebServiceValidationException(SAXParseException[] validationErrors) {
-        super(createMessage(validationErrors));
-        this.validationErrors = validationErrors;
-    }
+	/**
+	 * Create a new instance of the {@code WebServiceValidationException} class.
+	 */
+	public WebServiceValidationException(SAXParseException[] validationErrors) {
+		super(createMessage(validationErrors));
+		this.validationErrors = validationErrors;
+	}
 
-    private static String createMessage(SAXParseException[] validationErrors) {
-        StringBuilder builder = new StringBuilder("XML validation error on response: ");
+	private static String createMessage(SAXParseException[] validationErrors) {
+		StringBuilder builder = new StringBuilder("XML validation error on response: ");
 
-        for (SAXParseException validationError : validationErrors) {
-            builder.append(validationError.getMessage());
-        }
-        return builder.toString();
-    }
+		for (SAXParseException validationError : validationErrors) {
+			builder.append(validationError.getMessage());
+		}
+		return builder.toString();
+	}
 
-    /** Returns the validation errors. */
-    public SAXParseException[] getValidationErrors() {
-        return validationErrors;
-    }
+	/** Returns the validation errors. */
+	public SAXParseException[] getValidationErrors() {
+		return validationErrors;
+	}
 }

@@ -41,10 +41,10 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
- *    &#64;SoapAction("http://springframework.org/spring-ws/SoapAction")
- *    public Source doSomethingWithRequest() {
- *       ...
- *    }
+ *	  &#64;SoapAction("http://springframework.org/spring-ws/SoapAction")
+ *	  public Source doSomethingWithRequest() {
+ *		 ...
+ *	  }
  * }
  * </pre>
  *
@@ -52,69 +52,69 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
  * @since 1.0.0
  */
 public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<String>
-        implements SoapEndpointMapping {
+		implements SoapEndpointMapping {
 
-    private String[] actorsOrRoles;
+	private String[] actorsOrRoles;
 
-    private boolean isUltimateReceiver = true;
+	private boolean isUltimateReceiver = true;
 
-    @Override
-    public final void setActorOrRole(String actorOrRole) {
-        Assert.notNull(actorOrRole, "actorOrRole must not be null");
-        actorsOrRoles = new String[]{actorOrRole};
-    }
+	@Override
+	public final void setActorOrRole(String actorOrRole) {
+		Assert.notNull(actorOrRole, "actorOrRole must not be null");
+		actorsOrRoles = new String[]{actorOrRole};
+	}
 
-    @Override
-    public final void setActorsOrRoles(String[] actorsOrRoles) {
-        Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
-        this.actorsOrRoles = actorsOrRoles;
-    }
+	@Override
+	public final void setActorsOrRoles(String[] actorsOrRoles) {
+		Assert.notEmpty(actorsOrRoles, "actorsOrRoles must not be empty");
+		this.actorsOrRoles = actorsOrRoles;
+	}
 
-    @Override
-    public final void setUltimateReceiver(boolean ultimateReceiver) {
-        isUltimateReceiver = ultimateReceiver;
-    }
+	@Override
+	public final void setUltimateReceiver(boolean ultimateReceiver) {
+		isUltimateReceiver = ultimateReceiver;
+	}
 
-    /**
-     * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
-     * actors/roles.
-     *
-     * @param endpoint     the endpoint
-     * @param interceptors the endpoint interceptors
-     * @return the created invocation chain
-     * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
-     * @see #setActorsOrRoles(String[])
-     */
-    @Override
-    protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
-                                                                          Object endpoint,
-                                                                          EndpointInterceptor[] interceptors) {
-        return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
-    }
+	/**
+	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
+	 * actors/roles.
+	 *
+	 * @param endpoint	   the endpoint
+	 * @param interceptors the endpoint interceptors
+	 * @return the created invocation chain
+	 * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
+	 * @see #setActorsOrRoles(String[])
+	 */
+	@Override
+	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
+																		  Object endpoint,
+																		  EndpointInterceptor[] interceptors) {
+		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
+	}
 
-    @Override
-    protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        if (messageContext.getRequest() instanceof SoapMessage) {
-            SoapMessage request = (SoapMessage) messageContext.getRequest();
-            String soapAction = request.getSoapAction();
-            if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
-                    soapAction.charAt(soapAction.length() - 1) == '"') {
-                return soapAction.substring(1, soapAction.length() - 1);
-            }
-            else {
-                return soapAction;
-            }
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		if (messageContext.getRequest() instanceof SoapMessage) {
+			SoapMessage request = (SoapMessage) messageContext.getRequest();
+			String soapAction = request.getSoapAction();
+			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
+					soapAction.charAt(soapAction.length() - 1) == '"') {
+				return soapAction.substring(1, soapAction.length() - 1);
+			}
+			else {
+				return soapAction;
+			}
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    protected String getLookupKeyForMethod(Method method) {
-        SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
-        return soapAction != null ? soapAction.value() : null;
-    }
+	@Override
+	protected String getLookupKeyForMethod(Method method) {
+		SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
+		return soapAction != null ? soapAction.value() : null;
+	}
 
 	@Override
 	protected List<String> getLookupKeysForMethod(Method method) {

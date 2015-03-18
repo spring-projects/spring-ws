@@ -47,77 +47,77 @@ import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class MessageDispatcherServletTest {
 
-    private ServletConfig config;
+	private ServletConfig config;
 
-    private MessageDispatcherServlet servlet;
+	private MessageDispatcherServlet servlet;
 
-    @Before
-    public void setUp() throws Exception {
-        config = new MockServletConfig(new MockServletContext(), "spring-ws");
-        servlet = new MessageDispatcherServlet();
-    }
+	@Before
+	public void setUp() throws Exception {
+		config = new MockServletConfig(new MockServletContext(), "spring-ws");
+		servlet = new MessageDispatcherServlet();
+	}
 
-    private void assertStrategies(Class<?> expectedClass, List<?> actual) {
-        Assert.assertEquals("Invalid amount of strategies", 1, actual.size());
-        Object strategy = actual.get(0);
-        Assert.assertTrue("Invalid strategy", expectedClass.isAssignableFrom(strategy.getClass()));
-    }
+	private void assertStrategies(Class<?> expectedClass, List<?> actual) {
+		Assert.assertEquals("Invalid amount of strategies", 1, actual.size());
+		Object strategy = actual.get(0);
+		Assert.assertTrue("Invalid strategy", expectedClass.isAssignableFrom(strategy.getClass()));
+	}
 
-    @Test
-    public void testDefaultStrategies() throws ServletException {
-        servlet.setContextClass(StaticWebApplicationContext.class);
-        servlet.init(config);
-        MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-        Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
-    }
+	@Test
+	public void testDefaultStrategies() throws ServletException {
+		servlet.setContextClass(StaticWebApplicationContext.class);
+		servlet.init(config);
+		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
+		Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
+	}
 
-    @Test
-    public void testDetectedStrategies() throws ServletException {
-        servlet.setContextClass(DetectWebApplicationContext.class);
-        servlet.init(config);
-        MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-        Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
-        assertStrategies(PayloadRootQNameEndpointMapping.class, messageDispatcher.getEndpointMappings());
-        assertStrategies(PayloadEndpointAdapter.class, messageDispatcher.getEndpointAdapters());
-        assertStrategies(SimpleSoapExceptionResolver.class, messageDispatcher.getEndpointExceptionResolvers());
-    }
+	@Test
+	public void testDetectedStrategies() throws ServletException {
+		servlet.setContextClass(DetectWebApplicationContext.class);
+		servlet.init(config);
+		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
+		Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
+		assertStrategies(PayloadRootQNameEndpointMapping.class, messageDispatcher.getEndpointMappings());
+		assertStrategies(PayloadEndpointAdapter.class, messageDispatcher.getEndpointAdapters());
+		assertStrategies(SimpleSoapExceptionResolver.class, messageDispatcher.getEndpointExceptionResolvers());
+	}
 
-    @Test
-    public void testDetectWsdlDefinitions() throws Exception {
-        servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
-        servlet.init(config);
-        MockHttpServletRequest request =
-                new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
-        MockHttpServletResponse response = new MockHttpServletResponse();
-        servlet.service(request, response);
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
-        Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
-        XMLUnit.setIgnoreWhitespace(true);
-        assertXMLEqual("Invalid WSDL written", expected, result);
-    }
+	@Test
+	public void testDetectWsdlDefinitions() throws Exception {
+		servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
+		servlet.init(config);
+		MockHttpServletRequest request =
+				new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		servlet.service(request, response);
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		documentBuilderFactory.setNamespaceAware(true);
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
+		Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
+		XMLUnit.setIgnoreWhitespace(true);
+		assertXMLEqual("Invalid WSDL written", expected, result);
+	}
 
-    private static class DetectWebApplicationContext extends StaticWebApplicationContext {
+	private static class DetectWebApplicationContext extends StaticWebApplicationContext {
 
-        @Override
-        public void refresh() throws BeansException, IllegalStateException {
-            registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
-            registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
-            registerSingleton("simpleExceptionResolver", SimpleSoapExceptionResolver.class);
-            super.refresh();
-        }
-    }
+		@Override
+		public void refresh() throws BeansException, IllegalStateException {
+			registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
+			registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
+			registerSingleton("simpleExceptionResolver", SimpleSoapExceptionResolver.class);
+			super.refresh();
+		}
+	}
 
-    private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
+	private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
 
-        @Override
-        public void refresh() throws BeansException, IllegalStateException {
-            MutablePropertyValues mpv = new MutablePropertyValues();
-            mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));
-            registerSingleton("definition", SimpleWsdl11Definition.class, mpv);
-            super.refresh();
-        }
-    }
+		@Override
+		public void refresh() throws BeansException, IllegalStateException {
+			MutablePropertyValues mpv = new MutablePropertyValues();
+			mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));
+			registerSingleton("definition", SimpleWsdl11Definition.class, mpv);
+			super.refresh();
+		}
+	}
 }

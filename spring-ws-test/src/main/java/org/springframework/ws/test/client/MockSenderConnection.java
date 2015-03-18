@@ -35,91 +35,91 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
-    private final List<RequestMatcher> requestMatchers = new LinkedList<RequestMatcher>();
+	private final List<RequestMatcher> requestMatchers = new LinkedList<RequestMatcher>();
 
-    private URI uri;
+	private URI uri;
 
-    private WebServiceMessage request;
+	private WebServiceMessage request;
 
-    private ResponseCreator responseCreator;
+	private ResponseCreator responseCreator;
 
-    void addRequestMatcher(RequestMatcher requestMatcher) {
-        Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
-        requestMatchers.add(requestMatcher);
-    }
+	void addRequestMatcher(RequestMatcher requestMatcher) {
+		Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
+		requestMatchers.add(requestMatcher);
+	}
 
-    void setUri(URI uri) {
-        Assert.notNull(uri, "'uri' must not be null");
-        this.uri = uri;
-    }
+	void setUri(URI uri) {
+		Assert.notNull(uri, "'uri' must not be null");
+		this.uri = uri;
+	}
 
-    // ResponseActions implementation
+	// ResponseActions implementation
 
-    @Override
-    public ResponseActions andExpect(RequestMatcher requestMatcher) {
-        addRequestMatcher(requestMatcher);
-        return this;
-    }
+	@Override
+	public ResponseActions andExpect(RequestMatcher requestMatcher) {
+		addRequestMatcher(requestMatcher);
+		return this;
+	}
 
-    @Override
-    public void andRespond(ResponseCreator responseCreator) {
-        Assert.notNull(responseCreator, "'responseCreator' must not be null");
-        this.responseCreator = responseCreator;
-    }
+	@Override
+	public void andRespond(ResponseCreator responseCreator) {
+		Assert.notNull(responseCreator, "'responseCreator' must not be null");
+		this.responseCreator = responseCreator;
+	}
 
-    // FaultAwareWebServiceConnection implementation
+	// FaultAwareWebServiceConnection implementation
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void send(WebServiceMessage message) throws IOException {
-        if (!requestMatchers.isEmpty()) {
-            for (RequestMatcher requestMatcher : requestMatchers) {
-                requestMatcher.match(uri, message);
-            }
-        }
-        else {
-            throw new AssertionError("Unexpected send() for [" + message + "]");
-        }
-        this.request = message;
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public void send(WebServiceMessage message) throws IOException {
+		if (!requestMatchers.isEmpty()) {
+			for (RequestMatcher requestMatcher : requestMatchers) {
+				requestMatcher.match(uri, message);
+			}
+		}
+		else {
+			throw new AssertionError("Unexpected send() for [" + message + "]");
+		}
+		this.request = message;
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
-        if (responseCreator != null) {
-            return responseCreator.createResponse(uri, request, messageFactory);
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+		if (responseCreator != null) {
+			return responseCreator.createResponse(uri, request, messageFactory);
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    public URI getUri() {
-        return uri;
-    }
+	@Override
+	public URI getUri() {
+		return uri;
+	}
 
-    @Override
-    public boolean hasError() throws IOException {
-        return responseCreator instanceof ErrorResponseCreator;
-    }
+	@Override
+	public boolean hasError() throws IOException {
+		return responseCreator instanceof ErrorResponseCreator;
+	}
 
-    @Override
-    public String getErrorMessage() throws IOException {
-        if (responseCreator instanceof ErrorResponseCreator) {
-            return ((ErrorResponseCreator) responseCreator).getErrorMessage();
-        }
-        else {
-            return null;
-        }
-    }
+	@Override
+	public String getErrorMessage() throws IOException {
+		if (responseCreator instanceof ErrorResponseCreator) {
+			return ((ErrorResponseCreator) responseCreator).getErrorMessage();
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    public void close() throws IOException {
-        requestMatchers.clear();
-        request = null;
-        responseCreator = null;
-        uri = null;
-    }
+	@Override
+	public void close() throws IOException {
+		requestMatchers.clear();
+		request = null;
+		responseCreator = null;
+		uri = null;
+	}
 
 }

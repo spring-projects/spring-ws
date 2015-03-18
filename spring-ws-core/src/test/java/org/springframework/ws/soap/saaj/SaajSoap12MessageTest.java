@@ -33,39 +33,39 @@ import static org.junit.Assert.assertTrue;
 
 public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
 
-    private SOAPMessage saajMessage;
+	private SOAPMessage saajMessage;
 
-    @Override
-    protected SoapMessage createSoapMessage() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        saajMessage = messageFactory.createMessage();
-        saajMessage.getSOAPHeader().detachNode();
-        return new SaajSoapMessage(saajMessage, true, messageFactory);
-    }
+	@Override
+	protected SoapMessage createSoapMessage() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		saajMessage = messageFactory.createMessage();
+		saajMessage.getSOAPHeader().detachNode();
+		return new SaajSoapMessage(saajMessage, true, messageFactory);
+	}
 
-    public void testGetPayloadSource() throws Exception {
-        saajMessage.getSOAPBody().addChildElement("child");
-        Source source = soapMessage.getPayloadSource();
-        StringResult result = new StringResult();
-        transformer.transform(source, result);
-        assertXMLEqual("Invalid source", "<child/>", result.toString());
-    }
+	public void testGetPayloadSource() throws Exception {
+		saajMessage.getSOAPBody().addChildElement("child");
+		Source source = soapMessage.getPayloadSource();
+		StringResult result = new StringResult();
+		transformer.transform(source, result);
+		assertXMLEqual("Invalid source", "<child/>", result.toString());
+	}
 
-    public void testGetPayloadSourceText() throws Exception {
-        saajMessage.getSOAPBody().addTextNode(" ");
-        saajMessage.getSOAPBody().addChildElement("child");
-        Source source = soapMessage.getPayloadSource();
-        StringResult result = new StringResult();
-        transformer.transform(source, result);
-        assertXMLEqual("Invalid source", "<child/>", result.toString());
-    }
+	public void testGetPayloadSourceText() throws Exception {
+		saajMessage.getSOAPBody().addTextNode(" ");
+		saajMessage.getSOAPBody().addChildElement("child");
+		Source source = soapMessage.getPayloadSource();
+		StringResult result = new StringResult();
+		transformer.transform(source, result);
+		assertXMLEqual("Invalid source", "<child/>", result.toString());
+	}
 
-    public void testGetPayloadResult() throws Exception {
-        StringSource source = new StringSource("<child/>");
-        Result result = soapMessage.getPayloadResult();
-        transformer.transform(source, result);
-        assertTrue("No child nodes created", saajMessage.getSOAPBody().hasChildNodes());
-        assertEquals("Invalid child node created", "child", saajMessage.getSOAPBody().getFirstChild().getLocalName());
-    }
+	public void testGetPayloadResult() throws Exception {
+		StringSource source = new StringSource("<child/>");
+		Result result = soapMessage.getPayloadResult();
+		transformer.transform(source, result);
+		assertTrue("No child nodes created", saajMessage.getSOAPBody().hasChildNodes());
+		assertEquals("Invalid child node created", "child", saajMessage.getSOAPBody().getFirstChild().getLocalName());
+	}
 
 }

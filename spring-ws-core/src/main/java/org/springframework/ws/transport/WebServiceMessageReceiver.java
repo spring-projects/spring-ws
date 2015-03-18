@@ -27,11 +27,11 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface WebServiceMessageReceiver {
 
-    /**
-     * Receives the given message context. The given message context can be used to create a response.
-     *
-     * @param messageContext the message context to be received
-     */
-    void receive(MessageContext messageContext) throws Exception;
+	/**
+	 * Receives the given message context. The given message context can be used to create a response.
+	 *
+	 * @param messageContext the message context to be received
+	 */
+	void receive(MessageContext messageContext) throws Exception;
 
 }

@@ -32,28 +32,28 @@ import org.springframework.util.Assert;
  */
 class TextMessageOutputStream extends FilterOutputStream {
 
-    private final TextMessage message;
+	private final TextMessage message;
 
-    private final String encoding;
+	private final String encoding;
 
-    TextMessageOutputStream(TextMessage message, String encoding) {
-        super(new ByteArrayOutputStream());
-        Assert.notNull(message, "'message' must not be null");
-        Assert.notNull(encoding, "'encoding' must not be null");
-        this.message = message;
-        this.encoding = encoding;
-    }
+	TextMessageOutputStream(TextMessage message, String encoding) {
+		super(new ByteArrayOutputStream());
+		Assert.notNull(message, "'message' must not be null");
+		Assert.notNull(encoding, "'encoding' must not be null");
+		this.message = message;
+		this.encoding = encoding;
+	}
 
-    @Override
-    public void flush() throws IOException {
-        super.flush();
-        try {
-            ByteArrayOutputStream baos = (ByteArrayOutputStream) out;
-            String text = new String(baos.toByteArray(), encoding);
-            message.setText(text);
-        }
-        catch (JMSException ex) {
-            throw new JmsTransportException(ex);
-        }
-    }
+	@Override
+	public void flush() throws IOException {
+		super.flush();
+		try {
+			ByteArrayOutputStream baos = (ByteArrayOutputStream) out;
+			String text = new String(baos.toByteArray(), encoding);
+			message.setText(text);
+		}
+		catch (JMSException ex) {
+			throw new JmsTransportException(ex);
+		}
+	}
 }

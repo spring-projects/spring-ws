@@ -38,35 +38,35 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 @ContextConfiguration("jdk-proxy-registration.xml")
 public class JdkProxyRegistrationTest {
 
-    @Autowired
-    private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired
+	private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    @Test
-    public void registration() throws NoSuchMethodException {
-        MethodEndpoint jdkProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
-        assertNotNull("jdk proxy endpoint not registered", jdkProxy);
-        Method doIt = MyEndpointImpl.class.getMethod("doIt", Source.class);
-        MethodEndpoint expected = new MethodEndpoint("jdkProxyEndpoint", applicationContext, doIt);
-        assertEquals("Invalid endpoint registered", expected, jdkProxy);
-    }
+	@Test
+	public void registration() throws NoSuchMethodException {
+		MethodEndpoint jdkProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
+		assertNotNull("jdk proxy endpoint not registered", jdkProxy);
+		Method doIt = MyEndpointImpl.class.getMethod("doIt", Source.class);
+		MethodEndpoint expected = new MethodEndpoint("jdkProxyEndpoint", applicationContext, doIt);
+		assertEquals("Invalid endpoint registered", expected, jdkProxy);
+	}
 
-    @Endpoint
-    public interface MyEndpoint {
+	@Endpoint
+	public interface MyEndpoint {
 
-        @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
-        @Log
-        void doIt(Source payload);
-    }
+		@PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
+		@Log
+		void doIt(Source payload);
+	}
 
-    public static class MyEndpointImpl implements MyEndpoint {
+	public static class MyEndpointImpl implements MyEndpoint {
 
-        @Override
-        public void doIt(@RequestPayload Source payload) {
-        }
+		@Override
+		public void doIt(@RequestPayload Source payload) {
+		}
 
-    }
+	}
 
 }

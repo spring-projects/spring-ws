@@ -45,74 +45,74 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 public class DomPoxMessage implements PoxMessage {
 
-    private final String contentType;
+	private final String contentType;
 
-    private final Document document;
+	private final Document document;
 
-    private final Transformer transformer;
+	private final Transformer transformer;
 
-    /**
-     * Constructs a new instance of the {@code DomPoxMessage} with the given document.
-     *
-     * @param document the document to base the message on
-     */
-    public DomPoxMessage(Document document, Transformer transformer, String contentType) {
-        Assert.notNull(document, "'document' must not be null");
-        Assert.notNull(transformer, "'transformer' must not be null");
-        Assert.hasLength(contentType, "'contentType' must not be empty");
-        this.document = document;
-        this.transformer = transformer;
-        this.contentType = contentType;
-    }
+	/**
+	 * Constructs a new instance of the {@code DomPoxMessage} with the given document.
+	 *
+	 * @param document the document to base the message on
+	 */
+	public DomPoxMessage(Document document, Transformer transformer, String contentType) {
+		Assert.notNull(document, "'document' must not be null");
+		Assert.notNull(transformer, "'transformer' must not be null");
+		Assert.hasLength(contentType, "'contentType' must not be empty");
+		this.document = document;
+		this.transformer = transformer;
+		this.contentType = contentType;
+	}
 
-    /** Returns the document underlying this message. */
-    public Document getDocument() {
-        return document;
-    }
+	/** Returns the document underlying this message. */
+	public Document getDocument() {
+		return document;
+	}
 
-    @Override
-    public Result getPayloadResult() {
-        NodeList children = document.getChildNodes();
-        for (int i = 0; i < children.getLength(); i++) {
-            document.removeChild(children.item(i));
-        }
-        return new DOMResult(document);
-    }
+	@Override
+	public Result getPayloadResult() {
+		NodeList children = document.getChildNodes();
+		for (int i = 0; i < children.getLength(); i++) {
+			document.removeChild(children.item(i));
+		}
+		return new DOMResult(document);
+	}
 
-    @Override
-    public Source getPayloadSource() {
-        return new DOMSource(document);
-    }
+	@Override
+	public Source getPayloadSource() {
+		return new DOMSource(document);
+	}
 
-    public boolean hasFault() {
-        return false;
-    }
+	public boolean hasFault() {
+		return false;
+	}
 
-    public String getFaultReason() {
-        return null;
-    }
+	public String getFaultReason() {
+		return null;
+	}
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("DomPoxMessage ");
-        Element root = document.getDocumentElement();
-        if (root != null) {
-            builder.append(' ');
-            builder.append(QNameUtils.getQNameForNode(root));
-        }
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder("DomPoxMessage ");
+		Element root = document.getDocumentElement();
+		if (root != null) {
+			builder.append(' ');
+			builder.append(QNameUtils.getQNameForNode(root));
+		}
+		return builder.toString();
+	}
 
-    @Override
-    public void writeTo(OutputStream outputStream) throws IOException {
-        try {
-            if (outputStream instanceof TransportOutputStream) {
-                TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
-                transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
-            }
-            transformer.transform(getPayloadSource(), new StreamResult(outputStream));
-        }
-        catch (TransformerException ex) {
-            throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);
-        }
-    }
+	@Override
+	public void writeTo(OutputStream outputStream) throws IOException {
+		try {
+			if (outputStream instanceof TransportOutputStream) {
+				TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+			}
+			transformer.transform(getPayloadSource(), new StreamResult(outputStream));
+		}
+		catch (TransformerException ex) {
+			throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);
+		}
+	}
 }

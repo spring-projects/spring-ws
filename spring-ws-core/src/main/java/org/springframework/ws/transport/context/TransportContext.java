@@ -12,6 +12,6 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public interface TransportContext {
 
-    /** Returns the current {@code WebServiceConnection}. */
-    WebServiceConnection getConnection();
+	/** Returns the current {@code WebServiceConnection}. */
+	WebServiceConnection getConnection();
 }

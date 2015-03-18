@@ -33,24 +33,24 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  */
 abstract class SoapFaultResponseCreator extends AbstractResponseCreator {
 
-    @Override
-    protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
-        if (!(response instanceof SoapMessage)) {
-            fail("Response is not a SOAP message");
-            return;
-        }
-        SoapMessage soapResponse = (SoapMessage) response;
-        SoapBody responseBody = soapResponse.getSoapBody();
-        if (responseBody == null) {
-            fail("SOAP message [" + response + "] does not contain SOAP body");
-        }
-        addSoapFault(responseBody);
-    }
+	@Override
+	protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
+		if (!(response instanceof SoapMessage)) {
+			fail("Response is not a SOAP message");
+			return;
+		}
+		SoapMessage soapResponse = (SoapMessage) response;
+		SoapBody responseBody = soapResponse.getSoapBody();
+		if (responseBody == null) {
+			fail("SOAP message [" + response + "] does not contain SOAP body");
+		}
+		addSoapFault(responseBody);
+	}
 
-    /**
-     * Abstract template method that allows subclasses to add a SOAP Fault to the given Body.
-     *
-     * @param soapBody the body to attach a fault to
-     */
-    protected abstract void addSoapFault(SoapBody soapBody);
+	/**
+	 * Abstract template method that allows subclasses to add a SOAP Fault to the given Body.
+	 *
+	 * @param soapBody the body to attach a fault to
+	 */
+	protected abstract void addSoapFault(SoapBody soapBody);
 }

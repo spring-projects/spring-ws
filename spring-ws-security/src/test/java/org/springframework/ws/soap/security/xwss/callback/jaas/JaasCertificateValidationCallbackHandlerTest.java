@@ -29,35 +29,35 @@ import org.junit.Test;
 
 public class JaasCertificateValidationCallbackHandlerTest {
 
-    private JaasCertificateValidationCallbackHandler callbackHandler;
+	private JaasCertificateValidationCallbackHandler callbackHandler;
 
-    private CertificateValidationCallback callback;
+	private CertificateValidationCallback callback;
 
-    @Before
-    public void setUp() throws Exception {
-        System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
-        callbackHandler = new JaasCertificateValidationCallbackHandler();
-        callbackHandler.setLoginContextName("Certificate");
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        InputStream is = null;
-        try {
-            is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
-            keyStore.load(is, "password".toCharArray());
-        }
-        finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        X509Certificate certificate = (X509Certificate) keyStore.getCertificate("alias");
-        callback = new CertificateValidationCallback(certificate);
-    }
+	@Before
+	public void setUp() throws Exception {
+		System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
+		callbackHandler = new JaasCertificateValidationCallbackHandler();
+		callbackHandler.setLoginContextName("Certificate");
+		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream is = null;
+		try {
+			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
+			keyStore.load(is, "password".toCharArray());
+		}
+		finally {
+			if (is != null) {
+				is.close();
+			}
+		}
+		X509Certificate certificate = (X509Certificate) keyStore.getCertificate("alias");
+		callback = new CertificateValidationCallback(certificate);
+	}
 
-    @Test
-    public void testValidateCertificateValid() throws Exception {
-        callbackHandler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Not authenticated", authenticated);
-    }
+	@Test
+	public void testValidateCertificateValid() throws Exception {
+		callbackHandler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Not authenticated", authenticated);
+	}
 
 }

@@ -35,91 +35,91 @@ import org.springframework.xml.stream.CompositeXMLEventReader;
  */
 class StroapEnvelope extends StroapElement implements SoapEnvelope {
 
-    private static final String LOCAL_NAME = "Envelope";
+	private static final String LOCAL_NAME = "Envelope";
 
-    private StroapHeader header;
+	private StroapHeader header;
 
-    private StroapBody body;
+	private StroapBody body;
 
-    StroapEnvelope(StroapMessageFactory messageFactory) {
-        super(messageFactory.getSoapVersion().getEnvelopeName(), messageFactory);
-        this.header = null;
-        this.body = new Stroap11Body(messageFactory);
-    }
+	StroapEnvelope(StroapMessageFactory messageFactory) {
+		super(messageFactory.getSoapVersion().getEnvelopeName(), messageFactory);
+		this.header = null;
+		this.body = new Stroap11Body(messageFactory);
+	}
 
-    private StroapEnvelope(StartElement startElement,
-                           StroapHeader header,
-                           StroapBody body,
-                           StroapMessageFactory messageFactory) {
-        super(startElement, messageFactory);
-        this.header = header;
-        this.body = body;
-    }
+	private StroapEnvelope(StartElement startElement,
+						   StroapHeader header,
+						   StroapBody body,
+						   StroapMessageFactory messageFactory) {
+		super(startElement, messageFactory);
+		this.header = header;
+		this.body = body;
+	}
 
-    static StroapEnvelope build(XMLEventReader eventReader, StroapMessageFactory messageFactory)
-            throws XMLStreamException {
-        XMLEvent event = eventReader.nextTag();
-        if (!event.isStartElement()) {
-            throw new StroapMessageCreationException("Unexpected event: " + event + ", expected StartElement");
-        }
-        StartElement startElement = event.asStartElement();
-        SoapVersion soapVersion = messageFactory.getSoapVersion();
-        if (!soapVersion.getEnvelopeName().equals(startElement.getName())) {
-            throw new StroapMessageCreationException(
-                    "Unexpected name: " + startElement.getName() + ", expected " + soapVersion.getEnvelopeName());
-        }
-        StroapHeader header = null;
-        StroapBody body = null;
-        XMLEvent peekedEvent = eventReader.peek();
-        while (peekedEvent != null) {
-            if (peekedEvent.isStartElement()) {
-                QName headerOrBodyName = peekedEvent.asStartElement().getName();
-                if (soapVersion.getHeaderName().equals(headerOrBodyName)) {
-                    header = StroapHeader.build(eventReader, messageFactory);
-                }
-                else if (soapVersion.getBodyName().equals(headerOrBodyName)) {
-                    body = StroapBody.build(eventReader, messageFactory);
-                    break;
-                }
-                else {
-                    throw new StroapMessageCreationException(
-                            "Unexpected start element name [" + headerOrBodyName + "]");
-                }
-            }
-            else {
-                eventReader.nextEvent();
-            }
-            peekedEvent = eventReader.peek();
-        }
-        if (body == null) {
-            throw new StroapMessageCreationException("No SOAP body found");
-        }
+	static StroapEnvelope build(XMLEventReader eventReader, StroapMessageFactory messageFactory)
+			throws XMLStreamException {
+		XMLEvent event = eventReader.nextTag();
+		if (!event.isStartElement()) {
+			throw new StroapMessageCreationException("Unexpected event: " + event + ", expected StartElement");
+		}
+		StartElement startElement = event.asStartElement();
+		SoapVersion soapVersion = messageFactory.getSoapVersion();
+		if (!soapVersion.getEnvelopeName().equals(startElement.getName())) {
+			throw new StroapMessageCreationException(
+					"Unexpected name: " + startElement.getName() + ", expected " + soapVersion.getEnvelopeName());
+		}
+		StroapHeader header = null;
+		StroapBody body = null;
+		XMLEvent peekedEvent = eventReader.peek();
+		while (peekedEvent != null) {
+			if (peekedEvent.isStartElement()) {
+				QName headerOrBodyName = peekedEvent.asStartElement().getName();
+				if (soapVersion.getHeaderName().equals(headerOrBodyName)) {
+					header = StroapHeader.build(eventReader, messageFactory);
+				}
+				else if (soapVersion.getBodyName().equals(headerOrBodyName)) {
+					body = StroapBody.build(eventReader, messageFactory);
+					break;
+				}
+				else {
+					throw new StroapMessageCreationException(
+							"Unexpected start element name [" + headerOrBodyName + "]");
+				}
+			}
+			else {
+				eventReader.nextEvent();
+			}
+			peekedEvent = eventReader.peek();
+		}
+		if (body == null) {
+			throw new StroapMessageCreationException("No SOAP body found");
+		}
 
-        return new StroapEnvelope(startElement, header, body, messageFactory);
-    }
+		return new StroapEnvelope(startElement, header, body, messageFactory);
+	}
 
-    public SoapHeader getHeader() throws SoapHeaderException {
-        if (header == null) {
-            header = new Stroap11Header(getMessageFactory());
-        }
-        return header;
-    }
+	public SoapHeader getHeader() throws SoapHeaderException {
+		if (header == null) {
+			header = new Stroap11Header(getMessageFactory());
+		}
+		return header;
+	}
 
-    public SoapBody getBody() throws SoapBodyException {
-        if (body == null) {
-            body = new Stroap11Body(getMessageFactory());
-        }
-        return body;
-    }
+	public SoapBody getBody() throws SoapBodyException {
+		if (body == null) {
+			body = new Stroap11Body(getMessageFactory());
+		}
+		return body;
+	}
 
-    @Override
-    protected XMLEventReader getChildEventReader() {
-        if (header != null) {
-            return new CompositeXMLEventReader(header.getEventReader(false), body.getEventReader(false));
-        }
-        else {
-            return body.getEventReader(false);
-        }
-    }
+	@Override
+	protected XMLEventReader getChildEventReader() {
+		if (header != null) {
+			return new CompositeXMLEventReader(header.getEventReader(false), body.getEventReader(false));
+		}
+		else {
+			return body.getEventReader(false);
+		}
+	}
 
 }

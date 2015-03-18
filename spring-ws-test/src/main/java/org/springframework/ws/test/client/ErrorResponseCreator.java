@@ -31,21 +31,21 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 class ErrorResponseCreator implements ResponseCreator {
 
-    private final String errorMessage;
+	private final String errorMessage;
 
-    ErrorResponseCreator(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	ErrorResponseCreator(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
-    @Override
-    public WebServiceMessage createResponse(URI uri,
-                                            WebServiceMessage request,
-                                            WebServiceMessageFactory factory) throws IOException {
-        // Do nothing
-        return null;
-    }
+	@Override
+	public WebServiceMessage createResponse(URI uri,
+											WebServiceMessage request,
+											WebServiceMessageFactory factory) throws IOException {
+		// Do nothing
+		return null;
+	}
 
-    String getErrorMessage() {
-        return errorMessage;
-    }
+	String getErrorMessage() {
+		return errorMessage;
+	}
 }

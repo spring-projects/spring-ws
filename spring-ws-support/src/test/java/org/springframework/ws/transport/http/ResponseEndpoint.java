@@ -22,8 +22,8 @@ import org.springframework.ws.server.endpoint.MessageEndpoint;
 /** @author Arjen Poutsma */
 public class ResponseEndpoint implements MessageEndpoint {
 
-    @Override
-    public void invoke(MessageContext messageContext) throws Exception {
-        messageContext.getResponse();
-    }
+	@Override
+	public void invoke(MessageContext messageContext) throws Exception {
+		messageContext.getResponse();
+	}
 }

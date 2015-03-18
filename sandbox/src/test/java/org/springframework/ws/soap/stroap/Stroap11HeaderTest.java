@@ -21,9 +21,9 @@ import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;
 
 public class Stroap11HeaderTest extends AbstractSoap11HeaderTestCase {
 
-    @Override
-    protected SoapHeader createSoapHeader() throws Exception {
-        StroapMessageFactory messageFactory = new StroapMessageFactory();
-        return new Stroap11Header(messageFactory);
-    }
+	@Override
+	protected SoapHeader createSoapHeader() throws Exception {
+		StroapMessageFactory messageFactory = new StroapMessageFactory();
+		return new Stroap11Header(messageFactory);
+	}
 }

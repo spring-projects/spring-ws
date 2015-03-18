@@ -21,20 +21,20 @@ import org.junit.Test;
 
 public class XPathExpressionFactoryTest {
 
-    @Test
-    public void testCreateXPathExpression() throws Exception {
-        XPathExpression expression = XPathExpressionFactory.createXPathExpression("/root");
-        Assert.assertNotNull("No expression returned", expression);
-    }
+	@Test
+	public void testCreateXPathExpression() throws Exception {
+		XPathExpression expression = XPathExpressionFactory.createXPathExpression("/root");
+		Assert.assertNotNull("No expression returned", expression);
+	}
 
-    @Test
-    public void testCreateEmptyXPathExpression() throws Exception {
-        try {
-            XPathExpressionFactory.createXPathExpression("");
-            Assert.fail("Should have thrown an Exception");
-        }
-        catch (IllegalArgumentException ex) {
-            // expected
-        }
-    }
+	@Test
+	public void testCreateEmptyXPathExpression() throws Exception {
+		try {
+			XPathExpressionFactory.createXPathExpression("");
+			Assert.fail("Should have thrown an Exception");
+		}
+		catch (IllegalArgumentException ex) {
+			// expected
+		}
+	}
 }

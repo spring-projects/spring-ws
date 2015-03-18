@@ -47,93 +47,93 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  */
 public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
-    private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 
-    private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
+	private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
-    private static final QName SCHEMA_NAME = new QName(SCHEMA_NAMESPACE, "schema", "xsd");
+	private static final QName SCHEMA_NAME = new QName(SCHEMA_NAMESPACE, "schema", "xsd");
 
 	private Resource xsdResource;
 
-    private Element schemaElement;
+	private Element schemaElement;
 
-    static {
-        documentBuilderFactory.setNamespaceAware(true);
-    }
+	static {
+		documentBuilderFactory.setNamespaceAware(true);
+	}
 
-    /**
-     * Create a new instance of the {@link SimpleXsdSchema} class.
-     *
-     * <p>A subsequent call to the {@link #setXsd(Resource)} method is required.
-     */
-    public SimpleXsdSchema() {
-    }
+	/**
+	 * Create a new instance of the {@link SimpleXsdSchema} class.
+	 *
+	 * <p>A subsequent call to the {@link #setXsd(Resource)} method is required.
+	 */
+	public SimpleXsdSchema() {
+	}
 
-    /**
-     * Create a new instance of the  {@link SimpleXsdSchema} class with the specified resource.
-     *
-     * @param xsdResource the XSD resource; must not be {@code null}
-     * @throws IllegalArgumentException if the supplied {@code xsdResource} is {@code null}
-     */
-    public SimpleXsdSchema(Resource xsdResource) {
-        Assert.notNull(xsdResource, "xsdResource must not be null");
-        this.xsdResource = xsdResource;
-    }
+	/**
+	 * Create a new instance of the	 {@link SimpleXsdSchema} class with the specified resource.
+	 *
+	 * @param xsdResource the XSD resource; must not be {@code null}
+	 * @throws IllegalArgumentException if the supplied {@code xsdResource} is {@code null}
+	 */
+	public SimpleXsdSchema(Resource xsdResource) {
+		Assert.notNull(xsdResource, "xsdResource must not be null");
+		this.xsdResource = xsdResource;
+	}
 
-    /**
-     * Set the XSD resource to be exposed by calls to this instances' {@link #getSource()} method.
-     *
-     * @param xsdResource the XSD resource
-     */
-    public void setXsd(Resource xsdResource) {
-        this.xsdResource = xsdResource;
-    }
+	/**
+	 * Set the XSD resource to be exposed by calls to this instances' {@link #getSource()} method.
+	 *
+	 * @param xsdResource the XSD resource
+	 */
+	public void setXsd(Resource xsdResource) {
+		this.xsdResource = xsdResource;
+	}
 
-    @Override
-    public String getTargetNamespace() {
-        return schemaElement.getAttribute("targetNamespace");
-    }
+	@Override
+	public String getTargetNamespace() {
+		return schemaElement.getAttribute("targetNamespace");
+	}
 
-    @Override
-    public Source getSource() {
-        return new DOMSource(schemaElement);
-    }
+	@Override
+	public Source getSource() {
+		return new DOMSource(schemaElement);
+	}
 
-    @Override
-    public XmlValidator createValidator() {
-	    try {
-		    return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
-	    }
-	    catch (IOException ex) {
-		    throw new XsdSchemaException(ex.getMessage(), ex);
-	    }
-    }
+	@Override
+	public XmlValidator createValidator() {
+		try {
+			return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
+		}
+		catch (IOException ex) {
+			throw new XsdSchemaException(ex.getMessage(), ex);
+		}
+	}
 
-    @Override
-    public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
-        Assert.notNull(xsdResource, "'xsd' is required");
-        Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exist");
-        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        loadSchema(documentBuilder);
-    }
+	@Override
+	public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
+		Assert.notNull(xsdResource, "'xsd' is required");
+		Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exist");
+		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		loadSchema(documentBuilder);
+	}
 
-    private void loadSchema(DocumentBuilder documentBuilder) throws SAXException, IOException {
-        Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(xsdResource));
-        schemaElement = schemaDocument.getDocumentElement();
-        Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()),
-                xsdResource + " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
-        Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()), xsdResource +
-                " has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of [" +
-                SCHEMA_NAME.getNamespaceURI() + "]");
-        Assert.hasText(getTargetNamespace(), xsdResource + " has no targetNamespace");
-    }
+	private void loadSchema(DocumentBuilder documentBuilder) throws SAXException, IOException {
+		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(xsdResource));
+		schemaElement = schemaDocument.getDocumentElement();
+		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()),
+				xsdResource + " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
+		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()), xsdResource +
+				" has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of [" +
+				SCHEMA_NAME.getNamespaceURI() + "]");
+		Assert.hasText(getTargetNamespace(), xsdResource + " has no targetNamespace");
+	}
 
-    public String toString() {
-        StringBuilder builder = new StringBuilder("SimpleXsdSchema");
-        builder.append('{');
-        builder.append(getTargetNamespace());
-        builder.append('}');
-        return builder.toString();
-    }
+	public String toString() {
+		StringBuilder builder = new StringBuilder("SimpleXsdSchema");
+		builder.append('{');
+		builder.append(getTargetNamespace());
+		builder.append('}');
+		return builder.toString();
+	}
 
 }

@@ -49,127 +49,127 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
-    private final HttpClient httpClient;
+	private final HttpClient httpClient;
 
-    private final HttpPost httpPost;
+	private final HttpPost httpPost;
 
-    private final HttpContext httpContext;
+	private final HttpContext httpContext;
 
-    private HttpResponse httpResponse;
+	private HttpResponse httpResponse;
 
-    private ByteArrayOutputStream requestBuffer;
+	private ByteArrayOutputStream requestBuffer;
 
-    protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
-        Assert.notNull(httpClient, "httpClient must not be null");
-        Assert.notNull(httpPost, "httpPost must not be null");
-        this.httpClient = httpClient;
-        this.httpPost = httpPost;
-        this.httpContext = httpContext;
-    }
+	protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
+		Assert.notNull(httpClient, "httpClient must not be null");
+		Assert.notNull(httpPost, "httpPost must not be null");
+		this.httpClient = httpClient;
+		this.httpPost = httpPost;
+		this.httpContext = httpContext;
+	}
 
-    public HttpPost getHttpPost() {
-        return httpPost;
-    }
+	public HttpPost getHttpPost() {
+		return httpPost;
+	}
 
-    public HttpResponse getHttpResponse() {
-        return httpResponse;
-    }
+	public HttpResponse getHttpResponse() {
+		return httpResponse;
+	}
 
-    @Override
-    public void onClose() throws IOException {
-        if (httpResponse != null && httpResponse.getEntity() != null) {
-            EntityUtils.consume(httpResponse.getEntity());
-        }
-    }
+	@Override
+	public void onClose() throws IOException {
+		if (httpResponse != null && httpResponse.getEntity() != null) {
+			EntityUtils.consume(httpResponse.getEntity());
+		}
+	}
 
-    /*
-      * URI
-      */
-    @Override
-    public URI getUri() throws URISyntaxException {
-        return new URI(httpPost.getURI().toString());
-    }
+	/*
+	  * URI
+	  */
+	@Override
+	public URI getUri() throws URISyntaxException {
+		return new URI(httpPost.getURI().toString());
+	}
 
-    /*
-      * Sending request
-      */
+	/*
+	  * Sending request
+	  */
 
-    @Override
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        requestBuffer = new ByteArrayOutputStream();
-    }
+	@Override
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+		requestBuffer = new ByteArrayOutputStream();
+	}
 
-    @Override
-    protected void addRequestHeader(String name, String value) throws IOException {
-        httpPost.addHeader(name, value);
-    }
+	@Override
+	protected void addRequestHeader(String name, String value) throws IOException {
+		httpPost.addHeader(name, value);
+	}
 
-    @Override
-    protected OutputStream getRequestOutputStream() throws IOException {
-        return requestBuffer;
-    }
+	@Override
+	protected OutputStream getRequestOutputStream() throws IOException {
+		return requestBuffer;
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray()));
-        requestBuffer = null;
-        if (httpContext != null) {
-            httpResponse = httpClient.execute(httpPost, httpContext);
-        }
-        else {
-            httpResponse = httpClient.execute(httpPost);
-        }
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray()));
+		requestBuffer = null;
+		if (httpContext != null) {
+			httpResponse = httpClient.execute(httpPost, httpContext);
+		}
+		else {
+			httpResponse = httpClient.execute(httpPost);
+		}
+	}
 
-    /*
-     * Receiving response
-     */
+	/*
+	 * Receiving response
+	 */
 
-    @Override
-    protected int getResponseCode() throws IOException {
-        return httpResponse.getStatusLine().getStatusCode();
-    }
+	@Override
+	protected int getResponseCode() throws IOException {
+		return httpResponse.getStatusLine().getStatusCode();
+	}
 
-    @Override
-    protected String getResponseMessage() throws IOException {
-        return httpResponse.getStatusLine().getReasonPhrase();
-    }
+	@Override
+	protected String getResponseMessage() throws IOException {
+		return httpResponse.getStatusLine().getReasonPhrase();
+	}
 
-    @Override
-    protected long getResponseContentLength() throws IOException {
-        HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            return entity.getContentLength();
-        }
-        return 0;
-    }
+	@Override
+	protected long getResponseContentLength() throws IOException {
+		HttpEntity entity = httpResponse.getEntity();
+		if (entity != null) {
+			return entity.getContentLength();
+		}
+		return 0;
+	}
 
-    @Override
-    protected InputStream getRawResponseInputStream() throws IOException {
-        HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
-            return entity.getContent();
-        }
-        throw new IllegalStateException("Response has no enclosing response entity, cannot create input stream");
-    }
+	@Override
+	protected InputStream getRawResponseInputStream() throws IOException {
+		HttpEntity entity = httpResponse.getEntity();
+		if (entity != null) {
+			return entity.getContent();
+		}
+		throw new IllegalStateException("Response has no enclosing response entity, cannot create input stream");
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaderNames() throws IOException {
-        Header[] headers = httpResponse.getAllHeaders();
-        String[] names = new String[headers.length];
-        for (int i = 0; i < headers.length; i++) {
-            names[i] = headers[i].getName();
-        }
-        return Arrays.asList(names).iterator();
-    }
+	@Override
+	protected Iterator<String> getResponseHeaderNames() throws IOException {
+		Header[] headers = httpResponse.getAllHeaders();
+		String[] names = new String[headers.length];
+		for (int i = 0; i < headers.length; i++) {
+			names[i] = headers[i].getName();
+		}
+		return Arrays.asList(names).iterator();
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaders(String name) throws IOException {
-        Header[] headers = httpResponse.getHeaders(name);
-        String[] values = new String[headers.length];
-        for (int i = 0; i < headers.length; i++) {
-            values[i] = headers[i].getValue();
-        }
-        return Arrays.asList(values).iterator();
-    }
+	@Override
+	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+		Header[] headers = httpResponse.getHeaders(name);
+		String[] values = new String[headers.length];
+		for (int i = 0; i < headers.length; i++) {
+			values[i] = headers[i].getValue();
+		}
+		return Arrays.asList(values).iterator();
+	}
 }

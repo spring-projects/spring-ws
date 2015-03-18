@@ -26,9 +26,9 @@ import org.springframework.ws.transport.TransportConstants;
  */
 public interface XmppTransportConstants extends TransportConstants {
 
-    /**
-     * The "xmpp" URI scheme.
-     */
-    String XMPP_URI_SCHEME = "xmpp";
+	/**
+	 * The "xmpp" URI scheme.
+	 */
+	String XMPP_URI_SCHEME = "xmpp";
 
 }

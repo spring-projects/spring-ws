@@ -30,75 +30,75 @@ import javax.xml.namespace.QName;
  */
 public class SoapFaultDefinition {
 
-    /**
-     * Constant {@code QName} used to indicate that a {@code Client} fault must be created.
-     *
-     * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
-     */
-    public static final QName CLIENT = new QName("CLIENT");
+	/**
+	 * Constant {@code QName} used to indicate that a {@code Client} fault must be created.
+	 *
+	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
+	 */
+	public static final QName CLIENT = new QName("CLIENT");
 
-    /**
-     * Constant {@code QName} used to indicate that a {@code Receiver} fault must be created.
-     *
-     * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
-     */
-    public static final QName RECEIVER = new QName("RECEIVER");
+	/**
+	 * Constant {@code QName} used to indicate that a {@code Receiver} fault must be created.
+	 *
+	 * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
+	 */
+	public static final QName RECEIVER = new QName("RECEIVER");
 
-    /**
-     * Constant {@code QName} used to indicate that a {@code Sender} fault must be created.
-     *
-     * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
-     */
-    public static final QName SENDER = new QName("SENDER");
+	/**
+	 * Constant {@code QName} used to indicate that a {@code Sender} fault must be created.
+	 *
+	 * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String,java.util.Locale)
+	 */
+	public static final QName SENDER = new QName("SENDER");
 
-    /**
-     * Constant {@code QName} used to indicate that a {@code Server}  fault must be created.
-     *
-     * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
-     */
-    public static final QName SERVER = new QName("SERVER");
+	/**
+	 * Constant {@code QName} used to indicate that a {@code Server}  fault must be created.
+	 *
+	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
+	 */
+	public static final QName SERVER = new QName("SERVER");
 
-    private QName faultCode;
+	private QName faultCode;
 
-    private String faultStringOrReason;
+	private String faultStringOrReason;
 
-    private Locale locale = Locale.ENGLISH;
+	private Locale locale = Locale.ENGLISH;
 
-    /** Returns the fault code. */
-    public QName getFaultCode() {
-        return faultCode;
-    }
+	/** Returns the fault code. */
+	public QName getFaultCode() {
+		return faultCode;
+	}
 
-    /** Sets the fault code. */
-    public void setFaultCode(QName faultCode) {
-        this.faultCode = faultCode;
-    }
+	/** Sets the fault code. */
+	public void setFaultCode(QName faultCode) {
+		this.faultCode = faultCode;
+	}
 
-    /** Returns the fault string or reason text. By default, it is set to the exception message. */
-    public String getFaultStringOrReason() {
-        return faultStringOrReason;
-    }
+	/** Returns the fault string or reason text. By default, it is set to the exception message. */
+	public String getFaultStringOrReason() {
+		return faultStringOrReason;
+	}
 
-    /** Sets the fault string or reason text. By default, it is set to the exception message. */
-    public void setFaultStringOrReason(String faultStringOrReason) {
-        this.faultStringOrReason = faultStringOrReason;
-    }
+	/** Sets the fault string or reason text. By default, it is set to the exception message. */
+	public void setFaultStringOrReason(String faultStringOrReason) {
+		this.faultStringOrReason = faultStringOrReason;
+	}
 
-    /**
-     * Gets the fault string locale. By default, it is English.
-     *
-     * @see Locale#ENGLISH
-     */
-    public Locale getLocale() {
-        return locale;
-    }
+	/**
+	 * Gets the fault string locale. By default, it is English.
+	 *
+	 * @see Locale#ENGLISH
+	 */
+	public Locale getLocale() {
+		return locale;
+	}
 
-    /**
-     * Sets the fault string locale. By default, it is English.
-     *
-     * @see Locale#ENGLISH
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
+	/**
+	 * Sets the fault string locale. By default, it is English.
+	 *
+	 * @see Locale#ENGLISH
+	 */
+	public void setLocale(Locale locale) {
+		this.locale = locale;
+	}
 }

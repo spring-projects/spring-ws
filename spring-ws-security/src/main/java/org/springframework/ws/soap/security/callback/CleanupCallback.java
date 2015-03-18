@@ -28,6 +28,6 @@ import javax.security.auth.callback.Callback;
  */
 public class CleanupCallback implements Callback, Serializable {
 
-    private static final long serialVersionUID = 4744181820980888237L;
+	private static final long serialVersionUID = 4744181820980888237L;
 
 }

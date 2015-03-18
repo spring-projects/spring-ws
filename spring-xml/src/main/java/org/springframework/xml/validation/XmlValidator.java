@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,27 +32,27 @@ import org.xml.sax.SAXParseException;
  */
 public interface XmlValidator {
 
-    /**
-     * Validates the given {@link Source}, and returns an array of {@link SAXParseException}s as result. The array will
-     * be empty if no validation errors are found.
-     *
-     * @param source the input document
-     * @return an array of {@code SAXParseException}s
-     * @throws IOException            if the {@code source} cannot be read
-     * @throws XmlValidationException if the {@code source} cannot be validated
-     */
-    SAXParseException[] validate(Source source) throws IOException;
+	/**
+	 * Validates the given {@link Source}, and returns an array of {@link SAXParseException}s as result. The array will
+	 * be empty if no validation errors are found.
+	 *
+	 * @param source the input document
+	 * @return an array of {@code SAXParseException}s
+	 * @throws IOException			  if the {@code source} cannot be read
+	 * @throws XmlValidationException if the {@code source} cannot be validated
+	 */
+	SAXParseException[] validate(Source source) throws IOException;
 
-    /**
-     * Validates the given {@link Source} and {@link ValidationErrorHandler}, and returns an array of {@link
-     * SAXParseException}s as result. The array will be empty if no validation errors are found.
-     *
-     * @param source the input document
-     * @param errorHandler the error handler to use. May be {@code null}, in which case a default will be used.
-     * @return an array of {@code SAXParseException}s
-     * @throws IOException            if the {@code source} cannot be read
-     * @throws XmlValidationException if the {@code source} cannot be validated
-     */
-    SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException;
+	/**
+	 * Validates the given {@link Source} and {@link ValidationErrorHandler}, and returns an array of {@link
+	 * SAXParseException}s as result. The array will be empty if no validation errors are found.
+	 *
+	 * @param source the input document
+	 * @param errorHandler the error handler to use. May be {@code null}, in which case a default will be used.
+	 * @return an array of {@code SAXParseException}s
+	 * @throws IOException			  if the {@code source} cannot be read
+	 * @throws XmlValidationException if the {@code source} cannot be validated
+	 */
+	SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException;
 
 }

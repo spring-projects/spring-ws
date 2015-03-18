@@ -29,22 +29,22 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpointMapping {
 
-    @Override
-    protected final String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        QName qName = resolveQName(messageContext);
-        return qName != null ? qName.toString() : null;
-    }
+	@Override
+	protected final String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		QName qName = resolveQName(messageContext);
+		return qName != null ? qName.toString() : null;
+	}
 
-    /**
-     * Template method that resolves the qualified names from the given SOAP message.
-     *
-     * @return an array of qualified names that serve as registration keys
-     */
-    protected abstract QName resolveQName(MessageContext messageContext) throws Exception;
+	/**
+	 * Template method that resolves the qualified names from the given SOAP message.
+	 *
+	 * @return an array of qualified names that serve as registration keys
+	 */
+	protected abstract QName resolveQName(MessageContext messageContext) throws Exception;
 
-    @Override
-    protected boolean validateLookupKey(String key) {
-        return QNameUtils.validateQName(key);
-    }
+	@Override
+	protected boolean validateLookupKey(String key) {
+		return QNameUtils.validateQName(key);
+	}
 
 }

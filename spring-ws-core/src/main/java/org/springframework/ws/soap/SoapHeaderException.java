@@ -25,16 +25,16 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapHeaderException extends SoapMessageException {
 
-    public SoapHeaderException(String msg) {
-        super(msg);
-    }
+	public SoapHeaderException(String msg) {
+		super(msg);
+	}
 
-    public SoapHeaderException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SoapHeaderException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SoapHeaderException(Throwable ex) {
-        super("Could not access header: " + ex.getMessage(), ex);
-    }
+	public SoapHeaderException(Throwable ex) {
+		super("Could not access header: " + ex.getMessage(), ex);
+	}
 
 }

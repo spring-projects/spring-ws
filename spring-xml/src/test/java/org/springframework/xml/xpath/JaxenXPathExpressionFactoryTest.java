@@ -23,24 +23,24 @@ import org.xml.sax.SAXException;
 
 public class JaxenXPathExpressionFactoryTest extends AbstractXPathExpressionFactoryTestCase {
 
-    @Override
-    protected XPathExpression createXPathExpression(String expression) {
-        return JaxenXPathExpressionFactory.createXPathExpression(expression);
-    }
+	@Override
+	protected XPathExpression createXPathExpression(String expression) {
+		return JaxenXPathExpressionFactory.createXPathExpression(expression);
+	}
 
-    @Override
-    protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
-        return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
-    }
+	@Override
+	protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
+		return JaxenXPathExpressionFactory.createXPathExpression(expression, namespaces);
+	}
 
-    @Override
-    public void testEvaluateAsDoubleNoNamespaces() throws IOException, SAXException {
-        // Currently not working on Jaxen 1.1 beta 8, hence the override here
-    }
+	@Override
+	public void testEvaluateAsDoubleNoNamespaces() throws IOException, SAXException {
+		// Currently not working on Jaxen 1.1 beta 8, hence the override here
+	}
 
-    @Override
-    public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
-        // Currently not working on Jaxen 1.1 beta 8, hence the override here
-    }
+	@Override
+	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
+		// Currently not working on Jaxen 1.1 beta 8, hence the override here
+	}
 
 }

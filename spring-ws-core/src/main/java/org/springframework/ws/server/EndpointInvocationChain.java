@@ -25,46 +25,46 @@ package org.springframework.ws.server;
  */
 public class EndpointInvocationChain {
 
-    private Object endpoint;
+	private Object endpoint;
 
-    private EndpointInterceptor[] interceptors;
+	private EndpointInterceptor[] interceptors;
 
-    /**
-     * Create new {@code EndpointInvocationChain}.
-     *
-     * @param endpoint the endpoint object to invoke
-     */
-    public EndpointInvocationChain(Object endpoint) {
-        this.endpoint = endpoint;
-    }
+	/**
+	 * Create new {@code EndpointInvocationChain}.
+	 *
+	 * @param endpoint the endpoint object to invoke
+	 */
+	public EndpointInvocationChain(Object endpoint) {
+		this.endpoint = endpoint;
+	}
 
-    /**
-     * Create new {@code EndpointInvocationChain}.
-     *
-     * @param endpoint     the endpoint object to invoke
-     * @param interceptors the array of interceptors to apply
-     */
-    public EndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors) {
-        this.endpoint = endpoint;
-        this.interceptors = interceptors;
-    }
+	/**
+	 * Create new {@code EndpointInvocationChain}.
+	 *
+	 * @param endpoint	   the endpoint object to invoke
+	 * @param interceptors the array of interceptors to apply
+	 */
+	public EndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors) {
+		this.endpoint = endpoint;
+		this.interceptors = interceptors;
+	}
 
-    /**
-     * Returns the endpoint object to invoke.
-     *
-     * @return the endpoint object
-     */
-    public Object getEndpoint() {
-        return endpoint;
-    }
+	/**
+	 * Returns the endpoint object to invoke.
+	 *
+	 * @return the endpoint object
+	 */
+	public Object getEndpoint() {
+		return endpoint;
+	}
 
-    /**
-     * Returns the array of interceptors to apply before the handler executes.
-     *
-     * @return the array of interceptors
-     */
-    public EndpointInterceptor[] getInterceptors() {
-        return interceptors;
-    }
+	/**
+	 * Returns the array of interceptors to apply before the handler executes.
+	 *
+	 * @return the array of interceptors
+	 */
+	public EndpointInterceptor[] getInterceptors() {
+		return interceptors;
+	}
 
 }

@@ -45,70 +45,70 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
  * @since 2.1
  */
 public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private UserCache userCache = new NullUserCache();
+	private UserCache userCache = new NullUserCache();
 
-    private UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 
-    /** Sets the users cache. Not required, but can benefit performance. */
-    public void setUserCache(UserCache userCache) {
-        this.userCache = userCache;
-    }
+	/** Sets the users cache. Not required, but can benefit performance. */
+	public void setUserCache(UserCache userCache) {
+		this.userCache = userCache;
+	}
 
-    /** Sets the Spring Security user details service. Required. */
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+	/** Sets the Spring Security user details service. Required. */
+	public void setUserDetailsService(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(userDetailsService, "userDetailsService is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(userDetailsService, "userDetailsService is required");
+	}
 
-    @Override
-    protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-        String identifier = callback.getIdentifier();
-        UserDetails user = loadUserDetails(identifier);
-        if (user != null) {
-            SpringSecurityUtils.checkUserValidity(user);
-            callback.setPassword(user.getPassword());
-        }
-    }
+	@Override
+	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		String identifier = callback.getIdentifier();
+		UserDetails user = loadUserDetails(identifier);
+		if (user != null) {
+			SpringSecurityUtils.checkUserValidity(user);
+			callback.setPassword(user.getPassword());
+		}
+	}
 
-    @Override
-    protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
-            throws IOException, UnsupportedCallbackException {
-        UserDetails user = loadUserDetails(callback.getPrincipal().getName());
-        WSUsernameTokenPrincipal principal = callback.getPrincipal();
-        UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), user.getAuthorities());
-        if (logger.isDebugEnabled()) {
-            logger.debug("Authentication success: " + authRequest.toString());
-        }
-        SecurityContextHolder.getContext().setAuthentication(authRequest);
-    }
+	@Override
+	protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
+			throws IOException, UnsupportedCallbackException {
+		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
+		WSUsernameTokenPrincipal principal = callback.getPrincipal();
+		UsernamePasswordAuthenticationToken authRequest =
+				new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), user.getAuthorities());
+		if (logger.isDebugEnabled()) {
+			logger.debug("Authentication success: " + authRequest.toString());
+		}
+		SecurityContextHolder.getContext().setAuthentication(authRequest);
+	}
 
-    @Override
-    protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
-        SecurityContextHolder.clearContext();
-    }
+	@Override
+	protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
+		SecurityContextHolder.clearContext();
+	}
 
-    private UserDetails loadUserDetails(String username) throws DataAccessException {
-        UserDetails user = userCache.getUserFromCache(username);
+	private UserDetails loadUserDetails(String username) throws DataAccessException {
+		UserDetails user = userCache.getUserFromCache(username);
 
-        if (user == null) {
-            try {
-                user = userDetailsService.loadUserByUsername(username);
-            }
-            catch (UsernameNotFoundException notFound) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Username '" + username + "' not found");
-                }
-                return null;
-            }
-            userCache.putUserInCache(user);
-        }
-        return user;
-    }
+		if (user == null) {
+			try {
+				user = userDetailsService.loadUserByUsername(username);
+			}
+			catch (UsernameNotFoundException notFound) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Username '" + username + "' not found");
+				}
+				return null;
+			}
+			userCache.putUserInCache(user);
+		}
+		return user;
+	}
 }

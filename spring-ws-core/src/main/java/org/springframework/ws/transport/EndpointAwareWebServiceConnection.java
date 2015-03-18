@@ -28,7 +28,7 @@ import org.springframework.ws.NoEndpointFoundException;
  */
 public interface EndpointAwareWebServiceConnection extends WebServiceConnection {
 
-    /** Called when an endpoint is not found. */
-    void endpointNotFound();
+	/** Called when an endpoint is not found. */
+	void endpointNotFound();
 
 }

@@ -28,11 +28,11 @@ import org.springframework.xml.XmlException;
 @SuppressWarnings("serial")
 public class XsdSchemaException extends XmlException {
 
-    public XsdSchemaException(String message) {
-        super(message);
-    }
+	public XsdSchemaException(String message) {
+		super(message);
+	}
 
-    public XsdSchemaException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
+	public XsdSchemaException(String message, Throwable throwable) {
+		super(message, throwable);
+	}
 }

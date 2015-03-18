@@ -27,7 +27,7 @@ import org.jivesoftware.smack.packet.Packet;
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
- * Server-side component for receiving XMPP (Jabber) messages.  Requires a {@linkplain #setConnection(XMPPConnection)
+ * Server-side component for receiving XMPP (Jabber) messages.	Requires a {@linkplain #setConnection(XMPPConnection)
  * connection} to be set, in addition to the {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * messageFactory} and {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  * messageReceiver} required by the base class.
@@ -39,76 +39,76 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
  */
 public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
-    /** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
-    public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
+	/** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
+	public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
 
-    private XMPPConnection connection;
+	private XMPPConnection connection;
 
-    private WebServicePacketListener packetListener;
+	private WebServicePacketListener packetListener;
 
-    private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
+	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
-    public XmppMessageReceiver() {
-    }
+	public XmppMessageReceiver() {
+	}
 
-    /** Sets the {@code XMPPConnection} to use. Setting this property is required. */
-    public void setConnection(XMPPConnection connection) {
-        this.connection = connection;
-    }
+	/** Sets the {@code XMPPConnection} to use. Setting this property is required. */
+	public void setConnection(XMPPConnection connection) {
+		this.connection = connection;
+	}
 
-    @Override
-    protected void onActivate() throws XMPPException {
-        if (!connection.isConnected()) {
-            connection.connect();
-        }
-    }
+	@Override
+	protected void onActivate() throws XMPPException {
+		if (!connection.isConnected()) {
+			connection.connect();
+		}
+	}
 
-    @Override
-    protected void onStart() {
-        if (logger.isInfoEnabled()) {
-            logger.info("Starting XMPP receiver [" + connection.getUser() + "]");
-        }
-        packetListener = new WebServicePacketListener();
-        PacketFilter packetFilter = new PacketTypeFilter(Message.class);
-        connection.addPacketListener(packetListener, packetFilter);
-    }
+	@Override
+	protected void onStart() {
+		if (logger.isInfoEnabled()) {
+			logger.info("Starting XMPP receiver [" + connection.getUser() + "]");
+		}
+		packetListener = new WebServicePacketListener();
+		PacketFilter packetFilter = new PacketTypeFilter(Message.class);
+		connection.addPacketListener(packetListener, packetFilter);
+	}
 
-    @Override
-    protected void onStop() {
-        if (logger.isInfoEnabled()) {
-            logger.info("Stopping XMPP receiver [" + connection.getUser() + "]");
-        }
-        connection.removePacketListener(packetListener);
-        packetListener = null;
-    }
+	@Override
+	protected void onStop() {
+		if (logger.isInfoEnabled()) {
+			logger.info("Stopping XMPP receiver [" + connection.getUser() + "]");
+		}
+		connection.removePacketListener(packetListener);
+		packetListener = null;
+	}
 
-    @Override
-    protected void onShutdown() {
-        if (logger.isInfoEnabled()) {
-            logger.info("Shutting down XMPP receiver [" + connection.getUser() + "]");
-        }
-        if (connection.isConnected()) {
-            connection.disconnect();
-        }
-    }
+	@Override
+	protected void onShutdown() {
+		if (logger.isInfoEnabled()) {
+			logger.info("Shutting down XMPP receiver [" + connection.getUser() + "]");
+		}
+		if (connection.isConnected()) {
+			connection.disconnect();
+		}
+	}
 
-    private class WebServicePacketListener implements PacketListener {
+	private class WebServicePacketListener implements PacketListener {
 
-        @Override
-        public void processPacket(Packet packet) {
-            logger.info("Received " + packet);
-            if (packet instanceof Message) {
-                Message message = (Message) packet;
-                try {
-                    XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
-                    wsConnection.setMessageEncoding(messageEncoding);
-                    handleConnection(wsConnection);
-                }
-                catch (Exception ex) {
-                    logger.error(ex);
-                }
-            }
-        }
-    }
+		@Override
+		public void processPacket(Packet packet) {
+			logger.info("Received " + packet);
+			if (packet instanceof Message) {
+				Message message = (Message) packet;
+				try {
+					XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
+					wsConnection.setMessageEncoding(messageEncoding);
+					handleConnection(wsConnection);
+				}
+				catch (Exception ex) {
+					logger.error(ex);
+				}
+			}
+		}
+	}
 
 }

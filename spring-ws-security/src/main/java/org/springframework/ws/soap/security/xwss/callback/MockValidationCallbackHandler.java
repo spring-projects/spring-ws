@@ -40,49 +40,49 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
  */
 public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 
-    private boolean isValid = true;
+	private boolean isValid = true;
 
-    public MockValidationCallbackHandler() {
-    }
+	public MockValidationCallbackHandler() {
+	}
 
-    public MockValidationCallbackHandler(boolean valid) {
-        isValid = valid;
-    }
+	public MockValidationCallbackHandler(boolean valid) {
+		isValid = valid;
+	}
 
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof CertificateValidationCallback) {
-            CertificateValidationCallback validationCallback = (CertificateValidationCallback) callback;
-            validationCallback.setValidator(new MockCertificateValidator());
-        }
-        else if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-            validationCallback.setValidator(new MockPasswordValidator());
-        }
-        else {
-            throw new UnsupportedCallbackException(callback);
-        }
-    }
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof CertificateValidationCallback) {
+			CertificateValidationCallback validationCallback = (CertificateValidationCallback) callback;
+			validationCallback.setValidator(new MockCertificateValidator());
+		}
+		else if (callback instanceof PasswordValidationCallback) {
+			PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
+			validationCallback.setValidator(new MockPasswordValidator());
+		}
+		else {
+			throw new UnsupportedCallbackException(callback);
+		}
+	}
 
-    public void setValid(boolean valid) {
-        isValid = valid;
-    }
+	public void setValid(boolean valid) {
+		isValid = valid;
+	}
 
-    private class MockCertificateValidator implements CertificateValidationCallback.CertificateValidator {
+	private class MockCertificateValidator implements CertificateValidationCallback.CertificateValidator {
 
-        @Override
-        public boolean validate(X509Certificate certificate)
-                throws CertificateValidationCallback.CertificateValidationException {
-            return isValid;
-        }
-    }
+		@Override
+		public boolean validate(X509Certificate certificate)
+				throws CertificateValidationCallback.CertificateValidationException {
+			return isValid;
+		}
+	}
 
-    private class MockPasswordValidator implements PasswordValidationCallback.PasswordValidator {
+	private class MockPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            return isValid;
-        }
-    }
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			return isValid;
+		}
+	}
 }

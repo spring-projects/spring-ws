@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,11 +38,11 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
- *    &#64;PayloadRoot(localPart = "Request",
- *                 namespace = "http://springframework.org/spring-ws")
- *    public Source doSomethingWithRequest() {
- *       ...
- *    }
+ *	  &#64;PayloadRoot(localPart = "Request",
+ *				   namespace = "http://springframework.org/spring-ws")
+ *	  public Source doSomethingWithRequest() {
+ *		 ...
+ *	  }
  * }
  * </pre>
  *
@@ -51,44 +51,44 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
  */
 public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<QName> {
 
-    private static TransformerFactory transformerFactory;
+	private static TransformerFactory transformerFactory;
 
-    static {
-        transformerFactory = TransformerFactory.newInstance();
-    }
+	static {
+		transformerFactory = TransformerFactory.newInstance();
+	}
 
-    @Override
-    protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
-    }
+	@Override
+	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
+	}
 
-    @Override
-    protected List<QName> getLookupKeysForMethod(Method method) {
-	    List<QName> result = new ArrayList<QName>();
+	@Override
+	protected List<QName> getLookupKeysForMethod(Method method) {
+		List<QName> result = new ArrayList<QName>();
 
-        PayloadRoots payloadRoots = AnnotationUtils.findAnnotation(method, PayloadRoots.class);
-	    if (payloadRoots != null) {
-		    for (PayloadRoot payloadRoot : payloadRoots.value()) {
-			    result.add(getQNameFromAnnotation(payloadRoot));
-		    }
-	    }
-	    else {
-            PayloadRoot payloadRoot = AnnotationUtils.findAnnotation(method, PayloadRoot.class);
-		    if (payloadRoot != null) {
-			    result.add(getQNameFromAnnotation(payloadRoot));
-		    }
-        }
+		PayloadRoots payloadRoots = AnnotationUtils.findAnnotation(method, PayloadRoots.class);
+		if (payloadRoots != null) {
+			for (PayloadRoot payloadRoot : payloadRoots.value()) {
+				result.add(getQNameFromAnnotation(payloadRoot));
+			}
+		}
+		else {
+			PayloadRoot payloadRoot = AnnotationUtils.findAnnotation(method, PayloadRoot.class);
+			if (payloadRoot != null) {
+				result.add(getQNameFromAnnotation(payloadRoot));
+			}
+		}
 
-	    return result;
-    }
+		return result;
+	}
 
 	private QName getQNameFromAnnotation(PayloadRoot payloadRoot) {
 		if (StringUtils.hasLength(payloadRoot.localPart()) && StringUtils.hasLength(
 				payloadRoot.namespace())) {
-		    return new QName(payloadRoot.namespace(), payloadRoot.localPart());
+			return new QName(payloadRoot.namespace(), payloadRoot.localPart());
 		}
 		else {
-		    return new QName(payloadRoot.localPart());
+			return new QName(payloadRoot.localPart());
 		}
 	}
 

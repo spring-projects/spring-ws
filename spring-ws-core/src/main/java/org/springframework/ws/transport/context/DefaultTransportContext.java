@@ -27,20 +27,20 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class DefaultTransportContext implements TransportContext {
 
-    private final WebServiceConnection connection;
+	private final WebServiceConnection connection;
 
-    /** Creates a new {@code DefaultTransportContext} that exposes the given connection. */
-    public DefaultTransportContext(WebServiceConnection connection) {
-        Assert.notNull(connection, "'connection' must not be null");
-        this.connection = connection;
-    }
+	/** Creates a new {@code DefaultTransportContext} that exposes the given connection. */
+	public DefaultTransportContext(WebServiceConnection connection) {
+		Assert.notNull(connection, "'connection' must not be null");
+		this.connection = connection;
+	}
 
-    @Override
-    public WebServiceConnection getConnection() {
-        return connection;
-    }
+	@Override
+	public WebServiceConnection getConnection() {
+		return connection;
+	}
 
-    public String toString() {
-        return connection.toString();
-    }
+	public String toString() {
+		return connection.toString();
+	}
 }

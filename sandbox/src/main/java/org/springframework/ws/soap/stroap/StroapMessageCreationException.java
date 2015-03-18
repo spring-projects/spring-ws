@@ -23,11 +23,11 @@ import org.springframework.ws.soap.SoapMessageCreationException;
  */
 public class StroapMessageCreationException extends SoapMessageCreationException {
 
-    public StroapMessageCreationException(String msg) {
-        super(msg);
-    }
+	public StroapMessageCreationException(String msg) {
+		super(msg);
+	}
 
-    public StroapMessageCreationException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public StroapMessageCreationException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

@@ -26,11 +26,11 @@ import javax.xml.transform.Source;
  */
 public interface WsdlDefinition {
 
-    /**
-     * Returns the {@code Source} of the definition.
-     *
-     * @return the {@code Source} of this WSDL definition
-     */
-    Source getSource();
+	/**
+	 * Returns the {@code Source} of the definition.
+	 *
+	 * @return the {@code Source} of this WSDL definition
+	 */
+	Source getSource();
 
 }

@@ -32,18 +32,18 @@ import org.apache.axiom.soap.SOAPFactory;
 @SuppressWarnings("Since15")
 class CachingPayload extends AbstractPayload {
 
-    CachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
-        super(axiomBody, axiomFactory);
-    }
+	CachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
+		super(axiomBody, axiomFactory);
+	}
 
-    @Override
-    protected XMLStreamReader getStreamReader(OMElement payloadElement) {
-        return payloadElement.getXMLStreamReader();
-    }
+	@Override
+	protected XMLStreamReader getStreamReader(OMElement payloadElement) {
+		return payloadElement.getXMLStreamReader();
+	}
 
-    @Override
-    public Result getResultInternal() {
-        return new AxiomResult(getAxiomBody(), getAxiomFactory());
-    }
+	@Override
+	public Result getResultInternal() {
+		return new AxiomResult(getAxiomBody(), getAxiomFactory());
+	}
 
 }

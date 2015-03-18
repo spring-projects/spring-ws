@@ -29,6 +29,6 @@ import javax.wsdl.WSDLException;
  */
 public interface TypesProvider {
 
-    void addTypes(Definition definition) throws WSDLException;
+	void addTypes(Definition definition) throws WSDLException;
 
 }

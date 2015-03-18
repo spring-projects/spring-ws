@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -48,17 +48,17 @@ import org.springframework.context.annotation.Import;
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurerAdapter {
  *
- * 	&#064;Override
- * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- * 	    interceptors.add(new MyInterceptor());
- * 	}
+ *	&#064;Override
+ *	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ *		interceptors.add(new MyInterceptor());
+ *	}
  *
- * 	&#064;Override
- * 	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
- * 	    argumentResolvers.add(new MyArgumentResolver());
- * 	}
+ *	&#064;Override
+ *	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
+ *		argumentResolvers.add(new MyArgumentResolver());
+ *	}
  *
- * 	// More overridden methods ...
+ *	// More overridden methods ...
  * }
  * </pre>
  *
@@ -72,17 +72,17 @@ import org.springframework.context.annotation.Import;
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurationSupport {
  *
- * 	&#064;Override
- * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- * 	    interceptors.add(new MyInterceptor());
- *  }
+ *	&#064;Override
+ *	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ *		interceptors.add(new MyInterceptor());
+ *	}
  *
- * 	&#064;Bean
- * 	&#064;Override
- * 	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
+ *	&#064;Bean
+ *	&#064;Override
+ *	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
  *		// Create or delegate to "super" to create and
  *		// customize properties of DefaultMethodEndpointAdapter
- * 	}
+ *	}
  * }
  * </pre>
  *

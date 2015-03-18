@@ -21,11 +21,11 @@ import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTestCase;
 
 public class Stroap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {
 
-    @Override
-    protected SoapEnvelope createSoapEnvelope() throws Exception {
-        StroapMessageFactory messageFactory = new StroapMessageFactory();
-        StroapEnvelope envelope = new StroapEnvelope(messageFactory);
-        envelope.getHeader();
-        return envelope;
-    }
+	@Override
+	protected SoapEnvelope createSoapEnvelope() throws Exception {
+		StroapMessageFactory messageFactory = new StroapMessageFactory();
+		StroapEnvelope envelope = new StroapEnvelope(messageFactory);
+		envelope.getHeader();
+		return envelope;
+	}
 }

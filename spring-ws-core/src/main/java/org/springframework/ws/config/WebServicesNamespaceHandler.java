@@ -27,14 +27,14 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  */
 public class WebServicesNamespaceHandler extends NamespaceHandlerSupport {
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void init() {
-        registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenBeanDefinitionParser());
-        registerBeanDefinitionParser("interceptors", new InterceptorsBeanDefinitionParser());
-        registerBeanDefinitionParser("static-wsdl", new StaticWsdlBeanDefinitionParser());
-        registerBeanDefinitionParser("dynamic-wsdl", new DynamicWsdlBeanDefinitionParser());
-        registerBeanDefinitionParser("marshalling-endpoints", new MarshallingEndpointsBeanDefinitionParser());
-        registerBeanDefinitionParser("xpath-endpoints", new XPathEndpointsBeanDefinitionParser());
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void init() {
+		registerBeanDefinitionParser("annotation-driven", new AnnotationDrivenBeanDefinitionParser());
+		registerBeanDefinitionParser("interceptors", new InterceptorsBeanDefinitionParser());
+		registerBeanDefinitionParser("static-wsdl", new StaticWsdlBeanDefinitionParser());
+		registerBeanDefinitionParser("dynamic-wsdl", new DynamicWsdlBeanDefinitionParser());
+		registerBeanDefinitionParser("marshalling-endpoints", new MarshallingEndpointsBeanDefinitionParser());
+		registerBeanDefinitionParser("xpath-endpoints", new XPathEndpointsBeanDefinitionParser());
+	}
 }

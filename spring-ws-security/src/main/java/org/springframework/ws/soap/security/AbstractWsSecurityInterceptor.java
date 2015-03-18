@@ -50,216 +50,216 @@ import org.springframework.ws.soap.soap11.Soap11Body;
  */
 public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInterceptor, ClientInterceptor {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    protected static final QName WS_SECURITY_NAME =
-            new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
+	protected static final QName WS_SECURITY_NAME =
+			new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
 
-    private boolean secureResponse = true;
+	private boolean secureResponse = true;
 
-    private boolean validateRequest = true;
+	private boolean validateRequest = true;
 
-    private boolean secureRequest = true;
+	private boolean secureRequest = true;
 
-    private boolean validateResponse = true;
-    
-    private boolean skipValidationIfNoHeaderPresent = false;
+	private boolean validateResponse = true;
+	
+	private boolean skipValidationIfNoHeaderPresent = false;
 
-    private EndpointExceptionResolver exceptionResolver;
+	private EndpointExceptionResolver exceptionResolver;
 
-    /** Indicates whether server-side incoming request are to be validated. Defaults to {@code true}. */
-    public void setValidateRequest(boolean validateRequest) {
-        this.validateRequest = validateRequest;
-    }
+	/** Indicates whether server-side incoming request are to be validated. Defaults to {@code true}. */
+	public void setValidateRequest(boolean validateRequest) {
+		this.validateRequest = validateRequest;
+	}
 
-    /** Indicates whether server-side outgoing responses are to be secured. Defaults to {@code true}. */
-    public void setSecureResponse(boolean secureResponse) {
-        this.secureResponse = secureResponse;
-    }
+	/** Indicates whether server-side outgoing responses are to be secured. Defaults to {@code true}. */
+	public void setSecureResponse(boolean secureResponse) {
+		this.secureResponse = secureResponse;
+	}
 
-    /** Indicates whether client-side outgoing requests are to be secured. Defaults to {@code true}. */
-    public void setSecureRequest(boolean secureRequest) {
-        this.secureRequest = secureRequest;
-    }
+	/** Indicates whether client-side outgoing requests are to be secured. Defaults to {@code true}. */
+	public void setSecureRequest(boolean secureRequest) {
+		this.secureRequest = secureRequest;
+	}
 
-    /** Indicates whether client-side incoming responses are to be validated. Defaults to {@code true}. */
-    public void setValidateResponse(boolean validateResponse) {
-        this.validateResponse = validateResponse;
-    }
+	/** Indicates whether client-side incoming responses are to be validated. Defaults to {@code true}. */
+	public void setValidateResponse(boolean validateResponse) {
+		this.validateResponse = validateResponse;
+	}
 
-    /** Provide an {@link EndpointExceptionResolver} for resolving validation exceptions. */
-    public void setExceptionResolver(EndpointExceptionResolver exceptionResolver) {
-        this.exceptionResolver = exceptionResolver;
-    }
+	/** Provide an {@link EndpointExceptionResolver} for resolving validation exceptions. */
+	public void setExceptionResolver(EndpointExceptionResolver exceptionResolver) {
+		this.exceptionResolver = exceptionResolver;
+	}
 
-    /** Allows skipping validation if no security header is present. */
-    public void setSkipValidationIfNoHeaderPresent(
+	/** Allows skipping validation if no security header is present. */
+	public void setSkipValidationIfNoHeaderPresent(
 			boolean skipValidationIfNoHeaderPresent) {
 		this.skipValidationIfNoHeaderPresent = skipValidationIfNoHeaderPresent;
 	}
 
-    /*
-     * Server-side
-     */
+	/*
+	 * Server-side
+	 */
 
 	/**
-     * Validates a server-side incoming request. Delegates to {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
-     * if the {@link #setValidateRequest(boolean) validateRequest} property is {@code true}.
-     *
-     * @param messageContext the message context, containing the request to be validated
-     * @param endpoint       chosen endpoint to invoke
-     * @return {@code true} if the request was valid; {@code false} otherwise.
-     * @throws Exception in case of errors
-     * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
-     */
-    @Override
-    public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        if (validateRequest) {
-            Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-            if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
-            	return true;
-            }
-            try {
-                validateMessage((SoapMessage) messageContext.getRequest(), messageContext);
-                return true;
-            }
-            catch (WsSecurityValidationException ex) {
-                return handleValidationException(ex, messageContext);
-            }
-            catch (WsSecurityFaultException ex) {
-                return handleFaultException(ex, messageContext);
-            }
-        }
-        else {
-            return true;
-        }
-    }
+	 * Validates a server-side incoming request. Delegates to {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setValidateRequest(boolean) validateRequest} property is {@code true}.
+	 *
+	 * @param messageContext the message context, containing the request to be validated
+	 * @param endpoint		 chosen endpoint to invoke
+	 * @return {@code true} if the request was valid; {@code false} otherwise.
+	 * @throws Exception in case of errors
+	 * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
+	 */
+	@Override
+	public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
+		if (validateRequest) {
+			Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
+			if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
+				return true;
+			}
+			try {
+				validateMessage((SoapMessage) messageContext.getRequest(), messageContext);
+				return true;
+			}
+			catch (WsSecurityValidationException ex) {
+				return handleValidationException(ex, messageContext);
+			}
+			catch (WsSecurityFaultException ex) {
+				return handleFaultException(ex, messageContext);
+			}
+		}
+		else {
+			return true;
+		}
+	}
 
 	/**
-     * Secures a server-side outgoing response. Delegates to {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
-     * if the {@link #setSecureResponse(boolean) secureResponse} property is {@code true}.
-     *
-     * @param messageContext the message context, containing the response to be secured
-     * @param endpoint       chosen endpoint to invoke
-     * @return {@code true} if the response was secured; {@code false} otherwise.
-     * @throws Exception in case of errors
-     * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
-     */
-    @Override
-    public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        boolean result = true;
-        try {
-            if (secureResponse) {
-                Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
-                Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-                try {
-                    secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
-                }
-                catch (WsSecuritySecurementException ex) {
-                    result = handleSecurementException(ex, messageContext);
-                }
-                catch (WsSecurityFaultException ex) {
-                    result = handleFaultException(ex, messageContext);
-                }
-            }
-        }
-        finally {
-            if (!result) {
-                messageContext.clearResponse();
-            }
-        }
-        return result;
-    }
+	 * Secures a server-side outgoing response. Delegates to {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setSecureResponse(boolean) secureResponse} property is {@code true}.
+	 *
+	 * @param messageContext the message context, containing the response to be secured
+	 * @param endpoint		 chosen endpoint to invoke
+	 * @return {@code true} if the response was secured; {@code false} otherwise.
+	 * @throws Exception in case of errors
+	 * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
+	 */
+	@Override
+	public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+		boolean result = true;
+		try {
+			if (secureResponse) {
+				Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
+				Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
+				try {
+					secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
+				}
+				catch (WsSecuritySecurementException ex) {
+					result = handleSecurementException(ex, messageContext);
+				}
+				catch (WsSecurityFaultException ex) {
+					result = handleFaultException(ex, messageContext);
+				}
+			}
+		}
+		finally {
+			if (!result) {
+				messageContext.clearResponse();
+			}
+		}
+		return result;
+	}
 
-    /** Returns {@code true}, i.e. fault responses are not secured. */
-    @Override
-    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	/** Returns {@code true}, i.e. fault responses are not secured. */
+	@Override
+	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
 
-    @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
-        cleanUp();
-    }
+	@Override
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+		cleanUp();
+	}
 
-    @Override
-    public boolean understands(SoapHeaderElement headerElement) {
-        return WS_SECURITY_NAME.equals(headerElement.getName());
-    }
+	@Override
+	public boolean understands(SoapHeaderElement headerElement) {
+		return WS_SECURITY_NAME.equals(headerElement.getName());
+	}
 
-    /*
-     * Client-side
-     */
+	/*
+	 * Client-side
+	 */
 
-    /**
-     * Secures a client-side outgoing request. Delegates to {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
-     * if the {@link #setSecureRequest(boolean) secureRequest} property is {@code true}.
-     *
-     * @param messageContext the message context, containing the request to be secured
-     * @return {@code true} if the response was secured; {@code false} otherwise.
-     * @throws Exception in case of errors
-     * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
-     */
-    @Override
-    public final boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
-        if (secureRequest) {
-            Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-            try {
-                secureMessage((SoapMessage) messageContext.getRequest(), messageContext);
-                return true;
-            }
-            catch (WsSecuritySecurementException ex) {
-                return handleSecurementException(ex, messageContext);
-            }
-            catch (WsSecurityFaultException ex) {
-                return handleFaultException(ex, messageContext);
-            }
-        }
-        else {
-            return true;
-        }
-    }
+	/**
+	 * Secures a client-side outgoing request. Delegates to {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setSecureRequest(boolean) secureRequest} property is {@code true}.
+	 *
+	 * @param messageContext the message context, containing the request to be secured
+	 * @return {@code true} if the response was secured; {@code false} otherwise.
+	 * @throws Exception in case of errors
+	 * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
+	 */
+	@Override
+	public final boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+		if (secureRequest) {
+			Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
+			try {
+				secureMessage((SoapMessage) messageContext.getRequest(), messageContext);
+				return true;
+			}
+			catch (WsSecuritySecurementException ex) {
+				return handleSecurementException(ex, messageContext);
+			}
+			catch (WsSecurityFaultException ex) {
+				return handleFaultException(ex, messageContext);
+			}
+		}
+		else {
+			return true;
+		}
+	}
 
-    /**
-     * Validates a client-side incoming response. Delegates to {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
-     * if the {@link #setValidateResponse(boolean) validateResponse} property is {@code true}.
-     *
-     * @param messageContext the message context, containing the response to be validated
-     * @return {@code true} if the request was valid; {@code false} otherwise.
-     * @throws Exception in case of errors
-     * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
-     */
-    @Override
-    public final boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-        if (validateResponse) {
-            Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
-            Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-            if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
-            	return true;
-            }
-            try {
-                validateMessage((SoapMessage) messageContext.getResponse(), messageContext);
-                return true;
-            }
-            catch (WsSecurityValidationException ex) {
-                return handleValidationException(ex, messageContext);
-            }
-            catch (WsSecurityFaultException ex) {
-                return handleFaultException(ex, messageContext);
-            }
-        }
-        else {
-            return true;
-        }
-    }
+	/**
+	 * Validates a client-side incoming response. Delegates to {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setValidateResponse(boolean) validateResponse} property is {@code true}.
+	 *
+	 * @param messageContext the message context, containing the response to be validated
+	 * @return {@code true} if the request was valid; {@code false} otherwise.
+	 * @throws Exception in case of errors
+	 * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
+	 */
+	@Override
+	public final boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
+		if (validateResponse) {
+			Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
+			Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
+			if(skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())){
+				return true;
+			}
+			try {
+				validateMessage((SoapMessage) messageContext.getResponse(), messageContext);
+				return true;
+			}
+			catch (WsSecurityValidationException ex) {
+				return handleValidationException(ex, messageContext);
+			}
+			catch (WsSecurityFaultException ex) {
+				return handleFaultException(ex, messageContext);
+			}
+		}
+		else {
+			return true;
+		}
+	}
 
-    /** Returns {@code true}, i.e. fault responses are not validated. */
-    @Override
-    public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
-        return true;
-    }
+	/** Returns {@code true}, i.e. fault responses are not validated. */
+	@Override
+	public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
+		return true;
+	}
 
 	@Override
 	public void afterCompletion(MessageContext messageContext, Exception ex)
@@ -268,107 +268,107 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	/**
-     * Handles an securement exception. Default implementation logs the given exception, and returns
-     * {@code false}.
-     *
-     * @param ex             the validation exception
-     * @param messageContext the message context
-     * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
-     */
-    protected boolean handleSecurementException(WsSecuritySecurementException ex, MessageContext messageContext) {
-        if (logger.isErrorEnabled()) {
-            logger.error("Could not secure response: " + ex.getMessage(), ex);
-        }
-        return false;
-    }
+	 * Handles an securement exception. Default implementation logs the given exception, and returns
+	 * {@code false}.
+	 *
+	 * @param ex			 the validation exception
+	 * @param messageContext the message context
+	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 */
+	protected boolean handleSecurementException(WsSecuritySecurementException ex, MessageContext messageContext) {
+		if (logger.isErrorEnabled()) {
+			logger.error("Could not secure response: " + ex.getMessage(), ex);
+		}
+		return false;
+	}
 
-    /**
-     * Handles an invalid SOAP message. Default implementation logs the given exception, delegates to the set {@link
-     * #setExceptionResolver(EndpointExceptionResolver) exceptionResolver} if any, or creates a SOAP 1.1 Client or SOAP
-     * 1.2 Sender Fault with the exception message as fault string, and returns {@code false}.
-     *
-     * @param ex             the validation exception
-     * @param messageContext the message context
-     * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
-     */
-    protected boolean handleValidationException(WsSecurityValidationException ex, MessageContext messageContext) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("Could not validate request: " + ex.getMessage());
-        }
-        if (exceptionResolver != null) {
-            exceptionResolver.resolveException(messageContext, null, ex);
-        }
-        else {
-            if (logger.isDebugEnabled()) {
-                logger.debug("No exception resolver present, creating basic soap fault");
-            }
-            SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-            response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
-        }
-        return false;
-    }
+	/**
+	 * Handles an invalid SOAP message. Default implementation logs the given exception, delegates to the set {@link
+	 * #setExceptionResolver(EndpointExceptionResolver) exceptionResolver} if any, or creates a SOAP 1.1 Client or SOAP
+	 * 1.2 Sender Fault with the exception message as fault string, and returns {@code false}.
+	 *
+	 * @param ex			 the validation exception
+	 * @param messageContext the message context
+	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 */
+	protected boolean handleValidationException(WsSecurityValidationException ex, MessageContext messageContext) {
+		if (logger.isWarnEnabled()) {
+			logger.warn("Could not validate request: " + ex.getMessage());
+		}
+		if (exceptionResolver != null) {
+			exceptionResolver.resolveException(messageContext, null, ex);
+		}
+		else {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No exception resolver present, creating basic soap fault");
+			}
+			SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
+			response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+		}
+		return false;
+	}
 
-    /**
-     * Handles a fault exception.Default implementation logs the given exception, and creates a SOAP Fault with the
-     * properties of the given exception, and returns {@code false}.
-     *
-     * @param ex             the validation exception
-     * @param messageContext the message context
-     * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
-     */
-    protected boolean handleFaultException(WsSecurityFaultException ex, MessageContext messageContext) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("Could not handle request: " + ex.getMessage());
-        }
-        SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-        SoapFault fault;
-        if (response instanceof Soap11Body) {
-            fault = ((Soap11Body) response).addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
-        }
-        else {
-            fault = response.addClientOrSenderFault(ex.getFaultString(), Locale.ENGLISH);
-        }
-        fault.setFaultActorOrRole(ex.getFaultActor());
-        return false;
-    }
+	/**
+	 * Handles a fault exception.Default implementation logs the given exception, and creates a SOAP Fault with the
+	 * properties of the given exception, and returns {@code false}.
+	 *
+	 * @param ex			 the validation exception
+	 * @param messageContext the message context
+	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 */
+	protected boolean handleFaultException(WsSecurityFaultException ex, MessageContext messageContext) {
+		if (logger.isWarnEnabled()) {
+			logger.warn("Could not handle request: " + ex.getMessage());
+		}
+		SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
+		SoapFault fault;
+		if (response instanceof Soap11Body) {
+			fault = ((Soap11Body) response).addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
+		}
+		else {
+			fault = response.addClientOrSenderFault(ex.getFaultString(), Locale.ENGLISH);
+		}
+		fault.setFaultActorOrRole(ex.getFaultActor());
+		return false;
+	}
 
-    /**
-     * Abstract template method. Subclasses are required to validate the request contained in the given {@link
-     * SoapMessage}, and replace the original request with the validated version.
-     *
-     * @param soapMessage the soap message to validate
-     * @throws WsSecurityValidationException in case of validation errors
-     */
-    protected abstract void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
-            throws WsSecurityValidationException;
+	/**
+	 * Abstract template method. Subclasses are required to validate the request contained in the given {@link
+	 * SoapMessage}, and replace the original request with the validated version.
+	 *
+	 * @param soapMessage the soap message to validate
+	 * @throws WsSecurityValidationException in case of validation errors
+	 */
+	protected abstract void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+			throws WsSecurityValidationException;
 
-    /**
-     * Abstract template method. Subclasses are required to secure the response contained in the given {@link
-     * SoapMessage}, and replace the original response with the secured version.
-     *
-     * @param soapMessage the soap message to secure
-     * @throws WsSecuritySecurementException in case of securement errors
-     */
-    protected abstract void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
-            throws WsSecuritySecurementException;
+	/**
+	 * Abstract template method. Subclasses are required to secure the response contained in the given {@link
+	 * SoapMessage}, and replace the original response with the secured version.
+	 *
+	 * @param soapMessage the soap message to secure
+	 * @throws WsSecuritySecurementException in case of securement errors
+	 */
+	protected abstract void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+			throws WsSecuritySecurementException;
 
-    protected abstract void cleanUp();
+	protected abstract void cleanUp();
 
-    /**
-     * Iterates over header elements and returns true if WS-Security header is found. 
-     */
-    private boolean isSecurityHeaderPresent(SoapMessage message) {
-    	SoapHeader soapHeader = message.getSoapHeader();
-    	if(soapHeader == null){
-    		return false;
-    	}
+	/**
+	 * Iterates over header elements and returns true if WS-Security header is found. 
+	 */
+	private boolean isSecurityHeaderPresent(SoapMessage message) {
+		SoapHeader soapHeader = message.getSoapHeader();
+		if(soapHeader == null){
+			return false;
+		}
 		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
-    	while(elements.hasNext()){
-    		SoapHeaderElement e = elements.next();
-    		if(e.getName().equals(WS_SECURITY_NAME)){
-    			return true;
-    		}
-    	}
-    	return false;
+		while(elements.hasNext()){
+			SoapHeaderElement e = elements.next();
+			if(e.getName().equals(WS_SECURITY_NAME)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

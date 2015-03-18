@@ -61,111 +61,111 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  */
 public class MailMessageSender implements WebServiceMessageSender, InitializingBean {
 
-    /**
-     * Default timeout for receive operations. Set to 1000 * 60 milliseconds (i.e. 1 minute).
-     */
-    public static final long DEFAULT_RECEIVE_TIMEOUT = 1000 * 60;
+	/**
+	 * Default timeout for receive operations. Set to 1000 * 60 milliseconds (i.e. 1 minute).
+	 */
+	public static final long DEFAULT_RECEIVE_TIMEOUT = 1000 * 60;
 
-    private long receiveSleepTime = DEFAULT_RECEIVE_TIMEOUT;
+	private long receiveSleepTime = DEFAULT_RECEIVE_TIMEOUT;
 
-    private Session session = Session.getInstance(new Properties(), null);
+	private Session session = Session.getInstance(new Properties(), null);
 
-    private URLName storeUri;
+	private URLName storeUri;
 
-    private URLName transportUri;
+	private URLName transportUri;
 
-    private InternetAddress from;
+	private InternetAddress from;
 
-    /**
-     * Sets the from address to use when sending request messages.
-     */
-    public void setFrom(String from) throws AddressException {
-        this.from = new InternetAddress(from);
-    }
+	/**
+	 * Sets the from address to use when sending request messages.
+	 */
+	public void setFrom(String from) throws AddressException {
+		this.from = new InternetAddress(from);
+	}
 
-    /**
-     * Set JavaMail properties for the {@link Session}.
-     *
-     * <p>A new {@link Session} will be created with those properties. Use either this method or {@link #setSession}, but
-     * not both.
-     *
-     * <p>Non-default properties in this instance will override given JavaMail properties.
-     */
-    public void setJavaMailProperties(Properties javaMailProperties) {
-        session = Session.getInstance(javaMailProperties, null);
-    }
+	/**
+	 * Set JavaMail properties for the {@link Session}.
+	 *
+	 * <p>A new {@link Session} will be created with those properties. Use either this method or {@link #setSession}, but
+	 * not both.
+	 *
+	 * <p>Non-default properties in this instance will override given JavaMail properties.
+	 */
+	public void setJavaMailProperties(Properties javaMailProperties) {
+		session = Session.getInstance(javaMailProperties, null);
+	}
 
-    /**
-     * Set the sleep time to use for receive calls, <strong>in milliseconds</strong>. The default is 1000 * 60 ms, that
-     * is 1 minute.
-     */
-    public void setReceiveSleepTime(long receiveSleepTime) {
-        this.receiveSleepTime = receiveSleepTime;
-    }
+	/**
+	 * Set the sleep time to use for receive calls, <strong>in milliseconds</strong>. The default is 1000 * 60 ms, that
+	 * is 1 minute.
+	 */
+	public void setReceiveSleepTime(long receiveSleepTime) {
+		this.receiveSleepTime = receiveSleepTime;
+	}
 
-    /**
-     * Set the JavaMail {@code Session}, possibly pulled from JNDI.
-     *
-     * <p>Default is a new {@code Session} without defaults, that is completely configured via this instance's
-     * properties.
-     *
-     * <p>If using a pre-configured {@code Session}, non-default properties in this instance will override the
-     * settings in the {@code Session}.
-     *
-     * @see #setJavaMailProperties
-     */
-    public void setSession(Session session) {
-        Assert.notNull(session, "Session must not be null");
-        this.session = session;
-    }
+	/**
+	 * Set the JavaMail {@code Session}, possibly pulled from JNDI.
+	 *
+	 * <p>Default is a new {@code Session} without defaults, that is completely configured via this instance's
+	 * properties.
+	 *
+	 * <p>If using a pre-configured {@code Session}, non-default properties in this instance will override the
+	 * settings in the {@code Session}.
+	 *
+	 * @see #setJavaMailProperties
+	 */
+	public void setSession(Session session) {
+		Assert.notNull(session, "Session must not be null");
+		this.session = session;
+	}
 
-    /**
-     * Sets the JavaMail Store URI to be used for retrieving response messages. Typically takes the form of
-     * {@code [imap|pop3]://user:password@host:port/INBOX}. Setting this property is required.
-     *
-     * <p>For example, {@code imap://john:secret@imap.example.com/INBOX}
-     *
-     * @see Session#getStore(URLName)
-     */
-    public void setStoreUri(String storeUri) {
-        this.storeUri = new URLName(storeUri);
-    }
+	/**
+	 * Sets the JavaMail Store URI to be used for retrieving response messages. Typically takes the form of
+	 * {@code [imap|pop3]://user:password@host:port/INBOX}. Setting this property is required.
+	 *
+	 * <p>For example, {@code imap://john:secret@imap.example.com/INBOX}
+	 *
+	 * @see Session#getStore(URLName)
+	 */
+	public void setStoreUri(String storeUri) {
+		this.storeUri = new URLName(storeUri);
+	}
 
-    /**
-     * Sets the JavaMail Transport URI to be used for sending response messages. Typically takes the form of
-     * {@code smtp://user:password@host:port}. Setting this property is required.
-     *
-     * <p>For example, {@code smtp://john:secret@smtp.example.com}
-     *
-     * @see Session#getTransport(URLName)
-     */
-    public void setTransportUri(String transportUri) {
-        this.transportUri = new URLName(transportUri);
-    }
+	/**
+	 * Sets the JavaMail Transport URI to be used for sending response messages. Typically takes the form of
+	 * {@code smtp://user:password@host:port}. Setting this property is required.
+	 *
+	 * <p>For example, {@code smtp://john:secret@smtp.example.com}
+	 *
+	 * @see Session#getTransport(URLName)
+	 */
+	public void setTransportUri(String transportUri) {
+		this.transportUri = new URLName(transportUri);
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(transportUri, "'transportUri' is required");
-        Assert.notNull(storeUri, "'storeUri' is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(transportUri, "'transportUri' is required");
+		Assert.notNull(storeUri, "'storeUri' is required");
+	}
 
-    @Override
-    public WebServiceConnection createConnection(URI uri) throws IOException {
-        InternetAddress to = MailTransportUtils.getTo(uri);
-        MailSenderConnection connection =
-                new MailSenderConnection(session, transportUri, storeUri, to, receiveSleepTime);
-        if (from != null) {
-            connection.setFrom(from);
-        }
-        String subject = MailTransportUtils.getSubject(uri);
-        if (subject != null) {
-            connection.setSubject(subject);
-        }
-        return connection;
-    }
+	@Override
+	public WebServiceConnection createConnection(URI uri) throws IOException {
+		InternetAddress to = MailTransportUtils.getTo(uri);
+		MailSenderConnection connection =
+				new MailSenderConnection(session, transportUri, storeUri, to, receiveSleepTime);
+		if (from != null) {
+			connection.setFrom(from);
+		}
+		String subject = MailTransportUtils.getSubject(uri);
+		if (subject != null) {
+			connection.setSubject(subject);
+		}
+		return connection;
+	}
 
-    @Override
-    public boolean supports(URI uri) {
-        return uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME);
-    }
+	@Override
+	public boolean supports(URI uri) {
+		return uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME);
+	}
 }

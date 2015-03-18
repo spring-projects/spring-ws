@@ -35,67 +35,67 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
  */
 class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
 
-    SaajSoap12Body(SOAPBody body) {
-        super(body);
-    }
+	SaajSoap12Body(SOAPBody body) {
+		super(body);
+	}
 
-    @Override
-    public Soap12Fault getFault() {
-	    SOAPFault fault = getSaajBody().getFault();
-        return fault != null ? new SaajSoap12Fault(fault) : null;
-    }
+	@Override
+	public Soap12Fault getFault() {
+		SOAPFault fault = getSaajBody().getFault();
+		return fault != null ? new SaajSoap12Fault(fault) : null;
+	}
 
-    @Override
-    public Soap12Fault addClientOrSenderFault(String faultString, Locale locale) {
-        return addFault(SoapVersion.SOAP_12.getClientOrSenderFaultName(), faultString, locale);
-    }
+	@Override
+	public Soap12Fault addClientOrSenderFault(String faultString, Locale locale) {
+		return addFault(SoapVersion.SOAP_12.getClientOrSenderFaultName(), faultString, locale);
+	}
 
-    @Override
-    public Soap12Fault addMustUnderstandFault(String faultString, Locale locale) {
-        return addFault(SoapVersion.SOAP_12.getMustUnderstandFaultName(), faultString, locale);
-    }
+	@Override
+	public Soap12Fault addMustUnderstandFault(String faultString, Locale locale) {
+		return addFault(SoapVersion.SOAP_12.getMustUnderstandFaultName(), faultString, locale);
+	}
 
-    @Override
-    public Soap12Fault addServerOrReceiverFault(String faultString, Locale locale) {
-        return addFault(SoapVersion.SOAP_12.getServerOrReceiverFaultName(), faultString, locale);
-    }
+	@Override
+	public Soap12Fault addServerOrReceiverFault(String faultString, Locale locale) {
+		return addFault(SoapVersion.SOAP_12.getServerOrReceiverFaultName(), faultString, locale);
+	}
 
-    @Override
-    public Soap12Fault addVersionMismatchFault(String faultString, Locale locale) {
-        return addFault(SoapVersion.SOAP_12.getVersionMismatchFaultName(), faultString, locale);
-    }
+	@Override
+	public Soap12Fault addVersionMismatchFault(String faultString, Locale locale) {
+		return addFault(SoapVersion.SOAP_12.getVersionMismatchFaultName(), faultString, locale);
+	}
 
-    @Override
-    public Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) {
-        QName name = new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "DataEncodingUnknown");
-        Soap12Fault fault = addFault(name, reason, locale);
-        for (QName subcode : subcodes) {
-            fault.addFaultSubcode(subcode);
-        }
-        return fault;
-    }
+	@Override
+	public Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) {
+		QName name = new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "DataEncodingUnknown");
+		Soap12Fault fault = addFault(name, reason, locale);
+		for (QName subcode : subcodes) {
+			fault.addFaultSubcode(subcode);
+		}
+		return fault;
+	}
 
-    protected Soap12Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
-        Assert.notNull(faultCode, "No faultCode given");
-        Assert.hasLength(faultString, "faultString cannot be empty");
-        Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
-        Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
-        try {
-	        getSaajBody().removeContents();
-	        SOAPBody body = getSaajBody();
-	        SOAPFault result;
-	        if (faultStringLocale == null) {
-		        result = body.addFault(faultCode, faultString);
-	        }
-	        else {
-		        result = body.addFault(faultCode, faultString, faultStringLocale);
-	        }
-	        SOAPFault saajFault = result;
-            return new SaajSoap12Fault(saajFault);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
+	protected Soap12Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
+		Assert.notNull(faultCode, "No faultCode given");
+		Assert.hasLength(faultString, "faultString cannot be empty");
+		Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
+		Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
+		try {
+			getSaajBody().removeContents();
+			SOAPBody body = getSaajBody();
+			SOAPFault result;
+			if (faultStringLocale == null) {
+				result = body.addFault(faultCode, faultString);
+			}
+			else {
+				result = body.addFault(faultCode, faultString, faultStringLocale);
+			}
+			SOAPFault saajFault = result;
+			return new SaajSoap12Fault(saajFault);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapFaultException(ex);
+		}
+	}
 
 }

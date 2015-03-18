@@ -28,27 +28,27 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 public class MockSenderConnectionTest {
 
-    @Test
-    public void error() throws IOException {
-        String testErrorMessage = "Test Error Message";
-        MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(withError(testErrorMessage));
-        assertTrue(connection.hasError());
-        assertEquals(testErrorMessage, connection.getErrorMessage());
-    }
+	@Test
+	public void error() throws IOException {
+		String testErrorMessage = "Test Error Message";
+		MockSenderConnection connection = new MockSenderConnection();
+		connection.andRespond(withError(testErrorMessage));
+		assertTrue(connection.hasError());
+		assertEquals(testErrorMessage, connection.getErrorMessage());
+	}
 
-    @Test
-    public void normal() throws IOException {
-        MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(withPayload(new StringSource("<response/>")));
-        assertFalse(connection.hasError());
-        assertNull(connection.getErrorMessage());
-    }
+	@Test
+	public void normal() throws IOException {
+		MockSenderConnection connection = new MockSenderConnection();
+		connection.andRespond(withPayload(new StringSource("<response/>")));
+		assertFalse(connection.hasError());
+		assertNull(connection.getErrorMessage());
+	}
 
-    @Test(expected = AssertionError.class)
-    public void noRequestMatchers() throws IOException {
-        MockSenderConnection connection = new MockSenderConnection();
-        connection.andRespond(withPayload(new StringSource("<response/>")));
-        connection.send(null);
-    }
+	@Test(expected = AssertionError.class)
+	public void noRequestMatchers() throws IOException {
+		MockSenderConnection connection = new MockSenderConnection();
+		connection.andRespond(withPayload(new StringSource("<response/>")));
+		connection.send(null);
+	}
 }

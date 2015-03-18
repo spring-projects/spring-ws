@@ -43,61 +43,61 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  */
 class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 
-    AxiomSoap12Header(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
-        super(axiomHeader, axiomFactory);
-    }
+	AxiomSoap12Header(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
+		super(axiomHeader, axiomFactory);
+	}
 
-    @Override
-    public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
-        try {
-            SOAPHeaderBlock notUnderstood =
-                    getAxiomHeader().addHeaderBlock("NotUnderstood", getAxiomHeader().getNamespace());
-	        OMNamespace headerNamespace =
-                    notUnderstood.declareNamespace(headerName.getNamespaceURI(),
-		                    headerName.getPrefix());
-            notUnderstood.addAttribute("qname", headerNamespace.getPrefix() + ":" + headerName.getLocalPart(), null);
-            return new AxiomSoapHeaderElement(notUnderstood, getAxiomFactory());
-        }
-        catch (SOAPProcessingException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
+		try {
+			SOAPHeaderBlock notUnderstood =
+					getAxiomHeader().addHeaderBlock("NotUnderstood", getAxiomHeader().getNamespace());
+			OMNamespace headerNamespace =
+					notUnderstood.declareNamespace(headerName.getNamespaceURI(),
+							headerName.getPrefix());
+			notUnderstood.addAttribute("qname", headerNamespace.getPrefix() + ":" + headerName.getLocalPart(), null);
+			return new AxiomSoapHeaderElement(notUnderstood, getAxiomFactory());
+		}
+		catch (SOAPProcessingException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
-        try {
-            SOAPHeaderBlock upgrade = getAxiomHeader().addHeaderBlock("Upgrade", getAxiomHeader().getNamespace());
-            for (String supportedSoapUri : supportedSoapUris) {
-                OMElement supportedEnvelope = getAxiomFactory()
-                        .createOMElement("SupportedEnvelope", getAxiomHeader().getNamespace(), upgrade);
-                OMNamespace namespace = supportedEnvelope.declareNamespace(supportedSoapUri, "");
-                supportedEnvelope.addAttribute("qname", namespace.getPrefix() + ":Envelope", null);
-            }
-            return new AxiomSoapHeaderElement(upgrade, getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
+		try {
+			SOAPHeaderBlock upgrade = getAxiomHeader().addHeaderBlock("Upgrade", getAxiomHeader().getNamespace());
+			for (String supportedSoapUri : supportedSoapUris) {
+				OMElement supportedEnvelope = getAxiomFactory()
+						.createOMElement("SupportedEnvelope", getAxiomHeader().getNamespace(), upgrade);
+				OMNamespace namespace = supportedEnvelope.declareNamespace(supportedSoapUri, "");
+				supportedEnvelope.addAttribute("qname", namespace.getPrefix() + ":Envelope", null);
+			}
+			return new AxiomSoapHeaderElement(upgrade, getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapHeaderException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] roles, final boolean isUltimateDestination)
-            throws SoapHeaderException {
-        RolePlayer rolePlayer = null;
-        if (!ObjectUtils.isEmpty(roles)) {
-            rolePlayer = new RolePlayer() {
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] roles, final boolean isUltimateDestination)
+			throws SoapHeaderException {
+		RolePlayer rolePlayer = null;
+		if (!ObjectUtils.isEmpty(roles)) {
+			rolePlayer = new RolePlayer() {
 
-                public List<?> getRoles() {
-                    return Arrays.asList(roles);
-                }
+				public List<?> getRoles() {
+					return Arrays.asList(roles);
+				}
 
-                public boolean isUltimateDestination() {
-                    return isUltimateDestination;
-                }
-            };
-        }
-        Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
-        return new AxiomSoapHeaderElementIterator(result);
-    }
+				public boolean isUltimateDestination() {
+					return isUltimateDestination;
+				}
+			};
+		}
+		Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
+		return new AxiomSoapHeaderElementIterator(result);
+	}
 }

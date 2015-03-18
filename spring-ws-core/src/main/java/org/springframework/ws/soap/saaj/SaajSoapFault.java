@@ -32,33 +32,33 @@ import org.springframework.ws.soap.SoapFaultDetail;
  */
 abstract class SaajSoapFault extends SaajSoapElement<SOAPFault> implements SoapFault {
 
-    protected SaajSoapFault(SOAPFault fault) {
-        super(fault);
-    }
+	protected SaajSoapFault(SOAPFault fault) {
+		super(fault);
+	}
 
-    @Override
-    public QName getFaultCode() {
-	    return getSaajFault().getFaultCodeAsQName();
-    }
+	@Override
+	public QName getFaultCode() {
+		return getSaajFault().getFaultCodeAsQName();
+	}
 
-    protected SOAPFault getSaajFault() {
-        return getSaajElement();
-    }
+	protected SOAPFault getSaajFault() {
+		return getSaajElement();
+	}
 
-    @Override
-    public SoapFaultDetail getFaultDetail() {
-        Detail saajDetail = getSaajFault().getDetail();
-        return saajDetail != null ? new SaajSoapFaultDetail(saajDetail) : null;
-    }
+	@Override
+	public SoapFaultDetail getFaultDetail() {
+		Detail saajDetail = getSaajFault().getDetail();
+		return saajDetail != null ? new SaajSoapFaultDetail(saajDetail) : null;
+	}
 
-    @Override
-    public SoapFaultDetail addFaultDetail() {
-        try {
-            Detail saajDetail = getSaajFault().addDetail();
-            return new SaajSoapFaultDetail(saajDetail);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
+	@Override
+	public SoapFaultDetail addFaultDetail() {
+		try {
+			Detail saajDetail = getSaajFault().addDetail();
+			return new SaajSoapFaultDetail(saajDetail);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapFaultException(ex);
+		}
+	}
 }

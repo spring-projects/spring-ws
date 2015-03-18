@@ -55,107 +55,107 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @since 1.0.0
  */
 public class PayloadTransformingInterceptor extends TransformerObjectSupport
-        implements EndpointInterceptor, InitializingBean {
+		implements EndpointInterceptor, InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(PayloadTransformingInterceptor.class);
+	private static final Log logger = LogFactory.getLog(PayloadTransformingInterceptor.class);
 
-    private Resource requestXslt;
+	private Resource requestXslt;
 
-    private Resource responseXslt;
+	private Resource responseXslt;
 
-    private Templates requestTemplates;
+	private Templates requestTemplates;
 
-    private Templates responseTemplates;
+	private Templates responseTemplates;
 
-    /** Sets the XSLT stylesheet to use for transforming incoming request. */
-    public void setRequestXslt(Resource requestXslt) {
-        this.requestXslt = requestXslt;
-    }
+	/** Sets the XSLT stylesheet to use for transforming incoming request. */
+	public void setRequestXslt(Resource requestXslt) {
+		this.requestXslt = requestXslt;
+	}
 
-    /** Sets the XSLT stylesheet to use for transforming outgoing responses. */
-    public void setResponseXslt(Resource responseXslt) {
-        this.responseXslt = responseXslt;
-    }
+	/** Sets the XSLT stylesheet to use for transforming outgoing responses. */
+	public void setResponseXslt(Resource responseXslt) {
+		this.responseXslt = responseXslt;
+	}
 
-    /**
-     * Transforms the request message in the given message context using a provided stylesheet. Transformation only
-     * occurs if the {@code requestXslt} has been set.
-     *
-     * @param messageContext the message context
-     * @return always returns {@code true}
-     * @see #setRequestXslt(org.springframework.core.io.Resource)
-     */
-    @Override
-    public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-        if (requestTemplates != null) {
-            WebServiceMessage request = messageContext.getRequest();
-            Transformer transformer = requestTemplates.newTransformer();
-            transformMessage(request, transformer);
-            logger.debug("Request message transformed");
-        }
-        return true;
-    }
+	/**
+	 * Transforms the request message in the given message context using a provided stylesheet. Transformation only
+	 * occurs if the {@code requestXslt} has been set.
+	 *
+	 * @param messageContext the message context
+	 * @return always returns {@code true}
+	 * @see #setRequestXslt(org.springframework.core.io.Resource)
+	 */
+	@Override
+	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
+		if (requestTemplates != null) {
+			WebServiceMessage request = messageContext.getRequest();
+			Transformer transformer = requestTemplates.newTransformer();
+			transformMessage(request, transformer);
+			logger.debug("Request message transformed");
+		}
+		return true;
+	}
 
-    /**
-     * Transforms the response message in the given message context using a stylesheet. Transformation only occurs if
-     * the {@code responseXslt} has been set.
-     *
-     * @param messageContext the message context
-     * @return always returns {@code true}
-     * @see #setResponseXslt(org.springframework.core.io.Resource)
-     */
-    @Override
-    public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-        if (responseTemplates != null) {
-            WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = responseTemplates.newTransformer();
-            transformMessage(response, transformer);
-            logger.debug("Response message transformed");
-        }
-        return true;
-    }
+	/**
+	 * Transforms the response message in the given message context using a stylesheet. Transformation only occurs if
+	 * the {@code responseXslt} has been set.
+	 *
+	 * @param messageContext the message context
+	 * @return always returns {@code true}
+	 * @see #setResponseXslt(org.springframework.core.io.Resource)
+	 */
+	@Override
+	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
+		if (responseTemplates != null) {
+			WebServiceMessage response = messageContext.getResponse();
+			Transformer transformer = responseTemplates.newTransformer();
+			transformMessage(response, transformer);
+			logger.debug("Response message transformed");
+		}
+		return true;
+	}
 
-    private void transformMessage(WebServiceMessage message, Transformer transformer) throws TransformerException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        transformer.transform(message.getPayloadSource(), new StreamResult(os));
-        ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-        transform(new StreamSource(is), message.getPayloadResult());
-    }
+	private void transformMessage(WebServiceMessage message, Transformer transformer) throws TransformerException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		transformer.transform(message.getPayloadSource(), new StreamResult(os));
+		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+		transform(new StreamSource(is), message.getPayloadResult());
+	}
 
-    /** Does nothing by default. Faults are not transformed. */
-    @Override
-    public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-        return true;
-    }
+	/** Does nothing by default. Faults are not transformed. */
+	@Override
+	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
+		return true;
+	}
 
-    /** Does nothing by default.*/
-    @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
-    }
+	/** Does nothing by default.*/
+	@Override
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (requestXslt == null && responseXslt == null) {
-            throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
-        }
-        TransformerFactory transformerFactory = getTransformerFactory();
-        XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-        xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-        if (requestXslt != null) {
-            Assert.isTrue(requestXslt.exists(), "requestXslt \"" + requestXslt + "\" does not exit");
-            if (logger.isInfoEnabled()) {
-                logger.info("Transforming request using " + requestXslt);
-            }
-            Source requestSource = new ResourceSource(xmlReader, requestXslt);
-            requestTemplates = transformerFactory.newTemplates(requestSource);
-        }
-        if (responseXslt != null) {
-            Assert.isTrue(responseXslt.exists(), "responseXslt \"" + responseXslt + "\" does not exit");
-            if (logger.isInfoEnabled()) {
-                logger.info("Transforming response using " + responseXslt);
-            }
-            Source responseSource = new ResourceSource(xmlReader, responseXslt);
-            responseTemplates = transformerFactory.newTemplates(responseSource);
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (requestXslt == null && responseXslt == null) {
+			throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
+		}
+		TransformerFactory transformerFactory = getTransformerFactory();
+		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+		if (requestXslt != null) {
+			Assert.isTrue(requestXslt.exists(), "requestXslt \"" + requestXslt + "\" does not exit");
+			if (logger.isInfoEnabled()) {
+				logger.info("Transforming request using " + requestXslt);
+			}
+			Source requestSource = new ResourceSource(xmlReader, requestXslt);
+			requestTemplates = transformerFactory.newTemplates(requestSource);
+		}
+		if (responseXslt != null) {
+			Assert.isTrue(responseXslt.exists(), "responseXslt \"" + responseXslt + "\" does not exit");
+			if (logger.isInfoEnabled()) {
+				logger.info("Transforming response using " + responseXslt);
+			}
+			Source responseSource = new ResourceSource(xmlReader, responseXslt);
+			responseTemplates = transformerFactory.newTemplates(responseSource);
+		}
+	}
 }

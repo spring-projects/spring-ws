@@ -47,127 +47,127 @@ import org.springframework.ws.transport.WebServiceConnection;
 @Deprecated
 public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
-    private final HttpClient httpClient;
+	private final HttpClient httpClient;
 
-    private final PostMethod postMethod;
+	private final PostMethod postMethod;
 
-    private ByteArrayOutputStream requestBuffer;
+	private ByteArrayOutputStream requestBuffer;
 
-    private MultiThreadedHttpConnectionManager connectionManager;
+	private MultiThreadedHttpConnectionManager connectionManager;
 
-    protected CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
-        Assert.notNull(httpClient, "httpClient must not be null");
-        Assert.notNull(postMethod, "postMethod must not be null");
-        this.httpClient = httpClient;
-        this.postMethod = postMethod;
-    }
+	protected CommonsHttpConnection(HttpClient httpClient, PostMethod postMethod) {
+		Assert.notNull(httpClient, "httpClient must not be null");
+		Assert.notNull(postMethod, "postMethod must not be null");
+		this.httpClient = httpClient;
+		this.postMethod = postMethod;
+	}
 
-    public PostMethod getPostMethod() {
-        return postMethod;
-    }
+	public PostMethod getPostMethod() {
+		return postMethod;
+	}
 
-    @Override
-    public void onClose() throws IOException {
-        postMethod.releaseConnection();
-        if (connectionManager != null) {
-            connectionManager.shutdown();
-        }
-    }
+	@Override
+	public void onClose() throws IOException {
+		postMethod.releaseConnection();
+		if (connectionManager != null) {
+			connectionManager.shutdown();
+		}
+	}
 
-    /*
-     * URI
-     */
+	/*
+	 * URI
+	 */
 
-    @Override
-    public URI getUri() throws URISyntaxException {
-        try {
-            return new URI(postMethod.getURI().toString());
-        }
-        catch (URIException ex) {
-            throw new URISyntaxException("", ex.getMessage());
-        }
-    }
+	@Override
+	public URI getUri() throws URISyntaxException {
+		try {
+			return new URI(postMethod.getURI().toString());
+		}
+		catch (URIException ex) {
+			throw new URISyntaxException("", ex.getMessage());
+		}
+	}
 
-    /*
-     * Sending request
-     */
+	/*
+	 * Sending request
+	 */
 
-    @Override
-    protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-        requestBuffer = new ByteArrayOutputStream();
-    }
+	@Override
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
+		requestBuffer = new ByteArrayOutputStream();
+	}
 
-    @Override
-    protected void addRequestHeader(String name, String value) throws IOException {
-        postMethod.addRequestHeader(name, value);
-    }
+	@Override
+	protected void addRequestHeader(String name, String value) throws IOException {
+		postMethod.addRequestHeader(name, value);
+	}
 
-    @Override
-    protected OutputStream getRequestOutputStream() throws IOException {
-        return requestBuffer;
-    }
+	@Override
+	protected OutputStream getRequestOutputStream() throws IOException {
+		return requestBuffer;
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
-        requestBuffer = null;
-        try {
-            httpClient.executeMethod(postMethod);
-        } catch (IllegalStateException ex) {
-            if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
-                // The application context has been closed, resulting in a connection factory shutdown and an ISE.
-                // Let's create a new connection factory for this connection only.
-                connectionManager = new MultiThreadedHttpConnectionManager();
-                httpClient.setHttpConnectionManager(connectionManager);
-                httpClient.executeMethod(postMethod);
-            } else {
-                throw ex;
-            }
-        }
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
+		requestBuffer = null;
+		try {
+			httpClient.executeMethod(postMethod);
+		} catch (IllegalStateException ex) {
+			if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
+				// The application context has been closed, resulting in a connection factory shutdown and an ISE.
+				// Let's create a new connection factory for this connection only.
+				connectionManager = new MultiThreadedHttpConnectionManager();
+				httpClient.setHttpConnectionManager(connectionManager);
+				httpClient.executeMethod(postMethod);
+			} else {
+				throw ex;
+			}
+		}
+	}
 
-    /*
-     * Receiving response
-     */
+	/*
+	 * Receiving response
+	 */
 
-    @Override
-    protected int getResponseCode() throws IOException {
-        return postMethod.getStatusCode();
-    }
+	@Override
+	protected int getResponseCode() throws IOException {
+		return postMethod.getStatusCode();
+	}
 
-    @Override
-    protected String getResponseMessage() throws IOException {
-        return postMethod.getStatusText();
-    }
+	@Override
+	protected String getResponseMessage() throws IOException {
+		return postMethod.getStatusText();
+	}
 
-    @Override
-    protected long getResponseContentLength() throws IOException {
-        return postMethod.getResponseContentLength();
-    }
+	@Override
+	protected long getResponseContentLength() throws IOException {
+		return postMethod.getResponseContentLength();
+	}
 
-    @Override
-    protected InputStream getRawResponseInputStream() throws IOException {
-        return postMethod.getResponseBodyAsStream();
-    }
+	@Override
+	protected InputStream getRawResponseInputStream() throws IOException {
+		return postMethod.getResponseBodyAsStream();
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaderNames() throws IOException {
-        Header[] headers = postMethod.getResponseHeaders();
-        String[] names = new String[headers.length];
-        for (int i = 0; i < headers.length; i++) {
-            names[i] = headers[i].getName();
-        }
-        return Arrays.asList(names).iterator();
-    }
+	@Override
+	protected Iterator<String> getResponseHeaderNames() throws IOException {
+		Header[] headers = postMethod.getResponseHeaders();
+		String[] names = new String[headers.length];
+		for (int i = 0; i < headers.length; i++) {
+			names[i] = headers[i].getName();
+		}
+		return Arrays.asList(names).iterator();
+	}
 
-    @Override
-    protected Iterator<String> getResponseHeaders(String name) throws IOException {
-        Header[] headers = postMethod.getResponseHeaders(name);
-        String[] values = new String[headers.length];
-        for (int i = 0; i < headers.length; i++) {
-            values[i] = headers[i].getValue();
-        }
-        return Arrays.asList(values).iterator();
-    }
+	@Override
+	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+		Header[] headers = postMethod.getResponseHeaders(name);
+		String[] values = new String[headers.length];
+		for (int i = 0; i < headers.length; i++) {
+			values[i] = headers[i].getValue();
+		}
+		return Arrays.asList(values).iterator();
+	}
 
 }

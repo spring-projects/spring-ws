@@ -26,18 +26,18 @@ import org.springframework.oxm.XmlMappingException;
 
 public class DummyMarshaller implements Marshaller, Unmarshaller {
 
-    @Override
-    public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean supports(Class clazz) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public boolean supports(Class clazz) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public Object unmarshal(Source source) throws XmlMappingException, IOException {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public Object unmarshal(Source source) throws XmlMappingException, IOException {
+		throw new UnsupportedOperationException();
+	}
 }

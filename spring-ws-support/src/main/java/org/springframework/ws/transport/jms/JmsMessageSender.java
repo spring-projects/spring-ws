@@ -50,33 +50,33 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include:
  *
  * <blockquote>
- *     <table>
- *         <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
- *         <tr>
- *             <td><tt>deliveryMode</tt></td>
- *             <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
- *             <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
- *         </tr>
- *         <tr>
- *             <td><tt>messageType</tt></td>
- *             <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
- *         </tr>
- *         <tr>
- *             <td><tt>priority</tt></td>
- *             <td>The JMS priority (0-9) associated with the request message. See
- *             {@link MessageProducer#setPriority(int)}</td>
- *         </tr>
- *         <tr>
- *             <td><tt>replyToName</tt></td>
- *             <td>The name of the destination to which the response message must be sent, that will be resolved by
- *             the {@link #getDestinationResolver() destination resolver}.</td>
- *         </tr>
- *         <tr>
- *             <td><tt>timeToLive</tt></td>
- *             <td>The lifetime, in milliseconds, of the request message. See
- *             {@link MessageProducer#setTimeToLive(long)}</td>
- *         </tr>
- *     </table>
+ *	   <table>
+ *		   <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
+ *		   <tr>
+ *			   <td><tt>deliveryMode</tt></td>
+ *			   <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
+ *			   <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
+ *		   </tr>
+ *		   <tr>
+ *			   <td><tt>messageType</tt></td>
+ *			   <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
+ *		   </tr>
+ *		   <tr>
+ *			   <td><tt>priority</tt></td>
+ *			   <td>The JMS priority (0-9) associated with the request message. See
+ *			   {@link MessageProducer#setPriority(int)}</td>
+ *		   </tr>
+ *		   <tr>
+ *			   <td><tt>replyToName</tt></td>
+ *			   <td>The name of the destination to which the response message must be sent, that will be resolved by
+ *			   the {@link #getDestinationResolver() destination resolver}.</td>
+ *		   </tr>
+ *		   <tr>
+ *			   <td><tt>timeToLive</tt></td>
+ *			   <td>The lifetime, in milliseconds, of the request message. See
+ *			   {@link MessageProducer#setTimeToLive(long)}</td>
+ *		   </tr>
+ *	   </table>
  * </blockquote>
  *
  * <p>If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
@@ -96,117 +96,117 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
-    /** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
-    public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
+	/** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
+	public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
-    /** Default encoding used to read fromn and write to {@link TextMessage} messages. */
-    public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
+	/** Default encoding used to read fromn and write to {@link TextMessage} messages. */
+	public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
 
-    private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+	private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
 
-    private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
+	private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
-    private MessagePostProcessor postProcessor;
+	private MessagePostProcessor postProcessor;
 
-    /**
-     * Create a new {@code JmsMessageSender}
-     *
-     * <p><b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
-     * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via {@link
-     * #setConnectionFactory(ConnectionFactory)}.
-     *
-     * @see #setConnectionFactory(ConnectionFactory)
-     */
-    public JmsMessageSender() {
-    }
+	/**
+	 * Create a new {@code JmsMessageSender}
+	 *
+	 * <p><b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
+	 * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via {@link
+	 * #setConnectionFactory(ConnectionFactory)}.
+	 *
+	 * @see #setConnectionFactory(ConnectionFactory)
+	 */
+	public JmsMessageSender() {
+	}
 
-    /**
-     * Create a new {@code JmsMessageSender}, given a ConnectionFactory.
-     *
-     * @param connectionFactory the ConnectionFactory to obtain Connections from
-     */
-    public JmsMessageSender(ConnectionFactory connectionFactory) {
-        setConnectionFactory(connectionFactory);
-    }
+	/**
+	 * Create a new {@code JmsMessageSender}, given a ConnectionFactory.
+	 *
+	 * @param connectionFactory the ConnectionFactory to obtain Connections from
+	 */
+	public JmsMessageSender(ConnectionFactory connectionFactory) {
+		setConnectionFactory(connectionFactory);
+	}
 
-    /**
-     * Set the timeout to use for receive calls. The default is -1, which means no timeout.
-     *
-     * @see MessageConsumer#receive(long)
-     */
-    public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
-    }
+	/**
+	 * Set the timeout to use for receive calls. The default is -1, which means no timeout.
+	 *
+	 * @see MessageConsumer#receive(long)
+	 */
+	public void setReceiveTimeout(long receiveTimeout) {
+		this.receiveTimeout = receiveTimeout;
+	}
 
-    /** Sets the encoding used to read from {@link TextMessage} messages. Defaults to {@code UTF-8}. */
-    public void setTextMessageEncoding(String textMessageEncoding) {
-        this.textMessageEncoding = textMessageEncoding;
-    }
+	/** Sets the encoding used to read from {@link TextMessage} messages. Defaults to {@code UTF-8}. */
+	public void setTextMessageEncoding(String textMessageEncoding) {
+		this.textMessageEncoding = textMessageEncoding;
+	}
 
-    /**
-     * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
-     * been set.
-     */
-    public void setPostProcessor(MessagePostProcessor postProcessor) {
-        this.postProcessor = postProcessor;
-    }
+	/**
+	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
+	 * been set.
+	 */
+	public void setPostProcessor(MessagePostProcessor postProcessor) {
+		this.postProcessor = postProcessor;
+	}
 
-    @Override
-    public WebServiceConnection createConnection(URI uri) throws IOException {
-        Connection jmsConnection = null;
-        Session jmsSession = null;
-        try {
-            jmsConnection = createConnection();
-            jmsSession = createSession(jmsConnection);
-            Destination requestDestination = resolveRequestDestination(jmsSession, uri);
-            Message requestMessage = createRequestMessage(jmsSession, uri);
-            JmsSenderConnection wsConnection =
-                    new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination,
-                            requestMessage);
-            wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
-            wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
-            wsConnection.setReceiveTimeout(receiveTimeout);
-            wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
-            wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
-            wsConnection.setTextMessageEncoding(textMessageEncoding);
-            wsConnection.setSessionTransacted(isSessionTransacted());
-            wsConnection.setPostProcessor(postProcessor);
-            return wsConnection;
-        }
-        catch (JMSException ex) {
-            JmsUtils.closeSession(jmsSession);
-            ConnectionFactoryUtils.releaseConnection(jmsConnection, getConnectionFactory(), true);
-            throw new JmsTransportException(ex);
-        }
-    }
+	@Override
+	public WebServiceConnection createConnection(URI uri) throws IOException {
+		Connection jmsConnection = null;
+		Session jmsSession = null;
+		try {
+			jmsConnection = createConnection();
+			jmsSession = createSession(jmsConnection);
+			Destination requestDestination = resolveRequestDestination(jmsSession, uri);
+			Message requestMessage = createRequestMessage(jmsSession, uri);
+			JmsSenderConnection wsConnection =
+					new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination,
+							requestMessage);
+			wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
+			wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
+			wsConnection.setReceiveTimeout(receiveTimeout);
+			wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
+			wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
+			wsConnection.setTextMessageEncoding(textMessageEncoding);
+			wsConnection.setSessionTransacted(isSessionTransacted());
+			wsConnection.setPostProcessor(postProcessor);
+			return wsConnection;
+		}
+		catch (JMSException ex) {
+			JmsUtils.closeSession(jmsSession);
+			ConnectionFactoryUtils.releaseConnection(jmsConnection, getConnectionFactory(), true);
+			throw new JmsTransportException(ex);
+		}
+	}
 
-    @Override
-    public boolean supports(URI uri) {
-        return uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME);
-    }
+	@Override
+	public boolean supports(URI uri) {
+		return uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME);
+	}
 
-    private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {
-        return resolveDestinationName(session, JmsTransportUtils.getDestinationName(uri));
-    }
+	private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {
+		return resolveDestinationName(session, JmsTransportUtils.getDestinationName(uri));
+	}
 
-    private Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
-        String destinationName = JmsTransportUtils.getReplyToName(uri);
-        return StringUtils.hasLength(destinationName) ? resolveDestinationName(session, destinationName) : null;
-    }
+	private Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
+		String destinationName = JmsTransportUtils.getReplyToName(uri);
+		return StringUtils.hasLength(destinationName) ? resolveDestinationName(session, destinationName) : null;
+	}
 
-    private Message createRequestMessage(Session session, URI uri) throws JMSException {
-        int messageType = JmsTransportUtils.getMessageType(uri);
-        if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
-            return session.createBytesMessage();
-        }
-        else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
-            return session.createTextMessage();
-        }
-        else {
-            throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
-        }
+	private Message createRequestMessage(Session session, URI uri) throws JMSException {
+		int messageType = JmsTransportUtils.getMessageType(uri);
+		if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
+			return session.createBytesMessage();
+		}
+		else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
+			return session.createTextMessage();
+		}
+		else {
+			throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
+		}
 
-    }
+	}
 
 
 }

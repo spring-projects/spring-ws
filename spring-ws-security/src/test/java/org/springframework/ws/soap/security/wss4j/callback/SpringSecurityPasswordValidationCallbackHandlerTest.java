@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,44 +38,44 @@ import static org.easymock.EasyMock.*;
 /** @author tareq */
 public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
-    private SpringSecurityPasswordValidationCallbackHandler callbackHandler;
+	private SpringSecurityPasswordValidationCallbackHandler callbackHandler;
 
-    private SimpleGrantedAuthority grantedAuthority;
+	private SimpleGrantedAuthority grantedAuthority;
 
-    private UsernameTokenPrincipalCallback callback;
+	private UsernameTokenPrincipalCallback callback;
 
-    private UserDetails user;
+	private UserDetails user;
 
-    @Before
-    public void setUp() throws Exception {
-        callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
+	@Before
+	public void setUp() throws Exception {
+		callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
-        grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
-        user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));
+		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
+		user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));
 
-        WSUsernameTokenPrincipal principal = new WSUsernameTokenPrincipal("Ernie", true);
-        callback = new UsernameTokenPrincipalCallback(principal);
-    }
+		WSUsernameTokenPrincipal principal = new WSUsernameTokenPrincipal("Ernie", true);
+		callback = new UsernameTokenPrincipalCallback(principal);
+	}
 
-    @Test
-    public void testHandleUsernameTokenPrincipal() throws Exception {
-        UserDetailsService userDetailsService = createMock(UserDetailsService.class);
-        callbackHandler.setUserDetailsService(userDetailsService);
+	@Test
+	public void testHandleUsernameTokenPrincipal() throws Exception {
+		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+		callbackHandler.setUserDetailsService(userDetailsService);
 
-        expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
+		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
 
-        replay(userDetailsService);
+		replay(userDetailsService);
 
-        callbackHandler.handleUsernameTokenPrincipal(callback);
-        SecurityContext context = SecurityContextHolder.getContext();
-        Assert.assertNotNull("SecurityContext must not be null", context);
-        Authentication authentication = context.getAuthentication();
-        Assert.assertNotNull("Authentication must not be null", authentication);
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Assert.assertTrue("GrantedAuthority[] must not be null or empty",
-                (authorities != null && authorities.size() > 0));
-        Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());
+		callbackHandler.handleUsernameTokenPrincipal(callback);
+		SecurityContext context = SecurityContextHolder.getContext();
+		Assert.assertNotNull("SecurityContext must not be null", context);
+		Authentication authentication = context.getAuthentication();
+		Assert.assertNotNull("Authentication must not be null", authentication);
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Assert.assertTrue("GrantedAuthority[] must not be null or empty",
+				(authorities != null && authorities.size() > 0));
+		Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());
 
-        verify(userDetailsService);
-    }
+		verify(userDetailsService);
+	}
 }

@@ -34,31 +34,31 @@ import org.springframework.ws.context.MessageContext;
  */
 public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMethodProcessor {
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        Class<?> parameterType = parameter.getParameterType();
-        Type genericType = parameter.getGenericParameterType();
-        return JAXBElement.class.equals(parameterType) && genericType instanceof ParameterizedType;
-    }
-
-    @Override
-    public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
-            throws JAXBException {
-        ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
-        Class<?> clazz = (Class) parameterizedType.getActualTypeArguments()[0];
-        return unmarshalElementFromRequestPayload(messageContext, clazz);
-    }
-
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        Class<?> parameterType = returnType.getParameterType();
-        return JAXBElement.class.isAssignableFrom(parameterType);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		Class<?> parameterType = parameter.getParameterType();
+		Type genericType = parameter.getGenericParameterType();
+		return JAXBElement.class.equals(parameterType) && genericType instanceof ParameterizedType;
+	}
 
 	@Override
-    protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-            throws JAXBException {
-        JAXBElement<?> element = (JAXBElement<?>) returnValue;
-        marshalToResponsePayload(messageContext, element.getDeclaredType(), element);
-    }
+	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
+			throws JAXBException {
+		ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
+		Class<?> clazz = (Class) parameterizedType.getActualTypeArguments()[0];
+		return unmarshalElementFromRequestPayload(messageContext, clazz);
+	}
+
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		Class<?> parameterType = returnType.getParameterType();
+		return JAXBElement.class.isAssignableFrom(parameterType);
+	}
+
+	@Override
+	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+			throws JAXBException {
+		JAXBElement<?> element = (JAXBElement<?>) returnValue;
+		marshalToResponsePayload(messageContext, element.getDeclaredType(), element);
+	}
 }

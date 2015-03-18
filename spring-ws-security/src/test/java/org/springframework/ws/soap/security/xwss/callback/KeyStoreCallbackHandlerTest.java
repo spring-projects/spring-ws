@@ -21,17 +21,17 @@ import org.junit.Test;
 
 public class KeyStoreCallbackHandlerTest {
 
-    private KeyStoreCallbackHandler handler;
+	private KeyStoreCallbackHandler handler;
 
-    @Before
-    public void setUp() throws Exception {
-        handler = new KeyStoreCallbackHandler();
-    }
+	@Before
+	public void setUp() throws Exception {
+		handler = new KeyStoreCallbackHandler();
+	}
 
-    @Test
-    public void testLoadDefaultTrustStore() throws Exception {
-        System.setProperty("javax.net.ssl.trustStore",
-                "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");
-        handler.loadDefaultTrustStore();
-    }
+	@Test
+	public void testLoadDefaultTrustStore() throws Exception {
+		System.setProperty("javax.net.ssl.trustStore",
+				"/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");
+		handler.loadDefaultTrustStore();
+	}
 }

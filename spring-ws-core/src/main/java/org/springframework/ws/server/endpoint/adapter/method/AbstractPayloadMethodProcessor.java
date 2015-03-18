@@ -36,74 +36,74 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * @since 2.0
  */
 public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSupport
-        implements MethodArgumentResolver, MethodReturnValueHandler {
+		implements MethodArgumentResolver, MethodReturnValueHandler {
 
-    // MethodArgumentResolver
+	// MethodArgumentResolver
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
-     * {@link #supportsRequestPayloadParameter(org.springframework.core.MethodParameter)} afterwards.
-     */
-    @Override
-    public final boolean supportsParameter(MethodParameter parameter) {
-        Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index larger smaller than 0");
-        if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
-            return false;
-        }
-        else {
-            return supportsRequestPayloadParameter(parameter);
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
+	 * {@link #supportsRequestPayloadParameter(org.springframework.core.MethodParameter)} afterwards.
+	 */
+	@Override
+	public final boolean supportsParameter(MethodParameter parameter) {
+		Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index larger smaller than 0");
+		if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
+			return false;
+		}
+		else {
+			return supportsRequestPayloadParameter(parameter);
+		}
+	}
 
-    /**
-     * Indicates whether the given {@linkplain MethodParameter method parameter}, annotated with {@link RequestPayload},
-     * is supported by this resolver.
-     *
-     * @param parameter the method parameter to check
-     * @return {@code true} if this resolver supports the supplied parameter; {@code false} otherwise
-     */
-    protected abstract boolean supportsRequestPayloadParameter(MethodParameter parameter);
+	/**
+	 * Indicates whether the given {@linkplain MethodParameter method parameter}, annotated with {@link RequestPayload},
+	 * is supported by this resolver.
+	 *
+	 * @param parameter the method parameter to check
+	 * @return {@code true} if this resolver supports the supplied parameter; {@code false} otherwise
+	 */
+	protected abstract boolean supportsRequestPayloadParameter(MethodParameter parameter);
 
-    // MethodReturnValueHandler
-    
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
-     * and invokes {@link #supportsResponsePayloadReturnType(org.springframework.core.MethodParameter)} afterwards.
-     */
-    @Override
-    public final boolean supportsReturnType(MethodParameter returnType) {
-        Assert.isTrue(returnType.getParameterIndex() == -1, "Parameter index is not -1");
-        if (returnType.getMethodAnnotation(ResponsePayload.class) == null) {
-            return false;
-        }
-        else {
-            return supportsResponsePayloadReturnType(returnType);
-        }
-    }
+	// MethodReturnValueHandler
+	
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
+	 * and invokes {@link #supportsResponsePayloadReturnType(org.springframework.core.MethodParameter)} afterwards.
+	 */
+	@Override
+	public final boolean supportsReturnType(MethodParameter returnType) {
+		Assert.isTrue(returnType.getParameterIndex() == -1, "Parameter index is not -1");
+		if (returnType.getMethodAnnotation(ResponsePayload.class) == null) {
+			return false;
+		}
+		else {
+			return supportsResponsePayloadReturnType(returnType);
+		}
+	}
 
-    /**
-     * Indicates whether the given {@linkplain MethodParameter method return type}, annotated with {@link
-     * ResponsePayload}, is supported.
-     *
-     * @param returnType the method parameter to check
-     * @return {@code true} if this resolver supports the supplied return type; {@code false} otherwise
-     */
-    protected abstract boolean supportsResponsePayloadReturnType(MethodParameter returnType);
+	/**
+	 * Indicates whether the given {@linkplain MethodParameter method return type}, annotated with {@link
+	 * ResponsePayload}, is supported.
+	 *
+	 * @param returnType the method parameter to check
+	 * @return {@code true} if this resolver supports the supplied return type; {@code false} otherwise
+	 */
+	protected abstract boolean supportsResponsePayloadReturnType(MethodParameter returnType);
 
-    /**
-     * Converts the given source to a byte array input stream.
-     *
-     * @param source the source to convert
-     * @return the input stream
-     * @throws javax.xml.transform.TransformerException in case of transformation errors
-     */
-    protected ByteArrayInputStream convertToByteArrayInputStream(Source source) throws TransformerException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        transform(source, new StreamResult(bos));
-        return new ByteArrayInputStream(bos.toByteArray());
-    }
+	/**
+	 * Converts the given source to a byte array input stream.
+	 *
+	 * @param source the source to convert
+	 * @return the input stream
+	 * @throws javax.xml.transform.TransformerException in case of transformation errors
+	 */
+	protected ByteArrayInputStream convertToByteArrayInputStream(Source source) throws TransformerException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		transform(source, new StreamResult(bos));
+		return new ByteArrayInputStream(bos.toByteArray());
+	}
 }

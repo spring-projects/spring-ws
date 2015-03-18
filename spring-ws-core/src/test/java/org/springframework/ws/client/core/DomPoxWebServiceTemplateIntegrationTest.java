@@ -48,100 +48,100 @@ import org.springframework.xml.transform.StringSource;
 
 public class DomPoxWebServiceTemplateIntegrationTest {
 
-    private static Server jettyServer;
+	private static Server jettyServer;
 
-    private static String baseUrl;
+	private static String baseUrl;
 
 	@BeforeClass
-    public static void startJetty() throws Exception {
-        int port = FreePortScanner.getFreePort();
-        baseUrl = "http://localhost:" + port;
-        jettyServer = new Server(port);
-        Context jettyContext = new Context(jettyServer, "/");
-        jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
-        jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
-        jettyServer.start();
-    }
+	public static void startJetty() throws Exception {
+		int port = FreePortScanner.getFreePort();
+		baseUrl = "http://localhost:" + port;
+		jettyServer = new Server(port);
+		Context jettyContext = new Context(jettyServer, "/");
+		jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
+		jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
+		jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
+		jettyServer.start();
+	}
 
-    @AfterClass
-    public static void stopJetty() throws Exception {
-        if (jettyServer.isRunning()) {
-            jettyServer.stop();
-        }
-    }
+	@AfterClass
+	public static void stopJetty() throws Exception {
+		if (jettyServer.isRunning()) {
+			jettyServer.stop();
+		}
+	}
 
-    @Test
-    public void domPox() throws Exception {
-	    WebServiceTemplate template = new WebServiceTemplate(new DomPoxMessageFactory());
-        template.setMessageSender(new HttpComponentsMessageSender());
-        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-        StringResult result = new StringResult();
-        template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content),
-		        result);
-        assertXMLEqual(content, result.toString());
-        try {
-            template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-		            new StringSource(content), new StringResult());
-            Assert.fail("WebServiceTransportException expected");
-        }
-        catch (WebServiceTransportException ex) {
-            //expected
-        }
-        try {
-            template.sendSourceAndReceiveToResult(baseUrl + "/errors/server",
-		            new StringSource(content), result);
-            Assert.fail("WebServiceTransportException expected");
-        }
-        catch (WebServiceTransportException ex) {
-            //expected
-        }
-    }
+	@Test
+	public void domPox() throws Exception {
+		WebServiceTemplate template = new WebServiceTemplate(new DomPoxMessageFactory());
+		template.setMessageSender(new HttpComponentsMessageSender());
+		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+		StringResult result = new StringResult();
+		template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content),
+				result);
+		assertXMLEqual(content, result.toString());
+		try {
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
+					new StringSource(content), new StringResult());
+			Assert.fail("WebServiceTransportException expected");
+		}
+		catch (WebServiceTransportException ex) {
+			//expected
+		}
+		try {
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/server",
+					new StringSource(content), result);
+			Assert.fail("WebServiceTransportException expected");
+		}
+		catch (WebServiceTransportException ex) {
+			//expected
+		}
+	}
 
 	/** Servlet that returns and error message for a given status code. */
 	@SuppressWarnings("serial")
-    private static class ErrorServlet extends HttpServlet {
+	private static class ErrorServlet extends HttpServlet {
 
-        private int sc;
+		private int sc;
 
-        private ErrorServlet(int sc) {
-            this.sc = sc;
-        }
+		private ErrorServlet(int sc) {
+			this.sc = sc;
+		}
 
-        @Override
-        protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            resp.sendError(sc);
-        }
-    }
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			resp.sendError(sc);
+		}
+	}
 
-    /** Simple POX Servlet. */
-    @SuppressWarnings("serial")
-    private static class PoxServlet extends HttpServlet {
+	/** Simple POX Servlet. */
+	@SuppressWarnings("serial")
+	private static class PoxServlet extends HttpServlet {
 
-        private DocumentBuilderFactory documentBuilderFactory;
+		private DocumentBuilderFactory documentBuilderFactory;
 
-        private TransformerFactory transformerFactory;
+		private TransformerFactory transformerFactory;
 
-        @Override
-        public void init(ServletConfig servletConfig) throws ServletException {
-            super.init(servletConfig);
-            documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilderFactory.setNamespaceAware(true);
-            transformerFactory = TransformerFactory.newInstance();
-        }
+		@Override
+		public void init(ServletConfig servletConfig) throws ServletException {
+			super.init(servletConfig);
+			documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			documentBuilderFactory.setNamespaceAware(true);
+			transformerFactory = TransformerFactory.newInstance();
+		}
 
-        @Override
-        public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-            try {
-                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-                Document message = documentBuilder.parse(req.getInputStream());
-                Transformer transformer = transformerFactory.newTransformer();
-                transformer.transform(new DOMSource(message), new StreamResult(resp.getOutputStream()));
-            }
-            catch (Exception ex) {
-                throw new ServletException("POX POST failed" + ex.getMessage());
-            }
-        }
-    }
+		@Override
+		public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+			try {
+				DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+				Document message = documentBuilder.parse(req.getInputStream());
+				Transformer transformer = transformerFactory.newTransformer();
+				transformer.transform(new DOMSource(message), new StreamResult(resp.getOutputStream()));
+			}
+			catch (Exception ex) {
+				throw new ServletException("POX POST failed" + ex.getMessage());
+			}
+		}
+	}
 
 }

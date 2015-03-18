@@ -35,163 +35,163 @@ import static org.junit.Assert.*;
  */
 public class EndpointMappingTest {
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    @Before
-    public void setUp() throws Exception {
-        messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
-    }
+	@Before
+	public void setUp() throws Exception {
+		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	}
 
-    @Test
-    public void defaultEndpoint() throws Exception {
-        Object defaultEndpoint = new Object();
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
-            @Override
-            protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", messageContext, givenRequest);
-                return null;
-            }
-        };
-        mapping.setDefaultEndpoint(defaultEndpoint);
+	@Test
+	public void defaultEndpoint() throws Exception {
+		Object defaultEndpoint = new Object();
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+				assertEquals("Invalid request passed", messageContext, givenRequest);
+				return null;
+			}
+		};
+		mapping.setDefaultEndpoint(defaultEndpoint);
 
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertNotNull("No EndpointInvocatioChain returned", result);
-        assertEquals("Default Endpoint not returned", defaultEndpoint, result.getEndpoint());
-    }
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertNotNull("No EndpointInvocatioChain returned", result);
+		assertEquals("Default Endpoint not returned", defaultEndpoint, result.getEndpoint());
+	}
 
-    @Test
-    public void endpoint() throws Exception {
-        final Object endpoint = new Object();
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
-            @Override
-            protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", messageContext, givenRequest);
-                return endpoint;
-            }
-        };
+	@Test
+	public void endpoint() throws Exception {
+		final Object endpoint = new Object();
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+				assertEquals("Invalid request passed", messageContext, givenRequest);
+				return endpoint;
+			}
+		};
 
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertNotNull("No EndpointInvocationChain returned", result);
-        assertEquals("Unexpected Endpoint returned", endpoint, result.getEndpoint());
-    }
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertNotNull("No EndpointInvocationChain returned", result);
+		assertEquals("Unexpected Endpoint returned", endpoint, result.getEndpoint());
+	}
 
-    @Test
-    public void endpointInterceptors() throws Exception {
-        final Object endpoint = new Object();
-        EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
-            @Override
-            protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", messageContext, givenRequest);
-                return endpoint;
-            }
-        };
+	@Test
+	public void endpointInterceptors() throws Exception {
+		final Object endpoint = new Object();
+		EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+				assertEquals("Invalid request passed", messageContext, givenRequest);
+				return endpoint;
+			}
+		};
 
-        mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
-        assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
-    }
+		mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
+		assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
+	}
 
-    @Test
-    public void smartEndpointInterceptors() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("smartInterceptor", MySmartEndpointInterceptor.class);
+	@Test
+	public void smartEndpointInterceptors() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("smartInterceptor", MySmartEndpointInterceptor.class);
 
-        final Object endpoint = new Object();
-        EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
-            @Override
-            protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
-                assertEquals("Invalid request passed", messageContext, givenRequest);
-                return endpoint;
-            }
-        };
-        mapping.setApplicationContext(applicationContext);
-        mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
-        
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertEquals("Unexpected amount of EndpointInterceptors returned", 2, result.getInterceptors().length);
-        assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
-        assertTrue("Unexpected EndpointInterceptor returned",
-                result.getInterceptors()[1] instanceof MySmartEndpointInterceptor);
-    }
+		final Object endpoint = new Object();
+		EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+				assertEquals("Invalid request passed", messageContext, givenRequest);
+				return endpoint;
+			}
+		};
+		mapping.setApplicationContext(applicationContext);
+		mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
+		
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertEquals("Unexpected amount of EndpointInterceptors returned", 2, result.getInterceptors().length);
+		assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
+		assertTrue("Unexpected EndpointInterceptor returned",
+				result.getInterceptors()[1] instanceof MySmartEndpointInterceptor);
+	}
 
-    @Test
-    public void endpointBeanName() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("endpoint", Object.class);
+	@Test
+	public void endpointBeanName() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("endpoint", Object.class);
 
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
-            @Override
-            protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", messageContext, message);
-                return "endpoint";
-            }
-        };
-        mapping.setApplicationContext(applicationContext);
+			@Override
+			protected Object getEndpointInternal(MessageContext message) throws Exception {
+				assertEquals("Invalid request", messageContext, message);
+				return "endpoint";
+			}
+		};
+		mapping.setApplicationContext(applicationContext);
 
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertNotNull("No endpoint returned", result);
-    }
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertNotNull("No endpoint returned", result);
+	}
 
-    @Test
-    public void endpointInvalidBeanName() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerSingleton("endpoint", Object.class);
+	@Test
+	public void endpointInvalidBeanName() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("endpoint", Object.class);
 
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
-            @Override
-            protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", messageContext, message);
-                return "noSuchBean";
-            }
-        };
-        mapping.setApplicationContext(applicationContext);
+			@Override
+			protected Object getEndpointInternal(MessageContext message) throws Exception {
+				assertEquals("Invalid request", messageContext, message);
+				return "noSuchBean";
+			}
+		};
+		mapping.setApplicationContext(applicationContext);
 
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
 
-        assertNull("No endpoint returned", result);
-    }
+		assertNull("No endpoint returned", result);
+	}
 
-    @Test
-    public void endpointPrototype() throws Exception {
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-        applicationContext.registerPrototype("endpoint", MyEndpoint.class);
+	@Test
+	public void endpointPrototype() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerPrototype("endpoint", MyEndpoint.class);
 
-        AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
-            @Override
-            protected Object getEndpointInternal(MessageContext message) throws Exception {
-                assertEquals("Invalid request", messageContext, message);
-                return "endpoint";
-            }
-        };
-        mapping.setApplicationContext(applicationContext);
+			@Override
+			protected Object getEndpointInternal(MessageContext message) throws Exception {
+				assertEquals("Invalid request", messageContext, message);
+				return "endpoint";
+			}
+		};
+		mapping.setApplicationContext(applicationContext);
 
-        EndpointInvocationChain result = mapping.getEndpoint(messageContext);
-        assertNotNull("No endpoint returned", result);
-        result = mapping.getEndpoint(messageContext);
-        assertNotNull("No endpoint returned", result);
-        assertEquals("Prototype endpoint was not constructed twice", 2, MyEndpoint.constructorCount);
-    }
+		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		assertNotNull("No endpoint returned", result);
+		result = mapping.getEndpoint(messageContext);
+		assertNotNull("No endpoint returned", result);
+		assertEquals("Prototype endpoint was not constructed twice", 2, MyEndpoint.constructorCount);
+	}
 
-    private static class MyEndpoint {
+	private static class MyEndpoint {
 
-        private static int constructorCount;
+		private static int constructorCount;
 
-        private MyEndpoint() {
-            constructorCount++;
-        }
-    }
+		private MyEndpoint() {
+			constructorCount++;
+		}
+	}
 
-    private static class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
 
-        private MySmartEndpointInterceptor() {
-            super(new EndpointInterceptorAdapter());
-        }
-    }
+		private MySmartEndpointInterceptor() {
+			super(new EndpointInterceptorAdapter());
+		}
+	}
 
 }

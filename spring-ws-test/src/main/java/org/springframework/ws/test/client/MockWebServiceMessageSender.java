@@ -35,47 +35,47 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  */
 class MockWebServiceMessageSender implements WebServiceMessageSender {
 
-    private final List<MockSenderConnection> expectedConnections = new LinkedList<MockSenderConnection>();
+	private final List<MockSenderConnection> expectedConnections = new LinkedList<MockSenderConnection>();
 
-    private Iterator<MockSenderConnection> connectionIterator;
+	private Iterator<MockSenderConnection> connectionIterator;
 
-    @Override
-    public MockSenderConnection createConnection(URI uri) throws IOException {
-        Assert.notNull(uri, "'uri' must not be null");
-        if (connectionIterator == null) {
-            connectionIterator = expectedConnections.iterator();
-        }
-        if (!connectionIterator.hasNext()) {
-            throw new AssertionError("No further connections expected");
-        }
+	@Override
+	public MockSenderConnection createConnection(URI uri) throws IOException {
+		Assert.notNull(uri, "'uri' must not be null");
+		if (connectionIterator == null) {
+			connectionIterator = expectedConnections.iterator();
+		}
+		if (!connectionIterator.hasNext()) {
+			throw new AssertionError("No further connections expected");
+		}
 
-        MockSenderConnection currentConnection = connectionIterator.next();
-        currentConnection.setUri(uri);
-        return currentConnection;
-    }
+		MockSenderConnection currentConnection = connectionIterator.next();
+		currentConnection.setUri(uri);
+		return currentConnection;
+	}
 
-    /**
-     * Always returns {@code true}.
-     */
-    @Override
-    public boolean supports(URI uri) {
-        return true;
-    }
+	/**
+	 * Always returns {@code true}.
+	 */
+	@Override
+	public boolean supports(URI uri) {
+		return true;
+	}
 
-    MockSenderConnection expectNewConnection() {
-        Assert.state(connectionIterator == null, "Can not expect another connection, the test is already underway");
-        MockSenderConnection connection = new MockSenderConnection();
-        expectedConnections.add(connection);
-        return connection;
-    }
+	MockSenderConnection expectNewConnection() {
+		Assert.state(connectionIterator == null, "Can not expect another connection, the test is already underway");
+		MockSenderConnection connection = new MockSenderConnection();
+		expectedConnections.add(connection);
+		return connection;
+	}
 
-    void verifyConnections() {
-        if (expectedConnections.isEmpty()) {
-            return;
-        }
-        if (connectionIterator == null || connectionIterator.hasNext()) {
-            throw new AssertionError("Further connection(s) expected");
-        }
-    }
+	void verifyConnections() {
+		if (expectedConnections.isEmpty()) {
+			return;
+		}
+		if (connectionIterator == null || connectionIterator.hasNext()) {
+			throw new AssertionError("Further connection(s) expected");
+		}
+	}
 
 }

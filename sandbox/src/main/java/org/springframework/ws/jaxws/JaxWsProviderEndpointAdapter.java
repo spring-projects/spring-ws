@@ -39,43 +39,43 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public class JaxWsProviderEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
 
-    public boolean supports(Object endpoint) {
-        return endpoint.getClass().getAnnotation(WebServiceProvider.class) != null && endpoint instanceof Provider;
-    }
+	public boolean supports(Object endpoint) {
+		return endpoint.getClass().getAnnotation(WebServiceProvider.class) != null && endpoint instanceof Provider;
+	}
 
-    public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
-        ServiceMode serviceMode = endpoint.getClass().getAnnotation(ServiceMode.class);
-        if (serviceMode == null || Service.Mode.PAYLOAD.equals(serviceMode.value())) {
-            invokeSourceProvider(messageContext, (Provider<Source>) endpoint);
-        }
-        else if (Service.Mode.MESSAGE.equals(serviceMode.value())) {
-            Provider<SOAPMessage> provider = (Provider<SOAPMessage>) endpoint;
-            invokeMessageProvider(messageContext, provider);
-        }
-    }
+	public void invoke(MessageContext messageContext, Object endpoint) throws Exception {
+		ServiceMode serviceMode = endpoint.getClass().getAnnotation(ServiceMode.class);
+		if (serviceMode == null || Service.Mode.PAYLOAD.equals(serviceMode.value())) {
+			invokeSourceProvider(messageContext, (Provider<Source>) endpoint);
+		}
+		else if (Service.Mode.MESSAGE.equals(serviceMode.value())) {
+			Provider<SOAPMessage> provider = (Provider<SOAPMessage>) endpoint;
+			invokeMessageProvider(messageContext, provider);
+		}
+	}
 
-    private void invokeSourceProvider(MessageContext messageContext, Provider<Source> provider)
-            throws TransformerException {
-        Source requestSource = messageContext.getRequest().getPayloadSource();
-        Source responseSource = provider.invoke(requestSource);
-        if (responseSource != null) {
-            WebServiceMessage response = messageContext.getResponse();
-            Transformer transformer = createTransformer();
-            transformer.transform(responseSource, response.getPayloadResult());
-        }
-    }
+	private void invokeSourceProvider(MessageContext messageContext, Provider<Source> provider)
+			throws TransformerException {
+		Source requestSource = messageContext.getRequest().getPayloadSource();
+		Source responseSource = provider.invoke(requestSource);
+		if (responseSource != null) {
+			WebServiceMessage response = messageContext.getResponse();
+			Transformer transformer = createTransformer();
+			transformer.transform(responseSource, response.getPayloadResult());
+		}
+	}
 
-    private void invokeMessageProvider(MessageContext messageContext, Provider<SOAPMessage> provider) {
-        if (!(messageContext.getRequest() instanceof SaajSoapMessage)) {
-            throw new IllegalArgumentException("JaxWsProviderEndpointAdapter requires a SaajSoapMessage. " +
-                    "Use a SaajSoapMessageFactory to create the SOAP messages.");
-        }
-        SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
-        SOAPMessage saajRequest = request.getSaajMessage();
-        SOAPMessage saajResponse = provider.invoke(saajRequest);
-        if (saajResponse != null) {
-            SaajSoapMessage response = (SaajSoapMessage) messageContext.getResponse();
-            response.setSaajMessage(saajResponse);
-        }
-    }
+	private void invokeMessageProvider(MessageContext messageContext, Provider<SOAPMessage> provider) {
+		if (!(messageContext.getRequest() instanceof SaajSoapMessage)) {
+			throw new IllegalArgumentException("JaxWsProviderEndpointAdapter requires a SaajSoapMessage. " +
+					"Use a SaajSoapMessageFactory to create the SOAP messages.");
+		}
+		SaajSoapMessage request = (SaajSoapMessage) messageContext.getRequest();
+		SOAPMessage saajRequest = request.getSaajMessage();
+		SOAPMessage saajResponse = provider.invoke(saajRequest);
+		if (saajResponse != null) {
+			SaajSoapMessage response = (SaajSoapMessage) messageContext.getResponse();
+			response.setSaajMessage(saajResponse);
+		}
+	}
 }

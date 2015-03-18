@@ -27,23 +27,23 @@ import org.junit.Test;
 
 public class XPathPayloadEndpointMappingTest {
 
-    private XPathPayloadEndpointMapping mapping;
+	private XPathPayloadEndpointMapping mapping;
 
-    @Before
-    public void setUp() throws Exception {
-        mapping = new XPathPayloadEndpointMapping();
-    }
+	@Before
+	public void setUp() throws Exception {
+		mapping = new XPathPayloadEndpointMapping();
+	}
 
-    @Test
-    public void testGetLookupKeyForMessage() throws Exception {
-        mapping.setExpression("/root/text()");
-        mapping.afterPropertiesSet();
+	@Test
+	public void testGetLookupKeyForMessage() throws Exception {
+		mapping.setExpression("/root/text()");
+		mapping.afterPropertiesSet();
 
-        MockWebServiceMessage request = new MockWebServiceMessage("<root>value</root>");
-        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		MockWebServiceMessage request = new MockWebServiceMessage("<root>value</root>");
+		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-        String result = mapping.getLookupKeyForMessage(context);
-        Assert.assertNotNull("mapping returns null", result);
-        Assert.assertEquals("mapping returns invalid result", "value", result);
-    }
+		String result = mapping.getLookupKeyForMessage(context);
+		Assert.assertNotNull("mapping returns null", result);
+		Assert.assertEquals("mapping returns invalid result", "value", result);
+	}
 }

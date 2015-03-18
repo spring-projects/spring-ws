@@ -37,30 +37,30 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * @since 1.5.0
  */
 public class WebServiceMessageReceiverHttpHandler extends SimpleWebServiceMessageReceiverObjectSupport
-        implements HttpHandler {
+		implements HttpHandler {
 
-    private boolean chunkedEncoding = false;
+	private boolean chunkedEncoding = false;
 
-    /** Enables chunked encoding on response bodies. Defaults to {@code false}. */
-    public void setChunkedEncoding(boolean chunkedEncoding) {
-        this.chunkedEncoding = chunkedEncoding;
-    }
+	/** Enables chunked encoding on response bodies. Defaults to {@code false}. */
+	public void setChunkedEncoding(boolean chunkedEncoding) {
+		this.chunkedEncoding = chunkedEncoding;
+	}
 
-    @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        if (HttpTransportConstants.METHOD_POST.equals(httpExchange.getRequestMethod())) {
-            HttpExchangeConnection connection = new HttpExchangeConnection(httpExchange);
-            connection.setChunkedEncoding(chunkedEncoding);
-            try {
-                handleConnection(connection);
-            }
-            catch (Exception ex) {
-                logger.error(ex);
-            }
-        }
-        else {
-            httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
-            httpExchange.close();
-        }
-    }
+	@Override
+	public void handle(HttpExchange httpExchange) throws IOException {
+		if (HttpTransportConstants.METHOD_POST.equals(httpExchange.getRequestMethod())) {
+			HttpExchangeConnection connection = new HttpExchangeConnection(httpExchange);
+			connection.setChunkedEncoding(chunkedEncoding);
+			try {
+				handleConnection(connection);
+			}
+			catch (Exception ex) {
+				logger.error(ex);
+			}
+		}
+		else {
+			httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
+			httpExchange.close();
+		}
+	}
 }

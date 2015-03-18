@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,29 +39,29 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration("cglib-proxy-registration.xml")
 public class CgLibProxyRegistrationTest {
 
-    @Autowired
-    private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired
+	private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    @Test
-    public void registration() throws NoSuchMethodException {
-        MethodEndpoint cglibProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
-        assertNotNull("cg lib proxy endpoint not registered", cglibProxy);
-        Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
-        MethodEndpoint expected = new MethodEndpoint("cgLibProxyEndpoint", applicationContext, doIt);
-        assertEquals("Invalid endpoint registered", expected, cglibProxy);
-    }
+	@Test
+	public void registration() throws NoSuchMethodException {
+		MethodEndpoint cglibProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
+		assertNotNull("cg lib proxy endpoint not registered", cglibProxy);
+		Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
+		MethodEndpoint expected = new MethodEndpoint("cgLibProxyEndpoint", applicationContext, doIt);
+		assertEquals("Invalid endpoint registered", expected, cglibProxy);
+	}
 
-    @Endpoint
-    public static class MyEndpoint {
+	@Endpoint
+	public static class MyEndpoint {
 
-        @PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
-        @Log
-        public void doIt(@RequestPayload Source payload) {
-        }
+		@PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
+		@Log
+		public void doIt(@RequestPayload Source payload) {
+		}
 
-    }
+	}
 
 }

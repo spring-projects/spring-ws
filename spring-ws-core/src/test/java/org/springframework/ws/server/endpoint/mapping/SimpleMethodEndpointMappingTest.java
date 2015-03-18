@@ -27,49 +27,49 @@ import org.junit.Test;
 
 public class SimpleMethodEndpointMappingTest {
 
-    private SimpleMethodEndpointMapping mapping;
+	private SimpleMethodEndpointMapping mapping;
 
-    @Before
-    public void setUp() throws Exception {
-        mapping = new SimpleMethodEndpointMapping();
-        mapping.setMethodPrefix("prefix");
-        mapping.setMethodSuffix("Suffix");
-        MyBean bean = new MyBean();
-        mapping.setEndpoints(new Object[]{bean});
-        mapping.afterPropertiesSet();
-    }
+	@Before
+	public void setUp() throws Exception {
+		mapping = new SimpleMethodEndpointMapping();
+		mapping.setMethodPrefix("prefix");
+		mapping.setMethodSuffix("Suffix");
+		MyBean bean = new MyBean();
+		mapping.setEndpoints(new Object[]{bean});
+		mapping.afterPropertiesSet();
+	}
 
-    @Test
-    public void testRegistration() throws Exception {
-        Assert.assertNotNull("Endpoint not registered", mapping.lookupEndpoint("MyRequest"));
-        Assert.assertNull("Endpoint registered", mapping.lookupEndpoint("request"));
-    }
+	@Test
+	public void testRegistration() throws Exception {
+		Assert.assertNotNull("Endpoint not registered", mapping.lookupEndpoint("MyRequest"));
+		Assert.assertNull("Endpoint registered", mapping.lookupEndpoint("request"));
+	}
 
-    @Test
-    public void testGetLookupKeyForMessageNoNamespace() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<MyRequest/>");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        String result = mapping.getLookupKeyForMessage(messageContext);
-        Assert.assertEquals("Invalid lookup key", "MyRequest", result);
-    }
+	@Test
+	public void testGetLookupKeyForMessageNoNamespace() throws Exception {
+		MockWebServiceMessage request = new MockWebServiceMessage("<MyRequest/>");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		String result = mapping.getLookupKeyForMessage(messageContext);
+		Assert.assertEquals("Invalid lookup key", "MyRequest", result);
+	}
 
-    @Test
-    public void testGetLookupKeyForMessageNamespace() throws Exception {
-        MockWebServiceMessage request =
-                new MockWebServiceMessage("<MyRequest xmlns='http://springframework.org/spring-ws/' />");
-        MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-        String result = mapping.getLookupKeyForMessage(messageContext);
-        Assert.assertEquals("Invalid lookup key", "MyRequest", result);
-    }
+	@Test
+	public void testGetLookupKeyForMessageNamespace() throws Exception {
+		MockWebServiceMessage request =
+				new MockWebServiceMessage("<MyRequest xmlns='http://springframework.org/spring-ws/' />");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		String result = mapping.getLookupKeyForMessage(messageContext);
+		Assert.assertEquals("Invalid lookup key", "MyRequest", result);
+	}
 
-    private static class MyBean {
+	private static class MyBean {
 
-        public void prefixMyRequestSuffix() {
+		public void prefixMyRequestSuffix() {
 
-        }
+		}
 
-        public void request() {
+		public void request() {
 
-        }
-    }
+		}
+	}
 }

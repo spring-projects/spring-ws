@@ -34,51 +34,51 @@ import org.jivesoftware.smack.packet.Message;
  */
 public abstract class XmppTransportUtils {
 
-    private XmppTransportUtils() {
-    }
+	private XmppTransportUtils() {
+	}
 
-    /**
-     * Converts the given XMPP destination into a {@code xmpp} URI.
-     */
-    public static URI toUri(Message requestMessage) throws URISyntaxException {
-        return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo(), null);
-    }
+	/**
+	 * Converts the given XMPP destination into a {@code xmpp} URI.
+	 */
+	public static URI toUri(Message requestMessage) throws URISyntaxException {
+		return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo(), null);
+	}
 
-    public static String getTo(URI uri) {
-        return uri.getSchemeSpecificPart();
-    }
+	public static String getTo(URI uri) {
+		return uri.getSchemeSpecificPart();
+	}
 
-    public static boolean hasError(Message message) {
-        return message != null && Message.Type.error.equals(message.getType());
-    }
+	public static boolean hasError(Message message) {
+		return message != null && Message.Type.error.equals(message.getType());
+	}
 
-    public static String getErrorMessage(Message message) {
-        if (message == null || !Message.Type.error.equals(message.getType())) {
-            return null;
-        }
-        else {
-            return message.getBody();
-        }
-    }
+	public static String getErrorMessage(Message message) {
+		if (message == null || !Message.Type.error.equals(message.getType())) {
+			return null;
+		}
+		else {
+			return message.getBody();
+		}
+	}
 
-    public static void addHeader(Message message, String name, String value) {
-        message.setProperty(name, value);        
-    }
+	public static void addHeader(Message message, String name, String value) {
+		message.setProperty(name, value);		 
+	}
 
-    public static Iterator<String> getHeaderNames(Message message) {
-        Assert.notNull(message, "'message' must not be null");
-        return message.getPropertyNames().iterator();
-    }
+	public static Iterator<String> getHeaderNames(Message message) {
+		Assert.notNull(message, "'message' must not be null");
+		return message.getPropertyNames().iterator();
+	}
 
-    public static Iterator<String> getHeaders(Message message, String name) {
-        Assert.notNull(message, "'message' must not be null");
-        String value = message.getProperty(name).toString();
-        if (value != null) {
-            return Collections.singletonList(value).iterator();
-        }
-        else {
-            return Collections.<String>emptyList().iterator();
-        }
-    }
+	public static Iterator<String> getHeaders(Message message, String name) {
+		Assert.notNull(message, "'message' must not be null");
+		String value = message.getProperty(name).toString();
+		if (value != null) {
+			return Collections.singletonList(value).iterator();
+		}
+		else {
+			return Collections.<String>emptyList().iterator();
+		}
+	}
 
 }

@@ -22,18 +22,18 @@ import org.junit.Test;
 
 public abstract class AbstractWebServiceMessageFactoryTestCase {
 
-    protected WebServiceMessageFactory messageFactory;
+	protected WebServiceMessageFactory messageFactory;
 
-    @Before
-    public final void setUp() throws Exception {
-        messageFactory = createMessageFactory();
-    }
+	@Before
+	public final void setUp() throws Exception {
+		messageFactory = createMessageFactory();
+	}
 
-    @Test
-    public void testCreateEmptyMessage() throws Exception {
-        WebServiceMessage message = messageFactory.createWebServiceMessage();
-        Assert.assertNotNull("WebServiceMessage is null", message);
-    }
+	@Test
+	public void testCreateEmptyMessage() throws Exception {
+		WebServiceMessage message = messageFactory.createWebServiceMessage();
+		Assert.assertNotNull("WebServiceMessage is null", message);
+	}
 
-    protected abstract WebServiceMessageFactory createMessageFactory() throws Exception;
+	protected abstract WebServiceMessageFactory createMessageFactory() throws Exception;
 }

@@ -33,29 +33,29 @@ import org.xml.sax.ext.LexicalHandler;
  */
 class AxiomResult extends SAXResult {
 
-    AxiomResult(OMContainer container, OMFactory factory) {
-        AxiomHandler handler = new AxiomHandler(container, factory);
-        super.setHandler(handler);
-        super.setLexicalHandler(handler);
-    }
+	AxiomResult(OMContainer container, OMFactory factory) {
+		AxiomHandler handler = new AxiomHandler(container, factory);
+		super.setHandler(handler);
+		super.setLexicalHandler(handler);
+	}
 
-    /**
-     * Throws a {@code UnsupportedOperationException}.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    @Override
-    public void setHandler(ContentHandler handler) {
-        throw new UnsupportedOperationException("setHandler is not supported");
-    }
+	/**
+	 * Throws a {@code UnsupportedOperationException}.
+	 *
+	 * @throws UnsupportedOperationException always
+	 */
+	@Override
+	public void setHandler(ContentHandler handler) {
+		throw new UnsupportedOperationException("setHandler is not supported");
+	}
 
-    /**
-     * Throws a {@code UnsupportedOperationException}.
-     *
-     * @throws UnsupportedOperationException always
-     */
-    @Override
-    public void setLexicalHandler(LexicalHandler handler) {
-        throw new UnsupportedOperationException("setLexicalHandler is not supported");
-    }
+	/**
+	 * Throws a {@code UnsupportedOperationException}.
+	 *
+	 * @throws UnsupportedOperationException always
+	 */
+	@Override
+	public void setLexicalHandler(LexicalHandler handler) {
+		throw new UnsupportedOperationException("setLexicalHandler is not supported");
+	}
 }

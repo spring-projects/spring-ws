@@ -28,13 +28,13 @@ import javax.xml.namespace.QName;
  */
 public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 
-    /**
-     * Does this message have a fault?
-     *
-     * @return {@code true} if the message has a fault.
-     * @see #getFaultReason()
-     */
-    boolean hasFault();
+	/**
+	 * Does this message have a fault?
+	 *
+	 * @return {@code true} if the message has a fault.
+	 * @see #getFaultReason()
+	 */
+	boolean hasFault();
 
 	/**
 	 * Returns the fault code, if any.
@@ -42,11 +42,11 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 	QName getFaultCode();
 
 
-    /**
-     * Returns the fault reason message.
-     *
-     * @return the fault reason message, if any; returns {@code null} when no fault is present.
-     * @see #hasFault()
-     */
-    String getFaultReason();
+	/**
+	 * Returns the fault reason message.
+	 *
+	 * @return the fault reason message, if any; returns {@code null} when no fault is present.
+	 * @see #hasFault()
+	 */
+	String getFaultReason();
 }

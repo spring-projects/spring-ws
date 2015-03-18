@@ -28,58 +28,58 @@ import org.springframework.util.ClassUtils;
  * @author Arjen Poutsma
  */
 public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractStandaloneMessageReceiver
-        implements BeanNameAware {
+		implements BeanNameAware {
 
-    /** Default thread name prefix. */
-    public final String DEFAULT_THREAD_NAME_PREFIX = ClassUtils.getShortName(getClass()) + "-";
+	/** Default thread name prefix. */
+	public final String DEFAULT_THREAD_NAME_PREFIX = ClassUtils.getShortName(getClass()) + "-";
 
-    private TaskExecutor taskExecutor;
+	private TaskExecutor taskExecutor;
 
-    private String beanName;
+	private String beanName;
 
-    /**
-     * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is {@link
-     * SimpleAsyncTaskExecutor}, starting up a number of new threads.
-     *
-     * <p>Specify an alternative task executor for integration with an existing thread pool, such as the {@link
-     * org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
-     */
-    public void setTaskExecutor(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
+	/**
+	 * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is {@link
+	 * SimpleAsyncTaskExecutor}, starting up a number of new threads.
+	 *
+	 * <p>Specify an alternative task executor for integration with an existing thread pool, such as the {@link
+	 * org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
+	 */
+	public void setTaskExecutor(TaskExecutor taskExecutor) {
+		this.taskExecutor = taskExecutor;
+	}
 
-    @Override
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
-    }
+	@Override
+	public void setBeanName(String beanName) {
+		this.beanName = beanName;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (taskExecutor == null) {
-            taskExecutor = createDefaultTaskExecutor();
-        }
-        super.afterPropertiesSet();
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (taskExecutor == null) {
+			taskExecutor = createDefaultTaskExecutor();
+		}
+		super.afterPropertiesSet();
+	}
 
-    /**
-     * Create a default TaskExecutor. Called if no explicit TaskExecutor has been specified.
-     *
-     * <p>The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
-     * specified bean name (or the class name, if no bean name specified) as thread name prefix.
-     *
-     * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
-     */
-    protected TaskExecutor createDefaultTaskExecutor() {
-        String threadNamePrefix = beanName != null ? beanName + "-" : DEFAULT_THREAD_NAME_PREFIX;
-        return new SimpleAsyncTaskExecutor(threadNamePrefix);
-    }
+	/**
+	 * Create a default TaskExecutor. Called if no explicit TaskExecutor has been specified.
+	 *
+	 * <p>The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
+	 * specified bean name (or the class name, if no bean name specified) as thread name prefix.
+	 *
+	 * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
+	 */
+	protected TaskExecutor createDefaultTaskExecutor() {
+		String threadNamePrefix = beanName != null ? beanName + "-" : DEFAULT_THREAD_NAME_PREFIX;
+		return new SimpleAsyncTaskExecutor(threadNamePrefix);
+	}
 
-    /**
-     * Executes the given {@link Runnable} via this receiver's {@link TaskExecutor}.
-     *
-     * @see #setTaskExecutor(TaskExecutor)
-     */
-    protected void execute(Runnable runnable) {
-        taskExecutor.execute(runnable);
-    }
+	/**
+	 * Executes the given {@link Runnable} via this receiver's {@link TaskExecutor}.
+	 *
+	 * @see #setTaskExecutor(TaskExecutor)
+	 */
+	protected void execute(Runnable runnable) {
+		taskExecutor.execute(runnable);
+	}
 }

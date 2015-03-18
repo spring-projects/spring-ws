@@ -33,40 +33,40 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  */
 public abstract class AbstractActionMethodEndpointMapping extends AbstractActionEndpointMapping {
 
-    /**
-     * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
-     * and calls {@link #getActionForMethod(java.lang.reflect.Method)} for each. If this returns a URI, the method is
-     * registered using {@link #registerEndpoint(java.net.URI, Object)}.
-     *
-     * @see #getActionForMethod (java.lang.reflect.Method)
-     */
-    protected void registerMethods(Object endpoint) {
-        Assert.notNull(endpoint, "'endpoint' must not be null");
-        Method[] methods = AopUtils.getTargetClass(endpoint).getMethods();
-        for (Method method : methods) {
-            if (method.isSynthetic() || method.getDeclaringClass().equals(Object.class)) {
-                continue;
-            }
-            URI action = getActionForMethod(method);
-            if (action != null) {
-                registerEndpoint(action, new MethodEndpoint(endpoint, method));
-            }
-        }
-    }
+	/**
+	 * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
+	 * and calls {@link #getActionForMethod(java.lang.reflect.Method)} for each. If this returns a URI, the method is
+	 * registered using {@link #registerEndpoint(java.net.URI, Object)}.
+	 *
+	 * @see #getActionForMethod (java.lang.reflect.Method)
+	 */
+	protected void registerMethods(Object endpoint) {
+		Assert.notNull(endpoint, "'endpoint' must not be null");
+		Method[] methods = AopUtils.getTargetClass(endpoint).getMethods();
+		for (Method method : methods) {
+			if (method.isSynthetic() || method.getDeclaringClass().equals(Object.class)) {
+				continue;
+			}
+			URI action = getActionForMethod(method);
+			if (action != null) {
+				registerEndpoint(action, new MethodEndpoint(endpoint, method));
+			}
+		}
+	}
 
-    /** Returns the action value for the specified method. */
-    protected abstract URI getActionForMethod(Method method);
+	/** Returns the action value for the specified method. */
+	protected abstract URI getActionForMethod(Method method);
 
-    /**
-     * Return the class or interface to use for method reflection.
-     *
-     * <p>Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
-     *
-     * @param endpoint the bean instance (might be an AOP proxy)
-     * @return the bean class to expose
-     */
-    protected Class<?> getEndpointClass(Object endpoint) {
-        return AopUtils.getTargetClass(endpoint);
-    }
+	/**
+	 * Return the class or interface to use for method reflection.
+	 *
+	 * <p>Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
+	 *
+	 * @param endpoint the bean instance (might be an AOP proxy)
+	 * @return the bean class to expose
+	 */
+	protected Class<?> getEndpointClass(Object endpoint) {
+		return AopUtils.getTargetClass(endpoint);
+	}
 
 }

@@ -29,7 +29,7 @@ import org.springframework.ws.soap.SoapFault;
  */
 public interface Soap11Fault extends SoapFault {
 
-    /** Returns the locale of the fault string. */
-    Locale getFaultStringLocale();
+	/** Returns the locale of the fault string. */
+	Locale getFaultStringLocale();
 
 }

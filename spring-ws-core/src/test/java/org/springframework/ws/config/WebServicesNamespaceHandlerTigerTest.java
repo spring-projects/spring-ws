@@ -29,25 +29,25 @@ import org.junit.Test;
 
 public class WebServicesNamespaceHandlerTigerTest {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    @Before
-    public void setUp() throws Exception {
-        applicationContext =
-                new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml", getClass());
-    }
+	@Before
+	public void setUp() throws Exception {
+		applicationContext =
+				new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml", getClass());
+	}
 
-    @Test
-    public void testMarshallingEndpoints() throws Exception {
-        Map<String, GenericMarshallingMethodEndpointAdapter> result =
-                applicationContext.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
-        Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
-    }
+	@Test
+	public void testMarshallingEndpoints() throws Exception {
+		Map<String, GenericMarshallingMethodEndpointAdapter> result =
+				applicationContext.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
+		Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+	}
 
-    @Test
-    public void testXpathEndpoints() throws Exception {
-        Map<String, XPathParamAnnotationMethodEndpointAdapter> result =
-                applicationContext.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
-        Assert.assertFalse("no XPathParamAnnotationMethodEndpointAdapter found", result.isEmpty());
-    }
+	@Test
+	public void testXpathEndpoints() throws Exception {
+		Map<String, XPathParamAnnotationMethodEndpointAdapter> result =
+				applicationContext.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
+		Assert.assertFalse("no XPathParamAnnotationMethodEndpointAdapter found", result.isEmpty());
+	}
 }

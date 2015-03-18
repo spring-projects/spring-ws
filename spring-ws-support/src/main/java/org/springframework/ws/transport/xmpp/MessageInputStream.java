@@ -34,17 +34,17 @@ import org.jivesoftware.smack.packet.Message;
  */
 class MessageInputStream extends FilterInputStream {
 
-    MessageInputStream(Message message, String encoding) throws IOException {
-        super(createInputStream(message, encoding));
-    }
+	MessageInputStream(Message message, String encoding) throws IOException {
+		super(createInputStream(message, encoding));
+	}
 
-    private static InputStream createInputStream(Message message, String encoding) throws IOException {
-        Assert.notNull(message, "'message' must not be null");
-        Assert.notNull(encoding, "'encoding' must not be null");
-        String text = message.getBody();
-        byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
-        return new ByteArrayInputStream(contents);
-    }
+	private static InputStream createInputStream(Message message, String encoding) throws IOException {
+		Assert.notNull(message, "'message' must not be null");
+		Assert.notNull(encoding, "'encoding' must not be null");
+		String text = message.getBody();
+		byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
+		return new ByteArrayInputStream(contents);
+	}
 
 
 }

@@ -55,105 +55,105 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
  */
 public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallbackHandler implements InitializingBean {
 
-    private UserCache userCache = new NullUserCache();
+	private UserCache userCache = new NullUserCache();
 
-    private UserDetailsService userDetailsService;
+	private UserDetailsService userDetailsService;
 
-    /** Sets the users cache. Not required, but can benefit performance. */
-    public void setUserCache(UserCache userCache) {
-        this.userCache = userCache;
-    }
+	/** Sets the users cache. Not required, but can benefit performance. */
+	public void setUserCache(UserCache userCache) {
+		this.userCache = userCache;
+	}
 
-    /** Sets the Spring Security user details service. Required. */
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+	/** Sets the Spring Security user details service. Required. */
+	public void setUserDetailsService(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(userDetailsService, "userDetailsService is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(userDetailsService, "userDetailsService is required");
+	}
 
-    /**
-     * Handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest}, and throws an
-     * {@code UnsupportedCallbackException} for others
-     *
-     * @throws javax.security.auth.callback.UnsupportedCallbackException
-     *          when the callback is not supported
-     */
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
-            if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
-                PasswordValidationCallback.DigestPasswordRequest request =
-                        (PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
-                String username = request.getUsername();
-                UserDetails user = loadUserDetails(username);
-                if (user != null) {
-                    SpringSecurityUtils.checkUserValidity(user);
-                    request.setPassword(user.getPassword());
-                }
-                SpringSecurityDigestPasswordValidator validator = new SpringSecurityDigestPasswordValidator(user);
-                passwordCallback.setValidator(validator);
-                return;
-            }
-        }
-        else if (callback instanceof TimestampValidationCallback) {
-            TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
-            timestampCallback.setValidator(new DefaultTimestampValidator());
+	/**
+	 * Handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest}, and throws an
+	 * {@code UnsupportedCallbackException} for others
+	 *
+	 * @throws javax.security.auth.callback.UnsupportedCallbackException
+	 *			when the callback is not supported
+	 */
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof PasswordValidationCallback) {
+			PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
+			if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
+				PasswordValidationCallback.DigestPasswordRequest request =
+						(PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
+				String username = request.getUsername();
+				UserDetails user = loadUserDetails(username);
+				if (user != null) {
+					SpringSecurityUtils.checkUserValidity(user);
+					request.setPassword(user.getPassword());
+				}
+				SpringSecurityDigestPasswordValidator validator = new SpringSecurityDigestPasswordValidator(user);
+				passwordCallback.setValidator(validator);
+				return;
+			}
+		}
+		else if (callback instanceof TimestampValidationCallback) {
+			TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
+			timestampCallback.setValidator(new DefaultTimestampValidator());
 
-        }
-        else if (callback instanceof CleanupCallback) {
-            SecurityContextHolder.clearContext();
-            return;
-        }
-        throw new UnsupportedCallbackException(callback);
-    }
+		}
+		else if (callback instanceof CleanupCallback) {
+			SecurityContextHolder.clearContext();
+			return;
+		}
+		throw new UnsupportedCallbackException(callback);
+	}
 
-    private UserDetails loadUserDetails(String username) throws DataAccessException {
-        UserDetails user = userCache.getUserFromCache(username);
+	private UserDetails loadUserDetails(String username) throws DataAccessException {
+		UserDetails user = userCache.getUserFromCache(username);
 
-        if (user == null) {
-            try {
-                user = userDetailsService.loadUserByUsername(username);
-            }
-            catch (UsernameNotFoundException notFound) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Username '" + username + "' not found");
-                }
-                return null;
-            }
-            userCache.putUserInCache(user);
-        }
-        return user;
-    }
+		if (user == null) {
+			try {
+				user = userDetailsService.loadUserByUsername(username);
+			}
+			catch (UsernameNotFoundException notFound) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Username '" + username + "' not found");
+				}
+				return null;
+			}
+			userCache.putUserInCache(user);
+		}
+		return user;
+	}
 
-    private class SpringSecurityDigestPasswordValidator extends PasswordValidationCallback.DigestPasswordValidator {
+	private class SpringSecurityDigestPasswordValidator extends PasswordValidationCallback.DigestPasswordValidator {
 
-        private UserDetails user;
+		private UserDetails user;
 
-        private SpringSecurityDigestPasswordValidator(UserDetails user) {
-            this.user = user;
-        }
+		private SpringSecurityDigestPasswordValidator(UserDetails user) {
+			this.user = user;
+		}
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            if (super.validate(request)) {
-                UsernamePasswordAuthenticationToken authRequest =
-                        new UsernamePasswordAuthenticationToken(user, user.getPassword());
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication success: " + authRequest.toString());
-                }
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			if (super.validate(request)) {
+				UsernamePasswordAuthenticationToken authRequest =
+						new UsernamePasswordAuthenticationToken(user, user.getPassword());
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication success: " + authRequest.toString());
+				}
 
-                SecurityContextHolder.getContext().setAuthentication(authRequest);
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
+				SecurityContextHolder.getContext().setAuthentication(authRequest);
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
 
 }

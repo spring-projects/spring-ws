@@ -27,13 +27,13 @@ import org.springframework.ws.transport.TransportException;
 @SuppressWarnings("serial")
 public class HttpTransportException extends TransportException {
 
-    public HttpTransportException(String msg) {
-        super(msg);
-    }
+	public HttpTransportException(String msg) {
+		super(msg);
+	}
 
-    protected HttpTransportException(String msg, Throwable cause) {
-        super(msg);
-        initCause(cause);
-    }
+	protected HttpTransportException(String msg, Throwable cause) {
+		super(msg);
+		initCause(cause);
+	}
 
 }

@@ -25,73 +25,73 @@ import org.junit.Test;
 
 public class SimplePasswordValidationCallbackHandlerTest {
 
-    private SimplePasswordValidationCallbackHandler handler;
+	private SimplePasswordValidationCallbackHandler handler;
 
-    @Before
-    public void setUp() throws Exception {
-        handler = new SimplePasswordValidationCallbackHandler();
-        Properties users = new Properties();
-        users.setProperty("Bert", "Ernie");
-        handler.setUsers(users);
-    }
+	@Before
+	public void setUp() throws Exception {
+		handler = new SimplePasswordValidationCallbackHandler();
+		Properties users = new Properties();
+		users.setProperty("Bert", "Ernie");
+		handler.setUsers(users);
+	}
 
-    @Test
-    public void testPlainTextPasswordValid() throws Exception {
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        handler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Not authenticated", authenticated);
-    }
+	@Test
+	public void testPlainTextPasswordValid() throws Exception {
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		handler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Not authenticated", authenticated);
+	}
 
-    @Test
-    public void testPlainTextPasswordInvalid() throws Exception {
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        handler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
-    }
+	@Test
+	public void testPlainTextPasswordInvalid() throws Exception {
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		handler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
+	}
 
-    @Test
-    public void testPlainTextPasswordNoSuchUser() throws Exception {
-        PasswordValidationCallback.PlainTextPasswordRequest request =
-                new PasswordValidationCallback.PlainTextPasswordRequest("Big bird", "Bert");
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        handler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
-    }
+	@Test
+	public void testPlainTextPasswordNoSuchUser() throws Exception {
+		PasswordValidationCallback.PlainTextPasswordRequest request =
+				new PasswordValidationCallback.PlainTextPasswordRequest("Big bird", "Bert");
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		handler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
+	}
 
-    @Test
-    public void testDigestPasswordValid() throws Exception {
-        String username = "Bert";
-        String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
-        String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk=";
-        String creationTime = "2006-06-01T23:48:42Z";
-        PasswordValidationCallback.DigestPasswordRequest request =
-                new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        handler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertTrue("Authenticated", authenticated);
+	@Test
+	public void testDigestPasswordValid() throws Exception {
+		String username = "Bert";
+		String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
+		String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk=";
+		String creationTime = "2006-06-01T23:48:42Z";
+		PasswordValidationCallback.DigestPasswordRequest request =
+				new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		handler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertTrue("Authenticated", authenticated);
 
-    }
+	}
 
-    @Test
-    public void testDigestPasswordInvalid() throws Exception {
-        String username = "Bert";
-        String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
-        String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk";
-        String creationTime = "2006-06-01T23:48:42Z";
-        PasswordValidationCallback.DigestPasswordRequest request =
-                new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
-        PasswordValidationCallback callback = new PasswordValidationCallback(request);
-        handler.handleInternal(callback);
-        boolean authenticated = callback.getResult();
-        Assert.assertFalse("Authenticated", authenticated);
+	@Test
+	public void testDigestPasswordInvalid() throws Exception {
+		String username = "Bert";
+		String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
+		String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk";
+		String creationTime = "2006-06-01T23:48:42Z";
+		PasswordValidationCallback.DigestPasswordRequest request =
+				new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
+		PasswordValidationCallback callback = new PasswordValidationCallback(request);
+		handler.handleInternal(callback);
+		boolean authenticated = callback.getResult();
+		Assert.assertFalse("Authenticated", authenticated);
 
-    }
+	}
 }

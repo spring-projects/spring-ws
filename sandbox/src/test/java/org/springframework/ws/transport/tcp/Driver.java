@@ -24,10 +24,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /** @author Arjen Poutsma */
 public class Driver {
 
-    public static void main(String[] args) throws IOException {
-        new ClassPathXmlApplicationContext("applicationContext.xml", Driver.class);
-        System.out.println("Started....");
-        System.in.read();
-    }
+	public static void main(String[] args) throws IOException {
+		new ClassPathXmlApplicationContext("applicationContext.xml", Driver.class);
+		System.out.println("Started....");
+		System.in.read();
+	}
 
 }

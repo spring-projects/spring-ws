@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -50,28 +50,28 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  *
  * <p>This class registers the following {@link EndpointMapping}s:
  * <ul>
- * 	<li>{@link PayloadRootAnnotationMethodEndpointMapping}
- * 	ordered at 0 for mapping requests to {@link PayloadRoot @PayloadRoot} annotated
- * 	controller methods.
- * 	<li>{@link SoapActionAnnotationMethodEndpointMapping}
- * 	ordered at 1 for mapping requests to {@link SoapAction @SoapAction} annotated
- * 	controller methods.
- * 	<li>{@link AnnotationActionEndpointMapping}
- * 	ordered at 2 for mapping requests to {@link Action @Action} annotated
- * 	controller methods.
+ *	<li>{@link PayloadRootAnnotationMethodEndpointMapping}
+ *	ordered at 0 for mapping requests to {@link PayloadRoot @PayloadRoot} annotated
+ *	controller methods.
+ *	<li>{@link SoapActionAnnotationMethodEndpointMapping}
+ *	ordered at 1 for mapping requests to {@link SoapAction @SoapAction} annotated
+ *	controller methods.
+ *	<li>{@link AnnotationActionEndpointMapping}
+ *	ordered at 2 for mapping requests to {@link Action @Action} annotated
+ *	controller methods.
  * </ul>
  *
  * <p>Registers one {@link EndpointAdapter}:
  * <ul>
- * 	<li>{@link DefaultMethodEndpointAdapter}
- * 	for processing requests with annotated endpoint methods.
+ *	<li>{@link DefaultMethodEndpointAdapter}
+ *	for processing requests with annotated endpoint methods.
  * </ul>
  *
  * <p>Registers the following {@link EndpointExceptionResolver}s:
  * <ul>
- * 	<li>{@link SoapFaultAnnotationExceptionResolver} for handling exceptions
- * 	annotated with {@link SoapFault @SoapFault}.
- * 	<li>{@link SimpleSoapExceptionResolver} for creating default exceptions.
+ *	<li>{@link SoapFaultAnnotationExceptionResolver} for handling exceptions
+ *	annotated with {@link SoapFault @SoapFault}.
+ *	<li>{@link SimpleSoapExceptionResolver} for creating default exceptions.
  * </ul>
  *
  * @see EnableWs
@@ -149,8 +149,8 @@ public class WsConfigurationSupport {
 	 * through annotated endpoint methods. Consider overriding one of these
 	 * other more fine-grained methods:
 	 * <ul>
-	 *  <li>{@link #addArgumentResolvers(List)} for adding custom argument resolvers.
-	 * 	<li>{@link #addReturnValueHandlers(List)} for adding custom return value handlers.
+	 *	<li>{@link #addArgumentResolvers(List)} for adding custom argument resolvers.
+	 *	<li>{@link #addReturnValueHandlers(List)} for adding custom return value handlers.
 	 * </ul>
 	 */
 	@Bean
@@ -174,7 +174,7 @@ public class WsConfigurationSupport {
 	 * Add custom {@link MethodArgumentResolver}s to use in addition to
 	 * the ones registered by default.
 	 * @param argumentResolvers the list of custom converters;
-	 * 	initially an empty list.
+	 *	initially an empty list.
 	 */
 	protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
 	}

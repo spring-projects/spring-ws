@@ -27,52 +27,52 @@ import org.junit.Test;
 
 public class MessageMethodEndpointAdapterTest {
 
-    private MessageMethodEndpointAdapter adapter;
+	private MessageMethodEndpointAdapter adapter;
 
-    private boolean supportedInvoked;
+	private boolean supportedInvoked;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    @Before
-    public void setUp() throws Exception {
-        adapter = new MessageMethodEndpointAdapter();
-        messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
-    }
+	@Before
+	public void setUp() throws Exception {
+		adapter = new MessageMethodEndpointAdapter();
+		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	}
 
-    @Test
-    public void testSupported() throws NoSuchMethodException {
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
-        Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
-    }
+	@Test
+	public void testSupported() throws NoSuchMethodException {
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
+		Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+	}
 
-    @Test
-    public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
-        Assert.assertFalse("Method supported", adapter.supportsInternal(
-                new MethodEndpoint(this, "unsupportedMultipleParams",
-                        new Class[]{MessageContext.class, MessageContext.class})));
-    }
+	@Test
+	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+		Assert.assertFalse("Method supported", adapter.supportsInternal(
+				new MethodEndpoint(this, "unsupportedMultipleParams",
+						new Class[]{MessageContext.class, MessageContext.class})));
+	}
 
-    @Test
-    public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
-        Assert.assertFalse("Method supported",
-                adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[]{String.class})));
-    }
+	@Test
+	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+		Assert.assertFalse("Method supported",
+				adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[]{String.class})));
+	}
 
-    @Test
-    public void testInvokeSupported() throws Exception {
-        MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
-        Assert.assertFalse("Method invoked", supportedInvoked);
-        adapter.invoke(messageContext, methodEndpoint);
-        Assert.assertTrue("Method not invoked", supportedInvoked);
-    }
+	@Test
+	public void testInvokeSupported() throws Exception {
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[]{MessageContext.class});
+		Assert.assertFalse("Method invoked", supportedInvoked);
+		adapter.invoke(messageContext, methodEndpoint);
+		Assert.assertTrue("Method not invoked", supportedInvoked);
+	}
 
-    public void supported(MessageContext context) {
-        supportedInvoked = true;
-    }
+	public void supported(MessageContext context) {
+		supportedInvoked = true;
+	}
 
-    public void unsupportedMultipleParams(MessageContext s1, MessageContext s2) {
-    }
+	public void unsupportedMultipleParams(MessageContext s1, MessageContext s2) {
+	}
 
-    public void unsupportedWrongParam(String request) {
-    }
+	public void unsupportedWrongParam(String request) {
+	}
 }

@@ -37,32 +37,32 @@ import org.springframework.util.Assert;
  * @since 1.5.0
  */
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private Map<String, String > users = new HashMap<String, String>();
+	private Map<String, String > users = new HashMap<String, String>();
 
-    /** Sets the users to validate against. Property names are usernames, property values are passwords. */
-    public void setUsers(Properties users) {
-        for (Map.Entry<Object, Object> entry : users.entrySet()) {
-            if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-                this.users.put((String) entry.getKey(), (String) entry.getValue());
-            }
-        }
-    }
+	/** Sets the users to validate against. Property names are usernames, property values are passwords. */
+	public void setUsers(Properties users) {
+		for (Map.Entry<Object, Object> entry : users.entrySet()) {
+			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+				this.users.put((String) entry.getKey(), (String) entry.getValue());
+			}
+		}
+	}
 
-    public void setUsersMap(Map<String, String> users) {
-        this.users = users;
-    }
+	public void setUsersMap(Map<String, String> users) {
+		this.users = users;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(users, "users is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(users, "users is required");
+	}
 
-    @Override
-    protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-        String identifier = callback.getIdentifier();
-        callback.setPassword(users.get(identifier));
-    }
+	@Override
+	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		String identifier = callback.getIdentifier();
+		callback.setPassword(users.get(identifier));
+	}
 
 }

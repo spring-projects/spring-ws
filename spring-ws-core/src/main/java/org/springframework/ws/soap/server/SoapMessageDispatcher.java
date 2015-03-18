@@ -47,134 +47,134 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  */
 public class SoapMessageDispatcher extends MessageDispatcher {
 
-    /** Default message used when creating a SOAP MustUnderstand fault. */
-    public static final String DEFAULT_MUST_UNDERSTAND_FAULT_STRING =
-            "One or more mandatory SOAP header blocks not understood";
+	/** Default message used when creating a SOAP MustUnderstand fault. */
+	public static final String DEFAULT_MUST_UNDERSTAND_FAULT_STRING =
+			"One or more mandatory SOAP header blocks not understood";
 
-    private String mustUnderstandFaultString = DEFAULT_MUST_UNDERSTAND_FAULT_STRING;
+	private String mustUnderstandFaultString = DEFAULT_MUST_UNDERSTAND_FAULT_STRING;
 
-    private Locale mustUnderstandFaultStringLocale = Locale.ENGLISH;
+	private Locale mustUnderstandFaultStringLocale = Locale.ENGLISH;
 
-    /**
-     * Sets the message used for {@code MustUnderstand} fault. Default to {@link
-     * #DEFAULT_MUST_UNDERSTAND_FAULT_STRING}.
-     */
-    public void setMustUnderstandFaultString(String mustUnderstandFaultString) {
-        this.mustUnderstandFaultString = mustUnderstandFaultString;
-    }
+	/**
+	 * Sets the message used for {@code MustUnderstand} fault. Default to {@link
+	 * #DEFAULT_MUST_UNDERSTAND_FAULT_STRING}.
+	 */
+	public void setMustUnderstandFaultString(String mustUnderstandFaultString) {
+		this.mustUnderstandFaultString = mustUnderstandFaultString;
+	}
 
-    /** Sets the locale of the message used for {@code MustUnderstand} fault. Default to {@link Locale#ENGLISH}. */
-    public void setMustUnderstandFaultStringLocale(Locale mustUnderstandFaultStringLocale) {
-        this.mustUnderstandFaultStringLocale = mustUnderstandFaultStringLocale;
-    }
+	/** Sets the locale of the message used for {@code MustUnderstand} fault. Default to {@link Locale#ENGLISH}. */
+	public void setMustUnderstandFaultStringLocale(Locale mustUnderstandFaultStringLocale) {
+		this.mustUnderstandFaultStringLocale = mustUnderstandFaultStringLocale;
+	}
 
-    /**
-     * Process the headers targeted at the actor or role fullfilled by the endpoint. Also processed the
-     * {@code MustUnderstand} headers in the incoming SOAP request message. Iterates over all SOAP headers which
-     * should be understood for this role, and determines whether these are supported. Generates a SOAP MustUnderstand
-     * fault if a header is not understood.
-     *
-     * @param mappedEndpoint the mapped EndpointInvocationChain
-     * @param messageContext the message context
-     * @return {@code true} if all necessary headers are understood; {@code false} otherwise
-     * @see SoapEndpointInvocationChain#getActorsOrRoles()
-     * @see org.springframework.ws.soap.SoapHeader#examineMustUnderstandHeaderElements(String)
-     */
-    @Override
-    protected boolean handleRequest(EndpointInvocationChain mappedEndpoint, MessageContext messageContext) {
-        if (messageContext.getRequest() instanceof SoapMessage) {
-            String[] actorsOrRoles = null;
-            boolean isUltimateReceiver = true;
-            if (mappedEndpoint instanceof SoapEndpointInvocationChain) {
-                SoapEndpointInvocationChain soapChain = (SoapEndpointInvocationChain) mappedEndpoint;
-                actorsOrRoles = soapChain.getActorsOrRoles();
-                isUltimateReceiver = soapChain.isUltimateReceiver();
-            }
-            return handleHeaders(mappedEndpoint, messageContext, actorsOrRoles, isUltimateReceiver);
-        }
-        return true;
-    }
+	/**
+	 * Process the headers targeted at the actor or role fullfilled by the endpoint. Also processed the
+	 * {@code MustUnderstand} headers in the incoming SOAP request message. Iterates over all SOAP headers which
+	 * should be understood for this role, and determines whether these are supported. Generates a SOAP MustUnderstand
+	 * fault if a header is not understood.
+	 *
+	 * @param mappedEndpoint the mapped EndpointInvocationChain
+	 * @param messageContext the message context
+	 * @return {@code true} if all necessary headers are understood; {@code false} otherwise
+	 * @see SoapEndpointInvocationChain#getActorsOrRoles()
+	 * @see org.springframework.ws.soap.SoapHeader#examineMustUnderstandHeaderElements(String)
+	 */
+	@Override
+	protected boolean handleRequest(EndpointInvocationChain mappedEndpoint, MessageContext messageContext) {
+		if (messageContext.getRequest() instanceof SoapMessage) {
+			String[] actorsOrRoles = null;
+			boolean isUltimateReceiver = true;
+			if (mappedEndpoint instanceof SoapEndpointInvocationChain) {
+				SoapEndpointInvocationChain soapChain = (SoapEndpointInvocationChain) mappedEndpoint;
+				actorsOrRoles = soapChain.getActorsOrRoles();
+				isUltimateReceiver = soapChain.isUltimateReceiver();
+			}
+			return handleHeaders(mappedEndpoint, messageContext, actorsOrRoles, isUltimateReceiver);
+		}
+		return true;
+	}
 
-    private boolean handleHeaders(EndpointInvocationChain mappedEndpoint,
-                                  MessageContext messageContext,
-                                  String[] actorsOrRoles,
-                                  boolean isUltimateReceiver) {
-        SoapMessage soapRequest = (SoapMessage) messageContext.getRequest();
-        SoapHeader soapHeader = soapRequest.getSoapHeader();
-        if (soapHeader == null) {
-            return true;
-        }
-        Iterator<SoapHeaderElement> headerIterator;
-        if (soapHeader instanceof Soap11Header) {
-            headerIterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles);
-        }
-        else {
-            headerIterator =
-                    ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles, isUltimateReceiver);
-        }
-        List<QName> notUnderstoodHeaderNames = new ArrayList<QName>();
-        while (headerIterator.hasNext()) {
-            SoapHeaderElement headerElement = headerIterator.next();
-            QName headerName = headerElement.getName();
-            if (headerElement.getMustUnderstand() && logger.isDebugEnabled()) {
-                logger.debug("Handling MustUnderstand header " + headerName);
-            }
-            if (headerElement.getMustUnderstand() && !headerUnderstood(mappedEndpoint, headerElement)) {
-                notUnderstoodHeaderNames.add(headerName);
-            }
-        }
-        if (notUnderstoodHeaderNames.isEmpty()) {
-            return true;
-        }
-        else {
-            SoapMessage response = (SoapMessage) messageContext.getResponse();
-            createMustUnderstandFault(response, notUnderstoodHeaderNames, actorsOrRoles);
-            return false;
-        }
-    }
+	private boolean handleHeaders(EndpointInvocationChain mappedEndpoint,
+								  MessageContext messageContext,
+								  String[] actorsOrRoles,
+								  boolean isUltimateReceiver) {
+		SoapMessage soapRequest = (SoapMessage) messageContext.getRequest();
+		SoapHeader soapHeader = soapRequest.getSoapHeader();
+		if (soapHeader == null) {
+			return true;
+		}
+		Iterator<SoapHeaderElement> headerIterator;
+		if (soapHeader instanceof Soap11Header) {
+			headerIterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles);
+		}
+		else {
+			headerIterator =
+					((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles, isUltimateReceiver);
+		}
+		List<QName> notUnderstoodHeaderNames = new ArrayList<QName>();
+		while (headerIterator.hasNext()) {
+			SoapHeaderElement headerElement = headerIterator.next();
+			QName headerName = headerElement.getName();
+			if (headerElement.getMustUnderstand() && logger.isDebugEnabled()) {
+				logger.debug("Handling MustUnderstand header " + headerName);
+			}
+			if (headerElement.getMustUnderstand() && !headerUnderstood(mappedEndpoint, headerElement)) {
+				notUnderstoodHeaderNames.add(headerName);
+			}
+		}
+		if (notUnderstoodHeaderNames.isEmpty()) {
+			return true;
+		}
+		else {
+			SoapMessage response = (SoapMessage) messageContext.getResponse();
+			createMustUnderstandFault(response, notUnderstoodHeaderNames, actorsOrRoles);
+			return false;
+		}
+	}
 
-    /**
-     * Handles the request for a single SOAP actor/role. Iterates over all {@code MustUnderstand} headers for a
-     * specific SOAP 1.1 actor or SOAP 1.2 role, and determines whether these are understood by any of the registered
-     * {@code SoapEndpointInterceptor}. If they are, returns {@code true}. If they are not, a SOAP fault is
-     * created, and false is returned.
-     *
-     * @see SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
-     */
-    private boolean headerUnderstood(EndpointInvocationChain mappedEndpoint, SoapHeaderElement headerElement) {
-        EndpointInterceptor[] interceptors = mappedEndpoint.getInterceptors();
-        if (ObjectUtils.isEmpty(interceptors)) {
-            return false;
-        }
-        for (EndpointInterceptor interceptor : interceptors) {
-            if (interceptor instanceof SoapEndpointInterceptor &&
-                    ((SoapEndpointInterceptor) interceptor).understands(headerElement)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	/**
+	 * Handles the request for a single SOAP actor/role. Iterates over all {@code MustUnderstand} headers for a
+	 * specific SOAP 1.1 actor or SOAP 1.2 role, and determines whether these are understood by any of the registered
+	 * {@code SoapEndpointInterceptor}. If they are, returns {@code true}. If they are not, a SOAP fault is
+	 * created, and false is returned.
+	 *
+	 * @see SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
+	 */
+	private boolean headerUnderstood(EndpointInvocationChain mappedEndpoint, SoapHeaderElement headerElement) {
+		EndpointInterceptor[] interceptors = mappedEndpoint.getInterceptors();
+		if (ObjectUtils.isEmpty(interceptors)) {
+			return false;
+		}
+		for (EndpointInterceptor interceptor : interceptors) {
+			if (interceptor instanceof SoapEndpointInterceptor &&
+					((SoapEndpointInterceptor) interceptor).understands(headerElement)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    private void createMustUnderstandFault(SoapMessage soapResponse,
-                                           List<QName> notUnderstoodHeaderNames,
-                                           String[] actorsOrRoles) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("Could not handle mustUnderstand headers: " +
-                    StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");
-        }
-        SoapBody responseBody = soapResponse.getSoapBody();
-        SoapFault fault =
-                responseBody.addMustUnderstandFault(mustUnderstandFaultString, mustUnderstandFaultStringLocale);
-        if (!ObjectUtils.isEmpty(actorsOrRoles)) {
-            fault.setFaultActorOrRole(actorsOrRoles[0]);
-        }
-        SoapHeader header = soapResponse.getSoapHeader();
-        if (header instanceof Soap12Header) {
-            Soap12Header soap12Header = (Soap12Header) header;
-            for (QName headerName : notUnderstoodHeaderNames) {
-                soap12Header.addNotUnderstoodHeaderElement(headerName);
-            }
-        }
-    }
+	private void createMustUnderstandFault(SoapMessage soapResponse,
+										   List<QName> notUnderstoodHeaderNames,
+										   String[] actorsOrRoles) {
+		if (logger.isWarnEnabled()) {
+			logger.warn("Could not handle mustUnderstand headers: " +
+					StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");
+		}
+		SoapBody responseBody = soapResponse.getSoapBody();
+		SoapFault fault =
+				responseBody.addMustUnderstandFault(mustUnderstandFaultString, mustUnderstandFaultStringLocale);
+		if (!ObjectUtils.isEmpty(actorsOrRoles)) {
+			fault.setFaultActorOrRole(actorsOrRoles[0]);
+		}
+		SoapHeader header = soapResponse.getSoapHeader();
+		if (header instanceof Soap12Header) {
+			Soap12Header soap12Header = (Soap12Header) header;
+			for (QName headerName : notUnderstoodHeaderNames) {
+				soap12Header.addNotUnderstoodHeaderElement(headerName);
+			}
+		}
+	}
 
 }

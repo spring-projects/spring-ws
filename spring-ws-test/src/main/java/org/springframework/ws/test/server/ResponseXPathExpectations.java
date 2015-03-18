@@ -31,50 +31,50 @@ package org.springframework.ws.test.server;
  */
 public interface ResponseXPathExpectations {
 
-    /**
-     * Expects the XPath expression to exist.
-     *
-     * @return the request matcher
-     */
-    ResponseMatcher exists();
+	/**
+	 * Expects the XPath expression to exist.
+	 *
+	 * @return the request matcher
+	 */
+	ResponseMatcher exists();
 
-    /**
-     * Expects the XPath expression to not exist.
-     *
-     * @return the request matcher
-     */
-    ResponseMatcher doesNotExist();
+	/**
+	 * Expects the XPath expression to not exist.
+	 *
+	 * @return the request matcher
+	 */
+	ResponseMatcher doesNotExist();
 
-    /**
-     * Expects the XPath expression to evaluate to the given boolean.
-     *
-     * @param expectedValue the expected value
-     * @return the request matcher
-     */
-    ResponseMatcher evaluatesTo(final boolean expectedValue);
+	/**
+	 * Expects the XPath expression to evaluate to the given boolean.
+	 *
+	 * @param expectedValue the expected value
+	 * @return the request matcher
+	 */
+	ResponseMatcher evaluatesTo(final boolean expectedValue);
 
-    /**
-     * Expects the XPath expression to evaluate to the given integer.
-     *
-     * @param expectedValue the expected value
-     * @return the request matcher
-     */
-    ResponseMatcher evaluatesTo(int expectedValue);
+	/**
+	 * Expects the XPath expression to evaluate to the given integer.
+	 *
+	 * @param expectedValue the expected value
+	 * @return the request matcher
+	 */
+	ResponseMatcher evaluatesTo(int expectedValue);
 
-    /**
-     * Expects the XPath expression to evaluate to the given double.
-     *
-     * @param expectedValue the expected value
-     * @return the request matcher
-     */
-    ResponseMatcher evaluatesTo(double expectedValue);
+	/**
+	 * Expects the XPath expression to evaluate to the given double.
+	 *
+	 * @param expectedValue the expected value
+	 * @return the request matcher
+	 */
+	ResponseMatcher evaluatesTo(double expectedValue);
 
-    /**
-     * Expects the XPath expression to evaluate to the given string.
-     *
-     * @param expectedValue the expected value
-     * @return the request matcher
-     */
-    ResponseMatcher evaluatesTo(String expectedValue);
+	/**
+	 * Expects the XPath expression to evaluate to the given string.
+	 *
+	 * @param expectedValue the expected value
+	 * @return the request matcher
+	 */
+	ResponseMatcher evaluatesTo(String expectedValue);
 
 }

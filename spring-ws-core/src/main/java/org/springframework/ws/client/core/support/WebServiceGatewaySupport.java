@@ -52,144 +52,144 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    private WebServiceTemplate webServiceTemplate;
+	private WebServiceTemplate webServiceTemplate;
 
-    /**
-     * Creates a new instance of the {@code WebServiceGatewaySupport} class, with a default
-     * {@code WebServiceTemplate}.
-     */
-    protected WebServiceGatewaySupport() {
-        webServiceTemplate = new WebServiceTemplate();
-    }
+	/**
+	 * Creates a new instance of the {@code WebServiceGatewaySupport} class, with a default
+	 * {@code WebServiceTemplate}.
+	 */
+	protected WebServiceGatewaySupport() {
+		webServiceTemplate = new WebServiceTemplate();
+	}
 
-    /**
-     * Creates a new {@code WebServiceGatewaySupport} instance based on the given message factory.
-     *
-     * @param messageFactory the message factory to use
-     */
-    protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory) {
-        webServiceTemplate = new WebServiceTemplate(messageFactory);
-    }
+	/**
+	 * Creates a new {@code WebServiceGatewaySupport} instance based on the given message factory.
+	 *
+	 * @param messageFactory the message factory to use
+	 */
+	protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory) {
+		webServiceTemplate = new WebServiceTemplate(messageFactory);
+	}
 
-    /** Returns the {@code WebServiceMessageFactory} used by the gateway. */
-    public final WebServiceMessageFactory getMessageFactory() {
-        return webServiceTemplate.getMessageFactory();
-    }
+	/** Returns the {@code WebServiceMessageFactory} used by the gateway. */
+	public final WebServiceMessageFactory getMessageFactory() {
+		return webServiceTemplate.getMessageFactory();
+	}
 
-    /** Set the {@code WebServiceMessageFactory} to be used by the gateway. */
-    public final void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        webServiceTemplate.setMessageFactory(messageFactory);
-    }
+	/** Set the {@code WebServiceMessageFactory} to be used by the gateway. */
+	public final void setMessageFactory(WebServiceMessageFactory messageFactory) {
+		webServiceTemplate.setMessageFactory(messageFactory);
+	}
 
-    /** Returns the default URI used by the gateway. */
-    public final String getDefaultUri() {
-        return webServiceTemplate.getDefaultUri();
-    }
+	/** Returns the default URI used by the gateway. */
+	public final String getDefaultUri() {
+		return webServiceTemplate.getDefaultUri();
+	}
 
-    /** Sets the default URI used by the gateway. */
-    public final void setDefaultUri(String uri) {
-        webServiceTemplate.setDefaultUri(uri);
-    }
+	/** Sets the default URI used by the gateway. */
+	public final void setDefaultUri(String uri) {
+		webServiceTemplate.setDefaultUri(uri);
+	}
 
-    /** Returns the destination provider used by the gateway. */
-    public final DestinationProvider getDestinationProvider() {
-        return webServiceTemplate.getDestinationProvider();
-    }
+	/** Returns the destination provider used by the gateway. */
+	public final DestinationProvider getDestinationProvider() {
+		return webServiceTemplate.getDestinationProvider();
+	}
 
-    /** Set the destination provider URI used by the gateway. */
-    public final void setDestinationProvider(DestinationProvider destinationProvider) {
-        webServiceTemplate.setDestinationProvider(destinationProvider);
-    }
+	/** Set the destination provider URI used by the gateway. */
+	public final void setDestinationProvider(DestinationProvider destinationProvider) {
+		webServiceTemplate.setDestinationProvider(destinationProvider);
+	}
 
-    /** Sets a single {@code WebServiceMessageSender} to be used by the gateway. */
-    public final void setMessageSender(WebServiceMessageSender messageSender) {
-        webServiceTemplate.setMessageSender(messageSender);
-    }
+	/** Sets a single {@code WebServiceMessageSender} to be used by the gateway. */
+	public final void setMessageSender(WebServiceMessageSender messageSender) {
+		webServiceTemplate.setMessageSender(messageSender);
+	}
 
-    /** Returns the {@code WebServiceMessageSender}s used by the gateway. */
-    public final WebServiceMessageSender[] getMessageSenders() {
-        return webServiceTemplate.getMessageSenders();
-    }
+	/** Returns the {@code WebServiceMessageSender}s used by the gateway. */
+	public final WebServiceMessageSender[] getMessageSenders() {
+		return webServiceTemplate.getMessageSenders();
+	}
 
-    /** Sets multiple {@code WebServiceMessageSender} to be used by the gateway. */
-    public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
-        webServiceTemplate.setMessageSenders(messageSenders);
-    }
+	/** Sets multiple {@code WebServiceMessageSender} to be used by the gateway. */
+	public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+		webServiceTemplate.setMessageSenders(messageSenders);
+	}
 
-    /** Returns the {@code WebServiceTemplate} for the gateway. */
-    public final WebServiceTemplate getWebServiceTemplate() {
-        return webServiceTemplate;
-    }
+	/** Returns the {@code WebServiceTemplate} for the gateway. */
+	public final WebServiceTemplate getWebServiceTemplate() {
+		return webServiceTemplate;
+	}
 
-    /**
-     * Sets the {@code WebServiceTemplate} to be used by the gateway.
-     *
-     * <p>When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
-     * #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)}, {@link
-     * #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on this
-     * class, but on the template directly.
-     */
-    public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
-        this.webServiceTemplate = webServiceTemplate;
-    }
+	/**
+	 * Sets the {@code WebServiceTemplate} to be used by the gateway.
+	 *
+	 * <p>When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
+	 * #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)}, {@link
+	 * #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on this
+	 * class, but on the template directly.
+	 */
+	public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+		Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
+		this.webServiceTemplate = webServiceTemplate;
+	}
 
-    /** Returns the {@code Marshaller} used by the gateway. */
-    public final Marshaller getMarshaller() {
-        return webServiceTemplate.getMarshaller();
-    }
+	/** Returns the {@code Marshaller} used by the gateway. */
+	public final Marshaller getMarshaller() {
+		return webServiceTemplate.getMarshaller();
+	}
 
-    /**
-     * Sets the {@code Marshaller} used by the gateway. Setting this property is only required if the marshalling
-     * functionality of {@code WebServiceTemplate} is to be used.
-     *
-     * @see WebServiceTemplate#marshalSendAndReceive
-     */
-    public final void setMarshaller(Marshaller marshaller) {
-        webServiceTemplate.setMarshaller(marshaller);
-    }
+	/**
+	 * Sets the {@code Marshaller} used by the gateway. Setting this property is only required if the marshalling
+	 * functionality of {@code WebServiceTemplate} is to be used.
+	 *
+	 * @see WebServiceTemplate#marshalSendAndReceive
+	 */
+	public final void setMarshaller(Marshaller marshaller) {
+		webServiceTemplate.setMarshaller(marshaller);
+	}
 
-    /** Returns the {@code Unmarshaller} used by the gateway. */
-    public final Unmarshaller getUnmarshaller() {
-        return webServiceTemplate.getUnmarshaller();
-    }
+	/** Returns the {@code Unmarshaller} used by the gateway. */
+	public final Unmarshaller getUnmarshaller() {
+		return webServiceTemplate.getUnmarshaller();
+	}
 
-    /**
-     * Sets the {@code Unmarshaller} used by the gateway. Setting this property is only required if the marshalling
-     * functionality of {@code WebServiceTemplate} is to be used.
-     *
-     * @see WebServiceTemplate#marshalSendAndReceive
-     */
-    public final void setUnmarshaller(Unmarshaller unmarshaller) {
-        webServiceTemplate.setUnmarshaller(unmarshaller);
-    }
+	/**
+	 * Sets the {@code Unmarshaller} used by the gateway. Setting this property is only required if the marshalling
+	 * functionality of {@code WebServiceTemplate} is to be used.
+	 *
+	 * @see WebServiceTemplate#marshalSendAndReceive
+	 */
+	public final void setUnmarshaller(Unmarshaller unmarshaller) {
+		webServiceTemplate.setUnmarshaller(unmarshaller);
+	}
 
-    /** Returns the {@code ClientInterceptors} used by the template. */
-    public final ClientInterceptor[] getInterceptors() {
-        return webServiceTemplate.getInterceptors();
-    }
+	/** Returns the {@code ClientInterceptors} used by the template. */
+	public final ClientInterceptor[] getInterceptors() {
+		return webServiceTemplate.getInterceptors();
+	}
 
-    /** Sets the {@code ClientInterceptors} used by the gateway. */
-    public final void setInterceptors(ClientInterceptor[] interceptors) {
-        webServiceTemplate.setInterceptors(interceptors);
-    }
+	/** Sets the {@code ClientInterceptors} used by the gateway. */
+	public final void setInterceptors(ClientInterceptor[] interceptors) {
+		webServiceTemplate.setInterceptors(interceptors);
+	}
 
-    @Override
-    public final void afterPropertiesSet() throws Exception {
-        webServiceTemplate.afterPropertiesSet();
-        initGateway();
-    }
+	@Override
+	public final void afterPropertiesSet() throws Exception {
+		webServiceTemplate.afterPropertiesSet();
+		initGateway();
+	}
 
-    /**
-     * Subclasses can override this for custom initialization behavior. Gets called after population of this instance's
-     * bean properties.
-     *
-     * @throws java.lang.Exception if initialization fails
-     */
-    protected void initGateway() throws Exception {
-    }
+	/**
+	 * Subclasses can override this for custom initialization behavior. Gets called after population of this instance's
+	 * bean properties.
+	 *
+	 * @throws java.lang.Exception if initialization fails
+	 */
+	protected void initGateway() throws Exception {
+	}
 
 }

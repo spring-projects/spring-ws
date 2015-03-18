@@ -50,74 +50,74 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * @since 1.5.0
  */
 public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCallbackHandler
-        implements InitializingBean {
+		implements InitializingBean {
 
-    private AuthenticationManager authenticationManager;
+	private AuthenticationManager authenticationManager;
 
-    private boolean ignoreFailure = false;
+	private boolean ignoreFailure = false;
 
-    /** Sets the Spring Security authentication manager. Required. */
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+	/** Sets the Spring Security authentication manager. Required. */
+	public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+		this.authenticationManager = authenticationManager;
+	}
 
-    public void setIgnoreFailure(boolean ignoreFailure) {
-        this.ignoreFailure = ignoreFailure;
-    }
+	public void setIgnoreFailure(boolean ignoreFailure) {
+		this.ignoreFailure = ignoreFailure;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(authenticationManager, "authenticationManager is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(authenticationManager, "authenticationManager is required");
+	}
 
-    /**
-     * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
-     * an {@code UnsupportedCallbackException} for others.
-     *
-     * @throws javax.security.auth.callback.UnsupportedCallbackException
-     *          when the callback is not supported
-     */
-    @Override
-    protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-        if (callback instanceof PasswordValidationCallback) {
-            PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-            if (validationCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
-                validationCallback.setValidator(new SpringSecurityPlainTextPasswordValidator());
-                return;
-            }
-        }
-        else if (callback instanceof CleanupCallback) {
-            SecurityContextHolder.clearContext();
-            return;
-        }
-        throw new UnsupportedCallbackException(callback);
-    }
+	/**
+	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
+	 * an {@code UnsupportedCallbackException} for others.
+	 *
+	 * @throws javax.security.auth.callback.UnsupportedCallbackException
+	 *			when the callback is not supported
+	 */
+	@Override
+	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
+		if (callback instanceof PasswordValidationCallback) {
+			PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
+			if (validationCallback.getRequest() instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
+				validationCallback.setValidator(new SpringSecurityPlainTextPasswordValidator());
+				return;
+			}
+		}
+		else if (callback instanceof CleanupCallback) {
+			SecurityContextHolder.clearContext();
+			return;
+		}
+		throw new UnsupportedCallbackException(callback);
+	}
 
-    private class SpringSecurityPlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
+	private class SpringSecurityPlainTextPasswordValidator implements PasswordValidationCallback.PasswordValidator {
 
-        @Override
-        public boolean validate(PasswordValidationCallback.Request request)
-                throws PasswordValidationCallback.PasswordValidationException {
-            PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
-                    (PasswordValidationCallback.PlainTextPasswordRequest) request;
-            try {
-                Authentication authResult = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        plainTextRequest.getUsername(), plainTextRequest.getPassword()));
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication success: " + authResult.toString());
-                }
-                SecurityContextHolder.getContext().setAuthentication(authResult);
-                return true;
-            }
-            catch (AuthenticationException failed) {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Authentication request for user '" + plainTextRequest.getUsername() + "' failed: " +
-                            failed.toString());
-                }
-                SecurityContextHolder.clearContext();
-                return ignoreFailure;
-            }
-        }
-    }
+		@Override
+		public boolean validate(PasswordValidationCallback.Request request)
+				throws PasswordValidationCallback.PasswordValidationException {
+			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
+					(PasswordValidationCallback.PlainTextPasswordRequest) request;
+			try {
+				Authentication authResult = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+						plainTextRequest.getUsername(), plainTextRequest.getPassword()));
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication success: " + authResult.toString());
+				}
+				SecurityContextHolder.getContext().setAuthentication(authResult);
+				return true;
+			}
+			catch (AuthenticationException failed) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Authentication request for user '" + plainTextRequest.getUsername() + "' failed: " +
+							failed.toString());
+				}
+				SecurityContextHolder.clearContext();
+				return ignoreFailure;
+			}
+		}
+	}
 
 }

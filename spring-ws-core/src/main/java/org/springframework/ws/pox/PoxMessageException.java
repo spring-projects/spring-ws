@@ -27,11 +27,11 @@ import org.springframework.ws.WebServiceMessageException;
 @SuppressWarnings("serial")
 public abstract class PoxMessageException extends WebServiceMessageException {
 
-    public PoxMessageException(String msg) {
-        super(msg);
-    }
+	public PoxMessageException(String msg) {
+		super(msg);
+	}
 
-    public PoxMessageException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public PoxMessageException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

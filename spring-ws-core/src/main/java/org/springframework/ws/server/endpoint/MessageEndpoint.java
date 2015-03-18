@@ -30,13 +30,13 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface MessageEndpoint {
 
-    /**
-     * Invokes an operation.
-     *
-     * <p>The given {@code messageContext} can be used to create a response.
-     *
-     * @param messageContext the message context
-     * @throws Exception if an exception occurs
-     */
-    void invoke(MessageContext messageContext) throws Exception;
+	/**
+	 * Invokes an operation.
+	 *
+	 * <p>The given {@code messageContext} can be used to create a response.
+	 *
+	 * @param messageContext the message context
+	 * @throws Exception if an exception occurs
+	 */
+	void invoke(MessageContext messageContext) throws Exception;
 }

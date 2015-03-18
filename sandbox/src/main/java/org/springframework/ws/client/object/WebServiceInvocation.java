@@ -23,18 +23,18 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 /** @author Arjen Poutsma */
 public abstract class WebServiceInvocation {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    /** Lower-level class used to invoke Web service. */
-    private WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+	/** Lower-level class used to invoke Web service. */
+	private WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
-    /** Returns the {@link WebServiceTemplate} used by this object. */
-    public WebServiceTemplate getWebServiceTemplate() {
-        return webServiceTemplate;
-    }
+	/** Returns the {@link WebServiceTemplate} used by this object. */
+	public WebServiceTemplate getWebServiceTemplate() {
+		return webServiceTemplate;
+	}
 
-    public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
-        this.webServiceTemplate = webServiceTemplate;
-    }
+	public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+		this.webServiceTemplate = webServiceTemplate;
+	}
 }

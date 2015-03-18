@@ -25,16 +25,16 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapEnvelopeException extends SoapMessageException {
 
-    public SoapEnvelopeException(String msg) {
-        super(msg);
-    }
+	public SoapEnvelopeException(String msg) {
+		super(msg);
+	}
 
-    public SoapEnvelopeException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SoapEnvelopeException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SoapEnvelopeException(Throwable ex) {
-        super("Could not access envelope: " + ex.getMessage(), ex);
-    }
+	public SoapEnvelopeException(Throwable ex) {
+		super("Could not access envelope: " + ex.getMessage(), ex);
+	}
 
 }

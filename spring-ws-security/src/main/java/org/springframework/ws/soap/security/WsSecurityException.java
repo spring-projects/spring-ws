@@ -28,11 +28,11 @@ import org.springframework.ws.WebServiceException;
 @SuppressWarnings("serial")
 public abstract class WsSecurityException extends WebServiceException {
 
-    public WsSecurityException(String msg) {
-        super(msg);
-    }
+	public WsSecurityException(String msg) {
+		super(msg);
+	}
 
-    public WsSecurityException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public WsSecurityException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 }

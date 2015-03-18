@@ -36,19 +36,19 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Luke Taylor
  */
 public interface X509AuthoritiesPopulator {
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    /**
-     * Obtains the granted authorities for the specified user.<p>May throw any
-     * {@code AuthenticationException} or return {@code null} if the authorities are unavailable.</p>
-     *
-     * @param userCertificate the X.509 certificate supplied
-     *
-     * @return the details of the indicated user (at minimum the granted authorities and the username)
-     *
-     * @throws AuthenticationException if the user details are not available or the certificate isn't valid for the
-     *         application's purpose.
-     */
-    UserDetails getUserDetails(X509Certificate userCertificate)
-        throws AuthenticationException;
+	/**
+	 * Obtains the granted authorities for the specified user.<p>May throw any
+	 * {@code AuthenticationException} or return {@code null} if the authorities are unavailable.</p>
+	 *
+	 * @param userCertificate the X.509 certificate supplied
+	 *
+	 * @return the details of the indicated user (at minimum the granted authorities and the username)
+	 *
+	 * @throws AuthenticationException if the user details are not available or the certificate isn't valid for the
+	 *		   application's purpose.
+	 */
+	UserDetails getUserDetails(X509Certificate userCertificate)
+		throws AuthenticationException;
 }

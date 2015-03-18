@@ -24,11 +24,11 @@ import static org.junit.Assert.assertEquals;
 
 public class ErrorResponseCreatorTest {
 
-    @Test
-    public void callback() throws IOException {
-        String errorMessage = "Error message";
-        ErrorResponseCreator callback = new ErrorResponseCreator(errorMessage);
-        callback.createResponse(null, null, null);
-        assertEquals(errorMessage, callback.getErrorMessage());
-    }
+	@Test
+	public void callback() throws IOException {
+		String errorMessage = "Error message";
+		ErrorResponseCreator callback = new ErrorResponseCreator(errorMessage);
+		callback.createResponse(null, null, null);
+		assertEquals(errorMessage, callback.getErrorMessage());
+	}
 }

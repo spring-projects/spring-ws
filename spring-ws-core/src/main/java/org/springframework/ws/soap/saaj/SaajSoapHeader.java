@@ -38,86 +38,86 @@ import org.springframework.ws.soap.SoapHeaderException;
  */
 abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements SoapHeader {
 
-    SaajSoapHeader(SOAPHeader header) {
-        super(header);
-    }
+	SaajSoapHeader(SOAPHeader header) {
+		super(header);
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineAllHeaderElements() throws SoapHeaderException {
-        Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
-        return new SaajSoapHeaderElementIterator(iterator);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineAllHeaderElements() throws SoapHeaderException {
+		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
+		return new SaajSoapHeaderElementIterator(iterator);
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
-	    Iterator<SOAPHeaderElement> iterator = getSaajHeader().getChildElements(name);
-	    return new SaajSoapHeaderElementIterator(iterator);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
+		Iterator<SOAPHeaderElement> iterator = getSaajHeader().getChildElements(name);
+		return new SaajSoapHeaderElementIterator(iterator);
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
-	    Iterator<SOAPHeaderElement> iterator =
-			    getSaajHeader().examineMustUnderstandHeaderElements(actorOrRole);
-        return new SaajSoapHeaderElementIterator(iterator);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
+		Iterator<SOAPHeaderElement> iterator =
+				getSaajHeader().examineMustUnderstandHeaderElements(actorOrRole);
+		return new SaajSoapHeaderElementIterator(iterator);
+	}
 
-    @Override
-    public SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException {
-        try {
-	        SOAPHeaderElement headerElement = getSaajHeader().addHeaderElement(name);
-            return new SaajSoapHeaderElement(headerElement);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapHeaderException(ex);
-        }
-    }
+	@Override
+	public SoapHeaderElement addHeaderElement(QName name) throws SoapHeaderException {
+		try {
+			SOAPHeaderElement headerElement = getSaajHeader().addHeaderElement(name);
+			return new SaajSoapHeaderElement(headerElement);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapHeaderException(ex);
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void removeHeaderElement(QName name) throws SoapHeaderException {
-	    Iterator<SOAPElement> iterator = getSaajHeader().getChildElements(name);
-	    if (iterator.hasNext()) {
-	        SOAPElement element = iterator.next();
-	        element.detachNode();
-	    }
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public void removeHeaderElement(QName name) throws SoapHeaderException {
+		Iterator<SOAPElement> iterator = getSaajHeader().getChildElements(name);
+		if (iterator.hasNext()) {
+			SOAPElement element = iterator.next();
+			element.detachNode();
+		}
+	}
 
-    protected SOAPHeader getSaajHeader() {
-        return getSaajElement();
-    }
+	protected SOAPHeader getSaajHeader() {
+		return getSaajElement();
+	}
 
-    @Override
-    public Result getResult() {
-	    return new DOMResult(getSaajHeader());
-    }
+	@Override
+	public Result getResult() {
+		return new DOMResult(getSaajHeader());
+	}
 
-    protected static class SaajSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
+	protected static class SaajSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
 
-        private final Iterator<SOAPHeaderElement> iterator;
+		private final Iterator<SOAPHeaderElement> iterator;
 
-        protected SaajSoapHeaderElementIterator(Iterator<SOAPHeaderElement> iterator) {
-            Assert.notNull(iterator, "iterator must not be null");
-            this.iterator = iterator;
-        }
+		protected SaajSoapHeaderElementIterator(Iterator<SOAPHeaderElement> iterator) {
+			Assert.notNull(iterator, "iterator must not be null");
+			this.iterator = iterator;
+		}
 
-        @Override
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
+		@Override
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
 
-        @Override
-        public SoapHeaderElement next() {
-            SOAPHeaderElement saajHeaderElement = iterator.next();
-            return new SaajSoapHeaderElement(saajHeaderElement);
-        }
+		@Override
+		public SoapHeaderElement next() {
+			SOAPHeaderElement saajHeaderElement = iterator.next();
+			return new SaajSoapHeaderElement(saajHeaderElement);
+		}
 
-        @Override
-        public void remove() {
-            iterator.remove();
-        }
-    }
+		@Override
+		public void remove() {
+			iterator.remove();
+		}
+	}
 
 }

@@ -26,25 +26,25 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 
 public class AxiomSoap11NonCachingMessageTest extends AbstractSoap11MessageTestCase {
 
-    @Override
-    protected SoapMessage createSoapMessage() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        messageFactory.setSoapVersion(SoapVersion.SOAP_11);
+	@Override
+	protected SoapMessage createSoapMessage() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		messageFactory.setSoapVersion(SoapVersion.SOAP_11);
 
-        return messageFactory.createWebServiceMessage();
-    }
+		return messageFactory.createWebServiceMessage();
+	}
 
-    @Override
-    public void testWriteToTransportOutputStream() throws Exception {
-        super.testWriteToTransportOutputStream();
+	@Override
+	public void testWriteToTransportOutputStream() throws Exception {
+		super.testWriteToTransportOutputStream();
 
-        SoapBody body = soapMessage.getSoapBody();
-        OMSourcedElementImpl axiomPayloadEle =
-                (OMSourcedElementImpl) ((AxiomSoapBody) body).getAxiomElement().getFirstElement();
-        assertFalse("Non-cached body should not be expanded now", axiomPayloadEle.isExpanded());
-        axiomPayloadEle.getFirstElement();
-        assertTrue("Non-cached body should now be expanded", axiomPayloadEle.isExpanded());
-        assertEquals("Invalid payload", "payload", axiomPayloadEle.getLocalName());
-    }
+		SoapBody body = soapMessage.getSoapBody();
+		OMSourcedElementImpl axiomPayloadEle =
+				(OMSourcedElementImpl) ((AxiomSoapBody) body).getAxiomElement().getFirstElement();
+		assertFalse("Non-cached body should not be expanded now", axiomPayloadEle.isExpanded());
+		axiomPayloadEle.getFirstElement();
+		assertTrue("Non-cached body should now be expanded", axiomPayloadEle.isExpanded());
+		assertEquals("Invalid payload", "payload", axiomPayloadEle.getLocalName());
+	}
 }

@@ -41,114 +41,114 @@ import org.springframework.ws.soap.SoapElement;
  */
 class AxiomSoapElement implements SoapElement {
 
-    private final OMElement axiomElement;
+	private final OMElement axiomElement;
 
-    private final SOAPFactory axiomFactory;
+	private final SOAPFactory axiomFactory;
 
-    protected AxiomSoapElement(OMElement axiomElement, SOAPFactory axiomFactory) {
-        Assert.notNull(axiomElement, "axiomElement must not be null");
-        Assert.notNull(axiomFactory, "axiomFactory must not be null");
-        this.axiomElement = axiomElement;
-        this.axiomFactory = axiomFactory;
-    }
+	protected AxiomSoapElement(OMElement axiomElement, SOAPFactory axiomFactory) {
+		Assert.notNull(axiomElement, "axiomElement must not be null");
+		Assert.notNull(axiomFactory, "axiomFactory must not be null");
+		this.axiomElement = axiomElement;
+		this.axiomFactory = axiomFactory;
+	}
 
-    @Override
-    public final QName getName() {
-        try {
-            return axiomElement.getQName();
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public final QName getName() {
+		try {
+			return axiomElement.getQName();
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public final Source getSource() {
-        try {
-            return StaxUtils.createCustomStaxSource(axiomElement.getXMLStreamReader());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public final Source getSource() {
+		try {
+			return StaxUtils.createCustomStaxSource(axiomElement.getXMLStreamReader());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public final void addAttribute(QName name, String value) {
-        try {
-            String namespaceUri = name.getNamespaceURI();
-            String prefix = name.getPrefix();
-	        if (StringUtils.hasLength(namespaceUri) && !StringUtils.hasLength(prefix)) {
-		        prefix = null;
-	        }
-	        OMNamespace namespace =
-			        getAxiomFactory().createOMNamespace(namespaceUri, prefix);
-	        OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
-            getAxiomElement().addAttribute(attribute);
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public final void addAttribute(QName name, String value) {
+		try {
+			String namespaceUri = name.getNamespaceURI();
+			String prefix = name.getPrefix();
+			if (StringUtils.hasLength(namespaceUri) && !StringUtils.hasLength(prefix)) {
+				prefix = null;
+			}
+			OMNamespace namespace =
+					getAxiomFactory().createOMNamespace(namespaceUri, prefix);
+			OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
+			getAxiomElement().addAttribute(attribute);
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public void removeAttribute(QName name) {
-        try {
-            OMAttribute attribute = getAxiomElement().getAttribute(name);
-            if (attribute != null) {
-                getAxiomElement().removeAttribute(attribute);
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public void removeAttribute(QName name) {
+		try {
+			OMAttribute attribute = getAxiomElement().getAttribute(name);
+			if (attribute != null) {
+				getAxiomElement().removeAttribute(attribute);
+			}
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public final String getAttributeValue(QName name) {
-        try {
-            return getAxiomElement().getAttributeValue(name);
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public final String getAttributeValue(QName name) {
+		try {
+			return getAxiomElement().getAttributeValue(name);
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public final Iterator<QName> getAllAttributes() {
-        try {
-            List<QName> results = new ArrayList<QName>();
-            for (Iterator<?> iterator = getAxiomElement().getAllAttributes(); iterator.hasNext();) {
-                OMAttribute attribute = (OMAttribute) iterator.next();
-                results.add(attribute.getQName());
-            }
-            return results.iterator();
+	@Override
+	public final Iterator<QName> getAllAttributes() {
+		try {
+			List<QName> results = new ArrayList<QName>();
+			for (Iterator<?> iterator = getAxiomElement().getAllAttributes(); iterator.hasNext();) {
+				OMAttribute attribute = (OMAttribute) iterator.next();
+				results.add(attribute.getQName());
+			}
+			return results.iterator();
 
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    @Override
-    public void addNamespaceDeclaration(String prefix, String namespaceUri) {
-        try {
-            if (StringUtils.hasLength(prefix)) {
-                getAxiomElement().declareNamespace(namespaceUri, prefix);
-            }
-            else {
-                getAxiomElement().declareDefaultNamespace(namespaceUri);
-            }
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapElementException(ex);
-        }
-    }
+	@Override
+	public void addNamespaceDeclaration(String prefix, String namespaceUri) {
+		try {
+			if (StringUtils.hasLength(prefix)) {
+				getAxiomElement().declareNamespace(namespaceUri, prefix);
+			}
+			else {
+				getAxiomElement().declareDefaultNamespace(namespaceUri);
+			}
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapElementException(ex);
+		}
+	}
 
-    protected final OMElement getAxiomElement() {
-        return axiomElement;
-    }
+	protected final OMElement getAxiomElement() {
+		return axiomElement;
+	}
 
-    protected final SOAPFactory getAxiomFactory() {
-        return axiomFactory;
-    }
+	protected final SOAPFactory getAxiomFactory() {
+		return axiomFactory;
+	}
 }

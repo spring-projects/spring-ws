@@ -41,10 +41,10 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * &#64;Endpoint
  * &#64;Address("mailto:joe@fabrikam123.example")
  * public class MyEndpoint{
- *    &#64;Action("http://fabrikam123.example/mail/Delete")
- *    public Source doSomethingWithRequest() {
- *       ...
- *    }
+ *	  &#64;Action("http://fabrikam123.example/mail/Delete")
+ *	  public Source doSomethingWithRequest() {
+ *		 ...
+ *	  }
  * }
  * </pre>
  *
@@ -59,96 +59,96 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  */
 public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping implements BeanPostProcessor {
 
-    /** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
-    protected Class<? extends Annotation> getEndpointAnnotationType() {
-        return Endpoint.class;
-    }
+	/** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
+	protected Class<? extends Annotation> getEndpointAnnotationType() {
+		return Endpoint.class;
+	}
 
-    /**
-     * Returns the action value for the specified method. Default implementation looks for the {@link Action} annotation
-     * value.
-     */
-    @Override
-    protected URI getActionForMethod(Method method) {
-        Action action = method.getAnnotation(Action.class);
-        if (action != null && StringUtils.hasText(action.value())) {
-            try {
-                return new URI(action.value());
-            }
-            catch (URISyntaxException e) {
-                throw new IllegalArgumentException(
-                        "Invalid Action annotation [" + action.value() + "] on [" + method + "]");
-            }
-        }
-        return null;
-    }
+	/**
+	 * Returns the action value for the specified method. Default implementation looks for the {@link Action} annotation
+	 * value.
+	 */
+	@Override
+	protected URI getActionForMethod(Method method) {
+		Action action = method.getAnnotation(Action.class);
+		if (action != null && StringUtils.hasText(action.value())) {
+			try {
+				return new URI(action.value());
+			}
+			catch (URISyntaxException e) {
+				throw new IllegalArgumentException(
+						"Invalid Action annotation [" + action.value() + "] on [" + method + "]");
+			}
+		}
+		return null;
+	}
 
-    /**
-     * Returns the address property of the given {@link MethodEndpoint}, by looking for the {@link Address} annotation.
-     * The value of this property should match the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
-     * destination} of incoming messages. Returns {@code null} if the anotation is not present, thus ignoring the
-     * destination property.
-     *
-     * @param endpoint the method endpoint to return the address for
-     * @return the endpoint address; or {@code null} to ignore the destination property
-     */
-    @Override
-    protected URI getEndpointAddress(Object endpoint) {
-        MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
-        Class<?> endpointClass = methodEndpoint.getMethod().getDeclaringClass();
-        Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
-        if (address != null && StringUtils.hasText(address.value())) {
-            return getActionUri(address.value(), methodEndpoint);
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Returns the address property of the given {@link MethodEndpoint}, by looking for the {@link Address} annotation.
+	 * The value of this property should match the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
+	 * destination} of incoming messages. Returns {@code null} if the anotation is not present, thus ignoring the
+	 * destination property.
+	 *
+	 * @param endpoint the method endpoint to return the address for
+	 * @return the endpoint address; or {@code null} to ignore the destination property
+	 */
+	@Override
+	protected URI getEndpointAddress(Object endpoint) {
+		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+		Class<?> endpointClass = methodEndpoint.getMethod().getDeclaringClass();
+		Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
+		if (address != null && StringUtils.hasText(address.value())) {
+			return getActionUri(address.value(), methodEndpoint);
+		}
+		else {
+			return null;
+		}
+	}
 
-    @Override
-    protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
-        MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
-        Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
-        if (action != null && StringUtils.hasText(action.output())) {
-            return getActionUri(action.output(), methodEndpoint);
-        }
-        else {
-            return super.getResponseAction(endpoint, map);
-        }
-    }
+	@Override
+	protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
+		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
+		if (action != null && StringUtils.hasText(action.output())) {
+			return getActionUri(action.output(), methodEndpoint);
+		}
+		else {
+			return super.getResponseAction(endpoint, map);
+		}
+	}
 
-    @Override
-    protected URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
-        MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
-        Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
-        if (action != null && StringUtils.hasText(action.fault())) {
-            return getActionUri(action.fault(), methodEndpoint);
-        }
-        else {
-            return super.getResponseAction(endpoint, map);
-        }
-    }
+	@Override
+	protected URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
+		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
+		if (action != null && StringUtils.hasText(action.fault())) {
+			return getActionUri(action.fault(), methodEndpoint);
+		}
+		else {
+			return super.getResponseAction(endpoint, map);
+		}
+	}
 
-    private URI getActionUri(String action, MethodEndpoint methodEndpoint) {
-        try {
-            return new URI(action);
-        }
-        catch (URISyntaxException e) {
-            throw new IllegalArgumentException(
-                    "Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
-        }
-    }
+	private URI getActionUri(String action, MethodEndpoint methodEndpoint) {
+		try {
+			return new URI(action);
+		}
+		catch (URISyntaxException e) {
+			throw new IllegalArgumentException(
+					"Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
+		}
+	}
 
-    @Override
-    public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        return bean;
-    }
+	@Override
+	public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
 
-    @Override
-    public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (AopUtils.getTargetClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
-            registerMethods(bean);
-        }
-        return bean;
-    }
+	@Override
+	public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		if (AopUtils.getTargetClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
+			registerMethods(bean);
+		}
+		return bean;
+	}
 }

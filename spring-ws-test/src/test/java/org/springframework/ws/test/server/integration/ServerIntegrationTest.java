@@ -39,26 +39,26 @@ import static org.springframework.ws.test.server.ResponseMatchers.payload;
 @ContextConfiguration("integration-test.xml")
 public class ServerIntegrationTest {
 
-    @Autowired
-    private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
-    private MockWebServiceClient mockClient;
+	private MockWebServiceClient mockClient;
 
-    @Before
-    public void createClient() {
-        mockClient = MockWebServiceClient.createClient(applicationContext);
-    }
+	@Before
+	public void createClient() {
+		mockClient = MockWebServiceClient.createClient(applicationContext);
+	}
 
-    @Test
-    public void basic() throws Exception {
-        Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
-                "<customerName>John Doe</customerName>" + "</customerCountRequest>");
-        Source expectedResponsePayload = new StringSource(
-                "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
-                        "<customerCount>42</customerCount>" + "</customerCountResponse>");
+	@Test
+	public void basic() throws Exception {
+		Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+				"<customerName>John Doe</customerName>" + "</customerCountRequest>");
+		Source expectedResponsePayload = new StringSource(
+				"<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+						"<customerCount>42</customerCount>" + "</customerCountResponse>");
 
-        mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
-    }
+		mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
+	}
 
 
 }

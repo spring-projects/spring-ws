@@ -22,15 +22,15 @@ import org.springframework.ws.mime.AttachmentException;
 @SuppressWarnings("serial")
 public class SaajAttachmentException extends AttachmentException {
 
-    public SaajAttachmentException(String msg) {
-        super(msg);
-    }
+	public SaajAttachmentException(String msg) {
+		super(msg);
+	}
 
-    public SaajAttachmentException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajAttachmentException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SaajAttachmentException(Throwable ex) {
-        super(ex);
-    }
+	public SaajAttachmentException(Throwable ex) {
+		super(ex);
+	}
 }

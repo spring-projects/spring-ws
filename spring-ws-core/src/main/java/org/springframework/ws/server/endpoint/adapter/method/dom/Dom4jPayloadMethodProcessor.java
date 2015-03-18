@@ -39,41 +39,41 @@ import org.dom4j.io.DocumentSource;
  */
 public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-    @Override
-    protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
-        return supports(parameter);
-    }
+	@Override
+	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
+		return supports(parameter);
+	}
 
-    @Override
-    protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
-            throws TransformerException {
-        if (requestPayload instanceof DOMSource) {
-            org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
-            if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
-                DOMReader domReader = new DOMReader();
-                Document document = domReader.read((org.w3c.dom.Document) node);
-                return document.getRootElement();
-            }
-        }
-        // we have no other option than to transform
-        DocumentResult dom4jResult = new DocumentResult();
-        transform(requestPayload, dom4jResult);
-        return dom4jResult.getDocument().getRootElement();
-    }
+	@Override
+	protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
+			throws TransformerException {
+		if (requestPayload instanceof DOMSource) {
+			org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
+			if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
+				DOMReader domReader = new DOMReader();
+				Document document = domReader.read((org.w3c.dom.Document) node);
+				return document.getRootElement();
+			}
+		}
+		// we have no other option than to transform
+		DocumentResult dom4jResult = new DocumentResult();
+		transform(requestPayload, dom4jResult);
+		return dom4jResult.getDocument().getRootElement();
+	}
 
-    @Override
-    protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
-        return supports(returnType);
-    }
+	@Override
+	protected boolean supportsResponsePayloadReturnType(MethodParameter returnType) {
+		return supports(returnType);
+	}
 
-    @Override
-    protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
-        Element returnedElement = (Element) returnValue;
-        return new DocumentSource(returnedElement);
-    }
+	@Override
+	protected Source createResponsePayload(MethodParameter returnType, Object returnValue) {
+		Element returnedElement = (Element) returnValue;
+		return new DocumentSource(returnedElement);
+	}
 
-    private boolean supports(MethodParameter parameter) {
-        return Element.class.equals(parameter.getParameterType());
-    }
+	private boolean supports(MethodParameter parameter) {
+		return Element.class.equals(parameter.getParameterType());
+	}
 
 }

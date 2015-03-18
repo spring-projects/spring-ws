@@ -33,27 +33,27 @@ import org.junit.Test;
  */
 public class WsdlBeanDefinitionParserTest {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    @Before
-    public void setUp() throws Exception {
-        applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
-    }
+	@Before
+	public void setUp() throws Exception {
+		applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
+	}
 
-    @Test
-    public void staticWsdl() throws Exception {
-        Map<String, SimpleWsdl11Definition> result = applicationContext.getBeansOfType(SimpleWsdl11Definition.class);
-        Assert.assertFalse("no WSDL definitions found", result.isEmpty());
-        String beanName = result.keySet().iterator().next();
-        Assert.assertEquals("invalid bean name", "simple", beanName);
-    }
+	@Test
+	public void staticWsdl() throws Exception {
+		Map<String, SimpleWsdl11Definition> result = applicationContext.getBeansOfType(SimpleWsdl11Definition.class);
+		Assert.assertFalse("no WSDL definitions found", result.isEmpty());
+		String beanName = result.keySet().iterator().next();
+		Assert.assertEquals("invalid bean name", "simple", beanName);
+	}
 
-    @Test
-    public void dynamicWsdl() throws Exception {
-        Map<String, ?> result = applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
-        Assert.assertFalse("no WSDL definitions found", result.isEmpty());
+	@Test
+	public void dynamicWsdl() throws Exception {
+		Map<String, ?> result = applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
+		Assert.assertFalse("no WSDL definitions found", result.isEmpty());
 
-        result = applicationContext.getBeansOfType(CommonsXsdSchemaCollection.class);
-        Assert.assertFalse("no XSD definitions found", result.isEmpty());
-    }
+		result = applicationContext.getBeansOfType(CommonsXsdSchemaCollection.class);
+		Assert.assertFalse("no XSD definitions found", result.isEmpty());
+	}
 }

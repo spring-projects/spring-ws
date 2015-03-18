@@ -50,216 +50,216 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * @since 1.5.4
  */
 public abstract class AbstractValidatingInterceptor extends TransformerObjectSupport
-        implements ClientInterceptor, InitializingBean {
+		implements ClientInterceptor, InitializingBean {
 
-    private String schemaLanguage = XmlValidatorFactory.SCHEMA_W3C_XML;
+	private String schemaLanguage = XmlValidatorFactory.SCHEMA_W3C_XML;
 
-    private Resource[] schemas;
+	private Resource[] schemas;
 
-    private boolean validateRequest = true;
+	private boolean validateRequest = true;
 
-    private boolean validateResponse = false;
+	private boolean validateResponse = false;
 
-    private XmlValidator validator;
+	private XmlValidator validator;
 
-    public String getSchemaLanguage() {
-        return schemaLanguage;
-    }
+	public String getSchemaLanguage() {
+		return schemaLanguage;
+	}
 
-    /**
-     * Sets the schema language. Default is the W3C XML Schema: {@code http://www.w3.org/2001/XMLSchema"}.
-     *
-     * @see XmlValidatorFactory#SCHEMA_W3C_XML
-     * @see XmlValidatorFactory#SCHEMA_RELAX_NG
-     */
-    public void setSchemaLanguage(String schemaLanguage) {
-        this.schemaLanguage = schemaLanguage;
-    }
+	/**
+	 * Sets the schema language. Default is the W3C XML Schema: {@code http://www.w3.org/2001/XMLSchema"}.
+	 *
+	 * @see XmlValidatorFactory#SCHEMA_W3C_XML
+	 * @see XmlValidatorFactory#SCHEMA_RELAX_NG
+	 */
+	public void setSchemaLanguage(String schemaLanguage) {
+		this.schemaLanguage = schemaLanguage;
+	}
 
-    /** Returns the schema resources to use for validation. */
-    public Resource[] getSchemas() {
-        return schemas;
-    }
+	/** Returns the schema resources to use for validation. */
+	public Resource[] getSchemas() {
+		return schemas;
+	}
 
-    /**
-     * Sets the schema resource to use for validation. Setting this property, {@link
-     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-     * #setSchemas(Resource[]) schemas} is required.
-     */
-    public void setSchema(Resource schema) {
-        setSchemas(new Resource[]{schema});
-    }
+	/**
+	 * Sets the schema resource to use for validation. Setting this property, {@link
+	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+	 * #setSchemas(Resource[]) schemas} is required.
+	 */
+	public void setSchema(Resource schema) {
+		setSchemas(new Resource[]{schema});
+	}
 
-    /**
-     * Sets the schema resources to use for validation. Setting this property, {@link
-     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-     * #setSchemas(Resource[]) schemas} is required.
-     */
-    public void setSchemas(Resource[] schemas) {
-        Assert.notEmpty(schemas, "schemas must not be empty or null");
-        for (Resource schema : schemas) {
-            Assert.notNull(schema, "schema must not be null");
-            Assert.isTrue(schema.exists(), "schema \"" + schema + "\" does not exit");
-        }
-        this.schemas = schemas;
-    }
+	/**
+	 * Sets the schema resources to use for validation. Setting this property, {@link
+	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+	 * #setSchemas(Resource[]) schemas} is required.
+	 */
+	public void setSchemas(Resource[] schemas) {
+		Assert.notEmpty(schemas, "schemas must not be empty or null");
+		for (Resource schema : schemas) {
+			Assert.notNull(schema, "schema must not be null");
+			Assert.isTrue(schema.exists(), "schema \"" + schema + "\" does not exit");
+		}
+		this.schemas = schemas;
+	}
 
-    /**
-     * Sets the {@link XsdSchema} to use for validation. Setting this property, {@link
-     * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-     * #setSchemas(Resource[]) schemas} is required.
-     *
-     * @param schema the xsd schema to use
-     * @throws java.io.IOException in case of I/O errors
-     */
-    public void setXsdSchema(XsdSchema schema) throws IOException {
-        this.validator = schema.createValidator();
-    }
+	/**
+	 * Sets the {@link XsdSchema} to use for validation. Setting this property, {@link
+	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
+	 * #setSchemas(Resource[]) schemas} is required.
+	 *
+	 * @param schema the xsd schema to use
+	 * @throws java.io.IOException in case of I/O errors
+	 */
+	public void setXsdSchema(XsdSchema schema) throws IOException {
+		this.validator = schema.createValidator();
+	}
 
-    /**
-     * Sets the {@link XsdSchemaCollection} to use for validation. Setting this property, {@link
-     * #setXsdSchema(XsdSchema) xsdSchema}, {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[])
-     * schemas} is required.
-     *
-     * @param schemaCollection the xsd schema collection to use
-     * @throws java.io.IOException in case of I/O errors
-     */
-    public void setXsdSchemaCollection(XsdSchemaCollection schemaCollection) throws IOException {
-        this.validator = schemaCollection.createValidator();
-    }
+	/**
+	 * Sets the {@link XsdSchemaCollection} to use for validation. Setting this property, {@link
+	 * #setXsdSchema(XsdSchema) xsdSchema}, {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[])
+	 * schemas} is required.
+	 *
+	 * @param schemaCollection the xsd schema collection to use
+	 * @throws java.io.IOException in case of I/O errors
+	 */
+	public void setXsdSchemaCollection(XsdSchemaCollection schemaCollection) throws IOException {
+		this.validator = schemaCollection.createValidator();
+	}
 
-    /** Indicates whether the request should be validated against the schema. Default is {@code true}. */
-    public void setValidateRequest(boolean validateRequest) {
-        this.validateRequest = validateRequest;
-    }
+	/** Indicates whether the request should be validated against the schema. Default is {@code true}. */
+	public void setValidateRequest(boolean validateRequest) {
+		this.validateRequest = validateRequest;
+	}
 
-    /** Indicates whether the response should be validated against the schema. Default is {@code false}. */
-    public void setValidateResponse(boolean validateResponse) {
-        this.validateResponse = validateResponse;
-    }
+	/** Indicates whether the response should be validated against the schema. Default is {@code false}. */
+	public void setValidateResponse(boolean validateResponse) {
+		this.validateResponse = validateResponse;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (validator == null && !ObjectUtils.isEmpty(schemas)) {
-            Assert.hasLength(schemaLanguage, "schemaLanguage is required");
-            for (Resource schema : schemas) {
-                Assert.isTrue(schema.exists(), "schema [" + schema + "] does not exist");
-            }
-            if (logger.isInfoEnabled()) {
-                logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
-            }
-            validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
-        }
-        Assert.notNull(validator, "Setting 'schema', 'schemas', 'xsdSchema', or 'xsdSchemaCollection' is required");
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		if (validator == null && !ObjectUtils.isEmpty(schemas)) {
+			Assert.hasLength(schemaLanguage, "schemaLanguage is required");
+			for (Resource schema : schemas) {
+				Assert.isTrue(schema.exists(), "schema [" + schema + "] does not exist");
+			}
+			if (logger.isInfoEnabled()) {
+				logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
+			}
+			validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
+		}
+		Assert.notNull(validator, "Setting 'schema', 'schemas', 'xsdSchema', or 'xsdSchemaCollection' is required");
+	}
 
-    /**
-     * Validates the request message in the given message context. Validation only occurs if {@link
-     * #setValidateRequest(boolean) validateRequest} is set to {@code true}, which is the default.
-     *
-     * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
-     *
-     * @param messageContext the message context
-     * @return {@code true} if the message is valid; {@code false} otherwise
-     * @see #setValidateRequest(boolean)
-     */
-    @Override
-    public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
-        if (validateRequest) {
-            Source requestSource = getValidationRequestSource(messageContext.getRequest());
-            if (requestSource != null) {
-                SAXParseException[] errors;
-                try {
-                    errors = validator.validate(requestSource);
-                }
-                catch (IOException e) {
-                    throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
-                }
-                if (!ObjectUtils.isEmpty(errors)) {
-                    return handleRequestValidationErrors(messageContext, errors);
-                }
-                else if (logger.isDebugEnabled()) {
-                    logger.debug("Request message validated");
-                }
-            }
-        }
-        return true;
-    }
+	/**
+	 * Validates the request message in the given message context. Validation only occurs if {@link
+	 * #setValidateRequest(boolean) validateRequest} is set to {@code true}, which is the default.
+	 *
+	 * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
+	 *
+	 * @param messageContext the message context
+	 * @return {@code true} if the message is valid; {@code false} otherwise
+	 * @see #setValidateRequest(boolean)
+	 */
+	@Override
+	public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+		if (validateRequest) {
+			Source requestSource = getValidationRequestSource(messageContext.getRequest());
+			if (requestSource != null) {
+				SAXParseException[] errors;
+				try {
+					errors = validator.validate(requestSource);
+				}
+				catch (IOException e) {
+					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
+				}
+				if (!ObjectUtils.isEmpty(errors)) {
+					return handleRequestValidationErrors(messageContext, errors);
+				}
+				else if (logger.isDebugEnabled()) {
+					logger.debug("Request message validated");
+				}
+			}
+		}
+		return true;
+	}
 
-    /**
-     * Template method that is called when the request message contains validation errors.
-     *
-     * <p>Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can
-     * override this method to customize this behavior.
-     *
-     * @param messageContext the message context
-     * @param errors         the validation errors
-     * @return {@code true} to continue processing the request, {@code false} otherwise
-     */
-    protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
-        for (SAXParseException error : errors) {
-            logger.error("XML validation error on request: " + error.getMessage());
-        }
-        throw new WebServiceValidationException(errors);
-    }
+	/**
+	 * Template method that is called when the request message contains validation errors.
+	 *
+	 * <p>Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can
+	 * override this method to customize this behavior.
+	 *
+	 * @param messageContext the message context
+	 * @param errors		 the validation errors
+	 * @return {@code true} to continue processing the request, {@code false} otherwise
+	 */
+	protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
+		for (SAXParseException error : errors) {
+			logger.error("XML validation error on request: " + error.getMessage());
+		}
+		throw new WebServiceValidationException(errors);
+	}
 
-    /**
-     * Validates the response message in the given message context. Validation only occurs if {@link
-     * #setValidateResponse(boolean) validateResponse} is set to {@code true}, which is <strong>not</strong> the
-     * default.
-     *
-     * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
-     *
-     * @param messageContext the message context.
-     * @return {@code true} if the response is valid; {@code false} otherwise
-     * @see #setValidateResponse(boolean)
-     */
-    @Override
-    public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-        if (validateResponse) {
-            Source responseSource = getValidationResponseSource(messageContext.getResponse());
-            if (responseSource != null) {
-                SAXParseException[] errors;
-                try {
-                    errors = validator.validate(responseSource);
-                }
-                catch (IOException e) {
-                    throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
-                }
-                if (!ObjectUtils.isEmpty(errors)) {
-                    return handleResponseValidationErrors(messageContext, errors);
-                }
-                else if (logger.isDebugEnabled()) {
-                    logger.debug("Response message validated");
-                }
-            }
-        }
-        return true;
-    }
+	/**
+	 * Validates the response message in the given message context. Validation only occurs if {@link
+	 * #setValidateResponse(boolean) validateResponse} is set to {@code true}, which is <strong>not</strong> the
+	 * default.
+	 *
+	 * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
+	 *
+	 * @param messageContext the message context.
+	 * @return {@code true} if the response is valid; {@code false} otherwise
+	 * @see #setValidateResponse(boolean)
+	 */
+	@Override
+	public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
+		if (validateResponse) {
+			Source responseSource = getValidationResponseSource(messageContext.getResponse());
+			if (responseSource != null) {
+				SAXParseException[] errors;
+				try {
+					errors = validator.validate(responseSource);
+				}
+				catch (IOException e) {
+					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
+				}
+				if (!ObjectUtils.isEmpty(errors)) {
+					return handleResponseValidationErrors(messageContext, errors);
+				}
+				else if (logger.isDebugEnabled()) {
+					logger.debug("Response message validated");
+				}
+			}
+		}
+		return true;
+	}
 
-    /**
-     * Template method that is called when the response message contains validation errors.
-     *
-     * <p>Default implementation logs all errors, and returns {@code false}, i.e. do not cot continue to process the
-     * respone interceptor chain.
-     *
-     * @param messageContext the message context
-     * @param errors         the validation errors
-     * @return {@code true} to continue the reponse interceptor chain, {@code false} (the default) otherwise
-     */
-    protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
-            throws WebServiceValidationException {
-        for (SAXParseException error : errors) {
-            logger.warn("XML validation error on response: " + error.getMessage());
-        }
-        return false;
-    }
+	/**
+	 * Template method that is called when the response message contains validation errors.
+	 *
+	 * <p>Default implementation logs all errors, and returns {@code false}, i.e. do not cot continue to process the
+	 * respone interceptor chain.
+	 *
+	 * @param messageContext the message context
+	 * @param errors		 the validation errors
+	 * @return {@code true} to continue the reponse interceptor chain, {@code false} (the default) otherwise
+	 */
+	protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
+			throws WebServiceValidationException {
+		for (SAXParseException error : errors) {
+			logger.warn("XML validation error on response: " + error.getMessage());
+		}
+		return false;
+	}
 
-    /** Does nothing by default. Faults are not validated. */
-    @Override
-    public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
-        return true;
-    }
+	/** Does nothing by default. Faults are not validated. */
+	@Override
+	public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
+		return true;
+	}
 
 	/** Does nothing by default.*/
 	@Override
@@ -268,18 +268,18 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-     * Abstract template method that returns the part of the request message that is to be validated.
-     *
-     * @param request the request message
-     * @return the part of the message that is to validated, or {@code null} not to validate anything
-     */
-    protected abstract Source getValidationRequestSource(WebServiceMessage request);
+	 * Abstract template method that returns the part of the request message that is to be validated.
+	 *
+	 * @param request the request message
+	 * @return the part of the message that is to validated, or {@code null} not to validate anything
+	 */
+	protected abstract Source getValidationRequestSource(WebServiceMessage request);
 
-    /**
-     * Abstract template method that returns the part of the response message that is to be validated.
-     *
-     * @param response the response message
-     * @return the part of the message that is to validated, or {@code null} not to validate anything
-     */
-    protected abstract Source getValidationResponseSource(WebServiceMessage response);
+	/**
+	 * Abstract template method that returns the part of the response message that is to be validated.
+	 *
+	 * @param response the response message
+	 * @return the part of the message that is to validated, or {@code null} not to validate anything
+	 */
+	protected abstract Source getValidationResponseSource(WebServiceMessage response);
 }

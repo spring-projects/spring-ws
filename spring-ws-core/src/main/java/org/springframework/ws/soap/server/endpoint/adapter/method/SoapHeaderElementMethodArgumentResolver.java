@@ -52,80 +52,80 @@ import org.springframework.xml.namespace.QNameUtils;
  */
 public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentResolver {
 
-    @Override
-    public boolean supportsParameter(MethodParameter parameter) {
-        SoapHeader soapHeader = parameter.getParameterAnnotation(SoapHeader.class);
-        if (soapHeader == null) {
-            return false;
-        }
+	@Override
+	public boolean supportsParameter(MethodParameter parameter) {
+		SoapHeader soapHeader = parameter.getParameterAnnotation(SoapHeader.class);
+		if (soapHeader == null) {
+			return false;
+		}
 
-        Class<?> parameterType = parameter.getParameterType();
+		Class<?> parameterType = parameter.getParameterType();
 
-        // Simple SoapHeaderElement parameter
-        if (SoapHeaderElement.class.equals(parameterType)) {
-            return true;
-        }
+		// Simple SoapHeaderElement parameter
+		if (SoapHeaderElement.class.equals(parameterType)) {
+			return true;
+		}
 
-        // List<SoapHeaderElement> parameter
-        if (List.class.equals(parameterType)) {
-            Type genericType = parameter.getGenericParameterType();
-            if (genericType instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                if (typeArguments.length == 1 && SoapHeaderElement.class.equals(typeArguments[0])) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+		// List<SoapHeaderElement> parameter
+		if (List.class.equals(parameterType)) {
+			Type genericType = parameter.getGenericParameterType();
+			if (genericType instanceof ParameterizedType) {
+				ParameterizedType parameterizedType = (ParameterizedType) genericType;
+				Type[] typeArguments = parameterizedType.getActualTypeArguments();
+				if (typeArguments.length == 1 && SoapHeaderElement.class.equals(typeArguments[0])) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    @Override
-    public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
-        Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-        SoapMessage request = (SoapMessage) messageContext.getRequest();
-        org.springframework.ws.soap.SoapHeader soapHeader = request.getSoapHeader();
+	@Override
+	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
+		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
+		SoapMessage request = (SoapMessage) messageContext.getRequest();
+		org.springframework.ws.soap.SoapHeader soapHeader = request.getSoapHeader();
 
-        String paramValue = parameter.getParameterAnnotation(SoapHeader.class).value();
+		String paramValue = parameter.getParameterAnnotation(SoapHeader.class).value();
 
-        Assert.isTrue(QNameUtils.validateQName(paramValue), "Invalid header qualified name [" + paramValue + "]. " +
-                "QName must be of the form '{namespace}localPart'.");
+		Assert.isTrue(QNameUtils.validateQName(paramValue), "Invalid header qualified name [" + paramValue + "]. " +
+				"QName must be of the form '{namespace}localPart'.");
 
-        QName qname = QName.valueOf(paramValue);
+		QName qname = QName.valueOf(paramValue);
 
-        Class<?> parameterType = parameter.getParameterType();
+		Class<?> parameterType = parameter.getParameterType();
 
-        if (SoapHeaderElement.class.equals(parameterType)) {
-            return extractSoapHeader(qname, soapHeader);
-        }
-        else if (List.class.equals(parameterType)) {
-            return extractSoapHeaderList(qname, soapHeader);
-        }
-        // should not happen
-        throw new UnsupportedOperationException();
-    }
+		if (SoapHeaderElement.class.equals(parameterType)) {
+			return extractSoapHeader(qname, soapHeader);
+		}
+		else if (List.class.equals(parameterType)) {
+			return extractSoapHeaderList(qname, soapHeader);
+		}
+		// should not happen
+		throw new UnsupportedOperationException();
+	}
 
-    private SoapHeaderElement extractSoapHeader(QName qname, org.springframework.ws.soap.SoapHeader soapHeader) {
-        Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
-        while (elements.hasNext()) {
-            SoapHeaderElement e = elements.next();
-            if (e.getName().equals(qname)) {
-                return e;
-            }
-        }
-        return null;
-    }
+	private SoapHeaderElement extractSoapHeader(QName qname, org.springframework.ws.soap.SoapHeader soapHeader) {
+		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
+		while (elements.hasNext()) {
+			SoapHeaderElement e = elements.next();
+			if (e.getName().equals(qname)) {
+				return e;
+			}
+		}
+		return null;
+	}
 
-    private List<SoapHeaderElement> extractSoapHeaderList(QName qname,
-                                                          org.springframework.ws.soap.SoapHeader soapHeader) {
-        List<SoapHeaderElement> result = new ArrayList<SoapHeaderElement>();
-        Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
-        while (elements.hasNext()) {
-            SoapHeaderElement e = elements.next();
-            if (e.getName().equals(qname)) {
-                result.add(e);
-            }
-        }
-        return result;
-    }
+	private List<SoapHeaderElement> extractSoapHeaderList(QName qname,
+														  org.springframework.ws.soap.SoapHeader soapHeader) {
+		List<SoapHeaderElement> result = new ArrayList<SoapHeaderElement>();
+		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
+		while (elements.hasNext()) {
+			SoapHeaderElement e = elements.next();
+			if (e.getName().equals(qname)) {
+				result.add(e);
+			}
+		}
+		return result;
+	}
 }

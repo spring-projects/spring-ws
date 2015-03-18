@@ -32,17 +32,17 @@ import org.apache.ws.security.WSUsernameTokenPrincipal;
  */
 public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
-    private static final long serialVersionUID = -3022202225157082715L;
+	private static final long serialVersionUID = -3022202225157082715L;
 
-    private final WSUsernameTokenPrincipal principal;
+	private final WSUsernameTokenPrincipal principal;
 
-    /** Construct a {@code UsernameTokenPrincipalCallback}. */
-    public UsernameTokenPrincipalCallback(WSUsernameTokenPrincipal principal) {
-        this.principal = principal;
-    }
+	/** Construct a {@code UsernameTokenPrincipalCallback}. */
+	public UsernameTokenPrincipalCallback(WSUsernameTokenPrincipal principal) {
+		this.principal = principal;
+	}
 
-    /** Get the retrieved {@code Principal}. */
-    public WSUsernameTokenPrincipal getPrincipal() {
-        return principal;
-    }
+	/** Get the retrieved {@code Principal}. */
+	public WSUsernameTokenPrincipal getPrincipal() {
+		return principal;
+	}
 }

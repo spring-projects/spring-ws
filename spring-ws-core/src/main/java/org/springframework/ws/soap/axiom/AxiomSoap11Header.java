@@ -37,27 +37,27 @@ import org.springframework.ws.soap.soap11.Soap11Header;
  */
 class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
 
-    AxiomSoap11Header(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
-        super(axiomHeader, axiomFactory);
-    }
+	AxiomSoap11Header(SOAPHeader axiomHeader, SOAPFactory axiomFactory) {
+		super(axiomHeader, axiomFactory);
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
-        RolePlayer rolePlayer = null;
-        if (!ObjectUtils.isEmpty(actors)) {
-            rolePlayer = new RolePlayer() {
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
+		RolePlayer rolePlayer = null;
+		if (!ObjectUtils.isEmpty(actors)) {
+			rolePlayer = new RolePlayer() {
 
-                public List<?> getRoles() {
-                    return Arrays.asList(actors);
-                }
+				public List<?> getRoles() {
+					return Arrays.asList(actors);
+				}
 
-                public boolean isUltimateDestination() {
-                    return false;
-                }
-            };
-        }
-        Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
-        return new AxiomSoapHeaderElementIterator(result);
-    }
+				public boolean isUltimateDestination() {
+					return false;
+				}
+			};
+		}
+		Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
+		return new AxiomSoapHeaderElementIterator(result);
+	}
 }

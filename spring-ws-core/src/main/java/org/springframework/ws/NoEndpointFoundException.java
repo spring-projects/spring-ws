@@ -25,7 +25,7 @@ package org.springframework.ws;
 @SuppressWarnings("serial")
 public final class NoEndpointFoundException extends WebServiceException {
 
-    public NoEndpointFoundException(WebServiceMessage request) {
-        super("No endpoint can be found for request [" + request + "]");
-    }
+	public NoEndpointFoundException(WebServiceMessage request) {
+		super("No endpoint can be found for request [" + request + "]");
+	}
 }

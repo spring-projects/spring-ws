@@ -29,58 +29,58 @@ import org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean;
 
 public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTestCase {
 
-    protected Wss4jSecurityInterceptor interceptor;
+	protected Wss4jSecurityInterceptor interceptor;
 
-    @Override
-    protected void onSetup() throws Exception {
-        interceptor = new Wss4jSecurityInterceptor();
-        interceptor.setValidationActions("Encrypt");
-        interceptor.setSecurementActions("Encrypt");
+	@Override
+	protected void onSetup() throws Exception {
+		interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setValidationActions("Encrypt");
+		interceptor.setSecurementActions("Encrypt");
 
-        KeyStoreCallbackHandler callbackHandler = new KeyStoreCallbackHandler();
-        callbackHandler.setPrivateKeyPassword("123456");
-        interceptor.setValidationCallbackHandler(callbackHandler);
+		KeyStoreCallbackHandler callbackHandler = new KeyStoreCallbackHandler();
+		callbackHandler.setPrivateKeyPassword("123456");
+		interceptor.setValidationCallbackHandler(callbackHandler);
 
-        CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
+		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 
-        Properties cryptoFactoryBeanConfig = new Properties();
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.provider",
-                "org.apache.ws.security.components.crypto.Merlin");
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", "jceks");
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
+		Properties cryptoFactoryBeanConfig = new Properties();
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.provider",
+				"org.apache.ws.security.components.crypto.Merlin");
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.type", "jceks");
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
 
-        // from the class path
-        cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
-        cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
-        cryptoFactoryBean.afterPropertiesSet();
-        interceptor.setValidationDecryptionCrypto(cryptoFactoryBean
-                .getObject());
-        interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean
-                .getObject());
+		// from the class path
+		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
+		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
+		cryptoFactoryBean.afterPropertiesSet();
+		interceptor.setValidationDecryptionCrypto(cryptoFactoryBean
+				.getObject());
+		interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean
+				.getObject());
 
-        interceptor.afterPropertiesSet();
-    }
+		interceptor.afterPropertiesSet();
+	}
 
-    @Test
-    public void testDecryptRequest() throws Exception {
-        SoapMessage message = loadSoap11Message("encrypted-soap.xml");
-        MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-        interceptor.validateMessage(message, messageContext);
-        Document document = getDocument((SoapMessage) messageContext.getRequest());
-        assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
-                document);
-        assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
-                getDocument(message));
-    }
+	@Test
+	public void testDecryptRequest() throws Exception {
+		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		interceptor.validateMessage(message, messageContext);
+		Document document = getDocument((SoapMessage) messageContext.getRequest());
+		assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
+				document);
+		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
+				getDocument(message));
+	}
 
-    @Test
-    public void testEncryptResponse() throws Exception {
-        SoapMessage message = loadSoap11Message("empty-soap.xml");
-        MessageContext messageContext = getSoap11MessageContext(message);
-        interceptor.setSecurementEncryptionUser("rsakey");
-        interceptor.secureMessage(message, messageContext);
-        Document document = getDocument(message);
-        assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
-                document);
-    }
+	@Test
+	public void testEncryptResponse() throws Exception {
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+		interceptor.setSecurementEncryptionUser("rsakey");
+		interceptor.secureMessage(message, messageContext);
+		Document document = getDocument(message);
+		assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
+				document);
+	}
 }

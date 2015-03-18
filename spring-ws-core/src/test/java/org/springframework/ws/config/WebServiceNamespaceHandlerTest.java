@@ -28,16 +28,16 @@ import org.junit.Test;
 
 public class WebServiceNamespaceHandlerTest {
 
-    private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
-    @Before
-    public void setUp() throws Exception {
-        applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
-    }
+	@Before
+	public void setUp() throws Exception {
+		applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
+	}
 
-    @Test
-    public void testMarshallingMethods() throws Exception {
-        Map<String, MarshallingMethodEndpointAdapter> result = applicationContext.getBeansOfType(MarshallingMethodEndpointAdapter.class);
-        Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
-    }
+	@Test
+	public void testMarshallingMethods() throws Exception {
+		Map<String, MarshallingMethodEndpointAdapter> result = applicationContext.getBeansOfType(MarshallingMethodEndpointAdapter.class);
+		Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+	}
 }

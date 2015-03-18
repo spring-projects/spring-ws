@@ -28,20 +28,20 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public interface MessageIdStrategy {
 
-    /**
-     * Indicates whether the given {@code MessageID} value is a duplicate or not
-     *
-     * @param messageId the message id
-     * @return {@code true} if a duplicate; {@code false} otherwise
-     */
-    boolean isDuplicate(URI messageId);
+	/**
+	 * Indicates whether the given {@code MessageID} value is a duplicate or not
+	 *
+	 * @param messageId the message id
+	 * @return {@code true} if a duplicate; {@code false} otherwise
+	 */
+	boolean isDuplicate(URI messageId);
 
-    /**
-     * Returns a new WS-Addressing {@code MessageID} for the given {@link SoapMessage}.
-     *
-     * @param message the message to create an id for
-     * @return the new message id
-     */
-    URI newMessageId(SoapMessage message);
+	/**
+	 * Returns a new WS-Addressing {@code MessageID} for the given {@link SoapMessage}.
+	 *
+	 * @param message the message to create an id for
+	 * @return the new message id
+	 */
+	URI newMessageId(SoapMessage message);
 
 }

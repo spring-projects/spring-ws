@@ -32,9 +32,9 @@ import org.springframework.ws.soap.SoapMessage;
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
  * template.sendSourceAndReceiveToResult(
- *     new StringSource("&lt;content xmlns=\"http://tempuri.org\"/&gt;"),
- *     new SoapActionCallback("http://tempuri.org/SOAPAction"),
- *     result);
+ *	   new StringSource("&lt;content xmlns=\"http://tempuri.org\"/&gt;"),
+ *	   new SoapActionCallback("http://tempuri.org/SOAPAction"),
+ *	   result);
  * </pre>
  *
  * @author Arjen Poutsma
@@ -42,21 +42,21 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class SoapActionCallback implements WebServiceMessageCallback {
 
-    private final String soapAction;
+	private final String soapAction;
 
-    /** Create a new {@code SoapActionCallback} with the given string SOAPAction. */
-    public SoapActionCallback(String soapAction) {
-        if (!StringUtils.hasText(soapAction)) {
-            soapAction = "\"\"";
-        }
-        this.soapAction = soapAction;
-    }
+	/** Create a new {@code SoapActionCallback} with the given string SOAPAction. */
+	public SoapActionCallback(String soapAction) {
+		if (!StringUtils.hasText(soapAction)) {
+			soapAction = "\"\"";
+		}
+		this.soapAction = soapAction;
+	}
 
-    @Override
-    public void doWithMessage(WebServiceMessage message) throws IOException {
-        Assert.isInstanceOf(SoapMessage.class, message);
-        SoapMessage soapMessage = (SoapMessage) message;
-        soapMessage.setSoapAction(soapAction);
-    }
+	@Override
+	public void doWithMessage(WebServiceMessage message) throws IOException {
+		Assert.isInstanceOf(SoapMessage.class, message);
+		SoapMessage soapMessage = (SoapMessage) message;
+		soapMessage.setSoapAction(soapAction);
+	}
 
 }

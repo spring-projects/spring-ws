@@ -37,16 +37,16 @@ import org.springframework.xml.transform.TransformerHelper;
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
- *    public void doSomethingWithRequest(&#64;RequestBody MyRootElement rootElement) {
- *       ...
- *    }
+ *	  public void doSomethingWithRequest(&#64;RequestBody MyRootElement rootElement) {
+ *		 ...
+ *	  }
  * }
  * </pre>
  * where MyRootElement is annotated with {@code @XmlRootElement}:
  * <pre>
  * &#64;XmlRootElement(name = "myRoot", namespace = "http://springframework.org/spring-ws")
  * public class MyRootElement {
- *   ...
+ *	 ...
  * }
  * </pre>
  *
@@ -55,59 +55,59 @@ import org.springframework.xml.transform.TransformerHelper;
  */
 public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpointMapping<QName> {
 
-    private TransformerHelper transformerHelper = new TransformerHelper();
+	private TransformerHelper transformerHelper = new TransformerHelper();
 
-    public void setTransformerHelper(TransformerHelper transformerHelper) {
-        this.transformerHelper = transformerHelper;
-    }
+	public void setTransformerHelper(TransformerHelper transformerHelper) {
+		this.transformerHelper = transformerHelper;
+	}
 
-    @Override
-    protected QName getLookupKeyForMethod(Method method) {
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        for (int i = 0; i < parameterTypes.length; i++) {
-            MethodParameter methodParameter = new MethodParameter(method, i);
-            Class<?> parameterType = methodParameter.getParameterType();
-            if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
-                QName result = handleRootElement(parameterType);
-                if (result != null) {
-                    return result;
-                }
-            }
+	@Override
+	protected QName getLookupKeyForMethod(Method method) {
+		Class<?>[] parameterTypes = method.getParameterTypes();
+		for (int i = 0; i < parameterTypes.length; i++) {
+			MethodParameter methodParameter = new MethodParameter(method, i);
+			Class<?> parameterType = methodParameter.getParameterType();
+			if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
+				QName result = handleRootElement(parameterType);
+				if (result != null) {
+					return result;
+				}
+			}
 
-        }
-        return null;
-    }
+		}
+		return null;
+	}
 
-    private QName handleRootElement(Class<?> parameterType) {
-        try {
-            Object param = parameterType.newInstance();
-            QName result = getElementName(parameterType, param);
-            if (result != null) {
-                return result;
-            }
-        }
-        catch (InstantiationException e) {
-            // ignore
-        }
-        catch (IllegalAccessException ex) {
-            // ignore
-        }
-        return null;
-    }
+	private QName handleRootElement(Class<?> parameterType) {
+		try {
+			Object param = parameterType.newInstance();
+			QName result = getElementName(parameterType, param);
+			if (result != null) {
+				return result;
+			}
+		}
+		catch (InstantiationException e) {
+			// ignore
+		}
+		catch (IllegalAccessException ex) {
+			// ignore
+		}
+		return null;
+	}
 
-    private QName getElementName(Class<?> parameterType, Object param) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(parameterType);
-            JAXBIntrospector introspector = context.createJAXBIntrospector();
-            return introspector.getElementName(param);
-        }
-        catch (JAXBException ex) {
-            return null;
-        }
-    }
+	private QName getElementName(Class<?> parameterType, Object param) {
+		try {
+			JAXBContext context = JAXBContext.newInstance(parameterType);
+			JAXBIntrospector introspector = context.createJAXBIntrospector();
+			return introspector.getElementName(param);
+		}
+		catch (JAXBException ex) {
+			return null;
+		}
+	}
 
-    @Override
-    protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-        return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerHelper);
-    }
+	@Override
+	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerHelper);
+	}
 }

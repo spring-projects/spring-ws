@@ -22,14 +22,14 @@ import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
 
 public class AxiomSoap12NonCachingBodyTest extends AbstractSoap12BodyTestCase {
 
-    @Override
-    protected SoapBody createSoapBody() throws Exception {
-        AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-        messageFactory.setPayloadCaching(false);
-        messageFactory.setSoapVersion(SoapVersion.SOAP_12);
+	@Override
+	protected SoapBody createSoapBody() throws Exception {
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(false);
+		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 
-        AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
-        return axiomSoapMessage.getSoapBody();
-    }
+		AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
+		return axiomSoapMessage.getSoapBody();
+	}
 
 }

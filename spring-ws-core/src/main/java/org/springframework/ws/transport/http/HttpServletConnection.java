@@ -41,131 +41,131 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * @since 1.0.0
  */
 public class HttpServletConnection extends AbstractReceiverConnection
-        implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
+		implements EndpointAwareWebServiceConnection, FaultAwareWebServiceConnection {
 
-    private final HttpServletRequest httpServletRequest;
+	private final HttpServletRequest httpServletRequest;
 
-    private final HttpServletResponse httpServletResponse;
+	private final HttpServletResponse httpServletResponse;
 
-    private boolean statusCodeSet = false;
+	private boolean statusCodeSet = false;
 
-    /**
-     * Constructs a new servlet connection with the given {@code HttpServletRequest} and
-     * {@code HttpServletResponse}.
-     */
-    protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
-    }
+	/**
+	 * Constructs a new servlet connection with the given {@code HttpServletRequest} and
+	 * {@code HttpServletResponse}.
+	 */
+	protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		this.httpServletRequest = httpServletRequest;
+		this.httpServletResponse = httpServletResponse;
+	}
 
-    /** Returns the {@code HttpServletRequest} for this connection. */
-    public HttpServletRequest getHttpServletRequest() {
-        return httpServletRequest;
-    }
+	/** Returns the {@code HttpServletRequest} for this connection. */
+	public HttpServletRequest getHttpServletRequest() {
+		return httpServletRequest;
+	}
 
-    /** Returns the {@code HttpServletResponse} for this connection. */
-    public HttpServletResponse getHttpServletResponse() {
-        return httpServletResponse;
-    }
+	/** Returns the {@code HttpServletResponse} for this connection. */
+	public HttpServletResponse getHttpServletResponse() {
+		return httpServletResponse;
+	}
 
-    @Override
-    public void endpointNotFound() {
-        getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
-        statusCodeSet = true;
-    }
+	@Override
+	public void endpointNotFound() {
+		getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
+		statusCodeSet = true;
+	}
 
-    /*
-     * Errors
-     */
+	/*
+	 * Errors
+	 */
 
-    @Override
-    public boolean hasError() throws IOException {
-        return false;
-    }
+	@Override
+	public boolean hasError() throws IOException {
+		return false;
+	}
 
-    @Override
-    public String getErrorMessage() throws IOException {
-        return null;
-    }
+	@Override
+	public String getErrorMessage() throws IOException {
+		return null;
+	}
 
-    /*
-     * URI
-     */
+	/*
+	 * URI
+	 */
 
-    @Override
-    public URI getUri() throws URISyntaxException {
-        return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
-                httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
-                httpServletRequest.getQueryString(), null);
-    }
+	@Override
+	public URI getUri() throws URISyntaxException {
+		return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
+				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
+				httpServletRequest.getQueryString(), null);
+	}
 
-    /*
-    * Receiving request
-    */
+	/*
+	* Receiving request
+	*/
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected Iterator<String> getRequestHeaderNames() throws IOException {
-	    return new EnumerationIterator<String>(getHttpServletRequest().getHeaderNames());
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected Iterator<String> getRequestHeaderNames() throws IOException {
+		return new EnumerationIterator<String>(getHttpServletRequest().getHeaderNames());
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected Iterator<String> getRequestHeaders(String name) throws IOException {
-        return new EnumerationIterator<String>(getHttpServletRequest().getHeaders(name));
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+		return new EnumerationIterator<String>(getHttpServletRequest().getHeaders(name));
+	}
 
-    @Override
-    protected InputStream getRequestInputStream() throws IOException {
-        return getHttpServletRequest().getInputStream();
-    }
+	@Override
+	protected InputStream getRequestInputStream() throws IOException {
+		return getHttpServletRequest().getInputStream();
+	}
 
-    /*
-    * Sending response
-    */
+	/*
+	* Sending response
+	*/
 
-    @Override
-    protected void addResponseHeader(String name, String value) throws IOException {
-        getHttpServletResponse().addHeader(name, value);
-    }
+	@Override
+	protected void addResponseHeader(String name, String value) throws IOException {
+		getHttpServletResponse().addHeader(name, value);
+	}
 
-    @Override
-    protected OutputStream getResponseOutputStream() throws IOException {
-        return getHttpServletResponse().getOutputStream();
-    }
+	@Override
+	protected OutputStream getResponseOutputStream() throws IOException {
+		return getHttpServletResponse().getOutputStream();
+	}
 
-    @Override
-    protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-        statusCodeSet = true;
-    }
+	@Override
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		statusCodeSet = true;
+	}
 
-    @Override
-    public void onClose() throws IOException {
-        if (!statusCodeSet) {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);
-        }
-    }
+	@Override
+	public void onClose() throws IOException {
+		if (!statusCodeSet) {
+			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);
+		}
+	}
 
-    /*
-     * Faults
-     */
+	/*
+	 * Faults
+	 */
 
-    @Override
-    public boolean hasFault() throws IOException {
-        return false;
-    }
+	@Override
+	public boolean hasFault() throws IOException {
+		return false;
+	}
 
-    @Override
-    @Deprecated
-    public void setFault(boolean fault) throws IOException {
-        if (fault) {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
-        }
-        else {
-            getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
-        }
-        statusCodeSet = true;
-    }
+	@Override
+	@Deprecated
+	public void setFault(boolean fault) throws IOException {
+		if (fault) {
+			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
+		}
+		else {
+			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
+		}
+		statusCodeSet = true;
+	}
 
 	@Override
 	public void setFaultCode(QName faultCode) throws IOException {

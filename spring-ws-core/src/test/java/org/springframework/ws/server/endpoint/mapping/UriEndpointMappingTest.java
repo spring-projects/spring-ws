@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,56 +34,56 @@ import static org.easymock.EasyMock.*;
 
 public class UriEndpointMappingTest {
 
-    private UriEndpointMapping mapping;
+	private UriEndpointMapping mapping;
 
-    private MessageContext context;
+	private MessageContext context;
 
-    @Before
-    public void setUp() throws Exception {
-        mapping = new UriEndpointMapping();
-        context = new DefaultMessageContext(new MockWebServiceMessageFactory());
-    }
+	@Before
+	public void setUp() throws Exception {
+		mapping = new UriEndpointMapping();
+		context = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	}
 
-    @After
-    public void clearContext() {
-        TransportContextHolder.setTransportContext(null);
-    }
+	@After
+	public void clearContext() {
+		TransportContextHolder.setTransportContext(null);
+	}
 
-    @Test
-    public void getLookupKeyForMessage() throws Exception {
-        WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
+	@Test
+	public void getLookupKeyForMessage() throws Exception {
+		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
+		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
 
-        URI uri = new URI("jms://exampleQueue");
-        expect(connectionMock.getUri()).andReturn(uri);
+		URI uri = new URI("jms://exampleQueue");
+		expect(connectionMock.getUri()).andReturn(uri);
 
-        replay(connectionMock);
+		replay(connectionMock);
 
-        Assert.assertEquals("Invalid lookup key", uri.toString(), mapping.getLookupKeyForMessage(context));
+		Assert.assertEquals("Invalid lookup key", uri.toString(), mapping.getLookupKeyForMessage(context));
 
-        verify(connectionMock);
-    }
+		verify(connectionMock);
+	}
 
-    @Test
-    public void getLookupKeyForMessagePath() throws Exception {
-        mapping.setUsePath(true);
+	@Test
+	public void getLookupKeyForMessagePath() throws Exception {
+		mapping.setUsePath(true);
 
-        WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
-        TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
+		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
+		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
 
-        URI uri = new URI("http://example.com/foo/bar");
-        expect(connectionMock.getUri()).andReturn(uri);
+		URI uri = new URI("http://example.com/foo/bar");
+		expect(connectionMock.getUri()).andReturn(uri);
 
-        replay(connectionMock);
+		replay(connectionMock);
 
-        Assert.assertEquals("Invalid lookup key", "/foo/bar", mapping.getLookupKeyForMessage(context));
+		Assert.assertEquals("Invalid lookup key", "/foo/bar", mapping.getLookupKeyForMessage(context));
 
-        verify(connectionMock);
-    }
+		verify(connectionMock);
+	}
 
-    @Test
-    public void testValidateLookupKey() throws Exception {
-        Assert.assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
-        Assert.assertFalse("URI not valid", mapping.validateLookupKey("some string"));
-    }
+	@Test
+	public void testValidateLookupKey() throws Exception {
+		Assert.assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
+		Assert.assertFalse("URI not valid", mapping.validateLookupKey("some string"));
+	}
 }

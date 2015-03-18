@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,44 +34,44 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
  */
 public abstract class AbstractAnnotationMethodEndpointMapping<T> extends AbstractMethodEndpointMapping<T> {
 
-    private boolean detectEndpointsInAncestorContexts = false;
+	private boolean detectEndpointsInAncestorContexts = false;
 
-    /**
-     * Set whether to detect endpoint beans in ancestor ApplicationContexts.
-     *
-     * <p>Default is "false": Only endpoint beans in the current ApplicationContext will be detected, i.e. only in the
-     * context that this EndpointMapping itself is defined in (typically the current MessageDispatcherServlet's
-     * context).
-     *
-     * <p>Switch this flag on to detect endpoint beans in ancestor contexts (typically the Spring root
-     * WebApplicationContext) as well.
-     */
-    public void setDetectEndpointsInAncestorContexts(boolean detectEndpointsInAncestorContexts) {
-        this.detectEndpointsInAncestorContexts = detectEndpointsInAncestorContexts;
-    }
+	/**
+	 * Set whether to detect endpoint beans in ancestor ApplicationContexts.
+	 *
+	 * <p>Default is "false": Only endpoint beans in the current ApplicationContext will be detected, i.e. only in the
+	 * context that this EndpointMapping itself is defined in (typically the current MessageDispatcherServlet's
+	 * context).
+	 *
+	 * <p>Switch this flag on to detect endpoint beans in ancestor contexts (typically the Spring root
+	 * WebApplicationContext) as well.
+	 */
+	public void setDetectEndpointsInAncestorContexts(boolean detectEndpointsInAncestorContexts) {
+		this.detectEndpointsInAncestorContexts = detectEndpointsInAncestorContexts;
+	}
 
-    /** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
-    protected Class<? extends Annotation> getEndpointAnnotationType() {
-        return Endpoint.class;
-    }
+	/** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
+	protected Class<? extends Annotation> getEndpointAnnotationType() {
+		return Endpoint.class;
+	}
 
-    @Override
-    protected void initApplicationContext() throws BeansException {
-        super.initApplicationContext();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Looking for endpoints in application context: " + getApplicationContext());
-        }
-        String[] beanNames = (this.detectEndpointsInAncestorContexts ?
-                BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
-                getApplicationContext().getBeanNamesForType(Object.class));
+	@Override
+	protected void initApplicationContext() throws BeansException {
+		super.initApplicationContext();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Looking for endpoints in application context: " + getApplicationContext());
+		}
+		String[] beanNames = (this.detectEndpointsInAncestorContexts ?
+				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class) :
+				getApplicationContext().getBeanNamesForType(Object.class));
 
-        for (String beanName : beanNames) {
-            Class<?> endpointClass = getApplicationContext().getType(beanName);
-            if (endpointClass != null &&
-                    AnnotationUtils.findAnnotation(endpointClass, getEndpointAnnotationType()) != null) {
-                registerMethods(beanName);
-            }
-        }
-    }
+		for (String beanName : beanNames) {
+			Class<?> endpointClass = getApplicationContext().getType(beanName);
+			if (endpointClass != null &&
+					AnnotationUtils.findAnnotation(endpointClass, getEndpointAnnotationType()) != null) {
+				registerMethods(beanName);
+			}
+		}
+	}
 
 }

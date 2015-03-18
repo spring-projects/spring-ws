@@ -42,79 +42,79 @@ import static org.easymock.EasyMock.*;
 
 public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressingTestCase {
 
-    private ActionCallback callback;
+	private ActionCallback callback;
 
-    private MessageIdStrategy strategyMock;
+	private MessageIdStrategy strategyMock;
 
-    private WebServiceConnection connectionMock;
+	private WebServiceConnection connectionMock;
 
-    @Before
-    public void createMocks() throws Exception {
-        strategyMock = createMock(MessageIdStrategy.class);
+	@Before
+	public void createMocks() throws Exception {
+		strategyMock = createMock(MessageIdStrategy.class);
 
-        connectionMock = createMock(WebServiceConnection.class);
+		connectionMock = createMock(WebServiceConnection.class);
 
-        TransportContext transportContext = new DefaultTransportContext(connectionMock);
-        TransportContextHolder.setTransportContext(transportContext);
-    }
+		TransportContext transportContext = new DefaultTransportContext(connectionMock);
+		TransportContextHolder.setTransportContext(transportContext);
+	}
 
-    @After
-    public void clearContext() throws Exception {
-        TransportContextHolder.setTransportContext(null);
-    }
+	@After
+	public void clearContext() throws Exception {
+		TransportContextHolder.setTransportContext(null);
+	}
 
-    @Test
-    public void testValid() throws Exception {
-        URI action = new URI("http://example.com/fabrikam/mail/Delete");
-        URI to = new URI("mailto:fabrikam@example.com");
-        callback = new ActionCallback(action, getVersion(), to);
-        callback.setMessageIdStrategy(strategyMock);
-        SaajSoapMessage message = createDeleteMessage();
-        expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-        callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+	@Test
+	public void testValid() throws Exception {
+		URI action = new URI("http://example.com/fabrikam/mail/Delete");
+		URI to = new URI("mailto:fabrikam@example.com");
+		callback = new ActionCallback(action, getVersion(), to);
+		callback.setMessageIdStrategy(strategyMock);
+		SaajSoapMessage message = createDeleteMessage();
+		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
 
-        replay(strategyMock, connectionMock);
+		replay(strategyMock, connectionMock);
 
-        callback.doWithMessage(message);
+		callback.doWithMessage(message);
 
-        SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-        assertXMLEqual("Invalid message", expected, message);
+		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
+		assertXMLEqual("Invalid message", expected, message);
 
-        verify(strategyMock, connectionMock);
-    }
+		verify(strategyMock, connectionMock);
+	}
 
-    @Test
-    public void testDefaults() throws Exception {
-        URI action = new URI("http://example.com/fabrikam/mail/Delete");
-        URI connectionUri = new URI("mailto:fabrikam@example.com");
-        callback = new ActionCallback(action, getVersion());
-        callback.setMessageIdStrategy(strategyMock);
-        expect(connectionMock.getUri()).andReturn(connectionUri);
+	@Test
+	public void testDefaults() throws Exception {
+		URI action = new URI("http://example.com/fabrikam/mail/Delete");
+		URI connectionUri = new URI("mailto:fabrikam@example.com");
+		callback = new ActionCallback(action, getVersion());
+		callback.setMessageIdStrategy(strategyMock);
+		expect(connectionMock.getUri()).andReturn(connectionUri);
 
-        SaajSoapMessage message = createDeleteMessage();
-        expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-        callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		SaajSoapMessage message = createDeleteMessage();
+		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
 
-        replay(strategyMock, connectionMock);
+		replay(strategyMock, connectionMock);
 
-        callback.doWithMessage(message);
+		callback.doWithMessage(message);
 
-        SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-        assertXMLEqual("Invalid message", expected, message);
-        verify(strategyMock, connectionMock);
-    }
+		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
+		assertXMLEqual("Invalid message", expected, message);
+		verify(strategyMock, connectionMock);
+	}
 
-    private SaajSoapMessage createDeleteMessage() throws SOAPException {
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        SOAPBody saajBody = saajMessage.getSOAPBody();
-        SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
-        SOAPElement maxCount = delete.addChildElement(new QName("maxCount"));
-        maxCount.setTextContent("42");
-        return new SaajSoapMessage(saajMessage);
-    }
+	private SaajSoapMessage createDeleteMessage() throws SOAPException {
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		SOAPBody saajBody = saajMessage.getSOAPBody();
+		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
+		SOAPElement maxCount = delete.addChildElement(new QName("maxCount"));
+		maxCount.setTextContent("42");
+		return new SaajSoapMessage(saajMessage);
+	}
 
-    protected abstract AddressingVersion getVersion();
+	protected abstract AddressingVersion getVersion();
 
-    protected abstract String getTestPath();
+	protected abstract String getTestPath();
 
 }

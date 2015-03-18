@@ -25,16 +25,16 @@ package org.springframework.ws.soap;
 @SuppressWarnings("serial")
 public class SoapBodyException extends SoapMessageException {
 
-    public SoapBodyException(String msg) {
-        super(msg);
-    }
+	public SoapBodyException(String msg) {
+		super(msg);
+	}
 
-    public SoapBodyException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SoapBodyException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SoapBodyException(Throwable ex) {
-        super("Could not access body: " + ex.getMessage(), ex);
-    }
+	public SoapBodyException(Throwable ex) {
+		super("Could not access body: " + ex.getMessage(), ex);
+	}
 
 }

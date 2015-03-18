@@ -29,54 +29,54 @@ import org.springframework.ws.soap.SoapFaultDetail;
 /** @author Arjen Poutsma */
 abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 
-    protected AxiomSoapFault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
-        super(axiomFault, axiomFactory);
-    }
+	protected AxiomSoapFault(SOAPFault axiomFault, SOAPFactory axiomFactory) {
+		super(axiomFault, axiomFactory);
+	}
 
-    @Override
-    public String getFaultActorOrRole() {
-        SOAPFaultRole faultRole = getAxiomFault().getRole();
-        return faultRole != null ? faultRole.getRoleValue() : null;
-    }
+	@Override
+	public String getFaultActorOrRole() {
+		SOAPFaultRole faultRole = getAxiomFault().getRole();
+		return faultRole != null ? faultRole.getRoleValue() : null;
+	}
 
-    @Override
-    public void setFaultActorOrRole(String actor) {
-        try {
-            SOAPFaultRole axiomFaultRole = getAxiomFactory().createSOAPFaultRole(getAxiomFault());
-            axiomFaultRole.setRoleValue(actor);
-        }
-        catch (SOAPProcessingException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+	@Override
+	public void setFaultActorOrRole(String actor) {
+		try {
+			SOAPFaultRole axiomFaultRole = getAxiomFactory().createSOAPFaultRole(getAxiomFault());
+			axiomFaultRole.setRoleValue(actor);
+		}
+		catch (SOAPProcessingException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    public SoapFaultDetail getFaultDetail() {
-        try {
-            SOAPFaultDetail axiomFaultDetail = getAxiomFault().getDetail();
-            return axiomFaultDetail != null ? new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory()) : null;
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+	@Override
+	public SoapFaultDetail getFaultDetail() {
+		try {
+			SOAPFaultDetail axiomFaultDetail = getAxiomFault().getDetail();
+			return axiomFaultDetail != null ? new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory()) : null;
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    public SoapFaultDetail addFaultDetail() {
-        try {
-            SOAPFaultDetail axiomFaultDetail = getAxiomFactory().createSOAPFaultDetail(getAxiomFault());
-            return new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory());
-        }
-        catch (OMException ex) {
-            throw new AxiomSoapFaultException(ex);
-        }
+	@Override
+	public SoapFaultDetail addFaultDetail() {
+		try {
+			SOAPFaultDetail axiomFaultDetail = getAxiomFactory().createSOAPFaultDetail(getAxiomFault());
+			return new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory());
+		}
+		catch (OMException ex) {
+			throw new AxiomSoapFaultException(ex);
+		}
 
-    }
+	}
 
-    protected SOAPFault getAxiomFault() {
-        return (SOAPFault) getAxiomElement();
-    }
+	protected SOAPFault getAxiomFault() {
+		return (SOAPFault) getAxiomElement();
+	}
 
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *	   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,38 +29,38 @@ import static org.easymock.EasyMock.*;
 
 public class PayloadDiffMatcherTest {
 
-    @Test
-    public void match() throws Exception {
-        String xml = "<element xmlns='http://example.com'/>";
-        WebServiceMessage message = createMock(WebServiceMessage.class);
-        expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
-        replay(message);
+	@Test
+	public void match() throws Exception {
+		String xml = "<element xmlns='http://example.com'/>";
+		WebServiceMessage message = createMock(WebServiceMessage.class);
+		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
+		replay(message);
 
-        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xml));
-        matcher.match(message);
+		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xml));
+		matcher.match(message);
 
-        verify(message);
-    }
+		verify(message);
+	}
 
-    @Test(expected = AssertionError.class)
-    public void nonMatch() throws Exception {
-        String actual = "<element1 xmlns='http://example.com'/>";
-        WebServiceMessage message = createMock(WebServiceMessage.class);
-        expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
-        replay(message);
+	@Test(expected = AssertionError.class)
+	public void nonMatch() throws Exception {
+		String actual = "<element1 xmlns='http://example.com'/>";
+		WebServiceMessage message = createMock(WebServiceMessage.class);
+		expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
+		replay(message);
 
-        String expected = "<element2 xmlns='http://example.com'/>";
-        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
-        matcher.match(message);
-    }
+		String expected = "<element2 xmlns='http://example.com'/>";
+		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
+		matcher.match(message);
+	}
 
-    @Test(expected = AssertionError.class)
-    public void noPayload() throws Exception {
-        PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
-        MessageFactory messageFactory = MessageFactory.newInstance();
-        SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
+	@Test(expected = AssertionError.class)
+	public void noPayload() throws Exception {
+		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
 
-        matcher.createDiff(soapMessage);
-    }
+		matcher.createDiff(soapMessage);
+	}
 
 }

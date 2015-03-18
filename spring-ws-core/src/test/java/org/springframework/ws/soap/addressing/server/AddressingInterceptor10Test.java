@@ -31,29 +31,29 @@ import static org.junit.Assert.assertTrue;
 
 public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTestCase {
 
-    @Override
-    protected AddressingVersion getVersion() {
-        return new Addressing10();
-    }
+	@Override
+	protected AddressingVersion getVersion() {
+		return new Addressing10();
+	}
 
-    @Override
-    protected String getTestPath() {
-        return "10";
-    }
+	@Override
+	protected String getTestPath() {
+		return "10";
+	}
 
-    public void testNoTo() throws Exception {
-        SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-to.xml");
-        MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
-        URI messageId = new URI("uid:1234");
-        expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
-        replay(strategyMock);
-        boolean result = interceptor.handleResponse(context, null);
-        assertTrue("Request with no To not handled", result);
-        assertTrue("Message Context has no response", context.hasResponse());
-        SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
-        assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
-                (SaajSoapMessage) context.getResponse());
-        verify(strategyMock);
-    }
+	public void testNoTo() throws Exception {
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-to.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		URI messageId = new URI("uid:1234");
+		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		replay(strategyMock);
+		boolean result = interceptor.handleResponse(context, null);
+		assertTrue("Request with no To not handled", result);
+		assertTrue("Message Context has no response", context.hasResponse());
+		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
+		assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
+				(SaajSoapMessage) context.getResponse());
+		verify(strategyMock);
+	}
 
 }

@@ -29,21 +29,21 @@ import org.springframework.ws.transport.TransportException;
 @SuppressWarnings("serial")
 public class MailTransportException extends TransportException {
 
-    private final MessagingException messagingException;
+	private final MessagingException messagingException;
 
-    public MailTransportException(String msg, MessagingException ex) {
-        super(msg + ": " + ex.getMessage());
-        initCause(ex);
-        messagingException = ex;
-    }
+	public MailTransportException(String msg, MessagingException ex) {
+		super(msg + ": " + ex.getMessage());
+		initCause(ex);
+		messagingException = ex;
+	}
 
-    public MailTransportException(MessagingException ex) {
-        super(ex.getMessage());
-        initCause(ex);
-        messagingException = ex;
-    }
+	public MailTransportException(MessagingException ex) {
+		super(ex.getMessage());
+		initCause(ex);
+		messagingException = ex;
+	}
 
-    public MessagingException getMessagingException() {
-        return messagingException;
-    }
+	public MessagingException getMessagingException() {
+		return messagingException;
+	}
 }

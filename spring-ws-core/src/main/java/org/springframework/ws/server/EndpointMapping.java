@@ -38,22 +38,22 @@ import org.springframework.ws.context.MessageContext;
  */
 public interface EndpointMapping {
 
-    /**
-     * Returns an endpoint and any interceptors for this message context. The choice may be made on message contents,
-     * transport request url, a routing table, or any factor the implementing class chooses.
-     *
-     * <p>The returned {@code EndpointExecutionChain} contains an endpoint Object, rather than even a tag interface,
-     * so that endpoints are not constrained in any way. For example, a {@code EndpointAdapter} could be written to
-     * allow another framework's endpoint objects to be used.
-     *
-     * <p>Returns {@code null} if no match was found. This is by design. The {@code MessageDispatcher} will query
-     * all registered {@code EndpointMapping} beans to find a match, and only decide there is an error if none can
-     * find an endpoint.
-     *
-     * @return a HandlerExecutionChain instance containing endpoint object and any interceptors, or {@code null} if
-     *         no mapping is found
-     * @throws Exception if there is an internal error
-     */
-    EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception;
+	/**
+	 * Returns an endpoint and any interceptors for this message context. The choice may be made on message contents,
+	 * transport request url, a routing table, or any factor the implementing class chooses.
+	 *
+	 * <p>The returned {@code EndpointExecutionChain} contains an endpoint Object, rather than even a tag interface,
+	 * so that endpoints are not constrained in any way. For example, a {@code EndpointAdapter} could be written to
+	 * allow another framework's endpoint objects to be used.
+	 *
+	 * <p>Returns {@code null} if no match was found. This is by design. The {@code MessageDispatcher} will query
+	 * all registered {@code EndpointMapping} beans to find a match, and only decide there is an error if none can
+	 * find an endpoint.
+	 *
+	 * @return a HandlerExecutionChain instance containing endpoint object and any interceptors, or {@code null} if
+	 *		   no mapping is found
+	 * @throws Exception if there is an internal error
+	 */
+	EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception;
 
 }

@@ -44,74 +44,74 @@ import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
  * @version $Id: DaoX509AuthoritiesPopulator.java 2544 2008-01-29 11:50:33Z luke_t $
  */
 public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, InitializingBean, MessageSourceAware {
-    //~ Static fields/initializers =====================================================================================
+	//~ Static fields/initializers =====================================================================================
 
-    private static final Log logger = LogFactory.getLog(DaoX509AuthoritiesPopulator.class);
+	private static final Log logger = LogFactory.getLog(DaoX509AuthoritiesPopulator.class);
 
-    //~ Instance fields ================================================================================================
+	//~ Instance fields ================================================================================================
 
-    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-    private Pattern subjectDNPattern;
-    private String subjectDNRegex = "CN=(.*?),";
-    private UserDetailsService userDetailsService;
+	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+	private Pattern subjectDNPattern;
+	private String subjectDNRegex = "CN=(.*?),";
+	private UserDetailsService userDetailsService;
 
-    //~ Methods ========================================================================================================
+	//~ Methods ========================================================================================================
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(userDetailsService, "An authenticationDao must be set");
-        Assert.notNull(this.messages, "A message source must be set");
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Assert.notNull(userDetailsService, "An authenticationDao must be set");
+		Assert.notNull(this.messages, "A message source must be set");
 
-        subjectDNPattern = Pattern.compile(subjectDNRegex, Pattern.CASE_INSENSITIVE);
-    }
+		subjectDNPattern = Pattern.compile(subjectDNRegex, Pattern.CASE_INSENSITIVE);
+	}
 
-    @Override
-    public UserDetails getUserDetails(X509Certificate clientCert) throws AuthenticationException {
-        String subjectDN = clientCert.getSubjectDN().getName();
+	@Override
+	public UserDetails getUserDetails(X509Certificate clientCert) throws AuthenticationException {
+		String subjectDN = clientCert.getSubjectDN().getName();
 
-        Matcher matcher = subjectDNPattern.matcher(subjectDN);
+		Matcher matcher = subjectDNPattern.matcher(subjectDN);
 
-        if (!matcher.find()) {
-            throw new BadCredentialsException(messages.getMessage("DaoX509AuthoritiesPopulator.noMatching",
-                    new Object[] {subjectDN}, "No matching pattern was found in subjectDN: {0}"));
-        }
+		if (!matcher.find()) {
+			throw new BadCredentialsException(messages.getMessage("DaoX509AuthoritiesPopulator.noMatching",
+					new Object[] {subjectDN}, "No matching pattern was found in subjectDN: {0}"));
+		}
 
-        if (matcher.groupCount() != 1) {
-            throw new IllegalArgumentException("Regular expression must contain a single group ");
-        }
+		if (matcher.groupCount() != 1) {
+			throw new IllegalArgumentException("Regular expression must contain a single group ");
+		}
 
-        String userName = matcher.group(1);
+		String userName = matcher.group(1);
 
-        UserDetails user = this.userDetailsService.loadUserByUsername(userName);
+		UserDetails user = this.userDetailsService.loadUserByUsername(userName);
 
-        if (user == null) {
-            throw new AuthenticationServiceException(
-                "UserDetailsService returned null, which is an interface contract violation");
-        }
+		if (user == null) {
+			throw new AuthenticationServiceException(
+				"UserDetailsService returned null, which is an interface contract violation");
+		}
 
-        return user;
-    }
+		return user;
+	}
 
-    @Override
-    public void setMessageSource(MessageSource messageSource) {
-        this.messages = new MessageSourceAccessor(messageSource);
-    }
+	@Override
+	public void setMessageSource(MessageSource messageSource) {
+		this.messages = new MessageSourceAccessor(messageSource);
+	}
 
-    /**
-     * Sets the regular expression which will by used to extract the user name from the certificate's Subject
-     * DN.
-     * <p>It should contain a single group; for example the default expression "CN=(.?)," matches the common
-     * name field. So "CN=Jimi Hendrix, OU=..." will give a user name of "Jimi Hendrix".</p>
-     * <p>The matches are case insensitive. So "emailAddress=(.?)," will match "EMAILADDRESS=jimi@hendrix.org,
-     * CN=..." giving a user name "jimi@hendrix.org"</p>
-     *
-     * @param subjectDNRegex the regular expression to find in the subject
-     */
-    public void setSubjectDNRegex(String subjectDNRegex) {
-        this.subjectDNRegex = subjectDNRegex;
-    }
+	/**
+	 * Sets the regular expression which will by used to extract the user name from the certificate's Subject
+	 * DN.
+	 * <p>It should contain a single group; for example the default expression "CN=(.?)," matches the common
+	 * name field. So "CN=Jimi Hendrix, OU=..." will give a user name of "Jimi Hendrix".</p>
+	 * <p>The matches are case insensitive. So "emailAddress=(.?)," will match "EMAILADDRESS=jimi@hendrix.org,
+	 * CN=..." giving a user name "jimi@hendrix.org"</p>
+	 *
+	 * @param subjectDNRegex the regular expression to find in the subject
+	 */
+	public void setSubjectDNRegex(String subjectDNRegex) {
+		this.subjectDNRegex = subjectDNRegex;
+	}
 
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+	public void setUserDetailsService(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 }

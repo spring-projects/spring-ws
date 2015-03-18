@@ -31,14 +31,14 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public interface ResponseCreator {
 
-    /**
-     * Create a response for the given the request and URI.
-     *
-     * @param uri            the URI
-     * @param request        the request message
-     * @param messageFactory the message that can be used to create responses
-     * @throws IOException in case of I/O errors
-     */
-    WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory messageFactory) throws IOException;
+	/**
+	 * Create a response for the given the request and URI.
+	 *
+	 * @param uri			 the URI
+	 * @param request		 the request message
+	 * @param messageFactory the message that can be used to create responses
+	 * @throws IOException in case of I/O errors
+	 */
+	WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory messageFactory) throws IOException;
 
 }

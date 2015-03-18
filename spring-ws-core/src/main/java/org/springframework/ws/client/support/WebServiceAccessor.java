@@ -39,85 +39,85 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public abstract class WebServiceAccessor extends TransformerObjectSupport implements InitializingBean {
 
-    private WebServiceMessageFactory messageFactory;
+	private WebServiceMessageFactory messageFactory;
 
-    private WebServiceMessageSender[] messageSenders;
+	private WebServiceMessageSender[] messageSenders;
 
-    /** Returns the message factory used for creating messages. */
-    public WebServiceMessageFactory getMessageFactory() {
-        return messageFactory;
-    }
+	/** Returns the message factory used for creating messages. */
+	public WebServiceMessageFactory getMessageFactory() {
+		return messageFactory;
+	}
 
-    /** Sets the message factory used for creating messages. */
-    public void setMessageFactory(WebServiceMessageFactory messageFactory) {
-        this.messageFactory = messageFactory;
-    }
+	/** Sets the message factory used for creating messages. */
+	public void setMessageFactory(WebServiceMessageFactory messageFactory) {
+		this.messageFactory = messageFactory;
+	}
 
-    /** Returns the message senders used for sending messages. */
-    public WebServiceMessageSender[] getMessageSenders() {
-        return messageSenders;
-    }
+	/** Returns the message senders used for sending messages. */
+	public WebServiceMessageSender[] getMessageSenders() {
+		return messageSenders;
+	}
 
-    /**
-     * Sets the single message sender used for sending messages.
-     *
-     * <p>This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
-     *
-     * @see #createConnection(URI)
-     */
-    public void setMessageSender(WebServiceMessageSender messageSender) {
-        Assert.notNull(messageSender, "'messageSender' must not be null");
-        messageSenders = new WebServiceMessageSender[]{messageSender};
-    }
+	/**
+	 * Sets the single message sender used for sending messages.
+	 *
+	 * <p>This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
+	 *
+	 * @see #createConnection(URI)
+	 */
+	public void setMessageSender(WebServiceMessageSender messageSender) {
+		Assert.notNull(messageSender, "'messageSender' must not be null");
+		messageSenders = new WebServiceMessageSender[]{messageSender};
+	}
 
-    /**
-     * Sets the message senders used for sending messages.
-     *
-     * <p>These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
-     *
-     * @see #createConnection(URI)
-     */
-    public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
-        Assert.notEmpty(messageSenders, "'messageSenders' must not be empty");
-        this.messageSenders = messageSenders;
-    }
+	/**
+	 * Sets the message senders used for sending messages.
+	 *
+	 * <p>These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
+	 *
+	 * @see #createConnection(URI)
+	 */
+	public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
+		Assert.notEmpty(messageSenders, "'messageSenders' must not be empty");
+		this.messageSenders = messageSenders;
+	}
 
-    @Override
-    public void afterPropertiesSet() {
-        Assert.notNull(getMessageFactory(), "Property 'messageFactory' is required");
-        Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
-    }
+	@Override
+	public void afterPropertiesSet() {
+		Assert.notNull(getMessageFactory(), "Property 'messageFactory' is required");
+		Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
+	}
 
-    /**
-     * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
-     *
-     * <p>Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
-     * WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it creates a
-     * connection using {@link WebServiceMessageSender#createConnection(URI)} .
-     *
-     * @param uri the URI to open a connection to
-     * @return the created connection
-     * @throws IllegalArgumentException when the uri cannot be resolved
-     * @throws IOException              when an I/O error occurs
-     */
-    protected WebServiceConnection createConnection(URI uri) throws IOException {
-        Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
-        WebServiceMessageSender[] messageSenders = getMessageSenders();
-        for (WebServiceMessageSender messageSender : messageSenders) {
-            if (messageSender.supports(uri)) {
-                WebServiceConnection connection = messageSender.createConnection(uri);
-                if (logger.isDebugEnabled()) {
-                    try {
-                        logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
-                    }
-                    catch (URISyntaxException e) {
-                        // ignore
-                    }
-                }
-                return connection;
-            }
-        }
-        throw new IllegalArgumentException("Could not resolve [" + uri + "] to a WebServiceMessageSender");
-    }
+	/**
+	 * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
+	 *
+	 * <p>Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
+	 * WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it creates a
+	 * connection using {@link WebServiceMessageSender#createConnection(URI)} .
+	 *
+	 * @param uri the URI to open a connection to
+	 * @return the created connection
+	 * @throws IllegalArgumentException when the uri cannot be resolved
+	 * @throws IOException				when an I/O error occurs
+	 */
+	protected WebServiceConnection createConnection(URI uri) throws IOException {
+		Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
+		WebServiceMessageSender[] messageSenders = getMessageSenders();
+		for (WebServiceMessageSender messageSender : messageSenders) {
+			if (messageSender.supports(uri)) {
+				WebServiceConnection connection = messageSender.createConnection(uri);
+				if (logger.isDebugEnabled()) {
+					try {
+						logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
+					}
+					catch (URISyntaxException e) {
+						// ignore
+					}
+				}
+				return connection;
+			}
+		}
+		throw new IllegalArgumentException("Could not resolve [" + uri + "] to a WebServiceMessageSender");
+	}
 
 }

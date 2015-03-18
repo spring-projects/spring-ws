@@ -37,63 +37,63 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class TransformerObjectSupport {
 
-    /**
-     * Logger available to subclasses.
-     */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/**
+	 * Logger available to subclasses.
+	 */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    private TransformerHelper transformerHelper = new TransformerHelper();
+	private TransformerHelper transformerHelper = new TransformerHelper();
 
-    /**
-     * Specify the {@code TransformerFactory} class to use.
-     */
-    public void setTransformerFactoryClass(Class<? extends TransformerFactory> transformerFactoryClass) {
-        transformerHelper.setTransformerFactoryClass(transformerFactoryClass);
-    }
+	/**
+	 * Specify the {@code TransformerFactory} class to use.
+	 */
+	public void setTransformerFactoryClass(Class<? extends TransformerFactory> transformerFactoryClass) {
+		transformerHelper.setTransformerFactoryClass(transformerFactoryClass);
+	}
 
-    /**
-     * Instantiate a new TransformerFactory. <p>The default implementation simply calls {@link
-     * TransformerFactory#newInstance()}. If a {@link #setTransformerFactoryClass "transformerFactoryClass"} has been
-     * specified explicitly, the default constructor of the specified class will be called instead. <p>Can be overridden
-     * in subclasses.
-     *
-     * @param transformerFactoryClass the specified factory class (if any)
-     * @return the new TransactionFactory instance
-     * @see #setTransformerFactoryClass
-     * @see #getTransformerFactory()
-     */
-    protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
-        return transformerHelper.newTransformerFactory(transformerFactoryClass);
-    }
+	/**
+	 * Instantiate a new TransformerFactory. <p>The default implementation simply calls {@link
+	 * TransformerFactory#newInstance()}. If a {@link #setTransformerFactoryClass "transformerFactoryClass"} has been
+	 * specified explicitly, the default constructor of the specified class will be called instead. <p>Can be overridden
+	 * in subclasses.
+	 *
+	 * @param transformerFactoryClass the specified factory class (if any)
+	 * @return the new TransactionFactory instance
+	 * @see #setTransformerFactoryClass
+	 * @see #getTransformerFactory()
+	 */
+	protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
+		return transformerHelper.newTransformerFactory(transformerFactoryClass);
+	}
 
-    /**
-     * Returns the {@code TransformerFactory}.
-     */
-    protected TransformerFactory getTransformerFactory() {
-        return transformerHelper.getTransformerFactory();
-    }
+	/**
+	 * Returns the {@code TransformerFactory}.
+	 */
+	protected TransformerFactory getTransformerFactory() {
+		return transformerHelper.getTransformerFactory();
+	}
 
-    /**
-     * Creates a new {@code Transformer}. Must be called per request, as transformers are not thread-safe.
-     *
-     * @return the created transformer
-     * @throws TransformerConfigurationException
-     *          if thrown by JAXP methods
-     */
-    protected final Transformer createTransformer() throws TransformerConfigurationException {
-        return transformerHelper.createTransformer();
-    }
+	/**
+	 * Creates a new {@code Transformer}. Must be called per request, as transformers are not thread-safe.
+	 *
+	 * @return the created transformer
+	 * @throws TransformerConfigurationException
+	 *			if thrown by JAXP methods
+	 */
+	protected final Transformer createTransformer() throws TransformerConfigurationException {
+		return transformerHelper.createTransformer();
+	}
 
-    /**
-     * Transforms the given {@link Source} to the given {@link Result}. Creates a new {@link Transformer} for every
-     * call, as transformers are not thread-safe.
-     *
-     * @param source the source to transform from
-     * @param result the result to transform to
-     * @throws TransformerException if thrown by JAXP methods
-     */
-    protected final void transform(Source source, Result result) throws TransformerException {
-        transformerHelper.transform(source, result);
-    }
+	/**
+	 * Transforms the given {@link Source} to the given {@link Result}. Creates a new {@link Transformer} for every
+	 * call, as transformers are not thread-safe.
+	 *
+	 * @param source the source to transform from
+	 * @param result the result to transform to
+	 * @throws TransformerException if thrown by JAXP methods
+	 */
+	protected final void transform(Source source, Result result) throws TransformerException {
+		transformerHelper.transform(source, result);
+	}
 
 }

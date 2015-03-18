@@ -29,30 +29,30 @@ import org.junit.Test;
 
 public class PayloadRootQNameEndpointMappingTest {
 
-    private PayloadRootQNameEndpointMapping mapping;
+	private PayloadRootQNameEndpointMapping mapping;
 
-    @Before
-    public void setUp() throws Exception {
-        mapping = new PayloadRootQNameEndpointMapping();
-    }
+	@Before
+	public void setUp() throws Exception {
+		mapping = new PayloadRootQNameEndpointMapping();
+	}
 
-    @Test
-    public void testResolveQNames() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
-        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+	@Test
+	public void testResolveQNames() throws Exception {
+		MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
+		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-        QName qName = mapping.resolveQName(context);
-        Assert.assertNotNull("mapping returns null", qName);
-        Assert.assertEquals("mapping returns invalid qualified name", new QName("root"), qName);
-    }
+		QName qName = mapping.resolveQName(context);
+		Assert.assertNotNull("mapping returns null", qName);
+		Assert.assertEquals("mapping returns invalid qualified name", new QName("root"), qName);
+	}
 
-    @Test
-    public void testGetQNameNameNamespace() throws Exception {
-        MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
-        MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+	@Test
+	public void testGetQNameNameNamespace() throws Exception {
+		MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
+		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-        QName qName = mapping.resolveQName(context);
-        Assert.assertNotNull("mapping returns null", qName);
-        Assert.assertEquals("mapping returns invalid method name", new QName("namespace", "localname", "prefix"), qName);
-    }
+		QName qName = mapping.resolveQName(context);
+		Assert.assertNotNull("mapping returns null", qName);
+		Assert.assertEquals("mapping returns invalid method name", new QName("namespace", "localname", "prefix"), qName);
+	}
 }

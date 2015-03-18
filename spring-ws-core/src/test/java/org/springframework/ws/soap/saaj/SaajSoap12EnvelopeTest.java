@@ -25,10 +25,10 @@ import org.springframework.ws.soap.soap12.AbstractSoap12EnvelopeTestCase;
 
 public class SaajSoap12EnvelopeTest extends AbstractSoap12EnvelopeTestCase {
 
-    @Override
-    protected SoapEnvelope createSoapEnvelope() throws Exception {
-        MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-        SOAPMessage saajMessage = messageFactory.createMessage();
-        return new SaajSoapEnvelope(saajMessage.getSOAPPart().getEnvelope(), true);
-    }
+	@Override
+	protected SoapEnvelope createSoapEnvelope() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		SOAPMessage saajMessage = messageFactory.createMessage();
+		return new SaajSoapEnvelope(saajMessage.getSOAPPart().getEnvelope(), true);
+	}
 }

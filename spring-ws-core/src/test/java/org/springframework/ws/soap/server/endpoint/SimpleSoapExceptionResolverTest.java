@@ -33,37 +33,37 @@ import static org.easymock.EasyMock.*;
 
 public class SimpleSoapExceptionResolverTest {
 
-    private SimpleSoapExceptionResolver exceptionResolver;
+	private SimpleSoapExceptionResolver exceptionResolver;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    private SoapMessage messageMock;
+	private SoapMessage messageMock;
 
-    private Soap11Body bodyMock;
+	private Soap11Body bodyMock;
 
-    private WebServiceMessageFactory factoryMock;
+	private WebServiceMessageFactory factoryMock;
 
-    @Before
-    public void setUp() throws Exception {
-        exceptionResolver = new SimpleSoapExceptionResolver();
-        factoryMock = createMock(WebServiceMessageFactory.class);
-        messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
-        messageMock = createMock(SoapMessage.class);
-        bodyMock = createMock(Soap11Body.class);
-    }
+	@Before
+	public void setUp() throws Exception {
+		exceptionResolver = new SimpleSoapExceptionResolver();
+		factoryMock = createMock(WebServiceMessageFactory.class);
+		messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
+		messageMock = createMock(SoapMessage.class);
+		bodyMock = createMock(Soap11Body.class);
+	}
 
-    @Test
-    public void testResolveExceptionInternal() throws Exception {
-        Exception exception = new Exception("message");
-        expect(factoryMock.createWebServiceMessage()).andReturn(messageMock);
-        expect(messageMock.getSoapBody()).andReturn(bodyMock);
-        expect(bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH)).andReturn(null);
+	@Test
+	public void testResolveExceptionInternal() throws Exception {
+		Exception exception = new Exception("message");
+		expect(factoryMock.createWebServiceMessage()).andReturn(messageMock);
+		expect(messageMock.getSoapBody()).andReturn(bodyMock);
+		expect(bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH)).andReturn(null);
 
-        replay(factoryMock, messageMock, bodyMock);
+		replay(factoryMock, messageMock, bodyMock);
 
-        boolean result = exceptionResolver.resolveExceptionInternal(messageContext, null, exception);
-        Assert.assertTrue("Invalid result", result);
+		boolean result = exceptionResolver.resolveExceptionInternal(messageContext, null, exception);
+		Assert.assertTrue("Invalid result", result);
 
-        verify(factoryMock, messageMock, bodyMock);
-    }
+		verify(factoryMock, messageMock, bodyMock);
+	}
 }

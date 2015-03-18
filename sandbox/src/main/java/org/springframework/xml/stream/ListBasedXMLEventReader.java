@@ -27,53 +27,53 @@ import org.springframework.util.Assert;
  */
 public class ListBasedXMLEventReader extends AbstractXMLEventReader {
 
-    private final XMLEvent[] events;
+	private final XMLEvent[] events;
 
-    private int cursor = 0;
+	private int cursor = 0;
 
-    public ListBasedXMLEventReader() {
-        this.events = new XMLEvent[0];
-    }
+	public ListBasedXMLEventReader() {
+		this.events = new XMLEvent[0];
+	}
 
-    public ListBasedXMLEventReader(XMLEvent event) {
-        if (event != null) {
-            this.events = new XMLEvent[]{event};
-        }
-        else {
-            this.events = new XMLEvent[0];
-        }
-    }
+	public ListBasedXMLEventReader(XMLEvent event) {
+		if (event != null) {
+			this.events = new XMLEvent[]{event};
+		}
+		else {
+			this.events = new XMLEvent[0];
+		}
+	}
 
-    public ListBasedXMLEventReader(XMLEvent... events) {
-        Assert.notNull(events, "'events' must not be null");
-        this.events = events;
-    }
+	public ListBasedXMLEventReader(XMLEvent... events) {
+		Assert.notNull(events, "'events' must not be null");
+		this.events = events;
+	}
 
-    public ListBasedXMLEventReader(List<XMLEvent> events) {
-        Assert.notNull(events, "'events' must not be null");
-        this.events = events.toArray(new XMLEvent[events.size()]);
-    }
+	public ListBasedXMLEventReader(List<XMLEvent> events) {
+		Assert.notNull(events, "'events' must not be null");
+		this.events = events.toArray(new XMLEvent[events.size()]);
+	}
 
-    public boolean hasNext() {
-        Assert.notNull(events, "'events' must not be null");
-        return cursor != events.length;
-    }
+	public boolean hasNext() {
+		Assert.notNull(events, "'events' must not be null");
+		return cursor != events.length;
+	}
 
-    public XMLEvent nextEvent() {
-        if (cursor < events.length) {
-            return events[cursor++];
-        }
-        else {
-            throw new NoSuchElementException();
-        }
-    }
+	public XMLEvent nextEvent() {
+		if (cursor < events.length) {
+			return events[cursor++];
+		}
+		else {
+			throw new NoSuchElementException();
+		}
+	}
 
-    public XMLEvent peek() {
-        if (cursor < events.length) {
-            return events[cursor];
-        }
-        else {
-            return null;
-        }
-    }
+	public XMLEvent peek() {
+		if (cursor < events.length) {
+			return events[cursor];
+		}
+		else {
+			return null;
+		}
+	}
 }

@@ -26,18 +26,18 @@ import org.springframework.xml.validation.XmlValidator;
  */
 public interface XsdSchemaCollection {
 
-    /**
-     * Returns all schemas contained in this collection.
-     *
-     * @return the schemas contained in this collection
-     */
-    XsdSchema[] getXsdSchemas();
+	/**
+	 * Returns all schemas contained in this collection.
+	 *
+	 * @return the schemas contained in this collection
+	 */
+	XsdSchema[] getXsdSchemas();
 
-    /**
-     * Creates a {@link XmlValidator} based on the schemas contained in this collection.
-     *
-     * @return a validator for this collection
-     */
-    XmlValidator createValidator();
+	/**
+	 * Creates a {@link XmlValidator} based on the schemas contained in this collection.
+	 *
+	 * @return a validator for this collection
+	 */
+	XmlValidator createValidator();
 
 }

@@ -25,18 +25,18 @@ package org.springframework.ws.test.client;
  * @since 2.0
  */
 public interface ResponseActions {
-    /**
-     * Allows for further expectations to be set on the request.
-     *
-     * @return the request expectations
-     */
-    ResponseActions andExpect(RequestMatcher requestMatcher);
+	/**
+	 * Allows for further expectations to be set on the request.
+	 *
+	 * @return the request expectations
+	 */
+	ResponseActions andExpect(RequestMatcher requestMatcher);
 
-    /**
-     * Sets the {@link ResponseCreator} for this mock.
-     *
-     * @param responseCreator the response creator
-     */
-    void andRespond(ResponseCreator responseCreator);
+	/**
+	 * Sets the {@link ResponseCreator} for this mock.
+	 *
+	 * @param responseCreator the response creator
+	 */
+	void andRespond(ResponseCreator responseCreator);
 
 }

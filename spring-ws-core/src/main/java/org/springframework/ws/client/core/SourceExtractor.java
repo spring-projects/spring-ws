@@ -37,14 +37,14 @@ import javax.xml.transform.TransformerException;
  */
 public interface SourceExtractor<T> {
 
-    /**
-     * Process the data in the given {@code Source}, creating a corresponding result object.
-     *
-     * @param source the message payload to extract data from
-     * @return an arbitrary result object, or {@code null} if none (the extractor will typically be stateful in the
-     *         latter case)
-     * @throws IOException in case of I/O errors
-     */
-    T extractData(Source source) throws IOException, TransformerException;
+	/**
+	 * Process the data in the given {@code Source}, creating a corresponding result object.
+	 *
+	 * @param source the message payload to extract data from
+	 * @return an arbitrary result object, or {@code null} if none (the extractor will typically be stateful in the
+	 *		   latter case)
+	 * @throws IOException in case of I/O errors
+	 */
+	T extractData(Source source) throws IOException, TransformerException;
 
 }

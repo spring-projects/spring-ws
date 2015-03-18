@@ -22,15 +22,15 @@ import org.springframework.ws.soap.SoapElementException;
 @SuppressWarnings("serial")
 public class SaajSoapElementException extends SoapElementException {
 
-    public SaajSoapElementException(String msg) {
-        super(msg);
-    }
+	public SaajSoapElementException(String msg) {
+		super(msg);
+	}
 
-    public SaajSoapElementException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public SaajSoapElementException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public SaajSoapElementException(Throwable ex) {
-        super(ex);
-    }
+	public SaajSoapElementException(Throwable ex) {
+		super(ex);
+	}
 }

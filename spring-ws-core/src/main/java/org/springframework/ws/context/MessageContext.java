@@ -36,90 +36,90 @@ import org.springframework.ws.server.EndpointInterceptor;
  */
 public interface MessageContext {
 
-    /**
-     * Returns the request message.
-     *
-     * @return the request message
-     */
-    WebServiceMessage getRequest();
+	/**
+	 * Returns the request message.
+	 *
+	 * @return the request message
+	 */
+	WebServiceMessage getRequest();
 
-    /**
-     * Indicates whether this context has a response.
-     *
-     * @return {@code true} if this context has a response; {@code false} otherwise
-     */
-    boolean hasResponse();
+	/**
+	 * Indicates whether this context has a response.
+	 *
+	 * @return {@code true} if this context has a response; {@code false} otherwise
+	 */
+	boolean hasResponse();
 
-    /**
-     * Returns the response message. Creates a new response if no response is present.
-     *
-     * @return the response message
-     * @see #hasResponse()
-     */
-    WebServiceMessage getResponse();
+	/**
+	 * Returns the response message. Creates a new response if no response is present.
+	 *
+	 * @return the response message
+	 * @see #hasResponse()
+	 */
+	WebServiceMessage getResponse();
 
-    /**
-     * Sets the response message.
-     *
-     * @param response the response message
-     * @throws IllegalStateException if a response has already been created
-     * @since 1.5.0
-     */
-    void setResponse(WebServiceMessage response);
+	/**
+	 * Sets the response message.
+	 *
+	 * @param response the response message
+	 * @throws IllegalStateException if a response has already been created
+	 * @since 1.5.0
+	 */
+	void setResponse(WebServiceMessage response);
 
-    /**
-     * Removes the response message, if any.
-     *
-     * @since 1.5.0
-     */
-    void clearResponse();
+	/**
+	 * Removes the response message, if any.
+	 *
+	 * @since 1.5.0
+	 */
+	void clearResponse();
 
-    /**
-     * Reads a response message from the given input stream.
-     *
-     * @param inputStream the stream to read the response from
-     * @throws IOException           in case of I/O errors
-     * @throws IllegalStateException if a response has already been created
-     */
-    void readResponse(InputStream inputStream) throws IOException;
+	/**
+	 * Reads a response message from the given input stream.
+	 *
+	 * @param inputStream the stream to read the response from
+	 * @throws IOException			 in case of I/O errors
+	 * @throws IllegalStateException if a response has already been created
+	 */
+	void readResponse(InputStream inputStream) throws IOException;
 
-    /**
-     * Sets the name and value of a property associated with the {@code MessageContext}. If the
-     * {@code MessageContext} contains a value of the same property, the old value is replaced.
-     *
-     * @param name  name of the property associated with the value
-     * @param value value of the property
-     */
-    void setProperty(String name, Object value);
+	/**
+	 * Sets the name and value of a property associated with the {@code MessageContext}. If the
+	 * {@code MessageContext} contains a value of the same property, the old value is replaced.
+	 *
+	 * @param name	name of the property associated with the value
+	 * @param value value of the property
+	 */
+	void setProperty(String name, Object value);
 
-    /**
-     * Gets the value of a specific property from the {@code MessageContext}.
-     *
-     * @param name name of the property whose value is to be retrieved
-     * @return value of the property
-     */
-    Object getProperty(String name);
+	/**
+	 * Gets the value of a specific property from the {@code MessageContext}.
+	 *
+	 * @param name name of the property whose value is to be retrieved
+	 * @return value of the property
+	 */
+	Object getProperty(String name);
 
-    /**
-     * Removes a property from the {@code MessageContext}.
-     *
-     * @param name name of the property to be removed
-     */
-    void removeProperty(String name);
+	/**
+	 * Removes a property from the {@code MessageContext}.
+	 *
+	 * @param name name of the property to be removed
+	 */
+	void removeProperty(String name);
 
-    /**
-     * Check if this message context contains a property with the given name.
-     *
-     * @param name the name of the property to look for
-     * @return {@code true} if the {@code MessageContext} contains the property; {@code false} otherwise
-     */
-    boolean containsProperty(String name);
+	/**
+	 * Check if this message context contains a property with the given name.
+	 *
+	 * @param name the name of the property to look for
+	 * @return {@code true} if the {@code MessageContext} contains the property; {@code false} otherwise
+	 */
+	boolean containsProperty(String name);
 
-    /**
-     * Return the names of all properties in this {@code MessageContext}.
-     *
-     * @return the names of all properties in this context, or an empty array if none defined
-     */
-    String[] getPropertyNames();
+	/**
+	 * Return the names of all properties in this {@code MessageContext}.
+	 *
+	 * @return the names of all properties in this context, or an empty array if none defined
+	 */
+	String[] getPropertyNames();
 
 }

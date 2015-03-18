@@ -31,97 +31,97 @@ import org.junit.Test;
  */
 public class MapBasedSoapEndpointMappingTest {
 
-    @Test
-    public void testBeanNames() throws Exception {
-        StaticApplicationContext context = new StaticApplicationContext();
-        context.registerSingleton("endpointMapping", MyMapBasedEndpointMapping.class);
-        context.registerSingleton("endpoint", Object.class);
-        context.registerAlias("endpoint", "alias");
-        MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
-        mapping.setValidKeys(new String[]{"endpoint", "alias"});
+	@Test
+	public void testBeanNames() throws Exception {
+		StaticApplicationContext context = new StaticApplicationContext();
+		context.registerSingleton("endpointMapping", MyMapBasedEndpointMapping.class);
+		context.registerSingleton("endpoint", Object.class);
+		context.registerAlias("endpoint", "alias");
+		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
+		mapping.setValidKeys(new String[]{"endpoint", "alias"});
 
-        mapping.setRegisterBeanNames(true);
-        mapping.setApplicationContext(context);
+		mapping.setRegisterBeanNames(true);
+		mapping.setApplicationContext(context);
 
-        // try bean
-        mapping.setKey("endpoint");
-        Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		// try bean
+		mapping.setKey("endpoint");
+		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
 
-        // try alias
-        mapping.setKey("alias");
-        Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		// try alias
+		mapping.setKey("alias");
+		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
 
-        // try non-mapped values
-        mapping.setKey("endpointMapping");
-        Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+		// try non-mapped values
+		mapping.setKey("endpointMapping");
+		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
 
-    }
+	}
 
-    @Test
-    public void testDisabledBeanNames() throws Exception {
-        StaticApplicationContext context = new StaticApplicationContext();
-        context.registerSingleton("endpoint", Object.class);
+	@Test
+	public void testDisabledBeanNames() throws Exception {
+		StaticApplicationContext context = new StaticApplicationContext();
+		context.registerSingleton("endpoint", Object.class);
 
-        MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
+		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
 
-        mapping.setRegisterBeanNames(true);
-        mapping.setApplicationContext(context);
+		mapping.setRegisterBeanNames(true);
+		mapping.setApplicationContext(context);
 
-        mapping.setKey("endpoint");
-        Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
-    }
+		mapping.setKey("endpoint");
+		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+	}
 
-    @Test
-    public void testEndpointMap() throws Exception {
-        Map<String, Object> endpointMap = new TreeMap<String, Object>();
-        Object endpoint1 = new Object();
-        Object endpoint2 = new Object();
-        endpointMap.put("endpoint1", endpoint1);
-        endpointMap.put("endpoint2", endpoint2);
+	@Test
+	public void testEndpointMap() throws Exception {
+		Map<String, Object> endpointMap = new TreeMap<String, Object>();
+		Object endpoint1 = new Object();
+		Object endpoint2 = new Object();
+		endpointMap.put("endpoint1", endpoint1);
+		endpointMap.put("endpoint2", endpoint2);
 
-        MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
-        mapping.setValidKeys(new String[]{"endpoint1", "endpoint2"});
+		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
+		mapping.setValidKeys(new String[]{"endpoint1", "endpoint2"});
 
-        mapping.setEndpointMap(endpointMap);
-        mapping.setApplicationContext(new StaticApplicationContext());
+		mapping.setEndpointMap(endpointMap);
+		mapping.setApplicationContext(new StaticApplicationContext());
 
-        // try endpoint1
-        mapping.setKey("endpoint1");
-        Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		// try endpoint1
+		mapping.setKey("endpoint1");
+		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
 
-        // try endpoint2
-        mapping.setKey("endpoint2");
-        Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		// try endpoint2
+		mapping.setKey("endpoint2");
+		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
 
-        // try non-mapped values
-        mapping.setKey("endpoint3");
-        Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
-    }
+		// try non-mapped values
+		mapping.setKey("endpoint3");
+		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+	}
 
-    private static class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
+	private static class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
 
-        private String key;
+		private String key;
 
-        private String[] validKeys = new String[0];
+		private String[] validKeys = new String[0];
 
-        public void setKey(String key) {
-            this.key = key;
-        }
+		public void setKey(String key) {
+			this.key = key;
+		}
 
-        public void setValidKeys(String[] validKeys) {
-            this.validKeys = validKeys;
-            Arrays.sort(this.validKeys);
-        }
+		public void setValidKeys(String[] validKeys) {
+			this.validKeys = validKeys;
+			Arrays.sort(this.validKeys);
+		}
 
-        @Override
-        protected boolean validateLookupKey(String key) {
-            return Arrays.binarySearch(validKeys, key) >= 0;
-        }
+		@Override
+		protected boolean validateLookupKey(String key) {
+			return Arrays.binarySearch(validKeys, key) >= 0;
+		}
 
-        @Override
-        protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-            return key;
-        }
-    }
+		@Override
+		protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+			return key;
+		}
+	}
 
 }

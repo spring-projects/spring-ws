@@ -32,42 +32,42 @@ import org.springframework.ws.soap.soap11.Soap11Header;
  */
 class Stroap11Header extends StroapHeader implements Soap11Header {
 
-    Stroap11Header(StroapMessageFactory messageFactory) {
-        super(messageFactory);
-    }
+	Stroap11Header(StroapMessageFactory messageFactory) {
+		super(messageFactory);
+	}
 
-    Stroap11Header(StartElement startElement, StroapMessageFactory messageFactory) {
-        super(startElement, messageFactory);
-    }
+	Stroap11Header(StartElement startElement, StroapMessageFactory messageFactory) {
+		super(startElement, messageFactory);
+	}
 
-    public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
-        List<SoapHeaderElement> result = new LinkedList<SoapHeaderElement>();
-        Iterator<SoapHeaderElement> iterator = examineAllHeaderElements();
-        while (iterator.hasNext()) {
-            SoapHeaderElement headerElement = iterator.next();
-            String actor = headerElement.getActorOrRole();
-            if (shouldProcess(actor, actors)) {
-                result.add(headerElement);
-            }
-        }
-        return result.iterator();
-    }
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
+		List<SoapHeaderElement> result = new LinkedList<SoapHeaderElement>();
+		Iterator<SoapHeaderElement> iterator = examineAllHeaderElements();
+		while (iterator.hasNext()) {
+			SoapHeaderElement headerElement = iterator.next();
+			String actor = headerElement.getActorOrRole();
+			if (shouldProcess(actor, actors)) {
+				result.add(headerElement);
+			}
+		}
+		return result.iterator();
+	}
 
-    private boolean shouldProcess(String headerActor, String[] actors) {
-        if (!StringUtils.hasLength(headerActor)) {
-            return true;
-        }
-        if (SOAPConstants.URI_SOAP_ACTOR_NEXT.equals(headerActor)) {
-            return true;
-        }
-        if (!ObjectUtils.isEmpty(actors)) {
-            for (String actor : actors) {
-                if (actor.equals(headerActor)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	private boolean shouldProcess(String headerActor, String[] actors) {
+		if (!StringUtils.hasLength(headerActor)) {
+			return true;
+		}
+		if (SOAPConstants.URI_SOAP_ACTOR_NEXT.equals(headerActor)) {
+			return true;
+		}
+		if (!ObjectUtils.isEmpty(actors)) {
+			for (String actor : actors) {
+				if (actor.equals(headerActor)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 }

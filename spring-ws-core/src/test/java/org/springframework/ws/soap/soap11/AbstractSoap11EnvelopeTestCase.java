@@ -29,19 +29,19 @@ import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractSoap11EnvelopeTestCase extends AbstractSoapEnvelopeTestCase {
 
-    @Test
-    public void testGetName() throws Exception {
-        assertEquals("Invalid qualified name",
-                new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Envelope"),
-                soapEnvelope.getName());
-    }
+	@Test
+	public void testGetName() throws Exception {
+		assertEquals("Invalid qualified name",
+				new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Envelope"),
+				soapEnvelope.getName());
+	}
 
-    @Test
-    public void testGetContent() throws Exception {
-        StringResult result = new StringResult();
-        transformer.transform(soapEnvelope.getSource(), result);
-        assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>",
-                result.toString());
-    }
+	@Test
+	public void testGetContent() throws Exception {
+		StringResult result = new StringResult();
+		transformer.transform(soapEnvelope.getSource(), result);
+		assertXMLEqual("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>",
+				result.toString());
+	}
 
 }

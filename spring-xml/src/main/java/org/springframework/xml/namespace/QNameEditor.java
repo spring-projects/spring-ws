@@ -47,29 +47,29 @@ import org.springframework.util.StringUtils;
  */
 public class QNameEditor extends PropertyEditorSupport {
 
-    @Override
-    public void setAsText(String text) throws IllegalArgumentException {
-        setValue(QNameUtils.parseQNameString(text));
-    }
+	@Override
+	public void setAsText(String text) throws IllegalArgumentException {
+		setValue(QNameUtils.parseQNameString(text));
+	}
 
-    @Override
-    public String getAsText() {
-        Object value = getValue();
-        if (value == null || !(value instanceof QName)) {
-            return "";
-        }
-        else {
-            QName qName = (QName) value;
-	        String prefix = qName.getPrefix();
-            if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
-                return "{" + qName.getNamespaceURI() + "}" + prefix + ":" + qName.getLocalPart();
-            }
-            else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-                return "{" + qName.getNamespaceURI() + "}" + qName.getLocalPart();
-            }
-            else {
-                return qName.getLocalPart();
-            }
-        }
-    }
+	@Override
+	public String getAsText() {
+		Object value = getValue();
+		if (value == null || !(value instanceof QName)) {
+			return "";
+		}
+		else {
+			QName qName = (QName) value;
+			String prefix = qName.getPrefix();
+			if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
+				return "{" + qName.getNamespaceURI() + "}" + prefix + ":" + qName.getLocalPart();
+			}
+			else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+				return "{" + qName.getNamespaceURI() + "}" + qName.getLocalPart();
+			}
+			else {
+				return qName.getLocalPart();
+			}
+		}
+	}
 }

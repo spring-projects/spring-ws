@@ -24,15 +24,15 @@ import org.springframework.ws.soap.SoapHeaderException;
  */
 public class StroapHeaderException extends SoapHeaderException {
 
-    public StroapHeaderException(String msg) {
-        super(msg);
-    }
+	public StroapHeaderException(String msg) {
+		super(msg);
+	}
 
-    public StroapHeaderException(String msg, Throwable ex) {
-        super(msg, ex);
-    }
+	public StroapHeaderException(String msg, Throwable ex) {
+		super(msg, ex);
+	}
 
-    public StroapHeaderException(Throwable ex) {
-        super(ex);
-    }
+	public StroapHeaderException(Throwable ex) {
+		super(ex);
+	}
 }

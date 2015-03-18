@@ -36,116 +36,116 @@ import static org.junit.Assert.*;
  */
 public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
 
-    private static final QName HEADER_QNAME = new QName(NAMESPACE_URI, "header");
+	private static final QName HEADER_QNAME = new QName(NAMESPACE_URI, "header");
 
-    private static final String HEADER_CONTENT = "content";
+	private static final String HEADER_CONTENT = "content";
 
-    private SoapHeaderElementMethodArgumentResolver resolver;
+	private SoapHeaderElementMethodArgumentResolver resolver;
 
-    private MessageContext messageContext;
+	private MessageContext messageContext;
 
-    private MethodParameter soapHeaderWithEmptyValue;
+	private MethodParameter soapHeaderWithEmptyValue;
 
-    private MethodParameter soapHeaderElementParameter;
+	private MethodParameter soapHeaderElementParameter;
 
-    private MethodParameter soapHeaderElementListParameter;
+	private MethodParameter soapHeaderElementListParameter;
 
-    private MethodParameter soapHeaderMismatch;
+	private MethodParameter soapHeaderMismatch;
 
-    private MethodParameter soapHeaderMismatchList;
+	private MethodParameter soapHeaderMismatchList;
 
-    @Before
-    public void setUp() throws Exception {
-        resolver = new SoapHeaderElementMethodArgumentResolver();
-        messageContext = createSaajMessageContext();
-        SoapMessage message = (SoapMessage) messageContext.getRequest();
-        for (int i = 0; i < 3; i++) {
-            SoapHeaderElement element = message.getSoapHeader().addHeaderElement(HEADER_QNAME);
-            element.setText(HEADER_CONTENT + i);
-        }
-        soapHeaderWithEmptyValue =
-                new MethodParameter(getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
-        soapHeaderElementParameter =
-                new MethodParameter(getClass().getMethod("soapHeaderElement", SoapHeaderElement.class), 0);
-        soapHeaderElementListParameter =
-                new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class), 0);
-        soapHeaderMismatch =
-                new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
-        soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class), 0);
-    }
+	@Before
+	public void setUp() throws Exception {
+		resolver = new SoapHeaderElementMethodArgumentResolver();
+		messageContext = createSaajMessageContext();
+		SoapMessage message = (SoapMessage) messageContext.getRequest();
+		for (int i = 0; i < 3; i++) {
+			SoapHeaderElement element = message.getSoapHeader().addHeaderElement(HEADER_QNAME);
+			element.setText(HEADER_CONTENT + i);
+		}
+		soapHeaderWithEmptyValue =
+				new MethodParameter(getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
+		soapHeaderElementParameter =
+				new MethodParameter(getClass().getMethod("soapHeaderElement", SoapHeaderElement.class), 0);
+		soapHeaderElementListParameter =
+				new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class), 0);
+		soapHeaderMismatch =
+				new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
+		soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class), 0);
+	}
 
-    @Test
-    public void supportsParameter() throws Exception {
-        assertTrue("resolver does not support soapHeaderElement",
-                resolver.supportsParameter(soapHeaderElementParameter));
-        assertTrue("resolver does not support List<soapHeaderElement>",
-                resolver.supportsParameter(soapHeaderElementListParameter));
-    }
+	@Test
+	public void supportsParameter() throws Exception {
+		assertTrue("resolver does not support soapHeaderElement",
+				resolver.supportsParameter(soapHeaderElementParameter));
+		assertTrue("resolver does not support List<soapHeaderElement>",
+				resolver.supportsParameter(soapHeaderElementListParameter));
+	}
 
-    @Test(expected = IllegalArgumentException.class)
-    public void failOnEmptyValue() throws Exception {
-        resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void failOnEmptyValue() throws Exception {
+		resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue);
+	}
 
-    @Test
-    public void resolveSoapHeaderElement() throws Exception {
-        Object result = resolver.resolveArgument(messageContext, soapHeaderElementParameter);
+	@Test
+	public void resolveSoapHeaderElement() throws Exception {
+		Object result = resolver.resolveArgument(messageContext, soapHeaderElementParameter);
 
-        assertTrue("result must be a SoapHeaderElement", SoapHeaderElement.class.isAssignableFrom(result.getClass()));
+		assertTrue("result must be a SoapHeaderElement", SoapHeaderElement.class.isAssignableFrom(result.getClass()));
 
-        SoapHeaderElement element = (SoapHeaderElement) result;
+		SoapHeaderElement element = (SoapHeaderElement) result;
 
-        assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
-        assertEquals("header text must be equal to [" + HEADER_CONTENT + "0]", HEADER_CONTENT + "0", element.getText());
-    }
+		assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
+		assertEquals("header text must be equal to [" + HEADER_CONTENT + "0]", HEADER_CONTENT + "0", element.getText());
+	}
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void resolveSoapHeaderElementList() throws Exception {
-        Object result = resolver.resolveArgument(messageContext, soapHeaderElementListParameter);
+	@Test
+	@SuppressWarnings("unchecked")
+	public void resolveSoapHeaderElementList() throws Exception {
+		Object result = resolver.resolveArgument(messageContext, soapHeaderElementListParameter);
 
-        assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
+		assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
 
-        List<SoapHeaderElement> elements = (List) result;
+		List<SoapHeaderElement> elements = (List) result;
 
-        assertTrue("size", elements.size() > 1);
-        for (int i = 0; i < elements.size(); i++) {
-            SoapHeaderElement element = elements.get(i);
-            assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
-            assertEquals("header must be equal to [" + HEADER_CONTENT + i + "]", HEADER_CONTENT + i,
-                    elements.get(i).getText());
-        }
-    }
+		assertTrue("size", elements.size() > 1);
+		for (int i = 0; i < elements.size(); i++) {
+			SoapHeaderElement element = elements.get(i);
+			assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
+			assertEquals("header must be equal to [" + HEADER_CONTENT + i + "]", HEADER_CONTENT + i,
+					elements.get(i).getText());
+		}
+	}
 
-    @Test
-    public void resolveSoapHeaderMismatch() throws Exception {
-        Object result = resolver.resolveArgument(messageContext, soapHeaderMismatch);
-        assertNull(result);
-    }
+	@Test
+	public void resolveSoapHeaderMismatch() throws Exception {
+		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatch);
+		assertNull(result);
+	}
 
-    @Test
-    public void resolveSoapHeaderMismatchList() throws Exception {
-        Object result = resolver.resolveArgument(messageContext, soapHeaderMismatchList);
-        assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
-        assertTrue("result List must be empty", ((List) result).isEmpty());
-    }
+	@Test
+	public void resolveSoapHeaderMismatchList() throws Exception {
+		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatchList);
+		assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
+		assertTrue("result List must be empty", ((List) result).isEmpty());
+	}
 
-    public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
-    }
+	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
+	}
 
-    public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {
-    }
+	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {
+	}
 
-    public void soapHeaderElementList(@SoapHeader(
-            "{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {
-    }
+	public void soapHeaderElementList(@SoapHeader(
+			"{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {
+	}
 
-    public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {
-    }
+	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {
+	}
 
-    public void soapHeaderMismatchList(@SoapHeader(
-            "{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
-    }
+	public void soapHeaderMismatchList(@SoapHeader(
+			"{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
+	}
 
 
 }

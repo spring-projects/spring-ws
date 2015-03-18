@@ -27,11 +27,11 @@ import org.springframework.ws.WebServiceException;
 @SuppressWarnings("serial")
 public class WsdlDefinitionException extends WebServiceException {
 
-    public WsdlDefinitionException(String reason) {
-        super(reason);
-    }
+	public WsdlDefinitionException(String reason) {
+		super(reason);
+	}
 
-    public WsdlDefinitionException(String reason, Throwable throwable) {
-        super(reason, throwable);
-    }
+	public WsdlDefinitionException(String reason, Throwable throwable) {
+		super(reason, throwable);
+	}
 }

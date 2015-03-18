@@ -34,39 +34,39 @@ import org.w3c.dom.Element;
 @Deprecated
 class MarshallingEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-    private static final String GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-            "org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter";
+	private static final String GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
+			"org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter";
 
-    private static final boolean genericAdapterPresent =
-            ClassUtils.isPresent(GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME,
-                    MarshallingEndpointsBeanDefinitionParser.class.getClassLoader());
+	private static final boolean genericAdapterPresent =
+			ClassUtils.isPresent(GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME,
+					MarshallingEndpointsBeanDefinitionParser.class.getClassLoader());
 
-    private static final String MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-            "org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter";
+	private static final String MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
+			"org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter";
 
-    @Override
-    protected boolean shouldGenerateIdAsFallback() {
-        return true;
-    }
+	@Override
+	protected boolean shouldGenerateIdAsFallback() {
+		return true;
+	}
 
-    @Override
-    protected String getBeanClassName(Element element) {
-        if (genericAdapterPresent) {
-                return GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
-        }
-        return MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
-    }
+	@Override
+	protected String getBeanClassName(Element element) {
+		if (genericAdapterPresent) {
+				return GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
+		}
+		return MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
+	}
 
-    @Override
-    protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
-        String marshallerName = element.getAttribute("marshaller");
-        if (StringUtils.hasText(marshallerName)) {
-            beanDefinitionBuilder.addPropertyReference("marshaller", marshallerName);
-        }
-        String unmarshallerName = element.getAttribute("unmarshaller");
-        if (StringUtils.hasText(unmarshallerName)) {
-            beanDefinitionBuilder.addPropertyReference("unmarshaller", unmarshallerName);
-        }
-    }
+	@Override
+	protected void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder beanDefinitionBuilder) {
+		String marshallerName = element.getAttribute("marshaller");
+		if (StringUtils.hasText(marshallerName)) {
+			beanDefinitionBuilder.addPropertyReference("marshaller", marshallerName);
+		}
+		String unmarshallerName = element.getAttribute("unmarshaller");
+		if (StringUtils.hasText(unmarshallerName)) {
+			beanDefinitionBuilder.addPropertyReference("unmarshaller", unmarshallerName);
+		}
+	}
 
 }

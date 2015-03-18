@@ -45,195 +45,195 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
-    /** Logger available to subclasses. */
-    protected final Log logger = LogFactory.getLog(getClass());
+	/** Logger available to subclasses. */
+	protected final Log logger = LogFactory.getLog(getClass());
 
-    private String portTypeName;
+	private String portTypeName;
 
-    /** Returns the port type name used for this definition. */
-    public String getPortTypeName() {
-        return portTypeName;
-    }
+	/** Returns the port type name used for this definition. */
+	public String getPortTypeName() {
+		return portTypeName;
+	}
 
-    /** Sets the port type name used for this definition. Required. */
-    public void setPortTypeName(String portTypeName) {
-        this.portTypeName = portTypeName;
-    }
+	/** Sets the port type name used for this definition. Required. */
+	public void setPortTypeName(String portTypeName) {
+		this.portTypeName = portTypeName;
+	}
 
-    /**
-     * Creates a single {@link PortType}, and calls {@link #populatePortType(Definition, PortType)} with it.
-     *
-     * @param definition the WSDL4J {@code Definition}
-     * @throws WSDLException in case of errors
-     */
-    @Override
-    public void addPortTypes(Definition definition) throws WSDLException {
-        Assert.notNull(getPortTypeName(), "'portTypeName' is required");
-        PortType portType = definition.createPortType();
-        populatePortType(definition, portType);
-        createOperations(definition, portType);
-        portType.setUndefined(false);
-        definition.addPortType(portType);
-    }
+	/**
+	 * Creates a single {@link PortType}, and calls {@link #populatePortType(Definition, PortType)} with it.
+	 *
+	 * @param definition the WSDL4J {@code Definition}
+	 * @throws WSDLException in case of errors
+	 */
+	@Override
+	public void addPortTypes(Definition definition) throws WSDLException {
+		Assert.notNull(getPortTypeName(), "'portTypeName' is required");
+		PortType portType = definition.createPortType();
+		populatePortType(definition, portType);
+		createOperations(definition, portType);
+		portType.setUndefined(false);
+		definition.addPortType(portType);
+	}
 
-    /**
-     * Called after the {@link PortType} has been created.
-     *
-     * <p>Default implementation sets the name of the port type to the defined value.
-     *
-     * @param portType the WSDL4J {@code PortType}
-     * @throws WSDLException in case of errors
-     * @see #setPortTypeName(String)
-     */
-    protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
-        QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
-        if (logger.isDebugEnabled()) {
-            logger.debug("Creating port type [" + portTypeName + "]");
-        }
-        portType.setQName(portTypeName);
-    }
+	/**
+	 * Called after the {@link PortType} has been created.
+	 *
+	 * <p>Default implementation sets the name of the port type to the defined value.
+	 *
+	 * @param portType the WSDL4J {@code PortType}
+	 * @throws WSDLException in case of errors
+	 * @see #setPortTypeName(String)
+	 */
+	protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
+		QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
+		if (logger.isDebugEnabled()) {
+			logger.debug("Creating port type [" + portTypeName + "]");
+		}
+		portType.setQName(portTypeName);
+	}
 
-    private void createOperations(Definition definition, PortType portType) throws WSDLException {
-        MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
-        for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
-            Message message = (Message) iterator.next();
-            String operationName = getOperationName(message);
-            if (StringUtils.hasText(operationName)) {
-                operations.add(operationName,message);
-            }
-        }
-        if (operations.isEmpty() && logger.isWarnEnabled()) {
-            logger.warn("No operations were created, make sure the WSDL contains messages");
-        }
-        for (String operationName : operations.keySet()) {
-            Operation operation = definition.createOperation();
-            operation.setName(operationName);
-            List<Message> messages = operations.get(operationName);
-            for (Message message : messages) {
-                if (isInputMessage(message)) {
-                    Input input = definition.createInput();
-                    input.setMessage(message);
-                    populateInput(definition, input);
-                    operation.setInput(input);
-                }
-                else if (isOutputMessage(message)) {
-                    Output output = definition.createOutput();
-                    output.setMessage(message);
-                    populateOutput(definition, output);
-                    operation.setOutput(output);
-                }
-                else if (isFaultMessage(message)) {
-                    Fault fault = definition.createFault();
-                    fault.setMessage(message);
-                    populateFault(definition, fault);
-                    operation.addFault(fault);
-                }
-            }
-            operation.setStyle(getOperationType(operation));
-            operation.setUndefined(false);
-            if (logger.isDebugEnabled()) {
-                logger.debug(
-                        "Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
-            }
-            portType.addOperation(operation);
-        }
-    }
+	private void createOperations(Definition definition, PortType portType) throws WSDLException {
+		MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
+		for (Iterator<?> iterator = definition.getMessages().values().iterator(); iterator.hasNext();) {
+			Message message = (Message) iterator.next();
+			String operationName = getOperationName(message);
+			if (StringUtils.hasText(operationName)) {
+				operations.add(operationName,message);
+			}
+		}
+		if (operations.isEmpty() && logger.isWarnEnabled()) {
+			logger.warn("No operations were created, make sure the WSDL contains messages");
+		}
+		for (String operationName : operations.keySet()) {
+			Operation operation = definition.createOperation();
+			operation.setName(operationName);
+			List<Message> messages = operations.get(operationName);
+			for (Message message : messages) {
+				if (isInputMessage(message)) {
+					Input input = definition.createInput();
+					input.setMessage(message);
+					populateInput(definition, input);
+					operation.setInput(input);
+				}
+				else if (isOutputMessage(message)) {
+					Output output = definition.createOutput();
+					output.setMessage(message);
+					populateOutput(definition, output);
+					operation.setOutput(output);
+				}
+				else if (isFaultMessage(message)) {
+					Fault fault = definition.createFault();
+					fault.setMessage(message);
+					populateFault(definition, fault);
+					operation.addFault(fault);
+				}
+			}
+			operation.setStyle(getOperationType(operation));
+			operation.setUndefined(false);
+			if (logger.isDebugEnabled()) {
+				logger.debug(
+						"Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
+			}
+			portType.addOperation(operation);
+		}
+	}
 
-    /**
-     * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
-     * return {@code null} to indicate that a message should not be coupled to an operation.
-     *
-     * @param message the WSDL4J {@code Message}
-     * @return the operation name; or {@code null}
-     */
-    protected abstract String getOperationName(Message message);
+	/**
+	 * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
+	 * return {@code null} to indicate that a message should not be coupled to an operation.
+	 *
+	 * @param message the WSDL4J {@code Message}
+	 * @return the operation name; or {@code null}
+	 */
+	protected abstract String getOperationName(Message message);
 
-    /**
-     * Indicates whether the given name name should be included as {@link Input} message in the definition.
-     *
-     * @param message the message
-     * @return {@code true} if to be included as input; {@code false} otherwise
-     */
-    protected abstract boolean isInputMessage(Message message);
+	/**
+	 * Indicates whether the given name name should be included as {@link Input} message in the definition.
+	 *
+	 * @param message the message
+	 * @return {@code true} if to be included as input; {@code false} otherwise
+	 */
+	protected abstract boolean isInputMessage(Message message);
 
-    /**
-     * Called after the {@link javax.wsdl.Input} has been created, but it's added to the operation. Subclasses can
-     * override this method to define the input name.
-     *
-     * <p>Default implementation sets the input name to the message name.
-     *
-     * @param definition the WSDL4J {@code Definition}
-     * @param input      the WSDL4J {@code Input}
-     */
-    protected void populateInput(Definition definition, Input input) {
-        input.setName(input.getMessage().getQName().getLocalPart());
-    }
+	/**
+	 * Called after the {@link javax.wsdl.Input} has been created, but it's added to the operation. Subclasses can
+	 * override this method to define the input name.
+	 *
+	 * <p>Default implementation sets the input name to the message name.
+	 *
+	 * @param definition the WSDL4J {@code Definition}
+	 * @param input		 the WSDL4J {@code Input}
+	 */
+	protected void populateInput(Definition definition, Input input) {
+		input.setName(input.getMessage().getQName().getLocalPart());
+	}
 
-    /**
-     * Indicates whether the given name name should be included as {@link Output} message in the definition.
-     *
-     * @param message the message
-     * @return {@code true} if to be included as output; {@code false} otherwise
-     */
-    protected abstract boolean isOutputMessage(Message message);
+	/**
+	 * Indicates whether the given name name should be included as {@link Output} message in the definition.
+	 *
+	 * @param message the message
+	 * @return {@code true} if to be included as output; {@code false} otherwise
+	 */
+	protected abstract boolean isOutputMessage(Message message);
 
-    /**
-     * Called after the {@link javax.wsdl.Output} has been created, but it's added to the operation. Subclasses can
-     * override this method to define the output name.
-     *
-     * <p>Default implementation sets the output name to the message name.
-     *
-     * @param definition the WSDL4J {@code Definition}
-     * @param output     the WSDL4J {@code Output}
-     */
-    protected void populateOutput(Definition definition, Output output) {
-        output.setName(output.getMessage().getQName().getLocalPart());
-    }
+	/**
+	 * Called after the {@link javax.wsdl.Output} has been created, but it's added to the operation. Subclasses can
+	 * override this method to define the output name.
+	 *
+	 * <p>Default implementation sets the output name to the message name.
+	 *
+	 * @param definition the WSDL4J {@code Definition}
+	 * @param output	 the WSDL4J {@code Output}
+	 */
+	protected void populateOutput(Definition definition, Output output) {
+		output.setName(output.getMessage().getQName().getLocalPart());
+	}
 
-    /**
-     * Indicates whether the given name name should be included as {@link Fault} message in the definition.
-     *
-     * @param message the message
-     * @return {@code true} if to be included as fault; {@code false} otherwise
-     */
-    protected abstract boolean isFaultMessage(Message message);
+	/**
+	 * Indicates whether the given name name should be included as {@link Fault} message in the definition.
+	 *
+	 * @param message the message
+	 * @return {@code true} if to be included as fault; {@code false} otherwise
+	 */
+	protected abstract boolean isFaultMessage(Message message);
 
-    /**
-     * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the operation. Subclasses can
-     * override this method to define the fault name.
-     *
-     * <p>Default implementation sets the fault name to the message name.
-     *
-     * @param definition the WSDL4J {@code Definition}
-     * @param fault      the WSDL4J {@code Fault}
-     */
-    protected void populateFault(Definition definition, Fault fault) {
-        fault.setName(fault.getMessage().getQName().getLocalPart());
-    }
+	/**
+	 * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the operation. Subclasses can
+	 * override this method to define the fault name.
+	 *
+	 * <p>Default implementation sets the fault name to the message name.
+	 *
+	 * @param definition the WSDL4J {@code Definition}
+	 * @param fault		 the WSDL4J {@code Fault}
+	 */
+	protected void populateFault(Definition definition, Fault fault) {
+		fault.setName(fault.getMessage().getQName().getLocalPart());
+	}
 
-    /**
-     * Returns the {@link OperationType} for the given operation.
-     *
-     * <p>Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set; {@link
-     * OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
-     *
-     * @param operation the WSDL4J {@code Operation}
-     * @return the operation type for the operation
-     */
-    protected OperationType getOperationType(Operation operation) {
-        if (operation.getInput() != null && operation.getOutput() != null) {
-            return OperationType.REQUEST_RESPONSE;
-        }
-        else if (operation.getInput() != null && operation.getOutput() == null) {
-            return OperationType.ONE_WAY;
-        }
-        else if (operation.getInput() == null && operation.getOutput() != null) {
-            return OperationType.NOTIFICATION;
-        }
-        else {
-            return null;
-        }
-    }
+	/**
+	 * Returns the {@link OperationType} for the given operation.
+	 *
+	 * <p>Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set; {@link
+	 * OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
+	 *
+	 * @param operation the WSDL4J {@code Operation}
+	 * @return the operation type for the operation
+	 */
+	protected OperationType getOperationType(Operation operation) {
+		if (operation.getInput() != null && operation.getOutput() != null) {
+			return OperationType.REQUEST_RESPONSE;
+		}
+		else if (operation.getInput() != null && operation.getOutput() == null) {
+			return OperationType.ONE_WAY;
+		}
+		else if (operation.getInput() == null && operation.getOutput() != null) {
+			return OperationType.NOTIFICATION;
+		}
+		else {
+			return null;
+		}
+	}
 
 
 }

@@ -38,62 +38,62 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  */
 class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements SoapFaultDetail {
 
-    public SaajSoapFaultDetail(SOAPFaultElement faultElement) {
-        super(faultElement);
-    }
+	public SaajSoapFaultDetail(SOAPFaultElement faultElement) {
+		super(faultElement);
+	}
 
-    @Override
-    public Result getResult() {
-	    return new DOMResult(getSaajDetail());
-    }
+	@Override
+	public Result getResult() {
+		return new DOMResult(getSaajDetail());
+	}
 
-    @Override
-    public SoapFaultDetailElement addFaultDetailElement(QName name) {
-        try {
-	        DetailEntry detailEntry = getSaajDetail().addDetailEntry(name);
-            return new SaajSoapFaultDetailElement(detailEntry);
-        }
-        catch (SOAPException ex) {
-            throw new SaajSoapFaultException(ex);
-        }
-    }
+	@Override
+	public SoapFaultDetailElement addFaultDetailElement(QName name) {
+		try {
+			DetailEntry detailEntry = getSaajDetail().addDetailEntry(name);
+			return new SaajSoapFaultDetailElement(detailEntry);
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapFaultException(ex);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<SoapFaultDetailElement> getDetailEntries() {
-	    Iterator<DetailEntry> iterator = getSaajDetail().getDetailEntries();
-        return new SaajSoapFaultDetailElementIterator(iterator);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public Iterator<SoapFaultDetailElement> getDetailEntries() {
+		Iterator<DetailEntry> iterator = getSaajDetail().getDetailEntries();
+		return new SaajSoapFaultDetailElementIterator(iterator);
+	}
 
-    protected Detail getSaajDetail() {
-        return (Detail) getSaajElement();
-    }
+	protected Detail getSaajDetail() {
+		return (Detail) getSaajElement();
+	}
 
-    private static class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
+	private static class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
-        private final Iterator<DetailEntry> iterator;
+		private final Iterator<DetailEntry> iterator;
 
-        private SaajSoapFaultDetailElementIterator(Iterator<DetailEntry> iterator) {
-            Assert.notNull(iterator, "No iterator given");
-            this.iterator = iterator;
-        }
+		private SaajSoapFaultDetailElementIterator(Iterator<DetailEntry> iterator) {
+			Assert.notNull(iterator, "No iterator given");
+			this.iterator = iterator;
+		}
 
-        @Override
-        public boolean hasNext() {
-            return iterator.hasNext();
-        }
+		@Override
+		public boolean hasNext() {
+			return iterator.hasNext();
+		}
 
-        @Override
-        public SoapFaultDetailElement next() {
-            DetailEntry saajDetailEntry = iterator.next();
-            return new SaajSoapFaultDetailElement(saajDetailEntry);
-        }
+		@Override
+		public SoapFaultDetailElement next() {
+			DetailEntry saajDetailEntry = iterator.next();
+			return new SaajSoapFaultDetailElement(saajDetailEntry);
+		}
 
-        @Override
-        public void remove() {
-            iterator.remove();
-        }
-    }
+		@Override
+		public void remove() {
+			iterator.remove();
+		}
+	}
 
 
 }

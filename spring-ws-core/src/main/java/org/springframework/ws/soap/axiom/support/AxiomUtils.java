@@ -56,144 +56,144 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("Since15")
 public abstract class AxiomUtils {
 
-    /**
-     * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A
-     * {@code OMElement} is used to resolve the namespace, or to declare a new one.
-     *
-     * @param qName          the {@code QName} to convert
-     * @param resolveElement the element used to resolve the Q
-     * @return the converted SAAJ Name
-     * @throws OMException              if conversion is unsuccessful
-     * @throws IllegalArgumentException if {@code qName} is not fully qualified
-     */
-    public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
-	    String prefix = qName.getPrefix();
-        if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
-            return resolveElement.declareNamespace(qName.getNamespaceURI(), prefix);
-        }
-        else if (StringUtils.hasLength(qName.getNamespaceURI())) {
-            // check for existing namespace, and declare if necessary
-            return resolveElement.declareNamespace(qName.getNamespaceURI(), "");
-        }
-        else {
-            throw new IllegalArgumentException("qName [" + qName + "] does not contain a namespace");
-        }
-    }
+	/**
+	 * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A
+	 * {@code OMElement} is used to resolve the namespace, or to declare a new one.
+	 *
+	 * @param qName			 the {@code QName} to convert
+	 * @param resolveElement the element used to resolve the Q
+	 * @return the converted SAAJ Name
+	 * @throws OMException				if conversion is unsuccessful
+	 * @throws IllegalArgumentException if {@code qName} is not fully qualified
+	 */
+	public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
+		String prefix = qName.getPrefix();
+		if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
+			return resolveElement.declareNamespace(qName.getNamespaceURI(), prefix);
+		}
+		else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+			// check for existing namespace, and declare if necessary
+			return resolveElement.declareNamespace(qName.getNamespaceURI(), "");
+		}
+		else {
+			throw new IllegalArgumentException("qName [" + qName + "] does not contain a namespace");
+		}
+	}
 
-    /**
-     * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
-     *
-     * @param locale the locale
-     * @return the language string
-     */
-    public static String toLanguage(Locale locale) {
-        return locale.toString().replace('_', '-');
-    }
+	/**
+	 * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
+	 *
+	 * @param locale the locale
+	 * @return the language string
+	 */
+	public static String toLanguage(Locale locale) {
+		return locale.toString().replace('_', '-');
+	}
 
-    /**
-     * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
-     *
-     * @param language the language string
-     * @return the locale
-     */
-    public static Locale toLocale(String language) {
-        language = language.replace('-', '_');
-        return StringUtils.parseLocaleString(language);
-    }
+	/**
+	 * Converts the given locale to a {@code xml:lang} string, as used in Axiom Faults.
+	 *
+	 * @param language the language string
+	 * @return the locale
+	 */
+	public static Locale toLocale(String language) {
+		language = language.replace('-', '_');
+		return StringUtils.parseLocaleString(language);
+	}
 
-    /** Removes the contents (i.e. children) of the container. */
-    public static void removeContents(OMContainer container) {
-        for (Iterator<?> iterator = container.getChildren(); iterator.hasNext();) {
-            iterator.next();
-            iterator.remove();
-        }
-    }
+	/** Removes the contents (i.e. children) of the container. */
+	public static void removeContents(OMContainer container) {
+		for (Iterator<?> iterator = container.getChildren(); iterator.hasNext();) {
+			iterator.next();
+			iterator.remove();
+		}
+	}
 
-    /**
-     * Converts a given AXIOM {@link org.apache.axiom.soap.SOAPEnvelope} to a {@link Document}.
-     *
-     * @param envelope the SOAP envelope to be converted
-     * @return the converted document
-     * @throws IllegalArgumentException in case of errors
-     * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
-     */
-    public static Document toDocument(SOAPEnvelope envelope) {
-        try {
-            if (envelope instanceof Element) {
-                return ((Element) envelope).getOwnerDocument();
-            }
-            else {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                envelope.build();
-                envelope.serialize(bos);
+	/**
+	 * Converts a given AXIOM {@link org.apache.axiom.soap.SOAPEnvelope} to a {@link Document}.
+	 *
+	 * @param envelope the SOAP envelope to be converted
+	 * @return the converted document
+	 * @throws IllegalArgumentException in case of errors
+	 * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
+	 */
+	public static Document toDocument(SOAPEnvelope envelope) {
+		try {
+			if (envelope instanceof Element) {
+				return ((Element) envelope).getOwnerDocument();
+			}
+			else {
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				envelope.build();
+				envelope.serialize(bos);
 
-                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                documentBuilderFactory.setNamespaceAware(true);
-                return documentBuilderFactory.newDocumentBuilder().parse(bis);
-            }
-        }
-        catch (Exception ex) {
-            throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
-        }
-    }
+				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+				documentBuilderFactory.setNamespaceAware(true);
+				return documentBuilderFactory.newDocumentBuilder().parse(bis);
+			}
+		}
+		catch (Exception ex) {
+			throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
+		}
+	}
 
-    /**
-     * Converts a given {@link Document} to an AXIOM {@link org.apache.axiom.soap.SOAPEnvelope}.
-     *
-     * @param document the document to be converted
-     * @return the converted envelope
-     * @throws IllegalArgumentException in case of errors
-     * @see org.apache.rampart.util.Axis2Util.getSOAPEnvelopeFromDOMDocument(Document, boolean)
-     */
-    public static SOAPEnvelope toEnvelope(Document document) {
-        try {
-            DOMImplementation implementation = document.getImplementation();
-            Assert.isInstanceOf(DOMImplementationLS.class, implementation);
+	/**
+	 * Converts a given {@link Document} to an AXIOM {@link org.apache.axiom.soap.SOAPEnvelope}.
+	 *
+	 * @param document the document to be converted
+	 * @return the converted envelope
+	 * @throws IllegalArgumentException in case of errors
+	 * @see org.apache.rampart.util.Axis2Util.getSOAPEnvelopeFromDOMDocument(Document, boolean)
+	 */
+	public static SOAPEnvelope toEnvelope(Document document) {
+		try {
+			DOMImplementation implementation = document.getImplementation();
+			Assert.isInstanceOf(DOMImplementationLS.class, implementation);
 
-            DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
-            LSOutput output = loadSaveImplementation.createLSOutput();
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            output.setByteStream(bos);
+			DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
+			LSOutput output = loadSaveImplementation.createLSOutput();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			output.setByteStream(bos);
 
-            LSSerializer serializer = loadSaveImplementation.createLSSerializer();
-            serializer.write(document, output);
+			LSSerializer serializer = loadSaveImplementation.createLSSerializer();
+			serializer.write(document, output);
 
-            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-	        XMLInputFactory inputFactory = StAXUtils.getXMLInputFactory();
+			XMLInputFactory inputFactory = StAXUtils.getXMLInputFactory();
 
-	        StAXSOAPModelBuilder stAXSOAPModelBuilder =
-                    new StAXSOAPModelBuilder(inputFactory.createXMLStreamReader(bis), null);
-            SOAPEnvelope envelope = stAXSOAPModelBuilder.getSOAPEnvelope();
+			StAXSOAPModelBuilder stAXSOAPModelBuilder =
+					new StAXSOAPModelBuilder(inputFactory.createXMLStreamReader(bis), null);
+			SOAPEnvelope envelope = stAXSOAPModelBuilder.getSOAPEnvelope();
 
-            // Necessary to build a correct Axiom tree, see SWS-483
-            envelope.serialize(new NullOutputStream());
+			// Necessary to build a correct Axiom tree, see SWS-483
+			envelope.serialize(new NullOutputStream());
 
-            return envelope;
-        }
-        catch (Exception ex) {
-            IllegalArgumentException iaex =
-                    new IllegalArgumentException("Error in converting Document to SOAP Envelope");
-            iaex.initCause(ex);
-            throw iaex;
-        }
-    }
+			return envelope;
+		}
+		catch (Exception ex) {
+			IllegalArgumentException iaex =
+					new IllegalArgumentException("Error in converting Document to SOAP Envelope");
+			iaex.initCause(ex);
+			throw iaex;
+		}
+	}
 
-    /** OutputStream that does nothing. */
-    private static class NullOutputStream extends OutputStream {
+	/** OutputStream that does nothing. */
+	private static class NullOutputStream extends OutputStream {
 
-        @Override
-        public void write(int b) throws IOException {
-        }
+		@Override
+		public void write(int b) throws IOException {
+		}
 
-        @Override
-        public void write(byte[] b) throws IOException {
-        }
+		@Override
+		public void write(byte[] b) throws IOException {
+		}
 
-        @Override
-        public void write(byte[] b, int off, int len) throws IOException {
-        }
-    }
+		@Override
+		public void write(byte[] b, int off, int len) throws IOException {
+		}
+	}
 
 }

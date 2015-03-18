@@ -27,11 +27,11 @@ import org.springframework.ws.WebServiceMessage;
  */
 public interface StreamingWebServiceMessage extends WebServiceMessage {
 
-    /**
-     * Sets the streaming payload for this message.
-     *
-     * @param payload the streaming payload
-     */
-    void setStreamingPayload(StreamingPayload payload);
+	/**
+	 * Sets the streaming payload for this message.
+	 *
+	 * @param payload the streaming payload
+	 */
+	void setStreamingPayload(StreamingPayload payload);
 
 }
