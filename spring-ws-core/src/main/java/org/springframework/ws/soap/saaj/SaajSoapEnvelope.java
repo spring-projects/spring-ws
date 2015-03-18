@@ -51,6 +51,9 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 		if (body == null) {
 			try {
 				SOAPBody saajBody = getSaajEnvelope().getBody();
+				if (saajBody == null) {
+					throw new SaajSoapBodyException("SAAJ SOAP message has no body");
+				}
 				if (saajBody.getElementQName().getNamespaceURI()
 						.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
 					body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaultString);
