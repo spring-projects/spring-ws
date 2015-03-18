@@ -51,6 +51,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Alan Stewart
  * @author Barry Pitman
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see HttpClient
  * @since 2.1.0
  */
@@ -195,7 +196,13 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
 			URI uri = new URI(entry.getKey());
 			HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-			HttpRoute route = new HttpRoute(host);
+			final HttpRoute route;
+
+			if (uri.getScheme().equals("https")) {
+				route = new HttpRoute(host, null, true);
+			} else {
+				route = new HttpRoute(host);
+			}
 
 			int max = Integer.parseInt(entry.getValue());
 

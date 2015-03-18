@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.hamcrest.core.IsEqual.*;
+import static org.springframework.test.util.MatcherAssertionErrors.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,6 +31,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MessageFactory;
 
 import org.apache.commons.httpclient.URIException;
+import org.apache.http.HttpHost;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
@@ -49,13 +55,43 @@ public class HttpComponentsMessageSenderIntegrationTest extends AbstractHttpWebS
 
 	@Test
 	public void testMaxConnections() throws URISyntaxException, URIException {
+		final String url1 = "https://www.example.com";
+		URI uri1 = new URI(url1);
+		HttpHost host1 = new HttpHost(uri1.getHost(), uri1.getPort(), uri1.getScheme());
+		HttpRoute route1 = new HttpRoute(host1, null, true);
+		assertThat(route1.isSecure(), equalTo(true));
+		assertThat(route1.getTargetHost().getHostName(), equalTo("www.example.com"));
+		assertThat(route1.getTargetHost().getPort(), equalTo(-1));
+
+		final String url2 = "http://www.example.com:8080";
+		URI uri2 = new URI(url2);
+		HttpHost host2 = new HttpHost(uri2.getHost(), uri2.getPort(), uri2.getScheme());
+		HttpRoute route2 = new HttpRoute(host2);
+		assertThat(route2.isSecure(), equalTo(false));
+		assertThat(route2.getTargetHost().getHostName(), equalTo("www.example.com"));
+		assertThat(route2.getTargetHost().getPort(), equalTo(8080));
+
+		final String url3 = "http://www.springframework.org";
+		URI uri3 = new URI(url3);
+		HttpHost host3 = new HttpHost(uri3.getHost(), uri3.getPort(), uri3.getScheme());
+		HttpRoute route3 = new HttpRoute(host3);
+		assertThat(route3.isSecure(), equalTo(false));
+		assertThat(route3.getTargetHost().getHostName(), equalTo("www.springframework.org"));
+		assertThat(route3.getTargetHost().getPort(), equalTo(-1));
+
 		HttpComponentsMessageSender messageSender = new HttpComponentsMessageSender();
 		messageSender.setMaxTotalConnections(2);
 		Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
-		maxConnectionsPerHost.put("https://www.example.com", "1");
-		maxConnectionsPerHost.put("http://www.example.com:8080", "7");
-		maxConnectionsPerHost.put("http://www.springframework.org", "10");
+		maxConnectionsPerHost.put(url1, "1");
+		maxConnectionsPerHost.put(url2, "7");
+		maxConnectionsPerHost.put(url3, "10");
 		messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
+
+		PoolingClientConnectionManager poolingClientConnectionManager =
+				(PoolingClientConnectionManager) messageSender.getHttpClient().getConnectionManager();
+		assertThat(poolingClientConnectionManager.getMaxPerRoute(route1), equalTo(1));
+		assertThat(poolingClientConnectionManager.getMaxPerRoute(route2), equalTo(7));
+		assertThat(poolingClientConnectionManager.getMaxPerRoute(route3), equalTo(10));
 	}
 
 	@Test
