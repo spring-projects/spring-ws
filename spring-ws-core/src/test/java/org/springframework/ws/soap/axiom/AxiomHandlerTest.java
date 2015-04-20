@@ -16,6 +16,11 @@
 
 package org.springframework.ws.soap.axiom;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
@@ -34,9 +39,6 @@ import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -64,6 +66,8 @@ public class AxiomHandlerTest {
 	private static final String XML_4_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace1' />";
 	
 	private static final String XML_5_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<x:child xmlns:x='namespace1' />";
+
+	private static final String XML_6_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<parent xmlns='parent-namespace'><c:first-sibling xmlns:c='child-namespace' /><second-sibling /></parent>";
 
 	private AxiomHandler handler;
 
@@ -155,6 +159,32 @@ public class AxiomHandlerTest {
 		OMElement child = (OMElement) it.next();
 		assertEquals("x", child.getQName().getPrefix());
 		assertEquals("namespace1", child.getQName().getNamespaceURI());
+	}
+
+	@Test
+	public void testContentHandlerSiblingPrefixMapping() throws Exception {
+		handler = new AxiomHandler(result, factory);
+		xmlReader.setContentHandler(handler);
+		xmlReader.parse(new InputSource(new StringReader(XML_6_SNIPPET)));
+
+		Iterator<?> it = result.getOMDocumentElement().getChildren();
+		assertTrue(it.hasNext());
+		OMElement firstSibling = (OMElement) it.next();
+		assertEquals("first-sibling", firstSibling.getLocalName());
+		Iterator<?> firstSiblingNsIt = firstSibling.getAllDeclaredNamespaces();
+		// Verify first sibling has a single namespace declaration (with child-namespace URI)
+		assertTrue(firstSiblingNsIt.hasNext());
+		assertEquals("child-namespace", ((OMNamespace) firstSiblingNsIt.next()).getNamespaceURI());
+		assertFalse(firstSiblingNsIt.hasNext());
+
+		assertTrue(it.hasNext());
+		OMElement secondSibling = (OMElement) it.next();
+		// Verify second sibling has no namespace declarations as it's covered by <parent />
+		// This also verifies the child-namespace from the <first-sibling /> element isn't copied to second-sibling
+		assertEquals("second-sibling", secondSibling.getLocalName());
+		Iterator<?> secondSiblingNsIt = secondSibling.getAllDeclaredNamespaces();
+		assertFalse(secondSiblingNsIt.hasNext());
+
 	}
 
 	@Test

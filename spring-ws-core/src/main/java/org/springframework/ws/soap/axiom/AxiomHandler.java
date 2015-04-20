@@ -43,6 +43,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * AXIOM OMElement to a specified parent element when {@code endDocument} is called.
  * Used for returing {@code SAXResult}s from Axiom elements.
  * @author Arjen Poutsma
+ * @author Tommy Winther
  * @since 1.0.0
  */
 class AxiomHandler implements ContentHandler, LexicalHandler {
@@ -92,6 +93,7 @@ class AxiomHandler implements ContentHandler, LexicalHandler {
 
 	@Override
 	public void endPrefixMapping(String prefix) throws SAXException {
+		currentNamespaceMapping().remove(prefix);
 	}
 
 	@Override
