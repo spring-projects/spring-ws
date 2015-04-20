@@ -37,6 +37,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Implementation of the {@link WebServiceConnection} interface that uses a {@link HttpURLConnection}.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.0.0
  */
 public class HttpUrlConnection extends AbstractHttpSenderConnection {
@@ -76,7 +77,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	 */
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		connection.addRequestProperty(name, value);
 	}
 
@@ -100,7 +101,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		List<String> headerNames = new ArrayList<String>();
 		// Header field 0 is the status line, so we start at 1
 		int i = 1;
@@ -116,7 +117,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		String headerField = connection.getHeaderField(name);
 		if (headerField == null) {
 			return Collections.<String>emptyList().iterator();

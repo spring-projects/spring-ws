@@ -41,6 +41,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * PostMethod}.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.0.0
  * @deprecated In favor of {@link HttpComponentsConnection}
  */
@@ -98,7 +99,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		postMethod.addRequestHeader(name, value);
 	}
 
@@ -151,7 +152,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		Header[] headers = postMethod.getResponseHeaders();
 		String[] names = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
@@ -161,7 +162,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		Header[] headers = postMethod.getResponseHeaders(name);
 		String[] values = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {

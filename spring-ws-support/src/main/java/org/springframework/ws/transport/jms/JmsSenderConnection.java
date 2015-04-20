@@ -48,6 +48,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * BytesMessage} request and response message.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 public class JmsSenderConnection extends AbstractSenderConnection {
@@ -182,7 +183,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 */
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		try {
 			JmsTransportUtils.addHeader(requestMessage, name, value);
 		}
@@ -288,7 +289,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		try {
 			return JmsTransportUtils.getHeaderNames(responseMessage);
 		}
@@ -298,7 +299,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		try {
 			return JmsTransportUtils.getHeaders(responseMessage, name);
 		}

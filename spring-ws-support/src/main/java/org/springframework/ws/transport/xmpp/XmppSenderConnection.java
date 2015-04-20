@@ -43,6 +43,7 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 2.0
  */
 public class XmppSenderConnection extends AbstractSenderConnection {
@@ -116,7 +117,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	 */
 
 	@Override
-	protected void addRequestHeader(String name, String value) {
+	public void addRequestHeader(String name, String value) {
 		XmppTransportUtils.addHeader(requestMessage, name, value);
 	}
 
@@ -163,12 +164,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() {
+	public Iterator<String> getResponseHeaderNames() {
 		return XmppTransportUtils.getHeaderNames(responseMessage);
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		return XmppTransportUtils.getHeaders(responseMessage, name);
 	}
 

@@ -36,6 +36,7 @@ import org.springframework.ws.WebServiceMessage;
  *
  * @author Krzysztof Trojan
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 2.2
  */
 public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
@@ -67,7 +68,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	// Sending request
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		request.getHeaders().add(name, value);
 	}
 
@@ -89,12 +90,12 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		return response.getHeaders().keySet().iterator();
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		List<String> headers = response.getHeaders().get(name);
 		return headers != null ? headers.iterator() :
 				Collections.<String>emptyList().iterator();

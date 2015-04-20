@@ -60,6 +60,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * request and response message.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 
@@ -165,7 +166,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		try {
 			requestMessage.addHeader(name, value);
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
@@ -256,7 +257,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		try {
 			List<String> headers = new ArrayList<String>();
 			Enumeration<?> enumeration = responseMessage.getAllHeaders();
@@ -272,7 +273,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		try {
 			String[] headers = responseMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();

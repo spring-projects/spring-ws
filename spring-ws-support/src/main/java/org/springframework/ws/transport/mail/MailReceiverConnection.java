@@ -52,6 +52,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * request and response message.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 public class MailReceiverConnection extends AbstractReceiverConnection {
@@ -137,7 +138,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	*/
 
 	@Override
-	protected Iterator<String> getRequestHeaderNames() throws IOException {
+	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
 			List<String> headers = new ArrayList<String>();
 			Enumeration<?> enumeration = requestMessage.getAllHeaders();
@@ -153,7 +154,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	@Override
-	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		try {
 			String[] headers = requestMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();
@@ -174,7 +175,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	@Override
-	protected void addResponseHeader(String name, String value) throws IOException {
+	public void addResponseHeader(String name, String value) throws IOException {
 		try {
 			responseMessage.addHeader(name, value);
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {

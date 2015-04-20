@@ -45,6 +45,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Alan Stewart
  * @author Barry Pitman
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 2.1.0
  */
 public class HttpComponentsConnection extends AbstractHttpSenderConnection {
@@ -100,7 +101,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected void addRequestHeader(String name, String value) throws IOException {
+	public void addRequestHeader(String name, String value) throws IOException {
 		httpPost.addHeader(name, value);
 	}
 
@@ -154,7 +155,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaderNames() throws IOException {
+	public Iterator<String> getResponseHeaderNames() throws IOException {
 		Header[] headers = httpResponse.getAllHeaders();
 		String[] names = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
@@ -164,7 +165,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	protected Iterator<String> getResponseHeaders(String name) throws IOException {
+	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		Header[] headers = httpResponse.getHeaders(name);
 		String[] values = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {

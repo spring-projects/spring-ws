@@ -25,9 +25,11 @@ import java.util.Iterator;
  * Abstract base class for {@link WebServiceConnection} implementations used for sending requests.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.0.0
  */
-public abstract class AbstractSenderConnection extends AbstractWebServiceConnection {
+public abstract class AbstractSenderConnection extends AbstractWebServiceConnection implements
+		HeadersAwareSenderWebServiceConnection {
 
 	private TransportOutputStream requestOutputStream;
 
@@ -66,29 +68,8 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 	/** Indicates whether this connection has a response. */
 	protected abstract boolean hasResponse() throws IOException;
 
-	/**
-	 * Adds a request header with the given name and value. This method can be called multiple times, to allow for
-	 * headers with multiple values.
-	 *
-	 * @param name	the name of the header
-	 * @param value the value of the header
-	 */
-	protected abstract void addRequestHeader(String name, String value) throws IOException;
-
 	/** Returns the output stream to write the request to. */
 	protected abstract OutputStream getRequestOutputStream() throws IOException;
-
-	/**
-	 * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
-	 * there are no headers.
-	 */
-	protected abstract Iterator<String> getResponseHeaderNames() throws IOException;
-
-	/**
-	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
-	 * if there are no headers of the specified name.
-	 */
-	protected abstract Iterator<String> getResponseHeaders(String name) throws IOException;
 
 	/** Returns the input stream to read the response from. */
 	protected abstract InputStream getResponseInputStream() throws IOException;

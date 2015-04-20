@@ -46,6 +46,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code TextMessage} response is created.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 public class JmsReceiverConnection extends AbstractReceiverConnection {
@@ -140,7 +141,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	protected Iterator<String> getRequestHeaderNames() throws IOException {
+	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
 			return JmsTransportUtils.getHeaderNames(requestMessage);
 		}
@@ -150,7 +151,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	@Override
-	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		try {
 			return JmsTransportUtils.getHeaders(requestMessage, name);
 		}
@@ -200,7 +201,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	@Override
-	protected void addResponseHeader(String name, String value) throws IOException {
+	public void addResponseHeader(String name, String value) throws IOException {
 		try {
 			JmsTransportUtils.addHeader(responseMessage, name, value);
 		}

@@ -42,6 +42,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Implementation of {@link WebServiceConnection} that is based on the Java 6 HttpServer {@link HttpExchange}.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 public class HttpExchangeConnection extends AbstractReceiverConnection
@@ -99,12 +100,12 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	 */
 
 	@Override
-	protected Iterator<String> getRequestHeaderNames() throws IOException {
+	public Iterator<String> getRequestHeaderNames() throws IOException {
 		return httpExchange.getRequestHeaders().keySet().iterator();
 	}
 
 	@Override
-	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		List<String> headers = httpExchange.getRequestHeaders().get(name);
 		return headers != null ? headers.iterator() : Collections.<String>emptyList().iterator();
 	}
@@ -119,7 +120,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	 */
 
 	@Override
-	protected void addResponseHeader(String name, String value) throws IOException {
+	public void addResponseHeader(String name, String value) throws IOException {
 		httpExchange.getResponseHeaders().add(name, value);
 	}
 

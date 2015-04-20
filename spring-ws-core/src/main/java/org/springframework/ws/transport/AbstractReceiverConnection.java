@@ -25,9 +25,11 @@ import java.util.Iterator;
  * Abstract base class for {@link WebServiceConnection} implementations used for receiving requests.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.0.0
  */
-public abstract class AbstractReceiverConnection extends AbstractWebServiceConnection {
+public abstract class AbstractReceiverConnection extends AbstractWebServiceConnection implements
+		HeadersAwareReceiverWebServiceConnection {
 
 	private TransportInputStream requestInputStream;
 
@@ -58,29 +60,8 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 	protected void onClose() throws IOException {
 	}
 
-	/**
-	 * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
-	 * there are no headers.
-	 */
-	protected abstract Iterator<String> getRequestHeaderNames() throws IOException;
-
-	/**
-	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
-	 * if there are no headers of the specified name.
-	 */
-	protected abstract Iterator<String> getRequestHeaders(String name) throws IOException;
-
 	/** Returns the input stream to read the response from. */
 	protected abstract InputStream getRequestInputStream() throws IOException;
-
-	/**
-	 * Adds a response header with the given name and value. This method can be called multiple times, to allow for
-	 * headers with multiple values.
-	 *
-	 * @param name	the name of the header
-	 * @param value the value of the header
-	 */
-	protected abstract void addResponseHeader(String name, String value) throws IOException;
 
 	/** Returns the output stream to write the request to. */
 	protected abstract OutputStream getResponseOutputStream() throws IOException;

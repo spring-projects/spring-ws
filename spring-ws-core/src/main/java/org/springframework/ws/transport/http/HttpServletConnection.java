@@ -38,6 +38,7 @@ import org.springframework.ws.transport.support.EnumerationIterator;
  * Implementation of {@link WebServiceConnection} that is based on the Servlet API.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.0.0
  */
 public class HttpServletConnection extends AbstractReceiverConnection
@@ -105,13 +106,13 @@ public class HttpServletConnection extends AbstractReceiverConnection
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Iterator<String> getRequestHeaderNames() throws IOException {
+	public Iterator<String> getRequestHeaderNames() throws IOException {
 		return new EnumerationIterator<String>(getHttpServletRequest().getHeaderNames());
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Iterator<String> getRequestHeaders(String name) throws IOException {
+	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		return new EnumerationIterator<String>(getHttpServletRequest().getHeaders(name));
 	}
 
@@ -125,7 +126,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	*/
 
 	@Override
-	protected void addResponseHeader(String name, String value) throws IOException {
+	public void addResponseHeader(String name, String value) throws IOException {
 		getHttpServletResponse().addHeader(name, value);
 	}
 
