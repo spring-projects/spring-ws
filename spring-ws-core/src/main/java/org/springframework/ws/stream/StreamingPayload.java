@@ -30,7 +30,9 @@ import javax.xml.stream.XMLStreamWriter;
 public interface StreamingPayload {
 
 	/**
-	 * Returns the qualified name of the payload.
+	 * Returns the qualified name of the payload. Only the namespace URI and local part of the
+	 * returned qualified name are significant; they must match the name of the root element
+	 * produced by {@link #writeTo(XMLStreamWriter)}.
 	 *
 	 * @return the qualified name
 	 */
