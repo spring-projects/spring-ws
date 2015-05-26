@@ -102,14 +102,15 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 		}
 		StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
 
-		final QName name = new QName("http://springframework.org", "root", "prefix");
+		final QName name = new QName("http://springframework.org", "root", "");
 		streamingMessage.setStreamingPayload(new StreamingPayload() {
 			public QName getName() {
 				return name;
 			}
 
 			public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
-				streamWriter.writeStartElement(name.getPrefix(), name.getLocalPart(), name.getNamespaceURI());
+				// Use a prefix that is different from the one reported by getName()
+				streamWriter.writeStartElement("prefix", name.getLocalPart(), name.getNamespaceURI());
 				streamWriter.writeNamespace("prefix", name.getNamespaceURI());
 				streamWriter.writeStartElement(name.getNamespaceURI(), "child");
 				streamWriter.writeCharacters("Foo");

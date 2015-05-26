@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.axiom;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -71,7 +72,11 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 	public void setStreamingPayload(StreamingPayload payload) {
 		Assert.notNull(payload, "'payload' must not be null");
 		OMDataSource dataSource = new StreamingOMDataSource(payload);
-		OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, payload.getName());
+		SOAPFactory factory = getAxiomFactory();
+		QName name = payload.getName();
+		// Ignore the prefix; only the namespace URI and local name are significant
+		OMElement payloadElement = factory.createOMElement(dataSource, name.getLocalPart(),
+				factory.createOMNamespace(name.getNamespaceURI(), null));
 
 		SOAPBody soapBody = getAxiomBody();
 		AxiomUtils.removeContents(soapBody);
