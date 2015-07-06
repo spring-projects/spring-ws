@@ -42,19 +42,19 @@ public abstract class SpringSecurityUtils {
 	public static void checkUserValidity(UserDetails user)
 			throws AccountExpiredException, CredentialsExpiredException, DisabledException, LockedException {
 		if (!user.isAccountNonLocked()) {
-			throw new LockedException("User account is locked", user);
+			throw new LockedException("Account for user '" + user + "' is locked");
 		}
 
 		if (!user.isEnabled()) {
-			throw new DisabledException("User is disabled", user);
+			throw new DisabledException("User '" + user + "' is disabled");
 		}
 
 		if (!user.isAccountNonExpired()) {
-			throw new AccountExpiredException("User account has expired", user);
+			throw new AccountExpiredException("Account for user '" + user + "' has expired");
 		}
 
 		if (!user.isCredentialsNonExpired()) {
-			throw new CredentialsExpiredException("User credentials have expired", user);
+			throw new CredentialsExpiredException("Credentials for user '" + user + "' have expired");
 		}
 	}
 }
