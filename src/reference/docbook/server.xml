@@ -619,6 +619,15 @@ public DefaultWsdl11Definition orders() {
 </beans>]]></programlisting>
             </para>
         </section>
+        <section>
+            <title>MTOM</title>
+            <para>
+                <link xl:href="https://en.wikipedia.org/wiki/Message_Transmission_Optimization_Mechanism">MTOM</link> is
+                the mechanism of sending binary data to and from Web Services. You can look at how to implement
+                this with Spring WS through the
+                <link xl:href="https://github.com/spring-projects/spring-ws-samples/tree/master/mtom">MTOM sample</link>.
+            </para>
+        </section>
     </section>
     <section xml:id="server-endpoints">
         <title>Endpoints</title>
