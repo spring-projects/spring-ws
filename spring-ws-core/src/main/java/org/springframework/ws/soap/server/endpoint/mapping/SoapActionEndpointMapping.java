@@ -49,9 +49,7 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
- * @deprecated as of Spring Web Services 2.0, in favor of {@link SoapActionAnnotationMethodEndpointMapping}.
  */
-@Deprecated
 public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping implements SoapEndpointMapping {
 
 	private String[] actorsOrRoles;
