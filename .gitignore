@@ -16,3 +16,6 @@ out
 .gradle
 
 _site
+/.classpath
+/.project
+/.settings/

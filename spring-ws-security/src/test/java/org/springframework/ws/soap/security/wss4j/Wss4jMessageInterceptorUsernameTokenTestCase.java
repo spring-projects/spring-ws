@@ -146,6 +146,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 			interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		}
 		interceptor.setValidationCallbackHandler(callbackHandler);
+		
+		interceptor.setBspCompliant(false);
+		
 		interceptor.afterPropertiesSet();
 		return interceptor;
 	}
