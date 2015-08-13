@@ -19,7 +19,7 @@ package org.springframework.ws.soap.security.wss4j.callback;
 import java.io.Serializable;
 import javax.security.auth.callback.Callback;
 
-import org.apache.ws.security.WSUsernameTokenPrincipal;
+import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 
 /**
  * Underlying security services instantiate and pass a {@code UsernameTokenPrincipalCallback} to the
@@ -34,15 +34,15 @@ public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
 	private static final long serialVersionUID = -3022202225157082715L;
 
-	private final WSUsernameTokenPrincipal principal;
+	private final WSUsernameTokenPrincipalImpl principal;
 
 	/** Construct a {@code UsernameTokenPrincipalCallback}. */
-	public UsernameTokenPrincipalCallback(WSUsernameTokenPrincipal principal) {
+	public UsernameTokenPrincipalCallback(WSUsernameTokenPrincipalImpl principal) {
 		this.principal = principal;
 	}
 
 	/** Get the retrieved {@code Principal}. */
-	public WSUsernameTokenPrincipal getPrincipal() {
+	public WSUsernameTokenPrincipalImpl getPrincipal() {
 		return principal;
 	}
 }

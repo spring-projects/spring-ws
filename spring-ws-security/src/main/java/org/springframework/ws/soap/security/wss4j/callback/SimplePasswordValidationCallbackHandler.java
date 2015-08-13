@@ -16,13 +16,9 @@
 
 package org.springframework.ws.soap.security.wss4j.callback;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
-import org.apache.ws.security.WSPasswordCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -58,11 +54,4 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(users, "users is required");
 	}
-
-	@Override
-	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		String identifier = callback.getIdentifier();
-		callback.setPassword(users.get(identifier));
-	}
-
 }

@@ -16,14 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j.callback;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.security.Key;
 import java.security.KeyStore;
-import javax.crypto.SecretKey;
-import javax.security.auth.callback.UnsupportedCallbackException;
-
-import org.apache.ws.security.WSPasswordCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.soap.security.support.KeyStoreUtils;
@@ -79,29 +72,6 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 		}
 		if (symmetricKeyPassword == null) {
 			symmetricKeyPassword = privateKeyPassword.toCharArray();
-		}
-	}
-
-	@Override
-	protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		callback.setPassword(privateKeyPassword);
-	}
-
-
-	@Override
-	protected void handleSecretKey(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		try {
-			String identifier = callback.getIdentifier();
-			Key key = keyStore.getKey(identifier, symmetricKeyPassword);
-			if (key instanceof SecretKey) {
-				callback.setKey(key.getEncoded());
-			}
-			else {
-				logger.error("Key [" + key + "] is not a javax.crypto.SecretKey");
-			}
-		}
-		catch (GeneralSecurityException ex) {
-			logger.error("Could not obtain symmetric key", ex);
 		}
 	}
 

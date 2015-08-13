@@ -20,10 +20,9 @@ import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
-
-import org.apache.ws.security.WSPasswordCallback;
 
 /**
  * Abstract base class for {@link javax.security.auth.callback.CallbackHandler} implementations that handle {@link

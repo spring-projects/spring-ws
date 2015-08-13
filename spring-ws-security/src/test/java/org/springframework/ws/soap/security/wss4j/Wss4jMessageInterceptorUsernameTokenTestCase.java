@@ -22,8 +22,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-
-import org.apache.ws.security.WSConstants;
+import org.apache.wss4j.dom.WSConstants;
 import org.junit.Test;
 import org.w3c.dom.Document;
 

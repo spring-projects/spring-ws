@@ -27,8 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
-import org.apache.ws.security.WSUsernameTokenPrincipal;
+import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +52,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
 		user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));
 
-		WSUsernameTokenPrincipal principal = new WSUsernameTokenPrincipal("Ernie", true);
+		WSUsernameTokenPrincipalImpl principal = new WSUsernameTokenPrincipalImpl("Ernie", true);
 		callback = new UsernameTokenPrincipalCallback(principal);
 	}
 

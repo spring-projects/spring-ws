@@ -26,8 +26,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SpringSecurityPasswordValidationCallbackHandler;
-
-import org.apache.ws.security.WSConstants;
+import org.apache.wss4j.dom.WSConstants;
 import org.junit.After;
 import org.junit.Test;
 

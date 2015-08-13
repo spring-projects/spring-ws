@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.Properties;
 
 import org.springframework.ws.context.MessageContext;
-
-import org.apache.ws.security.WSSecurityEngineResult;
-import org.apache.ws.security.WSSecurityException;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.handler.RequestData;
-import org.apache.ws.security.handler.WSHandler;
-import org.apache.ws.security.handler.WSHandlerConstants;
 import org.w3c.dom.Document;
+import org.apache.wss4j.common.ConfigurationConstants;
+import org.apache.wss4j.common.crypto.Crypto;
+import org.apache.wss4j.common.ext.WSSecurityException;
+import org.apache.wss4j.dom.WSSecurityEngineResult;
+import org.apache.wss4j.dom.handler.HandlerAction;
+import org.apache.wss4j.dom.handler.RequestData;
+import org.apache.wss4j.dom.handler.WSHandler;
 
 /**
  * @author Tareq Abed Rabbo
@@ -47,8 +47,17 @@ class Wss4jHandler extends WSHandler {
 
 	Wss4jHandler() {
 		// set up default handler properties
-		options.setProperty(WSHandlerConstants.MUST_UNDERSTAND, Boolean.toString(true));
-		options.setProperty(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
+		options.setProperty(ConfigurationConstants.MUST_UNDERSTAND, Boolean.toString(true));
+		options.setProperty(ConfigurationConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
+	}
+	
+	public void doSenderAction(
+            Document doc,
+            RequestData reqData, 
+            List<HandlerAction> actions,
+            boolean isRequest) throws WSSecurityException
+	{
+		super.doSenderAction(doc, reqData, actions, isRequest);
 	}
 
 	@Override
@@ -109,14 +118,5 @@ class Wss4jHandler extends WSHandler {
 	@Override
 	public void setProperty(Object msgContext, String key, Object value) {
 		((MessageContext) msgContext).setProperty(key, value);
-	}
-
-	@Override
-	protected void doSenderAction(int doAction,
-								  Document doc,
-								  RequestData reqData,
-								  List<Integer> actions,
-								  boolean isRequest) throws WSSecurityException {
-		super.doSenderAction(doAction, doc, reqData, actions, isRequest);
 	}
 }
