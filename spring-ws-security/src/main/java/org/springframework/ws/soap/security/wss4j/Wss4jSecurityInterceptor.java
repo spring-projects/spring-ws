@@ -56,6 +56,7 @@ import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipalCallback;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
@@ -102,17 +103,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
-	private List<Integer> securementAction;
-
 	private String securementActions;
-
-	private List<HandlerAction> securementActionsVector;
 
 	private String securementUsername;
 
 	private CallbackHandler validationCallbackHandler;
-
-	private List<Integer> validationAction;
 
 	private String validationActions;
 
@@ -142,19 +137,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private boolean enableRevocation;
 
+	private boolean bspCompliant;
+
+	private boolean securementUseDerivedKey;
+	
+	// Allow RSA 15 to maintain default behavior
+	private boolean allowRSA15KeyTransportAlgorithm = true;
+
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
 
 	public void setSecurementActions(String securementActions) {
 		this.securementActions = securementActions;
-		securementActionsVector = new ArrayList<HandlerAction>();
-		try {
-			securementAction = WSSecurityUtil.decodeAction(securementActions);
-			securementActionsVector = WSSecurityUtil.decodeHandlerAction(securementActions, wssConfig);
-		}
-		catch (WSSecurityException ex) {
-			throw new IllegalArgumentException(ex);
-		}
 	}
 
 	/**
@@ -171,7 +165,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
 		handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
 	}
-
+	
 	/**
 	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
 	 * {@code IssuerSerial}. For possible encryption key identifier types refer to {@link
@@ -356,6 +350,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.securementTimeToLive = securementTimeToLive;
 	}
 
+	/**
+	 * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is {@code true}.
+	 */
+	public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
+		this.securementUseDerivedKey = securementUseDerivedKey;
+	}
+
 	/** Sets the server-side time to live */
 	public void setValidationTimeToLive(int validationTimeToLive) {
 		if (validationTimeToLive <= 0) {
@@ -368,8 +369,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	public void setValidationActions(String actions) {
 		this.validationActions = actions;
 		try {
-			validationActionsVector = new ArrayList<Integer>();
-			validationAction = WSSecurityUtil.decodeAction(actions);
+			validationActionsVector = WSSecurityUtil.decodeAction(actions);
 		}
 		catch (WSSecurityException ex) {
 			throw new IllegalArgumentException(ex);
@@ -469,6 +469,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
+	 */
+	public void setBspCompliant(boolean bspCompliant) {
+		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
+		this.bspCompliant = bspCompliant;
+	}
+
+	/**
 	 * Sets the time in seconds in the future within which the Created time of an
 	 * incoming Timestamp is valid. The default is 60 seconds.
 	 */
@@ -492,11 +500,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		Assert.isTrue(validationActions != null || securementActions != null,
 				"validationActions or securementActions are required");
 		if (validationActions != null) {
-			if (validationAction.contains(WSConstants.UT)) {
+			if (validationActionsVector.contains(WSConstants.UT)) {
 				Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
 			}
 
-			if (validationAction.contains(WSConstants.SIGN)) {
+			if (validationActionsVector.contains(WSConstants.SIGN)) {
 				Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
 			}
 		}
@@ -510,7 +518,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@Override
 	protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
 			throws WsSecuritySecurementException {
-		if (securementAction.contains(WSConstants.NO_SECURITY) && !enableSignatureConfirmation) {
+
+		List<HandlerAction> securementActionsVector = new ArrayList<HandlerAction>();
+		try {
+			securementActionsVector = WSSecurityUtil.decodeHandlerAction(securementActions, wssConfig);
+		}
+		catch (WSSecurityException ex) {
+			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
+		}
+		
+		if (securementActionsVector.isEmpty() && !enableSignatureConfirmation) {
 			return;
 		}
 		if (logger.isDebugEnabled()) {
@@ -520,13 +537,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		Document envelopeAsDocument = soapMessage.getDocument();
 		try {
-			// In case on signature confirmation with no other securement
-			// action, we need to pass an empty securementActionsVector to avoid
-			// NPE
-			if (securementAction.contains(WSConstants.NO_SECURITY)) {
-				securementActionsVector = new ArrayList<HandlerAction>();
-			}
-
 			handler.doSenderAction(envelopeAsDocument, requestData, securementActionsVector, false);
 		}
 		catch (WSSecurityException ex) {
@@ -556,11 +566,44 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		}
 
 		requestData.setTimeToLive(securementTimeToLive);
+
+		requestData.setUseDerivedKeyForMAC(securementUseDerivedKey);
 		
 		requestData.setWssConfig(wssConfig);
 
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
+				
+		return requestData;
+	}
 
+	/**
+	 * Creates and initializes a request data for the given message context.
+	 *
+	 * @param messageContext the message context
+	 * @return the request data
+	 */
+	protected RequestData initializeValidationRequestData(MessageContext messageContext) {
+		RequestData requestData = new RequestData();
+		requestData.setMsgContext(messageContext);
+		
+		requestData.setWssConfig(wssConfig);
+		
+		requestData.setDecCrypto(validationDecryptionCrypto);
+		
+		requestData.setSigVerCrypto(validationSignatureCrypto);
+		
+		requestData.setCallbackHandler(validationCallbackHandler);
+
+		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(validationTimeToLive));
+
+		requestData.setAllowRSA15KeyTransportAlgorithm(allowRSA15KeyTransportAlgorithm);
+		
+		requestData.setDisableBSPEnforcement(!bspCompliant);
+		if (requestData.getBSPEnforcer() != null)
+		{
+			requestData.getBSPEnforcer().setDisableBSPRules(!bspCompliant);
+		}
+				
 		return requestData;
 	}
 
@@ -571,7 +614,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
 		}
 
-		if (validationAction.contains(WSConstants.NO_SECURITY)) {
+		if (validationActionsVector.contains(WSConstants.NO_SECURITY)) {
 			return;
 		}
 
@@ -580,9 +623,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// Header processing
 
 		try {
+			RequestData validationData = initializeValidationRequestData(messageContext);
+
+			String actor = validationActor;
+	        if (actor == null) {
+	            actor = "";
+	        }
+	        
+	        Element elem = WSSecurityUtil.getSecurityHeader(envelopeAsDocument, actor);
 			List<WSSecurityEngineResult> results = securityEngine
-					.processSecurityHeader(envelopeAsDocument, validationActor, validationCallbackHandler,
-							validationSignatureCrypto, validationDecryptionCrypto);
+					.processSecurityHeader(elem, validationData);
 
 			// Results verification
 			if (CollectionUtils.isEmpty(results)) {

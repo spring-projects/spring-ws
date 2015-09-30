@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -62,6 +63,20 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(userDetailsService, "userDetailsService is required");
+	}
+	
+
+
+	/**
+	 * Invoked when the callback has a {@link WSPasswordCallback#USERNAME_TOKEN} usage.
+	 *
+	 * <p>This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
+	 *
+	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
+	 */
+	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		UserDetails details = loadUserDetails(callback.getIdentifier());
+		callback.setPassword(details.getPassword());
 	}
 
 	@Override

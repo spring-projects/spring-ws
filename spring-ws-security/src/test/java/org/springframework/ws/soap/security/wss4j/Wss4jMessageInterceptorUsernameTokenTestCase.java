@@ -16,17 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Properties;
 
+import org.apache.wss4j.dom.WSConstants;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler;
-import org.apache.wss4j.dom.WSConstants;
-import org.junit.Test;
 import org.w3c.dom.Document;
-
-import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4jTestCase {
 
@@ -145,6 +145,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 			interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		}
 		interceptor.setValidationCallbackHandler(callbackHandler);
+		
+		interceptor.setBspCompliant(false);
+		
 		interceptor.afterPropertiesSet();
 		return interceptor;
 	}
