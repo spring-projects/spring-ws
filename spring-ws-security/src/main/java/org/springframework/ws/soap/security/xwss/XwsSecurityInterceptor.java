@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security.xwss;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -169,24 +168,6 @@ public class XwsSecurityInterceptor extends AbstractWsSecurityInterceptor implem
 		}
 		catch (WssSoapFaultException ex) {
 			throw new XwsSecurityFaultException(ex.getFaultCode(), ex.getFaultString(), ex.getFaultActor());
-		}
-	}
-
-	private SOAPMessage verifyInboundMessage(ProcessingContext context)
-			throws XWSSecurityException {
-		try {
-			return processor.verifyInboundMessage(context);
-		}
-		catch (XWSSecurityException ex) {
-			Throwable cause = ex.getCause();
-			if (cause instanceof NullPointerException) {
-				StackTraceElement[] stackTrace = cause.getStackTrace();
-				if (stackTrace.length >= 1 &&
-						Hashtable.class.getName().equals(stackTrace[0].getClassName())) {
-					return verifyInboundMessage(context);
-				}
-			}
-			throw ex;
 		}
 	}
 
