@@ -145,7 +145,7 @@ public abstract class QNameUtils {
 
 	/**
 	 * Parse the given qualified name string into a {@code QName}. Expects the syntax {@code localPart},
-	 * {@code{namespace}localPart}, or {@code{namespace}prefix:localPart}. This format resembles the
+	 * {@code {namespace}localPart}, or {@code {namespace}prefix:localPart}. This format resembles the
 	 * {@code toString()} representation of {@code QName} itself, but allows for prefixes to be specified as
 	 * well.
 	 *

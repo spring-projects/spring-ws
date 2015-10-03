@@ -29,6 +29,7 @@ import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * Implementation of the {@link WebServiceConnection} interface that is based on the

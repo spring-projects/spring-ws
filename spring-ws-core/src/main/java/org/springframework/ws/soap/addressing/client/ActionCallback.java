@@ -114,7 +114,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 *
 	 * @param action  the value of the action property
 	 * @param version the WS-Addressing version to use
-	 * @param action  the value of the destination property
+	 * @param to  the value of the destination property
 	 */
 	public ActionCallback(URI action, AddressingVersion version, URI to) {
 		Assert.notNull(action, "'action' must not be null");
@@ -127,7 +127,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the WS-Addressing version
-	 * @return
 	 */
 	public AddressingVersion getVersion() {
 		return version;

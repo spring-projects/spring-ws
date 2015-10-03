@@ -122,7 +122,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends
 
 	/**
 	 * Specify the servlet mapping(s) for the {@code MessageDispatcherServlet}.
-	 * Defaults to {@link #DEFAULT_SERVLET_MAPPING}.
+	 * Defaults to {@link #DEFAULT_SERVLET_MAPPINGS}.
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected String[] getServletMappings() {

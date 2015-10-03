@@ -65,8 +65,10 @@ configure(allprojects) {
 	ext.javadocLinks = [
 		"http://docs.oracle.com/javase/7/docs/api/",
 		"http://docs.oracle.com/javaee/6/api/",
-		"http://jackson.codehaus.org/1.9.12/javadoc/",
-		"http://fasterxml.github.com/jackson-core/javadoc/2.2.2/",
+		"http://docs.spring.io/spring/docs/current/javadoc-api/",
+		"https://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/",
+		"http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/",
+		"http://fasterxml.github.com/jackson-core/javadoc/2.2.0/",
 	] as String[]
 
 }

@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http.support;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
