@@ -18,7 +18,6 @@ package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;

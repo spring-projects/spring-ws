@@ -18,6 +18,8 @@ package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import java.security.Principal;
 import java.util.Iterator;
+import java.util.Map;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.LoginException;
@@ -48,8 +50,8 @@ public class CertificateLoginModule implements LoginModule {
 	@Override
 	public void initialize(Subject subject,
 						   CallbackHandler callbackHandler,
-						   java.util.Map sharedState,
-						   java.util.Map options) {
+						   Map<String,?> sharedState,
+						   Map<String,?> options) {
 		this.subject = subject;
 	}
 
@@ -73,8 +75,8 @@ public class CertificateLoginModule implements LoginModule {
 	}
 
 	private String getName(Subject subject) {
-		for (Iterator iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
-			Principal principal = (Principal) iterator.next();
+		for (Iterator<Principal> iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
+			Principal principal = iterator.next();
 			if (principal instanceof X500Principal) {
 				return principal.getName();
 			}

@@ -45,7 +45,7 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
 			throws JAXBException {
 		ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
-		Class<?> clazz = (Class) parameterizedType.getActualTypeArguments()[0];
+		Class<?> clazz = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 		return unmarshalElementFromRequestPayload(messageContext, clazz);
 	}
 

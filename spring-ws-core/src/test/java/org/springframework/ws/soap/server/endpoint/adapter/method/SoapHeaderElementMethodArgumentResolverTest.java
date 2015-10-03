@@ -127,7 +127,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	public void resolveSoapHeaderMismatchList() throws Exception {
 		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatchList);
 		assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
-		assertTrue("result List must be empty", ((List) result).isEmpty());
+		assertTrue("result List must be empty", ((List<?>) result).isEmpty());
 	}
 
 	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {

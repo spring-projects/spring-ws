@@ -233,7 +233,7 @@ public class AxiomHandlerTest {
 
 	private int getNamespaceCount(OMElement element) {
 		int i = 0;
-		Iterator namespaces = element.getAllDeclaredNamespaces();
+		Iterator<?> namespaces = element.getAllDeclaredNamespaces();
 		while (namespaces.hasNext()) {
 			namespaces.next();
 			i++;

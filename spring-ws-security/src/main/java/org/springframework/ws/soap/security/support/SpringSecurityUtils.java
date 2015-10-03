@@ -38,7 +38,6 @@ public abstract class SpringSecurityUtils {
 	 * @throws DisabledException if the account is disabled
 	 * @throws LockedException if the account is locked
 	 */
-	@SuppressWarnings("deprecation")
 	public static void checkUserValidity(UserDetails user)
 			throws AccountExpiredException, CredentialsExpiredException, DisabledException, LockedException {
 		if (!user.isAccountNonLocked()) {

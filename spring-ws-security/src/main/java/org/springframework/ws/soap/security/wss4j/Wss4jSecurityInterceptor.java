@@ -597,7 +597,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 			throws WsSecurityValidationException {
 		if (logger.isDebugEnabled()) {

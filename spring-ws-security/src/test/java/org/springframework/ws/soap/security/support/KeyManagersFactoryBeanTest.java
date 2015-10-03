@@ -17,10 +17,8 @@
 package org.springframework.ws.soap.security.support;
 
 import javax.net.ssl.KeyManager;
-import javax.net.ssl.TrustManager;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 

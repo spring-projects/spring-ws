@@ -20,6 +20,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -69,8 +71,8 @@ public class PlainTextLoginModule implements LoginModule {
 	@Override
 	public void initialize(Subject subject,
 						   CallbackHandler callbackHandler,
-						   java.util.Map sharedState,
-						   java.util.Map options) {
+						   Map<String,?> sharedState,
+						   Map<String,?> options) {
 		this.subject = subject;
 		this.callbackHandler = callbackHandler;
 	}
@@ -126,9 +128,9 @@ public class PlainTextLoginModule implements LoginModule {
 	public boolean logout() {
 		principals.clear();
 
-		Iterator iterator = subject.getPrincipals(SimplePrincipal.class).iterator();
+		Iterator<SimplePrincipal> iterator = subject.getPrincipals(SimplePrincipal.class).iterator();
 		while (iterator.hasNext()) {
-			SimplePrincipal principal = (SimplePrincipal) iterator.next();
+			SimplePrincipal principal = iterator.next();
 			subject.getPrincipals().remove(principal);
 		}
 

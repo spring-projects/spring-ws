@@ -70,7 +70,6 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	// FaultAwareWebServiceConnection implementation
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void send(WebServiceMessage message) throws IOException {
 		if (!requestMatchers.isEmpty()) {
 			for (RequestMatcher requestMatcher : requestMatchers) {
@@ -84,7 +83,6 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		if (responseCreator != null) {
 			return responseCreator.createResponse(uri, request, messageFactory);

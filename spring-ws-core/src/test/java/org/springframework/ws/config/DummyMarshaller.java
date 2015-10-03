@@ -32,7 +32,7 @@ public class DummyMarshaller implements Marshaller, Unmarshaller {
 	}
 
 	@Override
-	public boolean supports(Class clazz) {
+	public boolean supports(Class<?> clazz) {
 		throw new UnsupportedOperationException();
 	}
 
