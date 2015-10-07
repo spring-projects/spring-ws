@@ -475,6 +475,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
 		this.bspCompliant = bspCompliant;
 	}
+	
+	/**
+	 * Sets whether the RSA 1.5 key transport algorithm is allowed.
+	 */
+	public void setAllowRSA15KeyTransportAlgorithm(boolean allow)
+	{
+		this.allowRSA15KeyTransportAlgorithm = allow;
+	}
 
 	/**
 	 * Sets the time in seconds in the future within which the Created time of an
