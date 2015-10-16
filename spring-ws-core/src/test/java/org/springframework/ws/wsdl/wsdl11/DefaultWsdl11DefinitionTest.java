@@ -79,7 +79,7 @@ public class DefaultWsdl11DefinitionTest {
 	@Test
 	public void testInclude() throws Exception {
 		ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
-		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
 		schemaCollection.afterPropertiesSet();
 		definition.setSchemaCollection(schemaCollection);
@@ -100,7 +100,7 @@ public class DefaultWsdl11DefinitionTest {
 	@Test
 	public void testImport() throws Exception {
 		ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
-		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
 		schemaCollection.afterPropertiesSet();
 		definition.setSchemaCollection(schemaCollection);

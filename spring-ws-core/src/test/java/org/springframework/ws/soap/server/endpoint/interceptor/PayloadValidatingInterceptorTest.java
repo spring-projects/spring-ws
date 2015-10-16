@@ -242,8 +242,8 @@ public class PayloadValidatingInterceptorTest {
 
 	@Test
 	public void testHandlerInvalidRequestMultipleSchemas() throws Exception {
-		interceptor.setSchemas(new Resource[]{new ClassPathResource(PRODUCT_SCHEMA, getClass()),
-				new ClassPathResource(SIZE_SCHEMA, getClass())});
+		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
+				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage(new ClassPathResource(INVALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -253,8 +253,8 @@ public class PayloadValidatingInterceptorTest {
 
 	@Test
 	public void testHandleValidRequestMultipleSchemas() throws Exception {
-		interceptor.setSchemas(new Resource[]{new ClassPathResource(PRODUCT_SCHEMA, getClass()),
-				new ClassPathResource(SIZE_SCHEMA, getClass())});
+		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
+				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage(new ClassPathResource(VALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -266,8 +266,8 @@ public class PayloadValidatingInterceptorTest {
 
 	@Test
 	public void testHandleInvalidResponseMultipleSchemas() throws Exception {
-		interceptor.setSchemas(new Resource[]{new ClassPathResource(PRODUCT_SCHEMA, getClass()),
-				new ClassPathResource(SIZE_SCHEMA, getClass())});
+		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
+				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -279,8 +279,8 @@ public class PayloadValidatingInterceptorTest {
 
 	@Test
 	public void testHandleValidResponseMultipleSchemas() throws Exception {
-		interceptor.setSchemas(new Resource[]{new ClassPathResource(PRODUCT_SCHEMA, getClass()),
-				new ClassPathResource(SIZE_SCHEMA, getClass())});
+		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
+				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());

@@ -59,7 +59,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testSingle() throws Exception {
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{resource});
+		collection.setXsds(resource);
 		collection.afterPropertiesSet();
 		Assert.assertEquals("Invalid amount of XSDs loaded", 1, collection.getXsdSchemas().length);
 	}
@@ -67,7 +67,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testInlineComplex() throws Exception {
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{a});
+		collection.setXsds(a);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 		XsdSchema[] schemas = collection.getXsdSchemas();
@@ -91,7 +91,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testCircular() throws Exception {
 		Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{resource});
+		collection.setXsds(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 		XsdSchema[] schemas = collection.getXsdSchemas();
@@ -101,7 +101,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testXmlNamespace() throws Exception {
 		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{resource});
+		collection.setXsds(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 		XsdSchema[] schemas = collection.getXsdSchemas();
@@ -111,7 +111,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testCreateValidator() throws Exception {
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{a});
+		collection.setXsds(a);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 
@@ -122,7 +122,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testInvalidSchema() throws Exception {
 		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTestCase.class);
-		collection.setXsds(new Resource[]{invalid});
+		collection.setXsds(invalid);
 		try {
 			collection.afterPropertiesSet();
 			Assert.fail("CommonsXsdSchemaException expected");
@@ -135,7 +135,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testIncludesAndImports() throws Exception {
 		Resource hr = new ClassPathResource("hr.xsd", getClass());
-		collection.setXsds(new Resource[]{hr});
+		collection.setXsds(hr);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 

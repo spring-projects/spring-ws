@@ -87,7 +87,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 	 *
 	 * @param resources the schema resources to load
 	 */
-	public CommonsXsdSchemaCollection(Resource[] resources) {
+	public CommonsXsdSchemaCollection(Resource... resources) {
 		this.xsdResources = resources;
 	}
 
@@ -96,7 +96,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 	 *
 	 * @param xsdResources the schema resources to be loaded
 	 */
-	public void setXsds(Resource[] xsdResources) {
+	public void setXsds(Resource... xsdResources) {
 		this.xsdResources = xsdResources;
 	}
 
