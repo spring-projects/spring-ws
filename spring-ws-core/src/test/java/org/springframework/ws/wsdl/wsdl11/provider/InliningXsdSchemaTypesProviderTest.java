@@ -76,7 +76,7 @@ public class InliningXsdSchemaTypesProviderTest {
 		definition.addNamespace("schema", schemaNamespace);
 
 		Resource resource = new ClassPathResource("A.xsd", getClass());
-		CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection(new Resource[]{resource});
+		CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 

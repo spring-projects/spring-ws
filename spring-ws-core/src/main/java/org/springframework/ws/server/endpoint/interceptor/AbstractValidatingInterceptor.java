@@ -93,7 +93,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * #setSchemas(Resource[]) schemas} is required.
 	 */
 	public void setSchema(Resource schema) {
-		setSchemas(new Resource[]{schema});
+		setSchemas(schema);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
 	 * #setSchemas(Resource[]) schemas} is required.
 	 */
-	public void setSchemas(Resource[] schemas) {
+	public void setSchemas(Resource... schemas) {
 		Assert.notEmpty(schemas, "schemas must not be empty or null");
 		for (Resource schema : schemas) {
 			Assert.notNull(schema, "schema must not be null");
