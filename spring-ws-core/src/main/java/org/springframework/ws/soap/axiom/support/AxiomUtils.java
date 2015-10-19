@@ -115,7 +115,7 @@ public abstract class AxiomUtils {
 	 * @param envelope the SOAP envelope to be converted
 	 * @return the converted document
 	 * @throws IllegalArgumentException in case of errors
-	 * @see org.apache.rampart.util.Axis2Util.getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
+	 * @see org.apache.rampart.util.Axis2Util#getDocumentFromSOAPEnvelope(SOAPEnvelope, boolean)
 	 */
 	public static Document toDocument(SOAPEnvelope envelope) {
 		try {
@@ -144,7 +144,7 @@ public abstract class AxiomUtils {
 	 * @param document the document to be converted
 	 * @return the converted envelope
 	 * @throws IllegalArgumentException in case of errors
-	 * @see org.apache.rampart.util.Axis2Util.getSOAPEnvelopeFromDOMDocument(Document, boolean)
+	 * @see org.apache.rampart.util.Axis2Util#getSOAPEnvelopeFromDOMDocument(Document, boolean)
 	 */
 	public static SOAPEnvelope toEnvelope(Document document) {
 		try {

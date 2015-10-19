@@ -37,13 +37,11 @@ import org.springframework.xml.namespace.QNameUtils;
  * method parameters must be annotated with {@link SoapHeader} to indicate the SOAP header to resolve. This resolver
  * supports simple {@link SoapHeaderElement} parameters and {@link List} parameters for elements that appear multiple
  * times in the same SOAP header. </p> The following snippet shows an example of supported declarations.
- * <pre>
- * {@code
+ * <pre><code>
  * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
  *
- * <p>public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement>
- * elements)
- * </pre>
+ * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
+ * </code></pre>
  *
  * @author Tareq Abedrabbo
  * @author Arjen Poutsma

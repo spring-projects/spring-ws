@@ -65,17 +65,28 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  *
  * <p>Valid <strong>validation</strong> actions are:
  *
- * <blockquote><table> <tr><th>Validation action</th><th>Description</th></tr> <tr><td>{@code UsernameToken}</td><td>Validates
- * username token</td></tr> <tr><td>{@code Timestamp}</td><td>Validates the timestamp</td></tr>
- * <tr><td>{@code Encrypt}</td><td>Decrypts the message</td></tr> <tr><td>{@code Signature}</td><td>Validates
- * the signature</td></tr> <tr><td>{@code NoSecurity}</td><td>No action performed</td></tr> </table></blockquote>
+ * <blockquote>
+ * <table>
+ * <tr><th>Validation action</th><th>Description</th></tr>
+ * <tr><td>{@code UsernameToken}</td><td>Validates username token</td></tr>
+ * <tr><td>{@code Timestamp}</td><td>Validates the timestamp</td></tr>
+ * <tr><td>{@code Encrypt}</td><td>Decrypts the message</td></tr>
+ * <tr><td>{@code Signature}</td><td>Validates the signature</td></tr>
+ * <tr><td>{@code NoSecurity}</td><td>No action performed</td></tr>
+ * </table></blockquote>
  * <p>
- * <strong>Securement</strong> actions are: <blockquote><table> <tr><th>Securement action</th><th>Description</th></tr>
- * <tr><td>{@code UsernameToken</td>}<td>Adds a username token</td></tr> <tr><td>{@code UsernameTokenSignature</td>}<td>Adds
- * a username token and a signature username token secret key</td></tr> <tr><td>{@code Timestamp</td>}<td>Adds a
- * timestamp</td></tr> <tr><td>{@code Encrypt</td>}<td>Encrypts the response</td></tr>
- * <tr><td>{@code Signature</td>}<td>Signs the response</td></tr> <tr><td>{@code NoSecurity</td>}<td>No action
- * performed</td></tr> </table></blockquote>
+ * <strong>Securement</strong> actions are:
+ * 
+ * <blockquote>
+ * <table>
+ * <tr><th>Securement action</th><th>Description</th></tr>
+ * <tr><td>{@code UsernameToken}</td><td>Adds a username token</td></tr>
+ * <tr><td>{@code UsernameTokenSignature}</td><td>Adds a username token and a signature username token secret key</td></tr>
+ * <tr><td>{@code Timestamp}</td><td>Adds a timestamp</td></tr>
+ * <tr><td>{@code Encrypt}</td><td>Encrypts the response</td></tr>
+ * <tr><td>{@code Signature}</td><td>Signs the response</td></tr>
+ * <tr><td>{@code NoSecurity}</td><td>No action performed</td></tr>
+ * </table></blockquote>
  *
  * <p>The order of the actions that the client performed to secure the messages is significant and is enforced by the
  * interceptor.
@@ -194,11 +205,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * Property to define which parts of the request shall be encrypted.
 	 *
-	 * <p>The value of this property is a list of semi-colon separated element names that identify the elements to encrypt.
+	 * <p>The value of this property is a list of semicolon separated element names that identify the elements to encrypt.
 	 * An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede
 	 * each element name.
 	 *
-	 * <p>The encryption mode specifier is either {@code{Content}} or {@code{Element}}. Please refer to the W3C
+	 * <p>The encryption mode specifier is either {@code {Content}} or {@code {Element}}. Please refer to the W3C
 	 * XML Encryption specification about the differences between Element and Content encryption. The encryption mode
 	 * defaults to {@code Content} if it is omitted. Example of a list:
 	 * <pre>
@@ -323,7 +334,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * sensitive string)
 	 *
 	 * <p>If there is no other element in the request with a local name of {@code Body} then the SOAP namespace
-	 * identifier can be empty ({@code{}}).
+	 * identifier can be empty ({@code {}}).
 	 */
 	public void setSecurementSignatureParts(String securementSignatureParts) {
 		handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);

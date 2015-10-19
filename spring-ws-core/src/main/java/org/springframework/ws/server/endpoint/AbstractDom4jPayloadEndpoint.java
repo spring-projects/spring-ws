@@ -73,9 +73,9 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 	 * Returns the payload element of the given source.
 	 *
 	 * <p>Default implementation checks whether the source is a {@link javax.xml.transform.dom.DOMSource}, and uses a
-	 * {@link org.jdom.input.DOMBuilder} to create a JDOM {@link org.jdom.Element}. In all other cases, or when
+	 * {@link org.dom4j.io.DOMReader} to create a JDOM {@link org.dom4j.Element}. In all other cases, or when
 	 * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the source is transformed into a
-	 * {@link org.jdom.transform.JDOMResult}, which is more expensive. If the passed source is {@code null}, {@code
+	 * {@link org.dom4j.io.DocumentResult}, which is more expensive. If the passed source is {@code null}, {@code
 	 * null} is returned.
 	 *
 	 * @param source the source to return the root element of; can be {@code null}
