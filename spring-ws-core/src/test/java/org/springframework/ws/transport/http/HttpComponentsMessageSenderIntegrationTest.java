@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import static org.hamcrest.core.IsEqual.*;
 import static org.springframework.test.util.MatcherAssertionErrors.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URI;
@@ -61,7 +62,7 @@ public class HttpComponentsMessageSenderIntegrationTest extends AbstractHttpWebS
 		HttpRoute route1 = new HttpRoute(host1, null, true);
 		assertThat(route1.isSecure(), equalTo(true));
 		assertThat(route1.getTargetHost().getHostName(), equalTo("www.example.com"));
-		assertThat(route1.getTargetHost().getPort(), equalTo(-1));
+		assertTrue((route1.getTargetHost().getPort() == -1) || (route1.getTargetHost().getPort() == 443));
 
 		final String url2 = "http://www.example.com:8080";
 		URI uri2 = new URI(url2);
@@ -77,7 +78,7 @@ public class HttpComponentsMessageSenderIntegrationTest extends AbstractHttpWebS
 		HttpRoute route3 = new HttpRoute(host3);
 		assertThat(route3.isSecure(), equalTo(false));
 		assertThat(route3.getTargetHost().getHostName(), equalTo("www.springframework.org"));
-		assertThat(route3.getTargetHost().getPort(), equalTo(-1));
+		assertTrue((route3.getTargetHost().getPort() ==  -1) || (route3.getTargetHost().getPort() == 80));
 
 		HttpComponentsMessageSender messageSender = new HttpComponentsMessageSender();
 		messageSender.setMaxTotalConnections(2);
