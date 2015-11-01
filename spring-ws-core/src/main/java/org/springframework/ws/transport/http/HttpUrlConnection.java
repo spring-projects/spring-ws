@@ -22,10 +22,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.util.Assert;
@@ -102,7 +103,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		List<String> headerNames = new ArrayList<String>();
+		Set<String> headerNames = new HashSet<String>();
 		// Header field 0 is the status line, so we start at 1
 		int i = 1;
 		while (true) {
@@ -118,13 +119,12 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		String headerField = connection.getHeaderField(name);
-		if (headerField == null) {
-			return Collections.<String>emptyList().iterator();
-		}
-		else {
-			Set<String> tokens = StringUtils.commaDelimitedListToSet(headerField);
-			return tokens.iterator();
+		Map<String, List<String>> mapHeader = connection.getHeaderFields();
+		List<String> listHeaderValues = mapHeader.get(name);
+		if (listHeaderValues == null) {
+		    return Collections.<String>emptyList().iterator();
+		} else {
+		    return listHeaderValues.iterator();
 		}
 	}
 
