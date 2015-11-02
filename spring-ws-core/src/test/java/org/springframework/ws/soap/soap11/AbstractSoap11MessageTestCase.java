@@ -24,8 +24,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Assert;
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,6 +36,11 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.xml.transform.StringSource;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -64,7 +67,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		soapMessage.writeTo(tos);
 		String result = bos.toString("UTF-8");
 		assertXMLEqual(
-				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				"<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>" + getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS() + ":Body></" + getNS() + ":Envelope>",
 				result);
 		String contentType = tos.getHeaders().get("Content-Type");
 		assertTrue("Invalid Content-Type set", contentType.indexOf(SoapVersion.SOAP_11.getContentType()) != -1);
@@ -99,6 +102,12 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		Document expected = documentBuilder.newDocument();
 		Element envelope = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Envelope");
 		expected.appendChild(envelope);
+
+		if (!getHeader().isEmpty()) {
+			Element header = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Header");
+			envelope.appendChild(header);
+		}
+
 		Element body = expected.createElementNS("http://schemas.xmlsoap.org/soap/envelope/", "Body");
 		envelope.appendChild(body);
 		Element payload = expected.createElementNS("http://www.springframework.org", "payload");
@@ -123,7 +132,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 
 		String result = bos.toString("UTF-8");
 		assertXMLEqual(
-				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				"<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>" + getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS() + ":Body></" + getNS() + ":Envelope>",
 				result);
 	}
 
@@ -148,7 +157,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 
 		String result = bos.toString("UTF-8");
 		assertXMLEqual(
-				"<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Body><payload xmlns='http://www.springframework.org' /></Body></Envelope>",
+				"<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>" + getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS() + ":Body></" + getNS() + ":Envelope>",
 				result);
 	}
 

@@ -24,6 +24,11 @@ import org.springframework.ws.soap.soap12.AbstractSoap12MessageTestCase;
 public class AxiomSoap12MessageTest extends AbstractSoap12MessageTestCase {
 
 	@Override
+	protected String getNS() {
+		return "soapenv";
+	}
+
+	@Override
 	protected SoapMessage createSoapMessage() throws Exception {
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP12Factory();
 		return new AxiomSoapMessage(axiomFactory);

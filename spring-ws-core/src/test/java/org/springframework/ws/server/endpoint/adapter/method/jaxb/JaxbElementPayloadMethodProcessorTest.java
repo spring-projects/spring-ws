@@ -25,8 +25,6 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +39,11 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class JaxbElementPayloadMethodProcessorTest {
 
@@ -141,7 +144,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Body>" +
+		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
 				"<type xmlns='http://springframework.org'><string>Foo</string></type>" +
 				"</soapenv:Body></soapenv:Envelope>", messageResult);
 

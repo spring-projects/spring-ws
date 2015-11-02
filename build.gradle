@@ -14,7 +14,7 @@ configure(allprojects) {
 
 	ext.springVersion = "4.0.9.RELEASE"
 	ext.springSecurityVersion = "3.2.7.RELEASE"
-	ext.axiomVersion = "1.2.14"
+	ext.axiomVersion = "1.2.15"
 
 	apply plugin: "java"
 
@@ -59,6 +59,7 @@ configure(allprojects) {
 		testCompile("junit:junit:4.10")
 		testCompile("org.easymock:easymock:3.1")
 		testCompile("xmlunit:xmlunit:1.5")
+		testCompile("com.sun.mail:javax.mail:1.5.4")
 		testRuntime("org.codehaus.woodstox:woodstox-core-asl:4.2.0")
 	}
 

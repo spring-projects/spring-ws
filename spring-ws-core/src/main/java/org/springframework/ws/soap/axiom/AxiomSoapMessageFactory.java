@@ -271,7 +271,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
 		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
 		StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		SOAPMessage soapMessage = builder.getSoapMessage();
+		SOAPMessage soapMessage = builder.getSOAPMessage();
 		return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
@@ -297,7 +297,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 			throw new AxiomSoapMessageCreationException(
 					"Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
 		}
-		return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching,
+		return new AxiomSoapMessage(builder.getSOAPMessage(), attachments, soapAction, payloadCaching,
 				langAttributeOnSoap11FaultString);
 	}
 

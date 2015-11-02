@@ -24,6 +24,9 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.junit.Test;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.AbstractMimeMessageTestCase;
@@ -36,13 +39,18 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
-import org.junit.Test;
-import org.xml.sax.SAXParseException;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
+
+	protected abstract String getNS();
+
+	protected String getHeader() {
+		return "<" + getNS() + ":Header/>";
+	}
 
 	protected SoapMessage soapMessage;
 

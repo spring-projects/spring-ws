@@ -33,6 +33,16 @@ import static org.junit.Assert.assertTrue;
 
 public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
 
+	@Override
+	protected String getNS() {
+		return "env";
+	}
+
+	@Override
+	protected String getHeader() {
+		return "";
+	}
+
 	private SOAPMessage saajMessage;
 
 	@Override

@@ -27,7 +27,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +53,8 @@ import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -302,7 +303,7 @@ public class PayloadValidatingInterceptorTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		messageContext.getResponse().writeTo(os);
 		assertXMLEqual(
-				"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Body>" +
+				"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>" + "<soapenv:Body>" +
 						"<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
 						"<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>" +
 						"<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +

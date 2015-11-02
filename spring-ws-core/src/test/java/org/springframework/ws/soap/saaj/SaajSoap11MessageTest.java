@@ -25,20 +25,30 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.junit.Test;
+
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
 
 	private SOAPMessage saajMessage;
+
+	@Override
+	protected String getNS() {
+		return "SOAP-ENV";
+	}
+
+	@Override
+	protected String getHeader() {
+		return "";
+	}
 
 	@Override
 	protected final SoapMessage createSoapMessage() throws Exception {
