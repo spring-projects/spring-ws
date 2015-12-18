@@ -265,16 +265,18 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		return contentType.contains(MULTI_PART_RELATED_CONTENT_TYPE);
 	}
 
+	@SuppressWarnings("deprecation")
 	/** Creates an AxiomSoapMessage without attachments. */
 	private AxiomSoapMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
 			throws XMLStreamException {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
 		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
 		StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		SOAPMessage soapMessage = builder.getSOAPMessage();
+		SOAPMessage soapMessage = builder.getSoapMessage();
 		return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
+	@SuppressWarnings("deprecation")
 	/** Creates an AxiomSoapMessage with attachments. */
 	private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
 															 String contentType,
@@ -297,7 +299,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 			throw new AxiomSoapMessageCreationException(
 					"Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
 		}
-		return new AxiomSoapMessage(builder.getSOAPMessage(), attachments, soapAction, payloadCaching,
+		return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching,
 				langAttributeOnSoap11FaultString);
 	}
 
