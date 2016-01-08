@@ -19,9 +19,11 @@ package org.springframework.ws.soap.security.wss4j.support;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.apache.wss4j.common.crypto.Crypto;
-import org.apache.wss4j.common.crypto.CryptoFactory;
-import org.apache.wss4j.common.crypto.Merlin;
+import org.apache.ws.security.components.crypto.Crypto;
+import org.apache.ws.security.components.crypto.CryptoFactory;
+import org.apache.ws.security.components.crypto.Merlin;
+
+import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ClassPathResource;
@@ -40,13 +42,15 @@ import org.springframework.util.Assert;
  * @see org.apache.ws.security.components.crypto.Crypto
  * @since 1.5.0
  */
-public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean {
+public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAware, InitializingBean {
 
 	private Properties configuration = new Properties();
 
+	private ClassLoader classLoader;
+
 	private Crypto crypto;
 
-	private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.wss4j.crypto.provider";
+	private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.ws.security.crypto.provider";
 
 	/**
 	 * Sets the configuration of the Crypto. Setting this property overrides all previously set configuration, through
@@ -160,11 +164,16 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 	}
 
 	@Override
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
+
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
 			configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
 		}
-		this.crypto = CryptoFactory.getInstance(configuration);
+		this.crypto = CryptoFactory.getInstance(configuration, classLoader);
 	}
 
 	@Override

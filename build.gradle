@@ -247,6 +247,8 @@ project('spring-ws-security') {
 		optional("com.sun.xml.wss:xws-security:3.0") {
 			exclude group: 'javax.xml.crypto', module: 'xmldsig'
 		}
+		
+		compile("org.apache.ws.security:wss4j:1.6.19")
 		compile("org.apache.wss4j:wss4j-ws-security-dom:2.0.5")
 
 		// SOAP

@@ -17,11 +17,11 @@
 package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.io.IOException;
-
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.apache.wss4j.common.ext.WSPasswordCallback;
-import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
+import org.apache.ws.security.WSPasswordCallback;
+import org.apache.ws.security.WSUsernameTokenPrincipal;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
@@ -64,26 +65,22 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(userDetailsService, "userDetailsService is required");
 	}
-	
 
-
-	/**
-	 * Invoked when the callback has a {@link WSPasswordCallback#USERNAME_TOKEN} usage.
-	 *
-	 * <p>This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
-	 *
-	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
-	 */
+	@Override
 	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		UserDetails details = loadUserDetails(callback.getIdentifier());
-		callback.setPassword(details.getPassword());
+		String identifier = callback.getIdentifier();
+		UserDetails user = loadUserDetails(identifier);
+		if (user != null) {
+			SpringSecurityUtils.checkUserValidity(user);
+			callback.setPassword(user.getPassword());
+		}
 	}
 
 	@Override
 	protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
 			throws IOException, UnsupportedCallbackException {
 		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
-		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
+		WSUsernameTokenPrincipal principal = callback.getPrincipal();
 		UsernamePasswordAuthenticationToken authRequest =
 				new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), user.getAuthorities());
 		if (logger.isDebugEnabled()) {

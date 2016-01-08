@@ -18,11 +18,13 @@ package org.springframework.ws.soap.security.wss4j.support;
 
 import java.util.Properties;
 
-import org.apache.wss4j.common.crypto.Merlin;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.ClassUtils;
+
+import org.apache.ws.security.components.crypto.Merlin;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
 
 public class CryptoFactoryBeanTest {
 
@@ -43,6 +45,7 @@ public class CryptoFactoryBeanTest {
 		configuration.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 
 		factoryBean.setConfiguration(configuration);
+		factoryBean.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
 		factoryBean.afterPropertiesSet();
 
 		Object result = factoryBean.getObject();
@@ -55,6 +58,7 @@ public class CryptoFactoryBeanTest {
 		factoryBean.setKeyStoreType("jceks");
 		factoryBean.setKeyStorePassword("123456");
 		factoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
+		factoryBean.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
 		factoryBean.afterPropertiesSet();
 		Object result = factoryBean.getObject();
 		Assert.assertNotNull("No result", result);

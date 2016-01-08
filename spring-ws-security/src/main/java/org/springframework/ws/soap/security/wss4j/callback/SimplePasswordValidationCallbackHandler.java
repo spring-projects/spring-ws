@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.apache.wss4j.common.ext.WSPasswordCallback;
+import org.apache.ws.security.WSPasswordCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {
 
-	private Map<String, String> users = new HashMap<String, String>();
+	private Map<String, String > users = new HashMap<String, String>();
 
 	/** Sets the users to validate against. Property names are usernames, property values are passwords. */
 	public void setUsers(Properties users) {
@@ -58,12 +58,11 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(users, "users is required");
 	}
-	
+
 	@Override
-	public void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException
-	{
-		String username = callback.getIdentifier();
-		String passwd = users.get(username);
-		callback.setPassword(passwd);
+	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		String identifier = callback.getIdentifier();
+		callback.setPassword(users.get(identifier));
 	}
+
 }

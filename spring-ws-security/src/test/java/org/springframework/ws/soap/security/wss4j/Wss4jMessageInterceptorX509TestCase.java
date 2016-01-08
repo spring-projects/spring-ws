@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j;
 
-import org.apache.wss4j.common.crypto.Merlin;
+import org.apache.ws.security.components.crypto.Merlin;
 import org.junit.Test;
 import org.w3c.dom.Document;
 

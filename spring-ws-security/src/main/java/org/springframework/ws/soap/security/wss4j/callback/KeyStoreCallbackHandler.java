@@ -17,15 +17,14 @@
 package org.springframework.ws.soap.security.wss4j.callback;
 
 import java.io.IOException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.GeneralSecurityException;
 import java.security.Key;
-
+import java.security.KeyStore;
+import javax.crypto.SecretKey;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
-import org.apache.wss4j.common.ext.WSPasswordCallback;
+import org.apache.ws.security.WSPasswordCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
@@ -45,42 +44,6 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 	private char[] symmetricKeyPassword;
 
 	private KeyStore keyStore;
-	
-	/**
-	 * Invoked when the callback has a {@link WSPasswordCallback#DECRYPT} usage.
-	 *
-	 * <p>This method is invoked when WSS4J needs a password to get the private key of the {@link
-	 * WSPasswordCallback#getIdentifier() identifier} (username) from the keystore. WSS4J uses this private key to
-	 * decrypt the session (symmetric) key. Because the encryption method uses the public key to encrypt the session key
-	 * it needs no password (a public key is usually not protected by a password).
-	 *
-	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
-	 */
-	protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		callback.setPassword(privateKeyPassword);
-	}
-	
-	/**
-	 * Invoked when the callback has a {@link WSPasswordCallback#SECRET_KEY} usage.
-	 *
-	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
-	 */
-	protected void handleSecretKey(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		String id = callback.getIdentifier();
-		Key key;
-		
-		try {
-			key = keyStore.getKey(id, symmetricKeyPassword != null ? symmetricKeyPassword : privateKeyPassword.toCharArray());
-		} catch (UnrecoverableKeyException e) {
-			throw new IOException("Could not get key", e);
-		} catch (KeyStoreException e) {
-			throw new IOException("Could not get key", e);
-		} catch (NoSuchAlgorithmException e) {
-			throw new IOException("Could not get key", e);
-		}
-		 
-		callback.setKey(key.getEncoded());
-	}
 
 	/** Sets the key store to use if a symmetric key name is embedded. */
 	public void setKeyStore(KeyStore keyStore) {
@@ -116,6 +79,29 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 		}
 		if (symmetricKeyPassword == null) {
 			symmetricKeyPassword = privateKeyPassword.toCharArray();
+		}
+	}
+
+	@Override
+	protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		callback.setPassword(privateKeyPassword);
+	}
+
+
+	@Override
+	protected void handleSecretKey(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+		try {
+			String identifier = callback.getIdentifier();
+			Key key = keyStore.getKey(identifier, symmetricKeyPassword);
+			if (key instanceof SecretKey) {
+				callback.setKey(key.getEncoded());
+			}
+			else {
+				logger.error("Key [" + key + "] is not a javax.crypto.SecretKey");
+			}
+		}
+		catch (GeneralSecurityException ex) {
+			logger.error("Could not obtain symmetric key", ex);
 		}
 	}
 

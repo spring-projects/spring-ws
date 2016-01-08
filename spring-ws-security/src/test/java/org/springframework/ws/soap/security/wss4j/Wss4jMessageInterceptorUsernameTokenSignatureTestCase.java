@@ -27,7 +27,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTestCase exte
 	@Test
 	public void testAddUsernameTokenSignature() throws Exception {
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setSecurementActions("UsernameToken");
+		interceptor.setSecurementActions("UsernameTokenSignature");
 		interceptor.setSecurementUsername("Bert");
 		interceptor.setSecurementPassword("Ernie");
 		interceptor.afterPropertiesSet();

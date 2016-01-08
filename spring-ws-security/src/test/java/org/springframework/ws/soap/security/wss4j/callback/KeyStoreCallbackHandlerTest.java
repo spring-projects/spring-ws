@@ -20,7 +20,8 @@ import java.security.KeyStore;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
-import org.apache.wss4j.common.ext.WSPasswordCallback;
+
+import org.apache.ws.security.WSPasswordCallback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
