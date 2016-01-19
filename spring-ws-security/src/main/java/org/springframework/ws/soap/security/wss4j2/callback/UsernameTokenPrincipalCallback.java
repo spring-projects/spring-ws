@@ -27,7 +27,7 @@ import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
  * {@code WSUsernameTokenPrincipal}.
  *
  * @author Arjen Poutsma
- * @see WSUsernameTokenPrincipal
+ * @see WSUsernameTokenPrincipalImpl
  * @since 1.5.0
  */
 public class UsernameTokenPrincipalCallback implements Callback, Serializable {
