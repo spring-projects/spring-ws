@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 
@@ -140,6 +141,10 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		connection.sendPacket(responseMessage);
+		try {
+			connection.sendStanza(responseMessage);
+		} catch (SmackException.NotConnectedException e) {
+			throw new IOException(e);
+		}
 	}
 }

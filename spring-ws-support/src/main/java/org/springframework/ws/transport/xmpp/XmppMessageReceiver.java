@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,17 @@
 
 package org.springframework.ws.transport.xmpp;
 
-import org.jivesoftware.smack.PacketListener;
+import java.io.IOException;
+
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
@@ -34,6 +38,7 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean
  * @since 2.0
  */
@@ -42,7 +47,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	/** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
 	public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
 
-	private XMPPConnection connection;
+	private XMPPTCPConnection connection;
 
 	private WebServicePacketListener packetListener;
 
@@ -52,12 +57,12 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	}
 
 	/** Sets the {@code XMPPConnection} to use. Setting this property is required. */
-	public void setConnection(XMPPConnection connection) {
+	public void setConnection(XMPPTCPConnection connection) {
 		this.connection = connection;
 	}
 
 	@Override
-	protected void onActivate() throws XMPPException {
+	protected void onActivate() throws XMPPException, IOException, SmackException {
 		if (!connection.isConnected()) {
 			connection.connect();
 		}
@@ -69,8 +74,8 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 			logger.info("Starting XMPP receiver [" + connection.getUser() + "]");
 		}
 		packetListener = new WebServicePacketListener();
-		PacketFilter packetFilter = new PacketTypeFilter(Message.class);
-		connection.addPacketListener(packetListener, packetFilter);
+		StanzaFilter packetFilter = new StanzaTypeFilter(Message.class);
+		connection.addAsyncStanzaListener(packetListener, packetFilter);
 	}
 
 	@Override
@@ -78,7 +83,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		if (logger.isInfoEnabled()) {
 			logger.info("Stopping XMPP receiver [" + connection.getUser() + "]");
 		}
-		connection.removePacketListener(packetListener);
+		connection.removeAsyncStanzaListener(packetListener);
 		packetListener = null;
 	}
 
@@ -92,10 +97,10 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		}
 	}
 
-	private class WebServicePacketListener implements PacketListener {
+	private class WebServicePacketListener implements StanzaListener {
 
 		@Override
-		public void processPacket(Packet packet) {
+		public void processPacket(Stanza packet) {
 			logger.info("Received " + packet);
 			if (packet instanceof Message) {
 				Message message = (Message) packet;

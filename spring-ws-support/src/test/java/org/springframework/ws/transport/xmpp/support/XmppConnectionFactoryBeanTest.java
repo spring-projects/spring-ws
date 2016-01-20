@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
+import java.io.IOException;
+
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,12 +33,12 @@ public class XmppConnectionFactoryBeanTest {
 		factoryBean = new XmppConnectionFactoryBean();
 	}
 	@Test(expected = IllegalArgumentException.class)
-	public void noHost() throws XMPPException {
+	public void noHost() throws XMPPException, IOException, SmackException {
 		factoryBean.afterPropertiesSet();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void noUsername() throws XMPPException {
+	public void noUsername() throws XMPPException, IOException, SmackException {
 		factoryBean.setHost("jabber.org");
 		factoryBean.afterPropertiesSet();
 	}

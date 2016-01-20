@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
+import java.io.IOException;
+
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
@@ -33,11 +36,11 @@ import org.springframework.util.StringUtils;
  * @author Arjen Poutsma
  * @since 2.0
  */
-public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, InitializingBean, DisposableBean {
+public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>, InitializingBean, DisposableBean {
 
 	private static final int DEFAULT_PORT = 5222;
 
-	private XMPPConnection connection;
+	private XMPPTCPConnection connection;
 
 	private String host;
 
@@ -84,13 +87,13 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
 	}
 
 	@Override
-	public void afterPropertiesSet() throws XMPPException {
-		ConnectionConfiguration configuration = createConnectionConfiguration(host, port, serviceName);
+	public void afterPropertiesSet() throws XMPPException, IOException, SmackException {
+		XMPPTCPConnectionConfiguration configuration = createConnectionConfiguration(host, port, serviceName);
 		Assert.notNull(configuration, "'configuration' must not be null");
 		Assert.hasText(username, "'username' must not be empty");
 		Assert.hasText(password, "'password' must not be empty");
 
-		connection = new XMPPConnection(configuration);
+		connection = new XMPPTCPConnection(configuration);
 		connection.connect();
 		if (StringUtils.hasText(resource)) {
 			connection.login(username, password, resource);
@@ -106,13 +109,13 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
 	}
 
 	@Override
-	public XMPPConnection getObject() {
+	public XMPPTCPConnection getObject() {
 		return connection;
 	}
 
 	@Override
-	public Class<XMPPConnection> getObjectType() {
-		return XMPPConnection.class;
+	public Class<XMPPTCPConnection> getObjectType() {
+		return XMPPTCPConnection.class;
 	}
 
 	@Override
@@ -127,13 +130,20 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPConnection>, I
 	 * @param port		  the port to connect to
 	 * @param serviceName the name of the service to connect to. May be {@code null}
 	 */
-	protected ConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName) {
+	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName) {
 		Assert.hasText(host, "'host' must not be empty");
 		if (StringUtils.hasText(serviceName)) {
-			return new ConnectionConfiguration(host, port, serviceName);
+			return XMPPTCPConnectionConfiguration.builder()
+					.setHost(host)
+					.setPort(port)
+					.setServiceName(serviceName)
+					.build();
 		}
 		else {
-			return new ConnectionConfiguration(host, port);
+			return XMPPTCPConnectionConfiguration.builder()
+					.setHost(host)
+					.setPort(port)
+					.build();
 		}
 	}
 

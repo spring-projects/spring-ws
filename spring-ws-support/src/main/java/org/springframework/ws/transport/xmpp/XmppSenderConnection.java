@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,13 +24,14 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 
 import org.jivesoftware.smack.PacketCollector;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
-import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.filter.StanzaFilter;
+import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.Stanza;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -129,7 +130,11 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		requestMessage.setFrom(connection.getUser());
-		connection.sendPacket(requestMessage);
+		try {
+			connection.sendStanza(requestMessage);
+		} catch (SmackException.NotConnectedException e) {
+			throw new IOException(e);
+		}
 	}
 
 	/*
@@ -138,10 +143,10 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	protected void onReceiveBeforeRead() throws IOException {
-		PacketFilter packetFilter = createPacketFilter();
+		StanzaFilter packetFilter = createPacketFilter();
 
 		PacketCollector collector = connection.createPacketCollector(packetFilter);
-		Packet packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
+		Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
 		if (packet instanceof Message) {
 			responseMessage = (Message) packet;
 		}
@@ -151,9 +156,9 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		}
 	}
 
-	private PacketFilter createPacketFilter() {
+	private StanzaFilter createPacketFilter() {
 		AndFilter andFilter = new AndFilter();
-		andFilter.addFilter(new PacketTypeFilter(Message.class));
+		andFilter.addFilter(new StanzaTypeFilter(Message.class));
 		andFilter.addFilter(new ThreadFilter(requestMessage.getThread()));
 		return andFilter;
 	}
