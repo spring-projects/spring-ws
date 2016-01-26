@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  * JAXP 1.3-specific factory creating {@link XPathExpression} objects.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see #createXPathExpression(String)
  * @since 1.0.0
  */
@@ -53,7 +54,7 @@ abstract class Jaxp13XPathExpressionFactory {
 		try {
 			XPath xpath = createXPath();
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
-			return new Jaxp13XPathExpression(xpathExpression);
+			return new Jaxp13XPathExpression(xpathExpression, expression);
 		}
 		catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
@@ -76,7 +77,7 @@ abstract class Jaxp13XPathExpressionFactory {
 			namespaceContext.setBindings(namespaces);
 			xpath.setNamespaceContext(namespaceContext);
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
-			return new Jaxp13XPathExpression(xpathExpression);
+			return new Jaxp13XPathExpression(xpathExpression, expression);
 		}
 		catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
@@ -93,9 +94,16 @@ abstract class Jaxp13XPathExpressionFactory {
 	private static class Jaxp13XPathExpression implements XPathExpression {
 
 		private final javax.xml.xpath.XPathExpression xpathExpression;
+		private final String expression;
 
-		private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression) {
+		private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression, String expression) {
 			this.xpathExpression = xpathExpression;
+			this.expression = expression;
+		}
+
+		@Override
+		public String toString() {
+			return expression;
 		}
 
 		@Override

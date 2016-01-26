@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import org.w3c.dom.Node;
  * Jaxen-specific factory for creating {@code XPathExpression}s.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see #createXPathExpression(String)
  * @since 1.0.0
  */
@@ -46,7 +47,7 @@ abstract class JaxenXPathExpressionFactory {
 	static XPathExpression createXPathExpression(String expression) {
 		try {
 			XPath xpath = new DOMXPath(expression);
-			return new JaxenXpathExpression(xpath);
+			return new JaxenXpathExpression(xpath, expression);
 		}
 		catch (JaxenException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
@@ -66,7 +67,7 @@ abstract class JaxenXPathExpressionFactory {
 		try {
 			XPath xpath = new DOMXPath(expression);
 			xpath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
-			return new JaxenXpathExpression(xpath);
+			return new JaxenXpathExpression(xpath, expression);
 		}
 		catch (JaxenException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
@@ -78,9 +79,16 @@ abstract class JaxenXPathExpressionFactory {
 	private static class JaxenXpathExpression implements XPathExpression {
 
 		private XPath xpath;
+		private final String expression;
 
-		private JaxenXpathExpression(XPath xpath) {
+		private JaxenXpathExpression(XPath xpath, String expression) {
 			this.xpath = xpath;
+			this.expression = expression;
+		}
+
+		@Override
+		public String toString() {
+			return expression;
 		}
 
 		@Override

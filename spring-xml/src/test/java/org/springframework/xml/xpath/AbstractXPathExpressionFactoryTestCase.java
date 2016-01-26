@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.springframework.util.StringUtils;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +31,8 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import org.springframework.util.StringUtils;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
@@ -63,6 +63,12 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 		finally {
 			inputStream.close();
 		}
+	}
+
+	@Test
+	public void testThatToStringReturnsOriginalXpathExpression() {
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
+		Assert.assertEquals("/prefix1:root/prefix2:otherchild", expression.toString());
 	}
 
 	@Test
