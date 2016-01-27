@@ -15,7 +15,7 @@ configure(allprojects) {
 	ext.springVersion = "4.0.9.RELEASE"
 	ext.springSecurityVersion = "3.2.7.RELEASE"
 	ext.axiomVersion = "1.2.15"
-	ext.smackVersion = "4.1.5"
+	ext.smackVersion = "4.1.6"
 
 	apply plugin: "java"
 
