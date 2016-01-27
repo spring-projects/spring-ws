@@ -15,7 +15,7 @@ configure(allprojects) {
 	ext.springVersion = "4.0.9.RELEASE"
 	ext.springSecurityVersion = "3.2.9.RELEASE"
 	ext.axiomVersion = "1.2.15"
-	ext.smackVersion = "4.1.5"
+	ext.smackVersion = "4.1.6"
 
 	apply plugin: "java"
 
@@ -220,7 +220,7 @@ project('spring-ws-support') {
 		provided("javax.mail:javax.mail-api:1.4.7")
 		provided("com.sun.mail:javax.mail:1.4.7")
 		optional("org.igniterealtime.smack:smack-tcp:$smackVersion")
-		optional("org.igniterealtime.smack:smack-resolver-javax:$smackVersion")
+		optional("org.igniterealtime.smack:smack-java7:$smackVersion")
 		optional("org.igniterealtime.smack:smack-extensions:$smackVersion")
 		testCompile("commons-httpclient:commons-httpclient:3.1")
 		testRuntime("org.apache.activemq:activemq-core:4.1.2") {
