@@ -545,7 +545,7 @@
             <para>
                 In this sample application, we are going to use <link xl:href="http://www.jdom.org">JDom 2</link> to handle
                 the XML message.
-                We are also using <link xl:href="http://www.w3schools.com/xpath/">XPath</link>, because it allows us to
+                We are also using <link xl:href="https://www.w3.org/TR/xpath20/">XPath</link>, because it allows us to
                 select particular parts of the XML JDOM tree, without requiring strict schema conformance.
             </para>
             <programlistingco>

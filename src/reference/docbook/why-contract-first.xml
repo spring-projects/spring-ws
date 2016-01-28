@@ -21,8 +21,7 @@
                 WSDL stands for Web Services Description Language. A WSDL file is an XML document that describes a Web 
                 service. It specifies the location of the service and the operations (or methods) the service exposes.
                 For more information about WSDL, refer to the 
-                <link xl:href="http://www.w3.org/TR/wsdl">WSDL specification</link>, or read the
-                <link xl:href="http://www.w3schools.com/wsdl/">WSDL tutorial</link>
+                <link xl:href="http://www.w3.org/TR/wsdl">WSDL specification</link>.
             </para>
         </sidebar>
         <para> 
