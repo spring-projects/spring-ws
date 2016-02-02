@@ -96,8 +96,9 @@ import org.w3c.dom.Element;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J</a>
- * @since 1.5.0
+ * @author Jamin Hitchcock
+ * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
+ * @since 2.3.0
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 

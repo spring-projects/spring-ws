@@ -32,7 +32,8 @@ import org.apache.wss4j.dom.handler.WSHandler;
 /**
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
- * @since 1.5.0
+ * @author Jamin Hitchcock
+ * @since 2.3.0
  */
 class Wss4jHandler extends WSHandler {
 

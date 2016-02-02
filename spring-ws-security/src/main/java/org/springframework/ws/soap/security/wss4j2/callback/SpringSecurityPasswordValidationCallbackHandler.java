@@ -41,7 +41,8 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * password contained in this details object is then compared with the digest in the message.
  *
  * @author Arjen Poutsma
- * @since 2.1
+ * @author Jamin Hitchcock
+ * @since 2.3.0
  */
 public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {

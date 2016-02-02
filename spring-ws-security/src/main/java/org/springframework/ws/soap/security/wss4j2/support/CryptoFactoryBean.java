@@ -37,8 +37,9 @@ import org.springframework.util.Assert;
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
+ * @author Jamin Hitchcock
  * @see org.apache.ws.security.components.crypto.Crypto
- * @since 1.5.0
+ * @since 2.3.0
  */
 public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean {
 

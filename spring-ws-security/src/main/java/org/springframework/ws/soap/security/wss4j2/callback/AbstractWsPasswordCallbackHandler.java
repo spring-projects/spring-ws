@@ -29,7 +29,8 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
  * WSPasswordCallback} callbacks.
  *
  * @author Arjen Poutsma
- * @since 1.5.0
+ * @author Jamin Hitchcock
+ * @since 2.3.0
  */
 public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallbackHandler {
 
