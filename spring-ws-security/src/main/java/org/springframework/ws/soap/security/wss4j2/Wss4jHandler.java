@@ -19,15 +19,16 @@ package org.springframework.ws.soap.security.wss4j2;
 import java.util.List;
 import java.util.Properties;
 
-import org.springframework.ws.context.MessageContext;
-import org.w3c.dom.Document;
 import org.apache.wss4j.common.ConfigurationConstants;
 import org.apache.wss4j.common.crypto.Crypto;
 import org.apache.wss4j.common.ext.WSSecurityException;
-import org.apache.wss4j.dom.WSSecurityEngineResult;
+import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
+import org.w3c.dom.Document;
+
+import org.springframework.ws.context.MessageContext;
 
 /**
  * @author Tareq Abed Rabbo
@@ -37,7 +38,7 @@ import org.apache.wss4j.dom.handler.WSHandler;
  */
 class Wss4jHandler extends WSHandler {
 
-	/** Keys are constants from {@link WSHandlerConstants}; values are strings. */
+	/** Keys are constants from {@link ConfigurationConstants}; values are strings. */
 	private Properties options = new Properties();
 
 	private String securementPassword;
@@ -52,6 +53,7 @@ class Wss4jHandler extends WSHandler {
 		options.setProperty(ConfigurationConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
 	}
 	
+	@Override
 	public void doSenderAction(
             Document doc,
             RequestData reqData, 
