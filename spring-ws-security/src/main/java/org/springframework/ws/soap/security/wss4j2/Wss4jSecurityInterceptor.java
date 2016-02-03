@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.security.auth.callback.Callback;
@@ -31,9 +32,9 @@ import org.apache.wss4j.common.crypto.Crypto;
 import org.apache.wss4j.common.ext.WSSecurityException;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 import org.apache.wss4j.dom.WSConstants;
-import org.apache.wss4j.dom.WSSConfig;
-import org.apache.wss4j.dom.WSSecurityEngine;
-import org.apache.wss4j.dom.WSSecurityEngineResult;
+import org.apache.wss4j.dom.engine.WSSConfig;
+import org.apache.wss4j.dom.engine.WSSecurityEngine;
+import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
@@ -520,8 +521,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// securement actions are not to be validated at start up as they could
 		// be configured dynamically via the message context
 
-		// allow for qualified password types for .Net interoperability
-		securityEngine.getWssConfig().setAllowNamespaceQualifiedPasswordTypes(true);
 	}
 
 	@Override
@@ -574,14 +573,17 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			requestData.setUsername(securementUsername);
 		}
 
-		requestData.setTimeToLive(securementTimeToLive);
+		requestData.setTimeStampTTL(securementTimeToLive);
 
 		requestData.setUseDerivedKeyForMAC(securementUseDerivedKey);
 		
 		requestData.setWssConfig(wssConfig);
 
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
-				
+
+		// allow for qualified password types for .Net interoperability
+		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
+
 		return requestData;
 	}
 
@@ -612,6 +614,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		{
 			requestData.getBSPEnforcer().setDisableBSPRules(!bspCompliant);
 		}
+		// allow for qualified password types for .Net interoperability
+		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
+
 				
 		return requestData;
 	}
@@ -640,25 +645,25 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	        }
 	        
 	        Element elem = WSSecurityUtil.getSecurityHeader(envelopeAsDocument, actor);
-			List<WSSecurityEngineResult> results = securityEngine
+			WSHandlerResult result = securityEngine
 					.processSecurityHeader(elem, validationData);
 
 			// Results verification
-			if (CollectionUtils.isEmpty(results)) {
+			if (CollectionUtils.isEmpty(result.getResults())) {
 				throw new Wss4jSecurityValidationException("No WS-Security header found");
 			}
 
-			checkResults(results, validationActionsVector);
+			checkResults(result.getResults(), validationActionsVector);
 
 			// puts the results in the context
 			// useful for Signature Confirmation
-			updateContextWithResults(messageContext, results);
+			updateContextWithResults(messageContext, result.getResults());
 
-			verifyCertificateTrust(results);
+			verifyCertificateTrust(result);
 
-			verifyTimestamp(results);
+			verifyTimestamp(result);
 
-			processPrincipal(results);
+			processPrincipal(result);
 		}
 		catch (WSSecurityException ex) {
 			throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
@@ -698,16 +703,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			handlerResults = new ArrayList<WSHandlerResult>();
 			messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 		}
-		WSHandlerResult rResult = new WSHandlerResult(validationActor, results);
+		WSHandlerResult rResult = new WSHandlerResult(validationActor, results,
+				Collections.<Integer, List<WSSecurityEngineResult>>emptyMap());
 		handlerResults.add(0, rResult);
 		messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 	}
 
-	/** Verifies the trust of a certificate. */
-	protected void verifyCertificateTrust(List<WSSecurityEngineResult> results) throws WSSecurityException {
-		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.SIGN);
+	/** Verifies the trust of a certificate.
+	 * @param result*/
+	protected void verifyCertificateTrust(WSHandlerResult result) throws WSSecurityException {
+		List<WSSecurityEngineResult> results =
+				result.getActionResults().get(WSConstants.SIGN);
 
-		if (actionResult != null) {
+		if (!CollectionUtils.isEmpty(results)) {
+			WSSecurityEngineResult actionResult = results.get(0);
 			X509Certificate returnCert =
 					(X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
 			Credential credential = new Credential();
@@ -722,22 +731,24 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		}
 	}
 
-	/** Verifies the timestamp. */
-	protected void verifyTimestamp(List<WSSecurityEngineResult> results) throws WSSecurityException {
-		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.TS);
+	/** Verifies the timestamp.
+	 * @param result*/
+	protected void verifyTimestamp(WSHandlerResult result) throws WSSecurityException {
+		List<WSSecurityEngineResult> results =
+				result.getActionResults().get(WSConstants.TS);
 
-		if (actionResult != null) {
+		if (!CollectionUtils.isEmpty(results)) {
+			WSSecurityEngineResult actionResult = results.get(0);
 			Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
 			if (timestamp != null && timestampStrict) {
 				Credential credential = new Credential();
 				credential.setTimestamp(timestamp);
 
 				RequestData requestData = new RequestData();
-				WSSConfig config = WSSConfig.getNewInstance();
-				config.setTimeStampTTL(validationTimeToLive);
-				config.setTimeStampStrict(timestampStrict);
-				config.setTimeStampFutureTTL(futureTimeToLive);
-				requestData.setWssConfig(config);
+				requestData.setWssConfig(WSSConfig.getNewInstance());
+				requestData.setTimeStampTTL(validationTimeToLive);
+				requestData.setTimeStampStrict(timestampStrict);
+				requestData.setTimeStampFutureTTL(futureTimeToLive);
 
 				TimestampValidator validator = new TimestampValidator();
 				validator.validate(credential, requestData);
@@ -745,10 +756,12 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		}
 	}
 
-	private void processPrincipal(List<WSSecurityEngineResult> results) {
-		WSSecurityEngineResult actionResult = WSSecurityUtil.fetchActionResult(results, WSConstants.UT);
+	private void processPrincipal(WSHandlerResult result) {
+		List<WSSecurityEngineResult> results =
+				result.getActionResults().get(WSConstants.UT);
 
-		if (actionResult != null) {
+		if (!CollectionUtils.isEmpty(results)) {
+			WSSecurityEngineResult actionResult = results.get(0);
 			Principal principal = (Principal) actionResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
 			if (principal != null && principal instanceof WSUsernameTokenPrincipalImpl) {
 				WSUsernameTokenPrincipalImpl usernameTokenPrincipal = (WSUsernameTokenPrincipalImpl) principal;
