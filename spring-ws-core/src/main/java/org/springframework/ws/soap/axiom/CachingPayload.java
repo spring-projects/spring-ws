@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMXMLStreamReaderConfiguration;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 
@@ -38,7 +39,9 @@ class CachingPayload extends AbstractPayload {
 
 	@Override
 	protected XMLStreamReader getStreamReader(OMElement payloadElement) {
-		return payloadElement.getXMLStreamReader();
+		OMXMLStreamReaderConfiguration config = new OMXMLStreamReaderConfiguration();
+		config.setPreserveNamespaceContext(true);
+		return payloadElement.getXMLStreamReader(true, config);
 	}
 
 	@Override
