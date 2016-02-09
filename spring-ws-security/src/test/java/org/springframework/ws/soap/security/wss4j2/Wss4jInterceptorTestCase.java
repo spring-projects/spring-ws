@@ -16,16 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import org.apache.wss4j.dom.engine.WSSecurityEngine;
+import org.junit.Test;
+
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 
@@ -79,6 +80,13 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 		context.getResponse();
 		interceptor.handleResponse(context, null);
 		assertEquals("Invalid response", securedResponseMessage, getMessage((SoapMessage) context.getResponse()));
+	}
+
+	@Test
+	public void testHandleCustomSecurityEngine() {
+		WSSecurityEngine engine = new WSSecurityEngine();
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);
+		assertEquals(engine, ReflectionTestUtils.getField(interceptor, "securityEngine"));
 	}
 
 }

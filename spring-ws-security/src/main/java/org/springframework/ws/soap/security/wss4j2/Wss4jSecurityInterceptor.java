@@ -22,7 +22,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -44,6 +43,9 @@ import org.apache.wss4j.dom.util.WSSecurityUtil;
 import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.SignatureTrustValidator;
 import org.apache.wss4j.dom.validate.TimestampValidator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -56,8 +58,6 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
@@ -135,7 +135,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private final Wss4jHandler handler = new Wss4jHandler();
 
-	private final WSSecurityEngine securityEngine = new WSSecurityEngine();
+	private final WSSecurityEngine securityEngine;
 
 	private boolean enableRevocation;
 
@@ -148,6 +148,21 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
+
+	/**
+	 * Create a {@link WSSecurityEngine} by default.
+	 */
+	public Wss4jSecurityInterceptor() {
+		this.securityEngine = new WSSecurityEngine();
+	}
+
+	/**
+	 * Inject a customize {@link WSSecurityEngine}.
+	 * @param securityEngine
+	 */
+	public Wss4jSecurityInterceptor(WSSecurityEngine securityEngine) {
+		this.securityEngine = securityEngine;
+	}
 
 	public void setSecurementActions(String securementActions) {
 		this.securementActions = securementActions;

@@ -241,6 +241,7 @@ project('spring-ws-security') {
 		// Spring
 		compile("org.springframework:spring-beans:$springVersion")
 		compile("org.springframework:spring-tx:$springVersion")
+		testCompile("org.springframework:spring-test:$springVersion")
 
 		// Spring Security
 		compile("org.springframework.security:spring-security-core:$springSecurityVersion")
