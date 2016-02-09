@@ -41,7 +41,9 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @see org.apache.ws.security.components.crypto.Crypto
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean}
  */
+@Deprecated
 public class CryptoFactoryBean implements FactoryBean<Crypto>, BeanClassLoaderAware, InitializingBean {
 
 	private Properties configuration = new Properties();

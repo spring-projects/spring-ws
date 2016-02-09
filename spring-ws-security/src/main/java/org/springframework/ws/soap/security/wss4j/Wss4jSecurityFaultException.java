@@ -26,8 +26,10 @@ import org.springframework.ws.soap.security.WsSecurityFaultException;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.Wss4jSecurityFaultException}
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class Wss4jSecurityFaultException extends WsSecurityFaultException {
 
 	public Wss4jSecurityFaultException(QName faultCode, String faultString, String faultActor) {

@@ -29,7 +29,9 @@ import org.apache.ws.security.WSUsernameTokenPrincipal;
  * @author Arjen Poutsma
  * @see WSUsernameTokenPrincipal
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback}
  */
+@Deprecated
 public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
 	private static final long serialVersionUID = -3022202225157082715L;

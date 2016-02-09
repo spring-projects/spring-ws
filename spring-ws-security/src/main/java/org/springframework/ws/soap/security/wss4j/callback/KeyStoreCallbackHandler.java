@@ -36,7 +36,9 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHandler}
  */
+@Deprecated
 public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler implements InitializingBean {
 
 	private String privateKeyPassword;

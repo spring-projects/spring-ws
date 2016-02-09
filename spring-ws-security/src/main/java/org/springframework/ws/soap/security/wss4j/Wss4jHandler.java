@@ -19,8 +19,6 @@ package org.springframework.ws.soap.security.wss4j;
 import java.util.List;
 import java.util.Properties;
 
-import org.springframework.ws.context.MessageContext;
-
 import org.apache.ws.security.WSSecurityEngineResult;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
@@ -29,11 +27,15 @@ import org.apache.ws.security.handler.WSHandler;
 import org.apache.ws.security.handler.WSHandlerConstants;
 import org.w3c.dom.Document;
 
+import org.springframework.ws.context.MessageContext;
+
 /**
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.Wss4jHandler}.
  */
+@Deprecated
 class Wss4jHandler extends WSHandler {
 
 	/** Keys are constants from {@link WSHandlerConstants}; values are strings. */

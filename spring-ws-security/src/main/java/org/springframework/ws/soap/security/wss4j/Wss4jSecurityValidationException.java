@@ -24,8 +24,10 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.Wss4jSecurityValidationException}
  */
 @SuppressWarnings("serial")
+@Deprecated
 public class Wss4jSecurityValidationException extends WsSecurityValidationException {
 
 	public Wss4jSecurityValidationException(String msg) {

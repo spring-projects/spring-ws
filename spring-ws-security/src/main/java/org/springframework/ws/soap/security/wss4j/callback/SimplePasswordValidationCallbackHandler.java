@@ -35,7 +35,9 @@ import org.springframework.util.Assert;
  * @author Arjen Poutsma
  * @see #setUsers(java.util.Properties)
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler}
  */
+@Deprecated
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {
 

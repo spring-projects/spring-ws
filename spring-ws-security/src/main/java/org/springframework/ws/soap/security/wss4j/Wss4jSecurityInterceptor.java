@@ -96,7 +96,9 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  * @author Greg Turnquist
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J</a>
  * @since 1.5.0
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor}
  */
+@Deprecated
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";

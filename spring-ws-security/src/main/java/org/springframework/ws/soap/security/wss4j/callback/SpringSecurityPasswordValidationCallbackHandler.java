@@ -43,7 +43,9 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
  *
  * @author Arjen Poutsma
  * @since 2.1
+ * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler}
  */
+@Deprecated
 public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {
 
