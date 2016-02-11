@@ -57,7 +57,7 @@ import org.springframework.ws.transport.TransportInputStream;
  * Axiom-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}
  * interface. Creates {@link org.springframework.ws.soap.axiom.AxiomSoapMessage AxiomSoapMessages}.
  *
- * <p>To increase reading performance on the the SOAP request created by this message factory, you can set the {@link
+ * <p>To increase reading performance on the SOAP request created by this message factory, you can set the {@link
  * #setPayloadCaching(boolean) payloadCaching} property to {@code false} (default is {@code true}). This this
  * will read the contents of the body directly from the stream. However, <strong>when this setting is enabled, the
  * payload can only be read once</strong>. This means that any endpoint mappings or interceptors which are based on the

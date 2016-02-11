@@ -217,7 +217,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
 	 *			   {Element}{}UserName" />
 	 * </pre>
-	 * The the first entry of the list identifies the element {@code CreditCard} in the namespace
+	 * The first entry of the list identifies the element {@code CreditCard} in the namespace
 	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
 	 * namespace identifier, and the encryption modifier are case sensitive.
 	 *

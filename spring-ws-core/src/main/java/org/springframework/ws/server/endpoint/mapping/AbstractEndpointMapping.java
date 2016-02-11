@@ -50,7 +50,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	private SmartEndpointInterceptor[] smartInterceptors;
 
 	/**
-	 * Returns the the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
+	 * Returns the endpoint interceptors to apply to all endpoints mapped by this endpoint mapping.
 	 *
 	 * @return array of endpoint interceptors, or {@code null} if none
 	 */
