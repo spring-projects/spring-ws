@@ -60,7 +60,7 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 	}
 
 	/**
-	 * Sets the the server port to connect to.
+	 * Sets the server port to connect to.
 	 *
 	 * <p>Defaults to {@code 5222}.
 	 */

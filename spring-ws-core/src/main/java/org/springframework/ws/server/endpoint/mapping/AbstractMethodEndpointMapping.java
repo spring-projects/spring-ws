@@ -70,7 +70,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Returns the the endpoint keys for the given message context.
+	 * Returns the endpoint keys for the given message context.
 	 *
 	 * @return the registration keys
 	 */
@@ -184,7 +184,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Returns the the endpoint key for the given method. Returns {@code null} if the method is not to be
+	 * Returns the endpoint key for the given method. Returns {@code null} if the method is not to be
 	 * registered, which is the default.
 	 *
 	 * @param method the method
@@ -196,7 +196,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Returns the the endpoint keys for the given method. Should return an empty array if the method is not to be
+	 * Returns the endpoint keys for the given method. Should return an empty array if the method is not to be
 	 * registered. The default delegates to {@link #getLookupKeysForMethod(Method)}.
 	 *
 	 * @param method the method

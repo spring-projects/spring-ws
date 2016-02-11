@@ -90,7 +90,7 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	@Override
 	public Source getSource() {
-		// try to use the the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
+		// try to use the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
 		try {
 			XmlSchemaSerializer serializer = BeanUtils.instantiateClass(XmlSchemaSerializer.class);
 			if (collection != null) {

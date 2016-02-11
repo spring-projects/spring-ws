@@ -93,7 +93,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	protected abstract boolean validateLookupKey(String key);
 
 	/**
-	 * Returns the the endpoint key for the given message context. Returns {@code null} if a key cannot be found.
+	 * Returns the endpoint key for the given message context. Returns {@code null} if a key cannot be found.
 	 *
 	 * @return the registration key; or {@code null}
 	 */
