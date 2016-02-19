@@ -91,7 +91,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  *		 "&lt;customerCount&gt;42&lt;/customerCount&gt;" +
  *		 "&lt;/customerCountResponse&gt;");
  *
- *	   <strong>mockClient.sendMessage(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload))</strong>;
+ *	   <strong>mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload))</strong>;
  *	 }
  * }
  * </pre></blockquote>
