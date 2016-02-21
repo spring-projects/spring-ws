@@ -75,7 +75,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		SoapMessage request = (SoapMessage) messageContext.getRequest();
 		MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
-		if (!version.hasRequiredProperties(requestMap)) {
+		if (!version.hasRequiredProperties(requestMap, endpoint)) {
 			version.addMessageAddressingHeaderRequiredFault((SoapMessage) messageContext.getResponse());
 			return false;
 		}
