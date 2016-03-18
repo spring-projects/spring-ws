@@ -22,12 +22,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -120,7 +115,14 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		Map<String, List<String>> mapHeader = connection.getHeaderFields();
-		List<String> listHeaderValues = mapHeader.get(name);
+		Map<String, List<String>> lowerCaseMapHeader = new HashMap<String, List<String>>();
+		Set<String> keys = mapHeader.keySet();
+		for(String key : keys) {
+            if(key != null){
+                lowerCaseMapHeader.put(key.toLowerCase(),mapHeader.get(key));
+            }
+		}
+		List<String> listHeaderValues = lowerCaseMapHeader.get(name.toLowerCase());
 		if (listHeaderValues == null) {
 		    return Collections.<String>emptyList().iterator();
 		} else {
