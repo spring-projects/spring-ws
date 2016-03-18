@@ -283,7 +283,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
 				httpServletResponse.setStatus(responseStatus);
 				if (response) {
-					httpServletResponse.setContentType("text/xml");
+					httpServletResponse.addHeader("Content-type", "text/xml");
 					if (contentLength != null) {
 						httpServletResponse.setContentLength(contentLength);
 					}
