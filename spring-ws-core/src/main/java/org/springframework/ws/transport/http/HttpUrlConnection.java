@@ -23,6 +23,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
+ * @author Oddgeir Gitlestad
  * @since 1.0.0
  */
 public class HttpUrlConnection extends AbstractHttpSenderConnection {
@@ -119,12 +121,20 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Map<String, List<String>> mapHeader = connection.getHeaderFields();
-		List<String> listHeaderValues = mapHeader.get(name);
-		if (listHeaderValues == null) {
+		Map<String, List<String>> headersListMappedByLowerCaseName = new HashMap<>();
+
+		for (String key : connection.getHeaderFields().keySet()) {
+			if (key != null) {
+				headersListMappedByLowerCaseName.put(key.toLowerCase(), connection.getHeaderFields().get(key));
+			}
+		}
+
+		List<String> headerValues = headersListMappedByLowerCaseName.get(name.toLowerCase());
+
+		if (headerValues == null) {
 		    return Collections.<String>emptyList().iterator();
 		} else {
-		    return listHeaderValues.iterator();
+		    return headerValues.iterator();
 		}
 	}
 

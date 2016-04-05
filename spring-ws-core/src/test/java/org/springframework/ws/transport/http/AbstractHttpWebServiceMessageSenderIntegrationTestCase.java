@@ -36,11 +36,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.After;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.mortbay.jetty.Server;
@@ -58,6 +56,9 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
@@ -283,7 +284,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
 				httpServletResponse.setStatus(responseStatus);
 				if (response) {
-					httpServletResponse.setContentType("text/xml");
+					httpServletResponse.addHeader("content-type", "text/xml");
 					if (contentLength != null) {
 						httpServletResponse.setContentLength(contentLength);
 					}
