@@ -143,6 +143,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private boolean securementUseDerivedKey;
 	
+	private CallbackHandler samlCallbackHandler;
+	
 	// Allow RSA 15 to maintain default behavior
 	private boolean allowRSA15KeyTransportAlgorithm = true;
 
@@ -373,6 +375,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
 		this.securementUseDerivedKey = securementUseDerivedKey;
 	}
+	
+	/**
+	 * Sets the SAML Callback used for generating SAML tokens.
+	 * 
+	 * @param samlCallback
+	 */
+	public void setSecurementSamlCallbackHandler(CallbackHandler samlCallbackHandler) {
+		this.samlCallbackHandler = samlCallbackHandler;
+	}
 
 	/** Sets the server-side time to live */
 	public void setValidationTimeToLive(int validationTimeToLive) {
@@ -385,12 +396,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/** Sets the validation actions to be executed by the interceptor. */
 	public void setValidationActions(String actions) {
 		this.validationActions = actions;
-		try {
-			validationActionsVector = WSSecurityUtil.decodeAction(actions);
-		}
-		catch (WSSecurityException ex) {
-			throw new IllegalArgumentException(ex);
-		}
 	}
 
 	public void setValidationActor(String validationActor) {
@@ -524,6 +529,12 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	public void afterPropertiesSet() throws Exception {
 		Assert.isTrue(validationActions != null || securementActions != null,
 				"validationActions or securementActions are required");
+		try {
+			validationActionsVector = WSSecurityUtil.decodeAction(validationActions);
+		}
+		catch (WSSecurityException ex) {
+			throw new IllegalArgumentException(ex);
+		}
 		if (validationActions != null) {
 			if (validationActionsVector.contains(WSConstants.UT)) {
 				Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
@@ -595,7 +606,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		requestData.setWssConfig(wssConfig);
 
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
-
+		
+		if (this.samlCallbackHandler != null) {
+			messageContext.setProperty(WSHandlerConstants.SAML_CALLBACK_REF, this.samlCallbackHandler);
+		}
+		
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
@@ -643,7 +658,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
 		}
 
-		if (validationActionsVector.contains(WSConstants.NO_SECURITY)) {
+		if (validationActionsVector.isEmpty() || validationActionsVector.contains(WSConstants.NO_SECURITY)) {
 			return;
 		}
 
