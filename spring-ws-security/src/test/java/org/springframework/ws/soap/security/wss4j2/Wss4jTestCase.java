@@ -79,6 +79,7 @@ public abstract class Wss4jTestCase {
 		namespaces.put("echo", "http://www.springframework.org/spring-ws/samples/echo");
 		namespaces.put("wsu",
 				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+		namespaces.put("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
 		namespaces.put("test", "http://test");
 		xpathTemplate.setNamespaces(namespaces);
 		onSetup();
