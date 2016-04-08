@@ -134,7 +134,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		Set<XmlSchema> processedImports = new HashSet<XmlSchema>();
 
 		for (Resource xsdResource : xsdResources) {
-			Assert.isTrue(xsdResource.exists(), xsdResource + " does not exit");
+			Assert.isTrue(xsdResource.exists(), xsdResource + " does not exist");
 			try {
 				XmlSchema xmlSchema =
 						schemaCollection.read(SaxUtils.createInputSource(xsdResource));
