@@ -47,7 +47,7 @@ public class SoapEnvelopeLoggingInterceptor extends AbstractLoggingInterceptor i
 
 	@Override
 	public boolean handleFault(MessageContext messageContext, Object endpoint) throws Exception {
-		if (logFault && logger.isDebugEnabled()) {
+		if (logFault && isLogEnabled()) {
 			logMessageSource("Fault: ", getSource(messageContext.getResponse()));
 		}
 		return true;
