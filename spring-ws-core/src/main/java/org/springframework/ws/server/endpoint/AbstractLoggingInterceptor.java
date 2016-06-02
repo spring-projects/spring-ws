@@ -85,7 +85,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * @throws TransformerException when the payload cannot be transformed to a string
 	 */
 	@Override
-	public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws TransformerException {
+	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws TransformerException {
 		if (logRequest && isLogEnabled()) {
 			logMessageSource("Request: ", getSource(messageContext.getRequest()));
 		}
