@@ -34,6 +34,7 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  * as constructor argument, or set using a property.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see #Wsdl4jDefinition(javax.wsdl.Definition)
  * @see #setDefinition(javax.wsdl.Definition)
  * @since 1.0.0
@@ -41,9 +42,6 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
 public class Wsdl4jDefinition implements Wsdl11Definition {
 
 	private Definition definition;
-
-	/** Cached DOM version of the definition */
-	private Document document;
 
 	/** WSDL4J is not thread safe, hence the need for a monitor. */
 	private final Object monitor = new Object();
@@ -76,7 +74,6 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 	public void setDefinition(Definition definition) {
 		synchronized (monitor) {
 			this.definition = definition;
-			this.document = null;
 		}
 	}
 
@@ -84,18 +81,16 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 	public Source getSource() {
 		synchronized (monitor) {
 			Assert.notNull(definition, "definition must not be null");
-			if (document == null) {
-				try {
-					WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-					WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-					document = wsdlWriter.getDocument(definition);
-				}
-				catch (WSDLException ex) {
-					throw new WsdlDefinitionException(ex.getMessage(), ex);
-				}
+			try {
+				WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+				WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
+				Document document = wsdlWriter.getDocument(definition);
+				return new DOMSource(document);
+			}
+			catch (WSDLException ex) {
+				throw new WsdlDefinitionException(ex.getMessage(), ex);
 			}
 		}
-		return new DOMSource(document);
 	}
 
 	public String toString() {
