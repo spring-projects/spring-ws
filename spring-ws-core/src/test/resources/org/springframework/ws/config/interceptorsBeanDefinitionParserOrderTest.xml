@@ -18,7 +18,7 @@
             </bean>
         </sws:payloadRoot>
         <sws:soapAction value="mySoapAction">
-            <ref local="externalSoapActionInterceptor"/>
+            <ref bean="externalSoapActionInterceptor"/>
             <bean class="org.springframework.ws.config.MyInterceptor">
                 <property name="order" value="5"/>
             </bean>

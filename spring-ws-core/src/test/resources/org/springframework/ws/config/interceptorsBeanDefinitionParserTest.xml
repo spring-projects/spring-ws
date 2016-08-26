@@ -15,7 +15,7 @@
         </sws:payloadRoot>
         <sws:soapAction value="mySoapAction">
             <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
-            <ref local="externalSoapActionInterceptor"/>
+            <ref bean="externalSoapActionInterceptor"/>
             <bean class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"/>
         </sws:soapAction>
     </sws:interceptors>

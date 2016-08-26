@@ -28,7 +28,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.FrameworkServlet;
-import org.springframework.web.util.WebUtils;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.server.EndpointAdapter;
 import org.springframework.ws.server.EndpointExceptionResolver;
@@ -36,6 +35,7 @@ import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
+import org.springframework.ws.support.WebUtils;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.xsd.XsdSchema;
 

@@ -17,14 +17,14 @@
 package org.springframework.ws.transport.http;
 
 import static org.hamcrest.core.IsEqual.*;
-import static org.springframework.test.util.MatcherAssertionErrors.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
