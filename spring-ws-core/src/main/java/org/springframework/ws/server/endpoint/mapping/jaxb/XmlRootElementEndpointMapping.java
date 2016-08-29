@@ -65,6 +65,16 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 		this.transformerHelper = transformerHelper;
 	}
 
+	/**
+	 * Set whether to only consider {@link RequestBody} annotated parameters.
+	 *
+	 * <p>Default is "false": All methods that take an {@link XmlRootElement} annotated
+	 * type as parameter will be resolved as valid endpoint.
+	 *
+	 * <p>Switch this flag on to require the {@link XmlRootElement} parameter to be annotated with
+	 * {@link RequestBody} to prevent duplicate endpoint registrations when having additional methods
+	 * that receive the {@link XmlRootElement} parameter.
+	 */
 	public void setRequiresRequestBodyAnnotation(boolean requiresRequestBodyAnnotation) {
 		this.requiresRequestBodyAnnotation = requiresRequestBodyAnnotation;
 	}
