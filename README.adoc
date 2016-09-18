@@ -74,8 +74,8 @@ http://help.github.com/set-up-git-redirect[Git] and JDK 1.7+.
 == Documentation
 
 See the current
-http://static.springsource.org/spring-ws/docs/current/javadoc-api[Javadoc]
-and http://static.springsource.org/spring-ws/docs/current/spring-ws-reference[reference
+http://docs.spring.io/spring-ws/docs/current/api[Javadoc]
+and http://docs.spring.io/spring-ws/docs/current/reference/htmlsingle[reference
 docs].
 
 == Issue Tracking
