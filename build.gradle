@@ -12,7 +12,7 @@ buildscript {
 configure(allprojects) {
 	group = "org.springframework.ws"
 
-	ext.springVersion = "4.2.7.RELEASE"
+	ext.springVersion = "4.2.8.RELEASE"
 	ext.springSecurityVersion = "4.0.4.RELEASE"
 	ext.axiomVersion = "1.2.16"
 	ext.smackVersion = "4.1.6"
@@ -92,6 +92,11 @@ configure(subprojects) { subproject ->
 	if (project.hasProperty('profile')) {
 		apply from: "${project.rootDir}/${profile}-profile.gradle"
 		println "+++ Configuring ${subproject.name} for Spring Framework ${springVersion}"
+
+		repositories {
+			maven { url "https://repo.spring.io/libs-snapshot" }
+		}
+
 	} else if (project.hasProperty('platformVersion')) {
 		apply plugin: 'spring-io'
 

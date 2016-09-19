@@ -2,5 +2,5 @@
  * Enable with "-Pprofile=spring4-next"
  */
 
-ext.springVersion = "4.3.2.RELEASE"
+ext.springVersion = "4.3.3.RELEASE"
 ext.springSecurityVersion = "4.1.3.RELEASE"
