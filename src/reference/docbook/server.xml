@@ -205,7 +205,7 @@
                 </para>
                 <programlisting><![CDATA[@Bean
 public SimpleWsdl11Definition orders() {
-	return new SimpleWsdl11Definition(new ClassPathResource("orders.xml"));
+	return new SimpleWsdl11Definition(new ClassPathResource("orders.wsdl"));
 }]]></programlisting>
                 <para>
                     The WSDL defined in the '<filename>orders.wsdl</filename>' file on the classpath can then be accessed via
