@@ -91,7 +91,7 @@ configure(subprojects) { subproject ->
 	 */
 	if (project.hasProperty('profile')) {
 		apply from: "${project.rootDir}/${profile}-profile.gradle"
-		println "+++ Configuring ${subproject.name} for Spring Framework ${springVersion}"
+		println "+++ Configuring ${subproject.name} for Spring Framework ${springVersion} and Spring Security ${springSecurityVersion}"
 
 		repositories {
 			maven { url "https://repo.spring.io/libs-snapshot" }

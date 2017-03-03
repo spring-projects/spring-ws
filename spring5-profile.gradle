@@ -2,8 +2,8 @@
  * Enable with "-Pprofile=spring5"
  */
 
-ext.springVersion = "5.0.0.M3"
-ext.springSecurityVersion = "4.2.0.BUILD-SNAPSHOT"
+ext.springVersion = "5.0.0.M5"
+ext.springSecurityVersion = "4.2.3.BUILD-SNAPSHOT"
 
 compileJava {
 	sourceCompatibility=1.8
