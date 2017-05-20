@@ -25,11 +25,13 @@ import java.io.Writer;
 import java.util.Iterator;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMOutputFormat;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.om.impl.MTOMConstants;
 import org.apache.axiom.om.impl.OMMultipartWriter;
 import org.apache.axiom.soap.SOAPBody;
@@ -212,12 +214,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	public void setDocument(Document document) {
 		// save the Soap Action
 		String soapAction = getSoapAction();
-		SOAPEnvelope envelope = AxiomUtils.toEnvelope(document);
-		SOAPMessage newMessage = axiomFactory.createSOAPMessage();
-		newMessage.setSOAPEnvelope(envelope);
-
 		// replace the Axiom message
-		setAxiomMessage(newMessage);
+		setAxiomMessage(OMXMLBuilderFactory.createSOAPModelBuilder(axiomFactory.getMetaFactory(),
+				new DOMSource(document)).getSOAPMessage());
 		// restore the Soap Action
 		setSoapAction(soapAction);
 	}
