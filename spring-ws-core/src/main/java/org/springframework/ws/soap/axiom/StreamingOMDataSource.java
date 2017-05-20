@@ -16,20 +16,13 @@
 
 package org.springframework.ws.soap.axiom;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.Writer;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.axiom.om.OMDataSource;
-import org.apache.axiom.om.OMOutputFormat;
-import org.apache.axiom.om.util.StAXUtils;
+import org.apache.axiom.om.ds.AbstractPushOMDataSource;
 
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.stream.StreamingPayload;
 
 /**
@@ -38,7 +31,7 @@ import org.springframework.ws.stream.StreamingPayload;
  * @author Arjen Poutsma
  * @since 2.0
  */
-class StreamingOMDataSource implements OMDataSource {
+class StreamingOMDataSource extends AbstractPushOMDataSource {
 
 	private final StreamingPayload payload;
 
@@ -48,36 +41,13 @@ class StreamingOMDataSource implements OMDataSource {
 	}
 
 	@Override
-	public void serialize(OutputStream output, OMOutputFormat format) throws XMLStreamException {
-		XMLStreamWriter streamWriter;
-		if (format != null && StringUtils.hasLength(format.getCharSetEncoding())) {
-			streamWriter = StAXUtils.createXMLStreamWriter(output, format.getCharSetEncoding());
-		}
-		else {
-			streamWriter = StAXUtils.createXMLStreamWriter(output);
-		}
-		serialize(streamWriter);
-	}
-
-	@Override
-	public void serialize(Writer writer, OMOutputFormat format) throws XMLStreamException {
-		XMLStreamWriter streamWriter = StAXUtils.createXMLStreamWriter(writer);
-		serialize(streamWriter);
+	public boolean isDestructiveWrite() {
+		return false;
 	}
 
 	@Override
 	public void serialize(XMLStreamWriter xmlWriter) throws XMLStreamException {
 		payload.writeTo(xmlWriter);
-		xmlWriter.flush();
-	}
-
-	@Override
-	public XMLStreamReader getReader() throws XMLStreamException {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		serialize(bos, null);
-
-		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-		return StAXUtils.createXMLStreamReader(bis);
 	}
 
 }
