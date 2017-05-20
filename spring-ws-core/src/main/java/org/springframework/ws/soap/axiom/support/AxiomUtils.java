@@ -18,29 +18,21 @@ package org.springframework.ws.soap.axiom.support;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.Locale;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLInputFactory;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.StAXUtils;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSSerializer;
 
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -145,54 +137,7 @@ public abstract class AxiomUtils {
 	 * @throws IllegalArgumentException in case of errors
 	 */
 	public static SOAPEnvelope toEnvelope(Document document) {
-		try {
-			DOMImplementation implementation = document.getImplementation();
-			Assert.isInstanceOf(DOMImplementationLS.class, implementation);
-
-			DOMImplementationLS loadSaveImplementation = (DOMImplementationLS) implementation;
-			LSOutput output = loadSaveImplementation.createLSOutput();
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			output.setByteStream(bos);
-
-			LSSerializer serializer = loadSaveImplementation.createLSSerializer();
-			serializer.write(document, output);
-
-			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-
-			XMLInputFactory inputFactory = StAXUtils.getXMLInputFactory();
-
-			@SuppressWarnings("deprecation")
-			StAXSOAPModelBuilder stAXSOAPModelBuilder =
-					new StAXSOAPModelBuilder(inputFactory.createXMLStreamReader(bis), null);
-			SOAPEnvelope envelope = stAXSOAPModelBuilder.getSOAPEnvelope();
-
-			// Necessary to build a correct Axiom tree, see SWS-483
-			envelope.serialize(new NullOutputStream());
-
-			return envelope;
-		}
-		catch (Exception ex) {
-			IllegalArgumentException iaex =
-					new IllegalArgumentException("Error in converting Document to SOAP Envelope");
-			iaex.initCause(ex);
-			throw iaex;
-		}
-	}
-
-	/** OutputStream that does nothing. */
-	private static class NullOutputStream extends OutputStream {
-
-		@Override
-		public void write(int b) throws IOException {
-		}
-
-		@Override
-		public void write(byte[] b) throws IOException {
-		}
-
-		@Override
-		public void write(byte[] b, int off, int len) throws IOException {
-		}
+		return OMXMLBuilderFactory.createSOAPModelBuilder(new DOMSource(document)).getSOAPEnvelope();
 	}
 
 }
