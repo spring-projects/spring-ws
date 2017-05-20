@@ -45,7 +45,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 
 	@Override
 	public Result getResult() {
-		return new AxiomResult(getAxiomHeader(), getAxiomFactory());
+		return getAxiomHeader().getSAXResult();
 	}
 
 	@Override
