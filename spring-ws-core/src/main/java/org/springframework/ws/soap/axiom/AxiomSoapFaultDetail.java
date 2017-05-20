@@ -60,7 +60,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 
 	@Override
 	public Result getResult() {
-		return new AxiomResult(getAxiomFaultDetail(), getAxiomFactory());
+		return getAxiomFaultDetail().getSAXResult();
 	}
 
 	protected SOAPFaultDetail getAxiomFaultDetail() {

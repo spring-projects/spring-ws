@@ -46,7 +46,7 @@ class CachingPayload extends AbstractPayload {
 
 	@Override
 	public Result getResultInternal() {
-		return new AxiomResult(getAxiomBody(), getAxiomFactory());
+		return getAxiomBody().getSAXResult();
 	}
 
 }

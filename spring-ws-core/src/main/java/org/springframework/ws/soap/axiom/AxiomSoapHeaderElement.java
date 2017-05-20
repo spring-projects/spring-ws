@@ -54,7 +54,7 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 	@Override
 	public Result getResult() {
 		try {
-			return new AxiomResult(getAxiomHeaderBlock(), getAxiomFactory());
+			return getAxiomHeaderBlock().getSAXResult();
 		}
 		catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);

@@ -39,7 +39,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 	@Override
 	public Result getResult() {
 		try {
-			return new AxiomResult(getAxiomElement(), getAxiomFactory());
+			return getAxiomElement().getSAXResult();
 		}
 		catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
