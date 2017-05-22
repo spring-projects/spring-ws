@@ -75,6 +75,7 @@ import org.springframework.ws.transport.TransportInputStream;
  * distribution.
  *
  * @author Arjen Poutsma
+ * @author Andreas Veithen
  * @see AxiomSoapMessage
  * @see #setPayloadCaching(boolean)
  * @since 1.0.0
@@ -227,9 +228,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		if (!StringUtils.hasLength(contentType)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("TransportInputStream has no Content-Type header; defaulting to \"" +
-						SoapVersion.SOAP_11.getContentType() + "\"");
+						soapFactory.getSOAPVersion().getMediaType() + "\"");
 			}
-			contentType = SoapVersion.SOAP_11.getContentType();
+			contentType = soapFactory.getSOAPVersion().getMediaType().toString();
 		}
 		String soapAction = getHeaderValue(transportInputStream, TransportConstants.HEADER_SOAP_ACTION);
 		if (!StringUtils.hasLength(soapAction)) {

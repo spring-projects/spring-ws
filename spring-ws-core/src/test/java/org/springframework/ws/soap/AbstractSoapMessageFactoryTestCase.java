@@ -43,4 +43,7 @@ public abstract class AbstractSoapMessageFactoryTestCase extends AbstractWebServ
 
 	@Test
 	public abstract void testCreateSoapMessageMtom() throws Exception;
+
+	@Test
+	public abstract void testCreateSoapMessageMissingContentType() throws Exception;
 }

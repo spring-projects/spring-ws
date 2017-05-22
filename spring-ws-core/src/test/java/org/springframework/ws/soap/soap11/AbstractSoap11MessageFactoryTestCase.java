@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.soap11;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -163,6 +164,17 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
 		SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
 		assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+	}
+
+	@Override
+	public void testCreateSoapMessageMissingContentType() throws Exception {
+		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
+		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
+		
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		SoapMessage soapMessage = (SoapMessage) message;
+		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
 	}
 
 
