@@ -154,6 +154,7 @@ public abstract class Wss4jTestCase {
 
 			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
 			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
+			builder.detach();
 			return new AxiomSoapMessage(soapMessage, "", true, true);
 		}
 		finally {
@@ -171,6 +172,7 @@ public abstract class Wss4jTestCase {
 
 			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
 			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
+			builder.detach();
 			return new AxiomSoapMessage(soapMessage, "", true, true);
 		}
 		finally {
