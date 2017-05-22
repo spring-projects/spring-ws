@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.soap12;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -107,5 +108,15 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 		assertNotNull("No attachment read", attachment);
 	}
 
+	@Override
+	public void testCreateSoapMessageMissingContentType() throws Exception {
+		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12.xml");
+		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
+		
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		SoapMessage soapMessage = (SoapMessage) message;
+		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
+	}
 
 }
