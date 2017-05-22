@@ -35,6 +35,7 @@ import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axiom.soap.SOAP12Version;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
+import org.apache.axiom.soap.SOAPModelBuilder;
 import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.commons.logging.Log;
@@ -271,8 +272,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 			throws XMLStreamException {
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
 		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
-		StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		SOAPMessage soapMessage = builder.getSoapMessage();
+		SOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
+		SOAPMessage soapMessage = builder.getSOAPMessage();
 		return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
@@ -286,7 +287,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 						Integer.toString(attachmentCacheThreshold));
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getRootPartInputStream(),
 				getCharSetEncoding(attachments.getRootPartContentType()));
-		StAXSOAPModelBuilder builder;
+		SOAPModelBuilder builder;
 		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
 		if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType()) ||
 				MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
@@ -299,7 +300,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 			throw new AxiomSoapMessageCreationException(
 					"Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
 		}
-		return new AxiomSoapMessage(builder.getSoapMessage(), attachments, soapAction, payloadCaching,
+		return new AxiomSoapMessage(builder.getSOAPMessage(), attachments, soapAction, payloadCaching,
 				langAttributeOnSoap11FaultString);
 	}
 

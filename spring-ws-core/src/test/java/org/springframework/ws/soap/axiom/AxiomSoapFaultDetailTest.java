@@ -17,14 +17,12 @@
 package org.springframework.ws.soap.axiom;
 
 import java.io.StringReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamReader;
 
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
-
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPMessage;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.apache.axiom.soap.SOAPModelBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,15 +56,13 @@ public class AxiomSoapFaultDetailTest {
 
 	@Before
 	public void setUp() throws Exception {
-		XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(FAILING_FAULT));
-		StAXSOAPModelBuilder builder = new StAXSOAPModelBuilder(parser);
-		SOAPMessage soapMessage = builder.getSoapMessage();
+		SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(new StringReader(FAILING_FAULT));
+		SOAPMessage soapMessage = builder.getSOAPMessage();
 
 		failingMessage = new AxiomSoapMessage(soapMessage, null, false, true);
 
-		parser = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(SUCCEEDING_FAULT));
-		builder = new StAXSOAPModelBuilder(parser);
-		soapMessage = builder.getSoapMessage();
+		builder = OMXMLBuilderFactory.createSOAPModelBuilder(new StringReader(SUCCEEDING_FAULT));
+		soapMessage = builder.getSOAPMessage();
 
 		succeedingMessage = new AxiomSoapMessage(soapMessage, null, false, true);
 
