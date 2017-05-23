@@ -18,6 +18,7 @@ package org.springframework.ws.soap.axiom;
 
 import javax.xml.transform.Result;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeaderBlock;
@@ -27,7 +28,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 /** Axiom-specific version of {@code org.springframework.ws.soap.SoapHeaderHeaderElement}. */
 class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderElement {
 
-	public AxiomSoapHeaderElement(SOAPHeaderBlock axiomHeaderBlock, SOAPFactory axiomFactory) {
+	public AxiomSoapHeaderElement(OMElement axiomHeaderBlock, SOAPFactory axiomFactory) {
 		super(axiomHeaderBlock, axiomFactory);
 	}
 
