@@ -332,8 +332,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 		if (!CollectionUtils.isEmpty(getEndpointExceptionResolvers())) {
 			for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
 				if (resolver.resolveException(messageContext, endpoint, ex)) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
+					if (logger.isErrorEnabled()) {
+						logger.error("Endpoint invocation resulted in exception - responding with Fault", ex);
 					}
 					return;
 				}
