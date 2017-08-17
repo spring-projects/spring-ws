@@ -33,6 +33,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
+import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
@@ -76,8 +77,11 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
 	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		UserDetails details = loadUserDetails(callback.getIdentifier());
-		callback.setPassword(details.getPassword());
+		UserDetails user = loadUserDetails(callback.getIdentifier());
+		if (user != null) {
+			SpringSecurityUtils.checkUserValidity(user);
+			callback.setPassword(user.getPassword());
+		}
 	}
 
 	@Override
