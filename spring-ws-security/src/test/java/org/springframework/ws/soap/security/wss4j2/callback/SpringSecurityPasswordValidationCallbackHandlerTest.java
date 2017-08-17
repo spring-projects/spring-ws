@@ -27,6 +27,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,6 +44,8 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	private SimpleGrantedAuthority grantedAuthority;
 
 	private UsernameTokenPrincipalCallback callback;
+	
+	private WSPasswordCallback passwordCallback;
 
 	private UserDetails user;
 
@@ -54,6 +58,38 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
 		WSUsernameTokenPrincipalImpl principal = new WSUsernameTokenPrincipalImpl("Ernie", true);
 		callback = new UsernameTokenPrincipalCallback(principal);
+		
+		passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
+	}
+	
+	@Test
+	public void testHandleUsernameToken() throws Exception {
+		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+		callbackHandler.setUserDetailsService(userDetailsService);
+
+		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
+
+		replay(userDetailsService);
+
+		callbackHandler.handleUsernameToken(passwordCallback);
+		Assert.assertEquals("Bert", passwordCallback.getPassword());
+
+		verify(userDetailsService);
+	}
+	
+	@Test
+	public void testHandleUsernameTokenUserNotFound() throws Exception {
+		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+		callbackHandler.setUserDetailsService(userDetailsService);
+
+		expect(userDetailsService.loadUserByUsername("Ernie")).andThrow(new UsernameNotFoundException("User 'Ernie' not found"));
+
+		replay(userDetailsService);
+
+		callbackHandler.handleUsernameToken(passwordCallback);
+		Assert.assertNull(passwordCallback.getPassword());
+
+		verify(userDetailsService);
 	}
 
 	@Test
