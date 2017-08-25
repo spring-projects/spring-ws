@@ -12,7 +12,7 @@ buildscript {
 configure(allprojects) {
 	group = "org.springframework.ws"
 
-	ext.springVersion = "4.2.8.RELEASE"
+	ext.springVersion = "4.2.9.RELEASE"
 	ext.springSecurityVersion = "4.0.4.RELEASE"
 	ext.axiomVersion = "1.2.20"
 	ext.smackVersion = "4.1.9"

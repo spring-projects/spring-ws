@@ -3,7 +3,7 @@
  */
 
 ext.springVersion = "5.0.0.BUILD-SNAPSHOT"
-ext.springSecurityVersion = "4.2.3.BUILD-SNAPSHOT"
+ext.springSecurityVersion = "4.2.4.BUILD-SNAPSHOT"
 
 compileJava {
 	sourceCompatibility=1.8
