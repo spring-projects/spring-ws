@@ -203,7 +203,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 		try {
 			Class<MethodArgumentResolver> methodArgumentResolverClass =
 					(Class<MethodArgumentResolver>) ClassUtils.forName(className, getClassLoader());
-			methodArgumentResolvers.add(BeanUtils.instantiate(methodArgumentResolverClass));
+			methodArgumentResolvers.add(BeanUtils.instantiateClass(methodArgumentResolverClass));
 		}
 		catch (ClassNotFoundException e) {
 			logger.warn("Could not find \"" + className + "\" on the classpath");

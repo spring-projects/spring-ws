@@ -21,8 +21,6 @@ import java.net.URI;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,11 +34,15 @@ import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.support.TestUtilities;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
 public class WebServiceTemplateTest {
@@ -458,7 +460,7 @@ public class WebServiceTemplateTest {
 
 		verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 	}
-
+	
 	@Test
 	public void testDestinationResolver() throws Exception {
 		DestinationProvider providerMock = createMock(DestinationProvider.class);
@@ -483,7 +485,11 @@ public class WebServiceTemplateTest {
 		WebServiceMessageExtractor extractorMock = createMock(WebServiceMessageExtractor.class);
 
 		reset(connectionMock);
-		expect(connectionMock.getUri()).andReturn(providerUri);
+
+		if (!TestUtilities.SPRING5) {
+			expect(connectionMock.getUri()).andReturn(providerUri);
+		}
+
 		connectionMock.send(isA(WebServiceMessage.class));
 		expect(connectionMock.hasError()).andReturn(false);
 		expect(connectionMock.receive(messageFactory)).andReturn(null);
