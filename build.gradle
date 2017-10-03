@@ -61,6 +61,7 @@ configure(allprojects) {
 		testCompile("org.easymock:easymock:3.1")
 		testCompile("xmlunit:xmlunit:1.5")
 		testCompile("com.sun.mail:javax.mail:1.5.4")
+		testCompile("commons-io:commons-io:2.5")
 		testRuntime("org.codehaus.woodstox:woodstox-core-asl:4.2.0")
 	}
 
