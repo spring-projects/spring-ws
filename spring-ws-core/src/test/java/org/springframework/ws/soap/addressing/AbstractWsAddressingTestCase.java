@@ -23,13 +23,14 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.w3c.dom.Document;
 
-import static org.junit.Assert.assertNotNull;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+
+import static org.custommonkey.xmlunit.XMLUnit.compareXML;
+import static org.junit.Assert.*;
 
 public abstract class AbstractWsAddressingTestCase {
 
@@ -59,5 +60,11 @@ public abstract class AbstractWsAddressingTestCase {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 		org.custommonkey.xmlunit.XMLAssert.assertXMLEqual(message, expectedDocument, resultDocument);
+	}
+
+	protected void assertXMLSimilar(String message, SaajSoapMessage expected, SaajSoapMessage result) {
+		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
+		Document resultDocument = result.getSaajMessage().getSOAPPart();
+		org.custommonkey.xmlunit.XMLAssert.assertXMLEqual(compareXML(expectedDocument, resultDocument), false);
 	}
 }
