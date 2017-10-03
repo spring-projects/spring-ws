@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.addressing.client;
 
 import java.net.URI;
-import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
@@ -79,7 +78,6 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-//		assertXMLEqual("Invalid message", expected, message);
 		assertXMLSimilar("Invalid message", expected, message);
 
 		verify(strategyMock, connectionMock);
@@ -109,9 +107,6 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 	private SaajSoapMessage createDeleteMessage() throws SOAPException {
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		SOAPBody saajBody = saajMessage.getSOAPBody();
-		for (Iterator<?> iterator = saajBody.getNamespacePrefixes(); iterator.hasNext(); ) {
-			System.out.println(iterator.next());
-		}
 		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
 		SOAPElement maxCount = delete.addChildElement(new QName("maxCount"));
 		maxCount.setTextContent("42");
