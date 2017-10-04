@@ -23,8 +23,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 
-import org.jivesoftware.smack.PacketCollector;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.StanzaCollector;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
@@ -32,6 +32,8 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -64,7 +66,11 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		Assert.hasLength(to, "'to' must not be empty");
 		Assert.hasLength(thread, "'thread' must not be empty");
 		this.connection = connection;
-		this.requestMessage = new Message(to, Message.Type.chat);
+		try {
+			this.requestMessage = new Message(JidCreate.from(to), Message.Type.chat);
+		} catch (XmppStringprepException e) {
+			throw new RuntimeException(e);
+		}
 		this.requestMessage.setThread(thread);
 	}
 
@@ -134,6 +140,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 			connection.sendStanza(requestMessage);
 		} catch (SmackException.NotConnectedException e) {
 			throw new IOException(e);
+		} catch (InterruptedException e) {
+			throw new IOException(e);
 		}
 	}
 
@@ -145,14 +153,17 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	protected void onReceiveBeforeRead() throws IOException {
 		StanzaFilter packetFilter = createPacketFilter();
 
-		PacketCollector collector = connection.createPacketCollector(packetFilter);
-		Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
-		if (packet instanceof Message) {
-			responseMessage = (Message) packet;
-		}
-		else if (packet != null) {
-			throw new IllegalArgumentException(
-					"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
+		StanzaCollector collector = connection.createStanzaCollector(packetFilter);
+		try {
+			Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
+			if (packet instanceof Message) {
+				responseMessage = (Message) packet;
+			} else if (packet != null) {
+				throw new IllegalArgumentException(
+						"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
+			}
+		} catch (InterruptedException e) {
+			throw new IOException(e);
 		}
 	}
 

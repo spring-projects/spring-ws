@@ -34,7 +34,6 @@ import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.support.TestUtilities;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -486,13 +485,10 @@ public class WebServiceTemplateTest {
 
 		reset(connectionMock);
 
-		if (!TestUtilities.SPRING5) {
-			expect(connectionMock.getUri()).andReturn(providerUri);
-		}
-
 		connectionMock.send(isA(WebServiceMessage.class));
 		expect(connectionMock.hasError()).andReturn(false);
 		expect(connectionMock.receive(messageFactory)).andReturn(null);
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
 		connectionMock.close();
 
 		replay(connectionMock, extractorMock, providerMock);

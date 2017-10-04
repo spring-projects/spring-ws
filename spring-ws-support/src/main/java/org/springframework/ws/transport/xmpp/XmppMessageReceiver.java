@@ -64,7 +64,11 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	@Override
 	protected void onActivate() throws XMPPException, IOException, SmackException {
 		if (!connection.isConnected()) {
-			connection.connect();
+			try {
+				connection.connect();
+			} catch (InterruptedException e) {
+				throw new IOException(e);
+			}
 		}
 	}
 
@@ -100,7 +104,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	private class WebServicePacketListener implements StanzaListener {
 
 		@Override
-		public void processPacket(Stanza packet) {
+		public void processStanza(Stanza packet) {
 			logger.info("Received " + packet);
 			if (packet instanceof Message) {
 				Message message = (Message) packet;

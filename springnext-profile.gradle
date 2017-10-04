@@ -1,0 +1,10 @@
+/**
+ * Enable with "-Pprofile=spring5"
+ */
+
+ext.springVersion = "5.0.1.BUILD-SNAPSHOT"
+ext.springSecurityVersion = "5.0.0.BUILD-SNAPSHOT"
+
+repositories {
+	maven { url 'https://repo.spring.io/libs-snapshot' }
+}

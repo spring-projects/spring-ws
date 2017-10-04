@@ -22,6 +22,8 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jxmpp.jid.parts.Resourcepart;
+import org.jxmpp.stringprep.XmppStringprepException;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
@@ -94,12 +96,15 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 		Assert.hasText(password, "'password' must not be empty");
 
 		connection = new XMPPTCPConnection(configuration);
-		connection.connect();
-		if (StringUtils.hasText(resource)) {
-			connection.login(username, password, resource);
-		}
-		else {
-			connection.login(username, password);
+		try {
+			connection.connect();
+			if (StringUtils.hasText(resource)) {
+				connection.login(username, password, Resourcepart.from(resource));
+			} else {
+				connection.login(username, password);
+			}
+		} catch (InterruptedException e) {
+			throw new IOException(e);
 		}
 	}
 
@@ -130,13 +135,13 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 	 * @param port		  the port to connect to
 	 * @param serviceName the name of the service to connect to. May be {@code null}
 	 */
-	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName) {
+	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName) throws XmppStringprepException {
 		Assert.hasText(host, "'host' must not be empty");
 		if (StringUtils.hasText(serviceName)) {
 			return XMPPTCPConnectionConfiguration.builder()
 					.setHost(host)
 					.setPort(port)
-					.setServiceName(serviceName)
+					.setXmppDomain(serviceName)
 					.build();
 		}
 		else {

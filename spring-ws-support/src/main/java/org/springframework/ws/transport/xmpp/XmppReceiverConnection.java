@@ -145,6 +145,8 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 			connection.sendStanza(responseMessage);
 		} catch (SmackException.NotConnectedException e) {
 			throw new IOException(e);
+		} catch (InterruptedException e) {
+			throw new IOException(e);
 		}
 	}
 }

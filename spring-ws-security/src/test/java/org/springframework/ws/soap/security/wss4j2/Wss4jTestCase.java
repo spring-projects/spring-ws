@@ -27,6 +27,13 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.dom.DOMSource;
 
+import org.apache.axiom.soap.SOAP12Constants;
+import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.junit.Assert;
+import org.junit.Before;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
@@ -43,14 +50,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.xpath.Jaxp13XPathTemplate;
 
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public abstract class Wss4jTestCase {
 
