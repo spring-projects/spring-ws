@@ -28,7 +28,6 @@ import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.support.TestUtilities;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
@@ -55,9 +54,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 	@Test
 	public void handleConnectionResponse() throws Exception {
-		if (!TestUtilities.SPRING5) {
-			expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-		}
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.setFaultCode(null);
 		connectionMock.send(isA(WebServiceMessage.class));
@@ -83,9 +80,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 	public void handleConnectionFaultResponse() throws Exception {
 		final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
 
-		if (!TestUtilities.SPRING5) {
-			expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-		}
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.setFaultCode(faultCode);
 		connectionMock.send(isA(WebServiceMessage.class));
@@ -111,9 +106,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 	@Test
 	public void handleConnectionNoResponse() throws Exception {
-		if (!TestUtilities.SPRING5) {
-			expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
-		}
+		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.close();
 

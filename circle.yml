@@ -1,20 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8u141
+    steps:
+      - checkout
+      - run: ./gradlew clean build
+      - run: ./gradlew -Pprofile=spring4-next clean build
+
 general:
   branches:
     ignore:
       - gh-pages # list of branches to ignore
-
-dependencies:
-  cache_directories:
-    - "~/.m2"
-
-machine:
-  java:
-    version: oraclejdk8
-  environment:
-    _JAVA_OPTIONS: "-Xms1024m -Xmx2048m"
-
-test:
-  override:
-    - ./gradlew clean build
-    - ./gradlew -Pprofile=spring4-next clean build
-    - ./gradlew -Pprofile=spring5 clean build
