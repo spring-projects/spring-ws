@@ -1,0 +1,7 @@
+[bibliography]
+= Bibliography
+
+- [[[waldo-94]]] Jim Waldo, Ann Wollrath, and Sam Kendall. _A Note on Distributed Computing_. Springer Verlag. 1994
+- [[[alpine]]] Steve Loughran & Edmund Smith. _Rethinking the Java SOAP Stack_. May 17, 2005. (C) 2005 IEEE Telephone Laboratories, Inc.
+- [[[effective-enterprise-java]]] Ted Neward. Scott Meyers. _Effective Enterprise Java_. Addison-Wesley. 2004
+- [[[effective-xml]]] Elliotte Rusty Harold. Scott Meyers. _Effective XML_. Addison-Wesley. 2004

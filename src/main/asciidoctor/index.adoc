@@ -1,0 +1,51 @@
+= Spring Web Services Reference Documentation
+Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist
+:revnumber: {version}
+:revdate: {localdate}
+:toc:
+:toclevels: 4
+:toc-placement!:
+:sectnumlevels: 3
+
+(C) 2005-2017 The original authors.
+
+NOTE: Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
+
+toc::[]
+
+:sectnums!:
+
+[[spring-framework-reference]]
+include::preface.adoc[leveloffset=+1]
+
+:sectnums!:
+= I. Introduction
+:sectnums:
+
+This first part of the reference documentation <<what-is-spring-ws,is an overview>> of Spring Web Services and the underlying concepts. Spring-WS is then introduced, and <<why-contract-first,the concepts>> behind contract-first Web service development are explained.
+
+include::what-is-spring-ws.adoc[leveloffset=+1]
+include::why-contract-first.adoc[leveloffset=+1]
+include::tutorial.adoc[leveloffset=+1]
+
+:sectnums!:
+= II. Reference
+:sectnums:
+
+This part of the reference documentation details the various components that comprise Spring Web Services. This includes <<common,a chapter>> that discusses the parts common to both client- and server-side WS, a chapter devoted to the specifics of <<server,writing server-side Web services>>, a chapter about using Web services on <<client,the client-side>>, and a chapters on using <<security,WS-Security>>.
+
+include::common.adoc[leveloffset=+1]
+include::server.adoc[leveloffset=+1]
+include::client.adoc[leveloffset=+1]
+include::security.adoc[leveloffset=+1]
+
+:sectnums!:
+[[resources]]
+= III. Other Resources
+:sectnums:
+
+In addition to this reference documentation, there exist a number of other resources that may help you learn how to use Spring Web Services. These additional, third-party resources are enumerated in this section.
+
+:sectnums!:
+
+include::bibliography.adoc[leveloffset=+1]

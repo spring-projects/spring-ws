@@ -1,0 +1,570 @@
+[[tutorial]]
+= Writing Contract-First Web Services
+
+== Introduction
+
+This tutorial shows you how to write <<why-contract-first,contract-first Web services>>, that is, developing web services that start with the XML Schema/WSDL contract first followed by the Java code second. Spring-WS focuses on this development style, and this tutorial will help you get started. Note that the first part of this tutorial contains almost no Spring-WS specific information: it is mostly about XML, XSD, and WSDL. The <<tutorial-creating-project,second part>> focuses on implementing this contract using Spring-WS .
+
+The most important thing when doing contract-first Web service development is to try and think in terms of XML. This means that Java-language concepts are of lesser importance. It is the XML that is sent across the wire, and you should focus on that. The fact that Java is used to implement the Web service is an implementation detail. An important detail, but a detail nonetheless.
+
+In this tutorial, we will define a Web service that is created by a Human Resources department. Clients can send holiday request forms to this service to book a holiday.
+
+== Messages
+
+In this section, we will focus on the actual XML messages that are sent to and from the Web service. We will start out by determining what these messages look like.
+
+=== Holiday
+
+In the scenario, we have to deal with holiday requests, so it makes sense to determine what a holiday looks like in XML:
+
+[source,xml]
+----
+<Holiday xmlns="http://mycompany.com/hr/schemas">
+    <StartDate>2006-07-03</StartDate>
+    <EndDate>2006-07-07</EndDate>
+</Holiday>
+----
+
+A holiday consists of a start date and an end date. We have also decided to use the standard https://www.cl.cam.ac.uk/~mgk25/iso-time.html[ISO 8601] date format for the dates, because that will save a lot of parsing hassle. We have also added a namespace to the element, to make sure our elements can used within other XML documents.
+
+=== Employee
+
+There is also the notion of an employee in the scenario. Here is what it looks like in XML:
+
+[source,xml]
+----
+<Employee xmlns="http://mycompany.com/hr/schemas">
+    <Number>42</Number>
+    <FirstName>Arjen</FirstName>
+    <LastName>Poutsma</LastName>
+</Employee>
+----
+
+We have used the same namespace as before. If this `<Employee/>` element could be used in other scenarios, it might make sense to use a different namespace, such as `http://mycompany.com/employees/schemas`.
+
+=== HolidayRequest
+
+Both the holiday and employee element can be put in a `<HolidayRequest/>`:
+
+[source,xml]
+----
+<HolidayRequest xmlns="http://mycompany.com/hr/schemas">
+    <Holiday>
+        <StartDate>2006-07-03</StartDate>
+        <EndDate>2006-07-07</EndDate>
+    </Holiday>
+    <Employee>
+        <Number>42</Number>
+        <FirstName>Arjen</FirstName>
+        <LastName>Poutsma</LastName>
+    </Employee>
+</HolidayRequest>
+----
+
+The order of the two elements does not matter: `<Employee/>` could have been the first element just as well. What is important is that all of the data is there. In fact, the data is the only thing that is important: we are taking a *data-driven* approach.
+
+[[tutorial.xsd]]
+== Data Contract
+
+Now that we have seen some examples of the XML data that we will use, it makes sense to formalize this into a schema. This data contract defines the message format we accept. There are four different ways of defining such a contract for XML:
+
+* DTDs
+* https://www.w3.org/XML/Schema[XML Schema (XSD)]
+* http://www.relaxng.org/[RELAX NG]
+* http://www.schematron.com/[Schematron]
+
+DTDs have limited namespace support, so they are not suitable for Web services. Relax NG and Schematron certainly are easier than XML Schema. Unfortunately, they are not so widely supported across platforms. We will use XML Schema.
+
+By far the easiest way to create an XSD is to infer it from sample documents. Any good XML editor or Java IDE offers this functionality. Basically, these tools use some sample XML documents, and generate a schema from it that validates them all. The end result certainly needs to be polished up, but it's a great starting point.
+
+Using the sample described above, we end up with the following generated schema:
+
+[source,xml]
+----
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/hr/schemas"
+        xmlns:hr="http://mycompany.com/hr/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="hr:Holiday"/>
+                <xs:element ref="hr:Employee"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Holiday">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="hr:StartDate"/>
+                <xs:element ref="hr:EndDate"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="StartDate" type="xs:NMTOKEN"/>
+    <xs:element name="EndDate" type="xs:NMTOKEN"/>
+    <xs:element name="Employee">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="hr:Number"/>
+                <xs:element ref="hr:FirstName"/>
+                <xs:element ref="hr:LastName"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Number" type="xs:integer"/>
+    <xs:element name="FirstName" type="xs:NCName"/>
+    <xs:element name="LastName" type="xs:NCName"/>
+</xs:schema>
+----
+
+This generated schema obviously can be improved. The first thing to notice is that every type has a root-level element declaration. This means that the Web service should be able to accept all of these elements as data. This is not desirable: we only want to accept a `<HolidayRequest/>`. By removing the wrapping element tags (thus keeping the types), and inlining the results, we can accomplish this.
+
+[source,xml]
+----
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:hr="http://mycompany.com/hr/schemas"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/hr/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Holiday" type="hr:HolidayType"/>
+                <xs:element name="Employee" type="hr:EmployeeType"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="HolidayType">
+        <xs:sequence>
+            <xs:element name="StartDate" type="xs:NMTOKEN"/>
+            <xs:element name="EndDate" type="xs:NMTOKEN"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EmployeeType">
+        <xs:sequence>
+            <xs:element name="Number" type="xs:integer"/>
+            <xs:element name="FirstName" type="xs:NCName"/>
+            <xs:element name="LastName" type="xs:NCName"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+----
+
+The schema still has one problem: with a schema like this, you can expect the following messages to validate:
+
+[source,xml]
+----
+<HolidayRequest xmlns="http://mycompany.com/hr/schemas">
+    <Holiday>
+        <StartDate>this is not a date</StartDate>
+        <EndDate>neither is this</EndDate>
+    </Holiday>
+    PlainText Section qName:lineannotation level:4, chunks:[<, !-- ... --, >] attrs:[:]
+</HolidayRequest>
+----
+
+Clearly, we must make sure that the start and end date are really dates. XML Schema has an excellent built-in `date` type which we can use. We also change the `NCName` s to `string` s. Finally, we change the `sequence` in `<HolidayRequest/>` to `all`. This tells the XML parser that the order of `<Holiday/>` and `<Employee/>` is not significant. Our final XSD now looks like this:
+
+[source,xml]
+----
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:hr="http://mycompany.com/hr/schemas"
+        elementFormDefault="qualified"
+        targetNamespace="http://mycompany.com/hr/schemas">
+    <xs:element name="HolidayRequest">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="Holiday" type="hr:HolidayType"/> <!--1-->
+                <xs:element name="Employee" type="hr:EmployeeType"/> <!--1-->
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="HolidayType">
+        <xs:sequence>
+            <xs:element name="StartDate" type="xs:date"/> <!--2-->
+            <xs:element name="EndDate" type="xs:date"/> <!--2-->
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EmployeeType">
+        <xs:sequence>
+            <xs:element name="Number" type="xs:integer"/>
+            <xs:element name="FirstName" type="xs:string"/> <!--3-->
+            <xs:element name="LastName" type="xs:string"/> <!--3-->
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
+----
+
+<1> `all` tells the XML parser that the order of `<Holiday/>` and `<Employee/>` is not significant.
+<2> We use the `xs:date` data type, which consist of a year, month, and day, for `<StartDate/>` and `<EndDate/>`.
+<3> `xs:string` is used for the first and last name.
+
+We store this file as `hr.xsd`.
+
+[[tutorial-service-contract]]
+== Service contract
+
+A service contract is generally expressed as a https://www.w3.org/TR/wsdl[WSDL] file. Note that in Spring-WS, _writing the WSDL by hand is not required_. Based on the XSD and some conventions, Spring-WS can create the WSDL for you, as explained in the section entitled <<tutorial.implementing.endpoint>>. You can skip to <<tutorial-creating-project,the next section>> if you want to; the remainder of this section will show you how to write your own WSDL by hand.
+
+We start our WSDL with the standard preamble, and by importing our existing XSD. To separate the schema from the definition, we will use a separate namespace for the WSDL definitions: `http://mycompany.com/hr/definitions`.
+
+[source,xml]
+----
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://mycompany.com/hr/schemas"
+                  xmlns:tns="http://mycompany.com/hr/definitions"
+                  targetNamespace="http://mycompany.com/hr/definitions">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/hr/schemas" schemaLocation="hr.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+----
+
+Next, we add our messages based on the written schema types. We only have one message: one with the `<HolidayRequest/>` we put in the schema:
+
+[source,xml]
+----
+
+    <wsdl:message name="HolidayRequest">
+        <wsdl:part element="schema:HolidayRequest" name="HolidayRequest"/>
+    </wsdl:message>
+----
+
+We add the message to a port type as an operation:
+
+[source,xml]
+----
+    <wsdl:portType name="HumanResource">
+        <wsdl:operation name="Holiday">
+            <wsdl:input message="tns:HolidayRequest" name="HolidayRequest"/>
+        </wsdl:operation>
+    </wsdl:portType>
+----
+
+That finished the abstract part of the WSDL (the interface, as it were), and leaves the concrete part. The concrete part consists of a `binding`, which tells the client *how* to invoke the operations you've just defined; and a `service`, which tells it _where_ to invoke it.
+
+Adding a concrete part is pretty standard: just refer to the abstract part you defined previously, make sure you use *document/literal* for the `soap:binding` elements (`rpc/encoded` is deprecated), pick a `soapAction` for the operation (in this case `http://mycompany.com/RequestHoliday`, but any URI will do), and determine the `location` URL where you want request to come in (in this case `http://mycompany.com/humanresources`):
+
+[source,xml]
+----
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://mycompany.com/hr/schemas"
+                  xmlns:tns="http://mycompany.com/hr/definitions"
+                  targetNamespace="http://mycompany.com/hr/definitions">
+    <wsdl:types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://mycompany.com/hr/schemas"              <!--1-->
+                schemaLocation="hr.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <wsdl:message name="HolidayRequest">                                         <!--2-->
+        <wsdl:part element="schema:HolidayRequest" name="HolidayRequest"/>       <!--3-->
+    </wsdl:message>
+    <wsdl:portType name="HumanResource">                                         <!--4-->
+        <wsdl:operation name="Holiday">
+            <wsdl:input message="tns:HolidayRequest" name="HolidayRequest"/>     <!--2-->
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="HumanResourceBinding" type="tns:HumanResource">          <!--4--><!--5-->
+        <soap:binding style="document"                                           <!--6-->
+            transport="http://schemas.xmlsoap.org/soap/http"/>                   <!--7-->
+        <wsdl:operation name="Holiday">
+            <soap:operation soapAction="http://mycompany.com/RequestHoliday"/>   <!--8-->
+            <wsdl:input name="HolidayRequest">
+                <soap:body use="literal"/>                                       <!--6-->
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="HumanResourceService">
+        <wsdl:port binding="tns:HumanResourceBinding" name="HumanResourcePort">  <!--5-->
+            <soap:address location="http://localhost:8080/holidayService/"/>     <!--9-->
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
+----
+
+<1> We import the schema defined in <<tutorial.xsd>>.
+<2> We define the `HolidayRequest` message, which gets used in the `portType`.
+<3> The `HolidayRequest` type is defined in the schema.
+<4> We define the `HumanResource` port type, which gets used in the `binding`.
+<5> We define the `HumanResourceBinding` binding, which gets used in the `port`.
+<6> We use a document/literal style.
+<7> The literal `http://schemas.xmlsoap.org/soap/http` signifies a HTTP transport.
+<8> The `soapAction` attribute signifies the `SOAPAction` HTTP header that will be sent with every request.
+<9> The `http://localhost:8080/holidayService/` address is the URL where the Web service can be invoked.
+
+This is the final WSDL. We will describe how to implement the resulting schema and WSDL in the next section.
+
+[[tutorial-creating-project]]
+== Creating the project
+
+In this section, we will be using https://maven.apache.org/[Maven3] to create the initial project structure for us. Doing so is not required, but greatly reduces the amount of code we have to write to setup our HolidayService.
+
+The following command creates a Maven3 web application project for us, using the Spring-WS archetype (that is, project template)
+
+----
+mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
+  -DarchetypeArtifactId=spring-ws-archetype \
+  -DarchetypeVersion= \
+  -DgroupId=com.mycompany.hr \
+  -DartifactId=holidayService
+----
+
+This command will create a new directory called `holidayService`. In this directory, there is a `'src/main/webapp'` directory, which will contain the root of the WAR file. You will find the standard web application deployment descriptor `'WEB-INF/web.xml'` here, which defines a Spring-WS `MessageDispatcherServlet` and maps all incoming requests to this servlet.
+
+[source,xml,subs="verbatim,quotes"]
+----
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+             http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+         version="2.4">
+
+    <display-name>MyCompany HR Holiday Service</display-name>
+
+    _<!-- take special notice of the name of this servlet -->_
+    <servlet>
+        <servlet-name>**__spring-ws__**</servlet-name>
+        <servlet-class>org.springframework.ws.transport.http.MessageDispatcherServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring-ws</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+</web-app>
+----
+
+In addition to the above `'WEB-INF/web.xml'` file, you will also need another, Spring-WS-specific configuration file, named `'WEB-INF/spring-ws-servlet.xml'`. This file contains all of the Spring-WS-specific beans such as `EndPoints`, `WebServiceMessageReceivers`, and suchlike, and is used to create a new Spring container. The name of this file is derived from the name of the attendant servlet (in this case `'spring-ws'`) with `'-servlet.xml'` appended to it. So if you defined a `MessageDispatcherServlet` with the name `'dynamite'`, the name of the Spring-WS-specific configuration file would be `'WEB-INF/dynamite-servlet.xml'`.
+
+(You can see the contents of the `'WEB-INF/spring-ws-servlet.xml'` file for this example in <<tutorial.example.sws-conf-file>>.)
+
+Once you had the project structure created, you can put the schema and wsdl from previous section into `'WEB-INF/'` folder.
+
+[[tutorial.implementing.endpoint]]
+== Implementing the Endpoint
+
+In Spring-WS, you will implement _Endpoints_ to handle incoming XML messages. An endpoint is typically created by annotating a class with the `@Endpoint` annotation. In this endpoint class, you will create one or more methods that handle incoming request. The method signatures can be quite flexible: you can include just about any sort of parameter type related to the incoming XML message, as will be explained later.
+
+=== Handling the XML Message
+
+In this sample application, we are going to use http://www.jdom.org/[JDom 2] to handle the XML message. We are also using https://www.w3.org/TR/xpath20/[XPath], because it allows us to select particular parts of the XML JDOM tree, without requiring strict schema conformance.
+
+[source,java]
+----
+package com.mycompany.hr.ws;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ws.server.endpoint.annotation.Endpoint;
+import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
+import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+
+import com.mycompany.hr.service.HumanResourceService;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathExpression;
+import org.jdom2.xpath.XPathFactory;
+
+@Endpoint                                                                                     // <1>
+public class HolidayEndpoint {
+
+    private static final String NAMESPACE_URI = "http://mycompany.com/hr/schemas";
+
+    private XPathExpression<Element> startDateExpression;
+
+    private XPathExpression<Element> endDateExpression;
+
+    private XPathExpression<Element> firstNameExpression;
+
+    private XPathExpression<Element> lastNameExpression;
+
+    private HumanResourceService humanResourceService;
+
+    @Autowired                                                                                // <2>
+    public HolidayEndpoint(HumanResourceService humanResourceService) throws JDOMException {
+        this.humanResourceService = humanResourceService;
+
+        Namespace namespace = Namespace.getNamespace("hr", NAMESPACE_URI);
+        XPathFactory xPathFactory = XPathFactory.instance();
+        startDateExpression = xPathFactory.compile("//hr:StartDate", Filters.element(), null, namespace);
+        endDateExpression = xPathFactory.compile("//hr:EndDate", Filters.element(), null, namespace);
+        firstNameExpression = xPathFactory.compile("//hr:FirstName", Filters.element(), null, namespace);
+        lastNameExpression = xPathFactory.compile("//hr:LastName", Filters.element(), null, namespace);
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "HolidayRequest")                      // <3>
+    public void handleHolidayRequest(@RequestPayload Element holidayRequest) throws Exception {// <4>
+        Date startDate = parseDate(startDateExpression, holidayRequest);
+        Date endDate = parseDate(endDateExpression, holidayRequest);
+        String name = firstNameExpression.evaluateFirst(holidayRequest).getText() + " " + lastNameExpression.evaluateFirst(holidayRequest).getText();
+
+        humanResourceService.bookHoliday(startDate, endDate, name);
+    }
+
+    private Date parseDate(XPathExpression<Element> expression, Element element) throws ParseException {
+        Element result = expression.evaluateFirst(element);
+        if (result != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return dateFormat.parse(result.getText());
+        } else {
+            throw new IllegalArgumentException("Could not evaluate [" + expression + "] on [" + element + "]");
+        }
+    }
+
+}
+----
+
+<1> The `HolidayEndpoint` is annotated with `@Endpoint`. This marks the class as a special sort of `@Component`, suitable for handling XML messages in Spring-WS, and also making it eligible for suitable for component scanning.
+<2> The `HolidayEndpoint` requires the `HumanResourceService` business service to operate, so we inject the dependency via the constructor and annotate it with `@Autowired`.
+Next, we set up XPath expressions using the JDOM2 API. There are four expressions: `//hr:StartDate` for extracting the `<StartDate>` text value, `//hr:EndDate` for extracting the end date and two for extracting the names of the employee.
+<3> The `@PayloadRoot` annotation tells Spring-WS that the `handleHolidayRequest` method is suitable for handling XML messages. The sort of message that this method can handle is indicated by the annotation values, in this case, it can 
+handle XML elements that have the `HolidayRequest` local part and the `http://mycompany.com/hr/schemas` namespace.
+More information about mapping messages to endpoints is provided in the next section.
+<4> The `handleHolidayRequest(..)` method is the main handling method method, which gets passed with the `<HolidayRequest/>` 
+element from the incoming XML message. The `@RequestPayload` annotation indicates that the `holidayRequest` parameter should be mapped to the payload of the
+request message. We use the XPath expressions to extract the string values from the XML messages, and convert these values to `Date` objects using a
+`SimpleDateFormat` (the `parseData` method). With these values, we invoke a method on the business service.
+Typically, this will result in a database transaction being started, and some records being altered in the database.
+Finally, we define a `void` return type, which indicates to Spring-WS that we do not want to send a response message.
+If we wanted a response message, we could have returned a JDOM Element that represents the payload of the response message.
+
+Using JDOM is just one of the options to handle the XML: other options include DOM, dom4j, XOM, SAX, and StAX, but also marshalling techniques like JAXB, Castor, XMLBeans, JiBX, and XStream, as is explained in the next chapter. We chose JDOM because it gives us access to the raw XML, and because it is based on classes (not interfaces and factory methods as with W3C DOM and dom4j), which makes the code less verbose. We use XPath because it is less fragile than marshalling technologies: we don't care for strict schema conformance, as long as we can find the dates and the name.
+
+Because we use JDOM, we must add some dependencies to the Maven `pom.xml`, which is in the root of our project directory. Here is the relevant section of the POM:
+
+[source,xml]
+----
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.ws</groupId>
+        <artifactId>spring-ws-core</artifactId>
+        <version></version>
+    </dependency>
+    <dependency>
+        <groupId>jdom</groupId>
+        <artifactId>jdom</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1</version>
+    </dependency>
+</dependencies>
+----
+
+Here is how we would configure these classes in our `spring-ws-servlet.xml` Spring XML configuration file, by using component scanning. We also instruct Spring-WS to use annotation-driven endpoints, with the `<sws:annotation-driven>` element.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:sws="http://www.springframework.org/schema/web-services"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
+  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+  <context:component-scan base-package="com.mycompany.hr"/>
+
+  <sws:annotation-driven/>
+
+</beans>
+----
+
+=== Routing the Message to the Endpoint
+
+As part of writing the endpoint, we also used the `@PayloadRoot` annotation to indicate which sort of messages can be handled by the `handleHolidayRequest` method. In Spring-WS, this process is the responsibility of an `EndpointMapping`. Here we route messages based on their content, by using a `PayloadRootAnnotationMethodEndpointMapping`. The annotation used above:
+
+[source,java]
+----
+@PayloadRoot(namespace = "http://mycompany.com/hr/schemas", localPart = "HolidayRequest")
+----
+
+basically means that whenever an XML message is received with the namespace `http://mycompany.com/hr/schemas` and the `HolidayRequest` local name, it will be routed to the `handleHolidayRequest` method. By using the `<sws:annotation-driven>` element in our configuration, we enable the detection of the `@PayloadRoot` annotations. It is possible (and quite common) to have multiple, related handling methods in an endpoint, each of them handling different XML messages.
+
+There are also other ways to map endpoints to XML messages, which will be described in the next chapter.
+
+=== Providing the Service and Stub implementation
+
+Now that we have the *Endpoint*, we need `HumanResourceService` and its implementation for use by `HolidayEndpoint`.
+
+[source,java]
+----
+package com.mycompany.hr.service;
+
+import java.util.Date;
+
+public interface HumanResourceService {
+    void bookHoliday(Date startDate, Date endDate, String name);
+}
+----
+
+For tutorial purposes, we will use a simple stub implementation of the `HumanResourceService`.
+
+[source,java]
+----
+package com.mycompany.hr.service;
+
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+
+@Service                                                                 // <1>
+public class StubHumanResourceService implements HumanResourceService {
+    public void bookHoliday(Date startDate, Date endDate, String name) {
+        System.out.println("Booking holiday for [" + startDate + "-" + endDate + "] for [" + name + "] ");
+    }
+}
+----
+
+<1> The `StubHumanResourceService` is annotated with `@Service`. This marks the class as a business facade, which makes this a candidate for injection by `@Autowired` in `HolidayEndpoint`.
+
+[[tutorial-publishing-wsdl]]
+== Publishing the WSDL
+
+Finally, we need to publish the WSDL. As stated in <<tutorial-service-contract>>, we don't need to write a WSDL ourselves; Spring-WS can generate one for us based on some conventions. Here is how we define the generation:
+
+[source,xml]
+----
+<sws:dynamic-wsdl id="holiday"                                <!--1-->
+    portTypeName="HumanResource"                              <!--3-->
+    locationUri="/holidayService/"                            <!--4-->
+    targetNamespace="http://mycompany.com/hr/definitions">    <!--5-->
+  <sws:xsd location="/WEB-INF/hr.xsd"/>                       <!--2-->
+</sws:dynamic-wsdl>
+----
+
+<1> The id determines the URL where the WSDL can be retrieved. In this case, the id is `holiday`, which means that the WSDL can be retrieved
+as `holiday.wsdl` in the servlet context. The full URL will typically be `http://localhost:8080/holidayService/holiday.wsdl`.
+<2> Next, we set the WSDL port type to be `HumanResource`.
+<3> We set the location where the service can be reached: `/holidayService/`. We use a relative URI and we instruct the framework to transform it
+dynamically to an absolute URI. Hence, if the service is deployed to different contexts we don't have to change the URI manually.
+For more information, please refer to <<server-automatic-wsdl-exposure, the section called “Automatic WSDL exposure”>>. For the location transformation to work, we need to add an init parameter to `spring-ws`
+servlet in `web.xml` (shown below).
+<4> We define the target namespace for the WSDL definition itself. Setting this attribute is not required. If not set, the WSDL will have the same namespace as the XSD schema.
+<5> The `xsd` element refers to the human resource schema we defined in <<tutorial.xsd>>. We simply placed the schema in the `WEB-INF` directory of the application.
+
+[source,xml]
+----
+<init-param>
+  <param-name>transformWsdlLocations</param-name>
+  <param-value>true</param-value>
+</init-param>
+----
+
+You can create a WAR file using *mvn install*. If you deploy the application (to Tomcat, Jetty, etc.), and point your browser at http://localhost:8080/holidayService/holiday.wsdl[this location], you will see the generated WSDL. This WSDL is ready to be used by clients, such as http://www.soapui.org/[soapUI], or other SOAP frameworks.
+
+That concludes this tutorial. The tutorial code can be found in the full distribution of Spring-WS. The next step would be to look at the echo sample application that is part of the distribution. After that, look at the airline sample, which is a bit more complicated, because it uses JAXB, WS-Security, Hibernate, and a transactional service layer. Finally, you can read the rest of the reference documentation.
+
