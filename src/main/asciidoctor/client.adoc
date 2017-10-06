@@ -1,0 +1,499 @@
+[[client]]
+= Using Spring Web Services on the Client
+
+== Introduction
+
+Spring-WS provides a client-side Web service API that allows for consistent, XML-driven access to Web services. It also caters for the use of marshallers and unmarshallers so that your service tier code can deal exclusively with Java objects.
+
+The `org.springframework.ws.client.core` package provides the core functionality for using the client-side access API. It contains template classes that simplify the use of Web services, much like the core Spring `JdbcTemplate` does for JDBC. The design principle common to Spring template classes is to provide helper methods to perform common operations, and for more sophisticated usage, delegate to user implemented callback interfaces. The Web service template follows the same design. The classes offer various convenience methods for the sending and receiving of XML messages, marshalling objects to XML before sending, and allows for multiple transport options.
+
+== Using the client-side API
+
+[[client-web-service-template]]
+=== `WebServiceTemplate`
+
+The `WebServiceTemplate` is the core class for client-side Web service access in Spring-WS. It contains methods for sending `Source` objects, and receiving response messages as either `Source` or `Result`. Additionally, it can marshal objects to XML before sending them across a transport, and unmarshal any response XML into an object again.
+
+[[client-transports]]
+==== URIs and Transports
+
+The `WebServiceTemplate` class uses an URI as the message destination. You can either set a `defaultUri` property on the template itself, or supply an URI explicitly when calling a method on the template. The URI will be resolved into a `WebServiceMessageSender`, which is responsible for sending the XML message across a transport layer. You can set one or more message senders using the `messageSender` or `messageSenders` properties of the `WebServiceTemplate` class.
+
+===== HTTP transports
+
+There are two implementations of the `WebServiceMessageSender` interface for sending messages via HTTP. The default implementation is the `HttpUrlConnectionMessageSender`, which uses the facilities provided by Java itself. The alternative is the `HttpComponentsMessageSender`, which uses the https://hc.apache.org/httpcomponents-client-ga[Apache HttpComponents HttpClient]. Use the latter if you need more advanced and easy-to-use functionality (such as authentication, HTTP connection pooling, and so forth).
+
+To use the HTTP transport, either set the `defaultUri` to something like `http://example.com/services`, or supply the *uri* parameter for one of the methods.
+
+The following example shows how the default configuration can be used for HTTP transports:
+
+[source,xml]
+----
+<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="defaultUri" value="http://example.com/WebService"/>
+    </bean>
+
+</beans>
+----
+
+The following example shows how override the default configuration, and to use Apache HttpClient to authenticate using HTTP authentication:
+
+[source,xml]
+----
+<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+    <constructor-arg ref="messageFactory"/>
+    <property name="messageSender">
+        <bean class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
+            <property name="credentials">
+                <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+                    <constructor-arg value="john:secret"/>
+                </bean>
+            </property>
+        </bean>
+    </property>
+    <property name="defaultUri" value="http://example.com/WebService"/>
+</bean>
+----
+
+===== JMS transport
+
+For sending messages over JMS, Spring Web Services provides the `JmsMessageSender`. This class uses the facilities of the Spring framework to transform the `WebServiceMessage` into a JMS `Message`, send it on its way on a `Queue` or `Topic`, and receive a response (if any).
+
+To use the `JmsMessageSender`, you need to set the `defaultUri` or *uri* parameter to a JMS URI, which - at a minimum - consists of the `jms:` prefix and a destination name. Some examples of JMS URIs are: `jms:SomeQueue`, `jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT`, and `jms:RequestQueue?replyToName=ResponseName`. For more information on this URI syntax, refer to the class level Javadoc of the `JmsMessageSender`.
+
+By default, the `JmsMessageSender` send JMS `BytesMessage`, but this can be overriden to use `TextMessages` by using the `messageType` parameter on the JMS URI. For example: `jms:Queue?messageType=TEXT_MESSAGE`. Note that `BytesMessages` are the preferred type, because `TextMessages` do not support attachments and character encodings reliably.
+
+The following example shows how to use the JMS transport in combination with an ActiveMQ connection factory:
+
+[source,xml]
+----
+<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+    </bean>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="messageSender">
+            <bean class="org.springframework.ws.transport.jms.JmsMessageSender">
+                <property name="connectionFactory" ref="connectionFactory"/>
+            </bean>
+        </property>
+        <property name="defaultUri" value="jms:RequestQueue?deliveryMode=NON_PERSISTENT"/>
+    </bean>
+
+</beans>
+----
+
+===== Email transport
+
+Spring Web Services also provides an email transport, which can be used to send web service messages via SMTP, and retrieve them via either POP3 or IMAP. The client-side email functionality is contained in the `MailMessageSender` class. This class creates an email message from the request `WebServiceMessage`, and sends it via SMTP. It then waits for a response message to arrive in the incoming POP3 or IMAP server.
+
+To use the `MailMessageSender`, set the `defaultUri` or *uri* parameter to a `mailto` URI. Here are some URI examples: `mailto:john@example.com`, and `mailto:server@localhost?subject=SOAP%20Test`. Make sure that the message sender is properly configured with a `transportUri`, which indicates the server to use for sending requests (typically a SMTP server), and a `storeUri`, which indicates the server to poll for responses (typically a POP3 or IMAP server).
+
+The following example shows how to use the email transport:
+
+[source,xml]
+----
+<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="messageSender">
+            <bean class="org.springframework.ws.transport.mail.MailMessageSender">
+                <property name="from" value="Spring-WS SOAP Client &lt;client@example.com&gt;"/>
+                <property name="transportUri" value="smtp://client:s04p@smtp.example.com"/>
+                <property name="storeUri" value="imap://client:s04p@imap.example.com/INBOX"/>
+            </bean>
+        </property>
+        <property name="defaultUri" value="mailto:server@example.com?subject=SOAP%20Test"/>
+    </bean>
+
+</beans>
+----
+
+===== XMPP transport
+
+Spring Web Services 2.0 introduced an XMPP (Jabber) transport, which can be used to send and receive web service messages via XMPP. The client-side XMPP functionality is contained in the `XmppMessageSender` class. This class creates an XMPP message from the request `WebServiceMessage`, and sends it via XMPP. It then listens for a response message to arrive.
+
+To use the `XmppMessageSender`, set the `defaultUri` or *uri* parameter to a `xmpp` URI, for example `xmpp:johndoe@jabber.org`. The sender also requires an `XMPPConnection` to work, which can be conveniently created using the `org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean`.
+
+The following example shows how to use the xmpp transport:
+
+[source,xml]
+----
+<beans>
+
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+
+    <bean id="connection" class="org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean">
+        <property name="host" value="jabber.org"/>
+        <property name="username" value="username"/>
+        <property name="password" value="password"/>
+    </bean>
+
+    <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory"/>
+        <property name="messageSender">
+            <bean class="org.springframework.ws.transport.xmpp.XmppMessageSender">
+                <property name="connection" ref="connection"/>
+            </bean>
+        </property>
+        <property name="defaultUri" value="xmpp:user@jabber.org"/>
+    </bean>
+
+</beans>
+----
+
+==== Message factories
+
+In addition to a message sender, the `WebServiceTemplate` requires a Web service message factory. There are two message factories for SOAP: `SaajSoapMessageFactory` and `AxiomSoapMessageFactory`. If no message factory is specified (via the `messageFactory` property), Spring-WS will use the `SaajSoapMessageFactory` by default.
+
+=== Sending and receiving a `WebServiceMessage`
+
+The `WebServiceTemplate` contains many convenience methods to send and receive web service messages. There are methods that accept and return a `Source` and those that return a `Result`. Additionally, there are methods which marshal and unmarshal objects to XML. Here is an example that sends a simple XML message to a Web service.
+
+[source,xml,subs="verbatim,quotes"]
+----
+import java.io.StringReader;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.transport.WebServiceMessageSender;
+
+public class WebServiceClient {
+
+    private static final String MESSAGE =
+        "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
+
+    private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+
+    public void setDefaultUri(String defaultUri) {
+        webServiceTemplate.setDefaultUri(defaultUri);
+    }
+
+    _// send to the configured default URI_
+    public void simpleSendAndReceive() {
+        StreamSource source = new StreamSource(new StringReader(MESSAGE));
+        StreamResult result = new StreamResult(System.out);
+        webServiceTemplate.sendSourceAndReceiveToResult(source, result);
+    }
+
+    _// send to an explicit URI_
+    public void customSendAndReceive() {
+        StreamSource source = new StreamSource(new StringReader(MESSAGE));
+        StreamResult result = new StreamResult(System.out);
+        webServiceTemplate.sendSourceAndReceiveToResult("http://localhost:8080/AnotherWebService",
+            source, result);
+    }
+
+}
+----
+
+[source,xml]
+----
+
+<beans xmlns="http://www.springframework.org/schema/beans">
+
+    <bean id="webServiceClient" class="WebServiceClient">
+        <property name="defaultUri" value="http://localhost:8080/WebService"/>
+    </bean>
+
+</beans>
+----
+
+The above example uses the `WebServiceTemplate` to send a hello world message to the web service located at `http://localhost:8080/WebService` (in the case of the `simpleSendAndReceive()` method), and writes the result to the console. The `WebServiceTemplate` is injected with the default URI, which is used because no URI was supplied explicitly in the Java code.
+
+Please note that the `WebServiceTemplate` class is thread-safe once configured (assuming that all of it's dependencies are thread-safe too, which is the case for all of the dependencies that ship with Spring-WS), and so multiple objects can use the same shared `WebServiceTemplate` instance if so desired. The `WebServiceTemplate` exposes a zero argument constructor and `messageFactory`/`messageSender` bean properties which can be used for constructing the instance (using a Spring container or plain Java code). Alternatively, consider deriving from Spring-WS's `WebServiceGatewaySupport` convenience base class, which exposes convenient bean properties to enable easy configuration. (You do *not* have to extend this base class... it is provided as a convenience class only.)
+
+=== Sending and receiving POJOs - marshalling and unmarshalling
+
+In order to facilitate the sending of plain Java objects, the `WebServiceTemplate` has a number of `send(..)` methods that take an `Object` as an argument for a message's data content. The method `marshalSendAndReceive(..)` in the `WebServiceTemplate` class delegates the conversion of the request object to XML to a `Marshaller`, and the conversion of the response XML to an object to an `Unmarshaller`. (For more information about marshalling and unmarshaller, refer to http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html[the Spring documentation].) By using the marshallers, your application code can focus on the business object that is being sent or received and not be concerned with the details of how it is represented as XML. In order to use the marshalling functionality, you have to set a marshaller and unmarshaller with the `marshaller`/`unmarshaller` properties of the `WebServiceTemplate` class.
+
+=== `WebServiceMessageCallback`
+
+To accommodate the setting of SOAP headers and other settings on the message, the `WebServiceMessageCallback` interface gives you access to the message *after* it has been created, but *before* it is sent. The example below demonstrates how to set the SOAP Action header on a message that is created by marshalling an object.
+
+[source,java]
+----
+
+public void marshalWithSoapActionHeader(MyObject o) {
+
+    webServiceTemplate.marshalSendAndReceive(o, new WebServiceMessageCallback() {
+
+        public void doWithMessage(WebServiceMessage message) {
+            ((SoapMessage)message).setSoapAction("http://tempuri.org/Action");
+        }
+    });
+}
+----
+
+NOTE: Note that you can also use the `org.springframework.ws.soap.client.core.SoapActionCallback` to set the SOAP Action header.
+
+==== WS-Addressing
+
+In addition to the <<server-ws-addressing,server-side WS-Addressing>> support, Spring Web Services also has support for this specification on the client-side.
+
+For setting WS-Addressing headers on the client, you can use the `org.springframework.ws.soap.addressing.client.ActionCallback`. This callback takes the desired Action header as a parameter. It also has constructors for specifying the WS-Addressing version, and a `To` header. If not specified, the `To` header will default to the URL of the connection being made.
+
+Here is an example of setting the `Action` header to `http://samples/RequestOrder`:
+
+[source,java]
+----
+webServiceTemplate.marshalSendAndReceive(o, new ActionCallback("http://samples/RequestOrder"));
+----
+
+=== `WebServiceMessageExtractor`
+
+The `WebServiceMessageExtractor` interface is a low-level callback interface that allows you to have full control over the process to extract an `Object` from a received `WebServiceMessage`. The `WebServiceTemplate` will invoke the `extractData(..)` method on a supplied `WebServiceMessageExtractor` *while the underlying connection to the serving resource is still open*. The following example illustrates the `WebServiceMessageExtractor` in action:
+
+[source,java,subs="verbatim,quotes"]
+----
+public void marshalWithSoapActionHeader(final Source s) {
+    final Transformer transformer = transformerFactory.newTransformer();
+    webServiceTemplate.sendAndReceive(new WebServiceMessageCallback() {
+        public void doWithMessage(WebServiceMessage message) {
+            transformer.transform(s, message.getPayloadResult());
+        },
+        new WebServiceMessageExtractor() {
+            public Object extractData(WebServiceMessage message) throws IOException
+                _// do your own transforms with message.getPayloadResult()
+                //     or message.getPayloadSource()_
+            }
+        });
+}
+----
+
+== Client-side testing
+
+When it comes to testing your Web service clients (i.e. classes that uses the `WebServiceTemplate` to access a Web service), there are two possible approaches:
+
+* Write *Unit Tests*, which simply mock away the `WebServiceTemplate` class, `WebServiceOperations` interface, or the complete client class.
++
+The advantage of this approach is that it's quite easy to accomplish; the disadvantage is that you are not really testing the exact content of the XML messages that are sent over the wire, especially when mocking out the entire client class.
++
+* Write *Integrations Tests*, which do test the contents of the message.
+
+The first approach can easily be accomplished with mocking frameworks such as EasyMock, JMock, etc. The next section will focus on writing integration tests, using the test features introduced in Spring Web Services 2.0.
+
+=== Writing client-side integration tests
+
+Spring Web Services 2.0 introduced support for creating Web service client integration tests. In this context, a client is a class that uses the `WebServiceTemplate` to access a Web service.
+
+The integration test support lives in the `org.springframework.ws.test.client` package. The core class in that package is the `MockWebServiceServer`. The underlying idea is that the web service template connects to this mock server, sends it request message, which the mock server then verifies against the registered expectations. If the expectations are met, the mock server then prepares a response message, which is send back to the template.
+
+The typical usage of the `MockWebServiceServer` is: . 
+                    
+. Create a `MockWebServiceServer` instance by calling `MockWebServiceServer.createServer(WebServiceTemplate)`, `MockWebServiceServer.createServer(WebServiceGatewaySupport)`, or `MockWebServiceServer.createServer(ApplicationContext)`.
+. Set up request expectations by calling `expect(RequestMatcher)`, possibly by using the default `RequestMatcher` implementations provided in `RequestMatchers` (which can be statically imported). Multiple expectations can be set up by chaining `andExpect(RequestMatcher)` calls.
+. Create an appropriate response message by calling `andRespond(ResponseCreator)`, possibly by using the default `ResponseCreator` implementations provided in `ResponseCreators` (which can be statically imported).
+. Use the `WebServiceTemplate` as normal, either directly of through client code.
+. Call `MockWebServiceServer.verify()` to make sure that all expectations have been met.
+
+NOTE: Note that the `MockWebServiceServer` (and related classes) offers a 'fluent' API, so you can typically use the Code Completion features (i.e. ctrl-space) in your IDE to guide you through the process of setting up the mock server.
+
+NOTE: Also note that you rely on the standard logging features available in Spring Web Services in your unit tests. Sometimes it might be useful to inspect the request or response message to find out why a particular tests failed. See <<logging>> for more information.
+
+Consider, for example, this Web service client class:
+
+[source,java]
+----
+import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+
+public class CustomerClient extends WebServiceGatewaySupport {                          //<1>
+
+  public int getCustomerCount() {
+    CustomerCountRequest request = new CustomerCountRequest();                          //<2>
+    request.setCustomerName("John Doe");
+
+    CustomerCountResponse response =
+      (CustomerCountResponse) getWebServiceTemplate().marshalSendAndReceive(request);   //<3>
+
+    return response.getCustomerCount();
+  }
+
+}
+----
+
+<1> The `CustomerClient` extends `WebServiceGatewaySupport`, which provides it with a webServiceTemplate property.
+<2> `CustomerCountRequest` is an object supported by a marshaller. For instance, it can have a `@XmlRootElement` annotation to be supported by JAXB2.
+<3> The `CustomerClient` uses the `WebServiceTemplate` offered by `WebServiceGatewaySupport` to marshal the request object into a SOAP message, and sends that to the web service. The response object is unmarshalled into a `CustomerCountResponse`.
+
+A typical test for `CustomerClient` would look like this:
+
+[source,java]
+----
+import javax.xml.transform.Source;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.xml.transform.StringSource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import static org.junit.Assert.assertEquals;
+
+import org.springframework.ws.test.client.MockWebServiceServer;                         //<1>
+import static org.springframework.ws.test.client.RequestMatchers.*;                     //<1>
+import static org.springframework.ws.test.client.ResponseCreators.*;                    //<1>
+
+@RunWith(SpringJUnit4ClassRunner.class)                                                 //<2>
+@ContextConfiguration("integration-test.xml")                                           //<2>
+public class CustomerClientIntegrationTest {
+
+  @Autowired
+  private CustomerClient client;                                                        //<3>
+
+  private MockWebServiceServer mockServer;                                              //<4>
+
+  @Before
+  public void createServer() throws Exception {
+    mockServer = MockWebServiceServer.createServer(client);
+  }
+
+  @Test
+  public void customerClient() throws Exception {
+    Source requestPayload = new StringSource(
+      "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
+        "<customerName>John Doe</customerName>" +
+      "</customerCountRequest>");
+    Source responsePayload = new StringSource(
+      "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
+        "<customerCount>10</customerCount>" +
+      "</customerCountResponse>");
+
+    mockServer.expect(payload(requestPayload)).andRespond(withPayload(responsePayload));//<5>
+
+    int result = client.getCustomerCount();                                             //<6>
+    assertEquals(10, result);                                                           //<6>
+
+    mockServer.verify();                                                                //<7>
+  }
+
+}
+----
+
+<1> The `CustomerClientIntegrationTest` imports the `MockWebServiceServer`, and statically imports `RequestMatchers` and `ResponseCreators`.
+<2> This test uses the standard testing facilities provided in the Spring Framework. This is not required, but is generally the easiest way to set up the test.
+<3> The `CustomerClient` is configured in `integration-test.xml`, and wired into this test using `@Autowired`.
+<4> In a `@Before` method, we create a `MockWebServiceServer` by using the `createServer` factory method.
+<5> We define expectations by calling `expect()` with a `payload()` `RequestMatcher` provided by the statically imported `RequestMatchers` (see <<client-test-request-matcher>>).
++
+We also set up a response by calling `andRespond()` with a `withPayload()` `ResponseCreator` provided by the statically imported `ResponseCreators` (see <<client-test-response-creator>>).
++
+This part of the test might look a bit confusing, but the Code Completion features of your IDE are of great help. After typing `expect(`, simply type ctrl-space, and your IDE will provide you with a list of possible request matching strategies, provided you statically imported `RequestMatchers`. The same applies to `andRespond(`, provided you statically imported `ResponseCreators`.
+<6> We call `getCustomerCount()` on the `CustomerClient`, thus using the `WebServiceTemplate`. The template has been set up for 'testing mode' by now, so no real (HTTP) connection is made by this method call. We also make some JUnit assertions based on the result of the method call.
+<7> We call `verify()` on the `MockWebServiceServer`, thus verifying that the expected message was actually received.
+
+
+[[client-test-request-matcher]]
+=== `RequestMatcher` and `RequestMatchers`
+
+To verify whether the request message meets certain expectations, the `MockWebServiceServer` uses the `RequestMatcher` strategy interface. The contract defined by this interface is quite simple:
+
+[source,java]
+----
+public interface RequestMatcher {
+
+  void match(URI uri,
+             WebServiceMessage request)
+    throws IOException,
+           AssertionError;
+}
+----
+
+You can write your own implementations of this interface, throwing `AssertionError`s when the message does not meet your expectations, but you certainly do not have to. The `RequestMatchers` class provides standard `RequestMatcher` implementations for you to use in your tests. You will typically statically import this class.
+
+The `RequestMatchers` class provides the following request matchers: 
+
+[cols="2", options="header"]
+|===
+| `RequestMatchers` method
+| Description
+
+| `anything()`
+| Expects any sort of request.
+
+| `payload()`
+| Expects a given request payload.
+
+| `validPayload()`
+| Expects the request payload to validate against given XSD schema(s).
+
+| `xpath()`
+| Expects a given XPath expression to exist, not exist, or evaluate to a given value.
+
+| `soapHeader()`
+| Expects a given SOAP header to exist in the request message.
+
+| `connectionTo()`
+| Expects a connection to the given URL.
+|===
+
+You can set up multiple request expectations by chaining `andExpect()` calls, like so:
+
+[source,java]
+----
+mockServer.expect(connectionTo("http://example.com")).
+ andExpect(payload(expectedRequestPayload)).
+ andExpect(validPayload(schemaResource)).
+ andRespond(...);
+----
+
+For more information on the request matchers provided by `RequestMatchers`, refer to the class level Javadoc.
+
+[[client-test-response-creator]]
+=== `ResponseCreator` and `ResponseCreators`
+
+When the request message has been verified and meets the defined expectations, the `MockWebServiceServer` will create a response message for the `WebServiceTemplate` to consume. The server uses the `ResponseCreator` strategy interface for this purpose:
+
+[source,java]
+----
+public interface ResponseCreator {
+
+  WebServiceMessage createResponse(URI uri,
+                                   WebServiceMessage request,
+                                   WebServiceMessageFactory messageFactory)
+    throws IOException;
+
+}
+----
+
+Once again you can write your own implementations of this interface, creating a response message by using the message factory, but you certainly do not have to, as the `ResponseCreators` class provides standard `ResponseCreator` implementations for you to use in your tests. You will typically statically import this class.
+
+The `ResponseCreators` class provides the following responses: 
+
+[cols="2", options="header"]
+|===
+| `ResponseCreators` method
+| Description
+
+| `withPayload()`
+| Creates a response message with a given payload.
+
+| `withError()`
+| Creates an error in the response connection. This method gives you the opportunity to test your error handling.
+
+| `withException()`
+| Throws an exception when reading from the response connection. This method gives you the opportunity to test your exception handling.
+
+| `withMustUnderstandFault()`, `withClientOrSenderFault()`, `withServerOrReceiverFault()`, and `withVersionMismatchFault()`
+| Creates a response message with a given SOAP fault. This method gives you the opportunity to test your Fault handling.
+|===
+
+For more information on the request matchers provided by `RequestMatchers`, refer to the class level Javadoc.
+
