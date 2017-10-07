@@ -43,7 +43,7 @@ public abstract class XmppTransportUtils {
 	 */
 	public static URI toUri(Message requestMessage) throws URISyntaxException {
 		return new URI(XmppTransportConstants.XMPP_URI_SCHEME,
-				requestMessage.getTo().asDomainFullJidIfPossible().asUnescapedString(), null);
+				requestMessage.getTo().asUnescapedString(), null);
 	}
 
 	public static String getTo(URI uri) {
