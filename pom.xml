@@ -508,6 +508,7 @@
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>build-helper-maven-plugin</artifactId>
 						<version>1.10</version>
+						<inherited>false</inherited>
 						<executions>
 							<execution>
 								<id>attach-zip</id>
