@@ -1,12 +1,34 @@
 version: 2
 jobs:
-   build:
+   test:
      docker:
        - image: circleci/openjdk:8u141
      steps:
             - checkout
-            - run: ./gradlew clean build
-            - run: ./gradlew -Pprofile=springnext clean build
+            - run: ./mvnw -Pdistribute,snapshot,docs clean test
+   test_next:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+            - checkout
+            - run: ./mvnw -Pspringnext clean test
+   deploy:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+            - checkout
+            - run: ./deploy.bash
+
+workflows:
+  version: 2
+  test_and_deploy:
+    - test
+    - test_next
+    - deploy:
+      requires:
+        - test
+        - test_next
+
 general:
   branches:
     ignore:

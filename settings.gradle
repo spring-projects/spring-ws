@@ -1,7 +1,0 @@
-rootProject.name = 'spring-ws'
-
-include 'spring-xml'
-include 'spring-ws-core'
-include 'spring-ws-support'
-include 'spring-ws-security'
-include 'spring-ws-test'
