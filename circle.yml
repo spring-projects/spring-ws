@@ -1,34 +1,20 @@
 version: 2
 jobs:
-   test:
+   build:
      docker:
        - image: circleci/openjdk:8u141
      steps:
-            - checkout
-            - run: ./mvnw -Pdistribute,snapshot,docs clean test
-   test_next:
-     docker:
-       - image: circleci/openjdk:8u141
-     steps:
-            - checkout
-            - run: ./mvnw -Pspringnext clean test
-   deploy:
-     docker:
-       - image: circleci/openjdk:8u141
-     steps:
-            - checkout
-            - run: ./deploy.bash
-
-workflows:
-  version: 2
-  test_and_deploy:
-    - test
-    - test_next
-    - deploy:
-      requires:
-        - test
-        - test_next
-
+        - checkout
+        - run:
+            name: Test current version
+            command: ./mvnw -Pdistribute,snapshot,docs clean test
+        - run:
+            name: Test Spring.NEXT
+            command: ./mvnw -Pspringnext clean test
+        - run:
+            name: Deploy to Artifactory
+            command: ./deploy.bash
+                
 general:
   branches:
     ignore:
