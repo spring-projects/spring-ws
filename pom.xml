@@ -10,6 +10,7 @@
 
 	<name>Spring Web Services</name>
 	<url>http://project.spring.io/spring-ws</url>
+	<description>Spring-based Web Services support</description>
 
 	<developers>
 		<developer>
