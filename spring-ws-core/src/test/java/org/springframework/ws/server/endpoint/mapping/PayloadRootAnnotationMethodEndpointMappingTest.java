@@ -18,16 +18,15 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 
 import org.apache.commons.logging.LogFactory;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -46,6 +45,8 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
@@ -76,20 +77,6 @@ public class PayloadRootAnnotationMethodEndpointMappingTest	 {
 		assertEquals("Invalid endpoint registered", expected, endpoint);
 
 		endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2"));
-		assertNotNull("MethodEndpoint not registered", endpoint);
-		assertEquals("Invalid endpoint registered", expected, endpoint);
-	}
-
-	@Test
-	public void registrationRepeatable() throws NoSuchMethodException {
-		Method doItMultiple = MyEndpoint.class.getMethod("doItRepeatable");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
-
-		MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request3"));
-		assertNotNull("MethodEndpoint not registered", endpoint);
-		assertEquals("Invalid endpoint registered", expected, endpoint);
-
-		endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request4"));
 		assertNotNull("MethodEndpoint not registered", endpoint);
 		assertEquals("Invalid endpoint registered", expected, endpoint);
 	}
@@ -148,14 +135,6 @@ public class PayloadRootAnnotationMethodEndpointMappingTest	 {
 				@PayloadRoot(localPart = "Request2",
 						namespace = "http://springframework.org/spring-ws")})
 		public void doItMultiple() {
-		}
-
-		@PayloadRoot(localPart = "Request3",
-				namespace = "http://springframework.org/spring-ws")
-		@PayloadRoot(localPart = "Request4",
-				namespace = "http://springframework.org/spring-ws")
-		public void doItRepeatable() {
-
 		}
 
 	}

@@ -1,0 +1,64 @@
+[[what-is-spring-ws]]
+= What is Spring Web Services?
+
+== Introduction
+
+Spring Web Services (Spring-WS) is a product of the Spring community focused on creating document-driven Web services. Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services using one of the many ways to manipulate XML payloads. The product is based on Spring itself, which means you can use the Spring concepts such as dependency injection as an integral part of your Web service.
+
+People use Spring-WS for many reasons, but most are drawn to it after finding alternative SOAP stacks lacking when it comes to following Web service best practices. Spring-WS makes the best practice an easy practice. This includes practices such as the WS-I basic profile, Contract-First development, and having a loose coupling between contract and implementation. The other key features of Spring Web services are:
+
+=== Powerful mappings
+
+You can distribute incoming XML requests to any object, depending on message payload, SOAP Action header, or an XPath expression.
+
+=== XML API support
+
+Incoming XML messages can be handled not only with standard JAXP APIs such as DOM, SAX, and StAX, but also JDOM, dom4j, XOM, or even marshalling technologies.
+
+=== Flexible XML Marshalling
+
+Spring Web Services builds on the Object/XML Mapping module in the Spring Framework, which supports JAXB 1 and 2, Castor, XMLBeans, JiBX, and XStream.
+
+=== Reuses your Spring expertise
+
+Spring-WS uses Spring application contexts for all configuration, which should help Spring developers get up-to-speed nice and quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
+
+=== Supports WS-Security
+
+WS-Security allows you to sign SOAP messages, encrypt and decrypt them, or authenticate against them.
+
+=== Integrates with Spring Security
+
+The WS-Security implementation of Spring Web Services provides integration with Spring Security. This means you can use your existing Spring Security configuration for your SOAP service as well.
+
+=== Apache license
+
+You can confidently use Spring-WS in your project.
+
+== Runtime environment
+
+Spring Web Services requires a standard Java 7 Runtime Environment. Java 8 is also supported. Spring-WS is built on Spring Framework 4.0.9, but higher versions are supported.
+
+Spring-WS consists of a number of modules, which are described in the remainder of this section.
+
+* The XML module (`spring-xml.jar`) contains various XML support classes for Spring Web Services. This module is mainly intended for the Spring-WS framework itself, and not a Web service  developers.
+* The Core module (`spring-ws-core.jar`) is the central part of the Spring's Web services functionality. It provides the central <<web-service-messages,`WebServiceMessage`>> and <<soap-message,`SoapMessage`>> interfaces, the <<server,server-side>> framework, with powerful message dispatching, and the various support classes for implementing Web service endpoints; and the <<client,client-side>> `WebServiceTemplate`.
+* The Support module (`spring-ws-support.jar`) contains additional transports (JMS, Email, and others).
+* The <<security,Security>> package (`spring-ws-security.jar`) provides a WS-Security implementation that integrates with the core Web service package. It allows you to add principal tokens, sign, and decrypt and encrypt SOAP messages. Additionally, it allows you to leverage your existing Spring Security security implementation for authentication and authorization.
+
+The following figure illustrates the Spring-WS modules and the dependencies between them. Arrows indicate dependencies, i.e. Spring-WS Core depends on Spring-XML and the OXM module found in Spring 3 and higher.
+
+image::spring-deps.png[align="center"]
+
+== Supported standards
+
+Spring Web Services supports the following standards:
+
+* SOAP 1.1 and 1.2
+* WSDL 1.1 and 2.0 (XSD-based generation only supported for WSDL 1.1)
+* WS-I Basic Profile 1.0, 1.1, 1.2 and 2.0
+* WS-Addressing 1.0 and the August 2004 draft
+* SOAP Message Security 1.1, Username Token Profile 1.1, X.509 Certificate Token Profile 1.1, SAML Token Profile 1.1, Kerberos Token Profile 1.1, Basic Security Profile 1.1
+
+        
+

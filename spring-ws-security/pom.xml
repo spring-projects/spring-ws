@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.ws</groupId>
+		<artifactId>spring-ws</artifactId>
+		<version>2.4.1.BUILD-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.springframework.ws</groupId>
+	<artifactId>spring-ws-security</artifactId>
+	<packaging>jar</packaging>
+
+	<description>Spring WS Security</description>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-xml</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.ws</groupId>
+			<artifactId>spring-ws-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!--// Spring Security-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+			<version>${ehcache.version}</version>
+		</dependency>
+
+		<!--// WS-Security-->
+		<dependency>
+			<groupId>com.sun.xml.wss</groupId>
+			<artifactId>xws-security</artifactId>
+			<version>${xws-security.version}</version>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.xml.crypto</groupId>
+					<artifactId>xmldsig</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.ws.security</groupId>
+			<artifactId>wss4j</artifactId>
+			<version>${wss4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.santuario</groupId>
+					<artifactId>xmlsec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.wss4j</groupId>
+			<artifactId>wss4j-ws-security-dom</artifactId>
+			<version>${wss4j2.version}</version>
+		</dependency>
+
+		<!--// SOAP-->
+		<dependency>
+			<groupId>com.sun.xml.messaging.saaj</groupId>
+			<artifactId>saaj-impl</artifactId>
+			<version>${saaj-impl.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>${axiom.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>${axiom.version}</version>
+			<optional>true</optional>
+			<exclusions>
+				<exclusion>
+					<groupId>org.codehaus.woodstox</groupId>
+					<artifactId>wstx-asl</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+	</dependencies>
+
+</project>

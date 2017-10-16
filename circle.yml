@@ -1,14 +1,28 @@
 version: 2
 jobs:
-  build:
-    docker:
-      - image: circleci/openjdk:8u141
-    steps:
-      - checkout
-      - run: ./gradlew clean build
-      - run: ./gradlew -Pprofile=spring4-next clean build
+   build:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+        - checkout
+        - run:
+            name: Test current version
+            command: ./mvnw -Pdistribute,snapshot,docs clean test
+        - run:
+            name: Test Spring.NEXT
+            command: ./mvnw -Pspringnext clean test
+        - run:
+            name: Test Spring.NEXT snapshots
+            command: ./mvnw -Pspringnext-snapshot clean test
+        - run:
+            name: Deploy to Artifactory
+            command: ./deploy.bash
 
 general:
   branches:
     ignore:
       - gh-pages # list of branches to ignore
+
+dependencies:
+  cache_directories:
+    - "~/.m2"

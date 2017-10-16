@@ -42,7 +42,7 @@ public class ClientInterceptorAdapterTest {
 
 	@Test
 	public void handleTestAdapter() {
-		TestClientInterceptorAdapter interceptor = new TestClientInterceptorAdapter(new ArrayList<>());
+		TestClientInterceptorAdapter interceptor = new TestClientInterceptorAdapter(new ArrayList<String>());
 
 		Assert.assertFalse(interceptor.handleRequest(null));
 		Assert.assertFalse(interceptor.handleResponse(null));
