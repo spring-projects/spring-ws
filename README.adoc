@@ -35,7 +35,7 @@ IMPORTANT: Snapshots do NOT include GPG signatures. To do so would require putti
 To do a release (.RELEASE, .RC?, .M?):
 
 . Check in all changes and ensure there are no edited files.
-. Bump up the version in ALL `pom.xml` files to the desired version and commit the change.
+. Bump up the version in ALL `pom.xml` files to the desired version (e.g. `mvn versions:set -DnewVersion=3.0.0.RC1`) and commit the change.
 . `git tag <version>` (like v3.0.0.RC1)
 . Execute a maven test (`./mvnw -Pdistribute,snapshot,docs clean test`).
 . Execute a maven deploy.
