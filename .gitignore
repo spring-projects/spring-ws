@@ -19,3 +19,5 @@ _site
 /.classpath
 /.project
 /.settings/
+
+*.versionsBackup
