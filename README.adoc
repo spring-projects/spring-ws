@@ -39,8 +39,8 @@ To do a release (.RELEASE, .RC?, .M?):
 . `git tag <version>` (like v3.0.0.RC1)
 . Execute a maven test (`./mvnw -Pdistribute,snapshot,docs clean test`).
 . Execute a maven deploy.
-* For a milestone: `USERNAME=<user> PASSWORD=<encrypted password> ./mvnw -Pdistribute,gpg,milestone,docs clean -Dmaven.test.skip=true deploy`
-* For a release: `USERNAME=<user> PASSWORD=<encrypted password> ./mvnw -Pdistribute,gpg,release,docs clean -Dmaven.test.skip=true deploy`
+* For a milestone: `USERNAME=<user> PASSWORD=<encrypted password> ./mvnw -Pdistribute,milestone,docs clean -Dmaven.test.skip=true deploy`
+* For a release: `USERNAME=<user> PASSWORD=<encrypted password> ./mvnw -Pdistribute,release,docs clean -Dmaven.test.skip=true deploy`
 * For a release to maven central: `USERNAME=<user> PASSWORD=<nexus password> ./mvnw -Pdistribute,gpg,central,docs clean -Dmaven.test.skip=true deploy -s settings.xml`
 . Bump up the version in ALL `pom.xml` files again to the next BUILD-SNAPSHOT.
 . Commit the change.
