@@ -16,14 +16,13 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PushbackInputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import javax.xml.namespace.QName;
 
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
@@ -33,13 +32,21 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Abstract base class for {@link WebServiceConnection} implementations that send request over HTTP.
  *
  * @author Arjen Poutsma
+ * @author Andreas Veithen
  * @since 1.0.0
  */
 public abstract class AbstractHttpSenderConnection extends AbstractSenderConnection
 		implements FaultAwareWebServiceConnection {
 
-	/** Buffer used for reading the response, when the content length is invalid. */
-	private byte[] responseBuffer;
+	/**
+	 * Cached result of {@link #hasResponse}.
+	 */
+	private Boolean hasResponse;
+
+	/**
+	 * The raw response input stream to use instead of calling {@link #getRawResponseInputStream()}.
+	 */
+	private PushbackInputStream rawResponseInputStream;
 
 	@Override
 	public final boolean hasError() throws IOException {
@@ -69,23 +76,29 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 				HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
 			return false;
 		}
+		if (hasResponse != null) {
+			return hasResponse;
+		}
 		long contentLength = getResponseContentLength();
 		if (contentLength < 0) {
-			if (responseBuffer == null) {
-				responseBuffer = FileCopyUtils.copyToByteArray(getRawResponseInputStream());
+			rawResponseInputStream = new PushbackInputStream(getRawResponseInputStream());
+			int b = rawResponseInputStream.read();
+			if (b == -1) {
+				hasResponse = Boolean.FALSE;
+			} else {
+				hasResponse = Boolean.TRUE;
+				rawResponseInputStream.unread(b);
 			}
-			contentLength = responseBuffer.length;
+		} else {
+			hasResponse = contentLength > 0;
 		}
-		return contentLength > 0;
+		return hasResponse;
 	}
 
 	@Override
 	protected final InputStream getResponseInputStream() throws IOException {
-		InputStream inputStream;
-		if (responseBuffer != null) {
-			inputStream = new ByteArrayInputStream(responseBuffer);
-		}
-		else {
+		InputStream inputStream = rawResponseInputStream;
+		if (inputStream == null) {
 			inputStream = getRawResponseInputStream();
 		}
 		return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
