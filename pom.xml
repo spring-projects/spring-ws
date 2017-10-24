@@ -85,7 +85,7 @@
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
 		<activemq.version>4.1.2</activemq.version>
-		<aspectj.version>1.8.11</aspectj.version>
+		<aspectj.version>1.8.12</aspectj.version>
 		<axiom.version>1.2.20</axiom.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<commons-logging.version>1.2</commons-logging.version>
@@ -175,6 +175,7 @@
 		<profile>
 			<id>springnext</id>
 			<properties>
+				<aspectj.version>1.9.0.RC1</aspectj.version>
 				<spring.version>5.0.1.BUILD-SNAPSHOT</spring.version>
 				<spring-security.version>5.0.0.BUILD-SNAPSHOT</spring-security.version>
 			</properties>
