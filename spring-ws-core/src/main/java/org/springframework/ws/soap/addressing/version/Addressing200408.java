@@ -45,14 +45,14 @@ public class Addressing200408 extends AbstractAddressingVersion {
 	}
 
 	@Override
-	public boolean hasRequiredProperties(MessageAddressingProperties map) {
+	public boolean hasRequiredProperties(MessageAddressingProperties map, Object endpoint){
 		if (map.getTo() == null) {
 			return false;
 		}
 		if (map.getAction() == null) {
 			return false;
 		}
-		if (map.getReplyTo() != null || map.getFaultTo() != null) {
+		if (isMessageIdRequired(map, endpoint)) {
 			return map.getMessageId() != null;
 		}
 		return true;

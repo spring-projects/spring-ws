@@ -57,12 +57,16 @@ public interface AddressingVersion {
 	boolean understands(SoapHeaderElement headerElement);
 
 	/**
-	 * Indicates whether the given {@link MessageAddressingProperties} has all required properties.
+	 * Indicates whether the given {@link MessageAddressingProperties} has all
+	 * required properties.
 	 *
-	 * @return {@code true} if the to and action properties have been set, and - if a reply or fault endpoint has
-	 *		   been set - also checks for the message id
+	 * @return {@code true} if the to and action properties have been set, if a
+	 *         reply or fault endpoint has been set and endpoint is not marked
+	 *         with
+	 *         {@link org.springframework.ws.soap.addressing.server.annotation.OptionalMessageId}
+	 *         also checks for the message id
 	 */
-	boolean hasRequiredProperties(MessageAddressingProperties map);
+	boolean hasRequiredProperties(MessageAddressingProperties map, Object endpoint);
 
 	/*
 	* Address URIs

@@ -16,16 +16,19 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Locale;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
+import org.springframework.ws.soap.addressing.server.annotation.OptionalMessageId;
 import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
@@ -92,7 +95,10 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 
 		replay(strategyMock);
 
-		boolean result = interceptor.handleRequest(context, null);
+		Method requiredMessageIdMethod = this.getClass().getMethod("requiredMessageIdMethod");
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, requiredMessageIdMethod);
+		
+		boolean result = interceptor.handleRequest(context, methodEndpoint);
 		assertFalse("Request with no MessageID handled", result);
 		assertTrue("Message Context has no response", context.hasResponse());
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-no-message-id.xml");
@@ -101,6 +107,35 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 
 		verify(strategyMock);
 	}
+	
+	@Test
+	public void testNoMessageIdOptionalMethod() throws Exception {
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-message-id.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		
+		expect(strategyMock.isDuplicate(isNull(URI.class))).andReturn(false);
+		replay(strategyMock);
+		Method optionalMessageIdMethod = this.getClass().getMethod("optionalMessageIdMethod");
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, optionalMessageIdMethod);
+		
+		boolean result = interceptor.handleRequest(context, methodEndpoint);
+		
+		assertTrue("Request with no MessageID and no response handled", result);
+		assertFalse("Message Context has no response", context.hasResponse());
+
+		verify(strategyMock);
+	}
+	
+	@OptionalMessageId
+	public void optionalMessageIdMethod(){
+		//doSomething
+	}
+	
+	public String requiredMessageIdMethod(){
+		return "MessageId Required";
+	}
+
+	
 
 	@Test
 	public void testNoReplyTo() throws Exception {

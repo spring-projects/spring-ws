@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.springframework.util.StringUtils;
+import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -45,6 +46,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.AddressingException;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
+import org.springframework.ws.soap.addressing.server.annotation.OptionalMessageId;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -140,6 +142,23 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		URI action = getUri(headerElement, actionExpression);
 		URI messageId = getUri(headerElement, messageIdExpression);
 		return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
+	}
+
+	protected boolean isMessageIdRequired(MessageAddressingProperties map, Object endpoint) {
+		if (endpoint != null && endpoint instanceof MethodEndpoint) {
+			MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
+			OptionalMessageId optionalMessageId = methodEndpoint.getMethod().getAnnotation(OptionalMessageId.class);
+			if (optionalMessageId != null) {
+				return false;
+			}
+		}
+		if (hasNoneAddress(map.getReplyTo()) && hasNoneAddress(map.getFaultTo())) {
+			return false;
+		}
+		if (map.getReplyTo() == null && map.getFaultTo() == null) {
+			return false;
+		}
+		return true;
 	}
 
 	private URI getUri(Node node, XPathExpression expression) {
