@@ -20,10 +20,13 @@ import java.lang.reflect.Method;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class XmlRootElementEndpointMappingTest {
 
@@ -41,7 +44,28 @@ public class XmlRootElementEndpointMappingTest {
 		assertEquals(new QName("myNamespace", "myRoot"), name);
 	}
 
+	@Test
+	public void testRequiredRequestBodyAnnotationMissing() throws NoSuchMethodException {
+		mapping.setRequiresRequestBodyAnnotation(true);
+
+		Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
+		QName name = mapping.getLookupKeyForMethod(rootElement);
+		assertNull(name);
+	}
+
+	@Test
+	public void testRequiredRequestBodyAnnotationPresent() throws NoSuchMethodException {
+		mapping.setRequiresRequestBodyAnnotation(true);
+
+		Method rootElement = getClass().getMethod("requestBodyRootElement", MyRootElement.class);
+		QName name = mapping.getLookupKeyForMethod(rootElement);
+		assertEquals(new QName("myNamespace", "myRoot"), name);
+	}
+
 	public void rootElement(MyRootElement rootElement) {
+	}
+
+	public void requestBodyRootElement(@RequestBody MyRootElement rootElement) {
 	}
 
 	@XmlRootElement(name = "myRoot", namespace = "myNamespace")

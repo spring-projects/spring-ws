@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.mapping.AbstractAnnotationMethodEndpointMapping;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
@@ -51,14 +52,31 @@ import org.springframework.xml.transform.TransformerHelper;
  * </pre>
  *
  * @author Arjen Poutsma
+ * @author Joost Koehoorn
  * @since 2.0
  */
 public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpointMapping<QName> {
 
 	private TransformerHelper transformerHelper = new TransformerHelper();
 
+	private boolean requiresRequestBodyAnnotation = false;
+
 	public void setTransformerHelper(TransformerHelper transformerHelper) {
 		this.transformerHelper = transformerHelper;
+	}
+
+	/**
+	 * Set whether to only consider {@link RequestBody} annotated parameters.
+	 *
+	 * <p>Default is "false": All methods that take an {@link XmlRootElement} annotated
+	 * type as parameter will be resolved as valid endpoint.
+	 *
+	 * <p>Switch this flag on to require the {@link XmlRootElement} parameter to be annotated with
+	 * {@link RequestBody} to prevent duplicate endpoint registrations when having additional methods
+	 * that receive the {@link XmlRootElement} parameter.
+	 */
+	public void setRequiresRequestBodyAnnotation(boolean requiresRequestBodyAnnotation) {
+		this.requiresRequestBodyAnnotation = requiresRequestBodyAnnotation;
 	}
 
 	@Override
@@ -66,9 +84,8 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			MethodParameter methodParameter = new MethodParameter(method, i);
-			Class<?> parameterType = methodParameter.getParameterType();
-			if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
-				QName result = handleRootElement(parameterType);
+			if (parameterHasRequiredAnnotations(methodParameter)) {
+				QName result = handleRootElement(methodParameter.getParameterType());
 				if (result != null) {
 					return result;
 				}
@@ -76,6 +93,14 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 
 		}
 		return null;
+	}
+
+	private boolean parameterHasRequiredAnnotations(MethodParameter parameter) {
+		if (requiresRequestBodyAnnotation && !parameter.hasParameterAnnotation(RequestBody.class)) {
+			return false;
+		}
+
+		return parameter.getParameterType().isAnnotationPresent(XmlRootElement.class);
 	}
 
 	private QName handleRootElement(Class<?> parameterType) {
