@@ -114,9 +114,9 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 
 	protected class AxiomSoapHeaderElementIterator implements Iterator<SoapHeaderElement> {
 
-		private final Iterator<SOAPHeaderBlock> axiomIterator;
+		private final Iterator<? extends OMElement> axiomIterator;
 
-		protected AxiomSoapHeaderElementIterator(Iterator<SOAPHeaderBlock> axiomIterator) {
+		protected AxiomSoapHeaderElementIterator(Iterator<? extends OMElement> axiomIterator) {
 			this.axiomIterator = axiomIterator;
 		}
 
@@ -128,7 +128,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 		@Override
 		public SoapHeaderElement next() {
 			try {
-				SOAPHeaderBlock axiomHeaderBlock = axiomIterator.next();
+				SOAPHeaderBlock axiomHeaderBlock = (SOAPHeaderBlock) axiomIterator.next();
 				return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
 			}
 			catch (OMException ex) {
