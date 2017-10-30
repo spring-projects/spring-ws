@@ -640,8 +640,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		requestData.setAllowRSA15KeyTransportAlgorithm(allowRSA15KeyTransportAlgorithm);
 		
 		requestData.setDisableBSPEnforcement(!bspCompliant);
-		if (requestData.getBSPEnforcer() != null)
-		{
+		if (requestData.getBSPEnforcer() != null) {
 			requestData.getBSPEnforcer().setDisableBSPRules(!bspCompliant);
 		}
 		// allow for qualified password types for .Net interoperability
