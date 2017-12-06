@@ -144,6 +144,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	private boolean securementUseDerivedKey;
 	
 	private CallbackHandler samlCallbackHandler;
+
+	private CallbackHandler	securementCallbackHandler;
 	
 	// Allow RSA 15 to maintain default behavior
 	private boolean allowRSA15KeyTransportAlgorithm = true;
@@ -385,6 +387,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.samlCallbackHandler = samlCallbackHandler;
 	}
 
+	/**
+	 * Sets the WSPasswordCallback handler to use when securing messages.
+	 *
+	 * @param securementCallbackHandler
+	 */
+	public void setSecurementCallbackHandler(CallbackHandler securementCallbackHandler) {
+		this.securementCallbackHandler = securementCallbackHandler;
+	}
+
 	/** Sets the server-side time to live */
 	public void setValidationTimeToLive(int validationTimeToLive) {
 		if (validationTimeToLive <= 0) {
@@ -609,6 +620,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		
 		if (this.samlCallbackHandler != null) {
 			messageContext.setProperty(WSHandlerConstants.SAML_CALLBACK_REF, this.samlCallbackHandler);
+		}
+		if (this.securementCallbackHandler != null) {
+			messageContext.setProperty(WSHandlerConstants.PW_CALLBACK_REF, this.securementCallbackHandler);
 		}
 		
 		// allow for qualified password types for .Net interoperability
