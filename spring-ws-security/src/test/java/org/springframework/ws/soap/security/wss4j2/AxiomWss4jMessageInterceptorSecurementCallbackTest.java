@@ -1,0 +1,4 @@
+package org.springframework.ws.soap.security.wss4j2;
+
+public class AxiomWss4jMessageInterceptorSecurementCallbackTest extends Wss4jMessageInterceptorSecurementCallbackTestCase {
+}
