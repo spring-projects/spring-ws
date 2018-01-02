@@ -199,6 +199,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private CallbackHandler samlCallbackHandler;
 
+	private CallbackHandler attachmentCallbackHandler;
+
 	// Allow RSA 15 to maintain default behavior
 	private boolean allowRSA15KeyTransportAlgorithm = true;
 
@@ -459,6 +461,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Sets the attachment callback handler used for SwA signature/encryption
+     * @param attachmentCallbackHandler
+     */
+    public void setAttachmentCallbackHandler (CallbackHandler attachmentCallbackHandler) {
+        this.attachmentCallbackHandler = attachmentCallbackHandler;
+    }
+
+	/**
 	 * Sets the server-side time to live.
 	 */
 	public void setValidationTimeToLive(int validationTimeToLive) {
@@ -704,6 +714,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		requestData.setUseDerivedKeyForMAC(this.securementUseDerivedKey);
 
 		requestData.setWssConfig(this.wssConfig);
+
+		requestData.setAttachmentCallbackHandler(attachmentCallbackHandler);
 
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(this.securementTimeToLive));
 
