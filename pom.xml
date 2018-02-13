@@ -177,8 +177,8 @@
 		<profile>
 			<id>springnext</id>
 			<properties>
-				<spring.version>4.3.12.RELEASE</spring.version>
-				<spring-security.version>4.2.3.RELEASE</spring-security.version>
+				<spring.version>4.3.14.RELEASE</spring.version>
+				<spring-security.version>4.2.4.RELEASE</spring-security.version>
 			</properties>
 			<repositories>
 				<repository>
@@ -211,8 +211,8 @@
 		<profile>
 			<id>springnext-snapshot</id>
 			<properties>
-				<spring.version>4.3.13.BUILD-SNAPSHOT</spring.version>
-				<spring-security.version>4.2.4.BUILD-SNAPSHOT</spring-security.version>
+				<spring.version>4.3.15.BUILD-SNAPSHOT</spring.version>
+				<spring-security.version>4.2.5.BUILD-SNAPSHOT</spring-security.version>
 			</properties>
 			<repositories>
 				<repository>
