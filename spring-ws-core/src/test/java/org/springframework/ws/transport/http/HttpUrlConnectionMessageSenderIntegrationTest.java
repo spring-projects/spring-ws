@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,31 @@
 
 package org.springframework.ws.transport.http;
 
+import java.time.Duration;
+
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.*;
+
 public class HttpUrlConnectionMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpUrlConnectionMessageSender> {
 
 	@Override
-	protected AbstractHttpWebServiceMessageSender createMessageSender() {
+	protected HttpUrlConnectionMessageSender createMessageSender() {
 		return new HttpUrlConnectionMessageSender();
 	}
+
+	@Test
+	public void testSetTimeout() throws Exception {
+
+		this.messageSender.setConnectionTimeout(Duration.ofSeconds(3));
+		this.messageSender.setReadTimeout(Duration.ofSeconds(5));
+
+		try (HttpUrlConnection connection =
+					 (HttpUrlConnection) this.messageSender.createConnection(this.connectionUri)) {
+			assertThat(connection.getConnection().getConnectTimeout()).isEqualTo(3000);
+			assertThat(connection.getConnection().getReadTimeout()).isEqualTo(5000);
+		}
+	}
+
 }

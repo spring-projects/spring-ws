@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.Duration;
 
 import org.springframework.ws.transport.WebServiceConnection;
 
@@ -33,10 +34,36 @@ import org.springframework.ws.transport.WebServiceConnection;
  * is rather limited in its capabilities.
  *
  * @author Arjen Poutsma
+ * @author Kazuki Shimizu
  * @see java.net.HttpURLConnection
  * @since 1.0.0
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
+
+	private Duration connectionTimeout = Duration.ofSeconds(60);
+	private Duration readTimeout = Duration.ofSeconds(60);
+
+	/**
+	 * Sets the timeout until a connection is established.
+	 *
+	 * @param connectTimeout the timeout value
+	 * @see URLConnection#setConnectTimeout(int)
+	 * @since 3.0.1
+	 */
+	public void setConnectionTimeout(Duration connectTimeout) {
+		this.connectionTimeout = connectTimeout;
+	}
+
+	/**
+	 * Set the socket read timeout.
+	 *
+	 * @param readTimeout the timeout value
+	 * @see URLConnection#setReadTimeout(int)
+	 * @since 3.0.1
+	 */
+	public void setReadTimeout(Duration readTimeout) {
+		this.readTimeout = readTimeout;
+	}
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
@@ -71,7 +98,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 			connection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
 					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
+		connection.setConnectTimeout(Math.toIntExact(this.connectionTimeout.toMillis()));
+		connection.setReadTimeout(Math.toIntExact(this.readTimeout.toMillis()));
 	}
-
 
 }

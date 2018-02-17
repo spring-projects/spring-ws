@@ -33,7 +33,7 @@ import org.springframework.ws.WebServiceMessageFactory;
  * @see WebServiceMessageSender#createConnection(URI)
  * @since 1.0.0
  */
-public interface WebServiceConnection {
+public interface WebServiceConnection extends AutoCloseable {
 
 	/**
 	 * Sends the given message using this connection.

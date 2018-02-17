@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ import org.springframework.xml.transform.StringSource;
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
 
-public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
+public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T extends AbstractHttpWebServiceMessageSender> {
 
 	private Server jettyServer;
 
@@ -84,8 +84,6 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
 					RESPONSE + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-	private AbstractHttpWebServiceMessageSender messageSender;
-
 	private Context jettyContext;
 
 	private MessageFactory saajMessageFactory;
@@ -94,7 +92,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 
 	private WebServiceMessageFactory messageFactory;
 
-	private URI connectionUri;
+	protected T messageSender;
+
+	protected URI connectionUri;
 
 	@Before
 	public final void setUp() throws Exception {
@@ -112,7 +112,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase {
 		transformerFactory = TransformerFactory.newInstance();
 	}
 
-	protected abstract AbstractHttpWebServiceMessageSender createMessageSender();
+	protected abstract T createMessageSender();
 
 	@After
 	public final void tearDown() throws Exception {
