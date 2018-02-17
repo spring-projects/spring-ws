@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,41 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import java.io.IOException;
+
 public class HttpUrlConnectionMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpUrlConnectionMessageSender> {
 
 	@Override
-	protected AbstractHttpWebServiceMessageSender createMessageSender() {
+	protected HttpUrlConnectionMessageSender createMessageSender() {
 		return new HttpUrlConnectionMessageSender();
 	}
+
+	@Test
+	public void testSetTimeout() throws Exception {
+
+		messageSender.setConnectionTimeout(3000);
+		messageSender.setReadTimeout(5000);
+
+		HttpUrlConnection connection = null;
+		try {
+			connection = HttpUrlConnection.class.cast(messageSender.createConnection(connectionUri));
+			assertEquals(3000, connection.getConnection().getConnectTimeout());
+			assertEquals(5000, connection.getConnection().getReadTimeout());
+		}
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (IOException ex) {
+					// ignore
+				}
+			}
+		}
+	}
+
 }
