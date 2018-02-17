@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,10 +33,39 @@ import org.springframework.ws.transport.WebServiceConnection;
  * is rather limited in its capabilities.
  *
  * @author Arjen Poutsma
+ * @author Kazuki Shimizu
  * @see java.net.HttpURLConnection
  * @since 1.0.0
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
+
+	private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
+	private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
+
+	private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
+	private int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
+
+	/**
+	 * Sets the timeout until a connection is established.
+	 *
+	 * @param timeout the timeout value in milliseconds
+	 * @see URLConnection#setConnectTimeout(int)
+	 * @since 3.0.1
+	 */
+	public void setConnectionTimeout(int timeout) {
+		this.connectionTimeout = timeout;
+	}
+
+	/**
+	 * Set the socket read timeout.
+	 *
+	 * @param timeout the timeout value in milliseconds
+	 * @see URLConnection#setReadTimeout(int)
+	 * @since 3.0.1
+	 */
+	public void setReadTimeout(int timeout) {
+		this.readTimeout = timeout;
+	}
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
@@ -71,7 +100,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 			connection.setRequestProperty(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
 					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
+		connection.setConnectTimeout(this.connectionTimeout);
+		connection.setReadTimeout(this.readTimeout);
 	}
-
 
 }
