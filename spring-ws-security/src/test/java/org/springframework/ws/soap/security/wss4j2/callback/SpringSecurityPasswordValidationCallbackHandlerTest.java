@@ -125,6 +125,8 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		assertThat(authorities).isNotEmpty();
 		assertThat(authorities.iterator().next()).isEqualTo(grantedAuthority);
 
+		assertThat(authentication.getDetails()).isEqualTo(user);
+
 		verify(userDetailsService);
 	}
 }

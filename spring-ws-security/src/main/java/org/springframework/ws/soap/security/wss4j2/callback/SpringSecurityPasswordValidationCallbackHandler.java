@@ -92,6 +92,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		if (logger.isDebugEnabled()) {
 			logger.debug("Authentication success: " + authRequest.toString());
 		}
+		authRequest.setDetails(user);
 		SecurityContextHolder.getContext().setAuthentication(authRequest);
 	}
 
