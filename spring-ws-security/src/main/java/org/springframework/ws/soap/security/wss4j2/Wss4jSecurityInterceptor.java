@@ -301,6 +301,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
 	}
 
+	/**
+	 * Defines which signature canonicalization algorithm to use.
+	 */
+	public void setSecurementSignatureCanonicalizationAlgorithm(String canonicalizationAlgorithm) {
+		handler.setOption(WSHandlerConstants.SIG_C14N_ALGO, canonicalizationAlgorithm);
+	}
+
 	public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
 		handler.setSecurementSignatureCrypto(securementSignatureCrypto);
 	}
