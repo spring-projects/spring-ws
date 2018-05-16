@@ -1,20 +1,64 @@
 version: 2
 jobs:
-   build:
+   java_8_test_current:
      docker:
        - image: circleci/openjdk:8u141
      steps:
         - checkout
         - run:
-            name: Test current version
+            name: Java 8 - Test current version
             command: ./mvnw -Pdistribute,snapshot,docs clean test
+
+   java_8_test_spring_next:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+        - checkout
         - run:
-            name: Test Spring.NEXT
+            name: Java 8 - Test Spring.NEXT
             command: ./mvnw -Pspringnext clean test
+
+   java_10_test_current:
+     docker:
+       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+     steps:
+        - checkout
+        - run:
+            name: Java 10 - Test current version
+            command: ./mvnw -Pdistribute,snapshot,docs clean test
+
+   java_10_test_spring_next:
+     docker:
+       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+     steps:
+        - checkout
+        - run:
+            name: Java 10 - Test Spring.NEXT
+            command: ./mvnw -Pspringnext clean test
+
+   deploy:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+        - checkout
         - run:
             name: Deploy to Artifactory
             command: ./deploy.bash
-                
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - java_8_test_current
+      - java_10_test_current
+      - java_8_test_spring_next
+      - java_10_test_spring_next
+      - deploy:
+          requires:
+            - java_8_test_current
+            - java_10_test_current
+            - java_8_test_spring_next
+            - java_10_test_spring_next
+
 general:
   branches:
     ignore:

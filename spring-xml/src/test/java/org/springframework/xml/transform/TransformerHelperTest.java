@@ -19,22 +19,25 @@ package org.springframework.xml.transform;
 import java.io.IOException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 
-import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
 
 public class TransformerHelperTest {
 
 	private TransformerHelper helper;
+	private Transformer transformer;
 
 	@Before
 	public void setUp() throws Exception {
 		helper = new TransformerHelper();
+		transformer = createMock(Transformer.class);
 	}
 
 	@Test
@@ -42,11 +45,12 @@ public class TransformerHelperTest {
 		doTest();
 	}
 
-	@Test
-	public void customTransformerFactory() throws TransformerException, IOException, SAXException {
-		helper.setTransformerFactoryClass(TransformerFactoryImpl.class);
-		doTest();
-	}
+//	@Ignore
+//	@Test
+//	public void customTransformerFactory() throws TransformerException, IOException, SAXException {
+//		helper.setTransformerFactoryClass(TransformerFactoryImpl.class);
+//		doTest();
+//	}
 
 	private void doTest() throws TransformerException, SAXException, IOException {
 		String xml = "<root xmlns='http://springframework.org/spring-ws'><child>text</child></root>";
@@ -57,4 +61,5 @@ public class TransformerHelperTest {
 
 		assertXMLEqual(xml, result.toString());
 	}
+
 }
