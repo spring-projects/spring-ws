@@ -197,7 +197,7 @@ In this case, we are only allowing the user "Bert" to log in using the password 
 
 ===== SpringPlainTextPasswordValidationCallbackHandler
 
-The `SpringPlainTextPasswordValidationCallbackHandler` uses http://project.spring.io/spring-security[_Spring Security_] to authenticate users. It is beyond the scope of this document to describe Spring Security, but suffice it to say that it is a full-fledged security framework. You can read more about it in the https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/[_Spring Security reference documentation_].
+The `SpringPlainTextPasswordValidationCallbackHandler` uses https://spring.io/projects/spring-security[_Spring Security_] to authenticate users. It is beyond the scope of this document to describe Spring Security, but suffice it to say that it is a full-fledged security framework. You can read more about it in the https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/[_Spring Security reference documentation_].
 
 The `SpringPlainTextPasswordValidationCallbackHandler` requires an `AuthenticationManager` to operate. It uses this manager to authenticate against a `UsernamePasswordAuthenticationToken` that it creates. If authentication is successful, the token is stored in the `SecurityContextHolder`. You can set the authentication manager using the `authenticationManager`property:
 
