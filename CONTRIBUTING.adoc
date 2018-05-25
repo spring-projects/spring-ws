@@ -10,8 +10,8 @@ unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
 == Using JIRA issues
 We use JIRA issues to track bugs and enhancements. If you have a general usage question
-please ask on http://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
-broader community monitor the http://stackoverflow.com/tags/spring-ws[`spring-ws`]
+please ask on https://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
+broader community monitor the https://stackoverflow.com/tags/spring-ws[`spring-ws`]
 tag.
 
 If you are reporting a bug, please help to speed up problem diagnosis by providing as much
@@ -45,18 +45,18 @@ added after the original pull request but before a merge.
 * When writing a commit message please follow http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions].
 
 === Building from source
-This project includes the Gradle wrapper, meaning you don't have to install any CLI tools to compile. Simply clone it and do this:
+This project includes the Maven wrapper, meaning you don't have to install any CLI tools to compile. Simply clone it and do this:
 
 ==== Default build
-The project can be built from the root directory using the standard gradle wrapper command:
+The project can be built from the root directory using the standard Maven wrapper command:
 
 ----
-$ ./gradlew clean build
+$ ./mvnw clean package
 ----
 
 If you are rebuilding often, you might also want to skip the tests until you are ready
 to submit a pull request:
 
 ----
-$ ./gradlew clean build -x test
+$ ./mvnw clean package -Dmaven.test.skip=true
 ----
