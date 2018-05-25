@@ -10,7 +10,7 @@ web services using one of the many ways to manipulate XML payloads.
 == Installation
 
 Releases of Spring Web Services are available for download from Maven Central,
-as well as our own repository, http://repo.spring.io/release[http://repo.springsource.org/release].
+as well as our own repository, https://repo.spring.io/release[https://repo.spring.io/release].
 
 Please visit https://projects.spring.io/spring-ws to get the right Maven/Gradle settings for your selected version.
 
@@ -56,11 +56,11 @@ By participating, you  are expected to uphold this code. Please report unaccepta
 
 = Spring Web Services Project Site
 
-You can find the documentation, issue management, support, samples, and guides for using Spring Web Services at http://projects.spring.io/spring-ws/
+You can find the documentation, issue management, support, samples, and guides for using Spring Web Services at https://projects.spring.io/spring-ws/
 
 == Documentation
 
-See the current http://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and http://docs.spring.io/spring-ws/docs/current/reference/[reference docs].
+See the current https://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and https://docs.spring.io/spring-ws/docs/current/reference/[reference docs].
 
 == Issue Tracking
 
@@ -68,4 +68,4 @@ Spring Web Services uses https://jira.spring.io/browse/SWS[JIRA] for issue track
 
 == License
 
-Spring Web Services is http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 licensed].
+Spring Web Services is https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 licensed].

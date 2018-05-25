@@ -10,8 +10,8 @@ unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
 == Using JIRA issues
 We use JIRA issues to track bugs and enhancements. If you have a general usage question
-please ask on http://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
-broader community monitor the http://stackoverflow.com/tags/spring-ws[`spring-ws`]
+please ask on https://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
+broader community monitor the https://stackoverflow.com/tags/spring-ws[`spring-ws`]
 tag.
 
 If you are reporting a bug, please help to speed up problem diagnosis by providing as much
