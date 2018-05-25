@@ -60,7 +60,7 @@ You can find the documentation, issue management, support, samples, and guides f
 
 == Documentation
 
-See the current http://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and http://docs.spring.io/spring-ws/docs/current/reference/htmlsingle/[reference docs].
+See the current http://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and http://docs.spring.io/spring-ws/docs/current/reference/[reference docs].
 
 == Issue Tracking
 
