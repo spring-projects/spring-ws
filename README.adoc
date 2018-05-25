@@ -16,7 +16,7 @@ Please visit https://projects.spring.io/spring-ws to get the right Maven/Gradle 
 
 == Building Spring Web Services
 
-. Run `mvn clean package`
+. Run `./mvnw clean package`
 
 This will generate the artifacts.
 

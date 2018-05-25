@@ -45,18 +45,18 @@ added after the original pull request but before a merge.
 * When writing a commit message please follow http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions].
 
 === Building from source
-This project includes the Gradle wrapper, meaning you don't have to install any CLI tools to compile. Simply clone it and do this:
+This project includes the Maven wrapper, meaning you don't have to install any CLI tools to compile. Simply clone it and do this:
 
 ==== Default build
-The project can be built from the root directory using the standard gradle wrapper command:
+The project can be built from the root directory using the standard Maven wrapper command:
 
 ----
-$ ./gradlew clean build
+$ ./mvnw clean package
 ----
 
 If you are rebuilding often, you might also want to skip the tests until you are ready
 to submit a pull request:
 
 ----
-$ ./gradlew clean build -x test
+$ ./mvnw clean package -Dmaven.test.skip=true
 ----
