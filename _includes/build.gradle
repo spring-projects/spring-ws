@@ -1,3 +1,0 @@
-dependencies {
-    compile '{@= groupId @}:spring-ws-core:{@= version @}'
-}
