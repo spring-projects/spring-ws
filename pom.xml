@@ -91,7 +91,6 @@
 		<axiom.version>1.2.20</axiom.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
 		<commons-io.version>2.5</commons-io.version>
-		<commons-logging.version>1.2</commons-logging.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<easymock.version>3.6</easymock.version>
 		<ehcache.version>2.10.4</ehcache.version>
