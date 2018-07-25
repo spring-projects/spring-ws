@@ -10,7 +10,6 @@
 		<version>3.0.2.BUILD-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.springframework.ws</groupId>
 	<artifactId>spring-xml</artifactId>
 	<packaging>jar</packaging>
 

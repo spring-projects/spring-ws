@@ -10,7 +10,6 @@
 		<version>3.0.2.BUILD-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.springframework.ws</groupId>
 	<artifactId>spring-ws-core</artifactId>
 	<packaging>jar</packaging>
 
@@ -157,9 +156,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

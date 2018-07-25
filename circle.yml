@@ -18,6 +18,15 @@ jobs:
             name: Java 8 - Test Spring.NEXT
             command: ./mvnw -Pspringnext clean test
 
+   java_8_test_spring_buildsnapshot:
+     docker:
+       - image: circleci/openjdk:8u141
+     steps:
+        - checkout
+        - run:
+            name: Java 8 - Test Spring.NEXT
+            command: ./mvnw -Pspring-buildsnapshot clean test
+
    java_10_test_current:
      docker:
        - image: circleci/openjdk:10.0.1-jdk-node-browsers
@@ -36,6 +45,15 @@ jobs:
             name: Java 10 - Test Spring.NEXT
             command: ./mvnw -Pspringnext clean test
 
+   java_10_test_spring_buildsnapshot:
+     docker:
+       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+     steps:
+        - checkout
+        - run:
+            name: Java 10 - Test Spring.NEXT
+            command: ./mvnw -Pspring-buildsnapshot clean test
+
    deploy:
      docker:
        - image: circleci/openjdk:8u141
@@ -52,12 +70,16 @@ workflows:
       - java_10_test_current
       - java_8_test_spring_next
       - java_10_test_spring_next
+      - java_8_test_spring_buildsnapshot
+      - java_10_test_spring_buildsnapshot
       - deploy:
           requires:
             - java_8_test_current
             - java_10_test_current
             - java_8_test_spring_next
             - java_10_test_spring_next
+            - java_8_test_spring_buildsnapshot
+            - java_10_test_spring_buildsnapshot
 
 general:
   branches:
