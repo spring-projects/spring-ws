@@ -34,7 +34,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test current version
-            command: ./mvnw -Pdistribute,snapshot,docs clean test
+            command: ./mvnw -Pdistribute,snapshot,docs,java10 clean test
 
    java_10_test_spring_next:
      docker:
@@ -43,7 +43,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspringnext clean test
+            command: ./mvnw -Pspringnext,java10 clean test
 
    java_10_test_spring_buildsnapshot:
      docker:
@@ -52,7 +52,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspring-buildsnapshot clean test
+            command: ./mvnw -Pspring-buildsnapshot,java10 clean test
 
    deploy:
      docker:

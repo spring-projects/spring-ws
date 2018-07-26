@@ -595,13 +595,6 @@
 
 		<profile>
 			<id>java10</id>
-			<activation>
-				<jdk>10</jdk>
-			</activation>
-
-			<properties>
-				<source.level>1.10</source.level>
-			</properties>
 
 			<dependencies>
 				<dependency>
