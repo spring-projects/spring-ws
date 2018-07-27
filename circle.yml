@@ -7,7 +7,7 @@ jobs:
         - checkout
         - run:
             name: Java 8 - Test current version
-            command: ./mvnw -Pdistribute,snapshot,docs clean test
+            command: ./mvnw -Pdistribute,snapshot,docs,convergence clean test
 
    java_8_test_spring_next:
      docker:
@@ -16,7 +16,7 @@ jobs:
         - checkout
         - run:
             name: Java 8 - Test Spring.NEXT
-            command: ./mvnw -Pspringnext clean test
+            command: ./mvnw -Pspringnext,convergence clean test
 
    java_8_test_spring_buildsnapshot:
      docker:
@@ -25,7 +25,7 @@ jobs:
         - checkout
         - run:
             name: Java 8 - Test Spring.NEXT
-            command: ./mvnw -Pspring-buildsnapshot clean test
+            command: ./mvnw -Pspring-buildsnapshot,convergence clean test
 
    java_10_test_current:
      docker:
@@ -34,7 +34,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test current version
-            command: ./mvnw -Pdistribute,snapshot,docs,java10 clean test
+            command: ./mvnw -Pdistribute,snapshot,docs,java10,convergence clean test
 
    java_10_test_spring_next:
      docker:
@@ -43,7 +43,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspringnext,java10 clean test
+            command: ./mvnw -Pspringnext,java10,convergence clean test
 
    java_10_test_spring_buildsnapshot:
      docker:
@@ -52,7 +52,7 @@ jobs:
         - checkout
         - run:
             name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspring-buildsnapshot,java10 clean test
+            command: ./mvnw -Pspring-buildsnapshot,java10,convergence clean test
 
    deploy:
      docker:
