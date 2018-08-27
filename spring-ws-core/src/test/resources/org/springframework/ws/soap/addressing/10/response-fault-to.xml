@@ -2,7 +2,7 @@
     <env:Header>
         <wsa:MessageID>uid:1234</wsa:MessageID>
         <wsa:RelatesTo>http://example.com/someuniquestring</wsa:RelatesTo>
-        <wsa:To env:mustUnderstand="true">http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
+        <wsa:To>http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
         <wsa:Action>urn:faultAction</wsa:Action>
     </env:Header>
     <env:Body>

@@ -38,6 +38,7 @@ public abstract class AbstractWsAddressingTestCase {
 	@BeforeEach
 	public void createMessageFactory() throws Exception {
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {

@@ -48,6 +48,7 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * </pre>
  *
  * @author Arjen Poutsma
+ * @author Leandro Quiroga
  * @since 1.0.0
  */
 public class ActionCallback implements WebServiceMessageCallback {
@@ -57,6 +58,8 @@ public class ActionCallback implements WebServiceMessageCallback {
 	private final URI action;
 
 	private final URI to;
+
+	private boolean shouldInitializeTo;
 
 	private MessageIdStrategy messageIdStrategy;
 
@@ -219,7 +222,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * destination was set.
 	 */
 	protected URI getTo() {
-		if (to == null) {
+		if (to == null && (isToHeaderRequired() || shouldInitializeTo)) {
 			TransportContext transportContext = TransportContextHolder.getTransportContext();
 			if (transportContext != null && transportContext.getConnection() != null) {
 				try {
@@ -234,6 +237,17 @@ public class ActionCallback implements WebServiceMessageCallback {
 		}
 	}
 
+	private boolean isToHeaderRequired() {
+		return getVersion().isToHeaderRequired();
+	}
+
+	/**
+	 * Set whether to initialize the {@code To} header by default or not.
+	 */
+	public void setShouldInitializeTo(boolean shouldInitializeTo) {
+		this.shouldInitializeTo = shouldInitializeTo;
+	}
+
 	@Override
 	public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
 
@@ -244,5 +258,4 @@ public class ActionCallback implements WebServiceMessageCallback {
 				getAction(), messageId);
 		version.addAddressingHeaders(soapMessage, map);
 	}
-
 }
