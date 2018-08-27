@@ -200,7 +200,6 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		if (map.getTo() != null) {
 			SoapHeaderElement to = header.addHeaderElement(getToName());
 			to.setText(map.getTo().toString());
-			to.setMustUnderstand(true);
 		}
 		// From
 		if (map.getFrom() != null) {
