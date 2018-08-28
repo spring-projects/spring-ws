@@ -7,7 +7,7 @@ jobs:
         - checkout
         - run:
             name: Java 8 - Test current version
-            command: ./mvnw -Pdistribute,snapshot,docs,convergence clean test
+            command: ./mvnw -Pdistribute,snapshot,convergence clean test
 
    java_8_test_spring_next:
      docker:
@@ -27,32 +27,32 @@ jobs:
             name: Java 8 - Test Spring.NEXT
             command: ./mvnw -Pspring-buildsnapshot,convergence clean test
 
-   java_10_test_current:
+   java_11_test_current:
      docker:
-       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+       - image: circleci/openjdk:11-ea-27-jdk-sid
      steps:
         - checkout
         - run:
-            name: Java 10 - Test current version
-            command: ./mvnw -Pdistribute,snapshot,docs,java10,convergence clean test
+            name: Java 11 - Test current version
+            command: ./mvnw -Pdistribute,snapshot,java11,convergence clean test
 
-   java_10_test_spring_next:
+   java_11_test_spring_next:
      docker:
-       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+       - image: circleci/openjdk:11-ea-27-jdk-sid
      steps:
         - checkout
         - run:
-            name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspringnext,java10,convergence clean test
+            name: Java 11 - Test Spring.NEXT
+            command: ./mvnw -Pspringnext,java11,convergence clean test
 
-   java_10_test_spring_buildsnapshot:
+   java_11_test_spring_buildsnapshot:
      docker:
-       - image: circleci/openjdk:10.0.1-jdk-node-browsers
+       - image: circleci/openjdk:11-ea-27-jdk-sid
      steps:
         - checkout
         - run:
-            name: Java 10 - Test Spring.NEXT
-            command: ./mvnw -Pspring-buildsnapshot,java10,convergence clean test
+            name: Java 11 - Test Spring.NEXT
+            command: ./mvnw -Pspring-buildsnapshot,java11,convergence clean test
 
    deploy:
      docker:
@@ -67,19 +67,19 @@ workflows:
   build-and-deploy:
     jobs:
       - java_8_test_current
-      - java_10_test_current
+      - java_11_test_current
       - java_8_test_spring_next
-      - java_10_test_spring_next
+      - java_11_test_spring_next
       - java_8_test_spring_buildsnapshot
-      - java_10_test_spring_buildsnapshot
+      - java_11_test_spring_buildsnapshot
       - deploy:
           requires:
             - java_8_test_current
-            - java_10_test_current
+            - java_11_test_current
             - java_8_test_spring_next
-            - java_10_test_spring_next
+            - java_11_test_spring_next
             - java_8_test_spring_buildsnapshot
-            - java_10_test_spring_buildsnapshot
+            - java_11_test_spring_buildsnapshot
 
 general:
   branches:

@@ -653,7 +653,7 @@
 		</profile>
 
 		<profile>
-			<id>java10</id>
+			<id>java11</id>
 
 			<dependencies>
 				<dependency>
