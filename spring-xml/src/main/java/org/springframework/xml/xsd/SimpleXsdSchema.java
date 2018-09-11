@@ -43,6 +43,7 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  *
  * @author Mark LaFond
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.0
  */
 public class SimpleXsdSchema implements XsdSchema, InitializingBean {
@@ -91,6 +92,9 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	@Override
 	public String getTargetNamespace() {
+
+		Assert.notNull(schemaElement, "schemaElement must not be null! Did you run afterPropertiesSet() or register this as a Spring bean?");
+		
 		return schemaElement.getAttribute("targetNamespace");
 	}
 
