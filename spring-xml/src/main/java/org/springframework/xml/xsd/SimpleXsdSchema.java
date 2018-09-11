@@ -91,6 +91,9 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	@Override
 	public String getTargetNamespace() {
+
+		Assert.notNull(schemaElement, "schemaElement must not be null! Did you run afterPropertiesSet() or register this as a Spring bean?");
+		
 		return schemaElement.getAttribute("targetNamespace");
 	}
 

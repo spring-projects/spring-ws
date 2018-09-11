@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xsd;
 
+import org.junit.Test;
+
 import org.springframework.core.io.Resource;
 
 public class SimpleXsdSchemaTest extends AbstractXsdSchemaTestCase {
@@ -25,6 +27,13 @@ public class SimpleXsdSchemaTest extends AbstractXsdSchemaTestCase {
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
 		return schema;
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testBareXsdSchema() {
+
+		SimpleXsdSchema schema = new SimpleXsdSchema();
+		schema.toString();
 	}
 
 }
