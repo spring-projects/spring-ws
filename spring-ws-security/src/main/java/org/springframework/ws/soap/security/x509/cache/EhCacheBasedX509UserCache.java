@@ -37,7 +37,11 @@ import org.springframework.util.Assert;
  *
  * @author Luke Taylor
  * @author Ben Alex
+ * @author Greg Turnquist
+ *
+ * @deprecated Migrate to {@link SpringBasedX509UserCache} and inject a platform neutral Spring-based {@link org.springframework.cache.Cache}.
  */
+@Deprecated
 public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBean {
 	//~ Static fields/initializers =====================================================================================
 
