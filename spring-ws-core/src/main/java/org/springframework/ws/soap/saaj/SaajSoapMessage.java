@@ -115,12 +115,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		saajMessage = soapMessage;
 		this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
 		this.messageFactory = messageFactory;
-		if (SoapVersion.SOAP_11.equals(getVersion())) {
-			MimeHeaders headers = soapMessage.getMimeHeaders();
-			if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
-				headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
-			}
-		}
+		addSoapActionHeader(soapMessage);
 	}
 
 	/** Return the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
@@ -373,6 +368,21 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			// ignore
 		}
 		return builder.toString();
+	}
+
+	private static void addSoapActionHeader(SOAPMessage soapMessage) {
+		try {
+			String namespaceURI = soapMessage.getSOAPPart().getEnvelope().getElementQName().getNamespaceURI();
+			if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(namespaceURI)) {
+				MimeHeaders headers = soapMessage.getMimeHeaders();
+				if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
+					headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
+				}
+			}
+		}
+		catch (SOAPException ex) {
+			throw new SaajSoapEnvelopeException(ex);
+		}
 	}
 
 	private static class SaajAttachmentIterator implements Iterator<Attachment> {
