@@ -57,6 +57,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * wraps a {@link SOAPMessage}.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see SOAPMessage
  * @since 1.0.0
  */
@@ -114,10 +115,6 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		Assert.notNull(soapMessage, "soapMessage must not be null");
 		saajMessage = soapMessage;
 		this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
-		MimeHeaders headers = soapMessage.getMimeHeaders();
-		if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
-			headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
-		}
 		this.messageFactory = messageFactory;
 	}
 
