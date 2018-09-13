@@ -57,6 +57,7 @@ import org.springframework.ws.transport.TransportOutputStream;
  * wraps a {@link SOAPMessage}.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @see SOAPMessage
  * @since 1.0.0
  */
@@ -115,12 +116,6 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		saajMessage = soapMessage;
 		this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
 		this.messageFactory = messageFactory;
-		if (SoapVersion.SOAP_11.equals(getVersion())) {
-			MimeHeaders headers = soapMessage.getMimeHeaders();
-			if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_SOAP_ACTION))) {
-				headers.addHeader(TransportConstants.HEADER_SOAP_ACTION, "\"\"");
-			}
-		}
 	}
 
 	/** Return the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
