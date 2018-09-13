@@ -12,7 +12,7 @@ web services using one of the many ways to manipulate XML payloads.
 Releases of Spring Web Services are available for download from Maven Central,
 as well as our own repository, https://repo.spring.io/release[https://repo.spring.io/release].
 
-Please visit https://projects.spring.io/spring-ws to get the right Maven/Gradle settings for your selected version.
+Please visit https://spring.io/projects/spring-ws to get the right Maven/Gradle settings for your selected version.
 
 == Building Spring Web Services
 
@@ -56,7 +56,7 @@ By participating, you  are expected to uphold this code. Please report unaccepta
 
 = Spring Web Services Project Site
 
-You can find the documentation, issue management, support, samples, and guides for using Spring Web Services at https://projects.spring.io/spring-ws/
+You can find the documentation, issue management, support, samples, and guides for using Spring Web Services at https://spring.io/projects/spring-ws/
 
 == Documentation
 
