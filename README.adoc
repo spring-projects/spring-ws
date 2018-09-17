@@ -1,6 +1,4 @@
-= Spring Web Services
-
-image:https://circleci.com/gh/spring-projects/spring-ws/tree/2.x.svg?style=svg["CircleCI", link="https://circleci.com/gh/spring-projects/spring-ws/tree/2.x"]
+= Spring Web Services image:https://circleci.com/gh/spring-projects/spring-ws/tree/2.x.svg?style=svg["CircleCI", link="https://circleci.com/gh/spring-projects/spring-ws/tree/2.x"]
 
 Spring Web Services is a product of the Spring community focused on creating
 document-driven Web services. Spring Web Services aims to facilitate
