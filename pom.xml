@@ -105,8 +105,10 @@
 		<mock-javamail.version>1.6</mock-javamail.version>
 		<saaj-impl.version>1.3.28</saaj-impl.version>
 		<smack.version>4.1.9</smack.version>
+		<soap-api.version>1.3.8</soap-api.version>
 		<spring.version>4.2.9.RELEASE</spring.version>
 		<spring-security.version>4.0.4.RELEASE</spring-security.version>
+		<stax.version>1.7.8</stax.version>
 		<sun-mail.version>1.5.4</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
@@ -581,6 +583,64 @@
 					<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 				</repository>
 			</distributionManagement>
+		</profile>
+
+		<profile>
+			<id>java11</id>
+
+			<dependencies>
+				<dependency>
+					<groupId>com.sun.xml.ws</groupId>
+					<artifactId>jaxws-ri</artifactId>
+					<version>2.3.0</version>
+					<type>pom</type>
+					<exclusions>
+						<exclusion>
+							<groupId>org.codehaus.woodstox</groupId>
+							<artifactId>woodstox-core-asl</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.jvnet.staxex</groupId>
+							<artifactId>stax-ex</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>com.sun.xml.messaging.saaj</groupId>
+							<artifactId>saaj-impl</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+
+				<dependency>
+					<groupId>org.jvnet.staxex</groupId>
+					<artifactId>stax-ex</artifactId>
+					<version>${stax.version}</version>
+				</dependency>
+
+				<dependency>
+					<groupId>com.sun.xml.messaging.saaj</groupId>
+					<artifactId>saaj-impl</artifactId>
+					<version>${saaj-impl.version}</version>
+					<exclusions>
+						<exclusion>
+							<groupId>javax.xml.soap</groupId>
+							<artifactId>javax.xml.soap-api</artifactId>
+						</exclusion>
+					</exclusions>
+				</dependency>
+
+				<dependency>
+					<groupId>javax.xml.soap</groupId>
+					<artifactId>javax.xml.soap-api</artifactId>
+					<version>${soap-api.version}</version>
+				</dependency>
+
+				<dependency>
+					<groupId>javax.xml.ws</groupId>
+					<artifactId>jaxws-api</artifactId>
+					<version>2.3.0</version>
+				</dependency>
+
+			</dependencies>
 		</profile>
 
 
