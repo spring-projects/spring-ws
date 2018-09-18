@@ -110,8 +110,8 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<smack.version>4.2.1</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
-		<spring.version>5.0.8.RELEASE</spring.version>
-		<spring-security.version>5.0.7.RELEASE</spring-security.version>
+		<spring.version>5.0.9.RELEASE</spring.version>
+		<spring-security.version>5.0.8.RELEASE</spring-security.version>
 		<stax.version>1.7.8</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
