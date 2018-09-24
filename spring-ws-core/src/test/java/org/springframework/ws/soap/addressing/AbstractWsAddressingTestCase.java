@@ -39,7 +39,6 @@ public abstract class AbstractWsAddressingTestCase {
 	@Before
 	public void createMessageFactory() throws Exception {
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 
