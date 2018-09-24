@@ -29,6 +29,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * Microsoft's Web Services Enhancements (WSE) 3.0, and supported by Axis 1 and 2, and XFire.
  *
  * @author Arjen Poutsma
+ * @author Leandro Quiroga
  * @see <a href="http://www.w3.org/Submission/2004/SUBM-ws-addressing-20040810/">Web Services Addressing, August
  *		2004</a>
  * @since 1.5.0
@@ -55,6 +56,11 @@ public class Addressing200408 extends AbstractAddressingVersion {
 		if (map.getReplyTo() != null || map.getFaultTo() != null) {
 			return map.getMessageId() != null;
 		}
+		return true;
+	}
+	
+	@Override
+	public boolean isToHeaderRequired() {
 		return true;
 	}
 
