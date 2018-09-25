@@ -29,13 +29,12 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
 import org.springframework.xml.xsd.XsdSchema;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class CommonsXsdSchemaCollectionTest {
 
@@ -53,7 +52,6 @@ public class CommonsXsdSchemaCollectionTest {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -78,14 +76,14 @@ public class CommonsXsdSchemaCollectionTest {
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(abc));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(schemas[0].getSource(), domResult);
-		assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areSimilar();
 
 		Assert.assertEquals("Invalid target namespace", "urn:2", schemas[1].getTargetNamespace());
 		Resource cd = new ClassPathResource("CD.xsd", AbstractXsdSchemaTestCase.class);
 		expected = documentBuilder.parse(SaxUtils.createInputSource(cd));
 		domResult = new DOMResult();
 		transformer.transform(schemas[1].getSource(), domResult);
-		assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -147,14 +145,13 @@ public class CommonsXsdSchemaCollectionTest {
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(hr_employee));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(schemas[0].getSource(), domResult);
-		assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
+		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areSimilar();
 
 		Assert.assertEquals("Invalid target namespace", "http://mycompany.com/hr/schemas/holiday", schemas[1].getTargetNamespace());
 		Resource holiday = new ClassPathResource("holiday.xsd", getClass());
 		expected = documentBuilder.parse(SaxUtils.createInputSource(holiday));
 		domResult = new DOMResult();
 		transformer.transform(schemas[1].getSource(), domResult);
-		assertXMLEqual("Invalid XSD generated", expected, (Document) domResult.getNode());
-
+		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areIdentical();
 	}
 }

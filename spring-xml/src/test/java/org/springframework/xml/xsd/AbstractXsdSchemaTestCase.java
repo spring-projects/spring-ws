@@ -27,13 +27,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 
-import org.custommonkey.xmlunit.XMLUnit;
+//import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
+
 
 public abstract class AbstractXsdSchemaTestCase {
 
@@ -48,7 +49,7 @@ public abstract class AbstractXsdSchemaTestCase {
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		transformer = transformerFactory.newTransformer();
-		XMLUnit.setIgnoreWhitespace(true);
+//		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -62,7 +63,7 @@ public abstract class AbstractXsdSchemaTestCase {
 		DOMResult domResult = new DOMResult();
 		transformer.transform(single.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -76,7 +77,7 @@ public abstract class AbstractXsdSchemaTestCase {
 		DOMResult domResult = new DOMResult();
 		transformer.transform(including.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -90,7 +91,7 @@ public abstract class AbstractXsdSchemaTestCase {
 		DOMResult domResult = new DOMResult();
 		transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -104,7 +105,7 @@ public abstract class AbstractXsdSchemaTestCase {
 		DOMResult domResult = new DOMResult();
 		transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test

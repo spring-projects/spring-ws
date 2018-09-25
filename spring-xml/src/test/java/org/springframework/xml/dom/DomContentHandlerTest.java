@@ -28,7 +28,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class DomContentHandlerTest {
 
@@ -69,7 +69,7 @@ public class DomContentHandlerTest {
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_1)));
-		assertXMLEqual("Invalid result", expected, result);
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class DomContentHandlerTest {
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_1)));
-		assertXMLEqual("Invalid result", expected, result);
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	@Test
@@ -89,7 +89,6 @@ public class DomContentHandlerTest {
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_2_EXPECTED)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_2_SNIPPET)));
-		assertXMLEqual("Invalid result", expected, result);
-
+		assertThat(result).and(expected).areSimilar();
 	}
 }

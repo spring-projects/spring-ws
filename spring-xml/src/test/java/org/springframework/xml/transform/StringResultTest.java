@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class StringResultTest {
 
@@ -37,7 +37,7 @@ public class StringResultTest {
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		StringResult result = new StringResult();
 		transformer.transform(new DOMSource(document), result);
-		assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());
+		assertThat(result.toString()).and("<prefix:localName xmlns:prefix='namespace'/>").areSimilar();
 	}
 
 }

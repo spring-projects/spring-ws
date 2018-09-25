@@ -119,7 +119,7 @@
 		<wss4j.version>2.2.0</wss4j.version>
 		<xmlsec.version>2.1.0</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
-		<xmlunit.version>1.5</xmlunit.version>
+		<xmlunit.version>2.6.2</xmlunit.version>
 		<xws-security.version>3.0</xws-security.version>
 		<xom.version>1.2.5</xom.version>
 	</properties>
@@ -169,8 +169,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>xmlunit</groupId>
-			<artifactId>xmlunit</artifactId>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>${xmlunit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-assertj</artifactId>
 			<version>${xmlunit.version}</version>
 			<scope>test</scope>
 		</dependency>
