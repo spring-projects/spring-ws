@@ -40,7 +40,7 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -96,7 +96,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, supportedReturnType, element);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>", response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and("<type xmlns='http://springframework.org'><string>Foo</string></type>").ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, stringReturnType, element);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<string xmlns='http://springframework.org'>Foo</string>", response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and("<string xmlns='http://springframework.org'>Foo</string>").ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -137,17 +137,15 @@ public class JaxbElementPayloadMethodProcessorTest {
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 
-		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>",
-				payloadResult.toString());
+		assertThat(payloadResult.toString()).and("<type xmlns='http://springframework.org'><string>Foo</string></type>").areSimilar();
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
+		assertThat(messageResult).and("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
 				"<type xmlns='http://springframework.org'><string>Foo</string></type>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
-
+				"</soapenv:Body></soapenv:Envelope>").areSimilar();
 	}
 
 

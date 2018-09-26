@@ -27,7 +27,7 @@ import org.springframework.xml.transform.StringSource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -67,7 +67,7 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
 				new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
 		assertTrue("No response message created", context.hasResponse());
-		assertXMLEqual(RESPONSE, ((MockWebServiceMessage) context.getResponse()).getPayloadAsString());
+		assertThat(((MockWebServiceMessage) context.getResponse()).getPayloadAsString()).and(RESPONSE).areSimilar();
 	}
 
 	protected abstract MessageEndpoint createNoResponseEndpoint();

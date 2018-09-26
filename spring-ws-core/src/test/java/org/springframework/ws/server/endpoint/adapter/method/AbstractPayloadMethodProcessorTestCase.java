@@ -25,7 +25,7 @@ import org.springframework.xml.transform.StringResult;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -135,7 +135,7 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 			Source responsePayload = messageContext.getResponse().getPayloadSource();
 			StringResult result = new StringResult();
 			transform(responsePayload, result);
-			assertXMLEqual(XML, result.toString());
+			assertThat(result.toString()).and(XML).areSimilar();
 		}
 	}
 

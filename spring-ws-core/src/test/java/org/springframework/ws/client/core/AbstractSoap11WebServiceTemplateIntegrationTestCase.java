@@ -41,7 +41,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
@@ -118,7 +118,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
 				new StringSource(messagePayload), result);
 		Assert.assertTrue("Invalid result", b);
-		assertXMLEqual(messagePayload, result.toString());
+		assertThat(result.toString()).and(messagePayload).areSimilar();
 	}
 
 	@Test

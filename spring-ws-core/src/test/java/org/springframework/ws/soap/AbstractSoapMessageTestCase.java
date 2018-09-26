@@ -39,7 +39,7 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -123,7 +123,7 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 		transformer.transform(streamingMessage.getPayloadSource(), result);
 
 		String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
-		assertXMLEqual(expected, result.toString());
+		assertThat(result.toString()).and(expected).areSimilar();
 
 		soapMessage.writeTo(new ByteArrayOutputStream());
 	}

@@ -34,7 +34,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.easymock.EasyMock.*;
 
 public class PayloadEndpointAdapterTest {
@@ -62,7 +62,7 @@ public class PayloadEndpointAdapterTest {
 			public Source invoke(Source request) throws Exception {
 				StringWriter writer = new StringWriter();
 				transformer.transform(request, new StreamResult(writer));
-				assertXMLEqual("Invalid request", "<request/>", writer.toString());
+				assertThat(writer.toString()).and("<request/>").areSimilar();
 				return new StreamSource(new StringReader("<response/>"));
 			}
 		};
@@ -71,7 +71,7 @@ public class PayloadEndpointAdapterTest {
 		adapter.invoke(messageContext, endpoint);
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 		Assert.assertNotNull("No response created", response);
-		assertXMLEqual("Invalid payload", "<response/>", response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and("<response/>").areSimilar();
 	}
 
 	@Test

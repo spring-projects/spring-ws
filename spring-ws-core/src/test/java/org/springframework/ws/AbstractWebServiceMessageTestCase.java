@@ -47,7 +47,6 @@ import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.StringResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -56,7 +55,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public abstract class AbstractWebServiceMessageTestCase {
 
@@ -78,7 +77,6 @@ public abstract class AbstractWebServiceMessageTestCase {
 		transformer = transformerFactory.newTransformer();
 		webServiceMessage = createWebServiceMessage();
 		payload = new ClassPathResource("payload.xml", AbstractWebServiceMessageTestCase.class);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -92,7 +90,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Document resultDocument = documentBuilder.newDocument();
 		DOMResult domResult = new DOMResult(resultDocument);
 		transformer.transform(webServiceMessage.getPayloadSource(), domResult);
-		assertXMLEqual(payloadDocument, resultDocument);
+		assertThat(resultDocument).and(payloadDocument).areIdentical();
 		validateMessage();
 	}
 
@@ -108,7 +106,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Result staxResult = StaxUtils.createCustomStaxResult(eventWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
 		eventWriter.flush();
-		assertXMLEqual(getExpectedString(), stringWriter.toString());
+		assertThat(stringWriter.toString()).and(getExpectedString()).areIdentical();
 		validateMessage();
 	}
 
@@ -120,7 +118,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		StringWriter resultWriter = new StringWriter();
 		StreamResult streamResult = new StreamResult(resultWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
-		assertXMLEqual(getExpectedString(), resultWriter.toString());
+		assertThat(resultWriter.toString()).and(getExpectedString()).areSimilar();
 	}
 
 	@Test
@@ -129,7 +127,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		transformer.transform(saxSource, webServiceMessage.getPayloadResult());
 		StringResult stringResult = new StringResult();
 		transformer.transform(webServiceMessage.getPayloadSource(), stringResult);
-		assertXMLEqual(getExpectedString(), stringResult.toString());
+		assertThat(stringResult.toString()).and(getExpectedString()).areSimilar();
 		validateMessage();
 	}
 
@@ -142,7 +140,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
 		ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
 		FileCopyUtils.copy(payload.getInputStream(), expectedStream);
-		assertXMLEqual(expectedStream.toString("UTF-8"), resultStream.toString("UTF-8"));
+		assertThat(resultStream.toString("UTF-8")).and(expectedStream.toString("UTF-8")).areSimilar();
 		validateMessage();
 	}
 
@@ -158,7 +156,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Result staxResult = StaxUtils.createCustomStaxResult(streamWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
 		streamWriter.flush();
-		assertXMLEqual(getExpectedString(), stringWriter.toString());
+		assertThat(stringWriter.toString()).and(getExpectedString()).areSimilar();
 		validateMessage();
 	}
 

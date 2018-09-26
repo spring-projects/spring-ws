@@ -29,7 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class DomPoxMessageTest {
 
@@ -54,7 +54,7 @@ public class DomPoxMessageTest {
 		transformer.transform(source, message.getPayloadResult());
 		StringResult stringResult = new StringResult();
 		transformer.transform(message.getPayloadSource(), stringResult);
-		assertXMLEqual(content, stringResult.toString());
+		assertThat(stringResult.toString()).and(content).areSimilar();
 	}
 
 	@Test
@@ -64,7 +64,7 @@ public class DomPoxMessageTest {
 		transformer.transform(new StringSource(content), message.getPayloadResult());
 		StringResult stringResult = new StringResult();
 		transformer.transform(message.getPayloadSource(), stringResult);
-		assertXMLEqual(content, stringResult.toString());
+		assertThat(stringResult.toString()).and(content).areSimilar();
 	}
 
 	@Test
@@ -74,6 +74,6 @@ public class DomPoxMessageTest {
 		transformer.transform(source, message.getPayloadResult());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		message.writeTo(os);
-		assertXMLEqual(content, os.toString("UTF-8"));
+		assertThat(os.toString("UTF-8")).and(content).areSimilar();
 	}
 }

@@ -26,7 +26,7 @@ import org.springframework.xml.transform.StringSource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -63,7 +63,7 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
 		assertNotNull("No response source returned", responseSource);
 		StringResult result = new StringResult();
 		transformer.transform(responseSource, result);
-		assertXMLEqual(RESPONSE, result.toString());
+		assertThat(result.toString()).and(RESPONSE).areSimilar();
 	}
 
 	protected abstract PayloadEndpoint createNoResponseEndpoint() throws Exception;

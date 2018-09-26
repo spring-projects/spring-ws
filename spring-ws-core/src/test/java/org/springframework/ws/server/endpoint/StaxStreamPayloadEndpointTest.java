@@ -37,7 +37,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -114,7 +114,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 		assertTrue("context has not response", context.hasResponse());
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+		assertThat(stringResult.toString()).and(RESPONSE).areSimilar();
 	}
 
 	@Test
@@ -132,7 +132,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 		assertTrue("context has not response", context.hasResponse());
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+		assertThat(stringResult.toString()).and(RESPONSE).areSimilar();
 	}
 
 	@Test
@@ -167,7 +167,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+		assertThat(stringResult.toString()).and(RESPONSE).areSimilar();
 	}
 
 	@Test

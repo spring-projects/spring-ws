@@ -29,7 +29,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -79,7 +79,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 		StringResult result = new StringResult();
 		template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content),
 				result);
-		assertXMLEqual(content, result.toString());
+		assertThat(result.toString()).and(content).areSimilar();
 		try {
 			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
 					new StringSource(content), new StringResult());

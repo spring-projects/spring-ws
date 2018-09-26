@@ -27,7 +27,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.easymock.EasyMock.*;
 import org.junit.Assert;
 import static org.junit.Assert.fail;
@@ -73,7 +73,7 @@ public class MarshallingPayloadEndpointTest {
 				try {
 					StringWriter writer = new StringWriter();
 					transformer.transform(source, new StreamResult(writer));
-					assertXMLEqual("Invalid source", "<request/>", writer.toString());
+					assertThat(writer.toString()).and("<request/>").areSimilar();
 					return 42L;
 				}
 				catch (Exception e) {
@@ -112,7 +112,7 @@ public class MarshallingPayloadEndpointTest {
 		endpoint.invoke(context);
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
 		Assert.assertNotNull("Invalid result", response);
-		assertXMLEqual("Invalid response", "<result/>", response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and("<result/>").areSimilar();
 
 		verify(factoryMock);
 	}
@@ -125,7 +125,7 @@ public class MarshallingPayloadEndpointTest {
 				try {
 					StringWriter writer = new StringWriter();
 					transformer.transform(source, new StreamResult(writer));
-					assertXMLEqual("Invalid source", "<request/>", writer.toString());
+					assertThat(writer.toString()).and("<request/>").areSimilar();
 					return (long) 42;
 				}
 				catch (Exception e) {
