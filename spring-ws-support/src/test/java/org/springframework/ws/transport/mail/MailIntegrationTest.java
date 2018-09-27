@@ -24,7 +24,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.custommonkey.xmlunit.XMLAssert;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,8 +56,7 @@ public class MailIntegrationTest {
 		applicationContext.close();
 		assertEquals("Server mail message not deleted", 0, Mailbox.get("server@example.com").size());
 		assertEquals("No client mail message received", 1, Mailbox.get("client@example.com").size());
-		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
-
+		assertThat(result.toString()).and(content).areSimilar();
 	}
 
 }

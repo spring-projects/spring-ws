@@ -23,7 +23,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.custommonkey.xmlunit.XMLAssert;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,7 +44,7 @@ public class JmsIntegrationTest {
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
 		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+		assertThat(result.toString()).and(content).areSimilar();
 	}
 
 	@Test
@@ -53,6 +53,6 @@ public class JmsIntegrationTest {
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
 		webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
-		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
+		assertThat(result.toString()).and(content).areSimilar();
 	}
 }
