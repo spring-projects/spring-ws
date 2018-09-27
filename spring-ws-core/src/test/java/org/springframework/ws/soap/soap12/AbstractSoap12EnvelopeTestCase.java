@@ -24,7 +24,7 @@ import org.springframework.xml.transform.StringResult;
 
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractSoap12EnvelopeTestCase extends AbstractSoapEnvelopeTestCase {
@@ -39,8 +39,7 @@ public abstract class AbstractSoap12EnvelopeTestCase extends AbstractSoapEnvelop
 	public void testGetSource() throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(soapEnvelope.getSource(), result);
-		assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/>" + "<Body/></Envelope>",
-				result.toString());
+		assertThat(result.toString()).and("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/>" + "<Body/></Envelope>").areSimilar();
 	}
 
 }

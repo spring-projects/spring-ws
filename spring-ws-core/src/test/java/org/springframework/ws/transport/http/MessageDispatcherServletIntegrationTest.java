@@ -36,7 +36,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 /**
  * @author Arjen Poutsma
@@ -89,8 +89,6 @@ public class MessageDispatcherServletIntegrationTest {
 
 		SOAPMessage response = connection.call(request, url);
 
-		assertXMLEqual(request.getSOAPPart(), response.getSOAPPart());
+		assertThat(response.getSOAPPart()).and(request.getSOAPPart()).areSimilar();
 	}
-
-
 }

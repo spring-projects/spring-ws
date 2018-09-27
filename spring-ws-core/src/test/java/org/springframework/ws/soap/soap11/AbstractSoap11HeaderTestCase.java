@@ -19,7 +19,7 @@ package org.springframework.ws.soap.soap11;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -47,8 +47,7 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 	public void testGetSource() throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(soapHeader.getSource(), result);
-		assertXMLEqual("Invalid contents of header",
-				"<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />", result.toString());
+		assertThat(result.toString()).and("<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />").areSimilar();
 	}
 
 	@Test

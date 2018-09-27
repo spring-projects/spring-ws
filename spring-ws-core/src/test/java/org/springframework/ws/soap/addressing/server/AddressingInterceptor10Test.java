@@ -28,6 +28,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertTrue;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTestCase {
 
@@ -51,9 +52,7 @@ public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTe
 		assertTrue("Request with no To not handled", result);
 		assertTrue("Message Context has no response", context.hasResponse());
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
-		assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
-				(SaajSoapMessage) context.getResponse());
+		assertThat(context.getResponse()).and(expectedResponse).areSimilar();
 		verify(strategyMock);
 	}
-
 }

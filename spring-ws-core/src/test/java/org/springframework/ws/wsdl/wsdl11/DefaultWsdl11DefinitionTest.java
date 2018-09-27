@@ -27,12 +27,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class DefaultWsdl11DefinitionTest {
 
@@ -50,7 +49,6 @@ public class DefaultWsdl11DefinitionTest {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -72,8 +70,7 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
 
-		assertXMLEqual("Invalid WSDL built", expected, result);
-
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -94,7 +91,7 @@ public class DefaultWsdl11DefinitionTest {
 
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
-		assertXMLEqual("Invalid WSDL built", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -115,7 +112,7 @@ public class DefaultWsdl11DefinitionTest {
 
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
-		assertXMLEqual("Invalid WSDL built", expected, result);
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -139,9 +136,6 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
 
-		assertXMLEqual("Invalid WSDL built", expected, result);
-
+		assertThat(result).and(expected).ignoreWhitespace().areSimilar();
 	}
-
-
 }

@@ -90,7 +90,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Document resultDocument = documentBuilder.newDocument();
 		DOMResult domResult = new DOMResult(resultDocument);
 		transformer.transform(webServiceMessage.getPayloadSource(), domResult);
-		assertThat(resultDocument).and(payloadDocument).areIdentical();
+		assertThat(resultDocument).and(payloadDocument).areSimilar();
 		validateMessage();
 	}
 
@@ -106,7 +106,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Result staxResult = StaxUtils.createCustomStaxResult(eventWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
 		eventWriter.flush();
-		assertThat(stringWriter.toString()).and(getExpectedString()).areIdentical();
+		assertThat(stringWriter.toString()).and(getExpectedString()).areSimilar();
 		validateMessage();
 	}
 

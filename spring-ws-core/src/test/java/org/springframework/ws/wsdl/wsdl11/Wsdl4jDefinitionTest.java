@@ -27,14 +27,13 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class Wsdl4jDefinitionTest {
 
@@ -44,7 +43,6 @@ public class Wsdl4jDefinitionTest {
 
 	@Before
 	public void setUp() throws Exception {
-		XMLUnit.setIgnoreWhitespace(true);
 		WSDLFactory factory = WSDLFactory.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
 		InputStream is = getClass().getResourceAsStream("complete.wsdl");
@@ -68,6 +66,6 @@ public class Wsdl4jDefinitionTest {
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("complete.wsdl"));
-		assertXMLEqual(expected, (Document) result.getNode());
+		assertThat(result.getNode()).and(expected).ignoreWhitespace().areSimilar();
 	}
 }

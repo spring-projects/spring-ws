@@ -19,7 +19,7 @@ package org.springframework.ws.soap.soap12;
 import java.util.Iterator;
 import javax.xml.namespace.QName;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -45,8 +45,7 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 	public void testGetSource() throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(soapHeader.getSource(), result);
-		assertXMLEqual("Invalid contents of header", "<Header xmlns='http://www.w3.org/2003/05/soap-envelope' />",
-				result.toString());
+		assertThat(result.toString()).and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' />").areSimilar();
 	}
 
 	@Test
@@ -56,9 +55,9 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		soap12Header.addNotUnderstoodHeaderElement(headerName);
 		StringResult result = new StringResult();
 		transformer.transform(soapHeader.getSource(), result);
-		assertXMLEqual("Invalid contents of header", "<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >" +
+		assertThat(result.toString()).and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >" +
 				"<NotUnderstood qname='spring-ws:NotUnderstood' xmlns:spring-ws='http://www.springframework.org' />" +
-				"</Header>", result.toString());
+				"</Header>").areSimilar();
 	}
 
 	@Test

@@ -30,12 +30,12 @@ import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.StringResult;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
@@ -130,7 +130,6 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 		StringResult result = new StringResult();
 		transformer.transform(message.getPayloadSource(), result);
 
-		XMLUnit.setIgnoreWhitespace(true);
 		String expectedPayload =
 				"<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>" +
 						"<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>" +
@@ -138,8 +137,6 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 						"<isStatusOK>true</isStatusOK>" + "<status>0</status>" +
 						"<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>" +
 						"</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
-		XMLAssert.assertXMLEqual(expectedPayload, result.toString());
-
+		assertThat(result.toString()).and(expectedPayload).areSimilar();
 	}
-
 }

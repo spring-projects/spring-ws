@@ -78,7 +78,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+		assertXMLSimilar(expected, message);
 
 		verify(strategyMock, connectionMock);
 	}
@@ -100,7 +100,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+		assertXMLSimilar(expected, message);
 		verify(strategyMock, connectionMock);
 	}
 
@@ -108,7 +108,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		SOAPBody saajBody = saajMessage.getSOAPBody();
 		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
-		SOAPElement maxCount = delete.addChildElement(new QName("maxCount"));
+		SOAPElement maxCount = delete.addChildElement("maxCount");
 		maxCount.setTextContent("42");
 		return new SaajSoapMessage(saajMessage);
 	}

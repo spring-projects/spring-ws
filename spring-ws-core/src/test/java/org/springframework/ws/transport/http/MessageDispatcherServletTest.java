@@ -37,13 +37,12 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMa
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class MessageDispatcherServletTest {
 
@@ -95,8 +94,7 @@ public class MessageDispatcherServletTest {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
-		XMLUnit.setIgnoreWhitespace(true);
-		assertXMLEqual("Invalid WSDL written", expected, result);
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	private static class DetectWebApplicationContext extends StaticWebApplicationContext {

@@ -36,7 +36,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,7 +56,7 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T extends AbstractHttpWebServiceMessageSender> {
@@ -106,7 +105,6 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		if (messageSender instanceof InitializingBean) {
 			((InitializingBean) messageSender).afterPropertiesSet();
 		}
-		XMLUnit.setIgnoreWhitespace(true);
 		saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
 		transformerFactory = TransformerFactory.newInstance();
@@ -209,7 +207,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 			StringResult result = new StringResult();
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.transform(response.getPayloadSource(), result);
-			assertXMLEqual("Invalid response", RESPONSE, result.toString());
+			assertThat(result.toString()).and(RESPONSE).areSimilar();
 		}
 		finally {
 			connection.close();
@@ -276,7 +274,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 						httpServletRequest.getHeader(REQUEST_HEADER_NAME));
 				String receivedRequest =
 						new String(FileCopyUtils.copyToByteArray(httpServletRequest.getInputStream()), "UTF-8");
-				assertXMLEqual("Invalid request received", SOAP_REQUEST, receivedRequest);
+				assertThat(receivedRequest).and(SOAP_REQUEST).areSimilar();
 				if (gzip) {
 					assertEquals("Invalid Accept-Encoding header value received on server side", "gzip",
 							httpServletRequest.getHeader("Accept-Encoding"));

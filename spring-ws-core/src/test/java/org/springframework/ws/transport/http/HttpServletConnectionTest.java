@@ -24,7 +24,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -82,7 +82,7 @@ public class HttpServletConnectionTest {
 		StringResult result = new StringResult();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.transform(message.getPayloadSource(), result);
-		assertXMLEqual("Invalid message", CONTENT, result.toString());
+		assertThat(result.toString()).and(CONTENT).areSimilar();
 		SOAPMessage saajMessage = message.getSaajMessage();
 		String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
 		Assert.assertNotNull("Response has no header", headerValues);
@@ -103,7 +103,7 @@ public class HttpServletConnectionTest {
 
 		assertEquals("Invalid header", HEADER_VALUE,
 				httpServletResponse.getHeader(HEADER_NAME));
-		assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
+		assertThat(httpServletResponse.getContentAsString()).and(SOAP_CONTENT).areSimilar();
 	}
 
 	@Test

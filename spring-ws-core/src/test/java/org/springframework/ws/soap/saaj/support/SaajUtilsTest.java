@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class SaajUtilsTest {
 
@@ -125,7 +125,7 @@ public class SaajUtilsTest {
 		Document document = builder.parse(getClass().getResourceAsStream("soapMessage.xml"));
 		SOAPMessage soapMessage =
 				SaajUtils.loadMessage(new ClassPathResource("soapMessage.xml", getClass()), messageFactory);
-		assertXMLEqual(soapMessage.getSOAPPart(), document);
+		assertThat(document).and(soapMessage.getSOAPPart()).areSimilar();
 	}
 
 	@Test

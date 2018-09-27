@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.StaticApplicationContext;
@@ -56,7 +55,6 @@ public class AnnotationActionMethodEndpointMappingTest {
 	@Before
 	public void setUp() throws Exception {
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		XMLUnit.setIgnoreWhitespace(true);
 		applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
 		applicationContext.registerSingleton("interceptor", MyInterceptor.class);

@@ -24,7 +24,7 @@ import org.springframework.xml.transform.StringSource;
 
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 
 public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTestCase {
@@ -82,9 +82,7 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 		assertEquals("Invalid qName for element", qName, headerElement.getName());
 		StringResult result = new StringResult();
 		transformer.transform(headerElement.getSource(), result);
-		assertXMLEqual("Invalid contents of header element",
-				"<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>",
-				result.toString());
+		assertThat(result.toString()).and("<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>").areSimilar();
 		assertFalse("header element iterator has too many elements", iterator.hasNext());
 	}
 
@@ -137,8 +135,6 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 	protected void assertHeaderElementEqual(SoapHeaderElement headerElement, String expected) throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(headerElement.getSource(), result);
-		assertXMLEqual("Invalid contents of header element", expected, result.toString());
+		assertThat(result.toString()).and(expected).areSimilar();
 	}
-
-
 }

@@ -54,7 +54,7 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -302,14 +302,12 @@ public class PayloadValidatingInterceptorTest {
 		interceptor.handleRequestValidationErrors(messageContext, exceptions);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		messageContext.getResponse().writeTo(os);
-		assertXMLEqual(
-				"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>" + "<soapenv:Body>" +
+		assertThat(os.toString()).and("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>" + "<soapenv:Body>" +
 						"<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
 						"<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>" +
 						"<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +
 						"<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>" +
-						"</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
-
+						"</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>").areSimilar();
 	}
 
 	@Test

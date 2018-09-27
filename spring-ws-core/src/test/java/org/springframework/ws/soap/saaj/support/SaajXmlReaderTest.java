@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class SaajXmlReaderTest {
 
@@ -59,7 +59,7 @@ public class SaajXmlReaderTest {
 		transformer.transform(source, result);
 		DOMResult expected = new DOMResult();
 		transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
-		assertXMLEqual((Document) expected.getNode(), (Document) result.getNode());
+		assertThat(result.getNode()).and(expected.getNode()).areSimilar();
 	}
 
 	@Test
@@ -71,6 +71,6 @@ public class SaajXmlReaderTest {
 		transformer.transform(source, result);
 		DOMResult expected = new DOMResult();
 		transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
-		assertXMLEqual((Document) expected.getNode(), (Document) result.getNode());
+		assertThat(result.getNode()).and(expected.getNode()).areSimilar();
 	}
 }

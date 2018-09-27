@@ -22,8 +22,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import org.custommonkey.xmlunit.XMLUnit;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +61,6 @@ public class PayloadTransformingInterceptorTest {
 		input = new ClassPathResource("transformInput.xml", getClass());
 		output = new ClassPathResource("transformOutput.xml", getClass());
 		xslt = new ClassPathResource("transformation.xslt", getClass());
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -76,7 +74,7 @@ public class PayloadTransformingInterceptorTest {
 		Assert.assertTrue("Invalid interceptor result", result);
 		StringResult expected = new StringResult();
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
-		assertXMLEqual(expected.toString(), request.getPayloadAsString());
+		assertThat(request.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -90,7 +88,7 @@ public class PayloadTransformingInterceptorTest {
 		Assert.assertTrue("Invalid interceptor result", result);
 		StringResult expected = new StringResult();
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
-		assertXMLEqual(expected.toString(), request.getPayloadAsString());
+		assertThat(request.getPayloadAsString()).and(expected.toString()).areSimilar();
 	}
 
 	@Test
@@ -106,7 +104,7 @@ public class PayloadTransformingInterceptorTest {
 		Assert.assertTrue("Invalid interceptor result", result);
 		StringResult expected = new StringResult();
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
-		assertXMLEqual(expected.toString(), response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -122,7 +120,7 @@ public class PayloadTransformingInterceptorTest {
 		Assert.assertTrue("Invalid interceptor result", result);
 		StringResult expected = new StringResult();
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
-		assertXMLEqual(expected.toString(), response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and(expected.toString()).areSimilar();
 	}
 
 	@Test
@@ -140,8 +138,7 @@ public class PayloadTransformingInterceptorTest {
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
 		StringResult result = new StringResult();
 		transformer.transform(message.getPayloadSource(), result);
-		assertXMLEqual(expected.toString(), result.toString());
-
+		assertThat(result.toString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -158,8 +155,7 @@ public class PayloadTransformingInterceptorTest {
 		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
 		StringResult result = new StringResult();
 		transformer.transform(message.getPayloadSource(), result);
-		assertXMLEqual(expected.toString(), result.toString());
-
+		assertThat(result.toString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
 
 	@Test

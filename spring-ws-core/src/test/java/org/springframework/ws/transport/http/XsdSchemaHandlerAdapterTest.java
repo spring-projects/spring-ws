@@ -33,7 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 public class XsdSchemaHandlerAdapterTest {
@@ -69,7 +69,7 @@ public class XsdSchemaHandlerAdapterTest {
 		schema.afterPropertiesSet();
 		adapter.handle(request, response, schema);
 		String expected = new String(FileCopyUtils.copyToByteArray(single.getFile()));
-		assertXMLEqual(expected, response.getContentAsString());
+		assertThat(response.getContentAsString()).and(expected).areSimilar();
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class XsdSchemaHandlerAdapterTest {
 
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("importing-expected.xsd"));
-		assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
+		assertThat(resultingDocument).and(expectedDocument).areSimilar();
 	}
 
 }

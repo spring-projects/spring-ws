@@ -35,13 +35,12 @@ import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class AxiomUtilsTest {
 
@@ -52,7 +51,6 @@ public class AxiomUtilsTest {
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		OMNamespace namespace = factory.createOMNamespace("http://www.springframework.org", "prefix");
 		element = factory.createOMElement("element", namespace);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
@@ -117,7 +115,7 @@ public class AxiomUtilsTest {
 
 		Document result = AxiomUtils.toDocument(soapMessage.getSOAPEnvelope());
 
-		assertXMLEqual("Invalid document generated from SOAPEnvelope", expected, result);
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	@Test
@@ -137,6 +135,6 @@ public class AxiomUtilsTest {
 		envelope.serialize(writer);
 		String result = writer.toString();
 
-		assertXMLEqual("Invalid SOAPEnvelope generated from document", expected, result);
+		assertThat(result).and(expected).areSimilar();
 	}
 }

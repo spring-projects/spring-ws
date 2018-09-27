@@ -27,7 +27,7 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 @SuppressWarnings("Since15")
 public class NonCachingPayloadTest {
@@ -63,7 +63,7 @@ public class NonCachingPayloadTest {
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
 				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
 				;
-		assertXMLEqual(expected, writer.toString());
+		assertThat(writer.toString()).and(expected).areSimilar();
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class NonCachingPayloadTest {
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
 				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
 				;
-		assertXMLEqual(expected, writer.toString());
+		assertThat(writer.toString()).and(expected).areSimilar();
 	}
 
 	@Test
@@ -105,6 +105,6 @@ public class NonCachingPayloadTest {
 
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
 				"<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";
-		assertXMLEqual(expected, writer.toString());
+		assertThat(writer.toString()).and(expected).areSimilar();
 	}
 }

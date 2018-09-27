@@ -35,7 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.easymock.EasyMock.*;
 
 public class WsdlDefinitionHandlerAdapterTest {
@@ -66,7 +66,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 		replay(definitionMock);
 
 		adapter.handle(request, response, definitionMock);
-		assertXMLEqual(definition, response.getContentAsString());
+		assertThat(response.getContentAsString()).and(definition).areSimilar();
 
 		verify(definitionMock);
 	}
@@ -104,7 +104,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 		Document result = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
 		adapter.transformLocations(result, request);
 		Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-expected.wsdl"));
-		assertXMLEqual("Invalid result", expectedDocument, result);
+		assertThat(result).and(expectedDocument).areSimilar();
 
 		verify(definitionMock);
 	}
@@ -192,7 +192,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("echo-input.wsdl"));
-		assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
+		assertThat(resultingDocument).and(expectedDocument).areSimilar();
 	}
 
 	@Test
@@ -222,7 +222,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expectedDocument = documentBuilder.parse(getClass().getResourceAsStream("echo-expected.wsdl"));
-		assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
+		assertThat(resultingDocument).and(expectedDocument).areSimilar();
 	}
 
 }

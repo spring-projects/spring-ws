@@ -27,7 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 
 public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCase {
@@ -77,7 +77,7 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 	protected void assertPayloadEqual(String expectedPayload) throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(soapBody.getPayloadSource(), result);
-		assertXMLEqual("Invalid payload contents", expectedPayload, result.toString());
+		assertThat(result.toString()).and(expectedPayload).areSimilar();
 	}
 
 }

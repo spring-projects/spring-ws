@@ -96,8 +96,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		assertFalse("Request with no MessageID handled", result);
 		assertTrue("Message Context has no response", context.hasResponse());
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-no-message-id.xml");
-		assertXMLEqual("Invalid response for message with no MessageID", expectedResponse,
-				(SaajSoapMessage) context.getResponse());
+		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
 		verify(strategyMock);
 	}
@@ -115,8 +114,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		assertTrue("Request with no ReplyTo not handled", result);
 		assertTrue("Message Context has no response", context.hasResponse());
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
-		assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
-				(SaajSoapMessage) context.getResponse());
+		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
 		verify(strategyMock);
 	}
@@ -133,8 +131,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		boolean result = interceptor.handleResponse(context, null);
 		assertTrue("Request with anonymous ReplyTo not handled", result);
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-anonymous.xml");
-		assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
-				(SaajSoapMessage) context.getResponse());
+		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
 		verify(strategyMock);
 	}
@@ -162,8 +159,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		boolean result = interceptor.handleFault(context, null);
 		assertTrue("Request with anonymous FaultTo not handled", result);
 		SaajSoapMessage expectedResponse = loadSaajMessage(getTestPath() + "/response-fault-to.xml");
-		assertXMLEqual("Invalid response for message with invalid MAP", expectedResponse,
-				(SaajSoapMessage) context.getResponse());
+		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 		verify(strategyMock);
 	}
 

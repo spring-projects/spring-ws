@@ -50,7 +50,7 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.sax.AbstractXmlReader;
 import org.springframework.xml.transform.StringResult;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -175,7 +175,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
+		assertThat(response.getPayloadAsString()).and("<root xmlns='http://springframework.org'><string>Foo</string></root>").ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -203,17 +203,15 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
-				payloadResult.toString());
+		assertThat(payloadResult.toString()).and("<root xmlns='http://springframework.org'><string>Foo</string></root>").areSimilar();
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 		
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
+		assertThat(messageResult).and("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
 				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
-
+				"</soapenv:Body></soapenv:Envelope>").ignoreWhitespace().areSimilar();
 	}
 
 	@Test
@@ -233,10 +231,9 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
+		assertThat(messageResult).and("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
 				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
-
+				"</soapenv:Body></soapenv:Envelope>").areSimilar();
 	}
 
 	@ResponsePayload

@@ -29,7 +29,7 @@ import org.springframework.xml.transform.StringSource;
 
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 
 public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCase {
@@ -48,8 +48,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 	public void testGetSource() throws Exception {
 		StringResult result = new StringResult();
 		transformer.transform(soapBody.getSource(), result);
-		assertXMLEqual("Invalid contents of body", "<Body xmlns='http://schemas.xmlsoap.org/soap/envelope/' />",
-				result.toString());
+		assertThat(result.toString()).and("<Body xmlns='http://schemas.xmlsoap.org/soap/envelope/' />").areSimilar();
 	}
 
 	@Test

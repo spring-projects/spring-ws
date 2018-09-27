@@ -27,7 +27,7 @@ import org.springframework.ws.soap.soap12.AbstractSoap12MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -58,7 +58,7 @@ public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
 		Source source = soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
 		transformer.transform(source, result);
-		assertXMLEqual("Invalid source", "<child/>", result.toString());
+		assertThat(result.toString()).and("<child/>").areSimilar();
 	}
 
 	public void testGetPayloadSourceText() throws Exception {
@@ -67,7 +67,7 @@ public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
 		Source source = soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
 		transformer.transform(source, result);
-		assertXMLEqual("Invalid source", "<child/>", result.toString());
+		assertThat(result.toString()).and("<child/>").areSimilar();
 	}
 
 	public void testGetPayloadResult() throws Exception {
