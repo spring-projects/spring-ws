@@ -25,9 +25,11 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerHelper;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.w3c.dom.Document;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 import static org.springframework.ws.test.support.AssertionErrors.fail;
@@ -36,6 +38,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * Matches {@link Source} SOAP envelopes.
  *
  * @author Alexander Shutyaev
+ * @author Leandro Quiroga
  * @since 2.1.1
  */
 public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
@@ -43,10 +46,6 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	private final Source expected;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
-
-	static {
-		XMLUnit.setIgnoreWhitespace(true);
-	}
 
 	public SoapEnvelopeDiffMatcher(Source expected) {
 		Assert.notNull(expected, "'expected' must not be null");
@@ -57,8 +56,8 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
-		Diff diff = new Diff(expectedDocument, actualDocument);
-		assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
+		Diff diff = DiffBuilder.compare(expectedDocument).withTest(actualDocument).withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)).ignoreWhitespace().checkForSimilar().build();
+		assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
 	}
 
 	private Document createDocumentFromSource(Source source) {

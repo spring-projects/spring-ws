@@ -24,8 +24,11 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
 
-import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 import static org.springframework.ws.test.support.AssertionErrors.fail;
 
@@ -34,6 +37,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
+ * @author Leandro Quiroga
  * @since 2.0
  */
 public class PayloadDiffMatcher extends DiffMatcher {
@@ -59,7 +63,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 	protected Diff createDiff(Source payload) {
 		Document expectedDocument = createDocumentFromSource(expected);
 		Document actualDocument = createDocumentFromSource(payload);
-		return new Diff(expectedDocument, actualDocument);
+		return DiffBuilder.compare(expectedDocument).withTest(actualDocument).withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName)).ignoreWhitespace().checkForSimilar().build();
 	}
 
 	private Document createDocumentFromSource(Source source) {

@@ -18,28 +18,24 @@ package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 import org.springframework.ws.WebServiceMessage;
+import org.xmlunit.diff.Diff;
 
 /**
  * Implementation of {@link WebServiceMessageMatcher} based on XMLUnit's {@link Diff}.
  *
  * @author Arjen Poutsma
+ * @author Leandro Quiroga
  * @since 2.0
  */
 public abstract class DiffMatcher implements WebServiceMessageMatcher {
 
-	static {
-		XMLUnit.setIgnoreWhitespace(true);
-	}
-
 	@Override
 	public final void match(WebServiceMessage message) throws IOException, AssertionError {
 		Diff diff = createDiff(message);
-		assertTrue("Messages are different, " + diff.toString(), diff.similar(), "Payload", message.getPayloadSource());
+		assertTrue("Messages are different, " + diff.toString(), !diff.hasDifferences(), "Payload", message.getPayloadSource());
 	}
 
 	/**

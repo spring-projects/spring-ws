@@ -36,7 +36,7 @@ import org.springframework.xml.transform.TransformerHelper;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.junit.Assert.*;
 
 public class ResponseCreatorsTest {
@@ -58,8 +58,7 @@ public class ResponseCreatorsTest {
 
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-		assertXMLEqual(payload, getPayloadAsString(response));
-
+		assertThat(getPayloadAsString(response)).and(payload).areSimilar();
 	}
 
 	@Test
@@ -70,7 +69,7 @@ public class ResponseCreatorsTest {
 
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-		assertXMLEqual(payload, getPayloadAsString(response));
+		assertThat(getPayloadAsString(response)).and(payload).areSimilar();
 	}
 	
 	@Test
@@ -84,7 +83,7 @@ public class ResponseCreatorsTest {
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new StringSource(envelope));
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
-		assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
+		assertThat(getSoapEnvelopeAsString((SoapMessage)response)).and(envelope).areSimilar();
 	}
 	
 	@Test
@@ -98,7 +97,7 @@ public class ResponseCreatorsTest {
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new ByteArrayResource(envelope.getBytes("UTF-8")));
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
-		assertXMLEqual(envelope, getSoapEnvelopeAsString((SoapMessage)response));
+		assertThat(getSoapEnvelopeAsString((SoapMessage)response)).and(envelope).areSimilar();
 	}
 
 	@Test

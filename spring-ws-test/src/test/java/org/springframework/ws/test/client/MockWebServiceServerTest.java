@@ -43,7 +43,7 @@ import org.springframework.xml.transform.StringSource;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.ws.test.client.RequestMatchers.*;
@@ -142,7 +142,7 @@ public class MockWebServiceServerTest {
 
 		StringResult result = new StringResult();
 		template.sendSourceAndReceiveToResult(request, result);
-		assertXMLEqual(result.toString(), response.toString());
+		assertThat(response.toString()).and(result.toString()).areSimilar();
 	}
 
 	@Test(expected = AssertionError.class)
@@ -264,7 +264,7 @@ public class MockWebServiceServerTest {
 
 		StringResult result = new StringResult();
 		template.sendSourceAndReceiveToResult(request, result);
-		assertXMLEqual(result.toString(), response.toString());
+		assertThat(response.toString()).and(result.toString()).areSimilar();
 
 		server.verify();
 	}
@@ -279,7 +279,7 @@ public class MockWebServiceServerTest {
 
 		StringResult result = new StringResult();
 		template.sendSourceAndReceiveToResult(request, result);
-		assertXMLEqual(result.toString(), response.toString());
+		assertThat(response.toString()).and(result.toString()).areSimilar();
 
 		server.expect(anything()).andRespond(withPayload(response));
 	}
