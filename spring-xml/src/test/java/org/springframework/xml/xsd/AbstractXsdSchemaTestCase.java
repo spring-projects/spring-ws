@@ -27,7 +27,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 
-//import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +48,6 @@ public abstract class AbstractXsdSchemaTestCase {
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		transformer = transformerFactory.newTransformer();
-//		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
