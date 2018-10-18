@@ -152,6 +152,6 @@ public class CommonsXsdSchemaCollectionTest {
 		expected = documentBuilder.parse(SaxUtils.createInputSource(holiday));
 		domResult = new DOMResult();
 		transformer.transform(schemas[1].getSource(), domResult);
-		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areIdentical();
+		assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areSimilar();
 	}
 }
