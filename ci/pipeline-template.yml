@@ -1,0 +1,279 @@
+---
+resource_types:
+- name: artifactory-resource
+  type: docker-image
+  source:
+    repository: springio/artifactory-resource
+    tag:        0.0.4
+
+- name: github-status
+  type: docker-image
+  source:
+    repository: dpb587/github-status-resource
+    tag:        master
+
+- name: pull-request
+  type: docker-image
+  source:
+    repository: jtarchie/pr
+    tag:        latest
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: nebhale/slack-notification-resource
+
+resources:
+- name: openjdk:8-jdk
+  type: docker-image
+  source:
+    repository: openjdk
+    tag:        8-jdk
+
+- name: openjdk:11-jdk
+  type: docker-image
+  source:
+    repository: openjdk
+    tag:        11-jdk
+
+- name: spring-ws-github
+  type: git
+  source:
+    uri: https://github.com/spring-projects/spring-ws.git
+    branch: ((branch))
+
+- name: spring-ws-artifactory
+  type: artifactory-resource
+  source:
+    uri: https://repo.spring.io
+    username: ((artifactory-username))
+    password: ((artifactory-password))
+    build_name: Spring Web Services
+
+- name: spring-ws-pull-requests
+  type: pull-request
+  source:
+    access_token: ((github-access-token))
+    repo: spring-projects/spring-ws
+    base: ((branch))
+
+- name: spring-ws-status
+  type: github-status
+  source:
+    access_token: ((github-access-token))
+    repository:   spring-projects/spring-ws
+    branch: concourse
+
+groups:
+- name: spring-ws
+  jobs:
+  - Test - JDK 8
+  - Test - JDK 8 + Spring.NEXT
+  - Test - JDK 8 + Spring.NEXT (snapshots)
+  - Test - JDK 8 + Spring (snapshots)
+  - Test - JDK 11
+  - Test - JDK 11 + Spring.NEXT
+  - Test - JDK 11 + Spring.NEXT (snapshots)
+  - Test - JDK 11 + Spring (snapshots)
+  - Build
+- name: pull-requests
+  jobs:
+  - spring-ws-pull-requests
+
+jobs:
+- name: Test - JDK 8
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:8-jdk
+    trigger: true
+  - task: test
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "distribute,convergence" }
+
+- name: Test - JDK 8 + Spring.NEXT
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:8-jdk
+    trigger: true
+  - task: test
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "springnext,convergence" }
+
+- name: Test - JDK 8 + Spring.NEXT (snapshots)
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:8-jdk
+    trigger: true
+  - task: test
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "springnext-buildsnapshot,convergence" }
+
+- name: Test - JDK 8 + Spring (snapshots)
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:8-jdk
+    trigger: true
+  - task: test
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "spring-buildsnapshot,convergence" }
+
+- name: Test - JDK 11
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:11-jdk
+    trigger: true
+  - task: test
+    image: openjdk:11-jdk
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "distribute,java11,convergence" }
+
+- name: Test - JDK 11 + Spring.NEXT
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:11-jdk
+    trigger: true
+  - task: test
+    image: openjdk:11-jdk
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "springnext,java11,convergence" }
+
+- name: Test - JDK 11 + Spring.NEXT (snapshots)
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:11-jdk
+    trigger: true
+  - task: test
+    image: openjdk:11-jdk
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
+
+- name: Test - JDK 11 + Spring (snapshots)
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+  - get: openjdk:11-jdk
+    trigger: true
+  - task: test
+    image: openjdk:11-jdk
+    file: spring-ws-github/ci/test.yml
+    params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
+
+- name: Build
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    trigger: true
+    passed: [
+      Test - JDK 8,
+      Test - JDK 8 + Spring.NEXT,
+      Test - JDK 8 + Spring.NEXT (snapshots),
+      Test - JDK 8 + Spring (snapshots),
+      Test - JDK 11,
+      Test - JDK 11 + Spring.NEXT,
+      Test - JDK 11 + Spring.NEXT (snapshots),
+      Test - JDK 11 + Spring (snapshots)
+    ]
+  - put: spring-ws-status
+    params:
+      commit: spring-ws-github
+      state: pending
+  - task: build
+    file: spring-ws-github/ci/build.yml
+  - put: spring-ws-artifactory
+    params:
+      build_number:   ${BUILD_NAME}
+      build_uri:      ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}
+      repo:           libs-snapshot-local
+      folder:         spring-ws-artifactory
+      artifact_set:
+      - include:
+        - "/**"
+        properties:
+          archives: '*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false'
+  on_failure:
+    put: spring-ws-status
+    params:
+      commit: spring-ws-github
+      state: failure
+  on_success:
+    put: spring-ws-status
+    params:
+      commit: spring-ws-github
+      state: success
+      
+- name: spring-ws-pull-requests
+  public: true
+  plan:
+  - get: spring-ws-github
+    resource: spring-ws-pull-requests
+    trigger: true
+    version: every
+  - get: openjdk:11-jdk
+    trigger: true
+  - put: spring-ws-pull-requests
+    params:
+      path: spring-ws-github
+      status: pending
+  - aggregate:
+    - task: test (JDK 8)
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "distribute,convergence" }
+    - task: test (JDK 8 + Spring.NEXT)
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "springnext,convergence" }
+    - task: test (JDK 8 + Spring.NEXT snapshots)
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "springnext-buildsnapshot,convergence" }
+    - task: test (JDK 8 + Spring snapshots)
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "spring-buildsnapshot,convergence" }
+    - task: test (JDK 11)
+      image: openjdk:11-jdk
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "distribute,java11,convergence" }
+    - task: test (JDK 11 + Spring.NEXT)
+      image: openjdk:11-jdk
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "springnext,java11,convergence" }
+    - task: test (JDK 11 + Spring.NEXT snapshots)
+      image: openjdk:11-jdk
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
+    - task: test (JDK 11 + Spring snapshots)
+      image: openjdk:11-jdk
+      file: spring-ws-github/ci/test.yml
+      params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
+  on_failure:
+    put: spring-ws-pull-requests
+    params:
+      path: spring-ws-github
+      status: failure
+  on_success:
+    put: spring-ws-pull-requests
+    params:
+      path: spring-ws-github
+      status: success
