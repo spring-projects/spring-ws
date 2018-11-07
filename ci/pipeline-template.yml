@@ -62,7 +62,7 @@ resources:
   source:
     access_token: ((github-access-token))
     repository:   spring-projects/spring-ws
-    branch: concourse
+    branch: ((branch))
 
 groups:
 - name: spring-ws
