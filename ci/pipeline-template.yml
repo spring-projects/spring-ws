@@ -68,13 +68,13 @@ groups:
 - name: spring-ws
   jobs:
   - Test - JDK 8
-  - Test - JDK 8 + Spring.NEXT
-  - Test - JDK 8 + Spring.NEXT (snapshots)
-  - Test - JDK 8 + Spring (snapshots)
+  - Test - JDK 8 and Spring.NEXT
+  - Test - JDK 8 and Spring.NEXT (snapshots)
+  - Test - JDK 8 and Spring (snapshots)
   - Test - JDK 11
-  - Test - JDK 11 + Spring.NEXT
-  - Test - JDK 11 + Spring.NEXT (snapshots)
-  - Test - JDK 11 + Spring (snapshots)
+  - Test - JDK 11 and Spring.NEXT
+  - Test - JDK 11 and Spring.NEXT (snapshots)
+  - Test - JDK 11 and Spring (snapshots)
   - Build
 - name: pull-requests
   jobs:
@@ -93,7 +93,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,convergence" }
 
-- name: Test - JDK 8 + Spring.NEXT
+- name: Test - JDK 8 and Spring.NEXT
   serial: true
   public: true
   plan:
@@ -105,7 +105,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,convergence" }
 
-- name: Test - JDK 8 + Spring.NEXT (snapshots)
+- name: Test - JDK 8 and Spring.NEXT (snapshots)
   serial: true
   public: true
   plan:
@@ -117,7 +117,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,convergence" }
 
-- name: Test - JDK 8 + Spring (snapshots)
+- name: Test - JDK 8 and Spring (snapshots)
   serial: true
   public: true
   plan:
@@ -142,7 +142,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,java11,convergence" }
 
-- name: Test - JDK 11 + Spring.NEXT
+- name: Test - JDK 11 and Spring.NEXT
   serial: true
   public: true
   plan:
@@ -155,7 +155,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,java11,convergence" }
 
-- name: Test - JDK 11 + Spring.NEXT (snapshots)
+- name: Test - JDK 11 and Spring.NEXT (snapshots)
   serial: true
   public: true
   plan:
@@ -168,7 +168,7 @@ jobs:
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
 
-- name: Test - JDK 11 + Spring (snapshots)
+- name: Test - JDK 11 and Spring (snapshots)
   serial: true
   public: true
   plan:
@@ -189,13 +189,13 @@ jobs:
     trigger: true
     passed: [
       Test - JDK 8,
-      Test - JDK 8 + Spring.NEXT,
-      Test - JDK 8 + Spring.NEXT (snapshots),
-      Test - JDK 8 + Spring (snapshots),
+      Test - JDK 8 and Spring.NEXT,
+      Test - JDK 8 and Spring.NEXT (snapshots),
+      Test - JDK 8 and Spring (snapshots),
       Test - JDK 11,
-      Test - JDK 11 + Spring.NEXT,
-      Test - JDK 11 + Spring.NEXT (snapshots),
-      Test - JDK 11 + Spring (snapshots)
+      Test - JDK 11 and Spring.NEXT,
+      Test - JDK 11 and Spring.NEXT (snapshots),
+      Test - JDK 11 and Spring (snapshots)
     ]
   - put: spring-ws-status
     params:
@@ -242,28 +242,28 @@ jobs:
     - task: test (JDK 8)
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "distribute,convergence" }
-    - task: test (JDK 8 + Spring.NEXT)
+    - task: test (JDK 8 and Spring.NEXT)
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext,convergence" }
-    - task: test (JDK 8 + Spring.NEXT snapshots)
+    - task: test (JDK 8 and Spring.NEXT snapshots)
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext-buildsnapshot,convergence" }
-    - task: test (JDK 8 + Spring snapshots)
+    - task: test (JDK 8 and Spring snapshots)
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "spring-buildsnapshot,convergence" }
     - task: test (JDK 11)
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "distribute,java11,convergence" }
-    - task: test (JDK 11 + Spring.NEXT)
+    - task: test (JDK 11 and Spring.NEXT)
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext,java11,convergence" }
-    - task: test (JDK 11 + Spring.NEXT snapshots)
+    - task: test (JDK 11 and Spring.NEXT snapshots)
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
-    - task: test (JDK 11 + Spring snapshots)
+    - task: test (JDK 11 and Spring snapshots)
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
