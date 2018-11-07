@@ -97,11 +97,7 @@ You can also import the project into your IDE.
 
 == Releasing Spring Web Services
 
-Snapshots are published automatically via CI server by doing this:
-
-----
-$ USERNAME=<username> PASSWORD=<encrypted password> ./mvnw -Pdistribute,snapshot,docs clean -Dmaven.test.skip=true deploy
-----
+Snapshots are published automatically via Concourse CI. (See the `ci` folder for details).
 
 IMPORTANT: Snapshots do NOT include GPG signatures. To do so would require putting a private key on the CI server. The process for releases (below) is manual and DOES include GPG signatures.
 
