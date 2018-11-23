@@ -93,7 +93,7 @@
 		<commons-io.version>2.5</commons-io.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<easymock.version>3.6</easymock.version>
-		<ehcache.version>2.10.4</ehcache.version>
+		<ehcache.version>2.10.5</ehcache.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<javax-mail.version>1.6.0</javax-mail.version>
 		<javax-servlet.version>3.1.0</javax-servlet.version>
@@ -114,10 +114,10 @@
 		<spring-security.version>5.0.8.RELEASE</spring-security.version>
 		<stax.version>1.7.8</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
-		<woodstox.version>4.2.0</woodstox.version>
+		<woodstox.version>5.0.3</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
-		<wss4j.version>2.2.0</wss4j.version>
-		<xmlsec.version>2.1.0</xmlsec.version>
+		<wss4j.version>2.2.2</wss4j.version>
+		<xmlsec.version>2.1.2</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
 		<xmlunit.version>1.5</xmlunit.version>
 		<xws-security.version>3.0</xws-security.version>
@@ -187,8 +187,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>woodstox-core-asl</artifactId>
+			<groupId>com.fasterxml.woodstox</groupId>
+			<artifactId>woodstox-core</artifactId>
 			<version>${woodstox.version}</version>
 			<scope>test</scope>
 		</dependency>

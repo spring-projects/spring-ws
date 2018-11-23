@@ -115,7 +115,7 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.codehaus.woodstox</groupId>
-					<artifactId>woodstox-core-asl</artifactId>
+					<artifactId>woodstox-core</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.apache.santuario</groupId>
@@ -124,6 +124,10 @@
 				<exclusion>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
