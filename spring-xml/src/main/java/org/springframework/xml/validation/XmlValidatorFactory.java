@@ -19,12 +19,12 @@ package org.springframework.xml.validation;
 import java.io.IOException;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.xml.JaxpVersion;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Factory for {@link XmlValidator} objects, being aware of JAXP 1.3 {@link Validator}s, and JAXP 1.0 parsing
@@ -84,10 +84,15 @@ public abstract class XmlValidatorFactory {
 		Assert.hasLength(schemaLanguage, "No schema language provided");
 		Assert.isTrue(SCHEMA_W3C_XML.equals(schemaLanguage) || SCHEMA_RELAX_NG.equals(schemaLanguage),
 				"Invalid schema language: " + schemaLanguage);
+		Assert.noNullElements(schemaResources, "No null schemaResources allowed");
 		for (Resource schemaResource : schemaResources) {
 			Assert.isTrue(schemaResource.exists(), "schema [" + schemaResource + "] does not exist");
 		}
-		if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
+		if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_15) {
+			logger.trace("Creating JAXP 1.5 XmlValidator");
+			return Jaxp15ValidatorFactory.createValidator(schemaResources, schemaLanguage);
+		}
+		else if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
 			logger.trace("Creating JAXP 1.3 XmlValidator");
 			return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
 		}

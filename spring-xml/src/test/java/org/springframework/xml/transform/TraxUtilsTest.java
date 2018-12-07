@@ -41,8 +41,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.util.xml.StaxUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -55,13 +53,17 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
 import static org.easymock.EasyMock.*;
 
 public class TraxUtilsTest {
 
 	@Test
 	public void testGetDocument() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
@@ -73,7 +75,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithDomSource() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
 
@@ -89,7 +91,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithDomResult() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
 
@@ -137,7 +139,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxSourceEventReader() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
@@ -167,7 +169,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxSourceStreamReader() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);

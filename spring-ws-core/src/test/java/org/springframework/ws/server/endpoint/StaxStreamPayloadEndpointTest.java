@@ -22,7 +22,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.soap.SOAPFactory;
+import org.junit.Test;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -32,13 +35,14 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test case for AbstractStaxStreamPayloadEndpoint.
@@ -101,7 +105,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testSaajResponse() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage());
 		transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
@@ -119,7 +123,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testAxiomResponse() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
 		transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
@@ -137,7 +141,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testAxiomNoResponse() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
 		transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
@@ -152,7 +156,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testAxiomResponseNoPayloadCaching() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
 		transformer.transform(new StringSource(REQUEST), request.getPayloadResult());
@@ -172,7 +176,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testAxiomNoResponseNoPayloadCaching() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
 		transformer.transform(new StringSource(REQUEST), request.getPayloadResult());

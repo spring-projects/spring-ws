@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactory;
 
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * Implementation of the {@code EndpointMapping} interface to map from the qualified name of the request payload
@@ -49,12 +50,20 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
 	private static TransformerFactory transformerFactory;
 
 	static {
-		transformerFactory = TransformerFactory.newInstance();
+		setTransformerFactory(TransformerFactoryUtils.newInstance());
 	}
 
+	/**
+	 * Override the default {@link TransformerFactory}.
+	 *
+	 * @param transformerFactory
+	 */
+	public static void setTransformerFactory(TransformerFactory transformerFactory) {
+		PayloadRootQNameEndpointMapping.transformerFactory = transformerFactory;
+	}
+	
 	@Override
 	protected QName resolveQName(MessageContext messageContext) throws TransformerException {
 		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 	}
-
 }

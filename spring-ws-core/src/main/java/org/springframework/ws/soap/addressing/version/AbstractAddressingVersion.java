@@ -52,6 +52,7 @@ import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 /**
  * Abstract base class for {@link AddressingVersion} implementations. Uses {@link XPathExpression}s to retrieve
@@ -62,7 +63,7 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public abstract class AbstractAddressingVersion extends TransformerObjectSupport implements AddressingVersion {
 
-	private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 
 	private final XPathExpression toExpression;
 

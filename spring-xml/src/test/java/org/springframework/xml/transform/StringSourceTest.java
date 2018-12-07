@@ -29,7 +29,7 @@ public class StringSourceTest {
 
 	@Test
 	public void testStringSource() throws TransformerException {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		String content = "<prefix:content xmlns:prefix='namespace'/>";
 		DOMResult result = new DOMResult();
 		transformer.transform(new StringSource(content), result);

@@ -36,6 +36,7 @@ import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
@@ -90,7 +91,7 @@ public class MessageDispatcherServletTest {
 				new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		servlet.service(request, response);
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));

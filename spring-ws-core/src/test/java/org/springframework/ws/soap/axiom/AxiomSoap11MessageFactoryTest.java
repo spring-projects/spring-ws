@@ -20,7 +20,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Test;
 
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
@@ -29,13 +32,9 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
@@ -43,7 +42,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 
 		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
 		factory.afterPropertiesSet();

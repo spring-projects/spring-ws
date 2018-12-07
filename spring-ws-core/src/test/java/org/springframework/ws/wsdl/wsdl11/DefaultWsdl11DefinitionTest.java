@@ -22,17 +22,19 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class DefaultWsdl11DefinitionTest {
 
@@ -45,9 +47,9 @@ public class DefaultWsdl11DefinitionTest {
 	@Before
 	public void setUp() throws Exception {
 		definition = new DefaultWsdl11Definition();
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		XMLUnit.setIgnoreWhitespace(true);

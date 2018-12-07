@@ -22,7 +22,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.springframework.util.Assert;
 
@@ -83,16 +82,11 @@ public class TransformerHelper {
 	 */
 	protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
 		if (transformerFactoryClass != null) {
-			try {
-				return transformerFactoryClass.newInstance();
-			}
-			catch (Exception ex) {
-				throw new TransformerFactoryConfigurationError(ex,
-						"Could not instantiate TransformerFactory [" + transformerFactoryClass + "]");
-			}
-		}
-		else {
-			return TransformerFactory.newInstance();
+			TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance(transformerFactoryClass);
+			return transformerFactory;
+		} else {
+			TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
+			return transformerFactory;
 		}
 	}
 

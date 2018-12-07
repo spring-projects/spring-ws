@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.springframework.util.StringUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 /**
  * Collection of generic utility methods to work with Axiom. Includes conversion from {@code OMNamespace}s to
@@ -119,7 +120,7 @@ public abstract class AxiomUtils {
 				envelope.serialize(bos);
 
 				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 				documentBuilderFactory.setNamespaceAware(true);
 				return documentBuilderFactory.newDocumentBuilder().parse(bis);
 			}

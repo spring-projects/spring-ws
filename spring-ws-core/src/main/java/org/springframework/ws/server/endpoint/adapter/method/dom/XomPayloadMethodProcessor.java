@@ -25,15 +25,16 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
-
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.ParsingException;
 import nu.xom.converters.DOMConverter;
 import org.w3c.dom.DOMImplementation;
+
+import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 /**
  * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
@@ -104,7 +105,7 @@ public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 	 * @return the created factory
 	 */
 	protected DocumentBuilderFactory createDocumentBuilderFactory() {
-		return DocumentBuilderFactory.newInstance();
+		return DocumentBuilderFactoryUtils.newInstance();
 	}
 
 }

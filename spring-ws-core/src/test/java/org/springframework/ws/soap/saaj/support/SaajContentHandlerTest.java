@@ -26,14 +26,14 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
-
-import org.springframework.xml.transform.StringSource;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 public class SaajContentHandlerTest {
 
@@ -49,7 +49,7 @@ public class SaajContentHandlerTest {
 		SOAPMessage message = messageFactory.createMessage();
 		envelope = message.getSOAPPart().getEnvelope();
 		handler = new SaajContentHandler(envelope.getBody());
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test

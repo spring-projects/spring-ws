@@ -37,6 +37,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * Mock implementation of the {@code WebServiceMessage} interface.
@@ -58,7 +59,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 	}
 
 	public MockWebServiceMessage(Source source) throws TransformerException {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		content = new StringBuilder();
 		transformer.transform(source, getPayloadResult());

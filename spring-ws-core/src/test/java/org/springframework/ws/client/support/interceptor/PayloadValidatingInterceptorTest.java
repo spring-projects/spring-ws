@@ -22,7 +22,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
@@ -39,6 +38,7 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 
 public class PayloadValidatingInterceptorTest {
@@ -75,7 +75,7 @@ public class PayloadValidatingInterceptorTest {
 
 		soap11Factory = new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
 
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test

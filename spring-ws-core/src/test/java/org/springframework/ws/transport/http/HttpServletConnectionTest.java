@@ -24,9 +24,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,6 +35,10 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
 
 public class HttpServletConnectionTest {
 
@@ -67,7 +69,7 @@ public class HttpServletConnectionTest {
 		connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
 		MessageFactory saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
-		transformerFactory = TransformerFactory.newInstance();
+		transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	@Test

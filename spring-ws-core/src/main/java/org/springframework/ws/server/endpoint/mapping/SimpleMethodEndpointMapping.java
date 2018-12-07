@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * Simple subclass of {@link AbstractMethodEndpointMapping} that maps from the local name of the request payload to
@@ -108,7 +109,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 	@Override
 	public final void afterPropertiesSet() throws Exception {
 		Assert.notEmpty(getEndpoints(), "'endpoints' is required");
-		transformerFactory = TransformerFactory.newInstance();
+		transformerFactory = TransformerFactoryUtils.newInstance();
 		for (int i = 0; i < getEndpoints().length; i++) {
 			registerMethods(getEndpoints()[i]);
 		}

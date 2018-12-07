@@ -26,14 +26,15 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.sax.SaxUtils;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public class DefaultMessagesProviderTest {
 
@@ -48,7 +49,7 @@ public class DefaultMessagesProviderTest {
 		provider = new DefaultMessagesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
 		definition = factory.newDefinition();
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 	}

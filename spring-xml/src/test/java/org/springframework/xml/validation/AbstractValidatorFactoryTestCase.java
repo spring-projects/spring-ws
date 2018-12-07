@@ -23,10 +23,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.transform.ResourceSource;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,6 +31,11 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public abstract class AbstractValidatorFactoryTestCase {
 
@@ -98,7 +99,7 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 	@Test
 	public void testHandleValidMessageDom() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		Document document = documentBuilderFactory.newDocumentBuilder()
 				.parse(new InputSource(validInputStream));
@@ -109,7 +110,7 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 	@Test
 	public void testHandleInvalidMessageDom() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		Document document = documentBuilderFactory.newDocumentBuilder()
 				.parse(new InputSource(invalidInputStream));

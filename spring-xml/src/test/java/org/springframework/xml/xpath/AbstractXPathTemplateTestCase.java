@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -128,7 +129,7 @@ public abstract class AbstractXPathTemplateTestCase {
 
 	@Test
 	public void testEvaluateDomSource() throws IOException, SAXException, ParserConfigurationException {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.parse(SaxUtils.createInputSource(

@@ -36,6 +36,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
@@ -96,7 +97,7 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
 				soapMessage.getSoapBody().getPayloadResult());
 
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expected = documentBuilder.newDocument();

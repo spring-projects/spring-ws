@@ -20,17 +20,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
@@ -60,7 +60,7 @@ public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
 
 	@Override
 	protected Element getReturnValue(MethodParameter returnType) throws ParserConfigurationException {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
 		return document.createElementNS(NAMESPACE_URI, LOCAL_NAME);

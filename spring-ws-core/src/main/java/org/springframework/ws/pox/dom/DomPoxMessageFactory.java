@@ -29,6 +29,7 @@ import org.xml.sax.SAXException;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 /**
  * Implementation of the {@link WebServiceMessageFactory} interface that creates a {@link DomPoxMessage}.
@@ -42,11 +43,25 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	/** The default content type for the POX messages. */
 	public static final String DEFAULT_CONTENT_TYPE = "application/xml";
 
-	private DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+	private DocumentBuilderFactory documentBuilderFactory;
 
 	private String contentType = DEFAULT_CONTENT_TYPE;
 
+	/**
+	 * Use default {@link DocumentBuilderFactory}.
+	 */
 	public DomPoxMessageFactory() {
+		this(DocumentBuilderFactoryUtils.newInstance());
+	}
+
+	/**
+	 * Provide your own {@link DocumentBuilderFactory}.
+	 * 
+	 * @param documentBuilderFactory
+	 */
+	public DomPoxMessageFactory(DocumentBuilderFactory documentBuilderFactory) {
+		this.documentBuilderFactory = documentBuilderFactory;
+		
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilderFactory.setValidating(false);
 		documentBuilderFactory.setExpandEntityReferences(false);
