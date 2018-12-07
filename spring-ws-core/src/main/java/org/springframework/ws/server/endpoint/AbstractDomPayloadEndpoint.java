@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 /**
  * Abstract base class for endpoints that handle the message payload as DOM elements.
@@ -120,7 +121,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 	 * @throws ParserConfigurationException if thrown by JAXP methods
 	 */
 	protected DocumentBuilderFactory createDocumentBuilderFactory() throws ParserConfigurationException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		factory.setValidating(validating);
 		factory.setNamespaceAware(namespaceAware);
 		factory.setExpandEntityReferences(expandEntityReferences);

@@ -22,11 +22,6 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.xml.sax.SaxUtils;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -41,7 +36,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class AxiomUtilsTest {
 
@@ -107,7 +108,7 @@ public class AxiomUtilsTest {
 	public void testToDocument() throws Exception {
 		Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
@@ -127,7 +128,7 @@ public class AxiomUtilsTest {
 		byte[] buf = FileCopyUtils.copyToByteArray(resource.getFile());
 		String expected = new String(buf, "UTF-8");
 
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.parse(SaxUtils.createInputSource(resource));

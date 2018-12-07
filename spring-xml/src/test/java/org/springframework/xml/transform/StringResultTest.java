@@ -16,25 +16,25 @@
 
 package org.springframework.xml.transform;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class StringResultTest {
 
 	@Test
 	public void testStringResult() throws Exception {
-		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		Document document = DocumentBuilderFactoryUtils.newInstance().newDocumentBuilder().newDocument();
 		Element element = document.createElementNS("namespace", "prefix:localName");
 		document.appendChild(element);
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		StringResult result = new StringResult();
 		transformer.transform(new DOMSource(document), result);
 		assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());

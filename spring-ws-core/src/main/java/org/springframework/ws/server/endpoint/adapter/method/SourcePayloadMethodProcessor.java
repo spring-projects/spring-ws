@@ -29,12 +29,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.xml.JaxpVersion;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+
+import org.springframework.core.MethodParameter;
+import org.springframework.xml.JaxpVersion;
+import org.springframework.xml.XMLInputFactoryUtils;
 
 /**
  * Implementation of {@link MethodArgumentResolver} and {@link MethodReturnValueHandler} that supports {@link Source}
@@ -125,7 +126,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 	 * @return the created factory
 	 */
 	protected XMLInputFactory createXmlInputFactory() {
-		return XMLInputFactory.newInstance();
+		return XMLInputFactoryUtils.newInstance();
 	}
 
 	/** Inner class to avoid a static JAXP 1.4 dependency. */

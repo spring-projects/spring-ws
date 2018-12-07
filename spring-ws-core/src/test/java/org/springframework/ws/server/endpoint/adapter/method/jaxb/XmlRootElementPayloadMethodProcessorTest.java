@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 
 import org.junit.Before;
@@ -49,6 +48,7 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.sax.AbstractXmlReader;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
@@ -199,7 +199,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		assertTrue("context has no response", messageContext.hasResponse());
 		AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
 
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 

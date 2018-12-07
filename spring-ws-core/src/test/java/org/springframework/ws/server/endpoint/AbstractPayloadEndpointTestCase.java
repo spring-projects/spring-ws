@@ -18,15 +18,15 @@ package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -39,7 +39,7 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
 	@Before
 	public void createEndpoint() throws Exception {
 		endpoint = createResponseEndpoint();
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test

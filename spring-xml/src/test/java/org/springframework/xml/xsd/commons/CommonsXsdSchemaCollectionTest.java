@@ -22,20 +22,22 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
-import org.springframework.xml.xsd.XsdSchema;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.xsd.XsdSchema;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class CommonsXsdSchemaCollectionTest {
 
@@ -48,9 +50,9 @@ public class CommonsXsdSchemaCollectionTest {
 	@Before
 	public void setUp() throws Exception {
 		collection = new CommonsXsdSchemaCollection();
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		XMLUnit.setIgnoreWhitespace(true);

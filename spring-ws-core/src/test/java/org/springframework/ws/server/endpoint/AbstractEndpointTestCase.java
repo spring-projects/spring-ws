@@ -30,13 +30,15 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.util.xml.StaxUtils;
-
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 @SuppressWarnings("Since15")
 public abstract class AbstractEndpointTestCase {
@@ -53,7 +55,7 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testDomSource() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document requestDocument = documentBuilder.parse(new InputSource(new StringReader(REQUEST)));
@@ -69,14 +71,14 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testStaxSourceEventReader() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
 		testSource(new SAXSource(StaxUtils.createXMLReader(eventReader), new InputSource()));
 	}
 
 	@Test
 	public void testStaxSourceStreamReader() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
 		testSource(new SAXSource(StaxUtils.createXMLReader(streamReader), new InputSource()));
 	}

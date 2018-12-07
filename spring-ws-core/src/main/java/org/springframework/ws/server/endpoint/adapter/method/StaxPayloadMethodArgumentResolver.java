@@ -30,6 +30,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
+import org.springframework.xml.XMLInputFactoryUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
@@ -152,7 +153,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 	 * @return the created factory
 	 */
 	protected XMLInputFactory createXmlInputFactory() {
-		return XMLInputFactory.newInstance();
+		return XMLInputFactoryUtils.newInstance();
 	}
 
 	private ByteArrayInputStream convertToByteArrayInputStream(Source source) throws TransformerException {

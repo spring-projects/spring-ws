@@ -23,19 +23,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.w3c.dom.Document;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.easymock.EasyMock.*;
 
 public class WsdlDefinitionHandlerAdapterTest {
@@ -98,7 +99,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		replay(definitionMock);
 
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document result = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
@@ -185,7 +186,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 		adapter.handle(request, response, definition);
 
 		InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document resultingDocument = documentBuilder.parse(inputStream);
@@ -215,7 +216,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 		adapter.handle(request, response, definition);
 
 		InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document resultingDocument = documentBuilder.parse(inputStream);

@@ -25,8 +25,9 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+
+import org.junit.Test;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -34,10 +35,9 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTestCase {
 
@@ -46,7 +46,7 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 	@Test
 	public void testSignAndValidate() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		interceptor.setSecurementActions("Signature");
 		interceptor.setEnableSignatureConfirmation(false);
 		interceptor.setSecurementPassword("123456");

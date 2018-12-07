@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import org.springframework.util.StringUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
@@ -46,7 +47,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 	public void setUp() throws Exception {
 		namespaces.put("prefix1", "namespace1");
 		namespaces.put("prefix2", "namespace2");
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		InputStream inputStream = getClass().getResourceAsStream("nonamespaces.xml");

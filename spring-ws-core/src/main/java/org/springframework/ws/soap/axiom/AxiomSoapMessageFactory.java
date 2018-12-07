@@ -53,6 +53,7 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
 import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
+import org.springframework.xml.XMLInputFactoryUtils;
 
 /**
  * Axiom-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}
@@ -366,7 +367,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	 * @return the created factory
 	 */
 	protected XMLInputFactory createXmlInputFactory() {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, replacingEntityReferences);
 		inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, supportingExternalEntities);
 		return inputFactory;

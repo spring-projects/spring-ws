@@ -28,6 +28,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class DomContentHandlerTest {
@@ -55,7 +57,7 @@ public class DomContentHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		result = documentBuilder.newDocument();

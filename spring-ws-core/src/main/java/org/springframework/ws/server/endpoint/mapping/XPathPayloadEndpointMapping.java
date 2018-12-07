@@ -29,6 +29,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
@@ -86,7 +87,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 		else {
 			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
 		}
-		transformerFactory = TransformerFactory.newInstance();
+		transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	@Override

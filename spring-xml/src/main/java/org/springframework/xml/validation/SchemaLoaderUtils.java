@@ -21,13 +21,12 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.xml.transform.ResourceSource;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * Convenient utility methods for loading of {@link Schema} objects, performing standard handling of input streams.
@@ -67,14 +66,14 @@ public abstract class SchemaLoaderUtils {
 		Assert.notEmpty(resources, "No resources given");
 		Assert.hasLength(schemaLanguage, "No schema language provided");
 		Source[] schemaSources = new Source[resources.length];
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		XMLReader xmlReader = XMLReaderFactoryUtils.createXMLReader();
 		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		for (int i = 0; i < resources.length; i++) {
 			Assert.notNull(resources[i], "Resource is null");
 			Assert.isTrue(resources[i].exists(), "Resource " + resources[i] + " does not exist");
 			schemaSources[i] = new ResourceSource(xmlReader, resources[i]);
 		}
-		SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage);
+		SchemaFactory schemaFactory = SchemaFactoryUtils.newInstance(schemaLanguage);
 		return schemaFactory.newSchema(schemaSources);
 	}
 
@@ -87,4 +86,5 @@ public abstract class SchemaLoaderUtils {
 			return null;
 		}
 	}
+
 }

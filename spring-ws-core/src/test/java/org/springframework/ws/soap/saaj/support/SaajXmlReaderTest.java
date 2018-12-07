@@ -21,7 +21,6 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
@@ -31,7 +30,9 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class SaajXmlReaderTest {
 
@@ -47,7 +48,7 @@ public class SaajXmlReaderTest {
 		message = messageFactory.createMessage();
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
 		saajReader = new SaajXmlReader(envelope);
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test

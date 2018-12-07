@@ -39,12 +39,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,6 +63,10 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
@@ -130,7 +131,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	@Test
 	public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
-		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
 		Marshaller marshaller = new Marshaller() {
 
@@ -173,7 +174,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	@Test
 	public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
-		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
 		Marshaller marshaller = new Marshaller() {
 

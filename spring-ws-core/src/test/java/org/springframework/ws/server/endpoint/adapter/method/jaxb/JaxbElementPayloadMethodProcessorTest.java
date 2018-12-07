@@ -23,7 +23,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +38,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
@@ -133,7 +133,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		assertTrue("context has no response", messageContext.hasResponse());
 		AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
 
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 

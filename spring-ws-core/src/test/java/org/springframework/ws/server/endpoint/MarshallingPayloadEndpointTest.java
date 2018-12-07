@@ -23,14 +23,10 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.easymock.EasyMock.*;
 import org.junit.Assert;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +43,11 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.fail;
 
 public class MarshallingPayloadEndpointTest {
 
@@ -59,7 +60,7 @@ public class MarshallingPayloadEndpointTest {
 	@Before
 	public void setUp() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-		transformer = TransformerFactory.newInstance().newTransformer();
+		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		factoryMock = createMock(WebServiceMessageFactory.class);
 
 		context = new DefaultMessageContext(request, factoryMock);

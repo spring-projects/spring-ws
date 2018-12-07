@@ -56,6 +56,7 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.custommonkey.xmlunit.XMLAssert.*;
 import static org.junit.Assert.assertEquals;
@@ -109,7 +110,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		XMLUnit.setIgnoreWhitespace(true);
 		saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
-		transformerFactory = TransformerFactory.newInstance();
+		transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	protected abstract T createMessageSender();

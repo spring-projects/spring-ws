@@ -32,6 +32,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 
@@ -52,7 +53,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	public static final String DEFAULT_WSDL_LOCATION_EXPRESSION =
 			"/wsdl:definitions/wsdl:service/wsdl:port/soap:address/@location";
 
-	private static TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	private static TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	private Map<String, String> expressionNamespaces = new HashMap<String, String>();
 

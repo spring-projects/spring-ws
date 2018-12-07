@@ -17,20 +17,19 @@
 package org.springframework.xml.transform;
 
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
-
-import org.springframework.core.io.ClassPathResource;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Element;
 
+import org.springframework.core.io.ClassPathResource;
+
 public class ResourceSourceTest {
 
 	@Test
 	public void testStringSource() throws Exception {
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		DOMResult result = new DOMResult();
 		ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
 		transformer.transform(source, result);

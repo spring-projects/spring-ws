@@ -40,13 +40,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.StringResult;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +49,17 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public abstract class AbstractWebServiceMessageTestCase {
 
@@ -74,7 +77,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 
 	@Before
 	public final void setUp() throws Exception {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		webServiceMessage = createWebServiceMessage();
 		payload = new ClassPathResource("payload.xml", AbstractWebServiceMessageTestCase.class);
@@ -83,7 +86,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 
 	@Test
 	public void testDomPayload() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document payloadDocument = documentBuilder.parse(SaxUtils.createInputSource(payload));
@@ -98,7 +101,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 
 	@Test
 	public void testEventReaderPayload() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(eventReader);
 		transformer.transform(staxSource, webServiceMessage.getPayloadResult());
@@ -148,7 +151,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 
 	@Test
 	public void testStreamReaderPayload() throws Exception {
-		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(streamReader);
 		transformer.transform(staxSource, webServiceMessage.getPayloadResult());

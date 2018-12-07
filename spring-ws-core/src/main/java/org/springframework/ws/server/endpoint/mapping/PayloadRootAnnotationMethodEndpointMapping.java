@@ -29,6 +29,7 @@ import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoots;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods
@@ -54,7 +55,16 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 	private static TransformerFactory transformerFactory;
 
 	static {
-		transformerFactory = TransformerFactory.newInstance();
+		setTransformerFactory(TransformerFactoryUtils.newInstance());
+	}
+
+	/**
+	 * Override the default {@link TransformerFactory}.
+	 * 
+	 * @param transformerFactory
+	 */
+	public static void setTransformerFactory(TransformerFactory transformerFactory) {
+		PayloadRootAnnotationMethodEndpointMapping.transformerFactory = transformerFactory;
 	}
 
 	@Override

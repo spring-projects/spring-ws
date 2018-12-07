@@ -22,14 +22,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class DomPoxMessageTest {
 
@@ -39,10 +41,10 @@ public class DomPoxMessageTest {
 
 	@Before
 	public void setUp() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
 	}

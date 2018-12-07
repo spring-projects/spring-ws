@@ -29,7 +29,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -45,6 +44,10 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class DomPoxWebServiceTemplateIntegrationTest {
 
@@ -125,9 +128,9 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 		@Override
 		public void init(ServletConfig servletConfig) throws ServletException {
 			super.init(servletConfig);
-			documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 			documentBuilderFactory.setNamespaceAware(true);
-			transformerFactory = TransformerFactory.newInstance();
+			transformerFactory = TransformerFactoryUtils.newInstance();
 		}
 
 		@Override

@@ -20,12 +20,13 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.springframework.util.StringUtils;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import org.springframework.util.StringUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public class QNameUtilsTest {
 
@@ -45,7 +46,7 @@ public class QNameUtilsTest {
 
 	@Test
 	public void testGetQNameForNodeNoNamespace() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
 		Element element = document.createElement("localname");
@@ -59,7 +60,7 @@ public class QNameUtilsTest {
 
 	@Test
 	public void testGetQNameForNodeNoPrefix() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
 		Element element = document.createElementNS("namespace", "localname");
@@ -72,7 +73,7 @@ public class QNameUtilsTest {
 
 	@Test
 	public void testGetQNameForNode() throws Exception {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.newDocument();
 		Element element = document.createElementNS("namespace", "prefix:localname");

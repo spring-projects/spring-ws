@@ -31,6 +31,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -141,7 +142,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 	@Test
 	public void testInvokeVoidDom() throws Exception {
-		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
 		String rootNamespace = "http://rootnamespace";

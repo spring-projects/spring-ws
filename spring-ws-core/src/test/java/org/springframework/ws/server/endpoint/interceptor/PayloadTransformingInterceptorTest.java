@@ -22,7 +22,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,6 +40,9 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class PayloadTransformingInterceptorTest {
 
@@ -57,7 +59,7 @@ public class PayloadTransformingInterceptorTest {
 	@Before
 	public void setUp() throws Exception {
 		interceptor = new PayloadTransformingInterceptor();
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		input = new ClassPathResource("transformInput.xml", getClass());
 		output = new ClassPathResource("transformOutput.xml", getClass());

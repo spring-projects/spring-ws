@@ -25,6 +25,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.xml.transform.TransformerFactoryUtils;
+
 public abstract class AbstractSoapElementTestCase {
 
 	private SoapElement soapElement;
@@ -33,7 +35,7 @@ public abstract class AbstractSoapElementTestCase {
 
 	@Before
 	public final void setUp() throws Exception {
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		soapElement = createSoapElement();
 	}
