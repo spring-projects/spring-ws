@@ -121,7 +121,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Map<String, List<String>> headersListMappedByLowerCaseName = new HashMap<>();
+		Map<String, List<String>> headersListMappedByLowerCaseName = new HashMap<String, List<String>>();
 
 		for (String key : connection.getHeaderFields().keySet()) {
 			if (key != null) {
