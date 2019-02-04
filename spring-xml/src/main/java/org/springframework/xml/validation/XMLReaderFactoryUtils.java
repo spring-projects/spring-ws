@@ -33,10 +33,10 @@ public class XMLReaderFactoryUtils {
 	public static XMLReader createXMLReader() throws SAXException {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 
-		xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-		xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-		xmlReader.setFeature("http://xml.org/sax/features/external-general-entities", false);
-		xmlReader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+		xmlReader.setFeature("https://xerces.apache.org/xerces2-j/features.html#disallow-doctype-decl", true);
+		xmlReader.setFeature("https://xerces.apache.org/xerces2-j/features.html#nonvalidating.load-external-dtd", false);
+		xmlReader.setFeature("https://xerces.apache.org/xerces2-j/features.html#external-general-entities", false);
+		xmlReader.setFeature("https://xerces.apache.org/xerces2-j/features.html#external-parameter-entities", false);
 
 		return xmlReader;
 	}
