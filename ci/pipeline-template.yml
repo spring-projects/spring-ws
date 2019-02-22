@@ -48,7 +48,7 @@ resources:
     uri: https://repo.spring.io
     username: ((artifactory-username))
     password: ((artifactory-password))
-    build_name: Spring Web Services
+    build_name: spring-ws
 
 - name: spring-ws-pull-requests
   type: pull-request
@@ -246,7 +246,7 @@ jobs:
         - "/**"
         properties:
           zip.deployed: false
-          zip.displayname: "Spring Web Services"
+          zip.displayname: "spring-ws"
           zip.name: "spring-ws"
           zip.type: "docs"
   on_failure:
@@ -357,7 +357,7 @@ jobs:
     trigger: true
   - put: spring-ws-status
     params:
-      commit: spring-ws-release
+      commit: spring-ws-github
       state: pending
   - task: build
     file: spring-ws-github/ci/build.yml
@@ -372,7 +372,7 @@ jobs:
         - "/**"
         properties:
           zip.deployed: false
-          zip.displayname: "Spring HATEOAS"
+          zip.displayname: "spring-ws"
           zip.name: "spring-ws"
           zip.type: "docs"
   on_failure:
