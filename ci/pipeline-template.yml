@@ -57,6 +57,12 @@ resources:
     repo: spring-projects/spring-ws
     base: ((branch))
 
+- name: spring-ws-release
+  type: git
+  source:
+    uri: https://github.com/spring-projects/spring-ws.git
+    branch: ((release-branch))
+
 - name: spring-ws-status
   type: github-status
   source:
@@ -84,6 +90,11 @@ groups:
 - name: pull-requests
   jobs:
   - spring-ws-pull-requests
+- name: release
+  jobs:
+  - release-to-artifactory
+  - promote-to-bintray
+  - sync-to-maven-central
 
 jobs:
 - name: Test - JDK 8
@@ -97,24 +108,8 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 8 and Spring.NEXT
   serial: true
@@ -127,24 +122,8 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 8 and Spring.NEXT (snapshots)
   serial: true
@@ -157,24 +136,8 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 8 and Spring (snapshots)
   serial: true
@@ -187,24 +150,8 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "spring-buildsnapshot,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 11
   serial: true
@@ -218,24 +165,8 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,java11,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 11 and Spring.NEXT
   serial: true
@@ -249,24 +180,8 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,java11,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 11 and Spring.NEXT (snapshots)
   serial: true
@@ -280,24 +195,8 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Test - JDK 11 and Spring (snapshots)
   serial: true
@@ -311,24 +210,8 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Build has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-          text: "Build has succeeded!"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  <<: *slack-test-failure
+  <<: *slack-test-success
 
 - name: Build
   serial: true
@@ -362,7 +245,10 @@ jobs:
       - include:
         - "/**"
         properties:
-          archives: '*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false'
+          zip.deployed: false
+          zip.displayname: "Spring Web Services"
+          zip.name: "spring-ws"
+          zip.type: "docs"
   on_failure:
     aggregate:
     - put: spring-ws-status
@@ -461,3 +347,176 @@ jobs:
             text: "Build has succeeded!"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: release-to-artifactory
+  serial: true
+  public: true
+  plan:
+  - get: spring-ws-github
+    resource: spring-ws-release
+    trigger: true
+  - put: spring-ws-status
+    params:
+      commit: spring-ws-release
+      state: pending
+  - task: build
+    file: spring-ws-github/ci/build.yml
+  - put: spring-ws-artifactory
+    params:
+      build_number:   ${BUILD_NAME}
+      build_uri:      ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}
+      repo:           libs-release-local
+      folder:         spring-ws-artifactory
+      artifact_set:
+      - include:
+        - "/**"
+        properties:
+          zip.deployed: false
+          zip.displayname: "Spring HATEOAS"
+          zip.name: "spring-ws"
+          zip.type: "docs"
+  on_failure:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: failure
+    - put: slack
+      params:
+        attachments:
+          - color: danger
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+            text: "Releasing to artifactory has failed"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: success
+    - put: slack
+      params:
+        attachments:
+          - color: good
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
+            text: "Releasing to artifactory has succeeded!"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: promote-to-bintray
+  serial: true
+  plan:
+  - get: spring-ws-github
+    resource: spring-ws-release
+  - get: spring-ws-artifactory
+    trigger: true
+    passed: [release-to-artifactory]
+    params:
+      save_build_info: true
+  - task: promote-to-bintray
+    file: spring-ws-github/ci/promote-to-bintray.yml
+    params:
+      ARTIFACTORY_USERNAME: ((artifactory-username))
+      ARTIFACTORY_PASSWORD: ((artifactory-password))
+  on_failure:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: failure
+    - put: slack
+      params:
+        attachments:
+          - color: danger
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+            text: "Promoting to bintray has failed"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: success
+    - put: slack
+      params:
+        attachments:
+          - color: good
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
+            text: "Promoting to bintray has succeeded!"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+- name: sync-to-maven-central
+  serial: true
+  plan:
+  - get: spring-ws-github
+    resource: spring-ws-release
+  - get: spring-ws-artifactory
+    trigger: true
+    passed: [promote-to-bintray]
+    params:
+      save_build_info: true
+  - task: sync-to-maven-central
+    file: spring-ws-github/ci/sync-to-maven-central.yml
+    params:
+      BINTRAY_USERNAME: ((bintray-username))
+      BINTRAY_API_KEY: ((bintray-api-key))
+      SONATYPE_USER_TOKEN: ((sonatype-user-token))
+      SONATYPE_PASSWORD_TOKEN: ((sonatype-user-token-password))
+      ARTIFACTORY_USERNAME: ((artifactory-username))
+      ARTIFACTORY_PASSWORD: ((artifactory-password))
+  on_failure:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: failure
+    - put: slack
+      params:
+        attachments:
+          - color: danger
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+            text: "Syncing to maven central has failed"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    aggregate:
+    - put: spring-ws-status
+      params:
+        commit: spring-ws-github
+        state: success
+    - put: slack
+      params:
+        attachments:
+          - color: good
+            fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
+            text: "Syncing to maven central has succeeded!"
+            title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+            title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+
+slack-test-success: &slack-test-success
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+slack-test-failure: &slack-test-failure
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+
+

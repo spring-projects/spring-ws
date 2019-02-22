@@ -27,20 +27,28 @@ WARNING: Do NOT check this file into source control! If you'll check, `credentia
 With this in place, run the following `fly` commands to create pipelines:
 
 ----
-% fly -t <team-name> sp -p spring-ws -c ci/pipeline-template.yml -l credentials.yml -v branch=master
-% fly -t <team-name> sp -p spring-ws-2.x -c ci/pipeline-template.yml -l credentials.yml -v branch=2.x
+% fly -t spring-team sp -p spring-ws -c ci/pipeline-template.yml -l credentials.yml -v branch=master -v release-branch=release
 ----
-
-This creates pipelines for:
-
-* Spring WS `master` branch
-* Spring WS `2.x` branch
 
 With these pipelines in place, you can now activate and expose them:
 
 ----
-% fly -t <team-name> unpause-pipeline -p spring-ws
-% fly -t <team-name> expose-pipeline -p spring-ws
-% fly -t <team-name> unpause-pipeline -p spring-ws-2.x
-% fly -t <team-name> expose-pipeline -p spring-ws-2.x
+% fly -t spring-team unpause-pipeline -p spring-ws
+% fly -t spring-team expose-pipeline -p spring-ws
 ----
+
+=== Making a release
+
+1. Create a new release (on the main branch).
+----
+% ci/create-release.sh <release version> <next snapshot version>
+----
+
+2. With the release tagged, push the tagged version to the release branch.
+----
+% git checkout -b release
+% git reset --hard <tag>
+% git push -f origin release
+----
+
+NOTE: You can chain the previous set of commands together using `&&`.
