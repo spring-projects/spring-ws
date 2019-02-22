@@ -27,14 +27,14 @@ WARNING: Do NOT check this file into source control! If you'll check, `credentia
 With this in place, run the following `fly` commands to create pipelines:
 
 ----
-% fly -t spring-team sp -p spring-ws -c ci/pipeline-template.yml -l credentials.yml -v branch=master -v release-branch=release
+% fly -t spring-team sp -p spring-ws-2.x -c ci/pipeline-template.yml -l credentials.yml -v branch=2.x -v release-branch=release-2.x
 ----
 
 With these pipelines in place, you can now activate and expose them:
 
 ----
-% fly -t spring-team unpause-pipeline -p spring-ws
-% fly -t spring-team expose-pipeline -p spring-ws
+% fly -t spring-team unpause-pipeline -p spring-ws-2.x
+% fly -t spring-team expose-pipeline -p spring-ws-2.x
 ----
 
 === Making a release
@@ -46,9 +46,9 @@ With these pipelines in place, you can now activate and expose them:
 
 2. With the release tagged, push the tagged version to the release branch.
 ----
-% git checkout -b release
+% git checkout -b release-2.x
 % git reset --hard <tag>
-% git push -f origin release
+% git push -f origin release-2.x
 ----
 
 NOTE: You can chain the previous set of commands together using `&&`.
