@@ -9,7 +9,7 @@
 	<packaging>pom</packaging>
 
 	<name>Spring Web Services</name>
-	<url>http://spring.io/projects/spring-ws</url>
+	<url>https://spring.io/projects/spring-ws</url>
 	<description>Spring-based Web Services support</description>
 
 	<developers>
@@ -44,13 +44,13 @@
 
 	<organization>
 		<name>Pivotal Software</name>
-		<url>http://spring.io</url>
+		<url>https://spring.io</url>
 	</organization>
 
 	<licenses>
 		<license>
 			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
 			<comments>
 				Copyright 2011 the original author or authors.
 
@@ -58,7 +58,7 @@
 				you may not use this file except in compliance with the License.
 				You may obtain a copy of the License at
 
-				http://www.apache.org/licenses/LICENSE-2.0
+				https://www.apache.org/licenses/LICENSE-2.0
 
 				Unless required by applicable law or agreed to in writing, software
 				distributed under the License is distributed on an "AS IS" BASIS,
@@ -443,7 +443,7 @@
 										<archives>*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false</archives>
 									</deployProperties>
 									<publisher>
-										<contextUrl>http://repo.spring.io</contextUrl>
+										<contextUrl>https://repo.spring.io</contextUrl>
 										<username>{{USERNAME}}</username>
 										<password>{{PASSWORD}}</password>
 										<repoKey>libs-milestone-local</repoKey>
@@ -478,7 +478,7 @@
 										<archives>*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false</archives>
 									</deployProperties>
 									<publisher>
-										<contextUrl>http://repo.spring.io</contextUrl>
+										<contextUrl>https://repo.spring.io</contextUrl>
 										<username>{{USERNAME}}</username>
 										<password>{{PASSWORD}}</password>
 										<repoKey>libs-release-local</repoKey>
