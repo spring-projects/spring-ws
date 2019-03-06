@@ -48,7 +48,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 	 */
 	@Override
 	public final boolean supportsParameter(MethodParameter parameter) {
-		Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index larger smaller than 0");
+		Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index smaller than 0");
 		if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
 			return false;
 		}
