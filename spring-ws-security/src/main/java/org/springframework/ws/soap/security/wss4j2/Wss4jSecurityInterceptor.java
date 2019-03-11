@@ -22,6 +22,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -58,6 +59,9 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the {@link
@@ -660,7 +664,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
-				
+		requestData.setSubjectCertConstraints(getSubjectCertConstraints());
+
 		return requestData;
 	}
 
@@ -768,9 +773,24 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			RequestData requestData = new RequestData();
 			requestData.setSigVerCrypto(validationSignatureCrypto);
 			requestData.setEnableRevocation(enableRevocation);
+			requestData.setSubjectCertConstraints(getSubjectCertConstraints());
 
 			SignatureTrustValidator validator = new SignatureTrustValidator();
 			validator.validate(credential, requestData);
+		}
+	}
+
+	private List<Pattern> getSubjectCertConstraints() {
+		String commaSeparatedCertConstraintPatterns = handler.getStringOption(ConfigurationConstants.SIG_SUBJECT_CERT_CONSTRAINTS);
+		if (commaSeparatedCertConstraintPatterns != null && !commaSeparatedCertConstraintPatterns.isEmpty()) {
+			String[] patternStrings = commaSeparatedCertConstraintPatterns.split(",");
+			List<Pattern> constraintPatterns = new ArrayList<>();
+			for (String pattern : patternStrings) {
+				constraintPatterns.add(Pattern.compile(pattern));
+			}
+			return unmodifiableList(constraintPatterns);
+		} else {
+			return emptyList();
 		}
 	}
 
