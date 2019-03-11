@@ -184,7 +184,21 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
 		handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
 	}
-	
+
+	/**
+	 * Certificate constraints which will be applied to the subject DN of the certificate used for
+	 * signature validation, after trust verification of the certificate chain associated with the
+	 * certificate.
+	 *
+	 * @param patterns A comma separated String of regular expressions which will be applied to
+	 *                 the subject DN.
+	 *
+	 * @see <a href="https://ws.apache.org/wss4j/config.html">WSS4J configuration: SIG_SUBJECT_CERT_CONSTRAINTS</a>
+	 */
+	public void setSignatureValidationSubjectCertificateConstraints(String patterns) {
+	    handler.setOption(ConfigurationConstants.SIG_SUBJECT_CERT_CONSTRAINTS, patterns);
+	}
+
 	/**
 	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
 	 * {@code IssuerSerial}. For possible encryption key identifier types refer to {@link
