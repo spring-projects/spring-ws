@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 public class TransformerFactoryUtils {
 
 	private static final Log log = LogFactory.getLog(TransformerFactoryUtils.class);
+
 	/**
 	 * Build a new {@link TransformerFactory} using the default constructor.
 	 */
@@ -69,7 +70,8 @@ public class TransformerFactoryUtils {
 		} catch (IllegalArgumentException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by " + factory.getClass().getCanonicalName());
-			}		}
+			}
+		}
 		return factory;
 	}
 }
