@@ -19,12 +19,16 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author Greg Turnquist
- * @since 3.0.5
+ * @since 2.4.6/3.0.5
  */
 public class TransformerFactoryUtils {
 
+	private static final Log log = LogFactory.getLog(TransformerFactoryUtils.class);
 	/**
 	 * Build a new {@link TransformerFactory} using the default constructor.
 	 */
@@ -53,8 +57,19 @@ public class TransformerFactoryUtils {
 	 * Prevent external entities from accessing.
 	 */
 	private static TransformerFactory defaultSettings(TransformerFactory factory) {
-		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-		factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		try {
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		} catch (IllegalArgumentException e) {
+			if (log.isWarnEnabled()) {
+				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + factory.getClass().getCanonicalName());
+			}
+		}
+		try {
+			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		} catch (IllegalArgumentException e) {
+			if (log.isWarnEnabled()) {
+				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by " + factory.getClass().getCanonicalName());
+			}		}
 		return factory;
 	}
 }
