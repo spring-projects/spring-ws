@@ -1,6 +1,6 @@
 buildscript {
 	repositories {
-		maven { url 'http://repo.springsource.org/plugins-release' }
+		maven { url 'https://repo.springsource.org/plugins-release' }
 	}
 	dependencies {
 		classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
@@ -65,12 +65,12 @@ configure(allprojects) {
 	}
 
 	ext.javadocLinks = [
-		"http://docs.oracle.com/javase/7/docs/api/",
-		"http://docs.oracle.com/javaee/6/api/",
-		"http://docs.spring.io/spring/docs/current/javadoc-api/",
+		"https://docs.oracle.com/javase/7/docs/api/",
+		"https://docs.oracle.com/javaee/6/api/",
+		"https://docs.spring.io/spring/docs/current/javadoc-api/",
 		"https://hc.apache.org/httpcomponents-core-ga/httpcore/apidocs/",
-		"http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/",
-		"http://fasterxml.github.com/jackson-core/javadoc/2.2.0/",
+		"https://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/",
+		"https://fasterxml.github.com/jackson-core/javadoc/2.2.0/",
 	] as String[]
 
 }
@@ -339,7 +339,7 @@ configure(rootProject) {
 		baseName = 'spring-ws'
 		classifier = 'docs'
 		description = "Builds -${classifier} archive containing api and reference " +
-			"for deployment at http://static.springframework.org/spring-framework/docs."
+			"for deployment at https://docs.spring.io/spring-framework/docs."
 
 		from('src/dist') {
 			include 'changelog.txt'
@@ -359,7 +359,7 @@ configure(rootProject) {
 		baseName = 'spring-ws'
 		classifier = 'schema'
 		description = "Builds -${classifier} archive containing all " +
-			"XSDs for deployment at http://springframework.org/schema."
+			"XSDs for deployment at https://springframework.org/schema."
 
 		subprojects.each { subproject ->
 			def Properties schemas = new Properties();
