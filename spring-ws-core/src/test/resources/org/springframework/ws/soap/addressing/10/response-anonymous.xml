@@ -1,8 +1,8 @@
-<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="https://www.w3.org/2005/08/addressing">
     <env:Header>
         <wsa:MessageID>uid:1234</wsa:MessageID>
-        <wsa:RelatesTo>http://example.com/someuniquestring</wsa:RelatesTo>
-        <wsa:To env:mustUnderstand="true">http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
+        <wsa:RelatesTo>https://example.com/someuniquestring</wsa:RelatesTo>
+        <wsa:To env:mustUnderstand="true">https://www.w3.org/2005/08/addressing/anonymous</wsa:To>
         <wsa:Action>urn:replyAction</wsa:Action>
     </env:Header>
     <env:Body/>

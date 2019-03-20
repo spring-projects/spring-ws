@@ -1,3 +1,3 @@
-<xwss:SecurityConfiguration dumpMessages="false" xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+<xwss:SecurityConfiguration dumpMessages="false" xmlns:xwss="https://java.sun.com/xml/ns/xwss/config">
     <xwss:RequireEncryption />
 </xwss:SecurityConfiguration>

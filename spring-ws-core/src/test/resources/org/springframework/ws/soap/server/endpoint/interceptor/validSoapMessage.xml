@@ -1,4 +1,4 @@
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="http://springws.cas.de">
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="https://springws.cas.de">
     <SOAP-ENV:Header/>
     <SOAP-ENV:Body>
         <ns2:createDataTypesResponse>
