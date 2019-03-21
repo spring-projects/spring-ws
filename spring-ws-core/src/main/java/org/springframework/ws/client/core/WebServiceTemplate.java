@@ -282,7 +282,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * allows this template to deal with non-conforming services.
 	 *
 	 * @see #hasError(WebServiceConnection, WebServiceMessage)
-	 * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
+	 * @see <a href="https://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
 	 * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#HTTP_Success_Status_Codes">WS-I Basic
 	 *		Profile</a>
 	 */
@@ -301,7 +301,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * {@code false} allows this template to deal with non-conforming services.
 	 *
 	 * @see #hasFault(WebServiceConnection,WebServiceMessage)
-	 * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
+	 * @see <a href="https://www.w3.org/TR/2000/NOTE-SOAP-20000508/#_Toc478383529">SOAP 1.1 specification</a>
 	 * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#HTTP_Server_Error_Status_Codes">WS-I Basic
 	 *		Profile</a>
 	 */

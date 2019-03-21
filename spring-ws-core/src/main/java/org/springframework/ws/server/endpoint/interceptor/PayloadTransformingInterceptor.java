@@ -140,7 +140,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 		}
 		TransformerFactory transformerFactory = getTransformerFactory();
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+		xmlReader.setFeature("http://www.xml.org/sax/features/namespace-prefixes", true);
 		if (requestXslt != null) {
 			Assert.isTrue(requestXslt.exists(), "requestXslt \"" + requestXslt + "\" does not exit");
 			if (logger.isInfoEnabled()) {

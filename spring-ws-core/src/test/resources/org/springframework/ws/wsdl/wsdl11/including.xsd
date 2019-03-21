@@ -5,7 +5,7 @@
             attributeFormDefault="unqualified">
 
     <xsd:include schemaLocation="included.xsd"/>
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="https://www.w3.org/XML/1998/namespace"/>
 
     <xsd:element name="GetOrderRequest">
         <xsd:complexType>

@@ -97,7 +97,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 	@Address("mailto:joe@fabrikam123.example")
 	private static class MyEndpoint {
 
-		@Action("http://fabrikam123.example/mail/Delete")
+		@Action("https://fabrikam123.example/mail/Delete")
 		public void doIt() {
 
 		}

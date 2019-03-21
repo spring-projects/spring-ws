@@ -41,7 +41,7 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * &#64;Endpoint
  * &#64;Address("mailto:joe@fabrikam123.example")
  * public class MyEndpoint{
- *	  &#64;Action("http://fabrikam123.example/mail/Delete")
+ *	  &#64;Action("https://fabrikam123.example/mail/Delete")
  *	  public Source doSomethingWithRequest() {
  *		 ...
  *	  }

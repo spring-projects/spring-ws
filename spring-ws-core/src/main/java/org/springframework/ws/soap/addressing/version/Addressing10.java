@@ -29,13 +29,13 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * Communication Foundation (WCF), and supported by Axis 1 and 2.
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
+ * @see <a href="https://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
  * @since 1.5.0
  */
 
 public class Addressing10 extends AbstractAddressingVersion {
 
-	private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";
+	private static final String NAMESPACE_URI = "https://www.w3.org/2005/08/addressing";
 
 	@Override
 	public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {

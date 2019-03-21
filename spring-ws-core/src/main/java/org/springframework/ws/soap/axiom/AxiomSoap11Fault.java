@@ -55,7 +55,7 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
 	public Locale getFaultStringLocale() {
 		if (getAxiomFault().getReason() != null) {
 			OMAttribute langAttribute =
-					getAxiomFault().getReason().getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
+					getAxiomFault().getReason().getAttribute(new QName("https://www.w3.org/XML/1998/namespace", "lang"));
 			if (langAttribute != null) {
 				String xmlLangString = langAttribute.getAttributeValue();
 				if (xmlLangString != null) {

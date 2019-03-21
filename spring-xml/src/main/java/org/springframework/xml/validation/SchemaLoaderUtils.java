@@ -67,7 +67,7 @@ public abstract class SchemaLoaderUtils {
 		Assert.hasLength(schemaLanguage, "No schema language provided");
 		Source[] schemaSources = new Source[resources.length];
 		XMLReader xmlReader = XMLReaderFactoryUtils.createXMLReader();
-		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+		xmlReader.setFeature("http://www.xml.org/sax/features/namespace-prefixes", true);
 		for (int i = 0; i < resources.length; i++) {
 			Assert.notNull(resources[i], "Resource is null");
 			Assert.isTrue(resources[i].exists(), "Resource " + resources[i] + " does not exist");

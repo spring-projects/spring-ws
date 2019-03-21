@@ -43,9 +43,9 @@ import org.springframework.xml.sax.AbstractXmlReader;
  */
 public class SaajXmlReader extends AbstractXmlReader {
 
-	private static final String NAMESPACES_FEATURE_NAME = "http://xml.org/sax/features/namespaces";
+	private static final String NAMESPACES_FEATURE_NAME = "http://www.xml.org/sax/features/namespaces";
 
-	private static final String NAMESPACE_PREFIXES_FEATURE_NAME = "http://xml.org/sax/features/namespace-prefixes";
+	private static final String NAMESPACE_PREFIXES_FEATURE_NAME = "http://www.xml.org/sax/features/namespace-prefixes";
 
 	private final Node startNode;
 

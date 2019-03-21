@@ -36,7 +36,7 @@ public interface AddressingVersion {
 	 *
 	 * @param message the message to find the map for
 	 * @return the message addressing properties
-	 * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
+	 * @see <a href="https://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
 	 */
 	MessageAddressingProperties getMessageAddressingProperties(SoapMessage message);
 
@@ -72,7 +72,7 @@ public interface AddressingVersion {
 	 * Indicates whether the given endpoint reference has a Anonymous address. This address is used to indicate that a
 	 * message should be sent in-band.
 	 *
-	 * @see <a href="http://www.w3.org/TR/ws-addr-core/#formreplymsg">Formulating a Reply Message</a>
+	 * @see <a href="https://www.w3.org/TR/ws-addr-core/#formreplymsg">Formulating a Reply Message</a>
 	 */
 	boolean hasAnonymousAddress(EndpointReference epr);
 
@@ -80,7 +80,7 @@ public interface AddressingVersion {
 	 * Indicates whether the given endpoint reference has a None address. Messages to be sent to this address will not
 	 * be sent.
 	 *
-	 * @see <a href="http://www.w3.org/TR/ws-addr-core/#sendmsgepr">Sending a Message to an EPR</a>
+	 * @see <a href="https://www.w3.org/TR/ws-addr-core/#sendmsgepr">Sending a Message to an EPR</a>
 	 */
 	boolean hasNoneAddress(EndpointReference epr);
 
@@ -91,14 +91,14 @@ public interface AddressingVersion {
 	/**
 	 * Adds a Invalid Addressing Header fault to the given message.
 	 *
-	 * @see <a href="http://www.w3.org/TR/ws-addr-soap/#invalidmapfault">Invalid Addressing Header</a>
+	 * @see <a href="https://www.w3.org/TR/ws-addr-soap/#invalidmapfault">Invalid Addressing Header</a>
 	 */
 	SoapFault addInvalidAddressingHeaderFault(SoapMessage message);
 
 	/**
 	 * Adds a Message Addressing Header Required fault to the given message.
 	 *
-	 * @see <a href="http://www.w3.org/TR/ws-addr-soap/#missingmapfault">Message Addressing Header Required</a>
+	 * @see <a href="https://www.w3.org/TR/ws-addr-soap/#missingmapfault">Message Addressing Header Required</a>
 	 */
 	SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message);
 

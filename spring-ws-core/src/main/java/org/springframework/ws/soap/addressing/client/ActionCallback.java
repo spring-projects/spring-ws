@@ -43,7 +43,7 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
  * template.sendSourceAndReceiveToResult(
- *	   new StringSource("&lt;content xmlns=\"http://tempuri.org\"/&gt;"),
+ *	   new StringSource("&lt;content xmlns=\"https://www.bing.com/\"/&gt;"),
  *	   new ActionCallback(new URI("http://tempuri.org/Action")),
  *	   result);
  * </pre>

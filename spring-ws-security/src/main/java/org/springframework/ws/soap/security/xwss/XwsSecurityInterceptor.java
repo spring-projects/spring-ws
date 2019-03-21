@@ -49,7 +49,7 @@ import org.springframework.ws.soap.security.xwss.callback.XwssCallbackHandlerCha
  * {@code Callback}s fired by XWSS. You can also set multiple handlers, each of which will be used in turn.
  *
  * <p>Additionally, you must define a XWSS policy file by setting {@code policyConfiguration} property. The format of
- * the policy file is documented in the <a href="http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp529900">Java
+ * the policy file is documented in the <a href="https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp529900">Java
  * Web Services Tutorial</a>.
  *
  * <p><b>Note</b> that this interceptor depends on SAAJ, and thus requires {@code SaajSoapMessage}s to operate. This

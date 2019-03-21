@@ -32,13 +32,13 @@ public interface SoapVersion {
 	/**
 	 * Represents version 1.1 of the SOAP specification.
 	 *
-	 * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/">SOAP 1.1 specification</a>
+	 * @see <a href="https://www.w3.org/TR/2000/NOTE-SOAP-20000508/">SOAP 1.1 specification</a>
 	 */
 	SoapVersion SOAP_11 = new SoapVersion() {
 
 		private static final String ENVELOPE_NAMESPACE_URI = "http://schemas.xmlsoap.org/soap/envelope/";
 
-		private static final String NEXT_ROLE_URI = "http://schemas.xmlsoap.org/soap/actor/next";
+		private static final String NEXT_ROLE_URI = "http://schemas.xmlsoap.org/soap/actor/next/";
 
 		private static final String CONTENT_TYPE = "text/xml";
 
@@ -130,7 +130,7 @@ public interface SoapVersion {
 	/**
 	 * Represents version 1.2 of the SOAP specification.
 	 *
-	 * @see <a href="http://www.w3.org/TR/soap12-part0/">SOAP 1.2 specification</a>
+	 * @see <a href="https://www.w3.org/TR/soap12-part0/">SOAP 1.2 specification</a>
 	 */
 	SoapVersion SOAP_12 = new SoapVersion() {
 

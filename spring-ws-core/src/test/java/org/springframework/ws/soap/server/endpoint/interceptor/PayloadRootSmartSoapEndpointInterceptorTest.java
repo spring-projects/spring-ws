@@ -67,7 +67,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTest {
 	@Test
 	public void shouldInterceptFullNonMatch() throws Exception {
 		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, "http://springframework.org/other", localPart);
+				new PayloadRootSmartSoapEndpointInterceptor(delegate, "https://springframework.org/other", localPart);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertFalse("Interceptor should not apply", result);
@@ -85,7 +85,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTest {
 	@Test
 	public void shouldInterceptNamespaceUriNonMatch() throws Exception {
 		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, "http://springframework.org/other", null);
+				new PayloadRootSmartSoapEndpointInterceptor(delegate, "https://springframework.org/other", null);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertFalse("Interceptor should not apply", result);

@@ -51,7 +51,7 @@ public class AxiomUtilsTest {
 	@Before
 	public void setUp() throws Exception {
 		OMFactory factory = OMAbstractFactory.getOMFactory();
-		OMNamespace namespace = factory.createOMNamespace("http://www.springframework.org", "prefix");
+		OMNamespace namespace = factory.createOMNamespace("https://www.springframework.org", "prefix");
 		element = factory.createOMElement("element", namespace);
 		XMLUnit.setIgnoreWhitespace(true);
 	}
@@ -66,7 +66,7 @@ public class AxiomUtilsTest {
 
 	@Test
 	public void testToNamespaceUndeclared() throws Exception {
-		QName qName = new QName("http://www.example.com", "localPart");
+		QName qName = new QName("https://www.example.com", "localPart");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
 		Assert.assertNotNull("Invalid namespace", namespace);
 		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
@@ -84,7 +84,7 @@ public class AxiomUtilsTest {
 
 	@Test
 	public void testToNamespacePrefixUndeclared() throws Exception {
-		QName qName = new QName("http://www.example.com", "localPart", "otherPrefix");
+		QName qName = new QName("https://www.example.com", "localPart", "otherPrefix");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
 		Assert.assertNotNull("Invalid namespace", namespace);
 		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());

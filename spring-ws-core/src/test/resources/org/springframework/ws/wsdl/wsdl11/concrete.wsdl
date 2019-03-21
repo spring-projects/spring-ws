@@ -8,7 +8,7 @@
 
 
     <binding name="binding" type="defs:portType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http/"/>
         <operation name="operation">
             <soap:operation soapAction=""/>
             <input name="request">

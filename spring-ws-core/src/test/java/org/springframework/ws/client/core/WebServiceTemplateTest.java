@@ -488,7 +488,7 @@ public class WebServiceTemplateTest {
 		connectionMock.send(isA(WebServiceMessage.class));
 		expect(connectionMock.hasError()).andReturn(false);
 		expect(connectionMock.receive(messageFactory)).andReturn(null);
-//		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+//		expect(connectionMock.getUri()).andReturn(new URI("https://example.com"));
 		connectionMock.close();
 
 		replay(connectionMock, extractorMock, providerMock);

@@ -23,7 +23,7 @@ The `WebServiceTemplate` class uses an URI as the message destination. You can e
 
 There are two implementations of the `WebServiceMessageSender` interface for sending messages via HTTP. The default implementation is the `HttpUrlConnectionMessageSender`, which uses the facilities provided by Java itself. The alternative is the `HttpComponentsMessageSender`, which uses the https://hc.apache.org/httpcomponents-client-ga[Apache HttpComponents HttpClient]. Use the latter if you need more advanced and easy-to-use functionality (such as authentication, HTTP connection pooling, and so forth).
 
-To use the HTTP transport, either set the `defaultUri` to something like `http://example.com/services`, or supply the *uri* parameter for one of the methods.
+To use the HTTP transport, either set the `defaultUri` to something like `https://example.com/services`, or supply the *uri* parameter for one of the methods.
 
 The following example shows how the default configuration can be used for HTTP transports:
 
@@ -35,7 +35,7 @@ The following example shows how the default configuration can be used for HTTP t
 
     <bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
         <constructor-arg ref="messageFactory"/>
-        <property name="defaultUri" value="http://example.com/WebService"/>
+        <property name="defaultUri" value="https://example.com/WebService"/>
     </bean>
 
 </beans>
@@ -56,7 +56,7 @@ The following example shows how override the default configuration, and to use A
             </property>
         </bean>
     </property>
-    <property name="defaultUri" value="http://example.com/WebService"/>
+    <property name="defaultUri" value="https://example.com/WebService"/>
 </bean>
 ----
 
@@ -176,7 +176,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 public class WebServiceClient {
 
     private static final String MESSAGE =
-        "<message xmlns=\"http://tempuri.org\">Hello Web Service World</message>";
+        "<message xmlns=\"https://www.bing.com/\">Hello Web Service World</message>";
 
     private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
 
@@ -220,7 +220,7 @@ Please note that the `WebServiceTemplate` class is thread-safe once configured (
 
 === Sending and receiving POJOs - marshalling and unmarshalling
 
-In order to facilitate the sending of plain Java objects, the `WebServiceTemplate` has a number of `send(..)` methods that take an `Object` as an argument for a message's data content. The method `marshalSendAndReceive(..)` in the `WebServiceTemplate` class delegates the conversion of the request object to XML to a `Marshaller`, and the conversion of the response XML to an object to an `Unmarshaller`. (For more information about marshalling and unmarshaller, refer to http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html[the Spring documentation].) By using the marshallers, your application code can focus on the business object that is being sent or received and not be concerned with the details of how it is represented as XML. In order to use the marshalling functionality, you have to set a marshaller and unmarshaller with the `marshaller`/`unmarshaller` properties of the `WebServiceTemplate` class.
+In order to facilitate the sending of plain Java objects, the `WebServiceTemplate` has a number of `send(..)` methods that take an `Object` as an argument for a message's data content. The method `marshalSendAndReceive(..)` in the `WebServiceTemplate` class delegates the conversion of the request object to XML to a `Marshaller`, and the conversion of the response XML to an object to an `Unmarshaller`. (For more information about marshalling and unmarshaller, refer to https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/oxm.html[the Spring documentation].) By using the marshallers, your application code can focus on the business object that is being sent or received and not be concerned with the details of how it is represented as XML. In order to use the marshalling functionality, you have to set a marshaller and unmarshaller with the `marshaller`/`unmarshaller` properties of the `WebServiceTemplate` class.
 
 === `WebServiceMessageCallback`
 
@@ -248,11 +248,11 @@ In addition to the <<server-ws-addressing,server-side WS-Addressing>> support, S
 
 For setting WS-Addressing headers on the client, you can use the `org.springframework.ws.soap.addressing.client.ActionCallback`. This callback takes the desired Action header as a parameter. It also has constructors for specifying the WS-Addressing version, and a `To` header. If not specified, the `To` header will default to the URL of the connection being made.
 
-Here is an example of setting the `Action` header to `http://samples/RequestOrder`:
+Here is an example of setting the `Action` header to `https://samples/RequestOrder`:
 
 [source,java]
 ----
-webServiceTemplate.marshalSendAndReceive(o, new ActionCallback("http://samples/RequestOrder"));
+webServiceTemplate.marshalSendAndReceive(o, new ActionCallback("https://samples/RequestOrder"));
 ----
 
 === `WebServiceMessageExtractor`
@@ -448,7 +448,7 @@ You can set up multiple request expectations by chaining `andExpect()` calls, li
 
 [source,java]
 ----
-mockServer.expect(connectionTo("http://example.com")).
+mockServer.expect(connectionTo("https://example.com")).
  andExpect(payload(expectedRequestPayload)).
  andExpect(validPayload(schemaResource)).
  andRespond(...);

@@ -53,8 +53,8 @@ public class SaajXmlReaderTest {
 
 	@Test
 	public void testNamespacesPrefixes() throws Exception {
-		saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
-		saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+		saajReader.setFeature("http://www.xml.org/sax/features/namespaces", true);
+		saajReader.setFeature("http://www.xml.org/sax/features/namespace-prefixes", true);
 		DOMResult result = new DOMResult();
 		Source source = new SAXSource(saajReader, new InputSource());
 		transformer.transform(source, result);
@@ -65,8 +65,8 @@ public class SaajXmlReaderTest {
 
 	@Test
 	public void testNamespacesNoPrefixes() throws Exception {
-		saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
-		saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+		saajReader.setFeature("http://www.xml.org/sax/features/namespaces", true);
+		saajReader.setFeature("http://www.xml.org/sax/features/namespace-prefixes", false);
 		DOMResult result = new DOMResult();
 		Source source = new SAXSource(saajReader, new InputSource());
 		transformer.transform(source, result);

@@ -102,7 +102,7 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * @see EncryptionKeyCallback
  * @see SignatureKeyCallback
  * @see SignatureVerificationKeyCallback
- * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
+ * @see <a href="https://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
  *		standard Java trust store mechanism</a>
  * @since 1.0.0
  */

@@ -145,10 +145,10 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
-		String rootNamespace = "http://rootnamespace";
+		String rootNamespace = "https://rootnamespace";
 		Element rootElement = document.createElementNS(rootNamespace, "root");
 		document.appendChild(rootElement);
-		String childNamespace = "http://childnamespace";
+		String childNamespace = "https://childnamespace";
 		Element first = document.createElementNS(childNamespace, "child");
 		rootElement.appendChild(first);
 		Text text = document.createTextNode("value");

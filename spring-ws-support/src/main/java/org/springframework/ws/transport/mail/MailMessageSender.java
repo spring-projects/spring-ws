@@ -56,7 +56,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * <blockquote><tt>mailto:john@example.com</tt><br> <tt>mailto:john@example.com@?subject=SOAP%20Test</tt><br></blockquote>
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.ietf.org/rfc/rfc2368.txt">The mailto URL scheme</a>
+ * @see <a href="https://www.ietf.org/rfc/rfc2368.txt">The mailto URL scheme</a>
  * @since 1.5.0
  */
 public class MailMessageSender implements WebServiceMessageSender, InitializingBean {

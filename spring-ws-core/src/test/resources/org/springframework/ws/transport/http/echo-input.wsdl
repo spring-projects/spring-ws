@@ -32,7 +32,7 @@
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="EchoBinding" type="schema:Echo">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http/"/>
         <wsdl:operation name="echo">
             <soap:operation soapAction="test"/>
             <wsdl:input name="echoRequest">

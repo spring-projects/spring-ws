@@ -44,14 +44,14 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
 	@Test
 	public void testPayload() throws Exception {
-		String payload = "<payload xmlns='http://www.springframework.org' />";
+		String payload = "<payload xmlns='https://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		assertPayloadEqual(payload);
 	}
 
 	@Test
 	public void testGetPayloadResultTwice() throws Exception {
-		String payload = "<payload xmlns='http://www.springframework.org' />";
+		String payload = "<payload xmlns='https://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		DOMResult domResult = new DOMResult();
@@ -68,7 +68,7 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
 	@Test
 	public void testAddFaultWithExistingPayload() throws Exception {
-		StringSource contents = new StringSource("<payload xmlns='http://www.springframework.org' />");
+		StringSource contents = new StringSource("<payload xmlns='https://www.springframework.org' />");
 		transformer.transform(contents, soapBody.getPayloadResult());
 		soapBody.addMustUnderstandFault("faultString", Locale.ENGLISH);
 		assertTrue("Body has no fault", soapBody.hasFault());

@@ -4,7 +4,7 @@
             xmlns="http://www.springframework.org/spring-ws/xmlNamespace" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
 
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+    <xsd:import namespace="https://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
 
     <xsd:element name="GetOrderRequest">
         <xsd:complexType>

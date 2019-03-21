@@ -146,7 +146,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 	}
 
 	private void addLangAttribute(Locale locale, SOAPFaultReason faultReason) {
-		OMNamespace xmlNamespace = getAxiomFactory().createOMNamespace("http://www.w3.org/XML/1998/namespace", "xml");
+		OMNamespace xmlNamespace = getAxiomFactory().createOMNamespace("https://www.w3.org/XML/1998/namespace", "xml");
 		OMAttribute langAttribute =
 				getAxiomFactory().createOMAttribute("lang", xmlNamespace, AxiomUtils.toLanguage(locale));
 		faultReason.addAttribute(langAttribute);

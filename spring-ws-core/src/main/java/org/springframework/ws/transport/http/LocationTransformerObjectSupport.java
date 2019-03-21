@@ -80,8 +80,8 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 	 * will be changed to {@code http://example.com:80/context/services/myService}.
 	 *
 	 * <p>If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the
-	 * WSDL is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
-	 * {@code http://example.com:8080/context/services/myService}.
+	 * WSDL is {@code https://example.com:8080/context/myService.wsdl}, the location will be changed to
+	 * {@code https://example.com:8080/context/services/myService}.
 	 *
 	 * <p>This method is only called when the {@code transformLocations} property is true.
 	 */

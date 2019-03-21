@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
  * Represents an Endpoint Reference, as defined in the WS-Addressing specification.
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.w3.org/TR/ws-addr-core/#eprs">Endpoint References</a>
+ * @see <a href="https://www.w3.org/TR/ws-addr-core/#eprs">Endpoint References</a>
  * @since 1.5.0
  */
 public final class EndpointReference implements Serializable {

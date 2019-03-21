@@ -102,7 +102,7 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 		}
 		StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
 
-		final QName name = new QName("http://springframework.org", "root", "");
+		final QName name = new QName("https://springframework.org", "root", "");
 		streamingMessage.setStreamingPayload(new StreamingPayload() {
 			public QName getName() {
 				return name;
@@ -122,7 +122,7 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 		StringResult result = new StringResult();
 		transformer.transform(streamingMessage.getPayloadSource(), result);
 
-		String expected = "<root xmlns='http://springframework.org'><child>Foo</child></root>";
+		String expected = "<root xmlns='https://springframework.org'><child>Foo</child></root>";
 		assertXMLEqual(expected, result.toString());
 
 		soapMessage.writeTo(new ByteArrayOutputStream());

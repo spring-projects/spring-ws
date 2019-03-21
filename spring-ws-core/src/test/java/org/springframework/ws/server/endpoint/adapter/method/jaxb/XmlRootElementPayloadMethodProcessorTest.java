@@ -89,7 +89,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 	@Test
 	public void resolveArgumentRootElement() throws JAXBException {
-		WebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'><string>Foo</string></root>");
+		WebServiceMessage request = new MockWebServiceMessage("<root xmlns='https://springframework.org'><string>Foo</string></root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = processor.resolveArgument(messageContext, rootElementParameter);
@@ -100,7 +100,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 	@Test
 	public void resolveArgumentType() throws JAXBException {
-		WebServiceMessage request = new MockWebServiceMessage("<type xmlns='http://springframework.org'><string>Foo</string></type>");
+		WebServiceMessage request = new MockWebServiceMessage("<type xmlns='https://springframework.org'><string>Foo</string></type>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = processor.resolveArgument(messageContext, typeParameter);
@@ -125,14 +125,14 @@ public class XmlRootElementPayloadMethodProcessorTest {
 			
 			private void parse() throws SAXException {
 				ContentHandler handler = getContentHandler();
-				// <root xmlns='http://springframework.org'><string>Foo</string></root>
+				// <root xmlns='https://springframework.org'><string>Foo</string></root>
 				handler.startDocument();
-				handler.startPrefixMapping("", "http://springframework.org");
-				handler.startElement("http://springframework.org", "root", "root", new AttributesImpl());
-				handler.startElement("http://springframework.org", "string", "string", new AttributesImpl());
+				handler.startPrefixMapping("", "https://springframework.org");
+				handler.startElement("https://springframework.org", "root", "root", new AttributesImpl());
+				handler.startElement("https://springframework.org", "string", "string", new AttributesImpl());
 				handler.characters("Foo".toCharArray(), 0, 3);
-				handler.endElement("http://springframework.org", "string", "string");
-				handler.endElement("http://springframework.org", "root", "root");
+				handler.endElement("https://springframework.org", "string", "string");
+				handler.endElement("https://springframework.org", "root", "root");
 				handler.endPrefixMapping("");
 				handler.endDocument();
 			}
@@ -175,7 +175,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
+		assertXMLEqual("<root xmlns='https://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
 	}
 
 	@Test
@@ -203,7 +203,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
+		assertXMLEqual("<root xmlns='https://springframework.org'><string>Foo</string></root>",
 				payloadResult.toString());
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -211,7 +211,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		String messageResult = bos.toString("UTF-8");
 		
 		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
-				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
+				"<root xmlns='https://springframework.org'><string>Foo</string></root>" +
 				"</soapenv:Body></soapenv:Envelope>", messageResult);
 
 	}
@@ -234,7 +234,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		String messageResult = bos.toString("UTF-8");
 
 		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
-				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
+				"<root xmlns='https://springframework.org'><string>Foo</string></root>" +
 				"</soapenv:Body></soapenv:Envelope>", messageResult);
 
 	}
@@ -247,12 +247,12 @@ public class XmlRootElementPayloadMethodProcessorTest {
 	public void type(@RequestPayload MyType type) {
 	}
 
-	@XmlRootElement(name = "root", namespace = "http://springframework.org")
+	@XmlRootElement(name = "root", namespace = "https://springframework.org")
 	public static class MyRootElement {
 
 		private String string;
 
-		@XmlElement(name = "string", namespace = "http://springframework.org")
+		@XmlElement(name = "string", namespace = "https://springframework.org")
 		public String getString() {
 			return string;
 		}
@@ -262,12 +262,12 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		}
 	}
 
-	@XmlType(name = "root", namespace = "http://springframework.org")
+	@XmlType(name = "root", namespace = "https://springframework.org")
 	public static class MyType {
 
 		private String string;
 
-		@XmlElement(name = "string", namespace = "http://springframework.org")
+		@XmlElement(name = "string", namespace = "https://springframework.org")
 		public String getString() {
 			return string;
 		}

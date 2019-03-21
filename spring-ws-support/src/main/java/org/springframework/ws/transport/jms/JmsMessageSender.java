@@ -91,7 +91,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br> <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
  * @author Arjen Poutsma
- * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message Service 1.0</a>
+ * @see <a href="https://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message Service 1.0</a>
  * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {

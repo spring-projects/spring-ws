@@ -43,7 +43,7 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 @SuppressWarnings("Since15")
 public abstract class AbstractEndpointTestCase {
 
-	protected static final String NAMESPACE_URI = "http://springframework.org/ws";
+	protected static final String NAMESPACE_URI = "https://springframework.org/ws";
 
 	protected static final String REQUEST_ELEMENT = "request";
 

@@ -3,7 +3,7 @@
             targetNamespace="urn:1"
             xmlns="urn:1"
             xmlns:imported="urn:2" elementFormDefault="qualified">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="https://www.w3.org/XML/1998/namespace"/>
     <xsd:include schemaLocation="C.xsd"/>
     <xsd:import schemaLocation="D.xsd" namespace="urn:2"/>
     <xsd:complexType name="B">

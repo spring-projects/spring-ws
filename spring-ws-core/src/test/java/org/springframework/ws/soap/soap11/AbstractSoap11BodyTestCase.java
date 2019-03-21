@@ -84,7 +84,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 
 	@Test
 	public void testAddFault() throws Exception {
-		QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
+		QName faultCode = new QName("https://www.springframework.org", "fault", "spring");
 		String faultString = "faultString";
 		Soap11Fault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, Locale.ENGLISH);
 		assertNotNull("Null returned", fault);
@@ -93,18 +93,18 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
 		assertEquals("Invalid fault string", faultString, fault.getFaultStringOrReason());
 		assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
-		String actor = "http://www.springframework.org/actor";
+		String actor = "https://www.springframework.org/actor";
 		fault.setFaultActorOrRole(actor);
 		assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());
 		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' " +
-				"xmlns:spring='http://www.springframework.org'>" + "<faultcode>spring:fault</faultcode>" +
+				"xmlns:spring='https://www.springframework.org'>" + "<faultcode>spring:fault</faultcode>" +
 				"<faultstring xml:lang='en'>" + faultString + "</faultstring>" + "<faultactor>" + actor +
 				"</faultactor>" + "</SOAP-ENV:Fault>");
 	}
 
 	@Test
 	public void testAddFaultNoPrefix() throws Exception {
-		QName faultCode = new QName("http://www.springframework.org", "fault");
+		QName faultCode = new QName("https://www.springframework.org", "fault");
 		String faultString = "faultString";
 		Soap11Fault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, Locale.ENGLISH);
 		assertNotNull("Null returned", fault);
@@ -113,18 +113,18 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		assertEquals("Invalid fault code", faultCode, fault.getFaultCode());
 		assertEquals("Invalid fault string", faultString, fault.getFaultStringOrReason());
 		assertEquals("Invalid fault string locale", Locale.ENGLISH, fault.getFaultStringLocale());
-		String actor = "http://www.springframework.org/actor";
+		String actor = "https://www.springframework.org/actor";
 		fault.setFaultActorOrRole(actor);
 		assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());
 	}
 
 	@Test
 	public void testAddFaultWithDetail() throws Exception {
-		QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
+		QName faultCode = new QName("https://www.springframework.org", "fault", "spring");
 		String faultString = "faultString";
 		SoapFault fault = ((Soap11Body) soapBody).addFault(faultCode, faultString, null);
 		SoapFaultDetail detail = fault.addFaultDetail();
-		QName detailName = new QName("http://www.springframework.org", "detailEntry", "spring");
+		QName detailName = new QName("https://www.springframework.org", "detailEntry", "spring");
 		SoapFaultDetailElement detailElement1 = detail.addFaultDetailElement(detailName);
 		StringSource detailContents = new StringSource("<detailContents xmlns='namespace'/>");
 		transformer.transform(detailContents, detailElement1.getResult());
@@ -132,11 +132,11 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		detailContents = new StringSource("<detailContents xmlns='namespace'/>");
 		transformer.transform(detailContents, detailElement2.getResult());
 		assertPayloadEqual(
-				"<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='http://www.springframework.org'>" +
+				"<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='https://www.springframework.org'>" +
 						"<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>" +
 						"<detail>" +
-						"<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
-						"<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
+						"<spring:detailEntry xmlns:spring='https://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
+						"<spring:detailEntry xmlns:spring='https://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
 						"</detail>" + "</SOAP-ENV:Fault>");
 
 	}

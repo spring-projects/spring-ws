@@ -71,7 +71,7 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 	public Source getSource() {
 		try {
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
-			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+			xmlReader.setFeature("http://www.xml.org/sax/features/namespace-prefixes", true);
 			return new ResourceSource(xmlReader, wsdlResource);
 		}
 		catch (SAXException ex) {

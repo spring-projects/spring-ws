@@ -72,13 +72,13 @@ public abstract class Wss4jTestCase {
 		Map<String, String> namespaces = new HashMap<String, String>();
 		namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
 		namespaces.put("wsse",
-				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
-		namespaces.put("ds", "http://www.w3.org/2000/09/xmldsig#");
-		namespaces.put("xenc", "http://www.w3.org/2001/04/xmlenc#");
-		namespaces.put("wsse11", "http://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
+				"https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");
+		namespaces.put("ds", "https://www.w3.org/2000/09/xmldsig#");
+		namespaces.put("xenc", "https://www.w3.org/2001/04/xmlenc#");
+		namespaces.put("wsse11", "https://docs.oasis-open.org/wss/oasis-wss-wssecurity-secext-1.1.xsd");
 		namespaces.put("echo", "http://www.springframework.org/spring-ws/samples/echo");
 		namespaces.put("wsu",
-				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
+				"https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd");
 		namespaces.put("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
 		namespaces.put("test", "http://test");
 		xpathTemplate.setNamespaces(namespaces);

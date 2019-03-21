@@ -43,7 +43,7 @@ public abstract class KeyStoreUtils {
 	 *
 	 * <p>This behavior corresponds to the standard J2SDK behavior for SSL key stores.
 	 *
-	 * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509KeyManager">The
+	 * @see <a href="https://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509KeyManager">The
 	 *		standard J2SDK SSL key store mechanism</a>
 	 */
 	public static KeyStore loadDefaultKeyStore() throws GeneralSecurityException, IOException {
@@ -85,7 +85,7 @@ public abstract class KeyStoreUtils {
 	 *
 	 * <p>This behavior corresponds to the standard J2SDK behavior for SSL trust stores.
 	 *
-	 * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
+	 * @see <a href="https://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
 	 *		standard J2SDK SSL trust store mechanism</a>
 	 */
 	public static KeyStore loadDefaultTrustStore() throws GeneralSecurityException, IOException {

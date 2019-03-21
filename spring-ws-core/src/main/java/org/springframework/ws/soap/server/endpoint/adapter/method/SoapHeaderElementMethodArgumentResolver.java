@@ -38,9 +38,9 @@ import org.springframework.xml.namespace.QNameUtils;
  * supports simple {@link SoapHeaderElement} parameters and {@link List} parameters for elements that appear multiple
  * times in the same SOAP header. </p> The following snippet shows an example of supported declarations.
  * <pre><code>
- * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
+ * public void soapHeaderElement(@SoapHeader("{https://springframework.org/ws}header") SoapHeaderElement element)
  *
- * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
+ * public void soapHeaderElementList(@SoapHeader("{https://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
  * </code></pre>
  *
  * @author Tareq Abedrabbo

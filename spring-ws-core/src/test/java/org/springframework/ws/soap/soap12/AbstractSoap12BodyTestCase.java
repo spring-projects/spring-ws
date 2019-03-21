@@ -138,9 +138,9 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
 	@Test
 	public void testAddFaultWithSubcode() throws Exception {
 		Soap12Fault fault = (Soap12Fault) soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
-		QName subcode1 = new QName("http://www.springframework.org", "Subcode1", "spring-ws");
+		QName subcode1 = new QName("https://www.springframework.org", "Subcode1", "spring-ws");
 		fault.addFaultSubcode(subcode1);
-		QName subcode2 = new QName("http://www.springframework.org", "Subcode2", "spring-ws");
+		QName subcode2 = new QName("https://www.springframework.org", "Subcode2", "spring-ws");
 		fault.addFaultSubcode(subcode2);
 		Iterator<QName> iterator = fault.getFaultSubcodes();
 		assertTrue("No subcode found", iterator.hasNext());
@@ -153,8 +153,8 @@ public abstract class AbstractSoap12BodyTestCase extends AbstractSoapBodyTestCas
 		assertXMLEqual("Invalid source for body",
 				"<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>" +
 						"<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix() + ":Receiver</soapenv:Value>" +
-						"<soapenv:Subcode><soapenv:Value xmlns:spring-ws='http://www.springframework.org'>spring-ws:Subcode1</soapenv:Value>" +
-						"<soapenv:Subcode><soapenv:Value xmlns:spring-ws='http://www.springframework.org'>spring-ws:Subcode2</soapenv:Value>" +
+						"<soapenv:Subcode><soapenv:Value xmlns:spring-ws='https://www.springframework.org'>spring-ws:Subcode1</soapenv:Value>" +
+						"<soapenv:Subcode><soapenv:Value xmlns:spring-ws='https://www.springframework.org'>spring-ws:Subcode2</soapenv:Value>" +
 						"</soapenv:Subcode></soapenv:Subcode></soapenv:Code>" +
 						"<soapenv:Reason><soapenv:Text xml:lang='en'>faultString</soapenv:Text></soapenv:Reason>" +
 						"</soapenv:Fault>", result.toString());

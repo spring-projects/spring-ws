@@ -43,7 +43,7 @@ public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 		AxiomSoapMessage axiomSoapMessage = messageFactory.createWebServiceMessage();
 		soapBody = axiomSoapMessage.getSoapBody();
 
-		String payload = "<payload xmlns='http://www.springframework.org' />";
+		String payload = "<payload xmlns='https://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		assertPayloadEqual(payload);
 	}

@@ -1,10 +1,10 @@
 <?xml version='1.0'?>
-<xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema targetNamespace="https://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xml:lang="en">
 
     <xs:annotation>
         <xs:documentation>
-            See http://www.w3.org/XML/1998/namespace.html and http://www.w3.org/TR/REC-xml for information about this
+            See https://www.w3.org/XML/1998/namespace.html and https://www.w3.org/TR/REC-xml for information about this
             namespace.
 
             This schema document describes the XML namespace, in a form suitable for import by other schema documents.
@@ -42,8 +42,8 @@
             allow xml:base, xml:lang, xml:space or xml:id attributes on elements they define.
 
             To enable this, such a schema must import this schema for the XML namespace, e.g. as follows: &lt;schema . .
-            .> . . . &lt;import namespace="http://www.w3.org/XML/1998/namespace"
-            schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+            .> . . . &lt;import namespace="https://www.w3.org/XML/1998/namespace"
+            schemaLocation="https://www.w3.org/2001/xml.xsd"/>
 
             Subsequently, qualified reference to any of the attributes or the group defined below will have the desired
             effect, e.g.
@@ -56,11 +56,11 @@
 
     <xs:annotation>
         <xs:documentation>In keeping with the XML Schema WG's standard versioning policy, this schema document will
-            persist at http://www.w3.org/2005/08/xml.xsd. At the date of issue it can also be found at
-            http://www.w3.org/2001/xml.xsd. The schema document at that URI may however change in the future, in order
+            persist at https://www.w3.org/2005/08/xml.xsd. At the date of issue it can also be found at
+            https://www.w3.org/2001/xml.xsd. The schema document at that URI may however change in the future, in order
             to remain compatible with the latest version of XML Schema itself, or with the XML namespace itself. In
             other words, if the XML Schema or XML namespaces change, the version of this document at
-            http://www.w3.org/2001/xml.xsd will change accordingly; the version at http://www.w3.org/2005/08/xml.xsd
+            https://www.w3.org/2001/xml.xsd will change accordingly; the version at https://www.w3.org/2005/08/xml.xsd
             will not change.</xs:documentation>
     </xs:annotation>
 
@@ -68,8 +68,8 @@
         <xs:annotation>
             <xs:documentation>Attempting to install the relevant ISO 2- and 3-letter codes as the enumerated possible
                 values is probably never going to be a realistic possibility. See RFC 3066 at
-                http://www.ietf.org/rfc/rfc3066.txt and the IANA registry at
-                http://www.iana.org/assignments/lang-tag-apps.htm for further information.
+                https://www.ietf.org/rfc/rfc3066.txt and the IANA registry at
+                https://www.iana.org/assignments/lang-tag-apps.htm for further information.
 
                 The union allows for the 'un-declaration' of xml:lang with the empty string.</xs:documentation>
         </xs:annotation>
@@ -95,13 +95,13 @@
 
     <xs:attribute name="base" type="xs:anyURI">
         <xs:annotation>
-            <xs:documentation>See http://www.w3.org/TR/xmlbase/ for information about this attribute.</xs:documentation>
+            <xs:documentation>See https://www.w3.org/TR/xmlbase/ for information about this attribute.</xs:documentation>
         </xs:annotation>
     </xs:attribute>
 
     <xs:attribute name="id" type="xs:ID">
         <xs:annotation>
-            <xs:documentation>See http://www.w3.org/TR/xml-id/ for information about this attribute.</xs:documentation>
+            <xs:documentation>See https://www.w3.org/TR/xml-id/ for information about this attribute.</xs:documentation>
         </xs:annotation>
     </xs:attribute>
 

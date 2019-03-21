@@ -38,7 +38,7 @@ public class MailMessageSenderIntegrationTest {
 
 	private MessageFactory messageFactory;
 
-	private static final String SOAP_ACTION = "http://springframework.org/DoIt";
+	private static final String SOAP_ACTION = "https://springframework.org/DoIt";
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,7 +62,7 @@ public class MailMessageSenderIntegrationTest {
 			URI mailTo = new URI("mailto:server@example.com?subject=SOAP%20Test");
 			connection = messageSender.createConnection(mailTo);
 			SOAPMessage saajMessage = messageFactory.createMessage();
-			saajMessage.getSOAPBody().addBodyElement(new QName("http://springframework.org", "test"));
+			saajMessage.getSOAPBody().addBodyElement(new QName("https://springframework.org", "test"));
 			SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);

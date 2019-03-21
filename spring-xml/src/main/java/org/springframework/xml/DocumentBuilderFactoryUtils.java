@@ -55,34 +55,34 @@ public class DocumentBuilderFactoryUtils {
 		}
 
 		try {
-			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+			factory.setFeature("https://apache.org/xml/features/disallow-doctype-decl", true);
 		} catch (ParserConfigurationException e) {
 			if (log.isWarnEnabled()) {
-				log.warn("FEATURE 'http://apache.org/xml/features/disallow-doctype-decl' is probably not supported by " + factory.getClass().getCanonicalName());
+				log.warn("FEATURE 'https://apache.org/xml/features/disallow-doctype-decl' is probably not supported by " + factory.getClass().getCanonicalName());
 			}
 		}
 
 		try {
-			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
+			factory.setFeature("http://www.xml.org/sax/features/external-general-entities", false);
 		} catch (ParserConfigurationException e) {
 			if (log.isWarnEnabled()) {
-				log.warn("FEATURE 'http://xml.org/sax/features/external-general-entities' is probably not supported by " + factory.getClass().getCanonicalName());
+				log.warn("FEATURE 'http://www.xml.org/sax/features/external-general-entities' is probably not supported by " + factory.getClass().getCanonicalName());
 			}
 		}
 
 		try {
-			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+			factory.setFeature("http://www.xml.org/sax/features/external-parameter-entities", false);
 		} catch (ParserConfigurationException e) {
 			if (log.isWarnEnabled()) {
-				log.warn("FEATURE 'http://xml.org/sax/features/external-parameter-entities' is probably not supported by " + factory.getClass().getCanonicalName());
+				log.warn("FEATURE 'http://www.xml.org/sax/features/external-parameter-entities' is probably not supported by " + factory.getClass().getCanonicalName());
 			}
 		}
 
 		try {
-			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			factory.setFeature("https://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		} catch (ParserConfigurationException e) {
 			if (log.isWarnEnabled()) {
-				log.warn("FEATURE 'http://apache.org/xml/features/nonvalidating/load-external-dtd' is probably not supported by " + factory.getClass().getCanonicalName());
+				log.warn("FEATURE 'https://apache.org/xml/features/nonvalidating/load-external-dtd' is probably not supported by " + factory.getClass().getCanonicalName());
 			}
 		}
 
