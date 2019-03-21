@@ -114,4 +114,4 @@ Spring Web Services uses https://jira.spring.io/browse/SWS[JIRA] for issue track
 
 == License
 
-Spring Web Services is http://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 licensed].
+Spring Web Services is https://www.apache.org/licenses/LICENSE-2.0.html[Apache 2.0 licensed].
