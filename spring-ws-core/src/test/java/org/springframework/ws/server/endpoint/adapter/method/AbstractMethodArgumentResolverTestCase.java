@@ -34,7 +34,7 @@ import org.apache.axiom.soap.SOAPFactory;
 
 public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSupport {
 
-	protected static final String NAMESPACE_URI = "http://springframework.org/ws";
+	protected static final String NAMESPACE_URI = "https://springframework.org/ws";
 
 	protected static final String LOCAL_NAME = "request";
 

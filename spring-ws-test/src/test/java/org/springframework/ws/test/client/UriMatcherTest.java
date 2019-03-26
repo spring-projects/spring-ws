@@ -43,6 +43,6 @@ public class UriMatcherTest {
 		expect(message.getPayloadSource()).andReturn(null);
 		replay(message);
 		UriMatcher matcher = new UriMatcher(GOOD_URI);
-		matcher.match(URI.create("http://www.example.org"), message);
+		matcher.match(URI.create("https://www.example.org"), message);
 	}
 }

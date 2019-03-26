@@ -94,7 +94,7 @@ import org.springframework.ws.soap.security.wss4j.callback.UsernameTokenPrincipa
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J</a>
+ * @see <a href="https://ws.apache.org/wss4j/">Apache WSS4J</a>
  * @since 1.5.0
  * @deprecated Transition to {@link org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor}
  */
@@ -216,11 +216,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * defaults to {@code Content} if it is omitted. Example of a list:
 	 * <pre>
 	 * &lt;property name="securementEncryptionParts"
-	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
+	 *	 value="{Content}{https://example.org/paymentv2}CreditCard;
 	 *			   {Element}{}UserName" />
 	 * </pre>
 	 * The first entry of the list identifies the element {@code CreditCard} in the namespace
-	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
+	 * {@code https://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the
 	 * namespace identifier, and the encryption modifier are case sensitive.
 	 *
 	 * <p>The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to

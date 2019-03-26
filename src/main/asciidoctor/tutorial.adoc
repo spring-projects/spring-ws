@@ -70,8 +70,8 @@ Now that we have seen some examples of the XML data that we will use, it makes s
 
 * DTDs
 * https://www.w3.org/XML/Schema[XML Schema (XSD)]
-* http://www.relaxng.org/[RELAX NG]
-* http://www.schematron.com/[Schematron]
+* https://relaxng.org/[RELAX NG]
+* http://schematron.com/[Schematron]
 
 DTDs have limited namespace support, so they are not suitable for Web services. Relax NG and Schematron certainly are easier than XML Schema. Unfortunately, they are not so widely supported across platforms. We will use XML Schema.
 
@@ -270,7 +270,7 @@ Adding a concrete part is pretty standard: just refer to the abstract part you d
     </wsdl:portType>
     <wsdl:binding name="HumanResourceBinding" type="tns:HumanResource">          <!--4--><!--5-->
         <soap:binding style="document"                                           <!--6-->
-            transport="http://schemas.xmlsoap.org/soap/http"/>                   <!--7-->
+            transport="http://schemas.xmlsoap.org/soap/http/"/>                   <!--7-->
         <wsdl:operation name="Holiday">
             <soap:operation soapAction="http://mycompany.com/RequestHoliday"/>   <!--8-->
             <wsdl:input name="HolidayRequest">
@@ -292,7 +292,7 @@ Adding a concrete part is pretty standard: just refer to the abstract part you d
 <4> We define the `HumanResource` port type, which gets used in the `binding`.
 <5> We define the `HumanResourceBinding` binding, which gets used in the `port`.
 <6> We use a document/literal style.
-<7> The literal `http://schemas.xmlsoap.org/soap/http` signifies a HTTP transport.
+<7> The literal `http://schemas.xmlsoap.org/soap/http/` signifies a HTTP transport.
 <8> The `soapAction` attribute signifies the `SOAPAction` HTTP header that will be sent with every request.
 <9> The `http://localhost:8080/holidayService/` address is the URL where the Web service can be invoked.
 
@@ -320,7 +320,7 @@ This command will create a new directory called `holidayService`. In this direct
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-             http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+             https://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
     <display-name>MyCompany HR Holiday Service</display-name>
@@ -472,9 +472,9 @@ Here is how we would configure these classes in our `spring-ws-servlet.xml` Spri
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:context="http://www.springframework.org/schema/context"
   xmlns:sws="http://www.springframework.org/schema/web-services"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-  http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd
-  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+  xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://www.springframework.org/schema/web-services https://www.springframework.org/schema/web-services/web-services-2.0.xsd
+  http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
   <context:component-scan base-package="com.mycompany.hr"/>
 
@@ -564,7 +564,7 @@ servlet in `web.xml` (shown below).
 </init-param>
 ----
 
-You can create a WAR file using *mvn install*. If you deploy the application (to Tomcat, Jetty, etc.), and point your browser at http://localhost:8080/holidayService/holiday.wsdl[this location], you will see the generated WSDL. This WSDL is ready to be used by clients, such as http://www.soapui.org/[soapUI], or other SOAP frameworks.
+You can create a WAR file using *mvn install*. If you deploy the application (to Tomcat, Jetty, etc.), and point your browser at http://localhost:8080/holidayService/holiday.wsdl[this location], you will see the generated WSDL. This WSDL is ready to be used by clients, such as https://www.soapui.org/[soapUI], or other SOAP frameworks.
 
 That concludes this tutorial. The tutorial code can be found in the full distribution of Spring-WS. The next step would be to look at the echo sample application that is part of the distribution. After that, look at the airline sample, which is a bit more complicated, because it uses JAXB, WS-Security, Hibernate, and a transactional service layer. Finally, you can read the rest of the reference documentation.
 

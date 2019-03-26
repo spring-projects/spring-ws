@@ -56,7 +56,7 @@ public class JmsMessageSenderIntegrationTest {
 
 	private MessageFactory messageFactory;
 
-	private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
+	private static final String SOAP_ACTION = "\"https://springframework.org/DoIt\"";
 
 	@Before
 	public void createMessageFactory() throws Exception {

@@ -54,7 +54,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	protected static final QName WS_SECURITY_NAME =
-			new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
+			new QName("https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security");
 
 	private boolean secureResponse = true;
 

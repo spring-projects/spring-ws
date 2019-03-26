@@ -42,7 +42,7 @@ public class Wsdl11DestinationProviderTest {
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
+		Assert.assertEquals("Invalid URI returned", new URI("https://example.com/myService"), result);
 	}
 
 	@Test
@@ -52,7 +52,7 @@ public class Wsdl11DestinationProviderTest {
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
+		Assert.assertEquals("Invalid URI returned", new URI("https://example.com/soap11"), result);
 	}
 
 	@Test
@@ -63,6 +63,6 @@ public class Wsdl11DestinationProviderTest {
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
+		Assert.assertEquals("Invalid URI returned", new URI("https://example.com/soap12"), result);
 	}
 }

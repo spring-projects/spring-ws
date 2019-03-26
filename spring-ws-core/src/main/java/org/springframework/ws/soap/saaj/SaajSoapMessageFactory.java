@@ -252,8 +252,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	/**
 	 * Checks for the UTF-8 Byte Order Mark, and removes it if present. The SAAJ RI cannot cope with these BOMs.
 	 *
-	 * @see <a href="http://jira.springframework.org/browse/SWS-393">SWS-393</a>
-	 * @see <a href="http://unicode.org/faq/utf_bom.html#22">UTF-8 BOMs</a>
+	 * @see <a href="https://jira.springframework.org/browse/SWS-393">SWS-393</a>
+	 * @see <a href="https://unicode.org/faq/utf_bom.html#22">UTF-8 BOMs</a>
 	 */
 	private InputStream checkForUtf8ByteOrderMark(InputStream inputStream) throws IOException {
 		PushbackInputStream pushbackInputStream = new PushbackInputStream(new BufferedInputStream(inputStream), 3);

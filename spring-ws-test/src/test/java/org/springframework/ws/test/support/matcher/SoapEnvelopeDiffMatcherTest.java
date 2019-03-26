@@ -34,8 +34,8 @@ public class SoapEnvelopeDiffMatcherTest {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
-		xmlBuilder.append("<soap:Header><header xmlns='http://example.com'/></soap:Header>");
-		xmlBuilder.append("<soap:Body><payload xmlns='http://example.com'/></soap:Body>");
+		xmlBuilder.append("<soap:Header><header xmlns='https://example.com'/></soap:Header>");
+		xmlBuilder.append("<soap:Body><payload xmlns='https://example.com'/></soap:Body>");
 		xmlBuilder.append("</soap:Envelope>");
 		String xml = xmlBuilder.toString();
 		DOMResult result = new DOMResult();
@@ -56,8 +56,8 @@ public class SoapEnvelopeDiffMatcherTest {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
-		xmlBuilder.append("<soap:Header><header xmlns='http://example.com'/></soap:Header>");
-		xmlBuilder.append("<soap:Body><payload%s xmlns='http://example.com'/></soap:Body>");
+		xmlBuilder.append("<soap:Header><header xmlns='https://example.com'/></soap:Header>");
+		xmlBuilder.append("<soap:Body><payload%s xmlns='https://example.com'/></soap:Body>");
 		xmlBuilder.append("</soap:Envelope>");
 		String xml = xmlBuilder.toString();
 		String actual = String.format(xml, "1");

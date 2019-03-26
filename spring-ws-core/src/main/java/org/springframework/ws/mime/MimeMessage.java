@@ -36,9 +36,9 @@ public interface MimeMessage extends WebServiceMessage {
 	/**
 	 * Indicates whether this message is a XOP package.
 	 *
-	 * @return {@code true} when the constraints specified in <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#identifying_xop_documents">Identifying
+	 * @return {@code true} when the constraints specified in <a href="https://www.w3.org/TR/2005/REC-xop10-20050125/#identifying_xop_documents">Identifying
 	 *		   XOP Documents</a> are met.
-	 * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
+	 * @see <a href="https://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
 	 */
 	boolean isXopPackage();
 
@@ -46,7 +46,7 @@ public interface MimeMessage extends WebServiceMessage {
 	 * Turns this message into a XOP package.
 	 *
 	 * @return {@code true} when the message is a XOP package
-	 * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
+	 * @see <a href="https://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
 	 */
 	boolean convertToXopPackage();
 

@@ -105,7 +105,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 	}
 
 	/**
-	 * See http://jira.springframework.org/browse/SWS-502
+	 * See https://jira.springframework.org/browse/SWS-502
 	 */
 	@Test
 	public void testSWS502() throws Exception {

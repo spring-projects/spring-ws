@@ -110,7 +110,7 @@ The WSDL defined in the '`orders.wsdl`' file on the classpath can then be access
 http://localhost:8080/spring-ws/orders.wsdl
 ----
 
-NOTE: All `WsdlDefinition` bean definitions are exposed by the `MessageDispatcherServlet` under their bean name with the suffix `.wsdl`. So if the bean name is `echo`, the host name is "server", and the Servlet context (war name) is "spring-ws", the WSDL can be obtained via `http://server/spring-ws/echo.wsdl`
+NOTE: All `WsdlDefinition` bean definitions are exposed by the `MessageDispatcherServlet` under their bean name with the suffix `.wsdl`. So if the bean name is `echo`, the host name is "server", and the Servlet context (war name) is "spring-ws", the WSDL can be obtained via `https://server/spring-ws/echo.wsdl`
 
 Another nice feature of the `MessageDispatcherServlet` (or more correctly the `WsdlDefinitionHandlerAdapter`) is that it is able to transform the value of the '`location`' of all the WSDL that it exposes to reflect the URL of the incoming request.
 
@@ -316,7 +316,7 @@ The following piece of configuration shows how to use the server-side email supp
 
 === Embedded HTTP Server transport
 
-Spring Web Services provides a transport based on Sun's JRE 1.6 http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html[HTTP server]. The embedded HTTP Server is a standalone server that is simple to configure. It lends itself to a lighter  alternative to conventional servlet containers.
+Spring Web Services provides a transport based on Sun's JRE 1.6 https://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html[HTTP server]. The embedded HTTP Server is a standalone server that is simple to configure. It lends itself to a lighter  alternative to conventional servlet containers.
 
 When using the embedded HTTP server, no external deployment descriptor is needed (`web.xml`). You only need to define an instance of the server and configure it to handle incoming requests. The remoting module in the Core Spring Framework contains a convenient factory bean for the HTTP server: the `SimpleHttpServerFactoryBean`. The most important property is `contexts`, which maps context paths to corresponding `HttpHandler`s.
 
@@ -360,7 +360,7 @@ The following snippet shows a simple configuration example of the HTTP server tr
 </beans>
 ----
 
-For more information on the `SimpleHttpServerFactoryBean`, refer to the http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html[Javadoc].
+For more information on the `SimpleHttpServerFactoryBean`, refer to the https://docs.spring.io/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html[Javadoc].
 
 === XMPP transport
 
@@ -471,9 +471,9 @@ To enable the support for `@Endpoint` and related Spring-WS annotations, you wil
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   *xmlns:sws="http://www.springframework.org/schema/web-services"*
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-      http://www.springframework.org/schema/beans/spring-beans.xsd
+      https://www.springframework.org/schema/beans/spring-beans.xsd
     *http://www.springframework.org/schema/web-services
-      http://www.springframework.org/schema/web-services/web-services.xsd">
+      https://www.springframework.org/schema/web-services/web-services.xsd">
 
   <sws:annotation-driven />*
 
@@ -518,7 +518,7 @@ public class MyConfiguration extends WsConfigurerAdapter {
 
 In the next couple of sections, a more elaborate description of the `@Endpoint` programming model is given.
 
-NOTE: Endpoints, like any other Spring Bean, are scoped as a singleton by default, i.e. one instance of the bean definition is created per container. Being a singleton implies that more than one thread can use it at the same time, so the endpoint has to be thread safe. If you want to use a different scope, such as prototype, refer to the http://static.springframework.org/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes[Spring Reference documentation].
+NOTE: Endpoints, like any other Spring Bean, are scoped as a singleton by default, i.e. one instance of the bean definition is created per container. Being a singleton implies that more than one thread can use it at the same time, so the endpoint has to be thread safe. If you want to use a different scope, such as prototype, refer to the https://docs.spring.io/spring/docs/2.5.x/reference/beans.html#beans-factory-scopes[Spring Reference documentation].
 
  Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated in the class-level Javadoc.
 
@@ -589,7 +589,7 @@ The following table describes the supported parameter types. It shows the suppor
 | Enabled when StAX is on the classpath.
 
 | XPath
-| Any boolean, double, `String`, `org.w3c.Node`, `org.w3c.dom.NodeList`, or type that can be converted from a `String` by a Spring 3 http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert[conversion service], and that is annotated with `@XPathParam`.
+| Any boolean, double, `String`, `org.w3c.Node`, `org.w3c.dom.NodeList`, or type that can be converted from a `String` by a Spring 3 https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert[conversion service], and that is annotated with `@XPathParam`.
 | No
 | Enabled by default, see <<server-xpath-param,the section called `XPathParam`>>.
 
@@ -609,7 +609,7 @@ The following table describes the supported parameter types. It shows the suppor
 | Enabled when JAXB2 is on the classpath.
 
 | OXM
-| Any type supported by a Spring OXM http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26164[`Unmarshaller`].
+| Any type supported by a Spring OXM https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26164[`Unmarshaller`].
 | Yes
 | Enabled when the `unmarshaller` attribute of `<sws:annotation-driven/>` is specified.
 |===
@@ -684,7 +684,7 @@ Using the `@XPathParam`, you can bind to all the data types supported by XPath:
 * `Node`
 * `NodeList`
 
-In addition to this list, you can use any type that can be converted from a `String` by a Spring 3 http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert[conversion service].
+In addition to this list, you can use any type that can be converted from a `String` by a Spring 3 https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/validation.html#core-convert[conversion service].
 
 ==== Handling method return types
 
@@ -738,7 +738,7 @@ The following table describes the supported return types. It shows the supported
 | Enabled when JAXB2 is on the classpath.
 
 | OXM
-| Any type supported by a Spring OXM http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26096[`Marshaller`].
+| Any type supported by a Spring OXM https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/oxm.html#d0e26096[`Marshaller`].
 | Yes
 | Enabled when the `marshaller` attribute of `<sws:annotation-driven/>` is specified.
 |===
@@ -772,11 +772,11 @@ WS-Addressing specifies a transport-neutral routing mechanism. It is based on a 
 [source,xml]
 ----
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope"
-    xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    xmlns:wsa="https://www.w3.org/2005/08/addressing">
   <SOAP-ENV::Header>
     <wsa:MessageID>urn:uuid:21363e0d-2645-4eb7-8afd-2f5ee1bb25cf</wsa:MessageID>
     <wsa:ReplyTo>
-      <wsa:Address>http://example.com/business/client1</wsa:Address>
+      <wsa:Address>https://example.com/business/client1</wsa:Address>
     </wsa:ReplyTo>
     <wsa:To S:mustUnderstand="true">http://example/com/fabrikam</wsa:To>
     <wsa:Action>http://example.com/fabrikam/mail/Delete</wsa:Action>
@@ -846,10 +846,10 @@ Endpoint interceptors are typically defined by using a `<sws:interceptors>` elem
 ----
 <sws:interceptors>
   <bean class="samples.MyGlobalInterceptor"/>
-  <sws:payloadRoot namespaceUri="http://www.example.com">
+  <sws:payloadRoot namespaceUri="https://www.example.com">
     <bean class="samples.MyPayloadRootInterceptor"/>
   </sws:payloadRoot>
-  <sws:soapAction value="http://www.example.com/SoapAction">
+  <sws:soapAction value="https://www.example.com/SoapAction">
     <bean class="samples.MySoapActionInterceptor1"/>
     <ref bean="mySoapActionInterceptor2"/>
   </sws:soapAction>
@@ -858,7 +858,7 @@ Endpoint interceptors are typically defined by using a `<sws:interceptors>` elem
 <bean id="mySoapActionInterceptor2" class="samples.MySoapActionInterceptor2"/>
 ----
 
-Here, we define one 'global' interceptor (`MyGlobalInterceptor`) that intercepts all request and responses. We also define an interceptor that only applies to XML messages that have the `http://www.example.com` as a payload root namespace. Here, we could have defined a `localPart` attribute in addition to the `namespaceUri` to further limit the messages the interceptor applies to. Finally, we define two interceptors that apply when the message has a `http://www.example.com/SoapAction` SOAP action. Notice how the second interceptor is actually a reference to a bean definition outside of the `<interceptors>` element. You can use bean references anywhere inside the `<interceptors>` element.
+Here, we define one 'global' interceptor (`MyGlobalInterceptor`) that intercepts all request and responses. We also define an interceptor that only applies to XML messages that have the `https://www.example.com` as a payload root namespace. Here, we could have defined a `localPart` attribute in addition to the `namespaceUri` to further limit the messages the interceptor applies to. Finally, we define two interceptors that apply when the message has a `https://www.example.com/SoapAction` SOAP action. Notice how the second interceptor is actually a reference to a bean definition outside of the `<interceptors>` element. You can use bean references anywhere inside the `<interceptors>` element.
 
 When using `@Configuration` classes, you can extend from `WsConfigurerAdapter` to add interceptors. Like so:
 

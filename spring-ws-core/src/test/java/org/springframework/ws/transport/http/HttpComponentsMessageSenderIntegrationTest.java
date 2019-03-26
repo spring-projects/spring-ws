@@ -64,7 +64,7 @@ public class HttpComponentsMessageSenderIntegrationTest extends AbstractHttpWebS
 		assertThat(route1.getTargetHost().getHostName(), equalTo("www.example.com"));
 		assertTrue((route1.getTargetHost().getPort() == -1) || (route1.getTargetHost().getPort() == 443));
 
-		final String url2 = "http://www.example.com:8080";
+		final String url2 = "https://www.example.com:8080";
 		URI uri2 = new URI(url2);
 		HttpHost host2 = new HttpHost(uri2.getHost(), uri2.getPort(), uri2.getScheme());
 		HttpRoute route2 = new HttpRoute(host2);
@@ -72,7 +72,7 @@ public class HttpComponentsMessageSenderIntegrationTest extends AbstractHttpWebS
 		assertThat(route2.getTargetHost().getHostName(), equalTo("www.example.com"));
 		assertThat(route2.getTargetHost().getPort(), equalTo(8080));
 
-		final String url3 = "http://www.springframework.org";
+		final String url3 = "https://www.springframework.org";
 		URI uri3 = new URI(url3);
 		HttpHost host3 = new HttpHost(uri3.getHost(), uri3.getPort(), uri3.getScheme());
 		HttpRoute route3 = new HttpRoute(host3);

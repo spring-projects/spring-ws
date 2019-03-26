@@ -60,10 +60,10 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(new QName(
-				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
+				"https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
 		assertTrue("No security header", iterator.hasNext());
 		SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();
-		iterator = securityHeader.getChildElements(new QName("http://www.w3.org/2000/09/xmldsig#", "Signature"));
+		iterator = securityHeader.getChildElements(new QName("https://www.w3.org/2000/09/xmldsig#", "Signature"));
 		assertTrue("No signature header", iterator.hasNext());
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

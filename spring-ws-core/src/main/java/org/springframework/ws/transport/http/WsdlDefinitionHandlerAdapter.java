@@ -48,12 +48,12 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  * overriding the {@code transformLocation()} method.
  *
  * <p>For instance, if the location attribute defined in the WSDL is {@code http://localhost:8080/context/services/myService},
- * and the request URI for the WSDL is {@code http://example.com/context/myService.wsdl}, the location will be
- * changed to {@code http://example.com/context/services/myService}.
+ * and the request URI for the WSDL is {@code https://example.com/context/myService.wsdl}, the location will be
+ * changed to {@code https://example.com/context/services/myService}.
  *
  * <p>If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the WSDL
- * is {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
- * {@code http://example.com:8080/context/services/myService}.
+ * is {@code https://example.com:8080/context/myService.wsdl}, the location will be changed to
+ * {@code https://example.com:8080/context/services/myService}.
  *
  * <p>When {@code transformLocations} is enabled, all {@code location} attributes found in the WSDL definition
  * are changed by default. This behavior can be customized by changing the {@code locationExpression} property,

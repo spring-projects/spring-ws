@@ -204,7 +204,7 @@ public class PayloadValidatingInterceptorTest {
 	@Test
 	public void testNamespacesInType() throws Exception {
 		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
-		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
+		// See https://opensource.atlassian.com/projects/spring/browse/SWS-35
 		String previousSchemaFactory =
 				System.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 		System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,

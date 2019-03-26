@@ -26,7 +26,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 @Endpoint
 public class EchoPayloadEndpoint {
 
-	public static final String NAMESPACE = "http://springframework.org";
+	public static final String NAMESPACE = "https://springframework.org";
 
 	public static final String LOCAL_PART = "root";
 

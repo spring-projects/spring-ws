@@ -53,7 +53,7 @@
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="OrderSoap11" type="tns:Order">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http/"/>
         <wsdl:operation name="GetOrder">
             <soap:operation soapAction=""/>
             <wsdl:input name="GetOrderRequest">
@@ -69,7 +69,7 @@
     </wsdl:binding>
     <wsdl:service name="OrderService">
         <wsdl:port binding="tns:OrderSoap11" name="OrderSoap11">
-            <soap:address location="http://example.com/myService"/>
+            <soap:address location="https://example.com/myService"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

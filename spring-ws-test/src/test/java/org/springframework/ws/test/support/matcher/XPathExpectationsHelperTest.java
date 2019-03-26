@@ -182,14 +182,14 @@ public class XPathExpectationsHelperTest {
 
 	@Test
 	public void existsWithNamespacesMatch() throws IOException, AssertionError {
-		Map<String, String> ns = Collections.singletonMap("x", "http://example.org");
+		Map<String, String> ns = Collections.singletonMap("x", "https://example.org");
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//x:b", ns);
 		WebServiceMessageMatcher matcher = helper.exists();
 		assertNotNull(matcher);
 
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 		expect(message.getPayloadSource())
-				.andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>"));
+				.andReturn(new StringSource("<a:a xmlns:a=\"https://example.org\"><a:b/></a:a>"));
 
 		replay(message);
 
@@ -200,14 +200,14 @@ public class XPathExpectationsHelperTest {
 
 	@Test(expected = AssertionError.class)
 	public void existsWithNamespacesNonMatch() throws IOException, AssertionError {
-		Map<String, String> ns = Collections.singletonMap("x", "http://example.org");
+		Map<String, String> ns = Collections.singletonMap("x", "https://example.org");
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//b", ns);
 		WebServiceMessageMatcher matcher = helper.exists();
 		assertNotNull(matcher);
 
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 		expect(message.getPayloadSource())
-				.andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>")).times(2);
+				.andReturn(new StringSource("<a:a xmlns:a=\"https://example.org\"><a:b/></a:a>")).times(2);
 
 		replay(message);
 

@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
+ * {@code WebServiceMessageSender} implementation that uses <a href="https://hc.apache.org/httpcomponents-client">Apache
  * HttpClient</a> to execute POST requests.
  *
  * <p>Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
@@ -174,8 +174,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 *
 	 * <pre>
 	 * https://www.example.com=1
-	 * http://www.example.com:8080=7
-	 * http://www.springframework.org=10
+	 * https://www.example.com:8080=7
+	 * https://www.springframework.org=10
 	 * </pre>
 	 *
 	 * <p>The host can be specified as a URI (with scheme and port).

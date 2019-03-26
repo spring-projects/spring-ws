@@ -46,7 +46,7 @@ public interface XPathExpression {
 	 * @param node the starting point
 	 * @return the result of the evaluation
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath/#function-boolean">XPath specification - boolean() function</a>
+	 * @see <a href="https://www.w3.org/TR/xpath/#function-boolean">XPath specification - boolean() function</a>
 	 */
 	boolean evaluateAsBoolean(Node node) throws XPathException;
 
@@ -57,7 +57,7 @@ public interface XPathExpression {
 	 * @param node the starting point
 	 * @return the result of the evaluation
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+	 * @see <a href="https://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
 	Node evaluateAsNode(Node node) throws XPathException;
 
@@ -68,7 +68,7 @@ public interface XPathExpression {
 	 * @param node the starting point
 	 * @return a list of {@code Node}s that are selected by the expression
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+	 * @see <a href="https://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
 	List<Node> evaluateAsNodeList(Node node) throws XPathException;
 
@@ -82,7 +82,7 @@ public interface XPathExpression {
 	 * @param node the starting point
 	 * @return the result of the evaluation
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath/#function-number">XPath specification - number() function</a>
+	 * @see <a href="https://www.w3.org/TR/xpath/#function-number">XPath specification - number() function</a>
 	 */
 	double evaluateAsNumber(Node node) throws XPathException;
 
@@ -95,7 +95,7 @@ public interface XPathExpression {
 	 * @param node the starting point
 	 * @return the result of the evaluation
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath/#function-string">XPath specification - string() function</a>
+	 * @see <a href="https://www.w3.org/TR/xpath/#function-string">XPath specification - string() function</a>
 	 */
 	String evaluateAsString(Node node) throws XPathException;
 
@@ -106,7 +106,7 @@ public interface XPathExpression {
 	 * @param nodeMapper object that will map one object per node
 	 * @return the single mapped object
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+	 * @see <a href="https://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
 	<T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 
@@ -118,7 +118,7 @@ public interface XPathExpression {
 	 * @param nodeMapper object that will map one object per node
 	 * @return the result list, containing mapped objects
 	 * @throws XPathException in case of XPath errors
-	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
+	 * @see <a href="https://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
 	<T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 }

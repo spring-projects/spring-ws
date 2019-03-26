@@ -124,7 +124,7 @@ public class DefaultMethodEndpointAdapterTest {
 
 	@Test
 	public void invokeSupported() throws Exception {
-		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
+		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='https://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		String value = "Foo";
@@ -151,7 +151,7 @@ public class DefaultMethodEndpointAdapterTest {
 
 	@Test
 	public void invokeNullReturnValue() throws Exception {
-		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
+		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='https://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		String value = "Foo";
@@ -172,7 +172,7 @@ public class DefaultMethodEndpointAdapterTest {
 
 	@Test
 	public void invokeException() throws Exception {
-		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
+		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='https://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		String value = "Foo";

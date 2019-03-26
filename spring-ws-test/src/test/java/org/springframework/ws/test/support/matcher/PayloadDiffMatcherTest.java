@@ -31,7 +31,7 @@ public class PayloadDiffMatcherTest {
 
 	@Test
 	public void match() throws Exception {
-		String xml = "<element xmlns='http://example.com'/>";
+		String xml = "<element xmlns='https://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
 		replay(message);
@@ -44,12 +44,12 @@ public class PayloadDiffMatcherTest {
 
 	@Test(expected = AssertionError.class)
 	public void nonMatch() throws Exception {
-		String actual = "<element1 xmlns='http://example.com'/>";
+		String actual = "<element1 xmlns='https://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 		expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
 		replay(message);
 
-		String expected = "<element2 xmlns='http://example.com'/>";
+		String expected = "<element2 xmlns='https://example.com'/>";
 		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
 		matcher.match(message);
 	}

@@ -37,7 +37,7 @@ public class SoapHeaderMatcherTest {
 
 	@Before
 	public void setUp() throws Exception {
-		expectedHeaderName = new QName("http://example.com", "header");
+		expectedHeaderName = new QName("https://example.com", "header");
 		matcher = new SoapHeaderMatcher(expectedHeaderName);
 	}
 

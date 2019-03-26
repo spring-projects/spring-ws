@@ -112,7 +112,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 		assertXpathEvaluatesTo("Invalid Username", "Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
 		assertXpathEvaluatesTo("Invalid Password", "Ernie",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText']/text()",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText']/text()",
 				doc);
 	}
 
@@ -123,7 +123,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 		assertXpathEvaluatesTo("Invalid Username", "Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
 		assertXpathExists("Password does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']",
 				doc);
 
 	}

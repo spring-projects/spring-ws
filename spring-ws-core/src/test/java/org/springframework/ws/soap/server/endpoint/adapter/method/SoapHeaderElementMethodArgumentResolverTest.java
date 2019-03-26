@@ -133,18 +133,18 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
 	}
 
-	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {
+	public void soapHeaderElement(@SoapHeader("{https://springframework.org/ws}header") SoapHeaderElement element) {
 	}
 
 	public void soapHeaderElementList(@SoapHeader(
-			"{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {
+			"{https://springframework.org/ws}header") List<SoapHeaderElement> elements) {
 	}
 
-	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {
+	public void soapHeaderMismatch(@SoapHeader("{https://springframework.org/ws}xxx") SoapHeaderElement element) {
 	}
 
 	public void soapHeaderMismatchList(@SoapHeader(
-			"{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
+			"{https://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
 	}
 
 

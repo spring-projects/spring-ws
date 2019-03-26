@@ -52,7 +52,7 @@ import org.springframework.util.Assert;
 public class Soap12Provider extends DefaultConcretePartProvider {
 
 	/** The default transport URI, which indicates an HTTP transport. */
-	public static final String DEFAULT_TRANSPORT_URI = "http://schemas.xmlsoap.org/soap/http";
+	public static final String DEFAULT_TRANSPORT_URI = "http://schemas.xmlsoap.org/soap/http/";
 
 	/** The prefix of the WSDL SOAP 1.2 namespace. */
 	public static final String SOAP_12_NAMESPACE_PREFIX = "soap12";

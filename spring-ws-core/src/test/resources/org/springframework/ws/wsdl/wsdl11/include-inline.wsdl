@@ -46,7 +46,7 @@
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="OrderSoap11" type="tns:Order">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http/"/>
         <wsdl:operation name="GetOrder">
             <soap:operation soapAction=""/>
             <wsdl:input name="GetOrderRequest">

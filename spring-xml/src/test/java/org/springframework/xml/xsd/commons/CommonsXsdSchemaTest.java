@@ -52,7 +52,7 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 		Element schemaElement = result.getDocumentElement();
 		Element elementElement = (Element) schemaElement.getFirstChild();
 		assertNotNull("No expectedContentTypes found",
-				elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
+				elementElement.getAttributeNS("https://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
 	}
 
 

@@ -54,7 +54,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 	@Test
 	public void handleConnectionResponse() throws Exception {
-		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.getUri()).andReturn(new URI("https://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.setFaultCode(null);
 		connectionMock.send(isA(WebServiceMessage.class));
@@ -80,7 +80,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 	public void handleConnectionFaultResponse() throws Exception {
 		final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
 
-		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.getUri()).andReturn(new URI("https://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.setFaultCode(faultCode);
 		connectionMock.send(isA(WebServiceMessage.class));
@@ -106,7 +106,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 	@Test
 	public void handleConnectionNoResponse() throws Exception {
-		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		expect(connectionMock.getUri()).andReturn(new URI("https://example.com"));
 		expect(connectionMock.receive(messageFactory)).andReturn(request);
 		connectionMock.close();
 

@@ -70,8 +70,8 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback = new ActionCallback(action, getVersion(), to);
 		callback.setMessageIdStrategy(strategyMock);
 		SaajSoapMessage message = createDeleteMessage();
-		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		expect(strategyMock.newMessageId(message)).andReturn(new URI("https://example.com/someuniquestring"));
+		callback.setReplyTo(new EndpointReference(new URI("https://example.com/business/client1")));
 
 		replay(strategyMock, connectionMock);
 
@@ -92,8 +92,8 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		expect(connectionMock.getUri()).andReturn(connectionUri);
 
 		SaajSoapMessage message = createDeleteMessage();
-		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		expect(strategyMock.newMessageId(message)).andReturn(new URI("https://example.com/someuniquestring"));
+		callback.setReplyTo(new EndpointReference(new URI("https://example.com/business/client1")));
 
 		replay(strategyMock, connectionMock);
 

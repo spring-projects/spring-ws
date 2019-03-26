@@ -114,9 +114,9 @@ Both the `SaajSoapMessageFactory` and the `AxiomSoapMessageFactory` have a `soap
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       https://www.springframework.org/schema/beans/spring-beans-2.0.xsd
        http://www.springframework.org/schema/util
-       http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+       https://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
     <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
         <property name="soapVersion">
@@ -178,7 +178,7 @@ The `XPathExpression` is an abstraction over a compiled XPath expression, such a
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-          http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+          https://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
     <bean id="nameExpression" class="org.springframework.xml.xpath.XPathExpressionFactoryBean">
         <property name="expression" value="/Contacts/Contact/Name"/>
@@ -295,7 +295,7 @@ With this configuration, a typical output will be:
 
 ----
 TRACE [client.MessageTracing.sent] Sent request [<SOAP-ENV:Envelope xmlns:SOAP-ENV="...
-DEBUG [server.MessageTracing.received] Received request [SaajSoapMessage {http://example.com}request] ...
-DEBUG [server.MessageTracing.sent] Sent response [SaajSoapMessage {http://example.com}response] ...
-DEBUG [client.MessageTracing.received] Received response [SaajSoapMessage {http://example.com}response] ...
+DEBUG [server.MessageTracing.received] Received request [SaajSoapMessage {https://example.com}request] ...
+DEBUG [server.MessageTracing.sent] Sent response [SaajSoapMessage {https://example.com}response] ...
+DEBUG [client.MessageTracing.received] Received response [SaajSoapMessage {https://example.com}response] ...
 ----

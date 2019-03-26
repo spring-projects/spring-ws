@@ -76,7 +76,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 			SoapHeaderElement element = i.next();
 			QName name = element.getName();
 			if (name.getNamespaceURI()
-					.equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
+					.equals("https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
 				fail("Security Header not removed");
 			}
 
@@ -102,7 +102,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 			SoapHeaderElement element = i.next();
 			QName name = element.getName();
 			if (name.getNamespaceURI()
-					.equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
+					.equals("https://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
 				foundSecurityHeader = true;
 			}
 

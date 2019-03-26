@@ -6,19 +6,19 @@ Portions © 2001 DevelopMentor.
 © 2001 W3C (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved.
 
 This document is governed by the W3C Software License [1] as described in the FAQ [2].
-[1] http://www.w3.org/Consortium/Legal/copyright-software-19980720
-[2] http://www.w3.org/Consortium/Legal/IPR-FAQ-20000620.html#DTD
+[1] https://www.w3.org/Consortium/Legal/copyright-software-19980720
+[2] https://www.w3.org/Consortium/Legal/IPR-FAQ-20000620.html#DTD
 By obtaining, using and/or copying this work, you (the licensee) agree that you have read, understood, and will comply with the following terms and conditions:
 
 Permission to use, copy, modify, and distribute this software and its documentation, with or without modification,  for any purpose and without fee or royalty is hereby granted, provided that you include the following on ALL copies of the software and documentation or portions thereof, including modifications, that you make:
 
 1.  The full text of this NOTICE in a location viewable to users of the redistributed or derivative work.
 
-2.  Any pre-existing intellectual property disclaimers, notices, or terms and conditions. If none exist, a short notice of the following form (hypertext is preferred, text is permitted) should be used within the body of any redistributed or derivative code: "Copyright © 2001 World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/"
+2.  Any pre-existing intellectual property disclaimers, notices, or terms and conditions. If none exist, a short notice of the following form (hypertext is preferred, text is permitted) should be used within the body of any redistributed or derivative code: "Copyright © 2001 World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. https://www.w3.org/Consortium/Legal/"
 
 3.  Notice of any changes or modifications to the W3C files, including the date changes were made. (We recommend you provide URIs to the location from which the code is derived.)
 
-Original W3C files; http://www.w3.org/2001/06/soap-envelope
+Original W3C files; https://www.w3.org/2001/06/soap-envelope
 Changes made:
      - reverted namespace to http://schemas.xmlsoap.org/soap/envelope/
      - reverted mustUnderstand to only allow 0 and 1 as lexical values

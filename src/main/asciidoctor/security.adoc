@@ -19,13 +19,13 @@ NOTE: Note that WS-Security (especially encryption and signing) requires substan
 [[security-xws-security-interceptor]]
 == `XwsSecurityInterceptor`
 
-The `XwsSecurityInterceptor` is an `EndpointInterceptor` (see <<server-endpoint-interceptor>>) that is based on SUN's XML and Web Services Security package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack (http://java.sun.com/webservices/[_Java WSDP_]).
+The `XwsSecurityInterceptor` is an `EndpointInterceptor` (see <<server-endpoint-interceptor>>) that is based on SUN's XML and Web Services Security package (XWSS). This WS-Security implementation is part of the Java Web Services Developer Pack (https://java.sun.com/webservices/[_Java WSDP_]).
 
 Like any other endpoint interceptor, it is defined in the endpoint mapping (see <<server-endpoint-mapping>>). This means that you can be selective about adding WS-Security support: some endpoint mappings require it, while others do not.
 
 NOTE: Note that XWSS requires both a SUN 1.5 JDK and the SUN SAAJ reference implementation. The WSS4J interceptor does not have these requirements (see <<security-wss4j-security-interceptor>>).
 
-The `XwsSecurityInterceptor` requires a *security policy file* to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP messages, and what aspects to add to outgoing messages. The basic format of the policy file will be explained in the following sections, but you can find a more in-depth tutorial http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887[_here_]. You can set the policy with the `policyConfiguration` property, which requires a Spring resource. The policy file can contain multiple elements, e.g. require a username token on incoming messages, and sign all outgoing messages. It contains a `SecurityConfiguration` element as root (not a `JAXRPCSecurity` element).
+The `XwsSecurityInterceptor` requires a *security policy file* to operate. This XML file tells the interceptor what security aspects to require from incoming SOAP messages, and what aspects to add to outgoing messages. The basic format of the policy file will be explained in the following sections, but you can find a more in-depth tutorial https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp564887[_here_]. You can set the policy with the `policyConfiguration` property, which requires a Spring resource. The policy file can contain multiple elements, e.g. require a username token on incoming messages, and sign all outgoing messages. It contains a `SecurityConfiguration` element as root (not a `JAXRPCSecurity` element).
 
 Additionally, the security interceptor requires one or more`CallbackHandler`s to operate. These handlers are used to retrieve certificates, private keys, validate user credentials, etc. Spring-WS offers handlers for most common security concerns, e.g. authenticating against a Spring Security authentication manager, signing outgoing messages based on a X509 certificate. The following sections will indicate what callback handler to use for which security concern. You can set the callback handlers using the `callbackHandler` or `callbackHandlers` property.
 
@@ -66,7 +66,7 @@ The `java.security.KeyStore` class represents a storage facility for cryptograph
 
 ==== KeyTool
 
-Supplied with your Java Virtual Machine is the *keytool* program, a key and certificate management utility. You can use this tool to create new keystores, add new private keys and certificates to them, etc. It is beyond the scope of this document to provide a full reference of the *keytool* command, but you can find a reference http://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html[_here_] , or by giving the command `keytool -help` on the command line.
+Supplied with your Java Virtual Machine is the *keytool* program, a key and certificate management utility. You can use this tool to create new keystores, add new private keys and certificates to them, etc. It is beyond the scope of this document to provide a full reference of the *keytool* command, but you can find a reference https://java.sun.com/j2se/1.5.0/docs/tooldocs/windows/keytool.html[_here_] , or by giving the command `keytool -help` on the command line.
 
 ==== KeyStoreFactoryBean
 
@@ -163,7 +163,7 @@ The simplest form of username authentication uses*plain text passwords*. In this
 
 WARNING: Note that plain text passwords are not very secure. Therefore, you should always add additional security measures to your transport layer if you are using them (using HTTPS instead of plain HTTP, for instance).
 
-To require that every incoming message contains a `UsernameToken` with a plain text password, the security policy file should contain a `RequireUsernameToken` element, with the `passwordDigestRequired` attribute set to`false`. You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459[_here_].
+To require that every incoming message contains a `UsernameToken` with a plain text password, the security policy file should contain a `RequireUsernameToken` element, with the `passwordDigestRequired` attribute set to`false`. You can find a reference of possible child elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459[_here_].
 
 [source,xml]
 ----
@@ -197,7 +197,7 @@ In this case, we are only allowing the user "Bert" to log in using the password 
 
 ===== SpringPlainTextPasswordValidationCallbackHandler
 
-The `SpringPlainTextPasswordValidationCallbackHandler` uses http://project.spring.io/spring-security[_Spring Security_] to authenticate users. It is beyond the scope of this document to describe Spring Security, but suffice it to say that it is a full-fledged security framework. You can read more about it in the https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/[_Spring Security reference documentation_].
+The `SpringPlainTextPasswordValidationCallbackHandler` uses https://project.spring.io/spring-security[_Spring Security_] to authenticate users. It is beyond the scope of this document to describe Spring Security, but suffice it to say that it is a full-fledged security framework. You can read more about it in the https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/[_Spring Security reference documentation_].
 
 The `SpringPlainTextPasswordValidationCallbackHandler` requires an `AuthenticationManager` to operate. It uses this manager to authenticate against a `UsernamePasswordAuthenticationToken` that it creates. If authentication is successful, the token is stored in the `SecurityContextHolder`. You can set the authentication manager using the `authenticationManager`property:
 
@@ -224,7 +224,7 @@ The `SpringPlainTextPasswordValidationCallbackHandler` requires an `Authenticati
 
 ===== JaasPlainTextPasswordValidationCallbackHandler
 
-The `JaasPlainTextPasswordValidationCallbackHandler` is based on the standard http://java.sun.com/products/jaas/[_Java Authentication and Authorization Service_]. It is beyond the scope of this document to provide a full introduction into JAAS, but there is a http://www.javaworld.com/javaworld/jw-09-2002/jw-0913-jaas.html[_good tutorial_] available.
+The `JaasPlainTextPasswordValidationCallbackHandler` is based on the standard https://java.sun.com/products/jaas/[_Java Authentication and Authorization Service_]. It is beyond the scope of this document to provide a full introduction into JAAS, but there is a https://www.javaworld.com/javaworld/jw-09-2002/jw-0913-jaas.html[_good tutorial_] available.
 
 The `JaasPlainTextPasswordValidationCallbackHandler` requires only a `loginContextName` to operate. It creates a new JAAS `LoginContext` using this name, and handles the standard JAAS `NameCallback` and `PasswordCallback` using the username and password provided in the SOAP message. This means that this callback handler integrates with any JAAS `LoginModule` that fires these callbacks during the `login()` phase, which is standard behavior.
 
@@ -244,7 +244,7 @@ In this case, the callback handler uses the `LoginContext` named "MyLoginModule"
 
 When using password digests, the SOAP message also contains a `UsernameToken` element, which itself contains a `Username` element and a `Password` element. The difference is that the password is not sent as plain text, but as a *digest*. The recipient compares this digest to the digest he calculated from the known password of the user, and if they are the same, the user is authenticated. It can be compared to the Digest Authentication provided by HTTP servers.
 
-To require that every incoming message contains a `UsernameToken` element with a password digest, the security policy file should contain a `RequireUsernameToken` element, with the `passwordDigestRequired` attribute set to`true`. Additionally, the `nonceRequired` should be set to`true`: You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459[_here_].
+To require that every incoming message contains a `UsernameToken` element with a password digest, the security policy file should contain a `RequireUsernameToken` element, with the `passwordDigestRequired` attribute set to`true`. Additionally, the `nonceRequired` should be set to`true`: You can find a reference of possible child elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp567459[_here_].
 
 [source,xml]
 ----
@@ -282,7 +282,7 @@ The `SpringDigestPasswordValidationCallbackHandler` requires an Spring Security 
 
 A more secure way of authentication uses X509 certificates. In this scenerario, the SOAP message contains a`BinarySecurityToken`, which contains a Base 64-encoded version of a X509 certificate. The certificate is used by the recipient to authenticate. The certificate stored in the message is also used to sign the message (see <<security-verifying-signatures>>).
 
-To make sure that all incoming SOAP messages carry a`BinarySecurityToken`, the security policy file should contain a `RequireSignature` element. This element can further carry other elements, which will be covered in <<security-verifying-signatures>>. You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769[_here_].
+To make sure that all incoming SOAP messages carry a`BinarySecurityToken`, the security policy file should contain a `RequireSignature` element. This element can further carry other elements, which will be covered in <<security-verifying-signatures>>. You can find a reference of possible child elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769[_here_].
 
 [source,xml]
 ----
@@ -375,7 +375,7 @@ The `SpringCertificateValidationCallbackHandler` requires an Spring Security `Au
 </beans>
 ----
 
-In this case, we are using a custom user details service to obtain authentication details based on the certificate. Refer to the http://www.springframework.org/security[_Spring Security reference documentation_] for more information about authentication against X509 certificates.
+In this case, we are using a custom user details service to obtain authentication details based on the certificate. Refer to the https://www.springframework.org/security[_Spring Security reference documentation_] for more information about authentication against X509 certificates.
 
 ===== JaasCertificateValidationCallbackHandler
 
@@ -402,7 +402,7 @@ The *digital signature* of a message is a piece of information based on both the
 
 Just like <<security-certificate-authentication,certificate-based authentication>>, a signed message contains a `BinarySecurityToken`, which contains the certificate used to sign the message. Additionally, it contains a `SignedInfo` block, which indicates what part of the message was signed.
 
-To make sure that all incoming SOAP messages carry a`BinarySecurityToken`, the security policy file should contain a `RequireSignature` element. It can also contain a `SignatureTarget` element, which specifies the target message part which was expected to be signed, and various other subelements. You can also define the private key alias to use, whether to use a symmetric instead of a private key, and many other properties. You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769[_here_].
+To make sure that all incoming SOAP messages carry a`BinarySecurityToken`, the security policy file should contain a `RequireSignature` element. It can also contain a `SignatureTarget` element, which specifies the target message part which was expected to be signed, and various other subelements. You can also define the private key alias to use, whether to use a symmetric instead of a private key, and many other properties. You can find a reference of possible child elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769[_here_].
 
 [source,xml]
 ----
@@ -435,7 +435,7 @@ As described in <<security-key-store-callback-handler>>, the `KeyStoreCallbackHa
 
 When signing a message, the `XwsSecurityInterceptor` adds the `BinarySecurityToken` to the message, and a `SignedInfo` block, which indicates what part of the message was signed.
 
-To sign all outgoing SOAP messages, the security policy file should contain a `Sign` element. It can also contain a `SignatureTarget` element, which specifies the target message part which was expected to be signed, and various other subelements. You can also define the private key alias to use, whether to use a symmetric instead of a private key, and many other properties. You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565497[_here_].
+To sign all outgoing SOAP messages, the security policy file should contain a `Sign` element. It can also contain a `SignatureTarget` element, which specifies the target message part which was expected to be signed, and various other subelements. You can also define the private key alias to use, whether to use a symmetric instead of a private key, and many other properties. You can find a reference of possible child elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565497[_here_].
 
 [source,xml]
 ----
@@ -471,7 +471,7 @@ When *encrypting*, the message is transformed into a form that can only be read 
 
 ==== Decryption
 
-To decrypt incoming SOAP messages, the security policy file should contain a `RequireEncryption` element. This element can further carry a `EncryptionTarget` element which indicates which part of the message should be encrypted, and a `SymmetricKey` to indicate that a shared secret instead of the regular private key should be used to decrypt the message. You can read a description of the other elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951[_here_].
+To decrypt incoming SOAP messages, the security policy file should contain a `RequireEncryption` element. This element can further carry a `EncryptionTarget` element which indicates which part of the message should be encrypted, and a `SymmetricKey` to indicate that a shared secret instead of the regular private key should be used to decrypt the message. You can read a description of the other elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951[_here_].
 
 [source,xml]
 ----
@@ -503,7 +503,7 @@ As described in <<security-key-store-callback-handler>>, the `KeyStoreCallbackHa
 
 ==== Encryption
 
-To encrypt outgoing SOAP messages, the security policy file should contain a `Encrypt` element. This element can further carry a `EncryptionTarget` element which indicates which part of the message should be encrypted, and a `SymmetricKey` to indicate that a shared secret instead of the regular public key should be used to encrypt the message. You can read a description of the other elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951[_here_].
+To encrypt outgoing SOAP messages, the security policy file should contain a `Encrypt` element. This element can further carry a `EncryptionTarget` element which indicates which part of the message should be encrypted, and a `SymmetricKey` to indicate that a shared secret instead of the regular public key should be used to encrypt the message. You can read a description of the other elements https://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565951[_here_].
 
 [source,xml]
 ----
@@ -958,9 +958,9 @@ If the `EmbeddedKeyName` type is chosen, you need to specify the *secret key* to
 </bean>
 ----
 
-The `securementEncryptionKeyTransportAlgorithm` property defines which algorithm to use to encrypt the generated symmetric key. Supported values are `http://www.w3.org/2001/04/xmlenc#rsa-1_5`, which is the default, and `http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p`.
+The `securementEncryptionKeyTransportAlgorithm` property defines which algorithm to use to encrypt the generated symmetric key. Supported values are `https://www.w3.org/2001/04/xmlenc#rsa-1_5`, which is the default, and `https://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p`.
 
-The symmetric encryption algorithm to use can be set via the `securementEncryptionSymAlgorithm` property. Supported values are `http://www.w3.org/2001/04/xmlenc#aes128-cbc` (default value), `http://www.w3.org/2001/04/xmlenc#tripledes-cbc`, `http://www.w3.org/2001/04/xmlenc#aes256-cbc`, `http://www.w3.org/2001/04/xmlenc#aes192-cbc`.
+The symmetric encryption algorithm to use can be set via the `securementEncryptionSymAlgorithm` property. Supported values are `https://www.w3.org/2001/04/xmlenc#aes128-cbc` (default value), `https://www.w3.org/2001/04/xmlenc#tripledes-cbc`, `https://www.w3.org/2001/04/xmlenc#aes256-cbc`, `https://www.w3.org/2001/04/xmlenc#aes192-cbc`.
 
 Finally, the `securementEncryptionParts` property defines which parts of the message will be encrypted. The value of this property is a list of semi-colon separated element names that identify the elements to encrypt. An encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede each element name. The encryption mode specifier is either `{Content}` or `{Element}` footnote:[Please refer to the W3C XML Encryption specification about the differences between Element and Content encryption.] . The following example identifies the `echoResponse` from the echo sample:
 

@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses <a href="http://jakarta.apache.org/commons/httpclient">Jakarta
+ * {@code WebServiceMessageSender} implementation that uses <a href="https://jakarta.apache.org/commons/httpclient">Jakarta
  * Commons HttpClient</a> to execute POST requests.
  *
  * <p>Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
@@ -156,7 +156,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
 	 * <pre>
 	 * https://www.example.com=1
-	 * http://www.example.com:8080=7
+	 * https://www.example.com:8080=7
 	 * www.springframework.org=10
 	 * *=5
 	 * </pre>

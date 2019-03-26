@@ -53,7 +53,7 @@ public class ResponseCreatorsTest {
 
 	@Test
 	public void withPayloadSource() throws Exception {
-		String payload = "<payload xmlns='http://springframework.org'/>";
+		String payload = "<payload xmlns='https://springframework.org'/>";
 		ResponseCreator responseCreator = ResponseCreators.withPayload(new StringSource(payload));
 
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
@@ -64,7 +64,7 @@ public class ResponseCreatorsTest {
 
 	@Test
 	public void withPayloadResource() throws Exception {
-		String payload = "<payload xmlns='http://springframework.org'/>";
+		String payload = "<payload xmlns='https://springframework.org'/>";
 		ResponseCreator responseCreator =
 				ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes("UTF-8")));
 
@@ -78,8 +78,8 @@ public class ResponseCreatorsTest {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
-		xmlBuilder.append("<soap:Header><header xmlns='http://springframework.org'/></soap:Header>");
-		xmlBuilder.append("<soap:Body><payload xmlns='http://springframework.org'/></soap:Body>");
+		xmlBuilder.append("<soap:Header><header xmlns='https://springframework.org'/></soap:Header>");
+		xmlBuilder.append("<soap:Body><payload xmlns='https://springframework.org'/></soap:Body>");
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new StringSource(envelope));
@@ -92,8 +92,8 @@ public class ResponseCreatorsTest {
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
-		xmlBuilder.append("<soap:Header><header xmlns='http://springframework.org'/></soap:Header>");
-		xmlBuilder.append("<soap:Body><payload xmlns='http://springframework.org'/></soap:Body>");
+		xmlBuilder.append("<soap:Header><header xmlns='https://springframework.org'/></soap:Header>");
+		xmlBuilder.append("<soap:Body><payload xmlns='https://springframework.org'/></soap:Body>");
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new ByteArrayResource(envelope.getBytes("UTF-8")));

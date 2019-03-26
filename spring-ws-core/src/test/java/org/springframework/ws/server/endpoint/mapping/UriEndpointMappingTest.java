@@ -71,7 +71,7 @@ public class UriEndpointMappingTest {
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
 
-		URI uri = new URI("http://example.com/foo/bar");
+		URI uri = new URI("https://example.com/foo/bar");
 		expect(connectionMock.getUri()).andReturn(uri);
 
 		replay(connectionMock);
@@ -83,7 +83,7 @@ public class UriEndpointMappingTest {
 
 	@Test
 	public void testValidateLookupKey() throws Exception {
-		Assert.assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
+		Assert.assertTrue("URI not valid", mapping.validateLookupKey("https://example.com/services"));
 		Assert.assertFalse("URI not valid", mapping.validateLookupKey("some string"));
 	}
 }

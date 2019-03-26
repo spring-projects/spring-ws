@@ -53,7 +53,7 @@ public class CommonsHttpMessageSenderIntegrationTest extends AbstractHttpWebServ
 		messageSender.setMaxTotalConnections(2);
 		Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
 		maxConnectionsPerHost.put("https://www.example.com", "1");
-		maxConnectionsPerHost.put("http://www.example.com:8080", "7");
+		maxConnectionsPerHost.put("https://www.example.com:8080", "7");
 		maxConnectionsPerHost.put("www.springframework.org", "10");
 		maxConnectionsPerHost.put("*", "5");
 		messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);

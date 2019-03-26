@@ -186,7 +186,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		URI messageId = new URI("uid:1234");
 		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
-		URI uri = new URI("http://example.com/business/client1");
+		URI uri = new URI("https://example.com/business/client1");
 		expect(senderMock.supports(uri)).andReturn(true);
 		expect(senderMock.createConnection(uri)).andReturn(connectionMock);
 		connectionMock.send(response);

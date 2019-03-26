@@ -122,7 +122,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		String result = adapter.transformLocation(oldLocation, request);
 		Assert.assertNotNull("No result", result);
-		Assert.assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
+		Assert.assertEquals("Invalid result", new URI("https://example.com:8080/context/service"), new URI(result));
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		String result = adapter.transformLocation(oldLocation, request);
 		Assert.assertNotNull("No result", result);
-		Assert.assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
+		Assert.assertEquals("Invalid result", new URI("https://example.com:8080/service"), new URI(result));
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		String result = adapter.transformLocation(oldLocation, request);
 		Assert.assertNotNull("No result", result);
-		Assert.assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
+		Assert.assertEquals("Invalid result", new URI("https://example.com:8080/context/service"), new URI(result));
 	}
 
 	@Test
@@ -165,7 +165,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		String result = adapter.transformLocation(oldLocation, request);
 		Assert.assertNotNull("No result", result);
-		Assert.assertEquals("Invalid result", new URI("http://example.com:8080/service"), new URI(result));
+		Assert.assertEquals("Invalid result", new URI("https://example.com:8080/service"), new URI(result));
 	}
 
 	@Test
