@@ -1,4 +1,4 @@
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tru="http://fabrikam123.com/payloads">
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tru="https://fabrikam123.com/payloads">
     <SOAP-ENV:Header>
     	<tru:DummyHeader/>
     </SOAP-ENV:Header>

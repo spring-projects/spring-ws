@@ -1,10 +1,10 @@
-<S:Envelope xmlns:S="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+<S:Envelope xmlns:S="https://www.w3.org/2003/05/soap-envelope" xmlns:wsa="https://www.w3.org/2005/08/addressing">
     <S:Header>
-        <wsa:Action>http://example.com/fabrikam/mail/Delete</wsa:Action>
-        <wsa:MessageID>http://example.com/someuniquestring</wsa:MessageID>
+        <wsa:Action>https://example.com/fabrikam/mail/Delete</wsa:Action>
+        <wsa:MessageID>https://example.com/someuniquestring</wsa:MessageID>
     </S:Header>
     <S:Body>
-        <f:Delete xmlns:f="http://example.com/fabrikam">
+        <f:Delete xmlns:f="https://example.com/fabrikam">
             <f:maxCount>42</f:maxCount>
         </f:Delete>
     </S:Body>

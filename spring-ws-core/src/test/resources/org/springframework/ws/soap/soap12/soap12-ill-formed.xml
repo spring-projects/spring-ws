@@ -1,6 +1,6 @@
-<env:Envelope xmlns:env='http://www.w3.org/2003/05/soap-envelope'>
+<env:Envelope xmlns:env='https://www.w3.org/2003/05/soap-envelope'>
     <env:Body>
-        <m:alert xmlns:m='http://example.org/alert'>
+        <m:alert xmlns:m='https://example.org/alert'>
             <m:msg>Pick up Mary at school at 2pm
         </m:alert>
     </env:Body>

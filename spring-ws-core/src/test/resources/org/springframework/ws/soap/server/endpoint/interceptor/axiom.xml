@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
     <soapenv:Body>
-        <GetMetadataKeysResponse xmlns="http://codex.corp.obade.com/codex/schemas">
+        <GetMetadataKeysResponse xmlns="https://codex.corp.obade.com/codex/schemas">
             <metadatakeylist>
                 <metadatakey>
                     <id>1319</id>

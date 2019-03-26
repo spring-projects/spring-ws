@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Body>
-        <m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>
+        <m:GetLastTradePrice xmlns:m='https://www.springframework.org/spring-ws'>
             <symbol>DIS</symbol>
         </m:GetLastTradePrice>
     </SOAP-ENV:Body>

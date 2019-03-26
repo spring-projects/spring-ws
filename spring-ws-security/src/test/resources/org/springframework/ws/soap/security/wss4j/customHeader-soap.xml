@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
     <SOAP-ENV:Header>
-        <header1 xmlns="http://test">test1</header1>
+        <header1 xmlns="https://test">test1</header1>
     </SOAP-ENV:Header>
     <SOAP-ENV:Body>
-        <tru:StockSymbol xmlns:tru="http://fabrikam123.com/payloads">QQQ</tru:StockSymbol>
+        <tru:StockSymbol xmlns:tru="https://fabrikam123.com/payloads">QQQ</tru:StockSymbol>
     </SOAP-ENV:Body>
 </SOAP-ENV:Envelope>

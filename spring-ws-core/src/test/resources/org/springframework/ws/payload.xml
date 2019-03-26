@@ -1,4 +1,4 @@
-<root xmlns="http://www.springframework.org/spring-ws" xmlns:attr="http://www.springframework.org/spring-ws/attr"
+<root xmlns="https://www.springframework.org/spring-ws" xmlns:attr="https://www.springframework.org/spring-ws/attr"
       attr:attribute="value">
-    <prefix:child xmlns:prefix="http://www.springframework.org/spring-ws/child"/>
+    <prefix:child xmlns:prefix="https://www.springframework.org/spring-ws/child"/>
 </root>

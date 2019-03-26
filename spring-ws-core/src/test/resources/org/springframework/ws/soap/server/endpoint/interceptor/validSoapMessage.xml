@@ -1,8 +1,8 @@
-<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="http://springws.cas.de">
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns2="https://springws.cas.de">
     <SOAP-ENV:Header/>
     <SOAP-ENV:Body>
         <ns2:createDataTypesResponse>
-            <ns2:casDataType xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:AddressDataType">
+            <ns2:casDataType xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:type="ns2:AddressDataType">
                 <ns2:key>123</ns2:key>
                 <ns2:firstName>Fritz</ns2:firstName>
                 <ns2:lastName>Meier</ns2:lastName>

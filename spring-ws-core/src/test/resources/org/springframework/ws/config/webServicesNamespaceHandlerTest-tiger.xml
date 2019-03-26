@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:sws="http://www.springframework.org/schema/web-services" xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-       http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd">
+<beans xmlns="https://www.springframework.org/schema/beans" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="https://www.springframework.org/schema/tx"
+       xmlns:sws="https://www.springframework.org/schema/web-services" xsi:schemaLocation="
+       https://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       https://www.springframework.org/schema/web-services https://www.springframework.org/schema/web-services/web-services-1.5.xsd">
 
     <sws:marshalling-endpoints/>
 
     <bean id="marshaller" class="org.springframework.ws.config.DummyMarshaller"/>
 
     <sws:xpath-endpoints>
-        <sws:namespace prefix="sws" uri="http://www.springframework.org/spring-ws"/>
+        <sws:namespace prefix="sws" uri="https://www.springframework.org/spring-ws"/>
     </sws:xpath-endpoints>
 
 </beans>
