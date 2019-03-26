@@ -4,13 +4,13 @@
     <S:Header>
         <wsa:MessageID>uuid:aaaabbbb-cccc-dddd-eeee-ffffffffffff</wsa:MessageID>
         <wsa:ReplyTo>
-            <wsa:Address>http://example.com/business/client1</wsa:Address>
+            <wsa:Address>https://example.com/business/client1</wsa:Address>
         </wsa:ReplyTo>
         <wsa:FaultTo>
             <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
         </wsa:FaultTo>
         <wsa:To S:mustUnderstand="true">mailto:joe@fabrikam123.example</wsa:To>
-        <wsa:Action>http://fabrikam123.example/mail/Delete</wsa:Action>
+        <wsa:Action>https://fabrikam123.example/mail/Delete</wsa:Action>
     </S:Header>
     <S:Body>
         <f123:Delete>

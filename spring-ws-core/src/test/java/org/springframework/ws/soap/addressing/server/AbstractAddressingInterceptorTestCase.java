@@ -20,6 +20,9 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -32,12 +35,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
@@ -186,7 +185,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 		URI messageId = new URI("uid:1234");
 		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
-		URI uri = new URI("http://example.com/business/client1");
+		URI uri = new URI("https://example.com/business/client1");
 		expect(senderMock.supports(uri)).andReturn(true);
 		expect(senderMock.createConnection(uri)).andReturn(connectionMock);
 		connectionMock.send(response);

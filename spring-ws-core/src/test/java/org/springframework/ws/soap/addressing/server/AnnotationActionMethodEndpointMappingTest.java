@@ -16,9 +16,17 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import java.io.IOException;
+import java.io.InputStream;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
+
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -31,13 +39,6 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
@@ -97,7 +98,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 	@Address("mailto:joe@fabrikam123.example")
 	private static class MyEndpoint {
 
-		@Action("http://fabrikam123.example/mail/Delete")
+		@Action("https://fabrikam123.example/mail/Delete")
 		public void doIt() {
 
 		}

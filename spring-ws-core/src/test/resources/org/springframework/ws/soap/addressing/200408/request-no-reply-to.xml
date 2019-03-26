@@ -7,7 +7,7 @@
         <wsa:From>
             <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
         </wsa:From>
-        <wsa:Action>http://fabrikam123.example/mail/Delete</wsa:Action>
+        <wsa:Action>https://fabrikam123.example/mail/Delete</wsa:Action>
     </S:Header>
     <S:Body>
         <f123:Delete>
