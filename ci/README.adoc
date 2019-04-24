@@ -27,7 +27,7 @@ WARNING: Do NOT check this file into source control! If you'll check, `credentia
 With this in place, run the following `fly` commands to create pipelines:
 
 ----
-% fly -t spring-team sp -p spring-ws -c ci/pipeline-template.yml -l credentials.yml -v branch=master -v release-branch=release
+% fly -t spring-team sp -p spring-ws -c ci/pipeline-template.yml -l credentials.yml -v branch=master
 ----
 
 With these pipelines in place, you can now activate and expose them:
@@ -40,15 +40,55 @@ With these pipelines in place, you can now activate and expose them:
 === Making a release
 
 1. Create a new release (on the main branch).
++
 ----
 % ci/create-release.sh <release version> <next snapshot version>
 ----
-
-2. With the release tagged, push the tagged version to the release branch.
++
+2. With the release officially tagged, just push it to master.
++
 ----
-% git checkout -b release
-% git reset --hard <tag>
-% git push -f origin release
+% git push
 ----
 
-NOTE: You can chain the previous set of commands together using `&&`.
+The pipeline will pick up the next tag and release it. It will also build a new snapshot and stage it on artifactory.
+
+
+=== Running CI tasks locally
+
+Since Concourse is built on top of Docker, it's easy to:
+
+* Debug what went wrong on your local machine.
+* Test out a a tweak to your `test.sh` script before sending it out.
+* Experiment against a new image before submitting your pull request.
+
+All of these use cases are great reasons to essentially run what Concourse does on your local machine.
+
+IMPORTANT: To do this you must have Docker installed on your machine.
+
+1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github openjdk:8-jdk /bin/bash`
++
+This will launch the Docker image and mount your source code at `spring-ws-github`.
++
+Next, run the `test.sh` script from inside the container:
++
+2. `PROFILE=none spring-ws-github/ci/test.sh`
+
+Since the container is binding to your source, you can make edits from your IDE and continue to run build jobs.
+
+If you need to test the `build.sh` script, then do this:
+
+1. `mkdir /tmp/spring-ws-artifactory`
+2. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github --mount type=bind,source="/tmp/spring-ws-artifactory",target=/spring-ws-artifactory openjdk:8-jdk /bin/bash`
++
+This will launch the Docker image and mount your source code at `spring-ws-github` and the temporary
+artifactory output directory at `spring-ws-artifactory`.
++
+Next, run the `build.sh` script from inside the container:
++
+3. `spring-ws-github/ci/build.sh`
+
+IMPORTANT: `build.sh` doesn't actually push to Artifactory so don't worry about accidentally deploying anything.
+It just deploys to a local folder. That way, the `artifactory-resource` later in the pipeline can pick up these artifacts
+and deliver them to artifactory.
+
