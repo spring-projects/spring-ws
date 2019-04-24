@@ -21,39 +21,39 @@ Check the matrix below to see the status of supported versions:
 | Job | `3.0` status | `2.x` status
 
 | Test - JDK 8
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%208/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk8/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%208/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Test - JDK 8 and Spring.NEXT
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%208%20and%20Spring.NEXT/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk8-spring-next/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%208%20and%20Spring.NEXT/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
-| Test - JDK 8 and Spring snapshots
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%208%20and%20Spring%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| Test - JDK 8 and Spring.NEXT snapshots
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk8-spring-next-snapshots/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%208%20and%20Spring%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
-| Test - JDK 8 and Spring.NEXT snapshots
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%208%20and%20Spring.NEXT%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| Test - JDK 8 and Spring snapshots
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk8-snapshots/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%208%20and%20Spring.NEXT%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Test - JDK 11
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%2011/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk11/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%2011/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Test - JDK 11 and Spring.NEXT
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%2011%20and%20Spring.NEXT/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk11-spring-next/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%2011%20and%20Spring.NEXT/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Test - JDK 11 and Spring snapshots
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%2011%20and%20Spring%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk11-snapshots/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%2011%20and%20Spring%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Test - JDK 11 and Spring.NEXT snapshots
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Test%20-%20JDK%2011%20and%20Spring.NEXT%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/spring-ws-test-jdk11-spring-next-snapshots/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Test%20-%20JDK%2011%20and%20Spring.NEXT%20(snapshots)/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 
 | Build - Release to repo.spring.io
-| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/Build/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
+| image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws/jobs/build/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws"]
 | image:https://ci.spring.io/api/v1/teams/spring-team/pipelines/spring-ws-2.x/jobs/Build/badge[link="https://ci.spring.io/teams/spring-team/pipelines/spring-ws-2.x"]
 |===
 
