@@ -1,49 +1,53 @@
 ---
 resource_types:
 - name: artifactory-resource
-  type: docker-image
+  type: registry-image
   source:
     repository: springio/artifactory-resource
-    tag:        0.0.4
+    tag:        0.0.6
 
 - name: github-status
-  type: docker-image
+  type: registry-image
   source:
     repository: dpb587/github-status-resource
     tag:        master
 
 - name: pull-request
-  type: docker-image
+  type: registry-image
   source:
     repository: jtarchie/pr
     tag:        latest
 
 - name: slack-notification
-  type: docker-image
+  type: registry-image
   source:
     repository: nebhale/slack-notification-resource
 
 resources:
 - name: openjdk:8-jdk
-  type: docker-image
+  type: registry-image
+  icon: docker
   source:
     repository: openjdk
     tag:        8-jdk
 
 - name: openjdk:11-jdk
-  type: docker-image
+  type: registry-image
+  icon: docker
   source:
     repository: openjdk
     tag:        11-jdk
 
 - name: spring-ws-github
   type: git
+  icon: github-circle
   source:
     uri: https://github.com/spring-projects/spring-ws.git
     branch: ((branch))
 
 - name: spring-ws-artifactory
   type: artifactory-resource
+  icon: package-variant
   source:
     uri: https://repo.spring.io
     username: ((artifactory-username))
@@ -52,6 +56,7 @@ resources:
 
 - name: spring-ws-pull-requests
   type: pull-request
+  icon: source-pull
   source:
     access_token: ((github-access-token))
     repo: spring-projects/spring-ws
@@ -59,12 +64,14 @@ resources:
 
 - name: spring-ws-release
   type: git
+  icon: github-circle
   source:
     uri: https://github.com/spring-projects/spring-ws.git
-    branch: ((release-branch))
+    tag_filter: v*
 
 - name: spring-ws-status
   type: github-status
+  icon: eye-check
   source:
     access_token: ((github-access-token))
     repository:   spring-projects/spring-ws
@@ -72,21 +79,22 @@ resources:
 
 - name: slack
   type: slack-notification
+  icon: slack
   source:
     url: ((slack))
     
 groups:
 - name: spring-ws
   jobs:
-  - Test - JDK 8
-  - Test - JDK 8 and Spring.NEXT
-  - Test - JDK 8 and Spring.NEXT (snapshots)
-  - Test - JDK 8 and Spring (snapshots)
-  - Test - JDK 11
-  - Test - JDK 11 and Spring.NEXT
-  - Test - JDK 11 and Spring.NEXT (snapshots)
-  - Test - JDK 11 and Spring (snapshots)
-  - Build
+  - spring-ws-test-jdk8
+  - spring-ws-test-jdk8-spring-next
+  - spring-ws-test-jdk8-spring-next-snapshots
+  - spring-ws-test-jdk8-snapshots
+  - spring-ws-test-jdk11
+  - spring-ws-test-jdk11-spring-next
+  - spring-ws-test-jdk11-spring-next-snapshots
+  - spring-ws-test-jdk11-snapshots
+  - build
 - name: pull-requests
   jobs:
   - spring-ws-pull-requests
@@ -97,7 +105,7 @@ groups:
   - sync-to-maven-central
 
 jobs:
-- name: Test - JDK 8
+- name: spring-ws-test-jdk8
   serial: true
   public: true
   plan:
@@ -108,10 +116,26 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 8 and Spring.NEXT
+- name: spring-ws-test-jdk8-spring-next
   serial: true
   public: true
   plan:
@@ -122,10 +146,26 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 8 and Spring.NEXT (snapshots)
+- name: spring-ws-test-jdk8-spring-next-snapshots
   serial: true
   public: true
   plan:
@@ -136,10 +176,26 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 8 and Spring (snapshots)
+- name: spring-ws-test-jdk8-snapshots
   serial: true
   public: true
   plan:
@@ -150,10 +206,26 @@ jobs:
   - task: test
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "spring-buildsnapshot,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 11
+- name: spring-ws-test-jdk11
   serial: true
   public: true
   plan:
@@ -165,10 +237,26 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "distribute,java11,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 11 and Spring.NEXT
+- name: spring-ws-test-jdk11-spring-next
   serial: true
   public: true
   plan:
@@ -180,10 +268,26 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext,java11,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 11 and Spring.NEXT (snapshots)
+- name: spring-ws-test-jdk11-spring-next-snapshots
   serial: true
   public: true
   plan:
@@ -195,10 +299,26 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Test - JDK 11 and Spring (snapshots)
+- name: spring-ws-test-jdk11-snapshots
   serial: true
   public: true
   plan:
@@ -210,24 +330,40 @@ jobs:
     image: openjdk:11-jdk
     file: spring-ws-github/ci/test.yml
     params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
-  <<: *slack-test-failure
-  <<: *slack-test-success
+  on_failure:
+    put: slack
+    params:
+      attachments:
+        - color: danger
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has failed"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  on_success:
+    put: slack
+    params:
+      attachments:
+        - color: good
+          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
+          text: "Test has succeeded"
+          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
+          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
-- name: Build
+- name: build
   serial: true
   public: true
   plan:
   - get: spring-ws-github
     trigger: true
     passed: [
-      Test - JDK 8,
-      Test - JDK 8 and Spring.NEXT,
-      Test - JDK 8 and Spring.NEXT (snapshots),
-      Test - JDK 8 and Spring (snapshots),
-      Test - JDK 11,
-      Test - JDK 11 and Spring.NEXT,
-      Test - JDK 11 and Spring.NEXT (snapshots),
-      Test - JDK 11 and Spring (snapshots)
+      spring-ws-test-jdk8,
+      spring-ws-test-jdk8-spring-next,
+      spring-ws-test-jdk8-spring-next-snapshots,
+      spring-ws-test-jdk8-snapshots,
+      spring-ws-test-jdk11,
+      spring-ws-test-jdk11-spring-next,
+      spring-ws-test-jdk11-spring-next-snapshots,
+      spring-ws-test-jdk11-snapshots
     ]
   - put: spring-ws-status
     params:
@@ -260,7 +396,7 @@ jobs:
         attachments:
           - color: danger
             fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-            text: "Build has failed"
+            text: "build has failed"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   on_success:
@@ -274,7 +410,7 @@ jobs:
         attachments:
           - color: good
             fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-            text: "Build has succeeded!"
+            text: "build has succeeded!"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
@@ -291,31 +427,31 @@ jobs:
       path: spring-ws-github
       status: pending
   - aggregate:
-    - task: test (JDK 8)
+    - task: test-jdk8
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "distribute,convergence" }
-    - task: test (JDK 8 and Spring.NEXT)
+    - task: test-jdk8-spring-next
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext,convergence" }
-    - task: test (JDK 8 and Spring.NEXT snapshots)
+    - task: test-jdk8-spring-next-snapshots
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext-buildsnapshot,convergence" }
-    - task: test (JDK 8 and Spring snapshots)
+    - task: test-jdk8-snapshots
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "spring-buildsnapshot,convergence" }
-    - task: test (JDK 11)
+    - task: test-jdk11
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "distribute,java11,convergence" }
-    - task: test (JDK 11 and Spring.NEXT)
+    - task: test-jdk11-spring-next
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext,java11,convergence" }
-    - task: test (JDK 11 and Spring.NEXT snapshots)
+    - task: test-jdk11-spring-next-snapshots
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "springnext-buildsnapshot,java11,convergence" }
-    - task: test (JDK 11 and Spring snapshots)
+    - task: test-jdk11-snapshots
       image: openjdk:11-jdk
       file: spring-ws-github/ci/test.yml
       params: { PROFILE: "spring-buildsnapshot,java11,convergence" }
@@ -330,7 +466,7 @@ jobs:
         attachments:
           - color: danger
             fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-            text: "Build has failed"
+            text: "build has failed"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   on_success:
@@ -344,7 +480,7 @@ jobs:
         attachments:
           - color: good
             fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <SUCCESS>"
-            text: "Build has succeeded!"
+            text: "build has succeeded!"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
 
@@ -495,28 +631,3 @@ jobs:
             text: "Syncing to maven central has succeeded!"
             title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
             title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-
-
-slack-test-success: &slack-test-success
-  on_success:
-    put: slack
-    params:
-      attachments:
-        - color: good
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Test has succeeded"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-
-slack-test-failure: &slack-test-failure
-  on_failure:
-    put: slack
-    params:
-      attachments:
-        - color: danger
-          fallback: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME <FAILURE>"
-          text: "Test has failed"
-          title: "$BUILD_PIPELINE_NAME/$BUILD_JOB_NAME #$BUILD_NAME"
-          title_link: $ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-
-
