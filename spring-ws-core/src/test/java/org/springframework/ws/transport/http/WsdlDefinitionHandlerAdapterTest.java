@@ -244,4 +244,43 @@ public class WsdlDefinitionHandlerAdapterTest {
 
 		XmlAssert.assertThat(resultingDocument).and(expectedDocument).ignoreWhitespace().areIdentical();
 	}
+
+	@Test
+	public void handlesForwardedHeadersInRequest() {
+
+		// given
+		request.setScheme("http");
+		request.setServerName("example.com");
+		request.setServerPort(80);
+		request.setContextPath("/context");
+		request.setPathInfo("/service.wsdl");
+
+		request.addHeader("X-Forwarded-Proto", "https");
+		request.addHeader("X-Forwarded-Host", "loadbalancer.com");
+		request.addHeader("X-Forwarded-Port", "8080");
+
+		// when
+		String result = adapter.transformLocation("/service", request);
+
+		// then
+		assertThat(URI.create("https://loadbalancer.com:8080/context/service")).isEqualTo(URI.create(result));
+	}
+
+	@Test
+	public void handlesNoForwardedHeadersInRequest() {
+
+		// given
+		request.setScheme("http");
+		request.setServerName("example.com");
+		request.setServerPort(80);
+		request.setContextPath("/context");
+		request.setPathInfo("/service.wsdl");
+
+		// when
+		String result = adapter.transformLocation("/service", request);
+
+		// then
+		assertThat(URI.create("http://example.com:80/context/service")).isEqualTo(URI.create(result));
+	}
+
 }
