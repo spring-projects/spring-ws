@@ -391,25 +391,40 @@
 		</profile>
 
 		<profile>
-			<id>gpg</id>
-
-			<properties>
-				<gpg.useagent>true</gpg.useagent>
-			</properties>
+			<id>snapshot</id>
 
 			<build>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.6</version>
+						<groupId>org.jfrog.buildinfo</groupId>
+						<artifactId>artifactory-maven-plugin</artifactId>
+						<version>2.6.1</version>
+						<inherited>false</inherited>
 						<executions>
 							<execution>
-								<id>sign-artifact</id>
-								<phase>verify</phase>
+								<id>build-info</id>
 								<goals>
-									<goal>sign</goal>
+									<goal>publish</goal>
 								</goals>
+								<configuration>
+									<buildInfo>
+										<buildUrl>{{BUILD_URL}}</buildUrl>
+									</buildInfo>
+									<deployProperties>
+										<zip.name>spring-ws</zip.name>
+										<zip.displayname>spring-ws</zip.displayname>
+										<zip.deployed>false</zip.deployed>
+										<zip.type>docs</zip.type>
+										<archives>*:*:*:*@zip</archives>
+									</deployProperties>
+									<publisher>
+										<contextUrl>https://repo.spring.io</contextUrl>
+										<username>{{ARTIFACTORY_USR}}</username>
+										<password>{{ARTIFACTORY_PSW}}</password>
+										<repoKey>libs-snapshot-local</repoKey>
+										<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+									</publisher>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
@@ -434,15 +449,22 @@
 									<goal>publish</goal>
 								</goals>
 								<configuration>
+									<buildInfo>
+										<buildUrl>{{BUILD_URL}}</buildUrl>
+									</buildInfo>
 									<deployProperties>
-										<archives>*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false</archives>
+										<zip.name>spring-ws</zip.name>
+										<zip.displayname>spring-ws</zip.displayname>
+										<zip.deployed>false</zip.deployed>
+										<zip.type>docs</zip.type>
+										<archives>*:*:*:*@zip</archives>
 									</deployProperties>
 									<publisher>
 										<contextUrl>https://repo.spring.io</contextUrl>
-										<username>{{USERNAME}}</username>
-										<password>{{PASSWORD}}</password>
+										<username>{{ARTIFACTORY_USR}}</username>
+										<password>{{ARTIFACTORY_PSW}}</password>
 										<repoKey>libs-milestone-local</repoKey>
-										<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+										<snapshotRepoKey>libs-milestone-local</snapshotRepoKey>
 									</publisher>
 								</configuration>
 							</execution>
@@ -469,15 +491,22 @@
 									<goal>publish</goal>
 								</goals>
 								<configuration>
+									<buildInfo>
+										<buildUrl>{{BUILD_URL}}</buildUrl>
+									</buildInfo>
 									<deployProperties>
-										<archives>*:*:*:*@zip zip.name:spring-ws, zip.displayname:Spring Web Services, zip.deployed:false</archives>
+										<zip.name>spring-ws</zip.name>
+										<zip.displayname>spring-ws</zip.displayname>
+										<zip.deployed>false</zip.deployed>
+										<zip.type>docs</zip.type>
+										<archives>*:*:*:*@zip</archives>
 									</deployProperties>
 									<publisher>
 										<contextUrl>https://repo.spring.io</contextUrl>
-										<username>{{USERNAME}}</username>
-										<password>{{PASSWORD}}</password>
+										<username>{{ARTIFACTORY_USR}}</username>
+										<password>{{ARTIFACTORY_PSW}}</password>
 										<repoKey>libs-release-local</repoKey>
-										<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+										<snapshotRepoKey>libs-release-local</snapshotRepoKey>
 									</publisher>
 								</configuration>
 							</execution>
@@ -681,12 +710,12 @@
 				<dependency>
 					<groupId>com.sun.xml.ws</groupId>
 					<artifactId>jaxws-ri</artifactId>
-					<version>2.3.0</version>
+					<version>2.3.2</version>
 					<type>pom</type>
 					<exclusions>
 						<exclusion>
-							<groupId>org.codehaus.woodstox</groupId>
-							<artifactId>woodstox-core-asl</artifactId>
+							<groupId>com.fasterxml.woodstox</groupId>
+							<artifactId>woodstox-core</artifactId>
 						</exclusion>
 						<exclusion>
 							<groupId>org.jvnet.staxex</groupId>
@@ -695,6 +724,10 @@
 						<exclusion>
 							<groupId>com.sun.xml.messaging.saaj</groupId>
 							<artifactId>saaj-impl</artifactId>
+						</exclusion>
+						<exclusion>
+							<groupId>org.jvnet.mimepull</groupId>
+							<artifactId>mimepull</artifactId>
 						</exclusion>
 					</exclusions>
 				</dependency>
