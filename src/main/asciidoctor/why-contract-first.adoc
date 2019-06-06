@@ -137,7 +137,7 @@ Besides the Object/XML Mapping issues mentioned in the previous section, there a
 
 As mentioned earlier, the contract-last development style results in your web service contract (WSDL and your XSD) being generated from your Java contract (usually an interface). If you are using  this approach, you will have no guarantee that the contract stays constant over time. Each time you change your Java contract and redeploy it, there might be subsequent changes to the web service contract.
 
-Aditionally, not all SOAP stacks generate the same web service contract from a Java contract. This means changing your current SOAP stack for a different one (for whatever reason), might also change your web service contract.
+Additionally, not all SOAP stacks generate the same web service contract from a Java contract. This means changing your current SOAP stack for a different one (for whatever reason), might also change your web service contract.
 
 When a web service contract changes, users of the contract will have to be instructed to obtain the new contract and potentially change their code to accommodate for any changes in the contract.
 
