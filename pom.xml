@@ -116,8 +116,8 @@
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
-		<wss4j.version>2.2.0</wss4j.version>
-		<xmlsec.version>2.1.0</xmlsec.version>
+		<wss4j.version>2.2.3</wss4j.version>
+		<xmlsec.version>2.1.4</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
 		<xmlunit.version>1.5</xmlunit.version>
 		<xws-security.version>3.0</xws-security.version>
