@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.ws</groupId>
 	<artifactId>spring-ws</artifactId>
-	<version>2.4.6.BUILD-SNAPSHOT</version>
+	<version>2.4.6.RELEASE</version>
 	<packaging>pom</packaging>
 
 	<name>Spring Web Services</name>
