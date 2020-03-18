@@ -30,7 +30,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * <ol>
  * <li>Create a {@code MockWebServiceServer} instance by calling {@link #createServer(WebServiceTemplate)},
  * {@link #createServer(WebServiceGatewaySupport)}, or {@link #createServer(ApplicationContext)}.
- * <li>Set up request expectations by calling {@link #expect(RequestMatcher)}, possibly by using the default 
+ * <li>Set up request expectations by calling {@link #expect(RequestMatcher)}, possibly by using the default
  * {@link RequestMatcher} implementations provided in {@link RequestMatchers} (which can be statically imported).
  * Multiple expectations can be set up by chaining {@link ResponseActions#andExpect(RequestMatcher)} calls.</li>
  * <li>Create an appropriate response message by calling
@@ -66,7 +66,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *	 public void createServer() throws Exception {
  *	   <strong>mockServer = MockWebServiceServer.createServer(client)</strong>;
  *	 }
- * 
+ *
  *	 &#064;Test
  *	 public void getCustomerCount() throws Exception {
  *	   Source expectedRequestPayload =
@@ -94,7 +94,7 @@ public class MockWebServiceServer {
 
 	private final MockWebServiceMessageSender mockMessageSender;
 
-	private MockWebServiceServer(MockWebServiceMessageSender mockMessageSender) {
+	public MockWebServiceServer(MockWebServiceMessageSender mockMessageSender) {
 		Assert.notNull(mockMessageSender, "'mockMessageSender' must not be null");
 		this.mockMessageSender = mockMessageSender;
 	}
@@ -172,7 +172,7 @@ public class MockWebServiceServer {
 	public void verify() {
 		mockMessageSender.verifyConnections();
 	}
-	
+
 
 
 
