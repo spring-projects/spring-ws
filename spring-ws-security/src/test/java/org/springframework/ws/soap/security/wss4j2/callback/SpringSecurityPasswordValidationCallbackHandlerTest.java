@@ -112,5 +112,6 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());
 
 		verify(userDetailsService);
+		SecurityContextHolder.clearContext();
 	}
 }
