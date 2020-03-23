@@ -88,6 +88,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
+ * @author Greg Turnquist
  * @since 2.0
  */
 public class MockWebServiceServer {
@@ -165,7 +166,7 @@ public class MockWebServiceServer {
 	}
 
 	/**
-	 * Verifies that all expectations were met.
+	 * Verifies that all of the {@link MockWebServiceMessageSender}'s expectations were met.
 	 *
 	 * @throws AssertionError in case of unmet expectations
 	 */
@@ -173,7 +174,12 @@ public class MockWebServiceServer {
 		mockMessageSender.verifyConnections();
 	}
 
-
+    /**
+     * Reset the {@link MockWebServiceMessageSender}'s expectations.
+     */
+    public void reset() {
+	    mockMessageSender.reset();
+    }
 
 
 }

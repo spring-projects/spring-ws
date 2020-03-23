@@ -31,9 +31,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
+ * @author Greg Turnquist
  * @since 2.0
  */
-class MockWebServiceMessageSender implements WebServiceMessageSender {
+public class MockWebServiceMessageSender implements WebServiceMessageSender {
 
 	private final List<MockSenderConnection> expectedConnections = new LinkedList<MockSenderConnection>();
 
@@ -77,5 +78,10 @@ class MockWebServiceMessageSender implements WebServiceMessageSender {
 			throw new AssertionError("Further connection(s) expected");
 		}
 	}
+
+	void reset() {
+	    expectedConnections.clear();
+	    connectionIterator = null;
+    }
 
 }
