@@ -230,7 +230,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		if (validateResponse) {
 			Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-			if (skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())) {
+			if (skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getResponse())) {
 				return true;
 			}
 			try {
