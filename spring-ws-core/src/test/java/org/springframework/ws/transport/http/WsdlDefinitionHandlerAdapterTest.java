@@ -226,4 +226,42 @@ public class WsdlDefinitionHandlerAdapterTest {
 		assertXMLEqual("Invalid WSDL returned", expectedDocument, resultingDocument);
 	}
 
+  @Test
+  public void handleReverseProxyRequestCheckOn() throws Exception {
+    adapter.setCheckForwardedHeaders(true);  
+		request.setScheme("http");
+		request.setServerName("example.com");
+		request.setServerPort(8080);
+		request.setContextPath("/context");
+		request.setPathInfo("/service.wsdl");
+		request.setRequestURI("/context/service.wsdl");
+    request.addHeader("X-Forwarded-Host", "loadbalancer.com");
+    request.addHeader("X-Forwarded-Proto", "https");
+		String oldLocation = "/service";
+
+		String result = adapter.transformLocation(oldLocation, request);
+		Assert.assertNotNull("No result", result);
+		Assert.assertEquals("Invalid result", new URI("https://loadbalancer.com/context/service"), new URI(result));
+
+  } 
+
+  @Test
+  public void handleReverseProxyRequestCheckOff() throws Exception {
+    adapter.setCheckForwardedHeaders(false);  
+    request.setScheme("http");
+		request.setServerName("example.com");
+		request.setServerPort(8080);
+		request.setContextPath("/context");
+		request.setPathInfo("/service.wsdl");
+		request.setRequestURI("/context/service.wsdl");
+    request.addHeader("X-Forwarded-Host", "loadbalancer.com");
+    request.addHeader("X-Forwarded-Proto", "https");
+		String oldLocation = "/service";
+
+		String result = adapter.transformLocation(oldLocation, request);
+		Assert.assertNotNull("No result", result);
+		Assert.assertEquals("Invalid result", new URI("http://example.com:8080/context/service"), new URI(result));
+
+  }
+
 }

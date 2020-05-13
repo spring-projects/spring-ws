@@ -41,6 +41,9 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 	/** Logger available to subclasses. */
 	private final Log logger = LogFactory.getLog(getClass());
+  private boolean checkForwardedHeaders = false;
+  private String XForwardedHostHeader = "X-Forwarded-Host";
+  private String XForwardedProtoHeader = "X-Forwarded-Proto";
 
 	/**
 	 * Transforms the locations of the given definition document using the given XPath expression.
@@ -86,8 +89,12 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 	 * <p>This method is only called when the {@code transformLocations} property is true.
 	 */
 	protected String transformLocation(String location, HttpServletRequest request) {
-		StringBuilder url = new StringBuilder(request.getScheme());
-		url.append("://").append(request.getServerName()).append(':').append(request.getServerPort());
+		StringBuilder url = new StringBuilder();
+    if (this.checkForwardedHeaders && this.headersValid(request)) {
+      url.append(request.getHeader(this.XForwardedProtoHeader)).append("://").append(request.getHeader(this.XForwardedHostHeader));
+    } else {
+      url.append(request.getScheme()).append("://").append(request.getServerName()).append(':').append(request.getServerPort());
+    }
 		if (location.startsWith("/")) {
 			// a relative path, prepend the context path
 			url.append(request.getContextPath()).append(location);
@@ -108,4 +115,22 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 		// unknown location, return the original
 		return location;
 	}
+
+  /**
+   * Helper to check that the headers exist and aren't empty
+   */
+  private boolean headersValid(HttpServletRequest request) {
+    return request.getHeader(this.XForwardedHostHeader) != null &&
+      !"".equals(request.getHeader(this.XForwardedHostHeader)) &&
+      request.getHeader(this.XForwardedProtoHeader) != null &&
+      !"".equals(request.getHeader(this.XForwardedProtoHeader));
+  }
+
+  /**
+   * Enable checking the X-Forwarded-* headers to build transform the location.
+   * Defaults to {@code false}
+   */
+  public void setCheckForwardedHeaders(boolean check) {
+    this.checkForwardedHeaders = check;
+  }
 }
