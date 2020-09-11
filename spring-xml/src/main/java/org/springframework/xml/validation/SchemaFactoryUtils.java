@@ -49,7 +49,7 @@ public class SchemaFactoryUtils {
 		}
 
 		try {
-			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file,jar:file");
+			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "file,jar:file,wsjar");
 		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by " + schemaFactory.getClass().getCanonicalName());
