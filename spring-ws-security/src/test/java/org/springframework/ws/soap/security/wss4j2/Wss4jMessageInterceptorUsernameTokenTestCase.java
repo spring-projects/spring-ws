@@ -147,6 +147,8 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 		interceptor.setValidationCallbackHandler(callbackHandler);
 		
 		interceptor.setBspCompliant(false);
+
+		interceptor.setAddInclusivePrefixes(false);
 		
 		interceptor.afterPropertiesSet();
 		return interceptor;

@@ -141,6 +141,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private boolean bspCompliant;
 
+	private boolean addInclusivePrefixes;
+
 	private boolean securementUseDerivedKey;
 	
 	private CallbackHandler samlCallbackHandler;
@@ -503,7 +505,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
 		this.bspCompliant = bspCompliant;
 	}
-	
+
+	/**
+	 * Sets whether to add an InclusiveNamespaces PrefixList as a CanonicalizationMethod child
+	 * when generating Signatures using WSConstants.C14N_EXCL_OMIT_COMMENTS. Default is {@code true}.
+	 */
+	public void setAddInclusivePrefixes(boolean addInclusivePrefixes) {
+		this.handler.setOption(WSHandlerConstants.ADD_INCLUSIVE_PREFIXES, addInclusivePrefixes);
+		this.addInclusivePrefixes = addInclusivePrefixes;
+	}
+
 	/**
 	 * Sets whether the RSA 1.5 key transport algorithm is allowed.
 	 */
@@ -643,6 +654,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		if (requestData.getBSPEnforcer() != null) {
 			requestData.getBSPEnforcer().setDisableBSPRules(!bspCompliant);
 		}
+
+		requestData.setAddInclusivePrefixes(addInclusivePrefixes);
+
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
