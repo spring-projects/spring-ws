@@ -26,6 +26,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * Defines the contract for a specific version of the WS-Addressing specification.
  *
  * @author Arjen Poutsma
+ * @author Leandro Quiroga
  * @since 1.5.0
  */
 public interface AddressingVersion {
@@ -63,6 +64,14 @@ public interface AddressingVersion {
 	 *		   been set - also checks for the message id
 	 */
 	boolean hasRequiredProperties(MessageAddressingProperties map);
+
+	
+	/**
+	 * Indicates whether the wsa:To header is REQUIRED or not.
+	 *  
+	 * @return {@code true} if the wsa:To header of the {@link AddressingVersion} is REQUIRED. 
+	 */
+	boolean isToHeaderRequired();
 
 	/*
 	* Address URIs

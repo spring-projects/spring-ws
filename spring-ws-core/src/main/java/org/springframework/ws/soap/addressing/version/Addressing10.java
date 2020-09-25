@@ -29,7 +29,8 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  * Communication Foundation (WCF), and supported by Axis 1 and 2.
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, August 2004</a>
+ * @author Leandro Quiroga
+ * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, May 2006</a>
  * @since 1.5.0
  */
 
@@ -53,6 +54,11 @@ public class Addressing10 extends AbstractAddressingVersion {
 		}
 		return true;
 
+	}
+	
+	@Override
+	public boolean isToHeaderRequired() {
+		return false;
 	}
 
 	@Override

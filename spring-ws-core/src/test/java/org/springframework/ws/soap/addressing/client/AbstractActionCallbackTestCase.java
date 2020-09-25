@@ -78,7 +78,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+		assertXMLEqual("Invalid message", expected, message);
 
 		verify(strategyMock, connectionMock);
 	}
@@ -89,6 +89,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
 		callback = new ActionCallback(action, getVersion());
 		callback.setMessageIdStrategy(strategyMock);
+		callback.setShouldInitializeTo(true);
 		expect(connectionMock.getUri()).andReturn(connectionUri);
 
 		SaajSoapMessage message = createDeleteMessage();
@@ -100,15 +101,37 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+		assertXMLEqual("Invalid message", expected, message);
 		verify(strategyMock, connectionMock);
 	}
+	
+	@Test
+	public void testNotInitializeTo() throws Exception {
+		URI action = new URI("http://example.com/fabrikam/mail/Delete");
+		URI connectionUri = new URI("mailto:fabrikam@example.com");
+		callback = new ActionCallback(action, getVersion());
+		callback.setMessageIdStrategy(strategyMock);
+		expect(connectionMock.getUri()).andReturn(connectionUri).times(0, 1);
+
+		SaajSoapMessage message = createDeleteMessage();
+		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+
+		replay(strategyMock, connectionMock);
+
+		callback.doWithMessage(message);
+
+		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/request-without-shouldInitializeTo.xml");
+		assertXMLEqual("Invalid message", expected, message);
+		verify(strategyMock, connectionMock);
+	}
+
 
 	private SaajSoapMessage createDeleteMessage() throws SOAPException {
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		SOAPBody saajBody = saajMessage.getSOAPBody();
 		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
-		SOAPElement maxCount = delete.addChildElement(new QName("maxCount"));
+		SOAPElement maxCount = delete.addChildElement(new QName("http://example.com/fabrikam", "maxCount"));
 		maxCount.setTextContent("42");
 		return new SaajSoapMessage(saajMessage);
 	}
