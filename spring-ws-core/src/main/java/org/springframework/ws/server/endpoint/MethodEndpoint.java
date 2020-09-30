@@ -26,8 +26,8 @@ import org.springframework.util.ReflectionUtils;
 
 /**
  * Represents a bean method that will be invoked as part of an incoming Web service message.
- *
- * <p>Consists of a {@link Method}, and a bean {@link Object}.
+ * <p>
+ * Consists of a {@link Method}, and a bean {@link Object}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -43,7 +43,7 @@ public final class MethodEndpoint {
 	/**
 	 * Constructs a new method endpoint with the given bean and method.
 	 *
-	 * @param bean	 the object bean
+	 * @param bean the object bean
 	 * @param method the method
 	 */
 	public MethodEndpoint(Object bean, Method method) {
@@ -57,8 +57,8 @@ public final class MethodEndpoint {
 	/**
 	 * Constructs a new method endpoint with the given bean, method name and parameters.
 	 *
-	 * @param bean			 the object bean
-	 * @param methodName	 the method name
+	 * @param bean the object bean
+	 * @param methodName the method name
 	 * @param parameterTypes the method parameter types
 	 * @throws NoSuchMethodException when the method cannot be found
 	 */
@@ -74,9 +74,9 @@ public final class MethodEndpoint {
 	 * Constructs a new method endpoint with the given bean name and method. The bean name will be lazily initialized when
 	 * {@link #invoke(Object...)} is called.
 	 *
-	 * @param beanName	  the bean name
+	 * @param beanName the bean name
 	 * @param beanFactory the bean factory to use for bean initialization
-	 * @param method	  the method
+	 * @param method the method
 	 */
 	public MethodEndpoint(String beanName, BeanFactory beanFactory, Method method) {
 		Assert.hasText(beanName, "'beanName' must not be null");
@@ -94,8 +94,7 @@ public final class MethodEndpoint {
 		if (beanFactory != null && bean instanceof String) {
 			String beanName = (String) bean;
 			return beanFactory.getBean(beanName);
-		}
-		else {
+		} else {
 			return bean;
 		}
 	}
@@ -132,12 +131,10 @@ public final class MethodEndpoint {
 		ReflectionUtils.makeAccessible(method);
 		try {
 			return method.invoke(endpoint, args);
-		}
-		catch (InvocationTargetException ex) {
+		} catch (InvocationTargetException ex) {
 			handleInvocationTargetException(ex);
-			throw new IllegalStateException(
-					"Unexpected exception thrown by method - " + ex.getTargetException().getClass().getName() + ": " +
-							ex.getTargetException().getMessage());
+			throw new IllegalStateException("Unexpected exception thrown by method - "
+					+ ex.getTargetException().getClass().getName() + ": " + ex.getTargetException().getMessage());
 		}
 	}
 

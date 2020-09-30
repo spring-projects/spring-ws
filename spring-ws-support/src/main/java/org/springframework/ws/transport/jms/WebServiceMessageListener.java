@@ -28,10 +28,10 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
  * Spring {@link SessionAwareMessageListener} that can be used to handle incoming {@link Message} service requests.
- *
- * <p>Requires a {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage} into a
- * {@link WebServiceMessage}, and passes that to the {@link WebServiceMessageReceiver} {@link
- * #setMessageReceiver(WebServiceMessageReceiver) registered}.
+ * <p>
+ * Requires a {@link WebServiceMessageFactory} which is used to convert the incoming JMS {@link BytesMessage} into a
+ * {@link WebServiceMessage}, and passes that to the {@link WebServiceMessageReceiver}
+ * {@link #setMessageReceiver(WebServiceMessageReceiver) registered}.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
@@ -44,11 +44,9 @@ public class WebServiceMessageListener extends JmsMessageReceiver implements Ses
 	public void onMessage(Message message, Session session) throws JMSException {
 		try {
 			handleMessage(message, session);
-		}
-		catch (JmsTransportException ex) {
+		} catch (JmsTransportException ex) {
 			throw ex.getJmsException();
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			JMSException jmsException = new JMSException(ex.getMessage());
 			jmsException.setLinkedException(ex);
 			throw jmsException;

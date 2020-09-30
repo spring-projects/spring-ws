@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Service;
@@ -29,11 +30,10 @@ import javax.mail.URLName;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import org.springframework.util.StringUtils;
-import org.springframework.ws.transport.mail.MailTransportConstants;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.transport.mail.MailTransportConstants;
 
 /**
  * Collection of utility methods to work with Mail transports.
@@ -49,8 +49,7 @@ public abstract class MailTransportUtils {
 
 	private static final Log logger = LogFactory.getLog(MailTransportUtils.class);
 
-	private MailTransportUtils() {
-	}
+	private MailTransportUtils() {}
 
 	public static InternetAddress getTo(URI uri) {
 		Matcher matcher = TO_PATTERN.matcher(uri.getSchemeSpecificPart());
@@ -60,8 +59,7 @@ public abstract class MailTransportUtils {
 				if (group != null) {
 					try {
 						return new InternetAddress(group);
-					}
-					catch (AddressException e) {
+					} catch (AddressException e) {
 						// try next group
 					}
 				}
@@ -79,8 +77,8 @@ public abstract class MailTransportUtils {
 	}
 
 	/**
-	 * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally}
-	 * blocks in manual JavaMail code.
+	 * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally} blocks
+	 * in manual JavaMail code.
 	 *
 	 * @param service the JavaMail Service to close (may be {@code null})
 	 * @see Transport
@@ -90,16 +88,15 @@ public abstract class MailTransportUtils {
 		if (service != null) {
 			try {
 				service.close();
-			}
-			catch (MessagingException ex) {
+			} catch (MessagingException ex) {
 				logger.debug("Could not close JavaMail Service", ex);
 			}
 		}
 	}
 
 	/**
-	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
-	 * blocks in manual JavaMail code.
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally} blocks
+	 * in manual JavaMail code.
 	 *
 	 * @param folder the JavaMail Folder to close (may be {@code null})
 	 */
@@ -109,18 +106,17 @@ public abstract class MailTransportUtils {
 	}
 
 	/**
-	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally}
-	 * blocks in manual JavaMail code.
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally} blocks
+	 * in manual JavaMail code.
 	 *
-	 * @param folder  the JavaMail Folder to close (may be {@code null})
+	 * @param folder the JavaMail Folder to close (may be {@code null})
 	 * @param expunge whether all deleted messages should be expunged from the folder
 	 */
 	public static void closeFolder(Folder folder, boolean expunge) {
 		if (folder != null && folder.isOpen()) {
 			try {
 				folder.close(expunge);
-			}
-			catch (MessagingException ex) {
+			} catch (MessagingException ex) {
 				logger.debug("Could not close JavaMail Folder", ex);
 			}
 		}
@@ -171,18 +167,16 @@ public abstract class MailTransportUtils {
 	/**
 	 * Converts the given internet address into a {@code mailto} URI.
 	 *
-	 * @param to	  the To: address
+	 * @param to the To: address
 	 * @param subject the subject, may be {@code null}
 	 * @return a mailto URI
 	 */
 	public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
 		if (StringUtils.hasLength(subject)) {
 			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
-		}
-		else {
+		} else {
 			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress(), null);
 		}
 	}
-
 
 }

@@ -16,15 +16,16 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.easymock.EasyMock.*;
+
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.servlet.http.HttpServletResponse;
 
-import static org.easymock.EasyMock.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -37,11 +38,11 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 public class WebServiceMessageReceiverHandlerAdapterTest {
 
-	private static final String REQUEST = " <SOAP-ENV:Envelope\n" +
-			"  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n" +
-			"  SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n" + "	  <SOAP-ENV:Body>\n" +
-			"		<m:GetLastTradePrice xmlns:m=\"Some-URI\">\n" + "			<symbol>DIS</symbol>\n" +
-			"		</m:GetLastTradePrice>\n" + "	</SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
+	private static final String REQUEST = " <SOAP-ENV:Envelope\n"
+			+ "  xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
+			+ "  SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n" + "	  <SOAP-ENV:Body>\n"
+			+ "		<m:GetLastTradePrice xmlns:m=\"Some-URI\">\n" + "			<symbol>DIS</symbol>\n"
+			+ "		</m:GetLastTradePrice>\n" + "	</SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
 	private WebServiceMessageReceiverHandlerAdapter adapter;
 
@@ -73,8 +74,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
 			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-			}
+			public void receive(MessageContext messageContext) throws Exception {}
 		};
 		adapter.handle(httpRequest, httpResponse, endpoint);
 		Assert.assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED,
@@ -94,14 +94,12 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
 			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-			}
+			public void receive(MessageContext messageContext) throws Exception {}
 		};
 
 		adapter.handle(httpRequest, httpResponse, endpoint);
 
-		Assert.assertEquals("Invalid status code on response", HttpServletResponse.SC_ACCEPTED,
-				httpResponse.getStatus());
+		Assert.assertEquals("Invalid status code on response", HttpServletResponse.SC_ACCEPTED, httpResponse.getStatus());
 		Assert.assertEquals("Response written", 0, httpResponse.getContentAsString().length());
 		verifyMockControls();
 	}
@@ -197,8 +195,7 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
 			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-			}
+			public void receive(MessageContext messageContext) throws Exception {}
 		};
 
 		adapter.handle(httpRequest, httpResponse, endpoint);

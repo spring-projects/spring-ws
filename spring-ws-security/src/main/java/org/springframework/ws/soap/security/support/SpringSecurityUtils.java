@@ -32,6 +32,7 @@ public abstract class SpringSecurityUtils {
 
 	/**
 	 * Checks the validity of a user's account and credentials.
+	 * 
 	 * @param user the user to check
 	 * @throws AccountExpiredException if the account has expired
 	 * @throws CredentialsExpiredException if the credentials have expired

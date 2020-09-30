@@ -17,12 +17,12 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFault;
-
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
@@ -54,8 +54,8 @@ class AxiomSoap11Fault extends AxiomSoapFault implements Soap11Fault {
 	@Override
 	public Locale getFaultStringLocale() {
 		if (getAxiomFault().getReason() != null) {
-			OMAttribute langAttribute =
-					getAxiomFault().getReason().getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
+			OMAttribute langAttribute = getAxiomFault().getReason()
+					.getAttribute(new QName("http://www.w3.org/XML/1998/namespace", "lang"));
 			if (langAttribute != null) {
 				String xmlLangString = langAttribute.getAttributeValue();
 				if (xmlLangString != null) {

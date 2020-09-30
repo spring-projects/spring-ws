@@ -27,10 +27,10 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 /**
  * Abstract base class for WS-Addressing {@code Action}-mapped {@link org.springframework.ws.server.EndpointMapping}
  * implementations. Provides infrastructure for mapping endpoints to actions.
- *
- * <p>By default, this mapping creates a {@code Action} for reply messages based on the request message, plus the
- * extra {@link #setOutputActionSuffix(String) suffix}, and a	* By default, this mapping creates a {@code Action}
- * for reply messages based on the request message, plus the extra {@link #setOutputActionSuffix(String) suffix}.
+ * <p>
+ * By default, this mapping creates a {@code Action} for reply messages based on the request message, plus the extra
+ * {@link #setOutputActionSuffix(String) suffix}, and a * By default, this mapping creates a {@code Action} for reply
+ * messages based on the request message, plus the extra {@link #setOutputActionSuffix(String) suffix}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -49,7 +49,6 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
 	private String faultActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
-
 
 	/** Returns the suffix to add to request {@code Action}s for reply messages. */
 	public String getOutputActionSuffix() {
@@ -98,9 +97,9 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	}
 
 	/**
-	 * Returns the address property of the given endpoint. The value of this property should match the {@link
-	 * MessageAddressingProperties#getTo() destination} of incoming messages. May return {@code null}  to ignore
-	 * the destination.
+	 * Returns the address property of the given endpoint. The value of this property should match the
+	 * {@link MessageAddressingProperties#getTo() destination} of incoming messages. May return {@code null} to ignore the
+	 * destination.
 	 *
 	 * @param endpoint the endpoint to return the address for
 	 * @return the endpoint address; or {@code null} to ignore the destination property
@@ -120,11 +119,10 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	/**
 	 * Register the specified endpoint for the given action URI.
 	 *
-	 * @param action   the action the bean should be mapped to
-	 * @param endpoint the endpoint instance or endpoint bean name String (a bean name will automatically be resolved
-	 *				   into the corresponding endpoint bean)
-	 * @throws org.springframework.beans.BeansException
-	 *								 if the endpoint couldn't be registered
+	 * @param action the action the bean should be mapped to
+	 * @param endpoint the endpoint instance or endpoint bean name String (a bean name will automatically be resolved into
+	 *          the corresponding endpoint bean)
+	 * @throws org.springframework.beans.BeansException if the endpoint couldn't be registered
 	 * @throws IllegalStateException if there is a conflicting endpoint registered
 	 */
 	protected void registerEndpoint(URI action, Object endpoint) throws BeansException, IllegalStateException {
@@ -141,11 +139,10 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		Object mappedEndpoint = this.endpointMap.get(action);
 		if (mappedEndpoint != null) {
 			if (mappedEndpoint != resolvedEndpoint) {
-				throw new IllegalStateException("Cannot map endpoint [" + endpoint + "] to action [" + action +
-						"]: There is already endpoint [" + resolvedEndpoint + "] mapped.");
+				throw new IllegalStateException("Cannot map endpoint [" + endpoint + "] to action [" + action
+						+ "]: There is already endpoint [" + resolvedEndpoint + "] mapped.");
 			}
-		}
-		else {
+		} else {
 			this.endpointMap.put(action, resolvedEndpoint);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Mapped Action [" + action + "] onto endpoint [" + resolvedEndpoint + "]");
@@ -158,8 +155,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
 			return URI.create(requestAction.toString() + getOutputActionSuffix());
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -169,8 +165,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
 			return URI.create(requestAction.toString() + getFaultActionSuffix());
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

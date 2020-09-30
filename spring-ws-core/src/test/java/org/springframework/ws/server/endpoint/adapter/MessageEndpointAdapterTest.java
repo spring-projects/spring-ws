@@ -16,16 +16,15 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import org.springframework.ws.MockWebServiceMessageFactory;
-import org.springframework.ws.context.DefaultMessageContext;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.MessageEndpoint;
+import static org.easymock.EasyMock.*;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
 
 public class MessageEndpointAdapterTest {
 
@@ -56,7 +55,5 @@ public class MessageEndpointAdapterTest {
 
 		verify(endpointMock);
 	}
-
-
 
 }

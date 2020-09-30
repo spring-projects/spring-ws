@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Node;
 import javax.xml.soap.SOAPException;
@@ -58,9 +59,9 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole) throws SoapHeaderException {
-		Iterator<SOAPHeaderElement> iterator =
-				getSaajHeader().examineMustUnderstandHeaderElements(actorOrRole);
+	public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String actorOrRole)
+			throws SoapHeaderException {
+		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineMustUnderstandHeaderElements(actorOrRole);
 		return new SaajSoapHeaderElementIterator(iterator);
 	}
 
@@ -69,8 +70,7 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
 		try {
 			SOAPHeaderElement headerElement = getSaajHeader().addHeaderElement(name);
 			return new SaajSoapHeaderElement(headerElement);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapHeaderException(ex);
 		}
 	}

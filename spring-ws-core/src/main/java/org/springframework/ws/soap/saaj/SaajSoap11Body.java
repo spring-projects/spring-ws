@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPException;
@@ -63,14 +64,12 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 			SOAPFault result;
 			if (faultStringLocale == null) {
 				result = body.addFault(faultCode, faultString);
-			}
-			else {
+			} else {
 				result = body.addFault(faultCode, faultString, faultStringLocale);
 			}
 			SOAPFault saajFault = result;
 			return new SaajSoap11Fault(saajFault);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

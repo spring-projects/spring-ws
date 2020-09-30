@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.security.xwss;
 
+import static org.junit.Assert.*;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Ignore;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
@@ -44,16 +44,14 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
 				if (callback instanceof EncryptionKeyCallback) {
 					EncryptionKeyCallback keyCallback = (EncryptionKeyCallback) callback;
 					if (keyCallback.getRequest() instanceof EncryptionKeyCallback.AliasX509CertificateRequest) {
-						EncryptionKeyCallback.AliasX509CertificateRequest request =
-								(EncryptionKeyCallback.AliasX509CertificateRequest) keyCallback.getRequest();
+						EncryptionKeyCallback.AliasX509CertificateRequest request = (EncryptionKeyCallback.AliasX509CertificateRequest) keyCallback
+								.getRequest();
 						assertEquals("Invalid alias", "", request.getAlias());
 						request.setX509Certificate(certificate);
-					}
-					else {
+					} else {
 						fail("Unexpected request");
 					}
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}
@@ -66,8 +64,8 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
 		assertNotNull("No result returned", result);
 		assertXpathExists("BinarySecurityToken does not exist",
 				"SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", result);
-		assertXpathExists("Signature does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey", result);
+		assertXpathExists("Signature does not exist", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
+				result);
 	}
 
 	@Test
@@ -81,16 +79,14 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
 				if (callback instanceof EncryptionKeyCallback) {
 					EncryptionKeyCallback keyCallback = (EncryptionKeyCallback) callback;
 					if (keyCallback.getRequest() instanceof EncryptionKeyCallback.AliasX509CertificateRequest) {
-						EncryptionKeyCallback.AliasX509CertificateRequest request =
-								(EncryptionKeyCallback.AliasX509CertificateRequest) keyCallback.getRequest();
+						EncryptionKeyCallback.AliasX509CertificateRequest request = (EncryptionKeyCallback.AliasX509CertificateRequest) keyCallback
+								.getRequest();
 						assertEquals("Invalid alias", "alias", request.getAlias());
 						request.setX509Certificate(certificate);
-					}
-					else {
+					} else {
 						fail("Unexpected request");
 					}
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}
@@ -103,8 +99,8 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
 		assertNotNull("No result returned", result);
 		assertXpathExists("BinarySecurityToken does not exist",
 				"SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", result);
-		assertXpathExists("Signature does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey", result);
+		assertXpathExists("Signature does not exist", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
+				result);
 	}
 
 	@Test
@@ -118,16 +114,14 @@ public class XwssMessageInterceptorEncryptTest extends AbstractXwssMessageInterc
 				if (callback instanceof DecryptionKeyCallback) {
 					DecryptionKeyCallback keyCallback = (DecryptionKeyCallback) callback;
 					if (keyCallback.getRequest() instanceof DecryptionKeyCallback.X509CertificateBasedRequest) {
-						DecryptionKeyCallback.X509CertificateBasedRequest request =
-								(DecryptionKeyCallback.X509CertificateBasedRequest) keyCallback.getRequest();
+						DecryptionKeyCallback.X509CertificateBasedRequest request = (DecryptionKeyCallback.X509CertificateBasedRequest) keyCallback
+								.getRequest();
 						assertEquals("Invalid certificate", certificate, request.getX509Certificate());
 						request.setPrivateKey(privateKey);
-					}
-					else {
+					} else {
 						fail("Unexpected request");
 					}
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}

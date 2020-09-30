@@ -21,8 +21,8 @@ import java.net.URI;
 /**
  * Strategy interface for providing a {@link org.springframework.ws.client.core.WebServiceTemplate} destination URI at
  * runtime.
- *
- * <p>Typically implemented by providers that use WSDL, a UDDI registry, or some other form to determine the destination
+ * <p>
+ * Typically implemented by providers that use WSDL, a UDDI registry, or some other form to determine the destination
  * URI.
  *
  * @author Arjen Poutsma

@@ -18,6 +18,7 @@ package org.springframework.ws;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
@@ -32,8 +33,7 @@ public class MockWebServiceMessageFactory implements WebServiceMessageFactory {
 	public MockWebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
 		try {
 			return new MockWebServiceMessage(new StreamSource(inputStream));
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			throw new IOException(ex.getMessage());
 		}
 	}

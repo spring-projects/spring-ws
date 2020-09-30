@@ -49,7 +49,7 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	/**
 	 * Resolves the given parameter, annotated with {@link RequestPayload}, into a method argument.
 	 *
-	 * @param parameter		 the parameter to resolve to an argument
+	 * @param parameter the parameter to resolve to an argument
 	 * @param requestPayload the request payload
 	 * @return the resolved argument. May be {@code null}.
 	 * @throws Exception in case of errors
@@ -74,7 +74,7 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	/**
 	 * Creates a response payload for the given return value.
 	 *
-	 * @param returnType  the return type to handle
+	 * @param returnType the return type to handle
 	 * @param returnValue the return value to handle
 	 * @return the response payload
 	 * @throws Exception in case of errors

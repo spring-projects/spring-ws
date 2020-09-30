@@ -31,8 +31,7 @@ public abstract class AbstractJaasValidationCallbackHandler extends AbstractCall
 
 	private String loginContextName;
 
-	protected AbstractJaasValidationCallbackHandler() {
-	}
+	protected AbstractJaasValidationCallbackHandler() {}
 
 	/** Returns the login context name. */
 	public String getLoginContextName() {

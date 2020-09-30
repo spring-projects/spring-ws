@@ -38,10 +38,10 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
  * Abstract base class for {@link MethodEndpoint} mappings.
- *
- * <p>Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
- * that qualify as endpoint. The methods of this bean are then registered under a specific key with {@link
- * #registerEndpoint(Object, MethodEndpoint)}.
+ * <p>
+ * Subclasses typically implement {@link org.springframework.beans.factory.config.BeanPostProcessor} to look for beans
+ * that qualify as endpoint. The methods of this bean are then registered under a specific key with
+ * {@link #registerEndpoint(Object, MethodEndpoint)}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -51,8 +51,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	private final Map<T, MethodEndpoint> endpointMap = new HashMap<T, MethodEndpoint>();
 
 	/**
-	 * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete
-	 * subclass.
+	 * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete subclass.
 	 *
 	 * @return the looked up endpoint, or {@code null}
 	 * @see #getLookupKeyForMessage(MessageContext)
@@ -89,15 +88,15 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	/**
 	 * Register the given endpoint instance under the key.
 	 *
-	 * @param key	   the lookup key
+	 * @param key the lookup key
 	 * @param endpoint the method endpoint instance
 	 * @throws BeansException if the endpoint could not be registered
 	 */
 	protected void registerEndpoint(T key, MethodEndpoint endpoint) throws BeansException {
 		Object mappedEndpoint = endpointMap.get(key);
 		if (mappedEndpoint != null) {
-			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key +
-					"]: there's already endpoint [" + mappedEndpoint + "] mapped");
+			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
+					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
 		}
 		if (endpoint == null) {
 			throw new ApplicationContextException("Could not find endpoint for key [" + key + "]");
@@ -109,9 +108,9 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean,
-	 * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
-	 * using {@link #registerEndpoint(Object, MethodEndpoint)}.
+	 * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean, and
+	 * calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered using
+	 * {@link #registerEndpoint(Object, MethodEndpoint)}.
 	 *
 	 * @see #getLookupKeyForMethod(Method)
 	 */
@@ -131,8 +130,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 
 	/**
 	 * Helper method that registers the methods of the given class. This method iterates over the methods of the class,
-	 * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered
-	 * using {@link #registerEndpoint(Object, MethodEndpoint)}.
+	 * and calls {@link #getLookupKeyForMethod(Method)} for each. If this returns a string, the method is registered using
+	 * {@link #registerEndpoint(Object, MethodEndpoint)}.
 	 *
 	 * @see #getLookupKeyForMethod(Method)
 	 * @see #getLookupKeysForMethod(Method)
@@ -141,7 +140,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		Assert.hasText(beanName, "'beanName' must not be empty");
 		Class<?> endpointType = getApplicationContext().getType(beanName);
 		endpointType = ClassUtils.getUserClass(endpointType);
-		
+
 		Set<Method> methods = findEndpointMethods(endpointType, new ReflectionUtils.MethodFilter() {
 			public boolean matches(Method method) {
 				return !getLookupKeysForMethod(method).isEmpty();
@@ -158,7 +157,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	private Set<Method> findEndpointMethods(Class<?> endpointType,
-											final ReflectionUtils.MethodFilter endpointMethodFilter) {
+			final ReflectionUtils.MethodFilter endpointMethodFilter) {
 		final Set<Method> endpointMethods = new LinkedHashSet<Method>();
 		Set<Class<?>> endpointTypes = new LinkedHashSet<Class<?>>();
 		Class<?> specificEndpointType = null;
@@ -173,8 +172,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 				public void doWith(Method method) {
 					Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
 					Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
-					if (endpointMethodFilter.matches(specificMethod) &&
-							(bridgedMethod == specificMethod || !endpointMethodFilter.matches(bridgedMethod))) {
+					if (endpointMethodFilter.matches(specificMethod)
+							&& (bridgedMethod == specificMethod || !endpointMethodFilter.matches(bridgedMethod))) {
 						endpointMethods.add(specificMethod);
 					}
 				}
@@ -184,8 +183,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Returns the endpoint key for the given method. Returns {@code null} if the method is not to be
-	 * registered, which is the default.
+	 * Returns the endpoint key for the given method. Returns {@code null} if the method is not to be registered, which is
+	 * the default.
 	 *
 	 * @param method the method
 	 * @return a registration key, or {@code null} if the method is not to be registered
@@ -196,8 +195,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	}
 
 	/**
-	 * Returns the endpoint keys for the given method. Should return an empty array if the method is not to be
-	 * registered. The default delegates to {@link #getLookupKeysForMethod(Method)}.
+	 * Returns the endpoint keys for the given method. Should return an empty array if the method is not to be registered.
+	 * The default delegates to {@link #getLookupKeysForMethod(Method)}.
 	 *
 	 * @param method the method
 	 * @return a list of registration keys
@@ -205,23 +204,23 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 */
 	protected List<T> getLookupKeysForMethod(Method method) {
 		T key = getLookupKeyForMethod(method);
-		return key != null ? Collections.singletonList(key) : Collections.<T>emptyList();
+		return key != null ? Collections.singletonList(key) : Collections.<T> emptyList();
 	}
 
 	/**
 	 * Return the class or interface to use for method reflection.
-	 *
-	 * <p>Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
+	 * <p>
+	 * Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
 	 *
 	 * @param endpoint the bean instance (might be an AOP proxy)
 	 * @return the bean class to expose
 	 */
 	protected Class<?> getEndpointClass(Object endpoint) {
 		if (AopUtils.isJdkDynamicProxy(endpoint)) {
-			throw new IllegalArgumentException(ClassUtils.getShortName(getClass()) +
-					" does not work with JDK Dynamic Proxies. " +
-					"Please use CGLIB proxies, by setting proxy-target-class=\"true\" on the aop:aspectj-autoproxy " +
-					"or aop:config element.");
+			throw new IllegalArgumentException(
+					ClassUtils.getShortName(getClass()) + " does not work with JDK Dynamic Proxies. "
+							+ "Please use CGLIB proxies, by setting proxy-target-class=\"true\" on the aop:aspectj-autoproxy "
+							+ "or aop:config element.");
 		}
 		return AopUtils.getTargetClass(endpoint);
 	}

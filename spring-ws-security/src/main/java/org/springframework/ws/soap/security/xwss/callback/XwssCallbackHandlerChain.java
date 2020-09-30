@@ -18,15 +18,16 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
+import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
+
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
-
-import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 
 /**
  * Represents a chain of {@code CallbackHandler}s. For each callback, each of the handlers is called in term. If a
@@ -45,14 +46,11 @@ public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
 		if (callback instanceof CertificateValidationCallback) {
 			handleCertificateValidationCallback((CertificateValidationCallback) callback);
-		}
-		else if (callback instanceof PasswordValidationCallback) {
+		} else if (callback instanceof PasswordValidationCallback) {
 			handlePasswordValidationCallback((PasswordValidationCallback) callback);
-		}
-		else if (callback instanceof TimestampValidationCallback) {
+		} else if (callback instanceof TimestampValidationCallback) {
 			handleTimestampValidationCallback((TimestampValidationCallback) callback);
-		}
-		else {
+		} else {
 			super.handleInternal(callback);
 		}
 	}
@@ -83,13 +81,11 @@ public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 			for (int i = 0; i < getCallbackHandlers().length; i++) {
 				CallbackHandler callbackHandler = getCallbackHandlers()[i];
 				try {
-					callbackHandler.handle(new Callback[]{callback});
+					callbackHandler.handle(new Callback[] { callback });
 					callback.getResult();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					throw new TimestampValidationCallback.TimestampValidationException(e);
-				}
-				catch (UnsupportedCallbackException e) {
+				} catch (UnsupportedCallbackException e) {
 					// ignore
 				}
 			}
@@ -111,16 +107,14 @@ public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 			for (int i = 0; i < getCallbackHandlers().length; i++) {
 				CallbackHandler callbackHandler = getCallbackHandlers()[i];
 				try {
-					callbackHandler.handle(new Callback[]{callback});
+					callbackHandler.handle(new Callback[] { callback });
 					allUnsupported = false;
 					if (!callback.getResult()) {
 						return false;
 					}
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					throw new PasswordValidationCallback.PasswordValidationException(e);
-				}
-				catch (UnsupportedCallbackException e) {
+				} catch (UnsupportedCallbackException e) {
 					// ignore
 				}
 			}
@@ -143,16 +137,14 @@ public class XwssCallbackHandlerChain extends CallbackHandlerChain {
 			for (int i = 0; i < getCallbackHandlers().length; i++) {
 				CallbackHandler callbackHandler = getCallbackHandlers()[i];
 				try {
-					callbackHandler.handle(new Callback[]{callback});
+					callbackHandler.handle(new Callback[] { callback });
 					allUnsupported = false;
 					if (!callback.getResult()) {
 						return false;
 					}
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					throw new CertificateValidationCallback.CertificateValidationException(e);
-				}
-				catch (UnsupportedCallbackException e) {
+				} catch (UnsupportedCallbackException e) {
 					// ignore
 				}
 			}

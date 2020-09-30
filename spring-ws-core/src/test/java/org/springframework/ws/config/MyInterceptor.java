@@ -50,6 +50,5 @@ public class MyInterceptor implements EndpointInterceptor {
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
-	}
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {}
 }

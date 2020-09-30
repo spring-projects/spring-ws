@@ -16,14 +16,13 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class XPathPayloadEndpointMappingTest {
 

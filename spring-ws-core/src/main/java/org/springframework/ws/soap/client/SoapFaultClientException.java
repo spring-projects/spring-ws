@@ -58,12 +58,11 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	/**
 	 * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
 	 * fault reason for the default locale.
-	 *
-	 * <p>Note that this message returns the same as {@link #getMessage()}.
+	 * <p>
+	 * Note that this message returns the same as {@link #getMessage()}.
 	 */
 	public String getFaultStringOrReason() {
 		return soapFault != null ? soapFault.getFaultStringOrReason() : null;
 	}
-
 
 }

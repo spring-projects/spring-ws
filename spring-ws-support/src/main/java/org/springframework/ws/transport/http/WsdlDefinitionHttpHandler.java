@@ -18,18 +18,19 @@ package org.springframework.ws.transport.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
-
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
+
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
 /**
  * @author Arjen Poutsma
@@ -41,8 +42,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 
 	private WsdlDefinition definition;
 
-	public WsdlDefinitionHttpHandler() {
-	}
+	public WsdlDefinitionHttpHandler() {}
 
 	public WsdlDefinitionHttpHandler(WsdlDefinition definition) {
 		this.definition = definition;
@@ -68,15 +68,12 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 				byte[] buf = os.toByteArray();
 				httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_OK, buf.length);
 				FileCopyUtils.copy(buf, httpExchange.getResponseBody());
-			}
-			else {
+			} else {
 				httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, -1);
 			}
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			logger.error(ex, ex);
-		}
-		finally {
+		} finally {
 			httpExchange.close();
 		}
 	}

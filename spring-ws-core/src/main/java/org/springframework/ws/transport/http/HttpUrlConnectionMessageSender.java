@@ -26,12 +26,11 @@ import java.time.Duration;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses standard J2SE facilities to
- * execute POST requests, without support for HTTP authentication or advanced
- * configuration options.
- *
- * <p>Consider {@link HttpComponentsMessageSender} for more sophisticated needs: this class
- * is rather limited in its capabilities.
+ * {@code WebServiceMessageSender} implementation that uses standard J2SE facilities to execute POST requests, without
+ * support for HTTP authentication or advanced configuration options.
+ * <p>
+ * Consider {@link HttpComponentsMessageSender} for more sophisticated needs: this class is rather limited in its
+ * capabilities.
  *
  * @author Arjen Poutsma
  * @author Kazuki Shimizu
@@ -71,8 +70,7 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 		URLConnection connection = url.openConnection();
 		if (!(connection instanceof HttpURLConnection)) {
 			throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
-		}
-		else {
+		} else {
 			HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
 			prepareConnection(httpURLConnection);
 			return new HttpUrlConnection(httpURLConnection);
@@ -81,8 +79,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 
 	/**
 	 * Template method for preparing the given {@link java.net.HttpURLConnection}.
-	 *
-	 * <p>The default implementation prepares the connection for input and output, sets the HTTP method to POST, disables
+	 * <p>
+	 * The default implementation prepares the connection for input and output, sets the HTTP method to POST, disables
 	 * caching, and sets the {@code Accept-Encoding} header to gzip, if {@linkplain #setAcceptGzipEncoding(boolean)
 	 * applicable}.
 	 *

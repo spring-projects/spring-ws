@@ -16,18 +16,16 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class PayloadRootSmartSoapEndpointInterceptorTest {
 
@@ -57,8 +55,8 @@ public class PayloadRootSmartSoapEndpointInterceptorTest {
 
 	@Test
 	public void shouldInterceptFullMatch() throws Exception {
-		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, namespaceUri, localPart);
+		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(delegate,
+				namespaceUri, localPart);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertTrue("Interceptor should apply", result);
@@ -66,8 +64,8 @@ public class PayloadRootSmartSoapEndpointInterceptorTest {
 
 	@Test
 	public void shouldInterceptFullNonMatch() throws Exception {
-		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, "http://springframework.org/other", localPart);
+		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(delegate,
+				"http://springframework.org/other", localPart);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertFalse("Interceptor should not apply", result);
@@ -75,17 +73,17 @@ public class PayloadRootSmartSoapEndpointInterceptorTest {
 
 	@Test
 	public void shouldInterceptNamespaceUriMatch() throws Exception {
-		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, namespaceUri, null);
+		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(delegate,
+				namespaceUri, null);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertTrue("Interceptor should apply", result);
 	}
-	
+
 	@Test
 	public void shouldInterceptNamespaceUriNonMatch() throws Exception {
-		PayloadRootSmartSoapEndpointInterceptor interceptor =
-				new PayloadRootSmartSoapEndpointInterceptor(delegate, "http://springframework.org/other", null);
+		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(delegate,
+				"http://springframework.org/other", null);
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertFalse("Interceptor should not apply", result);

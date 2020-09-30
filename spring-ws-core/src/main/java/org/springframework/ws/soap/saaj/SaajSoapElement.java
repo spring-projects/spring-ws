@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -55,8 +56,7 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 	public void addAttribute(QName name, String value) {
 		try {
 			element.addAttribute(name, value);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapElementException(ex);
 		}
 	}
@@ -81,8 +81,7 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 	public void addNamespaceDeclaration(String prefix, String namespaceUri) {
 		try {
 			element.addNamespaceDeclaration(prefix, namespaceUri);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapElementException(ex);
 		}
 	}

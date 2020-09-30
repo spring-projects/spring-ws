@@ -19,6 +19,7 @@ package org.springframework.ws.soap.axiom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -27,7 +28,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.StaxUtils;
@@ -56,8 +56,7 @@ class AxiomSoapElement implements SoapElement {
 	public final QName getName() {
 		try {
 			return axiomElement.getQName();
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -66,8 +65,7 @@ class AxiomSoapElement implements SoapElement {
 	public final Source getSource() {
 		try {
 			return StaxUtils.createCustomStaxSource(axiomElement.getXMLStreamReader());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -80,12 +78,10 @@ class AxiomSoapElement implements SoapElement {
 			if (StringUtils.hasLength(namespaceUri) && !StringUtils.hasLength(prefix)) {
 				prefix = null;
 			}
-			OMNamespace namespace =
-					getAxiomFactory().createOMNamespace(namespaceUri, prefix);
+			OMNamespace namespace = getAxiomFactory().createOMNamespace(namespaceUri, prefix);
 			OMAttribute attribute = getAxiomFactory().createOMAttribute(name.getLocalPart(), namespace, value);
 			getAxiomElement().addAttribute(attribute);
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -97,8 +93,7 @@ class AxiomSoapElement implements SoapElement {
 			if (attribute != null) {
 				getAxiomElement().removeAttribute(attribute);
 			}
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -107,8 +102,7 @@ class AxiomSoapElement implements SoapElement {
 	public final String getAttributeValue(QName name) {
 		try {
 			return getAxiomElement().getAttributeValue(name);
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -123,8 +117,7 @@ class AxiomSoapElement implements SoapElement {
 			}
 			return results.iterator();
 
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}
@@ -134,12 +127,10 @@ class AxiomSoapElement implements SoapElement {
 		try {
 			if (StringUtils.hasLength(prefix)) {
 				getAxiomElement().declareNamespace(namespaceUri, prefix);
-			}
-			else {
+			} else {
 				getAxiomElement().declareDefaultNamespace(namespaceUri);
 			}
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapElementException(ex);
 		}
 	}

@@ -27,14 +27,14 @@ import java.util.Iterator;
 public interface HeadersAwareReceiverWebServiceConnection {
 
 	/**
-	 * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if
-	 * there are no headers.
+	 * Returns an iteration over all the header names this request contains. Returns an empty {@code Iterator} if there
+	 * are no headers.
 	 */
 	Iterator<String> getRequestHeaderNames() throws IOException;
 
 	/**
-	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator}
-	 * if there are no headers of the specified name.
+	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator} if there
+	 * are no headers of the specified name.
 	 */
 	Iterator<String> getRequestHeaders(String name) throws IOException;
 
@@ -42,7 +42,7 @@ public interface HeadersAwareReceiverWebServiceConnection {
 	 * Adds a response header with the given name and value. This method can be called multiple times, to allow for
 	 * headers with multiple values.
 	 *
-	 * @param name	the name of the header
+	 * @param name the name of the header
 	 * @param value the value of the header
 	 */
 	void addResponseHeader(String name, String value) throws IOException;

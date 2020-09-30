@@ -20,14 +20,13 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
-import org.springframework.util.Assert;
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
+import org.springframework.util.Assert;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 
 /**
  * Abstract base class for {@link Payload} implementations.
@@ -55,12 +54,10 @@ abstract class AbstractPayload extends Payload {
 			if (payloadElement != null) {
 				XMLStreamReader streamReader = getStreamReader(payloadElement);
 				return StaxUtils.createCustomStaxSource(streamReader);
-			}
-			else {
+			} else {
 				return null;
 			}
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapBodyException(ex);
 		}
 	}

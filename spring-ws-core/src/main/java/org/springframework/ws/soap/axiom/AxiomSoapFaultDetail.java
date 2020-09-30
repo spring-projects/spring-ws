@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
@@ -24,7 +25,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPFaultDetail;
-
 import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
@@ -45,8 +45,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 		try {
 			OMElement element = getAxiomFactory().createOMElement(name, getAxiomFaultDetail());
 			return new AxiomSoapFaultDetailElement(element, getAxiomFactory());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 
@@ -85,8 +84,7 @@ class AxiomSoapFaultDetail extends AxiomSoapElement implements SoapFaultDetail {
 			try {
 				OMElement axiomElement = axiomIterator.next();
 				return new AxiomSoapFaultDetailElement(axiomElement, getAxiomFactory());
-			}
-			catch (OMException ex) {
+			} catch (OMException ex) {
 				throw new AxiomSoapFaultException(ex);
 			}
 

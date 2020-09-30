@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -25,16 +27,13 @@ import javax.xml.transform.dom.DOMResult;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.w3c.dom.Document;
 
 public class DefaultWsdl11DefinitionTest {
 
@@ -144,6 +143,5 @@ public class DefaultWsdl11DefinitionTest {
 		assertXMLEqual("Invalid WSDL built", expected, result);
 
 	}
-
 
 }

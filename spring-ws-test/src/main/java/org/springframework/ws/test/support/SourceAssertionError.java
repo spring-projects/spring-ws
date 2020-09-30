@@ -30,7 +30,7 @@ import org.springframework.xml.transform.TransformerHelper;
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
- * @since 2.0.1 
+ * @since 2.0.1
  */
 @SuppressWarnings("serial")
 public class SourceAssertionError extends AssertionError {
@@ -52,6 +52,7 @@ public class SourceAssertionError extends AssertionError {
 
 	/**
 	 * Returns the source context of this error.
+	 * 
 	 * @return the source
 	 */
 	public Source getSource() {
@@ -81,8 +82,7 @@ public class SourceAssertionError extends AssertionError {
 				Transformer transformer = createNonIndentingTransformer();
 				transformer.transform(source, result);
 				return result.toString();
-			}
-			catch (TransformerException ex) {
+			} catch (TransformerException ex) {
 				// Ignore
 			}
 		}
@@ -95,6 +95,5 @@ public class SourceAssertionError extends AssertionError {
 		transformer.setOutputProperty(OutputKeys.INDENT, "no");
 		return transformer;
 	}
-
 
 }

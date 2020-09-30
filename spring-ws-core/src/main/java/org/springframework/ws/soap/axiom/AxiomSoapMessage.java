@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.Iterator;
+
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.dom.DOMSource;
@@ -39,8 +40,6 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
-import org.w3c.dom.Document;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
@@ -54,6 +53,7 @@ import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
+import org.w3c.dom.Document;
 
 /**
  * AXIOM-specific implementation of the {@link SoapMessage} interface. Created via the {@link AxiomSoapMessageFactory},
@@ -111,30 +111,25 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	/**
 	 * Create a new {@code AxiomSoapMessage} based on the given AXIOM {@code SOAPMessage}.
 	 *
-	 * @param soapMessage	 the AXIOM SOAPMessage
-	 * @param soapAction	 the value of the SOAP Action header
+	 * @param soapMessage the AXIOM SOAPMessage
+	 * @param soapAction the value of the SOAP Action header
 	 * @param payloadCaching whether the contents of the SOAP body should be cached or not
 	 */
-	public AxiomSoapMessage(SOAPMessage soapMessage,
-							String soapAction,
-							boolean payloadCaching,
-							boolean langAttributeOnSoap11FaultString) {
+	public AxiomSoapMessage(SOAPMessage soapMessage, String soapAction, boolean payloadCaching,
+			boolean langAttributeOnSoap11FaultString) {
 		this(soapMessage, new Attachments(), soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
 	/**
 	 * Create a new {@code AxiomSoapMessage} based on the given AXIOM {@code SOAPMessage} and attachments.
 	 *
-	 * @param soapMessage	 the AXIOM SOAPMessage
-	 * @param attachments	 the attachments
-	 * @param soapAction	 the value of the SOAP Action header
+	 * @param soapMessage the AXIOM SOAPMessage
+	 * @param attachments the attachments
+	 * @param soapAction the value of the SOAP Action header
 	 * @param payloadCaching whether the contents of the SOAP body should be cached or not
 	 */
-	public AxiomSoapMessage(SOAPMessage soapMessage,
-							Attachments attachments,
-							String soapAction,
-							boolean payloadCaching,
-							boolean langAttributeOnSoap11FaultString) {
+	public AxiomSoapMessage(SOAPMessage soapMessage, Attachments attachments, String soapAction, boolean payloadCaching,
+			boolean langAttributeOnSoap11FaultString) {
 		Assert.notNull(soapMessage, "'soapMessage' must not be null");
 		Assert.notNull(attachments, "'attachments' must not be null");
 		axiomMessage = soapMessage;
@@ -155,8 +150,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 
 	/**
 	 * Sets the AXIOM {@code SOAPMessage} that this {@code AxiomSoapMessage} is based on.
-	 *
-	 * <p>Calling this method also clears the SOAP Action property.
+	 * <p>
+	 * Calling this method also clears the SOAP Action property.
 	 */
 	public final void setAxiomMessage(SOAPMessage axiomMessage) {
 		Assert.notNull(axiomMessage, "'axiomMessage' must not be null");
@@ -186,8 +181,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 			try {
 				envelope = new AxiomSoapEnvelope(axiomMessage.getSOAPEnvelope(), axiomFactory, payloadCaching,
 						langAttributeOnSoap11FaultString);
-			}
-			catch (SOAPProcessingException ex) {
+			} catch (SOAPProcessingException ex) {
 				throw new AxiomSoapEnvelopeException(ex);
 			}
 		}
@@ -215,8 +209,8 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 		// save the Soap Action
 		String soapAction = getSoapAction();
 		// replace the Axiom message
-		setAxiomMessage(OMXMLBuilderFactory.createSOAPModelBuilder(axiomFactory.getMetaFactory(),
-				new DOMSource(document)).getSOAPMessage());
+		setAxiomMessage(OMXMLBuilderFactory.createSOAPModelBuilder(axiomFactory.getMetaFactory(), new DOMSource(document))
+				.getSOAPMessage());
 		// restore the Soap Action
 		setSoapAction(soapAction);
 	}
@@ -225,11 +219,9 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	public boolean isXopPackage() {
 		try {
 			return MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			return false;
-		}
-		catch (NullPointerException ex) {
+		} catch (NullPointerException ex) {
 			// gotta love Axis2
 			return false;
 		}
@@ -279,8 +271,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 				if (SoapVersion.SOAP_11 == version) {
 					transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
 					transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
-				}
-				else if (SoapVersion.SOAP_12 == version) {
+				} else if (SoapVersion.SOAP_12 == version) {
 					contentType += "; action=" + soapAction;
 					transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
 				}
@@ -289,21 +280,17 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 			}
 			if (!(outputFormat.isOptimized()) & outputFormat.isDoingSWA()) {
 				writeSwAMessage(outputStream, outputFormat);
-			}
-			else {
+			} else {
 				if (payloadCaching) {
 					axiomMessage.serialize(outputStream, outputFormat);
-				}
-				else {
+				} else {
 					axiomMessage.serializeAndConsume(outputStream, outputFormat);
 				}
 			}
 			outputStream.flush();
-		}
-		catch (XMLStreamException ex) {
+		} catch (XMLStreamException ex) {
 			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
 		}
 	}
@@ -311,8 +298,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	private OMOutputFormat getOutputFormat() {
 		if (outputFormat != null) {
 			return outputFormat;
-		}
-		else {
+		} else {
 			String charsetEncoding = axiomMessage.getCharsetEncoding();
 
 			OMOutputFormat outputFormat = new OMOutputFormat();
@@ -320,8 +306,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 			outputFormat.setSOAP11(getVersion() == SoapVersion.SOAP_11);
 			if (isXopPackage()) {
 				outputFormat.setDoOptimize(true);
-			}
-			else if (!attachments.getContentIDSet().isEmpty()) {
+			} else if (!attachments.getContentIDSet().isEmpty()) {
 				outputFormat.setDoingSWA(true);
 			}
 			return outputFormat;
@@ -334,27 +319,24 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 		SOAPEnvelope envelope = axiomMessage.getSOAPEnvelope();
 		if (payloadCaching) {
 			envelope.serialize(writer, format);
-		}
-		else {
+		} else {
 			envelope.serializeAndConsume(writer, format);
 		}
 
 		try {
 			OMMultipartWriter mpw = new OMMultipartWriter(outputStream, format);
 
-			Writer rootPartWriter = new OutputStreamWriter(mpw.writeRootPart(),
-					format.getCharSetEncoding());
+			Writer rootPartWriter = new OutputStreamWriter(mpw.writeRootPart(), format.getCharSetEncoding());
 			rootPartWriter.write(writer.toString());
 			rootPartWriter.close();
 
 			// Get the collection of ids associated with the attachments
-			for (String id: attachments.getAllContentIDs()) {
+			for (String id : attachments.getAllContentIDs()) {
 				mpw.writePart(attachments.getDataHandler(id), id);
 			}
 
 			mpw.complete();
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new OMException("Error writing SwA message", ex);
 		}
 	}
@@ -374,8 +356,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 						}
 					}
 				}
-			}
-			catch (OMException ex) {
+			} catch (OMException ex) {
 				// ignore
 			}
 		}

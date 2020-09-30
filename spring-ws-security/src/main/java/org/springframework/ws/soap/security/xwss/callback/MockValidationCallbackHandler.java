@@ -18,22 +18,23 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+
+import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
-import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
-
 /**
  * Mock implementation of of callback handler that accepts all password and certificate validation callbacks.
- *
- * <p>If the {@code valid} property is set to {@code true} (the default), this handler simply accepts and
- * validates every password or certificate validation callback that is passed to it.
- *
- * <p>This class handles {@code CertificateValidationCallback}s and {@code PasswordValidationCallback}s, and
- * throws an {@code UnsupportedCallbackException} for others
+ * <p>
+ * If the {@code valid} property is set to {@code true} (the default), this handler simply accepts and validates every
+ * password or certificate validation callback that is passed to it.
+ * <p>
+ * This class handles {@code CertificateValidationCallback}s and {@code PasswordValidationCallback}s, and throws an
+ * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -42,8 +43,7 @@ public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 
 	private boolean isValid = true;
 
-	public MockValidationCallbackHandler() {
-	}
+	public MockValidationCallbackHandler() {}
 
 	public MockValidationCallbackHandler(boolean valid) {
 		isValid = valid;
@@ -54,12 +54,10 @@ public class MockValidationCallbackHandler extends AbstractCallbackHandler {
 		if (callback instanceof CertificateValidationCallback) {
 			CertificateValidationCallback validationCallback = (CertificateValidationCallback) callback;
 			validationCallback.setValidator(new MockCertificateValidator());
-		}
-		else if (callback instanceof PasswordValidationCallback) {
+		} else if (callback instanceof PasswordValidationCallback) {
 			PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
 			validationCallback.setValidator(new MockPasswordValidator());
-		}
-		else {
+		} else {
 			throw new UnsupportedCallbackException(callback);
 		}
 	}

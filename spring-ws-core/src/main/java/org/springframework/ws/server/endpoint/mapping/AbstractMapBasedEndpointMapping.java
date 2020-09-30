@@ -26,10 +26,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Abstract base class for endpoint mapping that are based on a {@code Map}. Provides mappings of application
- * context beans as well as a settable map.
- *
- * <p>Subclasses determine the exact nature of the key in the enpoint map; this can be a qualified name, a SOAP Header, the
+ * Abstract base class for endpoint mapping that are based on a {@code Map}. Provides mappings of application context
+ * beans as well as a settable map.
+ * <p>
+ * Subclasses determine the exact nature of the key in the enpoint map; this can be a qualified name, a SOAP Header, the
  * result of a XPath validation. The values are always endpoint objects, or bean names of endpoint objects.
  *
  * @author Arjen Poutsma
@@ -47,21 +47,21 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	private Map<String, Object> temporaryEndpointMap = new HashMap<String, Object>();
 
 	/**
-	 * Set whether to lazily initialize endpoints. Only applicable to singleton endpoints, as prototypes are always
-	 * lazily initialized. Default is {@code false}, as eager initialization allows for more efficiency through
-	 * referencing the controller objects directly.
-	 *
-	 * <p>If you want to allow your endpoints to be lazily initialized, make them "lazy-init" and set this flag to
-	 * {@code true}. Just making them "lazy-init" will not work, as they are initialized through the references
-	 * from the endpoint mapping in this case.
+	 * Set whether to lazily initialize endpoints. Only applicable to singleton endpoints, as prototypes are always lazily
+	 * initialized. Default is {@code false}, as eager initialization allows for more efficiency through referencing the
+	 * controller objects directly.
+	 * <p>
+	 * If you want to allow your endpoints to be lazily initialized, make them "lazy-init" and set this flag to
+	 * {@code true}. Just making them "lazy-init" will not work, as they are initialized through the references from the
+	 * endpoint mapping in this case.
 	 */
 	public void setLazyInitEndpoints(boolean lazyInitEndpoints) {
 		this.lazyInitEndpoints = lazyInitEndpoints;
 	}
 
 	/**
-	 * Set whether to register bean names found in the application context. Setting this to {@code true} will
-	 * register all beans found in the application context under their name. Default is {@code false}.
+	 * Set whether to register bean names found in the application context. Setting this to {@code true} will register all
+	 * beans found in the application context under their name. Default is {@code false}.
 	 */
 	public final void setRegisterBeanNames(boolean registerBeanNames) {
 		this.registerBeanNames = registerBeanNames;
@@ -78,8 +78,8 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	}
 
 	/**
-	 * Maps keys to endpoint bean names. The nature of the property names depends on the exact subclass used. They can
-	 * be qualified names, for instance, or mime headers.
+	 * Maps keys to endpoint bean names. The nature of the property names depends on the exact subclass used. They can be
+	 * qualified names, for instance, or mime headers.
 	 */
 	public void setMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
@@ -100,8 +100,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	protected abstract String getLookupKeyForMessage(MessageContext messageContext) throws Exception;
 
 	/**
-	 * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete
-	 * subclass.
+	 * Lookup an endpoint for the given message. The extraction of the endpoint key is delegated to the concrete subclass.
 	 *
 	 * @return the looked up endpoint, or {@code null}
 	 */
@@ -130,16 +129,15 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	/**
 	 * Register the given endpoint instance under the registration key.
 	 *
-	 * @param key	   the string representation of the registration key
+	 * @param key the string representation of the registration key
 	 * @param endpoint the endpoint instance
-	 * @throws org.springframework.beans.BeansException
-	 *			if the endpoint could not be registered
+	 * @throws org.springframework.beans.BeansException if the endpoint could not be registered
 	 */
 	protected void registerEndpoint(String key, Object endpoint) throws BeansException {
 		Object mappedEndpoint = endpointMap.get(key);
 		if (mappedEndpoint != null) {
-			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key +
-					"]: there's already endpoint [" + mappedEndpoint + "] mapped");
+			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
+					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
 		}
 		if (!lazyInitEndpoints && endpoint instanceof String) {
 			String endpointName = (String) endpoint;
@@ -156,11 +154,11 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 
 	/**
 	 * Registers annd checks the set endpoints. Checks the beans set through {@code setEndpointMap} and
-	 * {@code setMappings}, and registers the bean names found in the application context, if
-	 * {@code registerBeanNames} is set to {@code true}.
+	 * {@code setMappings}, and registers the bean names found in the application context, if {@code registerBeanNames} is
+	 * set to {@code true}.
 	 *
 	 * @throws ApplicationContextException if either of the endpoints defined via {@code setEndpointMap} or
-	 *									   {@code setMappings} is invalid
+	 *           {@code setMappings} is invalid
 	 * @see #setEndpointMap(java.util.Map)
 	 * @see #setMappings(java.util.Properties)
 	 * @see #setRegisterBeanNames(boolean)

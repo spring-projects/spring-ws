@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.junit.Assert;
@@ -74,9 +75,7 @@ public class SoapFaultDefinitionEditorTest {
 	public void testSetAsTextIllegalArgument() throws Exception {
 		try {
 			editor.setAsText("SOAP-ENV:Server");
-		}
-		catch (IllegalArgumentException ex) {
-		}
+		} catch (IllegalArgumentException ex) {}
 	}
 
 	@Test

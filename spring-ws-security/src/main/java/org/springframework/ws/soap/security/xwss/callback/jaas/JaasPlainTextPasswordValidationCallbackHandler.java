@@ -24,15 +24,15 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
+
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 /**
  * Provides basic support for integrating with JAAS and plain text passwords.
- *
- * <p>This class only handles {@code PasswordValidationCallback}s that contain a
- * {@code PlainTextPasswordRequest}, and throws an {@code UnsupportedCallbackException} for others.
+ * <p>
+ * This class only handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and
+ * throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see #getLoginContextName()
@@ -41,8 +41,8 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
 	/**
-	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
-	 * an {@code UnsupportedCallbackException} for others.
+	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws an
+	 * {@code UnsupportedCallbackException} for others.
 	 *
 	 * @throws UnsupportedCallbackException when the callback is not supported
 	 */
@@ -63,8 +63,7 @@ public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaas
 		@Override
 		public boolean validate(PasswordValidationCallback.Request request)
 				throws PasswordValidationCallback.PasswordValidationException {
-			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
-					(PasswordValidationCallback.PlainTextPasswordRequest) request;
+			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
 
 			final String username = plainTextRequest.getUsername();
 			final String password = plainTextRequest.getPassword();
@@ -77,20 +76,16 @@ public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaas
 					protected void handleInternal(Callback callback) throws UnsupportedCallbackException {
 						if (callback instanceof NameCallback) {
 							((NameCallback) callback).setName(username);
-						}
-						else if (callback instanceof PasswordCallback) {
+						} else if (callback instanceof PasswordCallback) {
 							((PasswordCallback) callback).setPassword(password.toCharArray());
-						}
-						else {
+						} else {
 							throw new UnsupportedCallbackException(callback);
 						}
 					}
 				});
-			}
-			catch (LoginException ex) {
+			} catch (LoginException ex) {
 				throw new PasswordValidationCallback.PasswordValidationException(ex);
-			}
-			catch (SecurityException ex) {
+			} catch (SecurityException ex) {
 				throw new PasswordValidationCallback.PasswordValidationException(ex);
 			}
 
@@ -102,15 +97,13 @@ public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaas
 						logger.debug("Authentication request for user '" + username + "' successful");
 					}
 					return true;
-				}
-				else {
+				} else {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Authentication request for user '" + username + "' failed");
 					}
 					return false;
 				}
-			}
-			catch (LoginException ex) {
+			} catch (LoginException ex) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Authentication request for user '" + username + "' failed");
 				}
@@ -118,7 +111,5 @@ public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaas
 			}
 		}
 
-
 	}
 }
-

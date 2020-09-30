@@ -24,11 +24,11 @@ import org.springframework.ws.server.EndpointInterceptor;
 
 /**
  * Context holder for message requests.
- *
- * <p>Contains both the message request as well as the response. Response message are usually lazily created (but do not
+ * <p>
+ * Contains both the message request as well as the response. Response message are usually lazily created (but do not
  * have to be).
- *
- * <p>Also contains properties, which can be used to by {@link EndpointInterceptor interceptors} to pass information on to
+ * <p>
+ * Also contains properties, which can be used to by {@link EndpointInterceptor interceptors} to pass information on to
  * endpoints.
  *
  * @author Arjen Poutsma
@@ -78,16 +78,16 @@ public interface MessageContext {
 	 * Reads a response message from the given input stream.
 	 *
 	 * @param inputStream the stream to read the response from
-	 * @throws IOException			 in case of I/O errors
+	 * @throws IOException in case of I/O errors
 	 * @throws IllegalStateException if a response has already been created
 	 */
 	void readResponse(InputStream inputStream) throws IOException;
 
 	/**
-	 * Sets the name and value of a property associated with the {@code MessageContext}. If the
-	 * {@code MessageContext} contains a value of the same property, the old value is replaced.
+	 * Sets the name and value of a property associated with the {@code MessageContext}. If the {@code MessageContext}
+	 * contains a value of the same property, the old value is replaced.
 	 *
-	 * @param name	name of the property associated with the value
+	 * @param name name of the property associated with the value
 	 * @param value value of the property
 	 */
 	void setProperty(String name, Object value);

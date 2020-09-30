@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
 

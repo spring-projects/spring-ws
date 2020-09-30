@@ -25,19 +25,21 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods with message contexts. Supports methods with the following signature:
+ * 
  * <pre>
  * void handleMyMessage(MessageContext request);
  * </pre>
- * I.e. methods that take a single {@link MessageContext} parameter, and return {@code void}. The method can have
- * any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
- *
- * <p>This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
+ * 
+ * I.e. methods that take a single {@link MessageContext} parameter, and return {@code void}. The method can have any
+ * name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
+ * <p>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
- * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *			   org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver
- *			   MessageContextMethodArgumentResolver}.
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and
+ *             {@link org.springframework.ws.server.endpoint.adapter.method.MessageContextMethodArgumentResolver
+ *             MessageContextMethodArgumentResolver}.
  */
 @Deprecated
 public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
@@ -45,8 +47,8 @@ public class MessageMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
 	@Override
 	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
 		Method method = methodEndpoint.getMethod();
-		return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1 &&
-				MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
+		return Void.TYPE.isAssignableFrom(method.getReturnType()) && method.getParameterTypes().length == 1
+				&& MessageContext.class.isAssignableFrom(method.getParameterTypes()[0]);
 	}
 
 	@Override

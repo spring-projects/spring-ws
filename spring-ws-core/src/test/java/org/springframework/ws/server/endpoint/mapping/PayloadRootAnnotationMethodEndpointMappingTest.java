@@ -16,18 +16,19 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
 import java.util.Collections;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 
 import org.apache.commons.logging.LogFactory;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,13 +50,11 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
-public class PayloadRootAnnotationMethodEndpointMappingTest	 {
+public class PayloadRootAnnotationMethodEndpointMappingTest {
 
-	@Autowired
-	private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-	@Autowired
-	private ApplicationContext applicationContext;
+	@Autowired private ApplicationContext applicationContext;
 
 	@Test
 	public void registrationSingle() throws NoSuchMethodException {
@@ -106,15 +105,15 @@ public class PayloadRootAnnotationMethodEndpointMappingTest	 {
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage request = messageFactory.createMessage();
 		request.getSOAPBody().addBodyElement(QName.valueOf("{http://springframework.org/spring-ws}Request"));
-		MessageContext messageContext =
-				new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+		MessageContext messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
+				new SaajSoapMessageFactory(messageFactory));
 		DefaultMethodEndpointAdapter adapter = new DefaultMethodEndpointAdapter();
 		adapter.afterPropertiesSet();
 
 		MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
 		messageDispatcher.setApplicationContext(applicationContext);
-		messageDispatcher.setEndpointMappings(Collections.<EndpointMapping>singletonList(mapping));
-		messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter>singletonList(adapter));
+		messageDispatcher.setEndpointMappings(Collections.<EndpointMapping> singletonList(mapping));
+		messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter> singletonList(adapter));
 
 		messageDispatcher.receive(messageContext);
 
@@ -143,17 +142,12 @@ public class PayloadRootAnnotationMethodEndpointMappingTest	 {
 			logger.info("In doIt()");
 		}
 
-		@PayloadRoots({@PayloadRoot(localPart = "Request1",
-				namespace = "http://springframework.org/spring-ws"),
-				@PayloadRoot(localPart = "Request2",
-						namespace = "http://springframework.org/spring-ws")})
-		public void doItMultiple() {
-		}
+		@PayloadRoots({ @PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
+				@PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws") })
+		public void doItMultiple() {}
 
-		@PayloadRoot(localPart = "Request3",
-				namespace = "http://springframework.org/spring-ws")
-		@PayloadRoot(localPart = "Request4",
-				namespace = "http://springframework.org/spring-ws")
+		@PayloadRoot(localPart = "Request3", namespace = "http://springframework.org/spring-ws")
+		@PayloadRoot(localPart = "Request4", namespace = "http://springframework.org/spring-ws")
 		public void doItRepeatable() {
 
 		}

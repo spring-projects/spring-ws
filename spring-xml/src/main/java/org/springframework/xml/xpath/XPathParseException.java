@@ -35,10 +35,9 @@ public class XPathParseException extends XPathException {
 	}
 
 	/**
-	 * Constructs a new instance of the {@code XPathParseException} with the specific detail message and
-	 * exception.
+	 * Constructs a new instance of the {@code XPathParseException} with the specific detail message and exception.
 	 *
-	 * @param message	the detail message
+	 * @param message the detail message
 	 * @param throwable the wrapped exception
 	 */
 	public XPathParseException(String message, Throwable throwable) {

@@ -20,9 +20,9 @@ import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Strategy interface used to handle method return values. This interface is used to allow the {@link
- * org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter DefaultMethodEndpointAdapter} to be
- * indefinitely extensible.
+ * Strategy interface used to handle method return values. This interface is used to allow the
+ * {@link org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter DefaultMethodEndpointAdapter} to
+ * be indefinitely extensible.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -41,14 +41,13 @@ public interface MethodReturnValueHandler {
 	 * Handles the given return value.
 	 *
 	 * @param messageContext the current message context
-	 * @param returnType	 the return type to handle. This type must have previously been passed to the {@link
-	 *						 #supportsReturnType(MethodParameter)} method of this interface, which must have returned
-	 *						 {@code true}.
-	 * @param returnValue	 the return value to handle
+	 * @param returnType the return type to handle. This type must have previously been passed to the
+	 *          {@link #supportsReturnType(MethodParameter)} method of this interface, which must have returned
+	 *          {@code true}.
+	 * @param returnValue the return value to handle
 	 * @throws Exception in case of errors
 	 */
 	void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
 			throws Exception;
-
 
 }

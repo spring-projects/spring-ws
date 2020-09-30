@@ -22,7 +22,6 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,8 +47,7 @@ public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 	protected Node resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
 		if (requestPayload instanceof DOMSource) {
 			return resolveArgumentDomSource(parameter, (DOMSource) requestPayload);
-		}
-		else {
+		} else {
 			DOMResult domResult = new DOMResult();
 			transform(requestPayload, domResult);
 			DOMSource domSource = new DOMSource(domResult.getNode());
@@ -62,8 +60,7 @@ public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 		Node requestNode = requestSource.getNode();
 		if (parameterType.isAssignableFrom(requestNode.getClass())) {
 			return requestNode;
-		}
-		else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
+		} else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
 			Document document = (Document) requestNode;
 			return document.getDocumentElement();
 		}

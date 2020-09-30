@@ -16,21 +16,20 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.easymock.EasyMock.*;
+
 import java.net.URI;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class UriEndpointMappingTest {
 

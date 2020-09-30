@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
@@ -51,8 +52,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	private boolean statusCodeSet = false;
 
 	/**
-	 * Constructs a new servlet connection with the given {@code HttpServletRequest} and
-	 * {@code HttpServletResponse}.
+	 * Constructs a new servlet connection with the given {@code HttpServletRequest} and {@code HttpServletResponse}.
 	 */
 	protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		this.httpServletRequest = httpServletRequest;
@@ -96,8 +96,8 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	@Override
 	public URI getUri() throws URISyntaxException {
 		return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
-				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
-				httpServletRequest.getQueryString(), null);
+				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(), httpServletRequest.getQueryString(),
+				null);
 	}
 
 	/*
@@ -159,8 +159,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	public void setFault(boolean fault) throws IOException {
 		if (fault) {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
-		}
-		else {
+		} else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
 		statusCodeSet = true;
@@ -170,15 +169,11 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	public void setFaultCode(QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
-				getHttpServletResponse()
-						.setStatus(HttpTransportConstants.STATUS_BAD_REQUEST);
+				getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_BAD_REQUEST);
+			} else {
+				getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
 			}
-			else {
-				getHttpServletResponse()
-						.setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
-			}
-		}
-		else {
+		} else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
 		statusCodeSet = true;

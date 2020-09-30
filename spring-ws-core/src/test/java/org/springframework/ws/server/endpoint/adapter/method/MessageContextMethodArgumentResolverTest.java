@@ -16,16 +16,14 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 public class MessageContextMethodArgumentResolverTest {
 
@@ -52,7 +50,6 @@ public class MessageContextMethodArgumentResolverTest {
 		assertSame("Invalid message context returned", messageContext, result);
 	}
 
-	public void supported(MessageContext messageContext) {
-	}
+	public void supported(MessageContext messageContext) {}
 
 }

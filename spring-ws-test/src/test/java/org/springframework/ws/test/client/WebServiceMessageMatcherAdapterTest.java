@@ -16,15 +16,14 @@
 
 package org.springframework.ws.test.client;
 
-import java.io.IOException;
+import static org.easymock.EasyMock.*;
 
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 
 /**
  * @author Arjen Poutsma
@@ -43,7 +42,7 @@ public class WebServiceMessageMatcherAdapterTest {
 		adaptee = createMock(WebServiceMessageMatcher.class);
 		adapter = new WebServiceMessageMatcherAdapter(adaptee);
 	}
-	
+
 	@Test
 	public void match() throws IOException {
 		adaptee.match(message);

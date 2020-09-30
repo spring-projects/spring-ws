@@ -45,8 +45,7 @@ public class LogAspect {
 		logger.info("Before: " + joinPoint.getSignature());
 		try {
 			return joinPoint.proceed();
-		}
-		finally {
+		} finally {
 			logger.info("After: " + joinPoint.getSignature());
 		}
 	}

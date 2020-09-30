@@ -16,10 +16,15 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,21 +34,13 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("cglib-proxy-registration.xml")
 public class CgLibProxyRegistrationTest {
 
-	@Autowired
-	private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-	@Autowired
-	private ApplicationContext applicationContext;
+	@Autowired private ApplicationContext applicationContext;
 
 	@Test
 	public void registration() throws NoSuchMethodException {
@@ -59,8 +56,7 @@ public class CgLibProxyRegistrationTest {
 
 		@PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
 		@Log
-		public void doIt(@RequestPayload Source payload) {
-		}
+		public void doIt(@RequestPayload Source payload) {}
 
 	}
 

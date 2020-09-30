@@ -16,19 +16,21 @@
 
 package org.springframework.ws.soap;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
+
 import javax.xml.transform.dom.DOMResult;
 
+import org.junit.Test;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCase {
 

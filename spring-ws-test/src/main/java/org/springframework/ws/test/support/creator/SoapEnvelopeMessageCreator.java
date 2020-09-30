@@ -16,7 +16,10 @@
 
 package org.springframework.ws.test.support.creator;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
@@ -25,11 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerHelper;
-
 import org.w3c.dom.Document;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link WebServiceMessageCreator} that creates a request based on a SOAP envelope {@link Source}.
@@ -38,11 +37,11 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @since 2.1.1
  */
 public class SoapEnvelopeMessageCreator extends AbstractMessageCreator {
-	
+
 	private final Source soapEnvelope;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
-	
+
 	/**
 	 * Creates a new instance of the {@code SoapEnvelopeMessageCreator} with the given SOAP envelope source.
 	 *
@@ -61,10 +60,9 @@ public class SoapEnvelopeMessageCreator extends AbstractMessageCreator {
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(soapEnvelope, result);
 			soapMessage.setDocument((Document) result.getNode());
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			fail("Could not transform request SOAP envelope to message: " + ex.getMessage());
-		}		
+		}
 	}
 
 }

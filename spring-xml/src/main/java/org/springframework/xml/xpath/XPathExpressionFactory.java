@@ -19,16 +19,15 @@ package org.springframework.xml.xpath;
 import java.util.Collections;
 import java.util.Map;
 
-import org.springframework.util.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
 
 /**
- * Factory for compiled {@code XPathExpression}s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly
- * for internal use of the framework.
- *
- * <p>The goal of this class is to avoid runtime dependencies a specific XPath engine, simply using the best XPath
+ * Factory for compiled {@code XPathExpression}s, being aware of JAXP 1.3+ XPath functionality, and Jaxen. Mainly for
+ * internal use of the framework.
+ * <p>
+ * The goal of this class is to avoid runtime dependencies a specific XPath engine, simply using the best XPath
  * implementation that is available. Prefers JAXP 1.3+ XPath implementations to Jaxen.
  *
  * @author Arjen Poutsma
@@ -45,11 +44,11 @@ public abstract class XPathExpressionFactory {
 	 * @param expression the XPath expression
 	 * @return the compiled XPath expression
 	 * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
-	 * @throws XPathParseException	 if the given expression cannot be parsed
+	 * @throws XPathParseException if the given expression cannot be parsed
 	 */
 	public static XPathExpression createXPathExpression(String expression)
 			throws IllegalStateException, XPathParseException {
-		return createXPathExpression(expression, Collections.<String, String>emptyMap());
+		return createXPathExpression(expression, Collections.<String, String> emptyMap());
 	}
 
 	/**
@@ -60,7 +59,7 @@ public abstract class XPathExpressionFactory {
 	 * @param namespaces a map that binds string prefixes to string namespaces
 	 * @return the compiled XPath expression
 	 * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
-	 * @throws XPathParseException	 if the given expression cannot be parsed
+	 * @throws XPathParseException if the given expression cannot be parsed
 	 */
 	public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
 			throws IllegalStateException, XPathParseException {
@@ -71,11 +70,9 @@ public abstract class XPathExpressionFactory {
 		try {
 			logger.trace("Creating [javax.xml.xpath.XPathExpression]");
 			return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
-		}
-		catch (XPathException e) {
+		} catch (XPathException e) {
 			throw e;
 		}
 	}
-
 
 }

@@ -19,8 +19,8 @@ package org.springframework.ws.soap;
 import javax.xml.transform.Result;
 
 /**
- * Represents the content for an individual SOAP detail entry in a SOAP Message.  All
- * {@code SoapFaultDetailElement}s are contained in a {@code SoapDetail}.
+ * Represents the content for an individual SOAP detail entry in a SOAP Message. All {@code SoapFaultDetailElement}s are
+ * contained in a {@code SoapDetail}.
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetail

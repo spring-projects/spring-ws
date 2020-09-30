@@ -31,7 +31,6 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
-
 import org.w3c.dom.Element;
 
 /**
@@ -76,12 +75,10 @@ class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
 			collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
 			String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
 			wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
-		}
-		else {
+		} else {
 			if (schemas.size() > 1) {
 				throw new IllegalArgumentException(
-						"Multiple <xsd/> elements requires Commons XMLSchema." +
-								"Please put Commons XMLSchema on the classpath.");
+						"Multiple <xsd/> elements requires Commons XMLSchema." + "Please put Commons XMLSchema on the classpath.");
 			}
 			RootBeanDefinition schemaDef = createBeanDefinition(SimpleXsdSchema.class, source);
 			Element schema = schemas.iterator().next();

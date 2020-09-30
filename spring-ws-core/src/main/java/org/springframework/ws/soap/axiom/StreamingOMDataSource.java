@@ -21,7 +21,6 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.ds.AbstractPushOMDataSource;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.stream.StreamingPayload;
 

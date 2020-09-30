@@ -38,9 +38,8 @@ class ErrorResponseCreator implements ResponseCreator {
 	}
 
 	@Override
-	public WebServiceMessage createResponse(URI uri,
-											WebServiceMessage request,
-											WebServiceMessageFactory factory) throws IOException {
+	public WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory factory)
+			throws IOException {
 		// Do nothing
 		return null;
 	}

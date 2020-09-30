@@ -21,12 +21,13 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import javax.xml.XMLConstants;
 
 /**
  * Sets up a namespace to be used in an {@link Endpoint @Endpoint} method, class, or package.
- *
- * <p>Typically used in combination with {@link XPathParam @XPathParam}, or {@link PayloadRoot @PayloadRoot}.
+ * <p>
+ * Typically used in combination with {@link XPathParam @XPathParam}, or {@link PayloadRoot @PayloadRoot}.
  *
  * @author Arjen Poutsma
  * @see XPathParam
@@ -35,7 +36,7 @@ import javax.xml.XMLConstants;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD })
 public @interface Namespace {
 
 	/**

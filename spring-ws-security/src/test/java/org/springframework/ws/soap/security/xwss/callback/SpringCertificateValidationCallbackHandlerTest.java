@@ -16,11 +16,17 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
+import static org.easymock.EasyMock.*;
+
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -31,12 +37,6 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.x509.X509AuthenticationToken;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class SpringCertificateValidationCallbackHandlerTest {
 
@@ -58,8 +58,7 @@ public class SpringCertificateValidationCallbackHandlerTest {
 		try {
 			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
 			keyStore.load(is, "password".toCharArray());
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}
@@ -76,7 +75,7 @@ public class SpringCertificateValidationCallbackHandlerTest {
 	@Test
 	public void testValidateCertificateValid() throws Exception {
 		expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
-				.andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority>emptyList()));
+				.andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority> emptyList()));
 
 		replay(authenticationManager);
 
@@ -105,8 +104,8 @@ public class SpringCertificateValidationCallbackHandlerTest {
 
 	@Test
 	public void testCleanUp() throws Exception {
-		TestingAuthenticationToken authentication =
-				new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
+		TestingAuthenticationToken authentication = new TestingAuthenticationToken(new Object(), new Object(),
+				Collections.<GrantedAuthority> emptyList());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		CleanupCallback cleanupCallback = new CleanupCallback();

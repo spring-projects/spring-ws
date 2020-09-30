@@ -34,10 +34,11 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the {@link
- * SoapAction} annotation to map methods to the request SOAPAction header.
- *
- * <p>Endpoints typically have the following form:
+ * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the
+ * {@link SoapAction} annotation to map methods to the request SOAPAction header.
+ * <p>
+ * Endpoints typically have the following form:
+ * 
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
@@ -61,7 +62,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	public final void setActorOrRole(String actorOrRole) {
 		Assert.notNull(actorOrRole, "actorOrRole must not be null");
-		actorsOrRoles = new String[]{actorOrRole};
+		actorsOrRoles = new String[] { actorOrRole };
 	}
 
 	@Override
@@ -79,16 +80,15 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
 	 * actors/roles.
 	 *
-	 * @param endpoint	   the endpoint
+	 * @param endpoint the endpoint
 	 * @param interceptors the endpoint interceptors
 	 * @return the created invocation chain
 	 * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
 	 * @see #setActorsOrRoles(String[])
 	 */
 	@Override
-	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
-																		  Object endpoint,
-																		  EndpointInterceptor[] interceptors) {
+	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext, Object endpoint,
+			EndpointInterceptor[] interceptors) {
 		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
 	}
 
@@ -97,15 +97,13 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 		if (messageContext.getRequest() instanceof SoapMessage) {
 			SoapMessage request = (SoapMessage) messageContext.getRequest();
 			String soapAction = request.getSoapAction();
-			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"' &&
-					soapAction.charAt(soapAction.length() - 1) == '"') {
+			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
+					&& soapAction.charAt(soapAction.length() - 1) == '"') {
 				return soapAction.substring(1, soapAction.length() - 1);
-			}
-			else {
+			} else {
 				return soapAction;
 			}
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -120,14 +118,12 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	protected List<String> getLookupKeysForMethod(Method method) {
 		List<String> result = new ArrayList<String>();
 
-		SoapActions soapActions = AnnotationUtils.findAnnotation(method,
-				SoapActions.class);
+		SoapActions soapActions = AnnotationUtils.findAnnotation(method, SoapActions.class);
 		if (soapActions != null) {
 			for (SoapAction soapAction : soapActions.value()) {
 				result.add(soapAction.value());
 			}
-		}
-		else {
+		} else {
 			SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
 			if (soapAction != null) {
 				result.add(soapAction.value());

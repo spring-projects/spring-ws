@@ -20,8 +20,8 @@ import javax.xml.namespace.QName;
 
 /**
  * Represents the {@code Fault} element in the body of a SOAP message.
- *
- * <p>A fault consists of a {@link #getFaultCode() fault code}, {@link #getFaultActorOrRole fault string/reason}, and
+ * <p>
+ * A fault consists of a {@link #getFaultCode() fault code}, {@link #getFaultActorOrRole fault string/reason}, and
  * {@link #getFaultActorOrRole() role}.
  *
  * @author Arjen Poutsma

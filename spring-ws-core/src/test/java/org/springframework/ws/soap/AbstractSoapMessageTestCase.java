@@ -16,17 +16,21 @@
 
 package org.springframework.ws.soap;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.Test;
-import org.xml.sax.SAXParseException;
-
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.AbstractMimeMessageTestCase;
@@ -38,11 +42,7 @@ import org.springframework.ws.transport.TransportConstants;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.xml.sax.SAXParseException;
 
 public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTestCase {
 
@@ -64,8 +64,7 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 
 	@Test
 	public void testValidate() throws Exception {
-		XmlValidator validator =
-				XmlValidatorFactory.createValidator(getSoapSchemas(), XmlValidatorFactory.SCHEMA_W3C_XML);
+		XmlValidator validator = XmlValidatorFactory.createValidator(getSoapSchemas(), XmlValidatorFactory.SCHEMA_W3C_XML);
 		SAXParseException[] errors = validator.validate(soapMessage.getEnvelope().getSource());
 		if (errors.length > 0) {
 			fail(StringUtils.arrayToCommaDelimitedString(errors));
@@ -147,6 +146,5 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 
 	@Test
 	public abstract void testSetOtherDocument() throws Exception;
-
 
 }

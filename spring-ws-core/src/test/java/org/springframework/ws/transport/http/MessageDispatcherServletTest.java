@@ -16,13 +16,20 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.ByteArrayInputStream;
 import java.util.List;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.custommonkey.xmlunit.XMLUnit;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
@@ -37,14 +44,7 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMa
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Document;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 
 public class MessageDispatcherServletTest {
 
@@ -87,8 +87,7 @@ public class MessageDispatcherServletTest {
 	public void testDetectWsdlDefinitions() throws Exception {
 		servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
 		servlet.init(config);
-		MockHttpServletRequest request =
-				new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
+		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		servlet.service(request, response);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();

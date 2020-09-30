@@ -3,10 +3,10 @@
             targetNamespace="urn:1"
             xmlns:tns="urn:1" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
-    <xsd:include schemaLocation="B.xsd"/>
-    <xsd:complexType name="A">
-        <xsd:complexContent>
-            <xsd:extension base="tns:B"/>
-        </xsd:complexContent>
-    </xsd:complexType>
+	<xsd:include schemaLocation="B.xsd"/>
+	<xsd:complexType name="A">
+		<xsd:complexContent>
+			<xsd:extension base="tns:B"/>
+		</xsd:complexContent>
+	</xsd:complexType>
 </xsd:schema>

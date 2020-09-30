@@ -41,7 +41,7 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 
-	private int order = Integer.MAX_VALUE;	// default: same as non-Ordered
+	private int order = Integer.MAX_VALUE; // default: same as non-Ordered
 
 	private Object defaultEndpoint;
 
@@ -74,8 +74,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 
 	/**
 	 * Specify the order value for this mapping.
-	 *
-	 * <p>Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
+	 * <p>
+	 * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
 	 *
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
@@ -102,8 +102,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
 				.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
 		if (!smartInterceptors.isEmpty()) {
-			this.smartInterceptors =
-					smartInterceptors.values().toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+			this.smartInterceptors = smartInterceptors.values()
+					.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
 		}
 	}
 
@@ -149,18 +149,16 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	}
 
 	/**
-	 * Creates a new {@code EndpointInvocationChain} based on the given message context, endpoint, and
-	 * interceptors. Default implementation creates a simple {@code EndpointInvocationChain} based on the set
-	 * interceptors.
+	 * Creates a new {@code EndpointInvocationChain} based on the given message context, endpoint, and interceptors.
+	 * Default implementation creates a simple {@code EndpointInvocationChain} based on the set interceptors.
 	 *
-	 * @param endpoint	   the endpoint
+	 * @param endpoint the endpoint
 	 * @param interceptors the endpoint interceptors
 	 * @return the created invocation chain
 	 * @see #setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
 	 */
-	protected EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
-																	Object endpoint,
-																	EndpointInterceptor[] interceptors) {
+	protected EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext, Object endpoint,
+			EndpointInterceptor[] interceptors) {
 		return new EndpointInvocationChain(endpoint, interceptors);
 	}
 
@@ -176,8 +174,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	/**
 	 * Sets the default endpoint for this endpoint mapping. This endpoint will be returned if no specific mapping was
 	 * found.
-	 *
-	 * <p>Default is {@code null}, indicating no default endpoint.
+	 * <p>
+	 * Default is {@code null}, indicating no default endpoint.
 	 *
 	 * @param defaultEndpoint the default endpoint, or null if none
 	 */
@@ -186,8 +184,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	}
 
 	/**
-	 * Resolves an endpoint string. If the given string can is a bean name, it is resolved using the application
-	 * context.
+	 * Resolves an endpoint string. If the given string can is a bean name, it is resolved using the application context.
 	 *
 	 * @param endpointName the endpoint name
 	 * @return the resolved endpoint, or {@code null} if the name could not be resolved
@@ -195,18 +192,16 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	protected Object resolveStringEndpoint(String endpointName) {
 		if (getApplicationContext().containsBean(endpointName)) {
 			return getApplicationContext().getBean(endpointName);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
 	/**
-	 * Lookup an endpoint for the given request, returning {@code null} if no specific one is found. This template
-	 * method is called by getEndpoint, a {@code null} return value will lead to the default handler, if one is
-	 * set.
-	 *
-	 * <p>The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
+	 * Lookup an endpoint for the given request, returning {@code null} if no specific one is found. This template method
+	 * is called by getEndpoint, a {@code null} return value will lead to the default handler, if one is set.
+	 * <p>
+	 * The returned endpoint can be a string, in which case it is resolved as a bean name. Also, it can take the form
 	 * {@code beanName#method}, in which case the method is resolved.
 	 *
 	 * @return the looked up endpoint instance, or null

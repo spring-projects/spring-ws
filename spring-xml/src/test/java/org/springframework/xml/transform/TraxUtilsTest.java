@@ -16,6 +16,8 @@
 
 package org.springframework.xml.transform;
 
+import static org.easymock.EasyMock.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -24,6 +26,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
@@ -43,6 +46,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.ContentHandler;
@@ -52,12 +58,6 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.XMLInputFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.easymock.EasyMock.*;
 
 public class TraxUtilsTest {
 
@@ -283,13 +283,11 @@ public class TraxUtilsTest {
 		verify(mock);
 	}
 
-
 	@Test
 	public void testDoWithInvalidSource() throws Exception {
 		Source source = new Source() {
 
-			public void setSystemId(String systemId) {
-			}
+			public void setSystemId(String systemId) {}
 
 			public String getSystemId() {
 				return null;
@@ -299,8 +297,7 @@ public class TraxUtilsTest {
 		try {
 			TraxUtils.doWithSource(source, null);
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}
@@ -309,8 +306,7 @@ public class TraxUtilsTest {
 	public void testDoWithInvalidResult() throws Exception {
 		Result result = new Result() {
 
-			public void setSystemId(String systemId) {
-			}
+			public void setSystemId(String systemId) {}
 
 			public String getSystemId() {
 				return null;
@@ -320,8 +316,7 @@ public class TraxUtilsTest {
 		try {
 			TraxUtils.doWithResult(result, null);
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}

@@ -16,11 +16,12 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
 
 public class SimpleUsernamePasswordCallbackHandlerTest {
 

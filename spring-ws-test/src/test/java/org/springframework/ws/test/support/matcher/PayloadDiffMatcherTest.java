@@ -16,16 +16,15 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.easymock.EasyMock.*;
+
 import javax.xml.soap.MessageFactory;
 
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class PayloadDiffMatcherTest {
 

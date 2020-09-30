@@ -16,34 +16,33 @@
 
 package org.springframework.xml.dom;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-
 public class DomContentHandlerTest {
 
-	private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>" +
-			"<root xmlns='namespace'>" +
-			"<prefix:child xmlns:prefix='namespace2' xmlns:prefix2='namespace3' prefix2:attr='value'>content</prefix:child>" +
-			"</root>";
+	private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>"
+			+ "<root xmlns='namespace'>"
+			+ "<prefix:child xmlns:prefix='namespace2' xmlns:prefix2='namespace3' prefix2:attr='value'>content</prefix:child>"
+			+ "</root>";
 
-	private static final String XML_2_EXPECTED = "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>" +
-			"<child xmlns='namespace2' />" + "</root>";
+	private static final String XML_2_EXPECTED = "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>"
+			+ "<child xmlns='namespace2' />" + "</root>";
 
-	private static final String XML_2_SNIPPET =
-			"<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace2' />";
+	private static final String XML_2_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace2' />";
 
 	private Document expected;
 

@@ -32,8 +32,6 @@ import org.apache.ws.commons.schema.XmlSchemaInclude;
 import org.apache.ws.commons.schema.XmlSchemaObject;
 import org.apache.ws.commons.schema.resolver.DefaultURIResolver;
 import org.apache.ws.commons.schema.resolver.URIResolver;
-import org.xml.sax.InputSource;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
@@ -46,13 +44,14 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
+import org.xml.sax.InputSource;
 
 /**
  * Implementation of the {@link XsdSchemaCollection} that uses Apache WS-Commons XML Schema.
- *
- * <p>Setting the {@link #setInline(boolean) inline} flag to {@code true} will result in all referenced schemas
- * (included and imported) being merged into the referred schema. When including the schemas into a WSDL, this greatly
- * simplifies the deployment of the schemas.
+ * <p>
+ * Setting the {@link #setInline(boolean) inline} flag to {@code true} will result in all referenced schemas (included
+ * and imported) being merged into the referred schema. When including the schemas into a WSDL, this greatly simplifies
+ * the deployment of the schemas.
  *
  * @author Arjen Poutsma
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
@@ -76,11 +75,10 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
 	/**
 	 * Constructs a new, empty instance of the {@code CommonsXsdSchemaCollection}.
-	 *
-	 * <p>A subsequent call to the {@link #setXsds(Resource[])} is required.
+	 * <p>
+	 * A subsequent call to the {@link #setXsds(Resource[])} is required.
 	 */
-	public CommonsXsdSchemaCollection() {
-	}
+	public CommonsXsdSchemaCollection() {}
 
 	/**
 	 * Constructs a new instance of the {@code CommonsXsdSchemaCollection} based on the given resources.
@@ -102,8 +100,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
 	/**
 	 * Defines whether included schemas should be inlined into the including schema.
-	 *
-	 * <p>Defaults to {@code false}.
+	 * <p>
+	 * Defaults to {@code false}.
 	 */
 	public void setInline(boolean inline) {
 		this.inline = inline;
@@ -111,8 +109,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
 	/**
 	 * Sets the WS-Commons uri resolver to use when resolving (relative) schemas.
-	 *
-	 * <p>Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
+	 * <p>
+	 * Default is an internal subclass of {@link DefaultURIResolver} which correctly handles schemas on the classpath.
 	 */
 	public void setUriResolver(URIResolver uriResolver) {
 		Assert.notNull(uriResolver, "'uriResolver' must not be null");
@@ -136,16 +134,14 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		for (Resource xsdResource : xsdResources) {
 			Assert.isTrue(xsdResource.exists(), xsdResource + " does not exist");
 			try {
-				XmlSchema xmlSchema =
-						schemaCollection.read(SaxUtils.createInputSource(xsdResource));
+				XmlSchema xmlSchema = schemaCollection.read(SaxUtils.createInputSource(xsdResource));
 				xmlSchemas.add(xmlSchema);
 
 				if (inline) {
 					inlineIncludes(xmlSchema, processedIncludes, processedImports);
 					findImports(xmlSchema, processedImports, processedIncludes);
 				}
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new CommonsXsdSchemaException("Schema [" + xsdResource + "] could not be loaded", ex);
 			}
 		}
@@ -176,8 +172,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 					resources[i] = new UrlResource(sourceUri);
 				}
 			}
-			return XmlValidatorFactory
-					.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
+			return XmlValidatorFactory.createValidator(resources, XmlValidatorFactory.SCHEMA_W3C_XML);
 		} catch (IOException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
 		}
@@ -213,8 +208,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 			if (external instanceof XmlSchemaImport) {
 				XmlSchemaImport schemaImport = (XmlSchemaImport) external;
 				XmlSchema importedSchema = schemaImport.getSchema();
-				if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) &&
-						importedSchema != null && !processedImports.contains(importedSchema)) {
+				if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) && importedSchema != null
+						&& !processedImports.contains(importedSchema)) {
 					inlineIncludes(importedSchema, processedIncludes, processedImports);
 					findImports(importedSchema, processedImports, processedIncludes);
 					xmlSchemas.add(importedSchema);
@@ -247,8 +242,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 				Resource resource = resourceLoader.getResource(schemaLocation);
 				if (resource.exists()) {
 					return createInputSource(resource);
-				}
-				else if (StringUtils.hasLength(baseUri)) {
+				} else if (StringUtils.hasLength(baseUri)) {
 					// let's try and find it relative to the baseUri, see SWS-413
 					try {
 						Resource baseUriResource = new UrlResource(baseUri);
@@ -256,8 +250,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 						if (resource.exists()) {
 							return createInputSource(resource);
 						}
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 						// fall through
 					}
 				}
@@ -274,8 +267,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		private InputSource createInputSource(Resource resource) {
 			try {
 				return SaxUtils.createInputSource(resource);
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				throw new CommonsXsdSchemaException("Could not resolve location", ex);
 			}
 		}

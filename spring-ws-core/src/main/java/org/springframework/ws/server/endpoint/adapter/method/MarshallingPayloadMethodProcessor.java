@@ -46,15 +46,14 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	 * @see #setMarshaller(Marshaller)
 	 * @see #setUnmarshaller(Unmarshaller)
 	 */
-	public MarshallingPayloadMethodProcessor() {
-	}
+	public MarshallingPayloadMethodProcessor() {}
 
 	/**
-	 * Creates a new {@code MarshallingPayloadMethodProcessor} with the given marshaller. If the given {@link
-	 * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
-	 * unmarshalling. Otherwise, an exception is thrown.
-	 *
-	 * <p>Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface, so
+	 * Creates a new {@code MarshallingPayloadMethodProcessor} with the given marshaller. If the given {@link Marshaller}
+	 * also implements the {@link Unmarshaller} interface, it is used for both marshalling and unmarshalling. Otherwise,
+	 * an exception is thrown.
+	 * <p>
+	 * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface, so
 	 * that you can safely use this constructor.
 	 *
 	 * @param marshaller object used as marshaller and unmarshaller
@@ -70,7 +69,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	/**
 	 * Creates a new {@code MarshallingPayloadMethodProcessor} with the given marshaller and unmarshaller.
 	 *
-	 * @param marshaller   the marshaller to use
+	 * @param marshaller the marshaller to use
 	 * @param unmarshaller the unmarshaller to use
 	 */
 	public MarshallingPayloadMethodProcessor(Marshaller marshaller, Unmarshaller unmarshaller) {
@@ -113,11 +112,9 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 		Unmarshaller unmarshaller = getUnmarshaller();
 		if (unmarshaller == null) {
 			return false;
-		}
-		else if (unmarshaller instanceof GenericUnmarshaller) {
+		} else if (unmarshaller instanceof GenericUnmarshaller) {
 			return ((GenericUnmarshaller) unmarshaller).supports(parameter.getGenericParameterType());
-		}
-		else {
+		} else {
 			return unmarshaller.supports(parameter.getParameterType());
 		}
 	}
@@ -140,12 +137,10 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 		Marshaller marshaller = getMarshaller();
 		if (marshaller == null) {
 			return false;
-		}
-		else if (marshaller instanceof GenericMarshaller) {
+		} else if (marshaller instanceof GenericMarshaller) {
 			GenericMarshaller genericMarshaller = (GenericMarshaller) marshaller;
 			return genericMarshaller.supports(returnType.getGenericParameterType());
-		}
-		else {
+		} else {
 			return marshaller.supports(returnType.getParameterType());
 		}
 	}

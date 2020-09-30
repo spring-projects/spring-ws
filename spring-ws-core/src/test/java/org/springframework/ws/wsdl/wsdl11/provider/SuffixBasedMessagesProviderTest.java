@@ -29,12 +29,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.w3c.dom.Document;
 
 public class SuffixBasedMessagesProviderTest {
 
@@ -67,8 +66,8 @@ public class SuffixBasedMessagesProviderTest {
 		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		Types types = definition.createTypes();
 		definition.setTypes(types);
-		Schema schema = (Schema) definition.getExtensionRegistry()
-				.createExtension(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"));
+		Schema schema = (Schema) definition.getExtensionRegistry().createExtension(Types.class,
+				new QName("http://www.w3.org/2001/XMLSchema", "schema"));
 		types.addExtensibilityElement(schema);
 		schema.setElement(schemaDocument.getDocumentElement());
 

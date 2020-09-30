@@ -20,12 +20,12 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
-import org.springframework.core.io.ClassPathResource;
-
-import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+
+import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 
 public class JaasCertificateValidationCallbackHandlerTest {
 
@@ -43,8 +43,7 @@ public class JaasCertificateValidationCallbackHandlerTest {
 		try {
 			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
 			keyStore.load(is, "password".toCharArray());
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}

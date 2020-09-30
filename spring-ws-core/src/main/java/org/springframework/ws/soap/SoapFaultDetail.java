@@ -17,12 +17,13 @@
 package org.springframework.ws.soap;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 /**
- * Represents the {@code detail} element in a SOAP fault. A detail contains {@code SoapFaultDetailElement}s,
- * which represent the individual details.
+ * Represents the {@code detail} element in a SOAP fault. A detail contains {@code SoapFaultDetailElement}s, which
+ * represent the individual details.
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetailElement
@@ -40,8 +41,8 @@ public interface SoapFaultDetail extends SoapElement {
 
 	/**
 	 * Returns a {@code Result} that represents the concents of the detail.
-	 *
-	 * <p>The result can be used for marshalling.
+	 * <p>
+	 * The result can be used for marshalling.
 	 *
 	 * @return the {@code Result} of this element
 	 */

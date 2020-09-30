@@ -80,8 +80,8 @@ public class MockWebServiceMessageSender implements WebServiceMessageSender {
 	}
 
 	void reset() {
-	    expectedConnections.clear();
-	    connectionIterator = null;
-    }
+		expectedConnections.clear();
+		connectionIterator = null;
+	}
 
 }

@@ -16,8 +16,14 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
+import static org.easymock.EasyMock.*;
+
 import java.util.Collections;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,12 +34,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class SpringDigestPasswordValidationCallbackHandlerTest {
 
@@ -57,8 +57,8 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 		String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
 		String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk=";
 		String creationTime = "2006-06-01T23:48:42Z";
-		PasswordValidationCallback.DigestPasswordRequest request =
-				new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
+		PasswordValidationCallback.DigestPasswordRequest request = new PasswordValidationCallback.DigestPasswordRequest(
+				username, passwordDigest, nonce, creationTime);
 		callback = new PasswordValidationCallback(request);
 	}
 
@@ -83,7 +83,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserDigestValid() throws Exception {
-		User user = new User(username, password, true, true, true, true, Collections.<GrantedAuthority>emptyList());
+		User user = new User(username, password, true, true, true, true, Collections.<GrantedAuthority> emptyList());
 		expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
 		replay(userDetailsService);
@@ -98,7 +98,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserDigestValidInvalid() throws Exception {
-		User user = new User(username, "Big bird", true, true, true, true, Collections.<GrantedAuthority>emptyList());
+		User user = new User(username, "Big bird", true, true, true, true, Collections.<GrantedAuthority> emptyList());
 		expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
 		replay(userDetailsService);
@@ -113,7 +113,7 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserDigestDisabled() throws Exception {
-		User user = new User(username, "Ernie", false, true, true, true, Collections.<GrantedAuthority>emptyList());
+		User user = new User(username, "Ernie", false, true, true, true, Collections.<GrantedAuthority> emptyList());
 		expect(userDetailsService.loadUserByUsername(username)).andReturn(user);
 
 		replay(userDetailsService);
@@ -129,8 +129,8 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testCleanUp() throws Exception {
-		TestingAuthenticationToken authentication =
-				new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
+		TestingAuthenticationToken authentication = new TestingAuthenticationToken(new Object(), new Object(),
+				Collections.<GrantedAuthority> emptyList());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		CleanupCallback cleanupCallback = new CleanupCallback();

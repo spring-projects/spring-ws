@@ -16,16 +16,16 @@
 
 package org.springframework.ws.transport.jms.support;
 
+import static org.junit.Assert.*;
+
 import java.net.URI;
+
 import javax.jms.DeliveryMode;
 import javax.jms.Message;
 
-import org.springframework.ws.transport.jms.JmsTransportConstants;
-
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.springframework.ws.transport.jms.JmsTransportConstants;
 
 public class JmsTransportUtilsTest {
 

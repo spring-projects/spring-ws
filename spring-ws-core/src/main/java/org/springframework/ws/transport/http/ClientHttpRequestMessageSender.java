@@ -27,8 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation based on the
- * {@link ClientHttpRequestFactory} introduced in Spring 3.
+ * {@code WebServiceMessageSender} implementation based on the {@link ClientHttpRequestFactory} introduced in Spring 3.
  *
  * @author Krzysztof Trojan
  * @author Arjen Poutsma

@@ -24,7 +24,6 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -63,8 +62,8 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	/**
 	 * Sets the server port to connect to.
-	 *
-	 * <p>Defaults to {@code 5222}.
+	 * <p>
+	 * Defaults to {@code 5222}.
 	 */
 	public void setPort(int port) {
 		Assert.isTrue(port > 0, "'port' must be larger than 0");
@@ -131,26 +130,18 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 	/**
 	 * Creates the {@code ConnectionConfiguration} from the given parameters.
 	 *
-	 * @param host		  the host to connect to
-	 * @param port		  the port to connect to
+	 * @param host the host to connect to
+	 * @param port the port to connect to
 	 * @param serviceName the name of the service to connect to. May be {@code null}
 	 */
-	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName) throws XmppStringprepException {
+	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName)
+			throws XmppStringprepException {
 		Assert.hasText(host, "'host' must not be empty");
 		if (StringUtils.hasText(serviceName)) {
-			return XMPPTCPConnectionConfiguration.builder()
-					.setHost(host)
-					.setPort(port)
-					.setXmppDomain(serviceName)
-					.build();
-		}
-		else {
-			return XMPPTCPConnectionConfiguration.builder()
-					.setHost(host)
-					.setPort(port)
-					.build();
+			return XMPPTCPConnectionConfiguration.builder().setHost(host).setPort(port).setXmppDomain(serviceName).build();
+		} else {
+			return XMPPTCPConnectionConfiguration.builder().setHost(host).setPort(port).build();
 		}
 	}
-
 
 }

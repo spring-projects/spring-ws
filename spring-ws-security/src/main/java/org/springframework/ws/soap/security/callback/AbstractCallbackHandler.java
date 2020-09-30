@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -35,8 +36,7 @@ public abstract class AbstractCallbackHandler implements CallbackHandler {
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	protected AbstractCallbackHandler() {
-	}
+	protected AbstractCallbackHandler() {}
 
 	/**
 	 * Iterates over the given callbacks, and calls {@code handleInternal} for each of them.

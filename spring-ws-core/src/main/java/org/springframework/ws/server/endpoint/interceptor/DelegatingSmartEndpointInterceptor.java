@@ -23,8 +23,8 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.SmartEndpointInterceptor;
 
 /**
- * Implementation of the {@link SmartEndpointInterceptor} interface that delegates to a delegate {@link
- * EndpointInterceptor}.
+ * Implementation of the {@link SmartEndpointInterceptor} interface that delegates to a delegate
+ * {@link EndpointInterceptor}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -45,6 +45,7 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 
 	/**
 	 * Returns the delegate.
+	 * 
 	 * @return the delegate
 	 */
 	public EndpointInterceptor getDelegate() {
@@ -53,8 +54,8 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * <p>This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
+	 * <p>
+	 * This implementation delegates to {@link #shouldIntercept(WebServiceMessage, Object)}.
 	 */
 	@Override
 	public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
@@ -64,10 +65,10 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 
 	/**
 	 * Indicates whether this interceptor should intercept the given request message.
+	 * <p>
+	 * This implementation always returns {@code true}.
 	 *
-	 * <p>This implementation always returns {@code true}.
-	 *
-	 * @param request  the request message
+	 * @param request the request message
 	 * @param endpoint chosen endpoint to invoke
 	 * @return {@code true} to indicate that this interceptor applies; {@code false} otherwise
 	 */

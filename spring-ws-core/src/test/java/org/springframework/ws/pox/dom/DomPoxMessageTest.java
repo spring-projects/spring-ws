@@ -16,7 +16,10 @@
 
 package org.springframework.ws.pox.dom;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -24,14 +27,11 @@ import javax.xml.transform.TransformerFactory;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.w3c.dom.Document;
 
 public class DomPoxMessageTest {
 

@@ -17,11 +17,11 @@
 package org.springframework.xml.transform;
 
 import java.io.IOException;
+
 import javax.xml.transform.sax.SAXSource;
 
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
-
 import org.xml.sax.XMLReader;
 
 /**

@@ -17,9 +17,8 @@
 package org.springframework.ws.client.support.interceptor;
 
 import java.io.IOException;
-import javax.xml.transform.Source;
 
-import org.xml.sax.SAXParseException;
+import javax.xml.transform.Source;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -35,13 +34,14 @@ import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
+import org.xml.sax.SAXParseException;
 
 /**
  * Abstract base class for {@link ClientInterceptor} implementations that validate part of the message using a schema.
- * The exact message part is determined by the {@link #getValidationRequestSource(WebServiceMessage)} and {@link
- * #getValidationResponseSource(WebServiceMessage)} template methods.
- *
- * <p>By default, only the request message is validated, but this behaviour can be changed using the
+ * The exact message part is determined by the {@link #getValidationRequestSource(WebServiceMessage)} and
+ * {@link #getValidationResponseSource(WebServiceMessage)} template methods.
+ * <p>
+ * By default, only the request message is validated, but this behaviour can be changed using the
  * {@code validateRequest} and {@code validateResponse} properties.
  *
  * @author Arjen Poutsma
@@ -82,18 +82,18 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-	 * Sets the schema resource to use for validation. Setting this property, {@link
-	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-	 * #setSchemas(Resource[]) schemas} is required.
+	 * Sets the schema resource to use for validation. Setting this property,
+	 * {@link #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or
+	 * {@link #setSchemas(Resource[]) schemas} is required.
 	 */
 	public void setSchema(Resource schema) {
 		setSchemas(schema);
 	}
 
 	/**
-	 * Sets the schema resources to use for validation. Setting this property, {@link
-	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-	 * #setSchemas(Resource[]) schemas} is required.
+	 * Sets the schema resources to use for validation. Setting this property,
+	 * {@link #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or
+	 * {@link #setSchemas(Resource[]) schemas} is required.
 	 */
 	public void setSchemas(Resource... schemas) {
 		Assert.notEmpty(schemas, "schemas must not be empty or null");
@@ -105,9 +105,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-	 * Sets the {@link XsdSchema} to use for validation. Setting this property, {@link
-	 * #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or {@link
-	 * #setSchemas(Resource[]) schemas} is required.
+	 * Sets the {@link XsdSchema} to use for validation. Setting this property,
+	 * {@link #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection}, {@link #setSchema(Resource) schema}, or
+	 * {@link #setSchemas(Resource[]) schemas} is required.
 	 *
 	 * @param schema the xsd schema to use
 	 * @throws java.io.IOException in case of I/O errors
@@ -117,9 +117,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-	 * Sets the {@link XsdSchemaCollection} to use for validation. Setting this property, {@link
-	 * #setXsdSchema(XsdSchema) xsdSchema}, {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[])
-	 * schemas} is required.
+	 * Sets the {@link XsdSchemaCollection} to use for validation. Setting this property, {@link #setXsdSchema(XsdSchema)
+	 * xsdSchema}, {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[]) schemas} is required.
 	 *
 	 * @param schemaCollection the xsd schema collection to use
 	 * @throws java.io.IOException in case of I/O errors
@@ -154,10 +153,10 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-	 * Validates the request message in the given message context. Validation only occurs if {@link
-	 * #setValidateRequest(boolean) validateRequest} is set to {@code true}, which is the default.
-	 *
-	 * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
+	 * Validates the request message in the given message context. Validation only occurs if
+	 * {@link #setValidateRequest(boolean) validateRequest} is set to {@code true}, which is the default.
+	 * <p>
+	 * Returns {@code true} if the request is valid, or {@code false} if it isn't.
 	 *
 	 * @param messageContext the message context
 	 * @return {@code true} if the message is valid; {@code false} otherwise
@@ -171,14 +170,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				SAXParseException[] errors;
 				try {
 					errors = validator.validate(requestSource);
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
 				}
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleRequestValidationErrors(messageContext, errors);
-				}
-				else if (logger.isDebugEnabled()) {
+				} else if (logger.isDebugEnabled()) {
 					logger.debug("Request message validated");
 				}
 			}
@@ -188,12 +185,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	/**
 	 * Template method that is called when the request message contains validation errors.
-	 *
-	 * <p>Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can
-	 * override this method to customize this behavior.
+	 * <p>
+	 * Default implementation logs all errors, and throws a {@link WebServiceValidationException}. Subclasses can override
+	 * this method to customize this behavior.
 	 *
 	 * @param messageContext the message context
-	 * @param errors		 the validation errors
+	 * @param errors the validation errors
 	 * @return {@code true} to continue processing the request, {@code false} otherwise
 	 */
 	protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
@@ -204,11 +201,11 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	}
 
 	/**
-	 * Validates the response message in the given message context. Validation only occurs if {@link
-	 * #setValidateResponse(boolean) validateResponse} is set to {@code true}, which is <strong>not</strong> the
+	 * Validates the response message in the given message context. Validation only occurs if
+	 * {@link #setValidateResponse(boolean) validateResponse} is set to {@code true}, which is <strong>not</strong> the
 	 * default.
-	 *
-	 * <p>Returns {@code true} if the request is valid, or {@code false} if it isn't.
+	 * <p>
+	 * Returns {@code true} if the request is valid, or {@code false} if it isn't.
 	 *
 	 * @param messageContext the message context.
 	 * @return {@code true} if the response is valid; {@code false} otherwise
@@ -222,14 +219,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				SAXParseException[] errors;
 				try {
 					errors = validator.validate(responseSource);
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
 				}
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleResponseValidationErrors(messageContext, errors);
-				}
-				else if (logger.isDebugEnabled()) {
+				} else if (logger.isDebugEnabled()) {
 					logger.debug("Response message validated");
 				}
 			}
@@ -239,12 +234,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	/**
 	 * Template method that is called when the response message contains validation errors.
-	 *
-	 * <p>Default implementation logs all errors, and returns {@code false}, i.e. do not cot continue to process the
-	 * respone interceptor chain.
+	 * <p>
+	 * Default implementation logs all errors, and returns {@code false}, i.e. do not cot continue to process the respone
+	 * interceptor chain.
 	 *
 	 * @param messageContext the message context
-	 * @param errors		 the validation errors
+	 * @param errors the validation errors
 	 * @return {@code true} to continue the reponse interceptor chain, {@code false} (the default) otherwise
 	 */
 	protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
@@ -261,11 +256,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 		return true;
 	}
 
-	/** Does nothing by default.*/
+	/** Does nothing by default. */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Exception ex)
-			throws WebServiceClientException {
-	}
+	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {}
 
 	/**
 	 * Abstract template method that returns the part of the request message that is to be validated.

@@ -276,8 +276,8 @@ public interface SoapVersion {
 	QName getClientOrSenderFaultName();
 
 	/**
-	 * Returns the URI indicating that a header element should only be processed by nodes acting as the ultimate
-	 * receiver of a message.
+	 * Returns the URI indicating that a header element should only be processed by nodes acting as the ultimate receiver
+	 * of a message.
 	 */
 	String getUltimateReceiverRoleUri();
 }

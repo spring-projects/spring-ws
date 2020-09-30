@@ -16,9 +16,14 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,21 +32,13 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("bridged-method-registration.xml")
 public class BridgedMethodRegistrationTest {
 
-	@Autowired
-	private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-	@Autowired
-	private ApplicationContext applicationContext;
+	@Autowired private ApplicationContext applicationContext;
 
 	@Test
 	public void registration() throws NoSuchMethodException {

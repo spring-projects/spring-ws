@@ -16,8 +16,12 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -26,13 +30,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.Namespaces;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
-
-import org.junit.Before;
-import org.junit.Test;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import static org.junit.Assert.*;
 
 @Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
 public class XPathParamMethodArgumentResolverTest {
@@ -62,8 +61,8 @@ public class XPathParamMethodArgumentResolverTest {
 	@Before
 	public void setUp() throws Exception {
 		resolver = new XPathParamMethodArgumentResolver();
-		Method supportedTypes = getClass()
-				.getMethod("supportedTypes", Boolean.TYPE, Double.TYPE, Node.class, NodeList.class, String.class);
+		Method supportedTypes = getClass().getMethod("supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
+				NodeList.class, String.class);
 		booleanParameter = new MethodParameter(supportedTypes, 0);
 		doubleParameter = new MethodParameter(supportedTypes, 1);
 		nodeParameter = new MethodParameter(supportedTypes, 2);
@@ -97,6 +96,7 @@ public class XPathParamMethodArgumentResolverTest {
 		Boolean b = (Boolean) result;
 		assertTrue("Invalid boolean value", b);
 	}
+
 	@Test
 	public void resolveDouble() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
@@ -117,7 +117,7 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, nodeParameter);
 
 		assertTrue("resolver does not return Node", result instanceof Node);
-		Node node  = (Node) result;
+		Node node = (Node) result;
 		assertEquals("Invalid node value", "child", node.getLocalName());
 	}
 
@@ -129,7 +129,7 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, nodeListParameter);
 
 		assertTrue("resolver does not return NodeList", result instanceof NodeList);
-		NodeList nodeList  = (NodeList) result;
+		NodeList nodeList = (NodeList) result;
 		assertEquals("Invalid NodeList value", 1, nodeList.getLength());
 		assertEquals("Invalid Node value", "child", nodeList.item(0).getLocalName());
 	}
@@ -142,10 +142,10 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, stringParameter);
 
 		assertTrue("resolver does not return String", result instanceof String);
-		String s  = (String) result;
+		String s = (String) result;
 		assertEquals("Invalid string value", "text", s);
 	}
-	
+
 	@Test
 	public void resolveConvertedType() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
@@ -154,7 +154,7 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, convertedParameter);
 
 		assertTrue("resolver does not return String", result instanceof Integer);
-		Integer i  = (Integer) result;
+		Integer i = (Integer) result;
 		assertEquals("Invalid integer value", new Integer(42), i);
 	}
 
@@ -167,10 +167,10 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, namespaceMethodParameter);
 
 		assertTrue("resolver does not return String", result instanceof String);
-		String s  = (String) result;
+		String s = (String) result;
 		assertEquals("Invalid string value", "text", s);
 	}
-	
+
 	@Test
 	public void resolveNamespacesClass() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage(
@@ -180,28 +180,21 @@ public class XPathParamMethodArgumentResolverTest {
 		Object result = resolver.resolveArgument(messageContext, namespaceClassParameter);
 
 		assertTrue("resolver does not return String", result instanceof String);
-		String s  = (String) result;
+		String s = (String) result;
 		assertEquals("Invalid string value", "text", s);
 	}
 
-	public void unsupported(String s) {
-	}
+	public void unsupported(String s) {}
 
-	public void supportedTypes(@XPathParam("/root/child")boolean param1,
-							   @XPathParam("/root/child/number")double param2,
-							   @XPathParam("/root/child") Node param3,
-							   @XPathParam("/root/*") NodeList param4,
-							   @XPathParam("/root/child/text")String param5) {
-	}
+	public void supportedTypes(@XPathParam("/root/child") boolean param1, @XPathParam("/root/child/number") double param2,
+			@XPathParam("/root/child") Node param3, @XPathParam("/root/*") NodeList param4,
+			@XPathParam("/root/child/text") String param5) {}
 
-	public void convertedType(@XPathParam("/root/child/number")int param) {
-	}
+	public void convertedType(@XPathParam("/root/child/number") int param) {}
 
 	@Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
-	public void namespacesMethod(@XPathParam("/tns:root")String s) {
-	}
+	public void namespacesMethod(@XPathParam("/tns:root") String s) {}
 
-	public void namespacesClass(@XPathParam("/tns:root")String s) {
-	}
+	public void namespacesClass(@XPathParam("/tns:root") String s) {}
 
 }

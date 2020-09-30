@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -49,8 +50,8 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 		Assert.hasLength(contentId, "contentId must not be empty");
 		Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
 		if (inputStreamSource instanceof Resource && ((Resource) inputStreamSource).isOpen()) {
-			throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. " +
-					"MIME requires an InputStreamSource that creates a fresh stream for every call.");
+			throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. "
+					+ "MIME requires an InputStreamSource that creates a fresh stream for every call.");
 		}
 		DataHandler dataHandler = new DataHandler(new InputStreamSourceDataSource(inputStreamSource, contentType));
 		return addAttachment(contentId, dataHandler);
@@ -93,8 +94,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 			if (inputStreamSource instanceof Resource) {
 				Resource resource = (Resource) inputStreamSource;
 				return resource.getFilename();
-			}
-			else {
+			} else {
 				throw new UnsupportedOperationException("DataSource name not available");
 			}
 		}

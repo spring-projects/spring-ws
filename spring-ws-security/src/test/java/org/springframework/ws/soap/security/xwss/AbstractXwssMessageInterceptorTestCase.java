@@ -16,27 +16,27 @@
 
 package org.springframework.ws.soap.security.xwss;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-
-import org.junit.Assert;
-import org.junit.Before;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractXwssMessageInterceptorTestCase {
 
@@ -59,10 +59,8 @@ public abstract class AbstractXwssMessageInterceptorTestCase {
 		onSetup();
 	}
 
-	protected void assertXpathEvaluatesTo(String message,
-										  String expectedValue,
-										  String xpathExpression,
-										  SOAPMessage soapMessage) {
+	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
+			SOAPMessage soapMessage) {
 		XPathExpression expression = XPathExpressionFactory.createXPathExpression(xpathExpression, namespaces);
 		Document document = soapMessage.getSOAPPart();
 		String actualValue = expression.evaluateAsString(document);
@@ -92,12 +90,10 @@ public abstract class AbstractXwssMessageInterceptorTestCase {
 			assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
 			is = resource.getInputStream();
 			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}
 
-	protected void onSetup() throws Exception {
-	}
+	protected void onSetup() throws Exception {}
 }

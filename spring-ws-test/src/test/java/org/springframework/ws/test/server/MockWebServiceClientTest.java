@@ -16,13 +16,12 @@
 
 package org.springframework.ws.test.server;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class MockWebServiceClientTest {
 
@@ -36,7 +35,7 @@ public class MockWebServiceClientTest {
 		MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
 		assertNotNull(client);
 	}
-	
+
 	@Test
 	public void createServerApplicationContextDefaults() throws Exception {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();

@@ -16,7 +16,10 @@
 
 package org.springframework.ws.client.core;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.IOException;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,18 +39,15 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.pox.dom.DomPoxMessageFactory;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 import org.springframework.ws.transport.support.FreePortScanner;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.w3c.dom.Document;
 
 public class DomPoxWebServiceTemplateIntegrationTest {
 
@@ -80,24 +80,20 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 		template.setMessageSender(new HttpComponentsMessageSender());
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
-		template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content),
-				result);
+		template.sendSourceAndReceiveToResult(baseUrl + "/pox", new StringSource(content), result);
 		assertXMLEqual(content, result.toString());
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-					new StringSource(content), new StringResult());
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound", new StringSource(content),
+					new StringResult());
 			Assert.fail("WebServiceTransportException expected");
-		}
-		catch (WebServiceTransportException ex) {
-			//expected
+		} catch (WebServiceTransportException ex) {
+			// expected
 		}
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/errors/server",
-					new StringSource(content), result);
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/server", new StringSource(content), result);
 			Assert.fail("WebServiceTransportException expected");
-		}
-		catch (WebServiceTransportException ex) {
-			//expected
+		} catch (WebServiceTransportException ex) {
+			// expected
 		}
 	}
 
@@ -140,8 +136,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 				Document message = documentBuilder.parse(req.getInputStream());
 				Transformer transformer = transformerFactory.newTransformer();
 				transformer.transform(new DOMSource(message), new StreamResult(resp.getOutputStream()));
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new ServletException("POX POST failed" + ex.getMessage());
 			}
 		}

@@ -19,11 +19,10 @@ package org.springframework.xml.validation;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class SchemaLoaderUtilsTest {
 
@@ -41,8 +40,7 @@ public class SchemaLoaderUtilsTest {
 			Resource nonExistant = new ClassPathResource("bla");
 			SchemaLoaderUtils.loadSchema(nonExistant, XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Assert.fail("Should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -52,8 +50,7 @@ public class SchemaLoaderUtilsTest {
 		try {
 			SchemaLoaderUtils.loadSchema((Resource) null, XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Assert.fail("Should have thrown an IllegalArgumentException");
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// expected
 		}
 	}
@@ -62,8 +59,8 @@ public class SchemaLoaderUtilsTest {
 	public void testLoadMultipleSchemas() throws Exception {
 		Resource envelope = new ClassPathResource("envelope.xsd", getClass());
 		Resource encoding = new ClassPathResource("encoding.xsd", getClass());
-		Schema schema =
-				SchemaLoaderUtils.loadSchema(new Resource[]{envelope, encoding}, XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		Schema schema = SchemaLoaderUtils.loadSchema(new Resource[] { envelope, encoding },
+				XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Assert.assertNotNull("No schema returned", schema);
 		Assert.assertFalse("Resource not closed", envelope.isOpen());
 		Assert.assertFalse("Resource not closed", encoding.isOpen());

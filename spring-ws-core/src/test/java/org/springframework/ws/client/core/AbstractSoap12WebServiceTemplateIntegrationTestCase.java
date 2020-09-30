@@ -16,10 +16,14 @@
 
 package org.springframework.ws.client.core;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import javax.activation.CommandMap;
 import javax.activation.DataHandler;
 import javax.activation.MailcapCommandMap;
@@ -50,8 +54,6 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.xml.sax.SAXException;
-
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -65,16 +67,13 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
+import org.xml.sax.SAXException;
 
 public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 
 	private static Server jettyServer;
 
 	private static String baseUrl;
-
 
 	private WebServiceTemplate template;
 
@@ -104,8 +103,8 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 	}
 
 	/**
-	 * A workaround for the faulty XmlDataContentHandler in the SAAJ RI, which cannot handle mime types such as
-	 * "text/xml; charset=UTF-8", causing issues with Axiom. We basically reset the command map
+	 * A workaround for the faulty XmlDataContentHandler in the SAAJ RI, which cannot handle mime types such as "text/xml;
+	 * charset=UTF-8", causing issues with Axiom. We basically reset the command map
 	 */
 	@Before
 	public void removeXmlDataContentHandler() throws SOAPException {
@@ -121,22 +120,20 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 		template.setMessageSender(new HttpComponentsMessageSender());
 	}
 
-
 	public abstract SoapMessageFactory createMessageFactory() throws Exception;
 
 	@Test
 	public void sendSourceAndReceiveToResult() throws SAXException, IOException {
 		StringResult result = new StringResult();
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
-				new StringSource(messagePayload), result);
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload), result);
 		Assert.assertTrue("Invalid result", b);
 		assertXMLEqual(messagePayload, result.toString());
 	}
 
 	@Test
 	public void sendSourceAndReceiveToResultNoResponse() {
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
-				new StringSource(messagePayload), new StringResult());
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse", new StringSource(messagePayload),
+				new StringResult());
 		Assert.assertFalse("Invalid result", b);
 	}
 
@@ -151,8 +148,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 				Assert.assertEquals("Invalid object", graph, requestObject);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				}
-				catch (TransformerException e) {
+				} catch (TransformerException e) {
 					Assert.fail(e.getMessage());
 				}
 			}
@@ -194,8 +190,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 				Assert.assertEquals("Invalid object", graph, requestObject);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				}
-				catch (TransformerException e) {
+				} catch (TransformerException e) {
 					Assert.fail(e.getMessage());
 				}
 			}
@@ -214,12 +209,11 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 	@Test
 	public void notFound() {
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-					new StringSource(messagePayload), new StringResult());
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound", new StringSource(messagePayload),
+					new StringResult());
 			Assert.fail("WebServiceTransportException expected");
-		}
-		catch (WebServiceTransportException ex) {
-			//expected
+		} catch (WebServiceTransportException ex) {
+			// expected
 		}
 	}
 
@@ -227,12 +221,10 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 	public void receiverFault() {
 		Result result = new StringResult();
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload),
-					result);
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload), result);
 			Assert.fail("SoapFaultClientException expected");
-		}
-		catch (SoapFaultClientException ex) {
-			//expected
+		} catch (SoapFaultClientException ex) {
+			// expected
 		}
 	}
 
@@ -240,12 +232,10 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 	public void senderFault() {
 		Result result = new StringResult();
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload),
-					result);
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload), result);
 			Assert.fail("SoapFaultClientException expected");
-		}
-		catch (SoapFaultClientException ex) {
-			//expected
+		} catch (SoapFaultClientException ex) {
+			// expected
 		}
 	}
 
@@ -291,8 +281,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 			super.init(servletConfig);
 			try {
 				messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-			}
-			catch (SOAPException ex) {
+			} catch (SOAPException ex) {
 				throw new ServletException("Unable to create message factory" + ex.getMessage());
 			}
 		}
@@ -308,25 +297,20 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTestCase {
 					SOAPBody replyBody = reply.getSOAPBody();
 					if (!replyBody.hasFault()) {
 						resp.setStatus(HttpServletResponse.SC_OK);
-					}
-					else {
-						if (replyBody.getFault().getFaultCodeAsQName()
-								.equals(SOAPConstants.SOAP_SENDER_FAULT)) {
+					} else {
+						if (replyBody.getFault().getFaultCodeAsQName().equals(SOAPConstants.SOAP_SENDER_FAULT)) {
 							resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 
-						}
-						else {
+						} else {
 							resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 						}
 					}
 					putHeaders(reply.getMimeHeaders(), resp);
 					reply.writeTo(resp.getOutputStream());
-				}
-				else {
+				} else {
 					resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 				}
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
 			}
 		}

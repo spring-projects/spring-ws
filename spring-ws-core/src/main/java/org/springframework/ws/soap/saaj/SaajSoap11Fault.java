@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import java.util.Locale;
+
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 
@@ -43,8 +44,7 @@ class SaajSoap11Fault extends SaajSoapFault implements Soap11Fault {
 	public void setFaultActorOrRole(String faultActor) {
 		try {
 			getSaajFault().setFaultActor(faultActor);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

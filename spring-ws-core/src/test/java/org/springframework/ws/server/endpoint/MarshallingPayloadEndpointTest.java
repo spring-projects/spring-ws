@@ -16,9 +16,14 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -29,7 +34,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -44,10 +48,6 @@ import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.fail;
 
 public class MarshallingPayloadEndpointTest {
 
@@ -76,8 +76,7 @@ public class MarshallingPayloadEndpointTest {
 					transformer.transform(source, new StreamResult(writer));
 					assertXMLEqual("Invalid source", "<request/>", writer.toString());
 					return 42L;
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					Assert.fail(e.getMessage());
 					return null;
 				}
@@ -89,8 +88,7 @@ public class MarshallingPayloadEndpointTest {
 				Assert.assertEquals("Invalid graph", "result", graph);
 				try {
 					transformer.transform(new StreamSource(new StringReader("<result/>")), result);
-				}
-				catch (TransformerException e) {
+				} catch (TransformerException e) {
 					Assert.fail(e.getMessage());
 				}
 			}
@@ -128,8 +126,7 @@ public class MarshallingPayloadEndpointTest {
 					transformer.transform(source, new StreamResult(writer));
 					assertXMLEqual("Invalid source", "<request/>", writer.toString());
 					return (long) 42;
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					Assert.fail(e.getMessage());
 					return null;
 				}

@@ -19,13 +19,12 @@ package org.springframework.ws.soap.security.wss4j2;
 import java.util.Properties;
 
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHandler;
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean;
+import org.w3c.dom.Document;
 
 public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTestCase {
 
@@ -53,10 +52,8 @@ public abstract class Wss4jMessageInterceptorEncryptionTestCase extends Wss4jTes
 		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
 		cryptoFactoryBean.afterPropertiesSet();
-		interceptor.setValidationDecryptionCrypto(cryptoFactoryBean
-				.getObject());
-		interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean
-				.getObject());
+		interceptor.setValidationDecryptionCrypto(cryptoFactoryBean.getObject());
+		interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean.getObject());
 
 		interceptor.afterPropertiesSet();
 	}

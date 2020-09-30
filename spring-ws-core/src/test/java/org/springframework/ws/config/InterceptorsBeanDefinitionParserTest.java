@@ -16,14 +16,13 @@
 
 package org.springframework.ws.config;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
@@ -34,8 +33,8 @@ public class InterceptorsBeanDefinitionParserTest {
 
 	@Test
 	public void namespace() throws Exception {
-		ApplicationContext applicationContext =
-				new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserTest.xml", getClass());
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+				"interceptorsBeanDefinitionParserTest.xml", getClass());
 		Map<String, ?> result = applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class);
 		assertEquals("no smart interceptors found", 8, result.size());
 
@@ -48,8 +47,8 @@ public class InterceptorsBeanDefinitionParserTest {
 
 	@Test
 	public void ordering() throws Exception {
-		ApplicationContext applicationContext =
-				new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserOrderTest.xml", getClass());
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+				"interceptorsBeanDefinitionParserOrderTest.xml", getClass());
 
 		List<DelegatingSmartEndpointInterceptor> interceptors = new ArrayList<DelegatingSmartEndpointInterceptor>(
 				applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class).values());
@@ -64,15 +63,14 @@ public class InterceptorsBeanDefinitionParserTest {
 
 	@Test
 	public void injection() throws Exception {
-		ApplicationContext applicationContext =
-				new ClassPathXmlApplicationContext("interceptorsBeanDefinitionParserInjectionTest.xml", getClass());
+		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
+				"interceptorsBeanDefinitionParserInjectionTest.xml", getClass());
 
 		List<DelegatingSmartEndpointInterceptor> interceptors = new ArrayList<DelegatingSmartEndpointInterceptor>(
 				applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class).values());
 		assertEquals("not enough smart interceptors found", 1, interceptors.size());
 
-		DummyInterceptor interceptor =
-				(DummyInterceptor) interceptors.get(0).getDelegate();
+		DummyInterceptor interceptor = (DummyInterceptor) interceptors.get(0).getDelegate();
 		assertNotNull(interceptor.getPropertyDependency());
 		assertNotNull(interceptor.getAutowiredDependency());
 	}

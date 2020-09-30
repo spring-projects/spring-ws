@@ -16,12 +16,12 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-
 import org.springframework.ws.WebServiceMessage;
 
 /**

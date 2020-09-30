@@ -26,8 +26,8 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Implementation of {@link MethodArgumentResolver} that supports {@link SoapMessage}, {@link SoapBody}, {@link
- * SoapEnvelope}, and {@link SoapHeader}.
+ * Implementation of {@link MethodArgumentResolver} that supports {@link SoapMessage}, {@link SoapBody},
+ * {@link SoapEnvelope}, and {@link SoapHeader}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -37,8 +37,8 @@ public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> parameterType = parameter.getParameterType();
-		return SoapMessage.class.equals(parameterType) || SoapBody.class.equals(parameterType) ||
-				SoapEnvelope.class.equals(parameterType) || SoapHeader.class.equals(parameterType);
+		return SoapMessage.class.equals(parameterType) || SoapBody.class.equals(parameterType)
+				|| SoapEnvelope.class.equals(parameterType) || SoapHeader.class.equals(parameterType);
 	}
 
 	@Override
@@ -50,14 +50,11 @@ public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 
 		if (SoapMessage.class.equals(parameterType)) {
 			return request;
-		}
-		else if (SoapBody.class.equals(parameterType)) {
+		} else if (SoapBody.class.equals(parameterType)) {
 			return request.getSoapBody();
-		}
-		else if (SoapEnvelope.class.equals(parameterType)) {
+		} else if (SoapEnvelope.class.equals(parameterType)) {
 			return request.getEnvelope();
-		}
-		else if (SoapHeader.class.equals(parameterType)) {
+		} else if (SoapHeader.class.equals(parameterType)) {
 			return request.getSoapHeader();
 		}
 		// should not happen

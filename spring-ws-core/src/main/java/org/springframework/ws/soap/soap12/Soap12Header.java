@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.soap12;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapHeader;
@@ -36,8 +37,7 @@ public interface Soap12Header extends SoapHeader {
 	 *
 	 * @param headerName the qualified name of the header that was not understood
 	 * @return the created {@code SoapHeaderElement}
-	 * @throws org.springframework.ws.soap.SoapHeaderException
-	 *			if the header cannot be created
+	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be created
 	 */
 	SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName);
 
@@ -46,23 +46,22 @@ public interface Soap12Header extends SoapHeader {
 	 *
 	 * @param supportedSoapUris an array of the URIs of SOAP versions supported
 	 * @return the created {@code SoapHeaderElement}
-	 * @throws org.springframework.ws.soap.SoapHeaderException
-	 *			if the header cannot be created
+	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be created
 	 */
 	SoapHeaderElement addUpgradeHeaderElement(java.lang.String[] supportedSoapUris);
 
 	/**
-	 * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed
-	 * for the given roles. Headers target to the "next" role will always be included, and those targeted to "none" will
-	 * never be included.
+	 * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed for the
+	 * given roles. Headers target to the "next" role will always be included, and those targeted to "none" will never be
+	 * included.
 	 *
-	 * @param roles				 an array of roles to search for
+	 * @param roles an array of roles to search for
 	 * @param isUltimateReceiver whether to search for headers for the ultimate receiver
 	 * @return an iterator over all the header elements that contain the specified roles
 	 * @throws SoapHeaderException if the headers cannot be returned
 	 * @see SoapHeaderElement
 	 */
-	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateReceiver) throws SoapHeaderException;
-
+	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateReceiver)
+			throws SoapHeaderException;
 
 }

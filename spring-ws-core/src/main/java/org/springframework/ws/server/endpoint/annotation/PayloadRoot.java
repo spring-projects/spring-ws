@@ -24,8 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method as the handler for an incoming request. The annotation values signify the request
- * payload root element that is handled by the method.
+ * Marks an endpoint method as the handler for an incoming request. The annotation values signify the request payload
+ * root element that is handled by the method.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping

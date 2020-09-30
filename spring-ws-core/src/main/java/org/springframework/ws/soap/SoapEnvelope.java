@@ -17,8 +17,8 @@
 package org.springframework.ws.soap;
 
 /**
- * Represents the {@code Envelope} element in a SOAP message. The header contains the optional
- * {@code SoapHeader} and {@code SoapBody}.
+ * Represents the {@code Envelope} element in a SOAP message. The header contains the optional {@code SoapHeader} and
+ * {@code SoapBody}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

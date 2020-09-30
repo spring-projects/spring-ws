@@ -27,9 +27,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Convenient base class for objects that use a {@code Transformer}. Subclasses can call {@link
- * #createTransformer()} or {@link #transform(Source, Result)}. This should be done per thread (i.e. per incoming
- * request), because {@code Transformer} instances are not thread-safe.
+ * Convenient base class for objects that use a {@code Transformer}. Subclasses can call {@link #createTransformer()} or
+ * {@link #transform(Source, Result)}. This should be done per thread (i.e. per incoming request), because
+ * {@code Transformer} instances are not thread-safe.
  *
  * @author Arjen Poutsma
  * @see Transformer
@@ -52,10 +52,13 @@ public abstract class TransformerObjectSupport {
 	}
 
 	/**
-	 * Instantiate a new TransformerFactory. <p>The default implementation simply calls {@link
-	 * TransformerFactory#newInstance()}. If a {@link #setTransformerFactoryClass "transformerFactoryClass"} has been
-	 * specified explicitly, the default constructor of the specified class will be called instead. <p>Can be overridden
-	 * in subclasses.
+	 * Instantiate a new TransformerFactory.
+	 * <p>
+	 * The default implementation simply calls {@link TransformerFactory#newInstance()}. If a
+	 * {@link #setTransformerFactoryClass "transformerFactoryClass"} has been specified explicitly, the default
+	 * constructor of the specified class will be called instead.
+	 * <p>
+	 * Can be overridden in subclasses.
 	 *
 	 * @param transformerFactoryClass the specified factory class (if any)
 	 * @return the new TransactionFactory instance
@@ -77,16 +80,15 @@ public abstract class TransformerObjectSupport {
 	 * Creates a new {@code Transformer}. Must be called per request, as transformers are not thread-safe.
 	 *
 	 * @return the created transformer
-	 * @throws TransformerConfigurationException
-	 *			if thrown by JAXP methods
+	 * @throws TransformerConfigurationException if thrown by JAXP methods
 	 */
 	protected final Transformer createTransformer() throws TransformerConfigurationException {
 		return transformerHelper.createTransformer();
 	}
 
 	/**
-	 * Transforms the given {@link Source} to the given {@link Result}. Creates a new {@link Transformer} for every
-	 * call, as transformers are not thread-safe.
+	 * Transforms the given {@link Source} to the given {@link Result}. Creates a new {@link Transformer} for every call,
+	 * as transformers are not thread-safe.
 	 *
 	 * @param source the source to transform from
 	 * @param result the result to transform to

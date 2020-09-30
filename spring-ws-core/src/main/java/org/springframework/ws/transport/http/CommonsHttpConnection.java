@@ -31,14 +31,13 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons HttpClient. Exposes a {@link
- * PostMethod}.
+ * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons HttpClient. Exposes a
+ * {@link PostMethod}.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -83,8 +82,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	public URI getUri() throws URISyntaxException {
 		try {
 			return new URI(postMethod.getURI().toString());
-		}
-		catch (URIException ex) {
+		} catch (URIException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}

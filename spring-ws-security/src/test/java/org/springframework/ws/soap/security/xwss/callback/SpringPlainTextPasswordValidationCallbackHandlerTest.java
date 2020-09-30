@@ -16,8 +16,14 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
+import static org.easymock.EasyMock.*;
+
 import java.util.Collections;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -28,12 +34,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
@@ -54,8 +54,8 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 		callbackHandler.setAuthenticationManager(authenticationManager);
 		username = "Bert";
 		password = "Ernie";
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest(username, password);
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				username, password);
 		callback = new PasswordValidationCallback(request);
 	}
 
@@ -66,9 +66,10 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserPlainTextValid() throws Exception {
-		Authentication authResult = new TestingAuthenticationToken(username, password, Collections
-						.<GrantedAuthority>emptyList());
-		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andReturn(authResult);
+		Authentication authResult = new TestingAuthenticationToken(username, password,
+				Collections.<GrantedAuthority> emptyList());
+		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)))
+				.andReturn(authResult);
 
 		replay(authenticationManager);
 
@@ -82,7 +83,8 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserPlainTextInvalid() throws Exception {
-		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password))).andThrow(new BadCredentialsException(""));
+		expect(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password)))
+				.andThrow(new BadCredentialsException(""));
 
 		replay(authenticationManager);
 
@@ -96,8 +98,8 @@ public class SpringPlainTextPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testCleanUp() throws Exception {
-		TestingAuthenticationToken authentication =
-				new TestingAuthenticationToken(new Object(), new Object(), Collections.<GrantedAuthority>emptyList());
+		TestingAuthenticationToken authentication = new TestingAuthenticationToken(new Object(), new Object(),
+				Collections.<GrantedAuthority> emptyList());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		CleanupCallback cleanupCallback = new CleanupCallback();

@@ -59,8 +59,7 @@ public abstract class FreePortScanner {
 						String.format("There were no ports available in the range %d to %d", minPort, maxPort));
 			}
 			candidatePort = getRandomPort(minPort, portRange);
-		}
-		while (!isPortAvailable(candidatePort));
+		} while (!isPortAvailable(candidatePort));
 
 		return candidatePort;
 	}
@@ -73,8 +72,7 @@ public abstract class FreePortScanner {
 		ServerSocket serverSocket;
 		try {
 			serverSocket = new ServerSocket();
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new IllegalStateException("Unable to create ServerSocket.", ex);
 		}
 
@@ -82,15 +80,12 @@ public abstract class FreePortScanner {
 			InetSocketAddress sa = new InetSocketAddress(port);
 			serverSocket.bind(sa);
 			return true;
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			return false;
-		}
-		finally {
+		} finally {
 			try {
 				serverSocket.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				// ignore
 			}
 		}

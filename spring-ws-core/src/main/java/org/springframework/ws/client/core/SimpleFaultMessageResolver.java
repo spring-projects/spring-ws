@@ -34,8 +34,7 @@ public class SimpleFaultMessageResolver implements FaultMessageResolver {
 	public void resolveFault(WebServiceMessage message) {
 		if (message instanceof FaultAwareWebServiceMessage) {
 			throw new WebServiceFaultException((FaultAwareWebServiceMessage) message);
-		}
-		else {
+		} else {
 			throw new WebServiceFaultException("Message has unknown fault: " + message);
 		}
 	}

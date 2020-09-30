@@ -16,16 +16,15 @@
 
 package org.springframework.ws.soap.soap12;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Test;
 import org.springframework.ws.soap.AbstractSoapEnvelopeTestCase;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
-
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractSoap12EnvelopeTestCase extends AbstractSoapEnvelopeTestCase {
 

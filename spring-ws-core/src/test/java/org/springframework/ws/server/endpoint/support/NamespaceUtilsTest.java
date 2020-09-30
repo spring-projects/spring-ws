@@ -16,18 +16,18 @@
 
 package org.springframework.ws.server.endpoint.support;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
+import org.junit.Test;
 import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.Namespaces;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
-@Namespaces({@Namespace(prefix = "prefix1", uri = "class1"), @Namespace(uri = "class2")})
+@Namespaces({ @Namespace(prefix = "prefix1", uri = "class1"), @Namespace(uri = "class2") })
 public class NamespaceUtilsTest {
 
 	@Test
@@ -38,7 +38,7 @@ public class NamespaceUtilsTest {
 		assertEquals("method2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
 
 	}
-	
+
 	@Test
 	public void getNamespaceContextClass() throws NoSuchMethodException {
 		Method method = getClass().getMethod("getNamespaceContextClass");
@@ -48,7 +48,7 @@ public class NamespaceUtilsTest {
 
 	}
 
-	@Namespaces({@Namespace(prefix = "prefix1", uri = "method1"), @Namespace(uri = "method2")})
+	@Namespaces({ @Namespace(prefix = "prefix1", uri = "method1"), @Namespace(uri = "method2") })
 	public void method() {
 
 	}

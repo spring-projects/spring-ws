@@ -26,9 +26,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * Add this annotation to an {@link Configuration @Configuration} class to have the Spring
- * Web Services configuration defined in {@link WsConfigurationSupport} imported. For
- * instance:
+ * Add this annotation to an {@link Configuration @Configuration} class to have the Spring Web Services configuration
+ * defined in {@link WsConfigurationSupport} imported. For instance:
  *
  * <pre class="code">
  * &#064;Configuration
@@ -38,9 +37,9 @@ import org.springframework.context.annotation.Import;
  *
  * }
  * </pre>
- * <p>Customize the imported configuration by implementing the
- * {@link WsConfigurer} interface or more likely by extending the
- * {@link WsConfigurerAdapter} base class and overriding individual methods:
+ * <p>
+ * Customize the imported configuration by implementing the {@link WsConfigurer} interface or more likely by extending
+ * the {@link WsConfigurerAdapter} base class and overriding individual methods:
  *
  * <pre class="code">
  * &#064;Configuration
@@ -48,48 +47,46 @@ import org.springframework.context.annotation.Import;
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurerAdapter {
  *
- *	&#064;Override
- *	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- *		interceptors.add(new MyInterceptor());
- *	}
+ * 	&#064;Override
+ * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ * 		interceptors.add(new MyInterceptor());
+ * 	}
  *
- *	&#064;Override
- *	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
- *		argumentResolvers.add(new MyArgumentResolver());
- *	}
+ * 	&#064;Override
+ * 	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
+ * 		argumentResolvers.add(new MyArgumentResolver());
+ * 	}
  *
- *	// More overridden methods ...
+ * 	// More overridden methods ...
  * }
  * </pre>
- *
- * <p>If the customization options of {@link WsConfigurer} do not expose
- * something you need to configure, consider removing the {@code @EnableWs}
- * annotation and extending directly from {@link WsConfigurationSupport}
- * overriding selected {@code @Bean} methods:
+ * <p>
+ * If the customization options of {@link WsConfigurer} do not expose something you need to configure, consider removing
+ * the {@code @EnableWs} annotation and extending directly from {@link WsConfigurationSupport} overriding selected
+ * {@code @Bean} methods:
  *
  * <pre class="code">
  * &#064;Configuration
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurationSupport {
  *
- *	&#064;Override
- *	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- *		interceptors.add(new MyInterceptor());
- *	}
+ * 	&#064;Override
+ * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ * 		interceptors.add(new MyInterceptor());
+ * 	}
  *
- *	&#064;Bean
- *	&#064;Override
- *	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
- *		// Create or delegate to "super" to create and
- *		// customize properties of DefaultMethodEndpointAdapter
- *	}
+ * 	&#064;Bean
+ * 	&#064;Override
+ * 	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
+ * 		// Create or delegate to "super" to create and
+ * 		// customize properties of DefaultMethodEndpointAdapter
+ * 	}
  * }
  * </pre>
  *
  * @see WsConfigurer
  * @see WsConfigurerAdapter
  * @see WsConfigurationSupport
- *
  * @author Arjen Poutsma
  * @since 2.2
  */

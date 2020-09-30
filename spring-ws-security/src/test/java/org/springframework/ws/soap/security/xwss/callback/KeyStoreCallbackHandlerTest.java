@@ -30,8 +30,7 @@ public class KeyStoreCallbackHandlerTest {
 
 	@Test
 	public void testLoadDefaultTrustStore() throws Exception {
-		System.setProperty("javax.net.ssl.trustStore",
-				"/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");
+		System.setProperty("javax.net.ssl.trustStore", "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");
 		handler.loadDefaultTrustStore();
 	}
 }

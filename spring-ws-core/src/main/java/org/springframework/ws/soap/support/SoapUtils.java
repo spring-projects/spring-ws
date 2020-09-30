@@ -33,8 +33,7 @@ public abstract class SoapUtils {
 
 	private static final Pattern ACTION_PATTERN = Pattern.compile("action\\s*=\\s*([^;]+)");
 
-	private SoapUtils() {
-	}
+	private SoapUtils() {}
 
 	/** Escapes the given SOAP action to be surrounded by quotes. */
 	public static String escapeAction(String soapAction) {
@@ -70,7 +69,7 @@ public abstract class SoapUtils {
 	 * Replaces or adds the value of the action parameter in the given SOAP 1.2 content type.
 	 *
 	 * @param contentType the SOAP 1.2 content type
-	 * @param action	  the action
+	 * @param action the action
 	 * @return the new content type
 	 */
 	public static String setActionInContentType(String contentType, String action) {
@@ -82,15 +81,12 @@ public abstract class SoapUtils {
 				matcher.appendReplacement(buffer, "action=" + action);
 				matcher.appendTail(buffer);
 				return buffer.toString();
-			}
-			else {
+			} else {
 				return contentType + "; action=" + action;
 			}
-		}
-		else {
+		} else {
 			return contentType;
 		}
 	}
-
 
 }

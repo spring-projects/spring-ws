@@ -19,6 +19,7 @@ package org.springframework.xml.dom;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -28,8 +29,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-
-import org.springframework.util.Assert;
 
 /**
  * SAX {@code ContentHandler} that transforms callback calls to DOM {@code Node}s.
@@ -56,8 +55,7 @@ public class DomContentHandler implements ContentHandler {
 		this.node = node;
 		if (node instanceof Document) {
 			document = (Document) node;
-		}
-		else {
+		} else {
 			document = node.getOwnerDocument();
 		}
 		Assert.notNull(document, "document must not be null");
@@ -66,8 +64,7 @@ public class DomContentHandler implements ContentHandler {
 	private Node getParent() {
 		if (!elements.isEmpty()) {
 			return elements.get(elements.size() - 1);
-		}
-		else {
+		} else {
 			return node;
 		}
 	}
@@ -100,8 +97,7 @@ public class DomContentHandler implements ContentHandler {
 		Node lastChild = parent.getLastChild();
 		if (lastChild != null && lastChild.getNodeType() == Node.TEXT_NODE) {
 			((Text) lastChild).appendData(data);
-		}
-		else {
+		} else {
 			Text text = document.createTextNode(data);
 			parent.appendChild(text);
 		}
@@ -119,30 +115,23 @@ public class DomContentHandler implements ContentHandler {
 	 */
 
 	@Override
-	public void setDocumentLocator(Locator locator) {
-	}
+	public void setDocumentLocator(Locator locator) {}
 
 	@Override
-	public void startDocument() throws SAXException {
-	}
+	public void startDocument() throws SAXException {}
 
 	@Override
-	public void endDocument() throws SAXException {
-	}
+	public void endDocument() throws SAXException {}
 
 	@Override
-	public void startPrefixMapping(String prefix, String uri) throws SAXException {
-	}
+	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
 
 	@Override
-	public void endPrefixMapping(String prefix) throws SAXException {
-	}
+	public void endPrefixMapping(String prefix) throws SAXException {}
 
 	@Override
-	public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
-	}
+	public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {}
 
 	@Override
-	public void skippedEntity(String name) throws SAXException {
-	}
+	public void skippedEntity(String name) throws SAXException {}
 }

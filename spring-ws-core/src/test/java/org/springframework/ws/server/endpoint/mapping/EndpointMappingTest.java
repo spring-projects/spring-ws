@@ -16,6 +16,10 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -24,11 +28,6 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Test case for {@link AbstractEndpointMapping}.
@@ -87,7 +86,7 @@ public class EndpointMappingTest {
 			}
 		};
 
-		mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
+		mapping.setInterceptors(new EndpointInterceptor[] { interceptor });
 		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
 		assertEquals("Unexpected amount of EndpointInterceptors returned", 1, result.getInterceptors().length);
 		assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);
@@ -108,8 +107,8 @@ public class EndpointMappingTest {
 			}
 		};
 		mapping.setApplicationContext(applicationContext);
-		mapping.setInterceptors(new EndpointInterceptor[]{interceptor});
-		
+		mapping.setInterceptors(new EndpointInterceptor[] { interceptor });
+
 		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
 		assertEquals("Unexpected amount of EndpointInterceptors returned", 2, result.getInterceptors().length);
 		assertEquals("Unexpected EndpointInterceptor returned", interceptor, result.getInterceptors()[0]);

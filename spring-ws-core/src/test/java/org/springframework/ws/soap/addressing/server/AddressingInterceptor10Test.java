@@ -16,6 +16,9 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.net.URI;
 
 import org.springframework.ws.context.DefaultMessageContext;
@@ -25,9 +28,6 @@ import org.springframework.ws.soap.addressing.version.Addressing10;
 import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertTrue;
 
 public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTestCase {
 

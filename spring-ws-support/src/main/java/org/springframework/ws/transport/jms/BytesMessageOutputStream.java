@@ -18,6 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 
@@ -42,8 +43,7 @@ class BytesMessageOutputStream extends OutputStream {
 	public void write(byte b[]) throws IOException {
 		try {
 			message.writeBytes(b);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}
@@ -52,8 +52,7 @@ class BytesMessageOutputStream extends OutputStream {
 	public void write(byte b[], int off, int len) throws IOException {
 		try {
 			message.writeBytes(b, off, len);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}
@@ -62,8 +61,7 @@ class BytesMessageOutputStream extends OutputStream {
 	public void write(int b) throws IOException {
 		try {
 			message.writeByte((byte) b);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}

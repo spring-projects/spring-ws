@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -33,6 +34,10 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -41,15 +46,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.springframework.xml.transform.TransformerHelper;
-import org.springframework.xml.transform.TraxUtils;
-
 /**
  * Implementation of {@link XPathOperations} that uses JAXP 1.3. JAXP 1.3 is part of Java SE since 1.5.
- *
- * <p>Namespaces can be set using the {@code namespaces} property.
+ * <p>
+ * Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
  * @see #setNamespaces(java.util.Map)
@@ -66,8 +66,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	public Jaxp13XPathTemplate(String xpathFactoryUri) {
 		try {
 			xpathFactory = XPathFactory.newInstance(xpathFactoryUri);
-		}
-		catch (XPathFactoryConfigurationException ex) {
+		} catch (XPathFactoryConfigurationException ex) {
 			throw new XPathException("Could not create XPathFactory", ex);
 		}
 	}
@@ -110,12 +109,10 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 		if (node != null) {
 			try {
 				return nodeMapper.mapNode(node, 0);
-			}
-			catch (DOMException ex) {
+			} catch (DOMException ex) {
 				throw new XPathException("Mapping resulted in DOMException", ex);
 			}
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -127,8 +124,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 		for (int i = 0; i < nodes.getLength(); i++) {
 			try {
 				results.add(nodeMapper.mapNode(nodes.item(i), i));
-			}
-			catch (DOMException ex) {
+			} catch (DOMException ex) {
 				throw new XPathException("Mapping resulted in DOMException", ex);
 			}
 		}
@@ -146,14 +142,11 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 			EvaluationCallback callback = new EvaluationCallback(xpath, expression, returnType);
 			TraxUtils.doWithSource(context, callback);
 			return callback.result;
-		}
-		catch (javax.xml.xpath.XPathException ex) {
+		} catch (javax.xml.xpath.XPathException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new XPathException(ex.getMessage(), ex);
 		}
 	}
@@ -230,7 +223,5 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 		}
 
 	}
-
-
 
 }

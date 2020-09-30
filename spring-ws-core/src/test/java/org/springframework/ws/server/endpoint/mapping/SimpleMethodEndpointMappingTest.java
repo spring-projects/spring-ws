@@ -16,14 +16,13 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SimpleMethodEndpointMappingTest {
 
@@ -35,7 +34,7 @@ public class SimpleMethodEndpointMappingTest {
 		mapping.setMethodPrefix("prefix");
 		mapping.setMethodSuffix("Suffix");
 		MyBean bean = new MyBean();
-		mapping.setEndpoints(new Object[]{bean});
+		mapping.setEndpoints(new Object[] { bean });
 		mapping.afterPropertiesSet();
 	}
 
@@ -55,8 +54,8 @@ public class SimpleMethodEndpointMappingTest {
 
 	@Test
 	public void testGetLookupKeyForMessageNamespace() throws Exception {
-		MockWebServiceMessage request =
-				new MockWebServiceMessage("<MyRequest xmlns='http://springframework.org/spring-ws/' />");
+		MockWebServiceMessage request = new MockWebServiceMessage(
+				"<MyRequest xmlns='http://springframework.org/spring-ws/' />");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		String result = mapping.getLookupKeyForMessage(messageContext);
 		Assert.assertEquals("Invalid lookup key", "MyRequest", result);

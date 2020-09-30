@@ -24,7 +24,6 @@ import java.net.URL;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -44,8 +43,7 @@ public class XmlValidatorFactoryTest {
 		try {
 			XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}
@@ -56,8 +54,7 @@ public class XmlValidatorFactoryTest {
 		try {
 			XmlValidatorFactory.createValidator(resource, "bla");
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}

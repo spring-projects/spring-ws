@@ -19,10 +19,14 @@ package org.springframework.ws.soap.server.endpoint;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -33,10 +37,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SoapFaultMappingExceptionResolverTest {
 
@@ -212,6 +212,5 @@ public class SoapFaultMappingExceptionResolverTest {
 		Assert.assertEquals("Invalid fault string on fault", "java.io.IOException", fault.getFaultStringOrReason());
 		Assert.assertNull("Detail on fault", fault.getFaultDetail());
 	}
-
 
 }

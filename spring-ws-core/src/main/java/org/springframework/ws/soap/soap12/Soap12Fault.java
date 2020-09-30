@@ -18,13 +18,14 @@ package org.springframework.ws.soap.soap12;
 
 import java.util.Iterator;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapFault;
 
 /**
- * Subinterface of {@code SoapFault} that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from
- * SOAP 1.2 with respect to SOAP Faults.
+ * Subinterface of {@code SoapFault} that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from SOAP
+ * 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

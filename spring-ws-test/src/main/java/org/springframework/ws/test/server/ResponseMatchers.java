@@ -16,9 +16,12 @@
 
 package org.springframework.ws.test.server;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -33,20 +36,17 @@ import org.springframework.ws.test.support.matcher.SoapEnvelopeDiffMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
-import static org.springframework.ws.test.support.AssertionErrors.fail;
-
 /**
- * Factory methods for {@link ResponseMatcher} classes. Typically used to provide input for {@link
- * ResponseActions#andExpect(ResponseMatcher)}.
+ * Factory methods for {@link ResponseMatcher} classes. Typically used to provide input for
+ * {@link ResponseActions#andExpect(ResponseMatcher)}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
 public abstract class ResponseMatchers {
 
-	private ResponseMatchers() {
-	}
-	
+	private ResponseMatchers() {}
+
 	// Payload
 
 	/**
@@ -72,7 +72,7 @@ public abstract class ResponseMatchers {
 	/**
 	 * Expects the payload to validate against the given XSD schema(s).
 	 *
-	 * @param schema		 the schema
+	 * @param schema the schema
 	 * @param furtherSchemas further schemas, if necessary
 	 * @return the response matcher
 	 */
@@ -93,7 +93,7 @@ public abstract class ResponseMatchers {
 	/**
 	 * Expects the given XPath expression to (not) exist or be evaluated to a value.
 	 *
-	 * @param xpathExpression  the XPath expression
+	 * @param xpathExpression the XPath expression
 	 * @param namespaceMapping the namespaces
 	 * @return the XPath expectations, to be further configured
 	 */
@@ -143,8 +143,7 @@ public abstract class ResponseMatchers {
 	 */
 	public static ResponseMatcher noFault() {
 		return new ResponseMatcher() {
-			public void match(WebServiceMessage request, WebServiceMessage response)
-					throws IOException, AssertionError {
+			public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
 				if (response instanceof FaultAwareWebServiceMessage) {
 					FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
 					if (faultMessage.hasFault()) {
@@ -169,7 +168,7 @@ public abstract class ResponseMatchers {
 	 * Expects a {@code MustUnderstand} fault with a particular fault string or reason.
 	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text. If {@code null} the fault string or
-	 * reason text will not be verified
+	 *          reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addMustUnderstandFault(String, Locale)
 	 */
 	public static ResponseMatcher mustUnderstandFault(String faultStringOrReason) {
@@ -194,7 +193,7 @@ public abstract class ResponseMatchers {
 	 * Expects a {@code Client} (SOAP 1.1) or {@code Sender} (SOAP 1.2) fault with a particular fault string or reason.
 	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text. If {@code null} the fault string or
-	 * reason text will not be verified
+	 *          reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
 	public static ResponseMatcher clientOrSenderFault(String faultStringOrReason) {
@@ -219,7 +218,7 @@ public abstract class ResponseMatchers {
 	 * Expects a {@code Server} (SOAP 1.1) or {@code Receiver} (SOAP 1.2) fault with a particular fault string or reason.
 	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text. If {@code null} the fault string or
-	 * reason text will not be verified
+	 *          reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
 	public static ResponseMatcher serverOrReceiverFault(String faultStringOrReason) {
@@ -244,7 +243,7 @@ public abstract class ResponseMatchers {
 	 * Expects a {@code VersionMismatch} fault with a particular fault string or reason.
 	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text. If {@code null} the fault string or
-	 * reason text will not be verified
+	 *          reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
 	public static ResponseMatcher versionMismatchFault(String faultStringOrReason) {

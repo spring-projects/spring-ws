@@ -25,8 +25,8 @@ import java.util.GregorianCalendar;
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 /**
- * A default implementation of a {@code TimestampValidationCallback.TimestampValidator}. Based on a version found
- * in the JWSDP samples.
+ * A default implementation of a {@code TimestampValidationCallback.TimestampValidator}. Based on a version found in the
+ * JWSDP samples.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -37,8 +37,7 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
 	public void validate(TimestampValidationCallback.Request request)
 			throws TimestampValidationCallback.TimestampValidationException {
 		if (request instanceof TimestampValidationCallback.UTCTimestampRequest) {
-			TimestampValidationCallback.UTCTimestampRequest utcRequest =
-					(TimestampValidationCallback.UTCTimestampRequest) request;
+			TimestampValidationCallback.UTCTimestampRequest utcRequest = (TimestampValidationCallback.UTCTimestampRequest) request;
 			Date created = parseDate(utcRequest.getCreated());
 
 			validateCreationTime(created, utcRequest.getMaxClockSkew(), utcRequest.getTimestampFreshnessLimit());
@@ -47,8 +46,7 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
 				Date expired = parseDate(utcRequest.getExpired());
 				validateExpirationTime(expired, utcRequest.getMaxClockSkew());
 			}
-		}
-		else {
+		} else {
 			throw new TimestampValidationCallback.TimestampValidationException("Unsupport request: [" + request + "]");
 		}
 	}
@@ -78,8 +76,7 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
 
 		if (addSkew) {
 			currentTime = currentTime + maxClockSkew;
-		}
-		else {
+		} else {
 			currentTime = currentTime - maxClockSkew;
 		}
 
@@ -94,14 +91,11 @@ public class DefaultTimestampValidator implements TimestampValidationCallback.Ti
 		try {
 			try {
 				return calendarFormatter1.parse(date);
-			}
-			catch (ParseException ignored) {
+			} catch (ParseException ignored) {
 				return calendarFormatter2.parse(date);
 			}
-		}
-		catch (ParseException ex) {
-			throw new TimestampValidationCallback.TimestampValidationException("Could not parse request date: " + date,
-					ex);
+		} catch (ParseException ex) {
+			throw new TimestampValidationCallback.TimestampValidationException("Could not parse request date: " + date, ex);
 		}
 	}
 

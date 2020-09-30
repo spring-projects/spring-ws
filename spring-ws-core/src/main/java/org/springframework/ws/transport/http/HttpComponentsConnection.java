@@ -33,7 +33,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -116,8 +115,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 		requestBuffer = null;
 		if (httpContext != null) {
 			httpResponse = httpClient.execute(httpPost, httpContext);
-		}
-		else {
+		} else {
 			httpResponse = httpClient.execute(httpPost);
 		}
 	}

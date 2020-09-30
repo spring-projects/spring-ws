@@ -19,6 +19,7 @@ package org.springframework.ws.soap.saaj.support;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -35,8 +36,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.TransportConstants;
 
 /**
- * Collection of generic utility methods to work with SAAJ. Includes conversion from SAAJ {@link Name} objects to {@link
- * QName}s and vice-versa, and SAAJ version checking.
+ * Collection of generic utility methods to work with SAAJ. Includes conversion from SAAJ {@link Name} objects to
+ * {@link QName}s and vice-versa, and SAAJ version checking.
  *
  * @author Arjen Poutsma
  * @see Name
@@ -54,8 +55,7 @@ public abstract class SaajUtils {
 	private static int saajVersion = SAAJ_13;
 
 	/**
-	 * Gets the SAAJ version.
-	 * Returns {@link #SAAJ_13} as of Spring-WS 2.2.
+	 * Gets the SAAJ version. Returns {@link #SAAJ_13} as of Spring-WS 2.2.
 	 *
 	 * @return a code comparable to the SAAJ_XX codes in this class
 	 */
@@ -64,8 +64,7 @@ public abstract class SaajUtils {
 	}
 
 	/**
-	 * Gets the SAAJ version for the specified {@link SOAPMessage}.
-	 * Returns {@link #SAAJ_13} as of Spring-WS 2.2.
+	 * Gets the SAAJ version for the specified {@link SOAPMessage}. Returns {@link #SAAJ_13} as of Spring-WS 2.2.
 	 *
 	 * @return a code comparable to the SAAJ_XX codes in this class
 	 * @see #SAAJ_11
@@ -79,8 +78,8 @@ public abstract class SaajUtils {
 	}
 
 	/**
-	 * Gets the SAAJ version for the specified {@link javax.xml.soap.SOAPElement}.
-	 * Returns {@link #SAAJ_13} as of Spring-WS 2.2.
+	 * Gets the SAAJ version for the specified {@link javax.xml.soap.SOAPElement}. Returns {@link #SAAJ_13} as of
+	 * Spring-WS 2.2.
 	 *
 	 * @return a code comparable to the SAAJ_XX codes in this class
 	 * @see #SAAJ_11
@@ -105,14 +104,11 @@ public abstract class SaajUtils {
 	private static String getSaajVersionString(int saajVersion) {
 		if (saajVersion >= SaajUtils.SAAJ_13) {
 			return "SAAJ 1.3";
-		}
-		else if (saajVersion == SaajUtils.SAAJ_12) {
+		} else if (saajVersion == SaajUtils.SAAJ_12) {
 			return "SAAJ 1.2";
-		}
-		else if (saajVersion == SaajUtils.SAAJ_11) {
+		} else if (saajVersion == SaajUtils.SAAJ_11) {
 			return "SAAJ 1.1";
-		}
-		else {
+		} else {
 			return "";
 		}
 	}
@@ -120,10 +116,10 @@ public abstract class SaajUtils {
 	/**
 	 * Converts a {@link QName} to a {@link Name}. A {@link SOAPElement} is required to resolve namespaces.
 	 *
-	 * @param qName			 the {@code QName} to convert
+	 * @param qName the {@code QName} to convert
 	 * @param resolveElement a {@code SOAPElement} used to resolve namespaces to prefixes
 	 * @return the converted SAAJ Name
-	 * @throws SOAPException			if conversion is unsuccessful
+	 * @throws SOAPException if conversion is unsuccessful
 	 * @throws IllegalArgumentException if {@code qName} is not fully qualified
 	 */
 	public static Name toName(QName qName, SOAPElement resolveElement) throws SOAPException {
@@ -131,13 +127,11 @@ public abstract class SaajUtils {
 		SOAPEnvelope envelope = getEnvelope(resolveElement);
 		if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(qNamePrefix)) {
 			return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
-		}
-		else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+		} else if (StringUtils.hasLength(qName.getNamespaceURI())) {
 			Iterator<?> prefixes;
 			if (getSaajVersion(resolveElement) == SAAJ_11) {
 				prefixes = resolveElement.getNamespacePrefixes();
-			}
-			else {
+			} else {
 				prefixes = resolveElement.getVisibleNamespacePrefixes();
 			}
 			while (prefixes.hasNext()) {
@@ -147,8 +141,7 @@ public abstract class SaajUtils {
 				}
 			}
 			return envelope.createName(qName.getLocalPart(), "", qName.getNamespaceURI());
-		}
-		else {
+		} else {
 			return envelope.createName(qName.getLocalPart());
 		}
 	}
@@ -162,11 +155,9 @@ public abstract class SaajUtils {
 	public static QName toQName(Name name) {
 		if (StringUtils.hasLength(name.getURI()) && StringUtils.hasLength(name.getPrefix())) {
 			return new QName(name.getURI(), name.getLocalName(), name.getPrefix());
-		}
-		else if (StringUtils.hasLength(name.getURI())) {
+		} else if (StringUtils.hasLength(name.getURI())) {
 			return new QName(name.getURI(), name.getLocalName());
-		}
-		else {
+		} else {
 			return new QName(name.getLocalName());
 		}
 	}
@@ -174,11 +165,11 @@ public abstract class SaajUtils {
 	/**
 	 * Loads a SAAJ {@code SOAPMessage} from the given resource with a given message factory.
 	 *
-	 * @param resource		 the resource to read from
+	 * @param resource the resource to read from
 	 * @param messageFactory SAAJ message factory used to construct the message
 	 * @return the loaded SAAJ message
 	 * @throws SOAPException if the message cannot be constructed
-	 * @throws IOException	 if the input stream resource cannot be loaded
+	 * @throws IOException if the input stream resource cannot be loaded
 	 */
 	public static SOAPMessage loadMessage(Resource resource, MessageFactory messageFactory)
 			throws SOAPException, IOException {
@@ -188,8 +179,7 @@ public abstract class SaajUtils {
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_LENGTH, Long.toString(resource.getFile().length()));
 			return messageFactory.createMessage(mimeHeaders, is);
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}
@@ -207,8 +197,7 @@ public abstract class SaajUtils {
 				return (SOAPEnvelope) element;
 			}
 			element = element.getParentElement();
-		}
-		while (element != null);
+		} while (element != null);
 		return null;
 	}
 
@@ -216,7 +205,7 @@ public abstract class SaajUtils {
 	 * Returns the first child element of the given body.
 	 */
 	public static SOAPElement getFirstBodyElement(SOAPBody body) {
-		for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext(); ) {
+		for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext();) {
 			Object child = iterator.next();
 			if (child instanceof SOAPElement) {
 				return (SOAPElement) child;

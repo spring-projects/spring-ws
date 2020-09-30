@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -55,8 +56,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 	private String faultReason;
 
-	public MockWebServiceMessage() {
-	}
+	public MockWebServiceMessage() {}
 
 	public MockWebServiceMessage(Source source) throws TransformerException {
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
@@ -90,8 +90,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 			is = inputStreamSource.getInputStream();
 			Reader reader = new InputStreamReader(is, "UTF-8");
 			content.replace(0, content.length(), FileCopyUtils.copyToString(reader));
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}
@@ -187,19 +186,16 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 		}
 
 		@Override
-		public void close() throws IOException {
-		}
+		public void close() throws IOException {}
 
 		@Override
-		public void flush() {
-		}
+		public void flush() {}
 
 		@Override
 		public void write(char cbuf[], int off, int len) {
 			if (off < 0 || off > cbuf.length || len < 0 || off + len > cbuf.length || off + len < 0) {
 				throw new IndexOutOfBoundsException();
-			}
-			else if (len == 0) {
+			} else if (len == 0) {
 				return;
 			}
 			content.append(cbuf, off, len);

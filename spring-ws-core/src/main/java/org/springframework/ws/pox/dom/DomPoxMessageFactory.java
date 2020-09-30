@@ -18,18 +18,18 @@ package org.springframework.ws.pox.dom;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * Implementation of the {@link WebServiceMessageFactory} interface that creates a {@link DomPoxMessage}.
@@ -61,7 +61,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	 */
 	public DomPoxMessageFactory(DocumentBuilderFactory documentBuilderFactory) {
 		this.documentBuilderFactory = documentBuilderFactory;
-		
+
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilderFactory.setValidating(false);
 		documentBuilderFactory.setExpandEntityReferences(false);
@@ -84,8 +84,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	}
 
 	/**
-	 * Set if the XML parser should expand entity reference nodes. Default is
-	 * {@code false}.
+	 * Set if the XML parser should expand entity reference nodes. Default is {@code false}.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityRef) {
 		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
@@ -97,11 +96,9 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.newDocument();
 			return new DomPoxMessage(request, createTransformer(), contentType);
-		}
-		catch (ParserConfigurationException ex) {
+		} catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);
-		}
-		catch (TransformerConfigurationException ex) {
+		} catch (TransformerConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create transformer", ex);
 		}
 	}
@@ -112,14 +109,11 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.parse(inputStream);
 			return new DomPoxMessage(request, createTransformer(), contentType);
-		}
-		catch (ParserConfigurationException ex) {
+		} catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);
-		}
-		catch (SAXException ex) {
+		} catch (SAXException ex) {
 			throw new DomPoxMessageException("Could not parse request message", ex);
-		}
-		catch (TransformerConfigurationException ex) {
+		} catch (TransformerConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create transformer", ex);
 		}
 	}

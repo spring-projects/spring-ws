@@ -22,7 +22,6 @@ import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axiom.soap.SOAPFaultRole;
 import org.apache.axiom.soap.SOAPProcessingException;
-
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
@@ -44,8 +43,7 @@ abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 		try {
 			SOAPFaultRole axiomFaultRole = getAxiomFactory().createSOAPFaultRole(getAxiomFault());
 			axiomFaultRole.setRoleValue(actor);
-		}
-		catch (SOAPProcessingException ex) {
+		} catch (SOAPProcessingException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 
@@ -56,8 +54,7 @@ abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 		try {
 			SOAPFaultDetail axiomFaultDetail = getAxiomFault().getDetail();
 			return axiomFaultDetail != null ? new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory()) : null;
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 
@@ -68,8 +65,7 @@ abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 		try {
 			SOAPFaultDetail axiomFaultDetail = getAxiomFactory().createSOAPFaultDetail(getAxiomFault());
 			return new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 

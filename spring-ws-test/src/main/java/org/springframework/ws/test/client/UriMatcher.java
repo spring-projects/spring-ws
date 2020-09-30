@@ -16,9 +16,9 @@
 
 package org.springframework.ws.test.client;
 
-import java.net.URI;
+import static org.springframework.ws.test.support.AssertionErrors.*;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
+import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 

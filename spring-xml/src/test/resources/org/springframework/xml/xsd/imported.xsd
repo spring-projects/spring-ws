@@ -4,12 +4,12 @@
             xmlns="http://www.springframework.org/spring-ws/imported/schema" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
 
-    <xsd:element name="GetOrderResponse">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="child" type="xsd:string"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="GetOrderResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="child" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
 
 </xsd:schema>

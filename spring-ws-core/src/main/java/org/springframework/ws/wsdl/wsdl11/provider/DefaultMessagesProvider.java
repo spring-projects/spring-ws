@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Iterator;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
@@ -28,16 +29,15 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.springframework.util.Assert;
-
 /**
  * Default implementation of the {@link MessagesProvider}.
- *
- * <p>Simply adds all elements contained in the schema(s) as messages.
+ * <p>
+ * Simply adds all elements contained in the schema(s) as messages.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -101,25 +101,25 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
 	/**
 	 * Indicates whether the given element should be includes as {@link Message} in the definition.
-	 *
-	 * <p>Default implementation checks whether the element has the XML Schema namespace, and if it has the local name
+	 * <p>
+	 * Default implementation checks whether the element has the XML Schema namespace, and if it has the local name
 	 * "element".
 	 *
 	 * @param element the element elligable for being a message
 	 * @return {@code true} if to be included as message; {@code false} otherwise
 	 */
 	protected boolean isMessageElement(Element element) {
-		return "element".equals(element.getLocalName()) &&
-				"http://www.w3.org/2001/XMLSchema".equals(element.getNamespaceURI());
+		return "element".equals(element.getLocalName())
+				&& "http://www.w3.org/2001/XMLSchema".equals(element.getNamespaceURI());
 	}
 
 	/**
 	 * Called after the {@link Message} has been created.
+	 * <p>
+	 * Default implementation sets the name of the message to the element name.
 	 *
-	 * <p>Default implementation sets the name of the message to the element name.
-	 *
-	 * @param definition  the WSDL4J {@code Definition}
-	 * @param message	  the WSDL4J {@code Message}
+	 * @param definition the WSDL4J {@code Definition}
+	 * @param message the WSDL4J {@code Message}
 	 * @param elementName the element name
 	 * @throws WSDLException in case of errors
 	 */
@@ -133,11 +133,11 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
 	/**
 	 * Called after the {@link Part} has been created.
+	 * <p>
+	 * Default implementation sets the element name of the part.
 	 *
-	 * <p>Default implementation sets the element name of the part.
-	 *
-	 * @param definition  the WSDL4J {@code Definition}
-	 * @param part		  the WSDL4J {@code Part}
+	 * @param definition the WSDL4J {@code Definition}
+	 * @param part the WSDL4J {@code Part}
 	 * @param elementName the elementName @throws WSDLException in case of errors
 	 * @see Part#setElementName(javax.xml.namespace.QName)
 	 */

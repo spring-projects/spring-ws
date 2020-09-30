@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Collections;
@@ -25,28 +28,23 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.easymock.Capture;
 import org.junit.Test;
-
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * @author Andreas Veithen
  */
 public class AbstractHttpSenderConnectionTest {
-	
+
 	/**
-	 * Tests that {@link AbstractHttpSenderConnection} doesn't consume the response stream before
-	 * passing it to the message factory. This is a regression test for SWS-707.
+	 * Tests that {@link AbstractHttpSenderConnection} doesn't consume the response stream before passing it to the
+	 * message factory. This is a regression test for SWS-707.
 	 *
-	 * @param chunking
-	 *            Specifies whether the test should simulate a response with chunking enabled.
+	 * @param chunking Specifies whether the test should simulate a response with chunking enabled.
 	 * @throws Exception
 	 */
 	private void testSupportsStreaming(boolean chunking) throws Exception {
-		byte[] content = new byte[16*1024];
+		byte[] content = new byte[16 * 1024];
 		new Random().nextBytes(content);
 		CountingInputStream rawInputStream = new CountingInputStream(new ByteArrayInputStream(content));
 
@@ -67,10 +65,9 @@ public class AbstractHttpSenderConnectionTest {
 
 		connection.receive(messageFactory);
 
-		assertTrue("The raw input stream has been completely consumed",
-				rawInputStream.getCount() < content.length);
-		assertArrayEquals("Unexpected content received by the message factory",
-				content, IOUtils.toByteArray(inputStreamCapture.getValue()));
+		assertTrue("The raw input stream has been completely consumed", rawInputStream.getCount() < content.length);
+		assertArrayEquals("Unexpected content received by the message factory", content,
+				IOUtils.toByteArray(inputStreamCapture.getValue()));
 	}
 
 	@Test

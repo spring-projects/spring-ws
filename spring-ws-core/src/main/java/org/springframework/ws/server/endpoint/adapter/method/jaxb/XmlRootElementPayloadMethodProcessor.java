@@ -27,8 +27,8 @@ import org.springframework.ws.context.MessageContext;
 /**
  * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
  * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
- * MethodReturnValueHandler} that supports parameters annotated with {@link XmlRootElement @XmlRootElement} or {@link
- * XmlType @XmlType}, and return values annotated with {@link XmlRootElement @XmlRootElement}.
+ * MethodReturnValueHandler} that supports parameters annotated with {@link XmlRootElement @XmlRootElement} or
+ * {@link XmlType @XmlType}, and return values annotated with {@link XmlRootElement @XmlRootElement}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -38,8 +38,7 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
 	@Override
 	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
 		Class<?> parameterType = parameter.getParameterType();
-		return parameterType.isAnnotationPresent(XmlRootElement.class) ||
-				parameterType.isAnnotationPresent(XmlType.class);
+		return parameterType.isAnnotationPresent(XmlRootElement.class) || parameterType.isAnnotationPresent(XmlType.class);
 	}
 
 	@Override
@@ -48,8 +47,7 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
 
 		if (parameterType.isAnnotationPresent(XmlRootElement.class)) {
 			return unmarshalFromRequestPayload(messageContext, parameterType);
-		}
-		else {
+		} else {
 			JAXBElement<?> element = unmarshalElementFromRequestPayload(messageContext, parameterType);
 			return element != null ? element.getValue() : null;
 		}
@@ -62,11 +60,10 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
 	}
 
 	@Override
-	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-			throws JAXBException {
+	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType,
+			Object returnValue) throws JAXBException {
 		Class<?> parameterType = returnType.getParameterType();
 		marshalToResponsePayload(messageContext, parameterType, returnValue);
 	}
-
 
 }

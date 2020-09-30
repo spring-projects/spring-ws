@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.addressing.version;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.util.Assert;
@@ -30,7 +31,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.w3.org/Submission/2004/SUBM-ws-addressing-20040810/">Web Services Addressing, August
- *		2004</a>
+ *      2004</a>
  * @since 1.5.0
  */
 public class Addressing200408 extends AbstractAddressingVersion {
@@ -70,8 +71,7 @@ public class Addressing200408 extends AbstractAddressingVersion {
 
 	@Override
 	protected final QName getInvalidAddressingHeaderFaultSubcode() {
-		return new QName(NAMESPACE_URI, "InvalidMessageInformationHeader",
-				getNamespacePrefix());
+		return new QName(NAMESPACE_URI, "InvalidMessageInformationHeader", getNamespacePrefix());
 	}
 
 	@Override
@@ -81,8 +81,7 @@ public class Addressing200408 extends AbstractAddressingVersion {
 
 	@Override
 	protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-		return new QName(NAMESPACE_URI, "MessageInformationHeaderRequired",
-				getNamespacePrefix());
+		return new QName(NAMESPACE_URI, "MessageInformationHeaderRequired", getNamespacePrefix());
 	}
 
 	@Override

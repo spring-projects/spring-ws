@@ -18,7 +18,6 @@ package org.springframework.xml.transform;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
 import org.junit.Assert;

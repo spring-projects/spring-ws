@@ -40,7 +40,7 @@ public abstract class WebServiceClientException extends WebServiceException {
 	 * Create a new instance of the {@code WebServiceClientException} class.
 	 *
 	 * @param msg the detail message
-	 * @param ex  the root {@link Throwable exception}
+	 * @param ex the root {@link Throwable exception}
 	 */
 	public WebServiceClientException(String msg, Throwable ex) {
 		super(msg, ex);

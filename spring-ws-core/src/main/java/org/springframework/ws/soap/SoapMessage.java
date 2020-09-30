@@ -18,13 +18,12 @@ package org.springframework.ws.soap;
 
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.mime.MimeMessage;
-
 import org.w3c.dom.Document;
 
 /**
  * Represents an abstraction for SOAP messages, providing access to a SOAP Envelope. The contents of the SOAP body can
- * be retrieved by {@code getPayloadSource()} and {@code getPayloadResult()} on
- * {@code WebServiceMessage}, the super-interface of this interface.
+ * be retrieved by {@code getPayloadSource()} and {@code getPayloadResult()} on {@code WebServiceMessage}, the
+ * super-interface of this interface.
  *
  * @author Arjen Poutsma
  * @see #getPayloadSource()
@@ -60,8 +59,8 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 	SoapBody getSoapBody() throws SoapBodyException;
 
 	/**
-	 * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a convenience method
-	 * for {@code getEnvelope().getHeader()}.
+	 * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a convenience method for
+	 * {@code getEnvelope().getHeader()}.
 	 *
 	 * @see SoapEnvelope#getHeader()
 	 */
@@ -77,9 +76,9 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 	SoapVersion getVersion();
 
 	/**
-	 * Returns this message as a {@link Document}.
-	 *
-	 * Depending on the underlying implementation, this Document may be 'live' or not.
+	 * Returns this message as a {@link Document}. Depending on the underlying implementation, this Document may be 'live'
+	 * or not.
+	 * 
 	 * @return this soap message as a DOM document
 	 */
 	Document getDocument();

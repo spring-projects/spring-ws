@@ -35,21 +35,23 @@ import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
 
 /**
  * Populates the X509 authorities via an {@link org.springframework.security.core.userdetails.UserDetailsService}.
- * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
+ * <p>
+ * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
+ * </p>
  *
  * @author Luke Taylor
  * @version $Id: DaoX509AuthoritiesPopulator.java 2544 2008-01-29 11:50:33Z luke_t $
  */
 public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, InitializingBean, MessageSourceAware {
 
-	//~ Instance fields ================================================================================================
+	// ~ Instance fields ================================================================================================
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	private Pattern subjectDNPattern;
 	private String subjectDNRegex = "CN=(.*?),";
 	private UserDetailsService userDetailsService;
 
-	//~ Methods ========================================================================================================
+	// ~ Methods ========================================================================================================
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -67,7 +69,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
 		if (!matcher.find()) {
 			throw new BadCredentialsException(messages.getMessage("DaoX509AuthoritiesPopulator.noMatching",
-					new Object[] {subjectDN}, "No matching pattern was found in subjectDN: {0}"));
+					new Object[] { subjectDN }, "No matching pattern was found in subjectDN: {0}"));
 		}
 
 		if (matcher.groupCount() != 1) {
@@ -80,7 +82,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
 		if (user == null) {
 			throw new AuthenticationServiceException(
-				"UserDetailsService returned null, which is an interface contract violation");
+					"UserDetailsService returned null, which is an interface contract violation");
 		}
 
 		return user;
@@ -92,12 +94,15 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 	}
 
 	/**
-	 * Sets the regular expression which will by used to extract the user name from the certificate's Subject
-	 * DN.
-	 * <p>It should contain a single group; for example the default expression "CN=(.?)," matches the common
-	 * name field. So "CN=Jimi Hendrix, OU=..." will give a user name of "Jimi Hendrix".</p>
-	 * <p>The matches are case insensitive. So "emailAddress=(.?)," will match "EMAILADDRESS=jimi@hendrix.org,
-	 * CN=..." giving a user name "jimi@hendrix.org"</p>
+	 * Sets the regular expression which will by used to extract the user name from the certificate's Subject DN.
+	 * <p>
+	 * It should contain a single group; for example the default expression "CN=(.?)," matches the common name field. So
+	 * "CN=Jimi Hendrix, OU=..." will give a user name of "Jimi Hendrix".
+	 * </p>
+	 * <p>
+	 * The matches are case insensitive. So "emailAddress=(.?)," will match "EMAILADDRESS=jimi@hendrix.org, CN=..." giving
+	 * a user name "jimi@hendrix.org"
+	 * </p>
 	 *
 	 * @param subjectDNRegex the regular expression to find in the subject
 	 */

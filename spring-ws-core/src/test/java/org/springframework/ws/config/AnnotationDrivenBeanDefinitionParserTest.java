@@ -16,10 +16,14 @@
 
 package org.springframework.ws.config;
 
+import static org.junit.Assert.*;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.EndpointAdapter;
@@ -46,12 +50,6 @@ import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElem
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Arjen Poutsma
  */
@@ -61,8 +59,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 
 	@Before
 	public void setUp() throws Exception {
-		applicationContext =
-				new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml", getClass());
+		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml", getClass());
 	}
 
 	@Test
@@ -76,8 +73,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 
 	@Test
 	public void endpointAdapters() {
-		Map<String, EndpointAdapter> result =
-				applicationContext.getBeansOfType(EndpointAdapter.class);
+		Map<String, EndpointAdapter> result = applicationContext.getBeansOfType(EndpointAdapter.class);
 		assertEquals("invalid amount of endpoint mappings found", 1, result.size());
 		DefaultMethodEndpointAdapter endpointAdapter = (DefaultMethodEndpointAdapter) result.values().iterator().next();
 
@@ -114,7 +110,6 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 		assertContainsInstanceOf(result.values(), SoapFaultAnnotationExceptionResolver.class);
 		assertContainsInstanceOf(result.values(), SimpleSoapExceptionResolver.class);
 	}
-
 
 	private <T> void assertContainsInstanceOf(Collection<T> collection, Class<? extends T> clazz) {
 		boolean found = false;

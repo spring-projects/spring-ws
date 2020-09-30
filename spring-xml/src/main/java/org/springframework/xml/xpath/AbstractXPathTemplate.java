@@ -17,16 +17,16 @@
 package org.springframework.xml.xpath;
 
 import java.util.Map;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for implementations of {@link XPathOperations}. Contains a namespaces property.

@@ -25,14 +25,14 @@ public class XMLInputFactoryUtils {
 	/**
 	 * Build an {@link XMLInputFactory} and set properties to prevent external entities from accessing.
 	 *
-	 * @see XMLInputFactory#newInstance() 
+	 * @see XMLInputFactory#newInstance()
 	 */
 	public static XMLInputFactory newInstance() {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 
 		factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
 		factory.setProperty("javax.xml.stream.isSupportingExternalEntities", false);
-		
+
 		return factory;
 	}
 

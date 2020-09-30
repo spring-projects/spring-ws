@@ -4,15 +4,15 @@
             xmlns="http://www.springframework.org/spring-ws/include/schema" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
 
-    <xsd:include schemaLocation="included.xsd"/>
+	<xsd:include schemaLocation="included.xsd"/>
 
-    <xsd:element name="GetOrderRequest">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="child" type="xsd:string"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="GetOrderRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="child" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
 
 
 </xsd:schema>

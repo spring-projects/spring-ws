@@ -17,18 +17,19 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Properties;
+
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 
 /**
  * Implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces that supports SOAP 1.1 and
  * SOAP 1.2. Delegates to {@link Soap11Provider} and {@link Soap12Provider}.
- *
- * <p>By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
- * resulting WSDL can be set. Additionally, the transport uri can be changed from the default HTTP transport by using the
- * {@link #setTransportUri(String) transportUri} property.
- *
- * <p>The {@link #setCreateSoap11Binding(boolean) createSoap11} and {@link #setCreateSoap12Binding(boolean) createSoap12}
+ * <p>
+ * By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
+ * resulting WSDL can be set. Additionally, the transport uri can be changed from the default HTTP transport by using
+ * the {@link #setTransportUri(String) transportUri} property.
+ * <p>
+ * The {@link #setCreateSoap11Binding(boolean) createSoap11} and {@link #setCreateSoap12Binding(boolean) createSoap12}
  * properties indicate whether a SOAP 1.1 or SOAP 1.2 binding should be created. These properties default to
  * {@code true} and {@code false} respectively.
  *
@@ -47,8 +48,8 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 
 	/**
 	 * Indicates whether a SOAP 1.1 binding should be created.
-	 *
-	 * <p>Defaults to {@code true}.
+	 * <p>
+	 * Defaults to {@code true}.
 	 */
 	public void setCreateSoap11Binding(boolean createSoap11Binding) {
 		this.createSoap11Binding = createSoap11Binding;
@@ -56,8 +57,8 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 
 	/**
 	 * Indicates whether a SOAP 1.2 binding should be created.
-	 *
-	 * <p>Defaults to {@code false}.
+	 * <p>
+	 * Defaults to {@code false}.
 	 */
 	public void setCreateSoap12Binding(boolean createSoap12Binding) {
 		this.createSoap12Binding = createSoap12Binding;

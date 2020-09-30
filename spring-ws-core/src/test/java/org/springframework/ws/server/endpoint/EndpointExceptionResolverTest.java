@@ -18,11 +18,10 @@ package org.springframework.ws.server.endpoint;
 
 import java.util.Collections;
 
-import org.springframework.ws.context.MessageContext;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.ws.context.MessageContext;
 
 /**
  * Test for AbstractEndpointExceptionResolver
@@ -56,6 +55,5 @@ public class EndpointExceptionResolverTest {
 		Assert.assertTrue("AbstractEndpointExceptionResolver did not match mapped MethodEndpoint", matched);
 	}
 
-	public void emptyMethod() {
-	}
+	public void emptyMethod() {}
 }

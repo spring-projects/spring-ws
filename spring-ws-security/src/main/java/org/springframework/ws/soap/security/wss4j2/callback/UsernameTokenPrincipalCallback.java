@@ -17,14 +17,14 @@
 package org.springframework.ws.soap.security.wss4j2.callback;
 
 import java.io.Serializable;
+
 import javax.security.auth.callback.Callback;
 
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 
 /**
- * Underlying security services instantiate and pass a {@code UsernameTokenPrincipalCallback} to the
- * {@code handle} method of a {@code CallbackHandler} to pass a security
- * {@code WSUsernameTokenPrincipal}.
+ * Underlying security services instantiate and pass a {@code UsernameTokenPrincipalCallback} to the {@code handle}
+ * method of a {@code CallbackHandler} to pass a security {@code WSUsernameTokenPrincipal}.
  *
  * @author Arjen Poutsma
  * @author Jamin Hitchcock

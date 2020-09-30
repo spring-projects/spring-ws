@@ -2,26 +2,26 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-    <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
-    </bean>
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+	</bean>
 
-    <bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
-        <property name="physicalName" value="SenderRequestQueue"/>
-    </bean>
+	<bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="SenderRequestQueue"/>
+	</bean>
 
-    <bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
-        <property name="physicalName" value="SenderResponseQueue"/>
-    </bean>
+	<bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<property name="physicalName" value="SenderResponseQueue"/>
+	</bean>
 
-    <bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-        <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="defaultDestination" ref="requestQueue"/>
-    </bean>
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="defaultDestination" ref="requestQueue"/>
+	</bean>
 
-    <bean id="messageSender" class="org.springframework.ws.transport.jms.JmsMessageSender">
-        <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="receiveTimeout" value="500"/>
-    </bean>
+	<bean id="messageSender" class="org.springframework.ws.transport.jms.JmsMessageSender">
+		<property name="connectionFactory" ref="connectionFactory"/>
+		<property name="receiveTimeout" value="500"/>
+	</bean>
 
 </beans>

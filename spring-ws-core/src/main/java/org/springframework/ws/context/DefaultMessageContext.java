@@ -43,8 +43,7 @@ public class DefaultMessageContext extends AbstractMessageContext {
 	}
 
 	/**
-	 * Construct a new instance of the {@code DefaultMessageContext} with the given request message and message
-	 * factory.
+	 * Construct a new instance of the {@code DefaultMessageContext} with the given request message and message factory.
 	 */
 	public DefaultMessageContext(WebServiceMessage request, WebServiceMessageFactory messageFactory) {
 		Assert.notNull(request, "request must not be null");

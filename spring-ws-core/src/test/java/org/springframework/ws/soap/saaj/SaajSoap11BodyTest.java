@@ -16,19 +16,18 @@
 
 package org.springframework.ws.soap.saaj;
 
+import static org.junit.Assert.*;
+
 import java.util.Locale;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Test;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
 
@@ -56,6 +55,5 @@ public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
 		soapBody.addClientOrSenderFault("Foo", Locale.ENGLISH);
 		assertNull("Language set", saajSoapBody.getFault().getFaultStringLocale());
 	}
-
 
 }

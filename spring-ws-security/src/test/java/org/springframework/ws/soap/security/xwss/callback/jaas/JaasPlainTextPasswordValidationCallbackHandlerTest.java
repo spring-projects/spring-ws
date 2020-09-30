@@ -16,10 +16,11 @@
 
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 public class JaasPlainTextPasswordValidationCallbackHandlerTest {
 
@@ -34,8 +35,8 @@ public class JaasPlainTextPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserPlainTextValid() throws Exception {
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				"Bert", "Ernie");
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		callbackHandler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
@@ -44,8 +45,8 @@ public class JaasPlainTextPasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testAuthenticateUserPlainTextInvalid() throws Exception {
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				"Bert", "Big bird");
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		callbackHandler.handleInternal(callback);
 		boolean authenticated = callback.getResult();

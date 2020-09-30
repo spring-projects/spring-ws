@@ -18,37 +18,31 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.StringReader;
 
-import org.springframework.ws.soap.SoapFault;
-import org.springframework.ws.soap.SoapFaultDetail;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.ws.soap.SoapFault;
+import org.springframework.ws.soap.SoapFaultDetail;
 
 @SuppressWarnings("Since15")
 public class AxiomSoapFaultDetailTest {
 
-	private static final String FAILING_FAULT =
-			"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-					"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
-					"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n	 " + "<soapenv:Body>\n	" +
-					"<soapenv:Fault>\n	" + "<faultcode>Client</faultcode>\n  " +
-					"<faultstring>Client Error</faultstring>\n	" + "<detail>\n " +
-					"<ns1:dispositionReport xmlns:ns1=\"urn:uddi-org:api_v3\">\n  " +
-					"<ns1:result errno=\"10210\"/>\n  " + "</ns1:dispositionReport>" + "</detail>" +
-					"</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>";
+	private static final String FAILING_FAULT = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+			+ "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+			+ "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n	 " + "<soapenv:Body>\n	" + "<soapenv:Fault>\n	"
+			+ "<faultcode>Client</faultcode>\n  " + "<faultstring>Client Error</faultstring>\n	" + "<detail>\n "
+			+ "<ns1:dispositionReport xmlns:ns1=\"urn:uddi-org:api_v3\">\n  " + "<ns1:result errno=\"10210\"/>\n  "
+			+ "</ns1:dispositionReport>" + "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>";
 
-	private static final String SUCCEEDING_FAULT =
-			"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
-					"xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" " +
-					"xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n	 " + "<soapenv:Body>\n	" +
-					"<soapenv:Fault>\n	" + "<faultcode>Client</faultcode>\n  " +
-					"<faultstring>Client Error</faultstring>\n	" + "<detail>" +
-					"<ns1:dispositionReport xmlns:ns1=\"urn:uddi-org:api_v3\">\n  " +
-					"<ns1:result errno=\"10210\"/>\n  " + "</ns1:dispositionReport>" + "</detail>" +
-					"</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>";
+	private static final String SUCCEEDING_FAULT = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+			+ "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+			+ "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n	 " + "<soapenv:Body>\n	" + "<soapenv:Fault>\n	"
+			+ "<faultcode>Client</faultcode>\n  " + "<faultstring>Client Error</faultstring>\n	" + "<detail>"
+			+ "<ns1:dispositionReport xmlns:ns1=\"urn:uddi-org:api_v3\">\n  " + "<ns1:result errno=\"10210\"/>\n  "
+			+ "</ns1:dispositionReport>" + "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>";
 
 	private AxiomSoapMessage failingMessage;
 

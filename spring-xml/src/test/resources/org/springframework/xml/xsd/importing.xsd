@@ -4,14 +4,14 @@
             xmlns="http://www.springframework.org/spring-ws/importing/schema" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
 
-    <xsd:import namespace="http://www.springframework.org/spring-ws/imported/schema" schemaLocation="imported.xsd"/>
+	<xsd:import namespace="http://www.springframework.org/spring-ws/imported/schema" schemaLocation="imported.xsd"/>
 
-    <xsd:element name="GetOrderRequest">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="child" type="xsd:string"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
+	<xsd:element name="GetOrderRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="child" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
 
 </xsd:schema>

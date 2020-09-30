@@ -28,8 +28,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 /**
- * Simple callback handler that validates passwords against a in-memory {@code Properties} object. Password
- * validation is done on a case-sensitive basis.
+ * Simple callback handler that validates passwords against a in-memory {@code Properties} object. Password validation
+ * is done on a case-sensitive basis.
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
@@ -59,10 +59,9 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(users, "users is required");
 	}
-	
+
 	@Override
-	public void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException
-	{
+	public void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
 		String username = callback.getIdentifier();
 		String passwd = users.get(username);
 		callback.setPassword(passwd);

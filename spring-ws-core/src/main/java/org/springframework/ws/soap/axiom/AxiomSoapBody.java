@@ -24,7 +24,6 @@ import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
@@ -44,8 +43,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 		super(axiomBody, axiomFactory);
 		if (payloadCaching) {
 			payload = new CachingPayload(axiomBody, axiomFactory);
-		}
-		else {
+		} else {
 			payload = new NonCachingPayload(axiomBody, axiomFactory);
 		}
 	}

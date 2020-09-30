@@ -16,10 +16,9 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import org.junit.Test;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
-
-import org.junit.Test;
 import org.w3c.dom.Document;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTestCase extends Wss4jTestCase {

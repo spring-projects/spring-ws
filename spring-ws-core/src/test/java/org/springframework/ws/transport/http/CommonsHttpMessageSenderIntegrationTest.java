@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,6 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -75,16 +75,14 @@ public class CommonsHttpMessageSenderIntegrationTest
 			appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
 			appContext.refresh();
 
-			CommonsHttpMessageSender messageSender = appContext
-					.getBean("messageSender", CommonsHttpMessageSender.class);
+			CommonsHttpMessageSender messageSender = appContext.getBean("messageSender", CommonsHttpMessageSender.class);
 			connection = messageSender.createConnection(new URI("http://localhost:" + port));
 
 			appContext.close();
 
 			connection.send(new SaajSoapMessage(messageFactory.createMessage()));
 			connection.receive(new SaajSoapMessageFactory(messageFactory));
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				try {
 					connection.close();
@@ -110,6 +108,5 @@ public class CommonsHttpMessageSenderIntegrationTest
 
 		}
 	}
-
 
 }

@@ -16,14 +16,13 @@
 
 package org.springframework.ws.soap.axiom;
 
-import org.apache.axiom.om.OMSourcedElement;
+import static org.junit.Assert.*;
 
+import org.apache.axiom.om.OMSourcedElement;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
-
-import static org.junit.Assert.*;
 
 public class AxiomSoap11NonCachingMessageTest extends AbstractSoap11MessageTestCase {
 
@@ -46,8 +45,7 @@ public class AxiomSoap11NonCachingMessageTest extends AbstractSoap11MessageTestC
 		super.testWriteToTransportOutputStream();
 
 		SoapBody body = soapMessage.getSoapBody();
-		OMSourcedElement axiomPayloadEle =
-				(OMSourcedElement) ((AxiomSoapBody) body).getAxiomElement().getFirstElement();
+		OMSourcedElement axiomPayloadEle = (OMSourcedElement) ((AxiomSoapBody) body).getAxiomElement().getFirstElement();
 		assertFalse("Non-cached body should not be expanded now", axiomPayloadEle.isExpanded());
 		axiomPayloadEle.getFirstElement();
 		assertTrue("Non-cached body should now be expanded", axiomPayloadEle.isExpanded());

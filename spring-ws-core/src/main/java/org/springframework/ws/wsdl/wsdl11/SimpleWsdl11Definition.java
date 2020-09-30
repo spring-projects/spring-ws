@@ -17,23 +17,23 @@
 package org.springframework.ws.wsdl.wsdl11;
 
 import java.io.IOException;
-import javax.xml.transform.Source;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
+import javax.xml.transform.Source;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.xml.transform.ResourceSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
  * The default {@link Wsdl11Definition} implementation.
- *
- * <p>Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the {@link
- * #SimpleWsdl11Definition(Resource) constructor}.
+ * <p>
+ * Allows a WSDL to be set by the {@link #setWsdl wsdl} property, or directly in the
+ * {@link #SimpleWsdl11Definition(Resource) constructor}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -44,14 +44,13 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
 	/**
 	 * Create a new instance of the {@link SimpleWsdl11Definition} class.
-	 *
-	 * <p>A subsequent call to the {@link #setWsdl(Resource)} method is required.
+	 * <p>
+	 * A subsequent call to the {@link #setWsdl(Resource)} method is required.
 	 */
-	public SimpleWsdl11Definition() {
-	}
+	public SimpleWsdl11Definition() {}
 
 	/**
-	 * Create a new instance of the	 {@link SimpleWsdl11Definition} class with the specified resource.
+	 * Create a new instance of the {@link SimpleWsdl11Definition} class with the specified resource.
 	 *
 	 * @param wsdlResource the WSDL resource; must not be {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code wsdlResource} is {@code null}
@@ -73,11 +72,9 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 			XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 			return new ResourceSource(xmlReader, wsdlResource);
-		}
-		catch (SAXException ex) {
+		} catch (SAXException ex) {
 			throw new WsdlDefinitionException("Could not create XMLReader", ex);
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			throw new WsdlDefinitionException("Could not create source from " + this.wsdlResource, ex);
 		}
 	}
@@ -94,6 +91,5 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 	public String toString() {
 		return "SimpleWsdl11Definition " + wsdlResource;
 	}
-
 
 }

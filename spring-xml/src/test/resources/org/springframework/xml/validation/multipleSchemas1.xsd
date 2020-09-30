@@ -3,12 +3,12 @@
         targetNamespace="http://www.springframework.org/spring-ws/test/multipleSchemas1"
         elementFormDefault="qualified">
 
-    <element name="multipleSchemas1">
-        <simpleType>
-            <restriction base="string">
-                <pattern value="[a-c]+"/>
-            </restriction>
-        </simpleType>
-    </element>
+	<element name="multipleSchemas1">
+		<simpleType>
+			<restriction base="string">
+				<pattern value="[a-c]+"/>
+			</restriction>
+		</simpleType>
+	</element>
 
 </schema>

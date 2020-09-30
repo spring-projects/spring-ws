@@ -16,11 +16,11 @@
 
 package org.springframework.ws.test.server;
 
-import java.io.IOException;
-import javax.xml.namespace.QName;
+import static org.springframework.ws.test.support.AssertionErrors.*;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import java.io.IOException;
+
+import javax.xml.namespace.QName;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
@@ -53,8 +53,7 @@ abstract class SoapFaultResponseMatcher implements ResponseMatcher {
 		QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
 		assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
 		if (expectedFaultStringOrReason != null) {
-			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
-					soapFault.getFaultStringOrReason());
+			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason, soapFault.getFaultStringOrReason());
 		}
 	}
 

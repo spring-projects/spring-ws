@@ -1,11 +1,11 @@
 package org.springframework.ws.config.annotation;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -36,8 +36,8 @@ public class WsConfigurerAdapterTest {
 
 	@Test
 	public void interceptors() {
-		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext.getBean(
-				PayloadRootAnnotationMethodEndpointMapping.class);
+		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
+				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
 		assertEquals(0, endpointMapping.getOrder());
 
 		EndpointInterceptor[] interceptors = endpointMapping.getInterceptors();
@@ -49,8 +49,7 @@ public class WsConfigurerAdapterTest {
 	public void argumentResolvers() {
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
-		List<MethodArgumentResolver> argumentResolvers =
-				endpointAdapter.getCustomMethodArgumentResolvers();
+		List<MethodArgumentResolver> argumentResolvers = endpointAdapter.getCustomMethodArgumentResolvers();
 		assertEquals(1, argumentResolvers.size());
 		assertTrue(argumentResolvers.get(0) instanceof MyMethodArgumentResolver);
 
@@ -62,15 +61,13 @@ public class WsConfigurerAdapterTest {
 	public void returnValueHandlers() {
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
-		List<MethodReturnValueHandler> returnValueHandlers =
-				endpointAdapter.getCustomMethodReturnValueHandlers();
+		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getCustomMethodReturnValueHandlers();
 		assertEquals(1, returnValueHandlers.size());
 		assertTrue(returnValueHandlers.get(0) instanceof MyReturnValueHandler);
 
 		returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
 		assertFalse(returnValueHandlers.isEmpty());
 	}
-
 
 	@Configuration
 	@EnableWs
@@ -87,14 +84,12 @@ public class WsConfigurerAdapterTest {
 		}
 
 		@Override
-		public void addReturnValueHandlers(
-				List<MethodReturnValueHandler> returnValueHandlers) {
+		public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 			returnValueHandlers.add(new MyReturnValueHandler());
 		}
 	}
 
-	public static class MyInterceptor extends EndpointInterceptorAdapter {
-	}
+	public static class MyInterceptor extends EndpointInterceptorAdapter {}
 
 	public static class MyMethodArgumentResolver implements MethodArgumentResolver {
 
@@ -104,8 +99,7 @@ public class WsConfigurerAdapterTest {
 		}
 
 		@Override
-		public Object resolveArgument(MessageContext messageContext,
-				MethodParameter parameter) throws Exception {
+		public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
 			return null;
 		}
 	}
@@ -118,11 +112,8 @@ public class WsConfigurerAdapterTest {
 		}
 
 		@Override
-		public void handleReturnValue(MessageContext messageContext,
-				MethodParameter returnType, Object returnValue) throws Exception {
-		}
+		public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+				throws Exception {}
 	}
-
-
 
 }

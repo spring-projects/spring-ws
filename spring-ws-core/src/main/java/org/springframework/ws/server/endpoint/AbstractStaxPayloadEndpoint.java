@@ -23,8 +23,7 @@ import org.springframework.xml.XMLInputFactoryUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for endpoints use StAX. Provides an {@code XMLInputFactory} and an
- * {@code XMLOutputFactory}.
+ * Abstract base class for endpoints use StAX. Provides an {@code XMLInputFactory} and an {@code XMLOutputFactory}.
  *
  * @author Arjen Poutsma
  * @see XMLInputFactory

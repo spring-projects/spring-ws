@@ -16,42 +16,42 @@
 
 package org.springframework.ws.soap.security.x509.cache;
 
-import java.security.cert.X509Certificate;
-
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+
+import java.security.cert.X509Certificate;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
-
 /**
- * Caches {@code User} objects using a Spring IoC defined <a
- * href="http://ehcache.sourceforge.net">EHCACHE</a>.
- * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
+ * Caches {@code User} objects using a Spring IoC defined <a href="http://ehcache.sourceforge.net">EHCACHE</a>.
+ * <p>
+ * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
+ * </p>
  *
  * @author Luke Taylor
  * @author Ben Alex
  * @author Greg Turnquist
- *
- * @deprecated Migrate to {@link SpringBasedX509UserCache} and inject a platform neutral Spring-based {@link org.springframework.cache.Cache}.
+ * @deprecated Migrate to {@link SpringBasedX509UserCache} and inject a platform neutral Spring-based
+ *             {@link org.springframework.cache.Cache}.
  */
 @Deprecated
 public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBean {
-	//~ Static fields/initializers =====================================================================================
+	// ~ Static fields/initializers =====================================================================================
 
 	private static final Log logger = LogFactory.getLog(EhCacheBasedX509UserCache.class);
 
-	//~ Instance fields ================================================================================================
+	// ~ Instance fields ================================================================================================
 
 	private Ehcache cache;
 
-	//~ Methods ========================================================================================================
+	// ~ Methods ========================================================================================================
 
 	@Override
 	public void afterPropertiesSet() throws Exception {

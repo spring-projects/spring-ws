@@ -16,18 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.junit.Assert.*;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-
-import org.junit.Test;
 import org.w3c.dom.Document;
-
-import static org.junit.Assert.assertEquals;
 
 public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTestCase {
 
@@ -40,8 +39,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		MessageContext context = getSoap11MessageContext(message);
 		interceptor.secureMessage(message, context);
 		Document document = getDocument(message);
-		assertXpathExists("timestamp header not found",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp", document);
+		assertXpathExists("timestamp header not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp",
+				document);
 	}
 
 	@Test
@@ -67,7 +66,6 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		interceptor.validateMessage(message, context);
 	}
 
-
 	@Test
 	public void testSecureTimestampWithCustomTtl() throws Exception {
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
@@ -79,10 +77,12 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.secureMessage(message, context);
-		
-		String created = xpathTemplate.evaluateAsString("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Created/text()",
+
+		String created = xpathTemplate.evaluateAsString(
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Created/text()",
 				message.getEnvelope().getSource());
-		String expires = xpathTemplate.evaluateAsString("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Expires/text()",
+		String expires = xpathTemplate.evaluateAsString(
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Expires/text()",
 				message.getEnvelope().getSource());
 
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");

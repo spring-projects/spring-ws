@@ -16,18 +16,17 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.easymock.EasyMock.*;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.createMock;
 
 public class SoapHeaderMatcherTest {
 

@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.security.support;
 
+import static org.junit.Assert.*;
+
 import javax.net.ssl.KeyManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 public class KeyManagersFactoryBeanTest {

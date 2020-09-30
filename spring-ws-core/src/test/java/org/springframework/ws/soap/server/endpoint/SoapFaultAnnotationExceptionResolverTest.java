@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
@@ -25,7 +26,6 @@ import javax.xml.soap.SOAPMessage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -245,6 +245,5 @@ public class SoapFaultAnnotationExceptionResolverTest {
 	public class NonAnnotatedException extends Exception {
 
 	}
-
 
 }

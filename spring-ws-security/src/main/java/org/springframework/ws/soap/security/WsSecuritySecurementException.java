@@ -18,8 +18,8 @@ package org.springframework.ws.soap.security;
 
 /**
  * Exception indicating that something went wrong during the securement of a message.
- *
- * <p>This is a checked exception since we want it to be caught, logged and handled rather than cause the application to
+ * <p>
+ * This is a checked exception since we want it to be caught, logged and handled rather than cause the application to
  * fail. Failure to secure a message is usually not a fatal problem.
  *
  * @author Arjen Poutsma

@@ -33,39 +33,68 @@ import java.security.cert.X509CertSelector;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Enumeration;
+
 import javax.crypto.SecretKey;
+
+import org.apache.xml.security.utils.RFC2253Parser;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.DecryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.EncryptionKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
 import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
-import org.apache.xml.security.utils.RFC2253Parser;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.ws.soap.security.support.KeyStoreUtils;
 
 /**
- * Callback handler that uses Java Security {@code KeyStore}s to handle cryptographic callbacks. Allows for
- * specific key stores to be set for various cryptographic operations.
- *
- * <p>This handler requires one or more key stores to be set. You can configure them in your application context by using a
+ * Callback handler that uses Java Security {@code KeyStore}s to handle cryptographic callbacks. Allows for specific key
+ * stores to be set for various cryptographic operations.
+ * <p>
+ * This handler requires one or more key stores to be set. You can configure them in your application context by using a
  * {@code KeyStoreFactoryBean}. The exact stores to be set depends on the cryptographic operations that are to be
- * performed by this handler. The table underneath show the key store to be used for each operation: <table border="1">
- * <tr> <td><strong>Cryptographic operation</strong></td> <td><strong>Key store used</strong></td> </tr> <tr>
- * <td>Certificate validation</td> <td>first {@code keyStore}, then {@code trustStore}</td> </tr> <tr>
- * <td>Decryption based on private key</td> <td>{@code keyStore}</td> </tr> <tr> <td>Decryption based on symmetric
- * key</td> <td>{@code symmetricStore}</td> </tr> <tr> <td>Encryption based on certificate</td>
- * <td>{@code trustStore}</td> </tr> <tr> <td>Encryption based on symmetric key</td>
- * <td>{@code symmetricStore}</td> </tr> <tr> <td>Signing</td> <td>{@code keyStore}</td> </tr> <tr>
- * <td>Signature verification</td> <td>{@code trustStore}</td> </tr> </table>
- *
- * <p><h3>Default key stores</h3> If the {@code symmetricStore} is not set, it will default to the
- * {@code keyStore}. If the key or trust store is not set, this handler will use the standard Java mechanism to
- * load or create it. See {@link #loadDefaultKeyStore()} and {@link #loadDefaultTrustStore()}.
- *
- * <p><h3>Examples</h3> For instance, if you want to use the {@code KeyStoreCallbackHandler} to validate incoming
+ * performed by this handler. The table underneath show the key store to be used for each operation:
+ * <table border="1">
+ * <tr>
+ * <td><strong>Cryptographic operation</strong></td>
+ * <td><strong>Key store used</strong></td>
+ * </tr>
+ * <tr>
+ * <td>Certificate validation</td>
+ * <td>first {@code keyStore}, then {@code trustStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Decryption based on private key</td>
+ * <td>{@code keyStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Decryption based on symmetric key</td>
+ * <td>{@code symmetricStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Encryption based on certificate</td>
+ * <td>{@code trustStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Encryption based on symmetric key</td>
+ * <td>{@code symmetricStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Signing</td>
+ * <td>{@code keyStore}</td>
+ * </tr>
+ * <tr>
+ * <td>Signature verification</td>
+ * <td>{@code trustStore}</td>
+ * </tr>
+ * </table>
+ * <p>
+ * <h3>Default key stores</h3> If the {@code symmetricStore} is not set, it will default to the {@code keyStore}. If the
+ * key or trust store is not set, this handler will use the standard Java mechanism to load or create it. See
+ * {@link #loadDefaultKeyStore()} and {@link #loadDefaultTrustStore()}.
+ * <p>
+ * <h3>Examples</h3> For instance, if you want to use the {@code KeyStoreCallbackHandler} to validate incoming
  * certificates or signatures, you would use a trust store, like so:
+ * 
  * <pre>
  * &lt;bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler"&gt;
  *	   &lt;property name="trustStore" ref="trustStore"/&gt;
@@ -76,8 +105,9 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  *	   &lt;property name="password" value="changeit"/&gt;
  * &lt;/bean&gt;
  * </pre>
- * If you want to use it to decrypt incoming certificates or sign outgoing messages, you would use a key store, like
- * so:
+ * 
+ * If you want to use it to decrypt incoming certificates or sign outgoing messages, you would use a key store, like so:
+ * 
  * <pre>
  * &lt;bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler"&gt;
  *	   &lt;property name="keyStore" ref="keyStore"/&gt;
@@ -90,9 +120,9 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * &lt;/bean&gt;
  * </pre>
  *
- * <h3>Handled callbacks</h3> This class handles {@code CertificateValidationCallback}s,
- * {@code DecryptionKeyCallback}s, {@code EncryptionKeyCallback}s, {@code SignatureKeyCallback}s, and
- * {@code SignatureVerificationKeyCallback}s. It throws an {@code UnsupportedCallbackException} for others.
+ * <h3>Handled callbacks</h3> This class handles {@code CertificateValidationCallback}s, {@code DecryptionKeyCallback}s,
+ * {@code EncryptionKeyCallback}s, {@code SignatureKeyCallback}s, and {@code SignatureVerificationKeyCallback}s. It
+ * throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see KeyStore
@@ -103,7 +133,7 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * @see SignatureKeyCallback
  * @see SignatureVerificationKeyCallback
  * @see <a href="http://java.sun.com/j2se/1.4.2/docs/guide/security/jsse/JSSERefGuide.html#X509TrustManager">The
- *		standard Java trust store mechanism</a>
+ *      standard Java trust store mechanism</a>
  * @since 1.0.0
  */
 public class KeyStoreCallbackHandler extends CryptographyCallbackHandler implements InitializingBean {
@@ -129,8 +159,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	private static X509Certificate getCertificate(String alias, KeyStore store) throws IOException {
 		try {
 			return (X509Certificate) store.getCertificate(alias);
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -149,8 +178,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return x509Cert;
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -183,8 +211,8 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	}
 
 	/**
-	 * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it default to
-	 * the private key password.
+	 * Sets the password used to retrieve keys from the symmetric keystore. If this property is not set, it default to the
+	 * private key password.
 	 *
 	 * @see #setPrivateKeyPassword(String)
 	 */
@@ -217,8 +245,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	}
 
 	/**
-	 * Determines if certificate revocation checking is enabled or not. Default is
-	 * {@code false}.
+	 * Determines if certificate revocation checking is enabled or not. Default is {@code false}.
 	 */
 	public void setRevocationEnabled(boolean revocationEnabled) {
 		this.revocationEnabled = revocationEnabled;
@@ -242,8 +269,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleAliasPrivKeyCertRequest(SignatureKeyCallback callback,
-													   SignatureKeyCallback.AliasPrivKeyCertRequest request)
-			throws IOException {
+			SignatureKeyCallback.AliasPrivKeyCertRequest request) throws IOException {
 		PrivateKey privateKey = getPrivateKey(request.getAlias());
 		X509Certificate certificate = getCertificate(request.getAlias());
 		request.setPrivateKey(privateKey);
@@ -252,8 +278,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleAliasSymmetricKeyRequest(DecryptionKeyCallback callback,
-														DecryptionKeyCallback.AliasSymmetricKeyRequest request)
-			throws IOException {
+			DecryptionKeyCallback.AliasSymmetricKeyRequest request) throws IOException {
 		SecretKey secretKey = getSymmetricKey(request.getAlias());
 		request.setSymmetricKey(secretKey);
 	}
@@ -264,16 +289,14 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleAliasSymmetricKeyRequest(EncryptionKeyCallback callback,
-														EncryptionKeyCallback.AliasSymmetricKeyRequest request)
-			throws IOException {
+			EncryptionKeyCallback.AliasSymmetricKeyRequest request) throws IOException {
 		SecretKey secretKey = getSymmetricKey(request.getAlias());
 		request.setSymmetricKey(secretKey);
 	}
 
 	@Override
 	protected final void handleAliasX509CertificateRequest(EncryptionKeyCallback callback,
-														   EncryptionKeyCallback.AliasX509CertificateRequest request)
-			throws IOException {
+			EncryptionKeyCallback.AliasX509CertificateRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(request.getAlias());
 		request.setX509Certificate(certificate);
 	}
@@ -293,8 +316,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleDefaultPrivKeyCertRequest(SignatureKeyCallback callback,
-														 SignatureKeyCallback.DefaultPrivKeyCertRequest request)
-			throws IOException {
+			SignatureKeyCallback.DefaultPrivKeyCertRequest request) throws IOException {
 		PrivateKey privateKey = getPrivateKey(defaultAlias);
 		X509Certificate certificate = getCertificate(defaultAlias);
 		request.setPrivateKey(privateKey);
@@ -303,16 +325,14 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleDefaultX509CertificateRequest(EncryptionKeyCallback callback,
-															 EncryptionKeyCallback.DefaultX509CertificateRequest request)
-			throws IOException {
+			EncryptionKeyCallback.DefaultX509CertificateRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(defaultAlias);
 		request.setX509Certificate(certificate);
 	}
 
 	@Override
 	protected final void handlePublicKeyBasedPrivKeyCertRequest(SignatureKeyCallback callback,
-																SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest request)
-			throws IOException {
+			SignatureKeyCallback.PublicKeyBasedPrivKeyCertRequest request) throws IOException {
 		PrivateKey privateKey = getPrivateKey(request.getPublicKey());
 		X509Certificate certificate = getCertificate(request.getPublicKey());
 		request.setPrivateKey(privateKey);
@@ -324,56 +344,49 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	//
 	@Override
 	protected final void handlePublicKeyBasedPrivKeyRequest(DecryptionKeyCallback callback,
-															DecryptionKeyCallback.PublicKeyBasedPrivKeyRequest request)
-			throws IOException {
+			DecryptionKeyCallback.PublicKeyBasedPrivKeyRequest request) throws IOException {
 		PrivateKey key = getPrivateKey(request.getPublicKey());
 		request.setPrivateKey(key);
 	}
 
 	@Override
 	protected final void handlePublicKeyBasedRequest(EncryptionKeyCallback callback,
-													 EncryptionKeyCallback.PublicKeyBasedRequest request)
-			throws IOException {
+			EncryptionKeyCallback.PublicKeyBasedRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(request.getPublicKey());
 		request.setX509Certificate(certificate);
 	}
 
 	@Override
 	protected final void handlePublicKeyBasedRequest(SignatureVerificationKeyCallback callback,
-													 SignatureVerificationKeyCallback.PublicKeyBasedRequest request)
-			throws IOException {
+			SignatureVerificationKeyCallback.PublicKeyBasedRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(request.getPublicKey());
 		request.setX509Certificate(certificate);
 	}
 
 	@Override
 	protected final void handleX509CertificateBasedRequest(DecryptionKeyCallback callback,
-														   DecryptionKeyCallback.X509CertificateBasedRequest request)
-			throws IOException {
+			DecryptionKeyCallback.X509CertificateBasedRequest request) throws IOException {
 		PrivateKey privKey = getPrivateKey(request.getX509Certificate());
 		request.setPrivateKey(privKey);
 	}
 
 	@Override
 	protected final void handleX509IssuerSerialBasedRequest(DecryptionKeyCallback callback,
-															DecryptionKeyCallback.X509IssuerSerialBasedRequest request)
-			throws IOException {
+			DecryptionKeyCallback.X509IssuerSerialBasedRequest request) throws IOException {
 		PrivateKey key = getPrivateKey(request.getIssuerName(), request.getSerialNumber());
 		request.setPrivateKey(key);
 	}
 
 	@Override
 	protected final void handleX509IssuerSerialBasedRequest(SignatureVerificationKeyCallback callback,
-															SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest request)
-			throws IOException {
+			SignatureVerificationKeyCallback.X509IssuerSerialBasedRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(request.getIssuerName(), request.getSerialNumber());
 		request.setX509Certificate(certificate);
 	}
 
 	@Override
 	protected final void handleX509SubjectKeyIdentifierBasedRequest(DecryptionKeyCallback callback,
-																	DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
-			throws IOException {
+			DecryptionKeyCallback.X509SubjectKeyIdentifierBasedRequest request) throws IOException {
 		PrivateKey key = getPrivateKey(request.getSubjectKeyIdentifier());
 		request.setPrivateKey(key);
 	}
@@ -384,8 +397,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 
 	@Override
 	protected final void handleX509SubjectKeyIdentifierBasedRequest(SignatureVerificationKeyCallback callback,
-																	SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest request)
-			throws IOException {
+			SignatureVerificationKeyCallback.X509SubjectKeyIdentifierBasedRequest request) throws IOException {
 		X509Certificate certificate = getCertificateFromTrustStore(request.getSubjectKeyIdentifier());
 		request.setX509Certificate(certificate);
 	}
@@ -423,8 +435,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return x509Cert;
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -451,8 +462,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return x509Cert;
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -463,8 +473,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	protected PrivateKey getPrivateKey(String alias) throws IOException {
 		try {
 			return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -479,8 +488,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -499,8 +507,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -528,8 +535,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -554,8 +560,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					return (PrivateKey) keyStore.getKey(alias, privateKeyPassword);
 				}
 			}
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 		return null;
@@ -580,8 +585,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 	protected SecretKey getSymmetricKey(String alias) throws IOException {
 		try {
 			return (SecretKey) symmetricStore.getKey(alias, symmetricKeyPassword);
-		}
-		catch (GeneralSecurityException e) {
+		} catch (GeneralSecurityException e) {
 			throw new IOException(e.getMessage());
 		}
 	}
@@ -593,8 +597,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded default key store");
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.warn("Could not open default key store", ex);
 		}
 	}
@@ -606,16 +609,14 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded default trust store");
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			logger.warn("Could not open default trust store", ex);
 		}
 	}
 
 	/**
-	 * Creates a {@code PKIXBuilderParameters} instance with the given parameters.
-	 * Default implementation simply instantiates one, without setting additional
-	 * parameters.
+	 * Creates a {@code PKIXBuilderParameters} instance with the given parameters. Default implementation simply
+	 * instantiates one, without setting additional parameters.
 	 *
 	 * @param trustStore the trust store to use
 	 * @param certSelector the certificate selector to use
@@ -628,7 +629,6 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 		return new PKIXBuilderParameters(trustStore, certSelector);
 	}
 
-
 	//
 	// Inner classes
 	//
@@ -640,29 +640,25 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 				throws CertificateValidationCallback.CertificateValidationException {
 			if (isOwnedCert(certificate)) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Certificate with DN [" + certificate.getSubjectX500Principal().getName() +
-							"] is in private keystore");
+					logger.debug(
+							"Certificate with DN [" + certificate.getSubjectX500Principal().getName() + "] is in private keystore");
 				}
 				return true;
-			}
-			else if (trustStore == null) {
+			} else if (trustStore == null) {
 				return false;
 			}
 
 			try {
 				certificate.checkValidity();
-			}
-			catch (CertificateExpiredException e) {
+			} catch (CertificateExpiredException e) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Certificate with DN [" + certificate.getSubjectX500Principal().getName() +
-							"] has expired");
+					logger.debug("Certificate with DN [" + certificate.getSubjectX500Principal().getName() + "] has expired");
 				}
 				return false;
-			}
-			catch (CertificateNotYetValidException e) {
+			} catch (CertificateNotYetValidException e) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Certificate with DN [" + certificate.getSubjectX500Principal().getName() +
-							"] is not yet valid");
+					logger
+							.debug("Certificate with DN [" + certificate.getSubjectX500Principal().getName() + "] is not yet valid");
 				}
 				return false;
 			}
@@ -676,26 +672,23 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 				parameters = createBuilderParameters(trustStore, certSelector);
 				parameters.setRevocationEnabled(revocationEnabled);
 				builder = CertPathBuilder.getInstance("PKIX");
-			}
-			catch (GeneralSecurityException ex) {
-				throw new CertificateValidationCallback.CertificateValidationException(
-						"Could not create PKIX CertPathBuilder", ex);
+			} catch (GeneralSecurityException ex) {
+				throw new CertificateValidationCallback.CertificateValidationException("Could not create PKIX CertPathBuilder",
+						ex);
 			}
 
 			try {
 				builder.build(parameters);
-			}
-			catch (CertPathBuilderException e) {
+			} catch (CertPathBuilderException e) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Certification path of certificate with DN [" +
-							certificate.getSubjectX500Principal().getName() + "] could not be validated");
+					logger.debug("Certification path of certificate with DN [" + certificate.getSubjectX500Principal().getName()
+							+ "] could not be validated");
 				}
 				return false;
-			}
-			catch (InvalidAlgorithmParameterException e) {
+			} catch (InvalidAlgorithmParameterException e) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Algorithm of certificate with DN [" +
-							certificate.getSubjectX500Principal().getName() + "] could not be validated");
+					logger.debug("Algorithm of certificate with DN [" + certificate.getSubjectX500Principal().getName()
+							+ "] could not be validated");
 				}
 				return false;
 			}
@@ -724,8 +717,7 @@ public class KeyStoreCallbackHandler extends CryptographyCallbackHandler impleme
 					}
 				}
 				return false;
-			}
-			catch (GeneralSecurityException e) {
+			} catch (GeneralSecurityException e) {
 				throw new CertificateValidationCallback.CertificateValidationException(
 						"Could not determine whether certificate is contained in main key store", e);
 			}

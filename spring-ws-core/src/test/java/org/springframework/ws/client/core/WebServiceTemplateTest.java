@@ -16,14 +16,17 @@
 
 package org.springframework.ws.client.core;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.net.URI;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
@@ -39,9 +42,6 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 @SuppressWarnings("unchecked")
 public class WebServiceTemplateTest {
@@ -85,8 +85,7 @@ public class WebServiceTemplateTest {
 		try {
 			template.marshalSendAndReceive(new Object());
 			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException ex) {
+		} catch (IllegalStateException ex) {
 			// expected behavior
 		}
 
@@ -103,8 +102,7 @@ public class WebServiceTemplateTest {
 		try {
 			template.marshalSendAndReceive(new Object());
 			fail("IllegalStateException expected");
-		}
-		catch (IllegalStateException ex) {
+		} catch (IllegalStateException ex) {
 			// expected behavior
 		}
 
@@ -194,9 +192,8 @@ public class WebServiceTemplateTest {
 		try {
 			template.sendAndReceive(null, extractorMock);
 			fail("Expected WebServiceTransportException");
-		}
-		catch (WebServiceTransportException ex) {
-			//expected
+		} catch (WebServiceTransportException ex) {
+			// expected
 			assertEquals("Invalid exception message", errorMessage, ex.getMessage());
 		}
 
@@ -292,7 +289,6 @@ public class WebServiceTemplateTest {
 		verify(connectionMock, response);
 	}
 
-
 	@Test
 	public void testSendAndReceiveMarshalResponse() throws Exception {
 		Marshaller marshallerMock = createMock(Marshaller.class);
@@ -378,13 +374,13 @@ public class WebServiceTemplateTest {
 	public void testInterceptors() throws Exception {
 		ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
 		ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-		template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+		template.setInterceptors(new ClientInterceptor[] { interceptorMock1, interceptorMock2 });
 		expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(true);
 		expect(interceptorMock2.handleRequest(isA(MessageContext.class))).andReturn(true);
 		expect(interceptorMock2.handleResponse(isA(MessageContext.class))).andReturn(true);
 		expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
-		interceptorMock2.afterCompletion(isA(MessageContext.class), (Exception)isNull());
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
+		interceptorMock2.afterCompletion(isA(MessageContext.class), (Exception) isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
 
 		WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
@@ -413,9 +409,9 @@ public class WebServiceTemplateTest {
 
 		ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
 		ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-		template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+		template.setInterceptors(new ClientInterceptor[] { interceptorMock1, interceptorMock2 });
 		expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
 
 		WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());
@@ -438,10 +434,10 @@ public class WebServiceTemplateTest {
 
 		ClientInterceptor interceptorMock1 = createStrictMock("interceptor1", ClientInterceptor.class);
 		ClientInterceptor interceptorMock2 = createStrictMock("interceptor2", ClientInterceptor.class);
-		template.setInterceptors(new ClientInterceptor[]{interceptorMock1, interceptorMock2});
+		template.setInterceptors(new ClientInterceptor[] { interceptorMock1, interceptorMock2 });
 		expect(interceptorMock1.handleRequest(isA(MessageContext.class))).andReturn(false);
 		expect(interceptorMock1.handleResponse(isA(MessageContext.class))).andReturn(true);
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception)isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
 
 		WebServiceMessageCallback requestCallback = createMock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());
@@ -459,7 +455,7 @@ public class WebServiceTemplateTest {
 
 		verify(connectionMock, interceptorMock1, interceptorMock2, requestCallback, extractorMock);
 	}
-	
+
 	@Test
 	public void testDestinationResolver() throws Exception {
 		DestinationProvider providerMock = createMock(DestinationProvider.class);
@@ -488,7 +484,7 @@ public class WebServiceTemplateTest {
 		connectionMock.send(isA(WebServiceMessage.class));
 		expect(connectionMock.hasError()).andReturn(false);
 		expect(connectionMock.receive(messageFactory)).andReturn(null);
-//		expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
+		// expect(connectionMock.getUri()).andReturn(new URI("http://example.com"));
 		connectionMock.close();
 
 		replay(connectionMock, extractorMock, providerMock);
@@ -498,6 +494,5 @@ public class WebServiceTemplateTest {
 
 		verify(connectionMock, extractorMock, providerMock);
 	}
-
 
 }

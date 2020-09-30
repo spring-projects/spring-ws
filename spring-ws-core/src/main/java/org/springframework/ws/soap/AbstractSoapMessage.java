@@ -77,8 +77,7 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 	public final String getFaultReason() {
 		if (hasFault()) {
 			return getSoapBody().getFault().getFaultStringOrReason();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -89,11 +88,9 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 			String envelopeNamespace = getEnvelope().getName().getNamespaceURI();
 			if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
 				version = SoapVersion.SOAP_11;
-			}
-			else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
+			} else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
 				version = SoapVersion.SOAP_12;
-			}
-			else {
+			} else {
 				throw new IllegalStateException(
 						"Unknown Envelope namespace uri '" + envelopeNamespace + "'. " + "Cannot deduce SoapVersion.");
 			}

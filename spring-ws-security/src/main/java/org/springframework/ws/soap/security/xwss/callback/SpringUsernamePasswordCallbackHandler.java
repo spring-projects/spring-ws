@@ -17,21 +17,22 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
+
 /**
- * Callback handler that adds username/password information to a mesage using an Spring Security {@link
- * org.springframework.security.core.context.SecurityContext}.
- *
- * <p>This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
+ * Callback handler that adds username/password information to a mesage using an Spring Security
+ * {@link org.springframework.security.core.context.SecurityContext}.
+ * <p>
+ * This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
  * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
@@ -47,22 +48,17 @@ public class SpringUsernamePasswordCallbackHandler extends AbstractCallbackHandl
 				UsernameCallback usernameCallback = (UsernameCallback) callback;
 				usernameCallback.setUsername(authentication.getName());
 				return;
+			} else {
+				logger.warn("Cannot handle UsernameCallback: Spring Security SecurityContext contains no Authentication");
 			}
-			else {
-				logger.warn(
-						"Cannot handle UsernameCallback: Spring Security SecurityContext contains no Authentication");
-			}
-		}
-		else if (callback instanceof PasswordCallback) {
+		} else if (callback instanceof PasswordCallback) {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			if (authentication != null && authentication.getName() != null) {
 				PasswordCallback passwordCallback = (PasswordCallback) callback;
 				passwordCallback.setPassword(authentication.getCredentials().toString());
 				return;
-			}
-			else {
-				logger.warn(
-						"Canot handle PasswordCallback: Spring Security SecurityContext contains no Authentication");
+			} else {
+				logger.warn("Canot handle PasswordCallback: Spring Security SecurityContext contains no Authentication");
 			}
 		}
 		throw new UnsupportedCallbackException(callback);

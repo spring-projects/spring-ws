@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
@@ -31,14 +32,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Test;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.XMLInputFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 @SuppressWarnings("Since15")
 public abstract class AbstractEndpointTestCase {

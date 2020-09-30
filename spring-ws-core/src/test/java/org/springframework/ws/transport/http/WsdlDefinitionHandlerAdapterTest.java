@@ -16,9 +16,13 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,18 +30,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
-import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.easymock.EasyMock.*;
+import org.springframework.xml.transform.StringSource;
+import org.w3c.dom.Document;
 
 public class WsdlDefinitionHandlerAdapterTest {
 
@@ -79,8 +79,7 @@ public class WsdlDefinitionHandlerAdapterTest {
 		replay(definitionMock);
 
 		adapter.handle(request, response, definitionMock);
-		Assert.assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-				response.getStatus());
+		Assert.assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED, response.getStatus());
 
 		verify(definitionMock);
 	}
@@ -180,8 +179,8 @@ public class WsdlDefinitionHandlerAdapterTest {
 		request.setPathInfo(null);
 		request.setRequestURI("/context/service.wsdl");
 
-		SimpleWsdl11Definition definition =
-				new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
+		SimpleWsdl11Definition definition = new SimpleWsdl11Definition(
+				new ClassPathResource("echo-input.wsdl", getClass()));
 
 		adapter.handle(request, response, definition);
 
@@ -210,8 +209,8 @@ public class WsdlDefinitionHandlerAdapterTest {
 		request.setPathInfo(null);
 		request.setRequestURI("/context/service.wsdl");
 
-		SimpleWsdl11Definition definition =
-				new SimpleWsdl11Definition(new ClassPathResource("echo-input.wsdl", getClass()));
+		SimpleWsdl11Definition definition = new SimpleWsdl11Definition(
+				new ClassPathResource("echo-input.wsdl", getClass()));
 
 		adapter.handle(request, response, definition);
 

@@ -23,9 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method as the handler for an incoming request. The annotation value
- * signifies the value for the request WS-Addressing {@code Action} header that is
- * handled by the method.
+ * Marks an endpoint method as the handler for an incoming request. The annotation value signifies the value for the
+ * request WS-Addressing {@code Action} header that is handled by the method.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -36,20 +35,17 @@ import java.lang.annotation.Target;
 public @interface Action {
 
 	/**
-	 * Signifies the value for the request WS-Addressing {@code Action} header that
-	 * is handled by the method.
+	 * Signifies the value for the request WS-Addressing {@code Action} header that is handled by the method.
 	 */
 	String value();
 
 	/**
-	 * Signifies the value for the response WS-Addressing {@code Action} header that
-	 * is provided by the method.
+	 * Signifies the value for the response WS-Addressing {@code Action} header that is provided by the method.
 	 */
 	String output() default "";
 
 	/**
-	 * Signifies the value for the fault response WS-Addressing {@code Action} header
-	 * that is provided by the method.
+	 * Signifies the value for the fault response WS-Addressing {@code Action} header that is provided by the method.
 	 */
 	String fault() default "";
 

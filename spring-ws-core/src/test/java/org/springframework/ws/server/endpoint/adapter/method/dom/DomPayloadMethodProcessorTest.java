@@ -16,12 +16,11 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
+import static org.junit.Assert.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
@@ -29,8 +28,8 @@ import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSour
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.junit.Assert.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
@@ -41,13 +40,12 @@ public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
 
 	@Override
 	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-		return new MethodParameter[]{
-				new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("element", Element.class), 0) };
 	}
 
 	@Override
 	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
-		return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("element", Element.class), -1) };
 	}
 
 	@Override

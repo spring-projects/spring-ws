@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
@@ -44,8 +45,7 @@ class TextMessageInputStream extends FilterInputStream {
 			String text = message.getText();
 			byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
 			return new ByteArrayInputStream(contents);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}

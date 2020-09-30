@@ -23,8 +23,8 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract base class for {@link DestinationProvider} implementations that cache destination URI.
- *
- * <p>Caching can be disabled by setting the {@link #setCache(boolean) cache} property to {@code false}; forcing a
+ * <p>
+ * Caching can be disabled by setting the {@link #setCache(boolean) cache} property to {@code false}; forcing a
  * destination lookup for every call.
  *
  * @author Arjen Poutsma
@@ -40,9 +40,9 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 	private boolean cache = true;
 
 	/**
-	 * Set whether to cache resolved destinations. Default is {@code true}. This flag can be turned off to
-	 * re-lookup a destination for each operation, which allows for hot restarting of destinations. This is mainly
-	 * useful during development.
+	 * Set whether to cache resolved destinations. Default is {@code true}. This flag can be turned off to re-lookup a
+	 * destination for each operation, which allows for hot restarting of destinations. This is mainly useful during
+	 * development.
 	 */
 	public void setCache(boolean cache) {
 		this.cache = cache;
@@ -55,16 +55,15 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 				cachedUri = lookupDestination();
 			}
 			return cachedUri;
-		}
-		else {
+		} else {
 			return lookupDestination();
 		}
 	}
 
 	/**
 	 * Abstract template method that looks up the URI.
-	 *
-	 * <p>If {@linkplain #setCache(boolean) caching}  is enabled, this method will only be called once.
+	 * <p>
+	 * If {@linkplain #setCache(boolean) caching} is enabled, this method will only be called once.
 	 *
 	 * @return the destination URI
 	 */

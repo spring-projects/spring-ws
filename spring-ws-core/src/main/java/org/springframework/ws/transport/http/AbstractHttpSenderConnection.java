@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.PushbackInputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.util.StringUtils;
@@ -72,8 +73,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	@Override
 	protected final boolean hasResponse() throws IOException {
 		int responseCode = getResponseCode();
-		if (HttpTransportConstants.STATUS_ACCEPTED == responseCode ||
-				HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
+		if (HttpTransportConstants.STATUS_ACCEPTED == responseCode
+				|| HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
 			return false;
 		}
 		if (hasResponse != null) {
@@ -109,8 +110,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 		Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
 		if (iterator.hasNext()) {
 			String encodingHeader = iterator.next();
-			return encodingHeader.toLowerCase()
-					.contains(HttpTransportConstants.CONTENT_ENCODING_GZIP);
+			return encodingHeader.toLowerCase().contains(HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
 		return false;
 	}
@@ -167,10 +167,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
 	@Override
 	@Deprecated
-	public final void setFault(boolean fault) {
-	}
+	public final void setFault(boolean fault) {}
 
 	@Override
-	public final void setFaultCode(QName faultCode) throws IOException {
-	}
+	public final void setFaultCode(QName faultCode) throws IOException {}
 }

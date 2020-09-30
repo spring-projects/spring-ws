@@ -16,11 +16,10 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
 import java.util.Arrays;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
-import org.xml.sax.SAXParseException;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -28,6 +27,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
+import org.xml.sax.SAXParseException;
 
 /**
  * Uses the {@link XmlValidator} to validate request payload.
@@ -43,7 +43,7 @@ public class SchemaValidatingMatcher implements WebServiceMessageMatcher {
 	/**
 	 * Creates a {@code SchemaValidatingMatcher} based on the given schema resource(s).
 	 *
-	 * @param schema		 the schema
+	 * @param schema the schema
 	 * @param furtherSchemas further schemas, if necessary
 	 * @throws IOException in case of I/O errors
 	 */

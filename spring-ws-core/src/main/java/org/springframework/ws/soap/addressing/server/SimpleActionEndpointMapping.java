@@ -25,22 +25,24 @@ import java.util.Properties;
 import org.springframework.beans.BeansException;
 
 /**
- * Implementation of the {@code EndpointMapping} interface to map from WS-Addressing {@code Action} Message
- * Addressing Property to endpoint beans. Supports both mapping to bean instances and mapping to bean names.
- *
- * <p>The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the
- * map element in XML bean definitions.
- *
- * <p>Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
+ * Implementation of the {@code EndpointMapping} interface to map from WS-Addressing {@code Action} Message Addressing
+ * Property to endpoint beans. Supports both mapping to bean instances and mapping to bean names.
+ * <p>
+ * The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the map
+ * element in XML bean definitions.
+ * <p>
+ * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
  * {@code java.util.Properties} class, like as follows:
+ * 
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
  * http://www.springframework.org/spring-ws/samples/airline/GetFlights=getFlightsEndpoint
  * </pre>
+ * 
  * The syntax is WS_ADDRESSING_ACTION=ENDPOINT_BEAN_NAME.
- *
- * <p>If set, the {@link #setAddress(URI) address} property should be equal to the {@link
- * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
+ * <p>
+ * If set, the {@link #setAddress(URI) address} property should be equal to the
+ * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
  * incominging message. As such, it can be used to create multiple Endpoint References, by defining multiple
  * {@code SimpleActionEndpointMapping} bean definitions with different {@code address} property values.
  *
@@ -77,11 +79,9 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 			URI action;
 			if (entry.getKey() instanceof String) {
 				action = new URI((String) entry.getKey());
-			}
-			else if (entry.getKey() instanceof URI) {
+			} else if (entry.getKey() instanceof URI) {
 				action = (URI) entry.getKey();
-			}
-			else {
+			} else {
 				throw new IllegalArgumentException("Invalid key [" + entry.getKey() + "]; expected String or URI");
 			}
 			this.actionMap.put(action, entry.getValue());
@@ -89,8 +89,8 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	}
 
 	/**
-	 * Set the address property. If set, value of this property is compared to the {@link
-	 * org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
+	 * Set the address property. If set, value of this property is compared to the
+	 * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
 	 * incominging message.
 	 *
 	 * @param address the address URI
@@ -109,14 +109,13 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	 * Register all endpoints specified in the action map.
 	 *
 	 * @param actionMap Map with action URIs as keys and endppint beans or bean names as values
-	 * @throws BeansException		 if an endpoint couldn't be registered
+	 * @throws BeansException if an endpoint couldn't be registered
 	 * @throws IllegalStateException if there is a conflicting endpoint registered
 	 */
 	protected void registerEndpoints(Map<URI, Object> actionMap) throws BeansException {
 		if (actionMap.isEmpty()) {
 			logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
-		}
-		else {
+		} else {
 			for (Map.Entry<URI, Object> entry : actionMap.entrySet()) {
 				URI action = entry.getKey();
 				Object endpoint = entry.getValue();

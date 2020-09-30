@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Properties;
+
 import javax.wsdl.Binding;
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
@@ -101,6 +102,5 @@ public class SoapProviderTest {
 		port = service.getPort("PortTypeSoap12");
 		Assert.assertNotNull("No SOAP 1.2 port created", port);
 	}
-
 
 }

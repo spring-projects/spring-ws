@@ -16,16 +16,15 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
+import static org.junit.Assert.*;
+
+import nu.xom.Element;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
-import nu.xom.Element;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
 
@@ -36,12 +35,12 @@ public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
 
 	@Override
 	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
-		return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), 0)};
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("element", Element.class), 0) };
 	}
 
 	@Override
 	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
-		return new MethodParameter[]{new MethodParameter(getClass().getMethod("element", Element.class), -1)};
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("element", Element.class), -1) };
 	}
 
 	@Override

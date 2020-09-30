@@ -16,15 +16,13 @@
 
 package org.springframework.ws.test.client;
 
+import static org.junit.Assert.*;
+import static org.springframework.ws.test.client.ResponseCreators.*;
+
 import java.io.IOException;
 
-import org.springframework.xml.transform.StringSource;
-
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.springframework.ws.test.client.ResponseCreators.withError;
-import static org.springframework.ws.test.client.ResponseCreators.withPayload;
+import org.springframework.xml.transform.StringSource;
 
 public class MockSenderConnectionTest {
 

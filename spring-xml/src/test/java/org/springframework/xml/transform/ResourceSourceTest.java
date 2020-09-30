@@ -21,9 +21,8 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.dom.Element;
-
 import org.springframework.core.io.ClassPathResource;
+import org.w3c.dom.Element;
 
 public class ResourceSourceTest {
 

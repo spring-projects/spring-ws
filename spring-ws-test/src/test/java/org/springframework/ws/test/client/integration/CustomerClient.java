@@ -20,7 +20,6 @@ import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.test.integration.CustomerCountRequest;
 import org.springframework.ws.test.integration.CustomerCountResponse;
 
-
 public class CustomerClient extends WebServiceGatewaySupport {
 
 	public int getCustomerCount() {

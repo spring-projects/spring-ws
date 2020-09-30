@@ -16,6 +16,13 @@
 
 package org.springframework.ws.transport.mail;
 
+import static org.junit.Assert.*;
+
+import org.custommonkey.xmlunit.XMLAssert;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,29 +31,18 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.jvnet.mock_javamail.Mailbox;
-
-import static org.junit.Assert.assertEquals;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("mail-applicationContext.xml")
 public class MailIntegrationTest {
 
-	@Autowired
-	private WebServiceTemplate webServiceTemplate;
+	@Autowired private WebServiceTemplate webServiceTemplate;
 
-	@Autowired
-	private GenericApplicationContext applicationContext;
+	@Autowired private GenericApplicationContext applicationContext;
 
 	@After
 	public void clearMailbox() throws Exception {
 		Mailbox.clearAll();
 	}
-
 
 	@Test
 	public void testMailTransport() throws Exception {

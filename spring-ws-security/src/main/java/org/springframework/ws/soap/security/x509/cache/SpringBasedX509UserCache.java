@@ -20,24 +20,23 @@ import java.security.cert.X509Certificate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
-
 /**
  * Caches {@code User} objects using a Spring Framework-based {@link Cache}.
- * 
- * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
+ * <p>
+ * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
+ * </p>
  *
  * @author Luke Taylor
  * @author Ben Alex
  * @author Greg Turnquist
  */
 public class SpringBasedX509UserCache implements X509UserCache, InitializingBean {
-	
+
 	private static final Log logger = LogFactory.getLog(SpringBasedX509UserCache.class);
 
 	private Cache cache;

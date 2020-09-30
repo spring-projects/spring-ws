@@ -16,9 +16,16 @@
 
 package org.springframework.ws.soap.security.wss4j2.callback;
 
+import static org.easymock.EasyMock.*;
+
 import java.util.Collection;
 import java.util.Collections;
 
+import org.apache.wss4j.common.ext.WSPasswordCallback;
+import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,13 +35,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.apache.wss4j.common.ext.WSPasswordCallback;
-import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 /** @author tareq */
 public class SpringSecurityPasswordValidationCallbackHandlerTest {
@@ -44,7 +44,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	private SimpleGrantedAuthority grantedAuthority;
 
 	private UsernameTokenPrincipalCallback callback;
-	
+
 	private WSPasswordCallback passwordCallback;
 
 	private UserDetails user;
@@ -58,10 +58,10 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
 		WSUsernameTokenPrincipalImpl principal = new WSUsernameTokenPrincipalImpl("Ernie", true);
 		callback = new UsernameTokenPrincipalCallback(principal);
-		
+
 		passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
 	}
-	
+
 	@Test
 	public void testHandleUsernameToken() throws Exception {
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
@@ -76,13 +76,14 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
 		verify(userDetailsService);
 	}
-	
+
 	@Test
 	public void testHandleUsernameTokenUserNotFound() throws Exception {
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie")).andThrow(new UsernameNotFoundException("User 'Ernie' not found"));
+		expect(userDetailsService.loadUserByUsername("Ernie"))
+				.andThrow(new UsernameNotFoundException("User 'Ernie' not found"));
 
 		replay(userDetailsService);
 
@@ -107,8 +108,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		Authentication authentication = context.getAuthentication();
 		Assert.assertNotNull("Authentication must not be null", authentication);
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		Assert.assertTrue("GrantedAuthority[] must not be null or empty",
-				(authorities != null && authorities.size() > 0));
+		Assert.assertTrue("GrantedAuthority[] must not be null or empty", (authorities != null && authorities.size() > 0));
 		Assert.assertEquals("Unexpected authority", grantedAuthority, authorities.iterator().next());
 
 		verify(userDetailsService);

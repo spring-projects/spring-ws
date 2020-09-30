@@ -18,6 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.MessageEOFException;
@@ -43,8 +44,7 @@ class BytesMessageInputStream extends InputStream {
 	public int read(byte b[]) throws IOException {
 		try {
 			return message.readBytes(b);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}
@@ -54,12 +54,10 @@ class BytesMessageInputStream extends InputStream {
 		if (off == 0) {
 			try {
 				return message.readBytes(b, len);
-			}
-			catch (JMSException ex) {
+			} catch (JMSException ex) {
 				throw new JmsTransportException(ex);
 			}
-		}
-		else {
+		} else {
 			return super.read(b, off, len);
 		}
 	}
@@ -68,11 +66,9 @@ class BytesMessageInputStream extends InputStream {
 	public int read() throws IOException {
 		try {
 			return message.readByte();
-		}
-		catch (MessageEOFException ex) {
+		} catch (MessageEOFException ex) {
 			return -1;
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}

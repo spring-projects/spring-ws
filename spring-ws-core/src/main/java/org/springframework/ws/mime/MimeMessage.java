@@ -18,14 +18,15 @@ package org.springframework.ws.mime;
 
 import java.io.File;
 import java.util.Iterator;
+
 import javax.activation.DataHandler;
 
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Represents a Web service message with MIME attachments. Attachments can be added as a file, an {@link
- * InputStreamSource}, or a {@link DataHandler}.
+ * Represents a Web service message with MIME attachments. Attachments can be added as a file, an
+ * {@link InputStreamSource}, or a {@link DataHandler}.
  *
  * @author Arjen Poutsma
  * @see Attachment
@@ -36,8 +37,9 @@ public interface MimeMessage extends WebServiceMessage {
 	/**
 	 * Indicates whether this message is a XOP package.
 	 *
-	 * @return {@code true} when the constraints specified in <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#identifying_xop_documents">Identifying
-	 *		   XOP Documents</a> are met.
+	 * @return {@code true} when the constraints specified in
+	 *         <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#identifying_xop_documents">Identifying XOP
+	 *         Documents</a> are met.
 	 * @see <a href="http://www.w3.org/TR/2005/REC-xop10-20050125/#xop_packages">XOP Packages</a>
 	 */
 	boolean isXopPackage();
@@ -69,12 +71,12 @@ public interface MimeMessage extends WebServiceMessage {
 
 	/**
 	 * Add an attachment to the message, taking the content from a {@link File}.
-	 *
-	 * <p>The content type will be determined by the name of the given content file. Do not use this for temporary files
-	 * with arbitrary filenames (possibly ending in ".tmp" or the like)!
+	 * <p>
+	 * The content type will be determined by the name of the given content file. Do not use this for temporary files with
+	 * arbitrary filenames (possibly ending in ".tmp" or the like)!
 	 *
 	 * @param contentId the content Id of the attachment
-	 * @param file		the file  to take the content from
+	 * @param file the file to take the content from
 	 * @return the added attachment
 	 * @throws AttachmentException in case of errors
 	 */
@@ -82,14 +84,14 @@ public interface MimeMessage extends WebServiceMessage {
 
 	/**
 	 * Add an attachment to the message, taking the content from an {@link InputStreamSource}.
-	 *
-	 * <p>Note that the stream returned by the source needs to be a <em>fresh one on each call</em>, as underlying
+	 * <p>
+	 * Note that the stream returned by the source needs to be a <em>fresh one on each call</em>, as underlying
 	 * implementations can invoke {@link InputStreamSource#getInputStream()} multiple times.
 	 *
-	 * @param contentId			the content Id of the attachment
+	 * @param contentId the content Id of the attachment
 	 * @param inputStreamSource the resource to take the content from (all of Spring's Resource implementations can be
-	 *							passed in here)
-	 * @param contentType		the content type to use for the element
+	 *          passed in here)
+	 * @param contentType the content type to use for the element
 	 * @return the added attachment
 	 * @throws AttachmentException in case of errors
 	 * @see org.springframework.core.io.Resource

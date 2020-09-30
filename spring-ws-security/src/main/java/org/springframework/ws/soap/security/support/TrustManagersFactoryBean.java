@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.support;
 
 import java.security.KeyStore;
+
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -26,16 +27,15 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for an array of {@link TrustManager}s.
- *
- * <p>Uses the {@link TrustManagerFactory} to create the {@code TrustManager}s.
+ * <p>
+ * Uses the {@link TrustManagerFactory} to create the {@code TrustManager}s.
  *
  * @author Arjen Poutsma
  * @see TrustManager
  * @see TrustManagerFactory
  * @since 2.2
  */
-public class TrustManagersFactoryBean
-		implements FactoryBean<TrustManager[]>, InitializingBean {
+public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, InitializingBean {
 
 	private TrustManager[] trustManagers;
 
@@ -46,16 +46,15 @@ public class TrustManagersFactoryBean
 	private String provider;
 
 	/**
-	 * Sets the provider of the trust manager to use. If this is not set, the default is
-	 * used.
+	 * Sets the provider of the trust manager to use. If this is not set, the default is used.
 	 */
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
 
 	/**
-	 * Sets the algorithm of the {@code TrustManager} to use. If this is not set, the
-	 * default is used.
+	 * Sets the algorithm of the {@code TrustManager} to use. If this is not set, the default is used.
+	 * 
 	 * @see TrustManagerFactory#getDefaultAlgorithm()
 	 */
 	public void setAlgorithm(String algorithm) {
@@ -64,6 +63,7 @@ public class TrustManagersFactoryBean
 
 	/**
 	 * Sets the source of certificate authorities and related trust material.
+	 * 
 	 * @see TrustManagerFactory#init(KeyStore)
 	 */
 	public void setKeyStore(KeyStore keyStore) {
@@ -87,12 +87,12 @@ public class TrustManagersFactoryBean
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String algorithm = StringUtils.hasLength(this.algorithm) ? this.algorithm :
-				TrustManagerFactory.getDefaultAlgorithm();
+		String algorithm = StringUtils.hasLength(this.algorithm) ? this.algorithm
+				: TrustManagerFactory.getDefaultAlgorithm();
 
-		TrustManagerFactory trustManagerFactory = StringUtils.hasLength(this.provider) ?
-				TrustManagerFactory.getInstance(algorithm, this.provider) :
-				TrustManagerFactory.getInstance(algorithm);
+		TrustManagerFactory trustManagerFactory = StringUtils.hasLength(this.provider)
+				? TrustManagerFactory.getInstance(algorithm, this.provider)
+				: TrustManagerFactory.getInstance(algorithm);
 
 		trustManagerFactory.init(keyStore);
 

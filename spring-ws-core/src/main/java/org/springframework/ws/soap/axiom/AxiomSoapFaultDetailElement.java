@@ -21,7 +21,6 @@ import javax.xml.transform.Result;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
-
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
@@ -40,8 +39,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 	public Result getResult() {
 		try {
 			return getAxiomElement().getSAXResult();
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 
@@ -51,8 +49,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 	public void addText(String text) {
 		try {
 			getAxiomElement().setText(text);
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 	}

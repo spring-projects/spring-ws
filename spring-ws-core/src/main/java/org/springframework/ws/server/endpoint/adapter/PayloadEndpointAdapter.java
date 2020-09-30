@@ -28,8 +28,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Adapter to use a {@code PayloadEndpoint} as the endpoint for a {@code EndpointInvocationChain}.
- *
- * <p>This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
+ * <p>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.server.endpoint.PayloadEndpoint

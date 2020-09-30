@@ -16,12 +16,15 @@
 
 package org.springframework.ws.soap.soap11;
 
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.AbstractSoapMessageFactoryTestCase;
@@ -29,10 +32,6 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
@@ -95,9 +94,10 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 	public void testCreateSoapMessageMtom() throws Exception {
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "multipart/related;" + "start-info=\"text/xml\";" +
-				"type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
-				"boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
+		headers.put("Content-Type",
+				"multipart/related;" + "start-info=\"text/xml\";" + "type=\"application/xop+xml\";"
+						+ "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";"
+						+ "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -116,9 +116,10 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 	public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "multipart/related;" + "startinfo=\"text/xml\";" +
-				"type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";" +
-				"boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
+		headers.put("Content-Type",
+				"multipart/related;" + "startinfo=\"text/xml\";" + "type=\"application/xop+xml\";"
+						+ "start=\"<0.urn:uuid:492264AB42E57108E01176731445508@apache.org>\";"
+						+ "boundary=\"MIMEBoundaryurn_uuid_492264AB42E57108E01176731445507\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -170,12 +171,11 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 	public void testCreateSoapMessageMissingContentType() throws Exception {
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
 		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
-		
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
 		SoapMessage soapMessage = (SoapMessage) message;
 		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
 	}
-
 
 }

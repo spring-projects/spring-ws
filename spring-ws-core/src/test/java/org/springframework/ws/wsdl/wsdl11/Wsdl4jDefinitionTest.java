@@ -16,7 +16,10 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.InputStream;
+
 import javax.wsdl.Definition;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
@@ -30,13 +33,10 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
-import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class Wsdl4jDefinitionTest {
 
@@ -53,8 +53,7 @@ public class Wsdl4jDefinitionTest {
 		try {
 			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
 			definition = new Wsdl4jDefinition(wsdl4jDefinition);
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();

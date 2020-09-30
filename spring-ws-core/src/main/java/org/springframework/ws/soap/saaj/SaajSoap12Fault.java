@@ -18,6 +18,7 @@ package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
@@ -43,8 +44,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultActorOrRole(String faultRole) {
 		try {
 			getSaajFault().setFaultRole(faultRole);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -59,8 +59,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void addFaultSubcode(QName subcode) {
 		try {
 			getSaajFault().appendFaultSubcode(subcode);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -74,8 +73,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultNode(String uri) {
 		try {
 			getSaajFault().setFaultNode(uri);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 
@@ -85,8 +83,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultReasonText(Locale locale, String text) {
 		try {
 			getSaajFault().addFaultReasonText(text, locale);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 
@@ -96,8 +93,7 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public String getFaultReasonText(Locale locale) {
 		try {
 			return getSaajFault().getFaultReasonText(locale);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xsd;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -26,16 +28,13 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.XmlValidator;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.w3c.dom.Document;
 
 public abstract class AbstractXsdSchemaTestCase {
 

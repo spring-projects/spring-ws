@@ -31,8 +31,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
 public interface AddressingVersion {
 
 	/**
-	 * Returns the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties} for the given
-	 * message.
+	 * Returns the {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties} for the given message.
 	 *
 	 * @param message the message to find the map for
 	 * @return the message addressing properties
@@ -44,7 +43,7 @@ public interface AddressingVersion {
 	 * Adds addressing SOAP headers to the given message, using the given {@link MessageAddressingProperties}.
 	 *
 	 * @param message the message to add the headers to
-	 * @param map	  the message addressing properties
+	 * @param map the message addressing properties
 	 */
 	void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map);
 
@@ -59,8 +58,8 @@ public interface AddressingVersion {
 	/**
 	 * Indicates whether the given {@link MessageAddressingProperties} has all required properties.
 	 *
-	 * @return {@code true} if the to and action properties have been set, and - if a reply or fault endpoint has
-	 *		   been set - also checks for the message id
+	 * @return {@code true} if the to and action properties have been set, and - if a reply or fault endpoint has been set
+	 *         - also checks for the message id
 	 */
 	boolean hasRequiredProperties(MessageAddressingProperties map);
 
@@ -77,8 +76,8 @@ public interface AddressingVersion {
 	boolean hasAnonymousAddress(EndpointReference epr);
 
 	/**
-	 * Indicates whether the given endpoint reference has a None address. Messages to be sent to this address will not
-	 * be sent.
+	 * Indicates whether the given endpoint reference has a None address. Messages to be sent to this address will not be
+	 * sent.
 	 *
 	 * @see <a href="http://www.w3.org/TR/ws-addr-core/#sendmsgepr">Sending a Message to an EPR</a>
 	 */

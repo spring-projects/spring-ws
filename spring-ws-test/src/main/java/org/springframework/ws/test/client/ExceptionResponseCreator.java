@@ -23,8 +23,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
 /**
- * Implementation of {@link ResponseCreator} that responds by throwing either an {@link IOException} or a {@link
- * RuntimeException}.
+ * Implementation of {@link ResponseCreator} that responds by throwing either an {@link IOException} or a
+ * {@link RuntimeException}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -42,13 +42,11 @@ class ExceptionResponseCreator implements ResponseCreator {
 	}
 
 	@Override
-	public WebServiceMessage createResponse(URI uri,
-											WebServiceMessage request,
-											WebServiceMessageFactory factory) throws IOException {
+	public WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory factory)
+			throws IOException {
 		if (exception instanceof IOException) {
 			throw (IOException) exception;
-		}
-		else {
+		} else {
 			throw (RuntimeException) exception;
 		}
 	}

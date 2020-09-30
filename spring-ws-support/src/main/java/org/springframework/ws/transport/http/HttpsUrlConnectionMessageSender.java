@@ -22,6 +22,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
@@ -81,8 +82,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Specifies the key managers to use for this message sender.
-	 *
-	 * <p>Setting either this property or {@link #setTrustManagers(TrustManager[]) trustManagers}  is required.
+	 * <p>
+	 * Setting either this property or {@link #setTrustManagers(TrustManager[]) trustManagers} is required.
 	 *
 	 * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
 	 */
@@ -92,8 +93,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Specifies the trust managers to use for this message sender.
-	 *
-	 * <p>Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers}	 is required.
+	 * <p>
+	 * Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers} is required.
 	 *
 	 * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
 	 */
@@ -153,25 +154,20 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 			return this.sslSocketFactory;
 		}
 		try {
-			SSLContext sslContext =
-					StringUtils.hasLength(sslProvider) ? SSLContext.getInstance(sslProtocol, sslProvider) :
-							SSLContext.getInstance(sslProtocol);
+			SSLContext sslContext = StringUtils.hasLength(sslProvider) ? SSLContext.getInstance(sslProtocol, sslProvider)
+					: SSLContext.getInstance(sslProtocol);
 			sslContext.init(keyManagers, trustManagers, rnd);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Initialized SSL Context with key managers [" +
-						StringUtils.arrayToCommaDelimitedString(keyManagers) + "] trust managers [" +
-						StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd +
-						"]");
+				logger.debug("Initialized SSL Context with key managers ["
+						+ StringUtils.arrayToCommaDelimitedString(keyManagers) + "] trust managers ["
+						+ StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd + "]");
 			}
 			return sslContext.getSocketFactory();
-		}
-		catch (NoSuchAlgorithmException ex) {
+		} catch (NoSuchAlgorithmException ex) {
 			throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-		}
-		catch (NoSuchProviderException ex) {
+		} catch (NoSuchProviderException ex) {
 			throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-		}
-		catch (KeyManagementException ex) {
+		} catch (KeyManagementException ex) {
 			throw new HttpsTransportException("Could not initialize SSLContext: " + ex.getMessage(), ex);
 		}
 

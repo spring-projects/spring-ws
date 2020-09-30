@@ -22,8 +22,8 @@ import java.io.OutputStream;
 import org.springframework.util.Assert;
 
 /**
- * A {@code TransportOutputStream} is an output stream with MIME input headers. It is used to write {@link
- * org.springframework.ws.WebServiceMessage WebServiceMessages} to a transport.
+ * A {@code TransportOutputStream} is an output stream with MIME input headers. It is used to write
+ * {@link org.springframework.ws.WebServiceMessage WebServiceMessages} to a transport.
  *
  * @author Arjen Poutsma
  * @see #addHeader(String,String)
@@ -33,8 +33,7 @@ public abstract class TransportOutputStream extends OutputStream {
 
 	private OutputStream outputStream;
 
-	protected TransportOutputStream() {
-	}
+	protected TransportOutputStream() {}
 
 	private OutputStream getOutputStream() throws IOException {
 		if (outputStream == null) {
@@ -73,7 +72,7 @@ public abstract class TransportOutputStream extends OutputStream {
 	 * Adds a header with the given name and value. This method can be called multiple times, to allow for headers with
 	 * multiple values.
 	 *
-	 * @param name	the name of the header
+	 * @param name the name of the header
 	 * @param value the value of the header
 	 */
 	public abstract void addHeader(String name, String value) throws IOException;

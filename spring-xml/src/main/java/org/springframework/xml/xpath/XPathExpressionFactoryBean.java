@@ -26,8 +26,8 @@ import org.springframework.util.CollectionUtils;
 /**
  * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of XPath expressions into
  * endpoint beans.
- *
- * <p>Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3, and Jaxen XPaths.
+ * <p>
+ * Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3, and Jaxen XPaths.
  *
  * @author Arjen Poutsma
  * @see #setExpression(String)
@@ -56,8 +56,7 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 		Assert.notNull(expressionString, "expression is required");
 		if (CollectionUtils.isEmpty(namespaces)) {
 			expression = XPathExpressionFactory.createXPathExpression(expressionString);
-		}
-		else {
+		} else {
 			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
 		}
 	}

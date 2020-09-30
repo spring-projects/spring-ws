@@ -19,6 +19,7 @@ package org.springframework.ws.test.client;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -32,26 +33,24 @@ import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
- * Factory methods for {@link RequestMatcher} classes. Typically used to provide input for {@link
- * MockWebServiceServer#expect(RequestMatcher)}.
+ * Factory methods for {@link RequestMatcher} classes. Typically used to provide input for
+ * {@link MockWebServiceServer#expect(RequestMatcher)}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
 public abstract class RequestMatchers {
 
-	private RequestMatchers() {
-	}
+	private RequestMatchers() {}
 
-   /**
+	/**
 	 * Expects any request.
 	 *
 	 * @return the request matcher
 	 */
 	public static RequestMatcher anything() {
 		return new RequestMatcher() {
-			public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-			}
+			public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {}
 		};
 	}
 
@@ -82,7 +81,7 @@ public abstract class RequestMatchers {
 	/**
 	 * Expects the payload to validate against the given XSD schema(s).
 	 *
-	 * @param schema		 the schema
+	 * @param schema the schema
 	 * @param furtherSchemas further schemas, if necessary
 	 * @return the request matcher
 	 */
@@ -103,7 +102,7 @@ public abstract class RequestMatchers {
 	/**
 	 * Expects the given XPath expression to (not) exist or be evaluated to a value.
 	 *
-	 * @param xpathExpression  the XPath expression
+	 * @param xpathExpression the XPath expression
 	 * @param namespaceMapping the namespaces
 	 * @return the XPath expectations, to be further configured
 	 */

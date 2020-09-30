@@ -39,7 +39,7 @@ public abstract class XmlException extends NestedRuntimeException {
 	/**
 	 * Constructs a new instance of the {@code XmlException} with the specific detail message and exception.
 	 *
-	 * @param message	the detail message
+	 * @param message the detail message
 	 * @param throwable the wrapped exception
 	 */
 	protected XmlException(String message, Throwable throwable) {

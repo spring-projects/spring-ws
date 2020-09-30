@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
+@Target({ ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD })
 public @interface Namespaces {
 
 	Namespace[] value();

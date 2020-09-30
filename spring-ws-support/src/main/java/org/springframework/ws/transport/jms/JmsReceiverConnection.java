@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -38,10 +39,10 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a {@link
- * BytesMessage} or {@link TextMessage} request and response message.
- *
- * <p>The response message type is equal to the request message type, i.e. if a {@code BytesMessage} is received as
+ * Implementation of {@link WebServiceConnection} that is used for server-side JMS access. Exposes a
+ * {@link BytesMessage} or {@link TextMessage} request and response message.
+ * <p>
+ * The response message type is equal to the request message type, i.e. if a {@code BytesMessage} is received as
  * request, a {@code BytesMessage} is created as response, and if a {@code TextMessage} is received, a
  * {@code TextMessage} response is created.
  *
@@ -72,7 +73,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 * Constructs a new JMS connection with the given {@link BytesMessage}.
 	 *
 	 * @param requestMessage the JMS request message
-	 * @param session		 the JMS session
+	 * @param session the JMS session
 	 */
 	protected JmsReceiverConnection(BytesMessage requestMessage, Session session) {
 		this((Message) requestMessage, session);
@@ -82,7 +83,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 * Constructs a new JMS connection with the given {@link TextMessage}.
 	 *
 	 * @param requestMessage the JMS request message
-	 * @param session		 the JMS session
+	 * @param session the JMS session
 	 */
 	protected JmsReceiverConnection(TextMessage requestMessage, String encoding, Session session) {
 		this(requestMessage, session);
@@ -93,16 +94,16 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 		this.postProcessor = postProcessor;
 	}
 
-	
-
-	/** Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}. */
+	/**
+	 * Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}.
+	 */
 	public Message getRequestMessage() {
 		return requestMessage;
 	}
 
 	/**
-	 * Returns the response message, if any, for this connection. Returns either a {@link BytesMessage} or a {@link
-	 * TextMessage}.
+	 * Returns the response message, if any, for this connection. Returns either a {@link BytesMessage} or a
+	 * {@link TextMessage}.
 	 */
 	public Message getResponseMessage() {
 		return responseMessage;
@@ -116,8 +117,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	public URI getUri() throws URISyntaxException {
 		try {
 			return JmsTransportUtils.toUri(requestMessage.getJMSDestination());
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}
@@ -144,8 +144,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
 			return JmsTransportUtils.getHeaderNames(requestMessage);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property names", ex);
 		}
 	}
@@ -154,8 +153,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		try {
 			return JmsTransportUtils.getHeaders(requestMessage, name);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property value", ex);
 		}
 	}
@@ -164,11 +162,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	protected InputStream getRequestInputStream() throws IOException {
 		if (requestMessage instanceof BytesMessage) {
 			return new BytesMessageInputStream((BytesMessage) requestMessage);
-		}
-		else if (requestMessage instanceof TextMessage) {
+		} else if (requestMessage instanceof TextMessage) {
 			return new TextMessageInputStream((TextMessage) requestMessage, textMessageEncoding);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
 		}
 	}
@@ -182,11 +178,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 		try {
 			if (requestMessage instanceof BytesMessage) {
 				responseMessage = session.createBytesMessage();
-			}
-			else if (requestMessage instanceof TextMessage) {
+			} else if (requestMessage instanceof TextMessage) {
 				responseMessage = session.createTextMessage();
-			}
-			else {
+			} else {
 				throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
 			}
 			String correlation = requestMessage.getJMSCorrelationID();
@@ -194,8 +188,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 				correlation = requestMessage.getJMSMessageID();
 			}
 			responseMessage.setJMSCorrelationID(correlation);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException("Could not create response message", ex);
 		}
 	}
@@ -204,8 +197,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	public void addResponseHeader(String name, String value) throws IOException {
 		try {
 			JmsTransportUtils.addHeader(responseMessage, name, value);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException("Could not set property", ex);
 		}
 	}
@@ -214,11 +206,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	protected OutputStream getResponseOutputStream() throws IOException {
 		if (responseMessage instanceof BytesMessage) {
 			return new BytesMessageOutputStream((BytesMessage) responseMessage);
-		}
-		else if (responseMessage instanceof TextMessage) {
+		} else if (responseMessage instanceof TextMessage) {
 			return new TextMessageOutputStream((TextMessage) responseMessage, textMessageEncoding);
-		}
-		else {
+		} else {
 			throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
 		}
 	}
@@ -236,11 +226,9 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 				}
 				messageProducer.send(responseMessage);
 			}
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
-		}
-		finally {
+		} finally {
 			JmsUtils.closeMessageProducer(messageProducer);
 		}
 	}

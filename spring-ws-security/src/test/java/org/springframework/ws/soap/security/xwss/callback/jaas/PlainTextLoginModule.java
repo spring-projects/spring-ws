@@ -57,22 +57,18 @@ public class PlainTextLoginModule implements LoginModule {
 				subject.getPrincipals().addAll(principals);
 				principals.clear();
 				return true;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new LoginException(e.getMessage());
 			}
-		}
-		else {
+		} else {
 			principals.clear();
 		}
 		return true;
 	}
 
 	@Override
-	public void initialize(Subject subject,
-						   CallbackHandler callbackHandler,
-						   Map<String,?> sharedState,
-						   Map<String,?> options) {
+	public void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState,
+			Map<String, ?> options) {
 		this.subject = subject;
 		this.callbackHandler = callbackHandler;
 	}
@@ -85,7 +81,7 @@ public class PlainTextLoginModule implements LoginModule {
 		try {
 			NameCallback nameCallback = new NameCallback("Username: ");
 			PasswordCallback passwordCallback = new PasswordCallback("Password: ", false);
-			Callback[] callbacks = new Callback[]{nameCallback, passwordCallback};
+			Callback[] callbacks = new Callback[] { nameCallback, passwordCallback };
 
 			callbackHandler.handle(callbacks);
 
@@ -104,11 +100,9 @@ public class PlainTextLoginModule implements LoginModule {
 			}
 
 			return true;
-		}
-		catch (LoginException ex) {
+		} catch (LoginException ex) {
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			success = false;
 			throw new LoginException(ex.getMessage());
 		}
@@ -118,8 +112,7 @@ public class PlainTextLoginModule implements LoginModule {
 		if ("Bert".equals(username) && "Ernie".equals(password)) {
 			this.principals.add(new SimplePrincipal(username));
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
@@ -136,6 +129,5 @@ public class PlainTextLoginModule implements LoginModule {
 
 		return true;
 	}
-
 
 }

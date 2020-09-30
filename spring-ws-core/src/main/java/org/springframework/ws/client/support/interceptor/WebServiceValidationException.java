@@ -16,9 +16,8 @@
 
 package org.springframework.ws.client.support.interceptor;
 
-import org.xml.sax.SAXParseException;
-
 import org.springframework.ws.client.WebServiceClientException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Exception thrown whenever a validation error occurs on the client-side.

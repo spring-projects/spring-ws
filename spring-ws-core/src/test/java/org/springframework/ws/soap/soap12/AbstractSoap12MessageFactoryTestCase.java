@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.soap12;
 
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,8 +32,6 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
-
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
@@ -69,13 +69,12 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 		messageFactory.createWebServiceMessage(tis);
 	}
 
-
 	@Override
 	public void testCreateSoapMessageSwA() throws Exception {
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-attachment.bin");
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "multipart/related;" + "type=\"application/soap+xml\";" +
-				"boundary=\"----=_Part_0_11416420.1149699787554\"");
+		headers.put("Content-Type",
+				"multipart/related;" + "type=\"application/soap+xml\";" + "boundary=\"----=_Part_0_11416420.1149699787554\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -91,9 +90,10 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 	public void testCreateSoapMessageMtom() throws Exception {
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type", "multipart/related;" + "start-info=\"application/soap+xml\";" +
-				"type=\"application/xop+xml\";" + "start=\"<0.urn:uuid:40864869929B855F971176851454456@apache.org>\";" +
-				"boundary=\"MIMEBoundaryurn_uuid_40864869929B855F971176851454455\"");
+		headers.put("Content-Type",
+				"multipart/related;" + "start-info=\"application/soap+xml\";" + "type=\"application/xop+xml\";"
+						+ "start=\"<0.urn:uuid:40864869929B855F971176851454456@apache.org>\";"
+						+ "boundary=\"MIMEBoundaryurn_uuid_40864869929B855F971176851454455\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -112,7 +112,7 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 	public void testCreateSoapMessageMissingContentType() throws Exception {
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12.xml");
 		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
-		
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
 		SoapMessage soapMessage = (SoapMessage) message;

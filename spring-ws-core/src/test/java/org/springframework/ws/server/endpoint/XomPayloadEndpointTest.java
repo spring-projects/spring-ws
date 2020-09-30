@@ -16,9 +16,9 @@
 
 package org.springframework.ws.server.endpoint;
 
-import nu.xom.Element;
-
 import static org.junit.Assert.*;
+
+import nu.xom.Element;
 
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 

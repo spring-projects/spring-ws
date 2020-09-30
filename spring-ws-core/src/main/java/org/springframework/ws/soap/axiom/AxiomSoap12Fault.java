@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMNamespace;
@@ -32,7 +33,6 @@ import org.apache.axiom.soap.SOAPFaultSubCode;
 import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
-
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap12.Soap12Fault;
@@ -66,14 +66,12 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 		SOAPFaultSubCode faultSubCode = null;
 		if (faultCode.getSubCode() == null) {
 			faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultCode);
-		}
-		else {
+		} else {
 			faultSubCode = faultCode.getSubCode();
 			while (true) {
 				if (faultSubCode.getSubCode() != null) {
 					faultSubCode = faultSubCode.getSubCode();
-				}
-				else {
+				} else {
 					faultSubCode = getAxiomFactory().createSOAPFaultSubCode(faultSubCode);
 					break;
 				}
@@ -90,14 +88,12 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 			if (namespace == null) {
 				getAxiomFault().declareNamespace(code.getNamespaceURI(), prefix);
 			}
-		}
-		else if (StringUtils.hasLength(code.getNamespaceURI())) {
+		} else if (StringUtils.hasLength(code.getNamespaceURI())) {
 			OMNamespace namespace = getAxiomFault().findNamespace(code.getNamespaceURI(), null);
 			if (namespace == null) {
 				throw new IllegalArgumentException("Could not resolve namespace of code [" + code + "]");
 			}
-			code = new QName(code.getNamespaceURI(), code.getLocalPart(),
-					namespace.getPrefix());
+			code = new QName(code.getNamespaceURI(), code.getLocalPart(), namespace.getPrefix());
 		}
 		faultValue.setText(prefix + ":" + code.getLocalPart());
 	}
@@ -107,8 +103,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 		SOAPFaultNode faultNode = getAxiomFault().getNode();
 		if (faultNode == null) {
 			return null;
-		}
-		else {
+		} else {
 			return faultNode.getFaultNodeValue();
 		}
 	}
@@ -119,8 +114,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 			SOAPFaultNode faultNode = getAxiomFactory().createSOAPFaultNode(getAxiomFault());
 			faultNode.setFaultNodeValue(uri);
 			getAxiomFault().setNode(faultNode);
-		}
-		catch (SOAPProcessingException ex) {
+		} catch (SOAPProcessingException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 	}
@@ -146,8 +140,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 			SOAPFaultText faultText = getAxiomFactory().createSOAPFaultText(faultReason);
 			faultText.setLang(language);
 			faultText.setText(text);
-		}
-		catch (SOAPProcessingException ex) {
+		} catch (SOAPProcessingException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 	}

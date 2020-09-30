@@ -42,9 +42,7 @@ public class PayloadRootSmartSoapEndpointInterceptor extends DelegatingSmartSoap
 
 	private final String localPart;
 
-	public PayloadRootSmartSoapEndpointInterceptor(EndpointInterceptor delegate,
-												   String namespaceUri,
-												   String localPart) {
+	public PayloadRootSmartSoapEndpointInterceptor(EndpointInterceptor delegate, String namespaceUri, String localPart) {
 		super(delegate);
 		Assert.hasLength(namespaceUri, "namespaceUri can not be empty");
 		this.namespaceUri = namespaceUri;
@@ -64,8 +62,7 @@ public class PayloadRootSmartSoapEndpointInterceptor extends DelegatingSmartSoap
 			}
 			return !StringUtils.hasLength(localPart) || localPart.equals(payloadRootName.getLocalPart());
 
-		}
-		catch (TransformerException e) {
+		} catch (TransformerException e) {
 			return false;
 		}
 	}

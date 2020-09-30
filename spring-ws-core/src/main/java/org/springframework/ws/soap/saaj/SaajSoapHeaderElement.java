@@ -24,8 +24,8 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 
 /**
- * SAAJ-specific implementation of the {@code SoapHeaderElement} interface. Wraps a {@link
- * javax.xml.soap.SOAPHeaderElement}.
+ * SAAJ-specific implementation of the {@code SoapHeaderElement} interface. Wraps a
+ * {@link javax.xml.soap.SOAPHeaderElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

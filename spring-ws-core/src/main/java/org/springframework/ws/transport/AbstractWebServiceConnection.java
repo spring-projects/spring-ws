@@ -49,20 +49,18 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	}
 
 	/**
-	 * Called before the given message has been written to the {@code TransportOutputStream}. Called from {@link
-	 * #send(WebServiceMessage)}.
-	 *
-	 * <p>Default implementation does nothing.
+	 * Called before the given message has been written to the {@code TransportOutputStream}. Called from
+	 * {@link #send(WebServiceMessage)}.
+	 * <p>
+	 * Default implementation does nothing.
 	 *
 	 * @param message the message
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-	}
+	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {}
 
 	/**
-	 * Returns a {@code TransportOutputStream} for the given message. Called from {@link
-	 * #send(WebServiceMessage)}.
+	 * Returns a {@code TransportOutputStream} for the given message. Called from {@link #send(WebServiceMessage)}.
 	 *
 	 * @return the output stream
 	 * @throws IOException when an I/O exception occurs
@@ -70,16 +68,15 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
 
 	/**
-	 * Called after the given message has been written to the {@code TransportOutputStream}. Called from {@link
-	 * #send(WebServiceMessage)}.
-	 *
-	 * <p>Default implementation does nothing.
+	 * Called after the given message has been written to the {@code TransportOutputStream}. Called from
+	 * {@link #send(WebServiceMessage)}.
+	 * <p>
+	 * Default implementation does nothing.
 	 *
 	 * @param message the message
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-	}
+	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {}
 
 	@Override
 	public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
@@ -95,15 +92,14 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	}
 
 	/**
-	 * Called before a message has been read from the {@code TransportInputStream}. Called from {@link
-	 * #receive(WebServiceMessageFactory)}.
-	 *
-	 * <p>Default implementation does nothing.
+	 * Called before a message has been read from the {@code TransportInputStream}. Called from
+	 * {@link #receive(WebServiceMessageFactory)}.
+	 * <p>
+	 * Default implementation does nothing.
 	 *
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected void onReceiveBeforeRead() throws IOException {
-	}
+	protected void onReceiveBeforeRead() throws IOException {}
 
 	/**
 	 * Returns a {@code TransportInputStream}. Called from {@link #receive(WebServiceMessageFactory)}.
@@ -114,16 +110,15 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	protected abstract TransportInputStream createTransportInputStream() throws IOException;
 
 	/**
-	 * Called when the given message has been read from the {@code TransportInputStream}. Called from {@link
-	 * #receive(WebServiceMessageFactory)}.
-	 *
-	 * <p>Default implementation does nothing.
+	 * Called when the given message has been read from the {@code TransportInputStream}. Called from
+	 * {@link #receive(WebServiceMessageFactory)}.
+	 * <p>
+	 * Default implementation does nothing.
 	 *
 	 * @param message the message
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {
-	}
+	protected void onReceiveAfterRead(WebServiceMessage message) throws IOException {}
 
 	@Override
 	public final void close() throws IOException {
@@ -131,16 +126,14 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 		if (tis != null) {
 			try {
 				tis.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				ioex = ex;
 			}
 		}
 		if (tos != null) {
 			try {
 				tos.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				ioex = ex;
 			}
 		}
@@ -162,7 +155,6 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	 *
 	 * @throws IOException if an I/O error occurs when closing this connection
 	 */
-	protected void onClose() throws IOException {
-	}
+	protected void onClose() throws IOException {}
 
 }

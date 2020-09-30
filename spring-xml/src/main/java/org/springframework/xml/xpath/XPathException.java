@@ -39,7 +39,7 @@ public class XPathException extends XmlException {
 	/**
 	 * Constructs a new instance of the {@code XPathException} with the specific detail message and exception.
 	 *
-	 * @param message	the detail message
+	 * @param message the detail message
 	 * @param throwable the wrapped exception
 	 */
 	public XPathException(String message, Throwable throwable) {

@@ -38,8 +38,7 @@ public class WsConfigurerComposite implements WsConfigurer {
 	}
 
 	@Override
-	public void addReturnValueHandlers(
-			List<MethodReturnValueHandler> returnValueHandlers) {
+	public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 		for (WsConfigurer delegate : delegates) {
 			delegate.addReturnValueHandlers(returnValueHandlers);
 		}

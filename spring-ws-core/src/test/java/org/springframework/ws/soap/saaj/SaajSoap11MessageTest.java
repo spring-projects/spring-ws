@@ -16,7 +16,12 @@
 
 package org.springframework.ws.soap.saaj;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
@@ -26,15 +31,10 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.junit.Test;
-
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
 

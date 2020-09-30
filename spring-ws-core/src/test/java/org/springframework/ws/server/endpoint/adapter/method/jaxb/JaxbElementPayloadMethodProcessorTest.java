@@ -16,7 +16,13 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,7 +32,6 @@ import javax.xml.transform.Transformer;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -39,11 +44,6 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class JaxbElementPayloadMethodProcessorTest {
 
@@ -65,8 +65,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 	@Test
 	public void supportsParameter() {
-		assertTrue("processor does not support @JAXBElement parameter",
-				processor.supportsParameter(supportedParameter));
+		assertTrue("processor does not support @JAXBElement parameter", processor.supportsParameter(supportedParameter));
 	}
 
 	@Test
@@ -77,7 +76,8 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 	@Test
 	public void resolveArgument() throws JAXBException {
-		WebServiceMessage request = new MockWebServiceMessage("<myType xmlns='http://springframework.org'><string>Foo</string></myType>");
+		WebServiceMessage request = new MockWebServiceMessage(
+				"<myType xmlns='http://springframework.org'><string>Foo</string></myType>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		JAXBElement<?> result = processor.resolveArgument(messageContext, supportedParameter);
@@ -92,11 +92,13 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 		MyType type = new MyType();
 		type.setString("Foo");
-		JAXBElement<MyType> element = new JAXBElement<MyType>(new QName("http://springframework.org", "type"), MyType.class, type);
+		JAXBElement<MyType> element = new JAXBElement<MyType>(new QName("http://springframework.org", "type"), MyType.class,
+				type);
 		processor.handleReturnValue(messageContext, supportedReturnType, element);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>", response.getPayloadAsString());
+		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>",
+				response.getPayloadAsString());
 	}
 
 	@Test
@@ -104,7 +106,8 @@ public class JaxbElementPayloadMethodProcessorTest {
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		String s = "Foo";
-		JAXBElement<String> element = new JAXBElement<String>(new QName("http://springframework.org", "string"), String.class, s);
+		JAXBElement<String> element = new JAXBElement<String>(new QName("http://springframework.org", "string"),
+				String.class, s);
 		processor.handleReturnValue(messageContext, stringReturnType, element);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
@@ -113,8 +116,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 	@Test
 	public void handleNullReturnValue() throws Exception {
-		MessageContext messageContext =
-				new DefaultMessageContext(new MockWebServiceMessageFactory());
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		processor.handleReturnValue(messageContext, stringReturnType, null);
 		assertFalse("context has response", messageContext.hasResponse());
@@ -127,7 +129,8 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 		MyType type = new MyType();
 		type.setString("Foo");
-		JAXBElement<MyType> element = new JAXBElement<MyType>(new QName("http://springframework.org", "type"), MyType.class, type);
+		JAXBElement<MyType> element = new JAXBElement<MyType>(new QName("http://springframework.org", "type"), MyType.class,
+				type);
 
 		processor.handleReturnValue(messageContext, supportedReturnType, element);
 		assertTrue("context has no response", messageContext.hasResponse());
@@ -137,19 +140,19 @@ public class JaxbElementPayloadMethodProcessorTest {
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 
-		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>",
-				payloadResult.toString());
+		assertXMLEqual("<type xmlns='http://springframework.org'><string>Foo</string></type>", payloadResult.toString());
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
-				"<type xmlns='http://springframework.org'><string>Foo</string></type>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
+		assertXMLEqual(
+				"<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>"
+						+ "<type xmlns='http://springframework.org'><string>Foo</string></type>"
+						+ "</soapenv:Body></soapenv:Envelope>",
+				messageResult);
 
 	}
-
 
 	@ResponsePayload
 	public JAXBElement<MyType> supported(@RequestPayload JAXBElement<MyType> element) {
@@ -161,7 +164,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		return new JAXBElement<String>(new QName("string"), String.class, "Foo");
 	}
 
-	@XmlType(name="myType", namespace = "http://springframework.org")
+	@XmlType(name = "myType", namespace = "http://springframework.org")
 	public static class MyType {
 
 		private String string;

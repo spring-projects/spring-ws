@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.adapter.method;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
@@ -42,8 +43,8 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * <p>This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
+	 * <p>
+	 * This implementation gets checks if the given parameter is annotated with {@link RequestPayload}, and invokes
 	 * {@link #supportsRequestPayloadParameter(org.springframework.core.MethodParameter)} afterwards.
 	 */
 	@Override
@@ -51,8 +52,7 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 		Assert.isTrue(parameter.getParameterIndex() >= 0, "Parameter index smaller than 0");
 		if (parameter.getParameterAnnotation(RequestPayload.class) == null) {
 			return false;
-		}
-		else {
+		} else {
 			return supportsRequestPayloadParameter(parameter);
 		}
 	}
@@ -67,11 +67,11 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 	protected abstract boolean supportsRequestPayloadParameter(MethodParameter parameter);
 
 	// MethodReturnValueHandler
-	
+
 	/**
 	 * {@inheritDoc}
-	 *
-	 * <p>This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
+	 * <p>
+	 * This implementation gets checks if the method of the given return type is annotated with {@link ResponsePayload},
 	 * and invokes {@link #supportsResponsePayloadReturnType(org.springframework.core.MethodParameter)} afterwards.
 	 */
 	@Override
@@ -79,15 +79,14 @@ public abstract class AbstractPayloadMethodProcessor extends TransformerObjectSu
 		Assert.isTrue(returnType.getParameterIndex() == -1, "Parameter index is not -1");
 		if (returnType.getMethodAnnotation(ResponsePayload.class) == null) {
 			return false;
-		}
-		else {
+		} else {
 			return supportsResponsePayloadReturnType(returnType);
 		}
 	}
 
 	/**
-	 * Indicates whether the given {@linkplain MethodParameter method return type}, annotated with {@link
-	 * ResponsePayload}, is supported.
+	 * Indicates whether the given {@linkplain MethodParameter method return type}, annotated with
+	 * {@link ResponsePayload}, is supported.
 	 *
 	 * @param returnType the method parameter to check
 	 * @return {@code true} if this resolver supports the supplied return type; {@code false} otherwise

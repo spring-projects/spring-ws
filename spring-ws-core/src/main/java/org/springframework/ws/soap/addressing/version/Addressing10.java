@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.addressing.version;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.util.Assert;
@@ -87,8 +88,7 @@ public class Addressing10 extends AbstractAddressingVersion {
 
 	@Override
 	protected final QName getMessageAddressingHeaderRequiredFaultSubcode() {
-		return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired",
-				getNamespacePrefix());
+		return new QName(NAMESPACE_URI, "MessageAddressingHeaderRequired", getNamespacePrefix());
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import java.io.PushbackInputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
@@ -31,8 +32,6 @@ import javax.xml.soap.SOAPMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.xml.sax.SAXParseException;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -44,13 +43,13 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
+import org.xml.sax.SAXParseException;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
- * Wraps a SAAJ {@link MessageFactory}. This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or even
- * 1.1.
- *
- * <p>A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
+ * Wraps a SAAJ {@link MessageFactory}. This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or even 1.1.
+ * <p>
+ * A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
  * constructor}, or by the {@link #setMessageFactory(javax.xml.soap.MessageFactory)} property. When a SAAJ message
  * factory is injected, the {@link #setSoapVersion(org.springframework.ws.soap.SoapVersion)} property is ignored.
  *
@@ -72,8 +71,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	private Map<String, ?> messageProperties;
 
 	/** Default, empty constructor. */
-	public SaajSoapMessageFactory() {
-	}
+	public SaajSoapMessageFactory() {}
 
 	/** Constructor that takes a message factory as an argument. */
 	public SaajSoapMessageFactory(MessageFactory messageFactory) {
@@ -92,6 +90,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/**
 	 * Sets the SAAJ message properties. These properties will be set on created messages.
+	 * 
 	 * @see javax.xml.soap.SOAPMessage#setProperty(String, Object)
 	 */
 	public void setMessageProperties(Map<String, ?> messageProperties) {
@@ -100,8 +99,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/**
 	 * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
-	 *
-	 * <p>The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+	 * <p>
+	 * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
 	 * 1.1 specification.
 	 *
 	 * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
@@ -115,16 +114,13 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 		if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
 			if (SoapVersion.SOAP_11 == version) {
 				messageFactoryProtocol = SOAPConstants.SOAP_1_1_PROTOCOL;
-			}
-			else if (SoapVersion.SOAP_12 == version) {
+			} else if (SoapVersion.SOAP_12 == version) {
 				messageFactoryProtocol = SOAPConstants.SOAP_1_2_PROTOCOL;
-			}
-			else {
+			} else {
 				throw new IllegalArgumentException(
 						"Invalid version [" + version + "]. Expected the SOAP_11 or SOAP_12 constant");
 			}
-		}
-		else if (SoapVersion.SOAP_11 != version) {
+		} else if (SoapVersion.SOAP_11 != version) {
 			throw new IllegalArgumentException("SAAJ 1.1 and 1.2 only support SOAP 1.1");
 		}
 	}
@@ -141,27 +137,22 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 						logger.info("Creating SAAJ 1.3 MessageFactory with " + messageFactoryProtocol);
 					}
 					messageFactory = MessageFactory.newInstance(messageFactoryProtocol);
-				}
-				else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+				} else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
 					logger.info("Creating SAAJ 1.2 MessageFactory");
 					messageFactory = MessageFactory.newInstance();
-				}
-				else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
+				} else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
 					logger.info("Creating SAAJ 1.1 MessageFactory");
 					messageFactory = MessageFactory.newInstance();
-				}
-				else {
+				} else {
 					throw new IllegalStateException(
 							"SaajSoapMessageFactory requires SAAJ 1.1, which was not found on the classpath");
 				}
-			}
-			catch (NoSuchMethodError ex) {
+			} catch (NoSuchMethodError ex) {
 				throw new SoapMessageCreationException(
-						"Could not create SAAJ MessageFactory. Is the version of the SAAJ specification interfaces [" +
-								SaajUtils.getSaajVersionString() +
-								"] the same as the version supported by the application server?", ex);
-			}
-			catch (SOAPException ex) {
+						"Could not create SAAJ MessageFactory. Is the version of the SAAJ specification interfaces ["
+								+ SaajUtils.getSaajVersionString() + "] the same as the version supported by the application server?",
+						ex);
+			} catch (SOAPException ex) {
 				throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
 			}
 		}
@@ -176,8 +167,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 			SOAPMessage saajMessage = messageFactory.createMessage();
 			postProcess(saajMessage);
 			return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString, messageFactory);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
 		}
 	}
@@ -191,8 +181,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 			saajMessage.getSOAPPart().getEnvelope();
 			postProcess(saajMessage);
 			return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString, messageFactory);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			// SAAJ 1.3 RI has a issue with handling multipart XOP content types which contain "startinfo" rather than
 			// "start-info", so let's try and do something about it
 			String contentType = StringUtils
@@ -203,10 +192,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 				try {
 					SOAPMessage saajMessage = messageFactory.createMessage(mimeHeaders, inputStream);
 					postProcess(saajMessage);
-					return new SaajSoapMessage(saajMessage,
-							langAttributeOnSoap11FaultString);
-				}
-				catch (SOAPException e) {
+					return new SaajSoapMessage(saajMessage, langAttributeOnSoap11FaultString);
+				} catch (SOAPException e) {
 					// fall-through
 				}
 			}
@@ -214,9 +201,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 			if (parseException != null) {
 				throw new InvalidXmlException("Could not parse XML", parseException);
 			} else {
-				throw new SoapMessageCreationException(
-						"Could not create message from InputStream: " + ex.getMessage(),
-						ex);
+				throw new SoapMessageCreationException("Could not create message from InputStream: " + ex.getMessage(), ex);
 			}
 		}
 	}
@@ -282,7 +267,9 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/**
 	 * Template method that allows for post-processing of the given {@link SOAPMessage}.
-	 * <p>Default implementation sets {@linkplain SOAPMessage#setProperty(String, Object) message properties}, if any.
+	 * <p>
+	 * Default implementation sets {@linkplain SOAPMessage#setProperty(String, Object) message properties}, if any.
+	 * 
 	 * @param soapMessage the message to post process
 	 * @see #setMessageProperties(java.util.Map)
 	 */

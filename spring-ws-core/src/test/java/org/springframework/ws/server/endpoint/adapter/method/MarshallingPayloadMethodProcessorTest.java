@@ -16,22 +16,22 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Type;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumentResolverTestCase {
 
@@ -123,7 +123,6 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 
 		verify(marshaller, unmarshaller);
 	}
-
 
 	@Test
 	public void resolveArgument() throws Exception {

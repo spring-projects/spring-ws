@@ -23,8 +23,8 @@ import org.springframework.ws.soap.server.SmartSoapEndpointInterceptor;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 
 /**
- * Implementation of the {@link SmartSoapEndpointInterceptor} interface that delegates to a delegate {@link
- * SoapEndpointInterceptor}.
+ * Implementation of the {@link SmartSoapEndpointInterceptor} interface that delegates to a delegate
+ * {@link SoapEndpointInterceptor}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -46,8 +46,7 @@ public class DelegatingSmartSoapEndpointInterceptor extends DelegatingSmartEndpo
 		EndpointInterceptor delegate = getDelegate();
 		if (delegate instanceof SoapEndpointInterceptor) {
 			return ((SoapEndpointInterceptor) delegate).understands(header);
-		}
-		else {
+		} else {
 			return false;
 		}
 	}

@@ -23,9 +23,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation which indicates that a method parameter should be bound to the {@linkplain
- * org.springframework.ws.WebServiceMessage#getPayloadSource() request payload}. Supported for annotated endpoint
- * methods.
+ * Annotation which indicates that a method parameter should be bound to the
+ * {@linkplain org.springframework.ws.WebServiceMessage#getPayloadSource() request payload}. Supported for annotated
+ * endpoint methods.
  *
  * @author Arjen Poutsma
  * @see ResponsePayload

@@ -27,8 +27,7 @@ import javax.xml.transform.Source;
  */
 public abstract class AssertionErrors {
 
-	private AssertionErrors() {
-	}
+	private AssertionErrors() {}
 
 	/**
 	 * Fails a test with the given message.
@@ -43,13 +42,12 @@ public abstract class AssertionErrors {
 	 * Fails a test with the given message and source.
 	 *
 	 * @param message the message
-	 * @param source  the source
+	 * @param source the source
 	 */
 	public static void fail(String message, String sourceLabel, Source source) {
 		if (source != null) {
 			throw new SourceAssertionError(message, sourceLabel, source);
-		}
-		else {
+		} else {
 			fail(message);
 		}
 	}
@@ -57,7 +55,7 @@ public abstract class AssertionErrors {
 	/**
 	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError} with the given message.
 	 *
-	 * @param message	the message
+	 * @param message the message
 	 * @param condition the condition to test for
 	 */
 	public static void assertTrue(String message, boolean condition) {
@@ -68,7 +66,7 @@ public abstract class AssertionErrors {
 	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError} with the given message and
 	 * source.
 	 *
-	 * @param message	the message
+	 * @param message the message
 	 * @param condition the condition to test for
 	 */
 	public static void assertTrue(String message, boolean condition, String sourceLabel, Source source) {
@@ -80,9 +78,9 @@ public abstract class AssertionErrors {
 	/**
 	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown with the given message.
 	 *
-	 * @param message  the message
+	 * @param message the message
 	 * @param expected the expected value
-	 * @param actual   the actual value
+	 * @param actual the actual value
 	 */
 	public static void assertEquals(String message, Object expected, Object actual) {
 		assertEquals(message, expected, actual, null, null);
@@ -91,10 +89,10 @@ public abstract class AssertionErrors {
 	/**
 	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown with the given message.
 	 *
-	 * @param message  the message
+	 * @param message the message
 	 * @param expected the expected value
-	 * @param actual   the actual value
-	 * @param source   the source
+	 * @param actual the actual value
+	 * @param source the source
 	 */
 	public static void assertEquals(String message, Object expected, Object actual, String sourceLabel, Source source) {
 		if (expected == null && actual == null) {

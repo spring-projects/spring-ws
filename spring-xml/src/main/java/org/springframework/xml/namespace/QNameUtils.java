@@ -18,10 +18,9 @@ package org.springframework.xml.namespace;
 
 import javax.xml.namespace.QName;
 
-import org.w3c.dom.Node;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.w3c.dom.Node;
 
 /**
  * Helper class for using {@link QName}.
@@ -34,12 +33,12 @@ public abstract class QNameUtils {
 
 	/**
 	 * Creates a new {@code QName} with the given parameters. Sets the prefix if possible, i.e. if the
-	 * {@code QName(String, String, String)} constructor can be found. If this constructor is not available (as is
-	 * the case on older implementations of JAX-RPC), the prefix is ignored.
+	 * {@code QName(String, String, String)} constructor can be found. If this constructor is not available (as is the
+	 * case on older implementations of JAX-RPC), the prefix is ignored.
 	 *
 	 * @param namespaceUri namespace URI of the {@code QName}
-	 * @param localPart	   local part of the {@code QName}
-	 * @param prefix	   prefix of the {@code QName}. May be ignored.
+	 * @param localPart local part of the {@code QName}
+	 * @param prefix prefix of the {@code QName}. May be ignored.
 	 * @return the created {@code QName}
 	 * @see QName#QName(String,String,String)
 	 * @deprecated in favor of {@link QName#QName(String, String, String)}
@@ -92,16 +91,12 @@ public abstract class QNameUtils {
 	 */
 	public static QName getQNameForNode(Node node) {
 		if (node.getNamespaceURI() != null && node.getPrefix() != null && node.getLocalName() != null) {
-			return new QName(node.getNamespaceURI(), node.getLocalName(),
-					node.getPrefix());
-		}
-		else if (node.getNamespaceURI() != null && node.getLocalName() != null) {
+			return new QName(node.getNamespaceURI(), node.getLocalName(), node.getPrefix());
+		} else if (node.getNamespaceURI() != null && node.getLocalName() != null) {
 			return new QName(node.getNamespaceURI(), node.getLocalName());
-		}
-		else if (node.getLocalName() != null) {
+		} else if (node.getLocalName() != null) {
 			return new QName(node.getLocalName());
-		}
-		else {
+		} else {
 			// as a last resort, use the node name
 			return new QName(node.getNodeName());
 		}
@@ -118,17 +113,16 @@ public abstract class QNameUtils {
 		String prefix = qName.getPrefix();
 		if (!StringUtils.hasLength(prefix)) {
 			return qName.getLocalPart();
-		}
-		else {
+		} else {
 			return prefix + ":" + qName.getLocalPart();
 		}
 	}
 
 	/**
-	 * Convert a namespace URI and DOM or SAX qualified name to a {@code QName}. The qualified name can have the
-	 * form {@code prefix:localname} or {@code localName}.
+	 * Convert a namespace URI and DOM or SAX qualified name to a {@code QName}. The qualified name can have the form
+	 * {@code prefix:localname} or {@code localName}.
 	 *
-	 * @param namespaceUri	the namespace URI
+	 * @param namespaceUri the namespace URI
 	 * @param qualifiedName the qualified name
 	 * @return a QName
 	 */
@@ -136,18 +130,15 @@ public abstract class QNameUtils {
 		int idx = qualifiedName.indexOf(':');
 		if (idx == -1) {
 			return new QName(namespaceUri, qualifiedName);
-		}
-		else {
-			return new QName(namespaceUri, qualifiedName.substring(idx + 1),
-					qualifiedName.substring(0, idx));
+		} else {
+			return new QName(namespaceUri, qualifiedName.substring(idx + 1), qualifiedName.substring(0, idx));
 		}
 	}
 
 	/**
 	 * Parse the given qualified name string into a {@code QName}. Expects the syntax {@code localPart},
-	 * {@code {namespace}localPart}, or {@code {namespace}prefix:localPart}. This format resembles the
-	 * {@code toString()} representation of {@code QName} itself, but allows for prefixes to be specified as
-	 * well.
+	 * {@code {namespace}localPart}, or {@code {namespace}prefix:localPart}. This format resembles the {@code toString()}
+	 * representation of {@code QName} itself, but allows for prefixes to be specified as well.
 	 *
 	 * @return a corresponding QName instance
 	 * @throws IllegalArgumentException when the given string is {@code null} or empty.
@@ -156,19 +147,16 @@ public abstract class QNameUtils {
 		Assert.hasLength(qNameString, "QName text may not be null or empty");
 		if (qNameString.charAt(0) != '{') {
 			return new QName(qNameString);
-		}
-		else {
+		} else {
 			int endOfNamespaceURI = qNameString.indexOf('}');
 			if (endOfNamespaceURI == -1) {
-				throw new IllegalArgumentException(
-						"Cannot create QName from \"" + qNameString + "\", missing closing \"}\"");
+				throw new IllegalArgumentException("Cannot create QName from \"" + qNameString + "\", missing closing \"}\"");
 			}
 			int prefixSeperator = qNameString.indexOf(':', endOfNamespaceURI + 1);
 			String namespaceURI = qNameString.substring(1, endOfNamespaceURI);
 			if (prefixSeperator == -1) {
 				return new QName(namespaceURI, qNameString.substring(endOfNamespaceURI + 1));
-			}
-			else {
+			} else {
 				return new QName(namespaceURI, qNameString.substring(prefixSeperator + 1),
 						qNameString.substring(endOfNamespaceURI + 1, prefixSeperator));
 			}

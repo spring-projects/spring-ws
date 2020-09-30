@@ -19,12 +19,11 @@ package org.springframework.ws.client.support.destination;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 public class Wsdl11DestinationProviderTest {
 

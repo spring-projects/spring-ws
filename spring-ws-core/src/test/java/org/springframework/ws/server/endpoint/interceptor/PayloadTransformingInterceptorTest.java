@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
@@ -26,7 +28,6 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -41,8 +42,6 @@ import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class PayloadTransformingInterceptorTest {
 
@@ -169,8 +168,6 @@ public class PayloadTransformingInterceptorTest {
 		try {
 			interceptor.afterPropertiesSet();
 			Assert.fail("Should have thrown an Exception");
-		}
-		catch (IllegalArgumentException ex) {
-		}
+		} catch (IllegalArgumentException ex) {}
 	}
 }

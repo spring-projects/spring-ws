@@ -25,8 +25,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 /**
  * @author Arjen Poutsma
  */
-public class SaajSoap11WebServiceTemplateIntegrationTest
-		extends AbstractSoap11WebServiceTemplateIntegrationTestCase {
+public class SaajSoap11WebServiceTemplateIntegrationTest extends AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	@Override
 	public SoapMessageFactory createMessageFactory() throws Exception {

@@ -18,6 +18,7 @@ package org.springframework.ws.pox.dom;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -26,15 +27,14 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.pox.PoxMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Implementation of the {@code PoxMessage} interface that is based on a DOM Document.
@@ -110,8 +110,7 @@ public class DomPoxMessage implements PoxMessage {
 				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 			}
 			transformer.transform(getPayloadSource(), new StreamResult(outputStream));
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);
 		}
 	}

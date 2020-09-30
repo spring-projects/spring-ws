@@ -18,10 +18,10 @@ package org.springframework.ws.test.client;
 
 /**
  * Allows for setting up expectations on XPath expressions.
- *
- * <p>Implementations of this interface are returned by {@link RequestMatchers#xpath(String)} and {@link
- * RequestMatchers#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to implement this
- * interface yourself.
+ * <p>
+ * Implementations of this interface are returned by {@link RequestMatchers#xpath(String)} and
+ * {@link RequestMatchers#xpath(String, java.util.Map)}, as part of the fluent API. As such, it is not typical to
+ * implement this interface yourself.
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma

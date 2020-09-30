@@ -26,15 +26,14 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of {@link TypesProvider} that inlines a {@link XsdSchema} or {@link XsdSchemaCollection} into the
@@ -60,7 +59,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 		this.schemaCollection = new XsdSchemaCollection() {
 
 			public XsdSchema[] getXsdSchemas() {
-				return new XsdSchema[]{schema};
+				return new XsdSchema[] { schema };
 			}
 
 			public XmlValidator createValidator() {
@@ -93,14 +92,13 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 			}
 			if (schemas.length == 1) {
 				definition.addNamespace(SCHEMA_PREFIX, schemas[i].getTargetNamespace());
-			}
-			else {
+			} else {
 				String prefix = SCHEMA_PREFIX + i;
 				definition.addNamespace(prefix, schemas[i].getTargetNamespace());
 			}
 			Element schemaElement = getSchemaElement(schemas[i]);
-			Schema schema = (Schema) definition.getExtensionRegistry()
-					.createExtension(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"));
+			Schema schema = (Schema) definition.getExtensionRegistry().createExtension(Types.class,
+					new QName("http://www.w3.org/2001/XMLSchema", "schema"));
 			types.addExtensibilityElement(schema);
 			schema.setElement(schemaElement);
 		}
@@ -113,8 +111,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 			transform(schema.getSource(), result);
 			Document schemaDocument = (Document) result.getNode();
 			return schemaDocument.getDocumentElement();
-		}
-		catch (TransformerException e) {
+		} catch (TransformerException e) {
 			throw new WsdlDefinitionException("Could not transform schema source to Document");
 		}
 	}

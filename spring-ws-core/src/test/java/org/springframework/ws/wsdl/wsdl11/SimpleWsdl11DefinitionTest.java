@@ -16,11 +16,10 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import org.springframework.core.io.ClassPathResource;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
 public class SimpleWsdl11DefinitionTest {
 

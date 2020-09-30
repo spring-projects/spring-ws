@@ -20,9 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 
-import org.springframework.util.Assert;
-
 import org.jivesoftware.smack.packet.Message;
+import org.springframework.util.Assert;
 
 /**
  * Output stream that wraps a {@link Message}.

@@ -16,16 +16,25 @@
 
 package org.springframework.ws.test.client;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.ws.test.client.RequestMatchers.*;
+import static org.springframework.ws.test.client.ResponseCreators.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -39,16 +48,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.ws.test.client.RequestMatchers.*;
-import static org.springframework.ws.test.client.ResponseCreators.withClientOrSenderFault;
-import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 public class MockWebServiceServerTest {
 
@@ -214,7 +213,8 @@ public class MockWebServiceServerTest {
 	@Test
 	public void xsdMatch() throws Exception {
 		Resource schema = new ByteArrayResource(
-				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
+						.getBytes());
 
 		server.expect(validPayload(schema));
 
@@ -226,7 +226,8 @@ public class MockWebServiceServerTest {
 	@Test(expected = AssertionError.class)
 	public void xsdNonMatch() throws Exception {
 		Resource schema = new ByteArrayResource(
-				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>".getBytes());
+				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
+						.getBytes());
 
 		server.expect(validPayload(schema));
 
@@ -304,7 +305,7 @@ public class MockWebServiceServerTest {
 		StringResult result = new StringResult();
 		template.sendSourceAndReceiveToResult(request, result);
 	}
-	   
+
 	public static class MyClient extends WebServiceGatewaySupport {
 
 	}

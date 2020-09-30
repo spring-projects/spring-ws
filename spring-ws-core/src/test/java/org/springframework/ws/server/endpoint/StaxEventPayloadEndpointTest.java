@@ -16,7 +16,10 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.junit.Assert.*;
+
 import java.util.Collections;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
@@ -24,8 +27,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Namespace;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
-
-import static org.junit.Assert.*;
 
 /**
  * Test case for AbstractStaxEventPayloadEndpoint.
@@ -39,9 +40,8 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
 	protected MessageEndpoint createNoResponseEndpoint() {
 		return new AbstractStaxEventPayloadEndpoint() {
 			@Override
-			protected void invokeInternal(XMLEventReader eventReader,
-										  XMLEventConsumer eventWriter,
-										  XMLEventFactory eventFactory) throws Exception {
+			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
+					XMLEventFactory eventFactory) throws Exception {
 				assertNotNull("No EventReader passed", eventReader);
 			}
 		};
@@ -52,9 +52,8 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
 		return new AbstractStaxEventPayloadEndpoint() {
 
 			@Override
-			protected void invokeInternal(XMLEventReader eventReader,
-										  XMLEventConsumer eventWriter,
-										  XMLEventFactory eventFactory) throws Exception {
+			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
+					XMLEventFactory eventFactory) throws Exception {
 				assertNull("EventReader passed", eventReader);
 			}
 		};
@@ -65,9 +64,8 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
 		return new AbstractStaxEventPayloadEndpoint() {
 
 			@Override
-			protected void invokeInternal(XMLEventReader eventReader,
-										  XMLEventConsumer eventWriter,
-										  XMLEventFactory eventFactory) throws XMLStreamException {
+			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
+					XMLEventFactory eventFactory) throws XMLStreamException {
 				assertNotNull("eventReader not given", eventReader);
 				assertNotNull("eventWriter not given", eventWriter);
 				assertNotNull("eventFactory not given", eventFactory);
@@ -83,19 +81,15 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
 				assertTrue("eventReader has not next element", eventReader.hasNext());
 				event = eventReader.nextEvent();
 				assertTrue("Not a end element", event.isEndElement());
-				assertEquals("Invalid end event local name", REQUEST_ELEMENT,
-						event.asEndElement().getName().getLocalPart());
-				assertEquals("Invalid end event namespace", NAMESPACE_URI,
-						event.asEndElement().getName().getNamespaceURI());
+				assertEquals("Invalid end event local name", REQUEST_ELEMENT, event.asEndElement().getName().getLocalPart());
+				assertEquals("Invalid end event namespace", NAMESPACE_URI, event.asEndElement().getName().getNamespaceURI());
 				Namespace namespace = eventFactory.createNamespace(NAMESPACE_URI);
 				QName name = new QName(NAMESPACE_URI, RESPONSE_ELEMENT);
-				eventWriter
-						.add(eventFactory.createStartElement(name, null, Collections.singleton(namespace).iterator()));
+				eventWriter.add(eventFactory.createStartElement(name, null, Collections.singleton(namespace).iterator()));
 				eventWriter.add(eventFactory.createEndElement(name, Collections.singleton(namespace).iterator()));
 				eventWriter.add(eventFactory.createEndDocument());
 			}
 		};
 	}
-
 
 }

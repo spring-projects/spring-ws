@@ -17,11 +17,9 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
-import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -37,15 +35,18 @@ import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
+
 /**
- * Callback handler that validates a password digest using an Spring Security {@code UserDetailsService}. Logic
- * based on Spring Security's {@code DigestProcessingFilter}.
- *
- * <p>An Spring Security {@code UserDetailService} is used to load {@code UserDetails} from. The digest of the
- * password contained in this details object is then compared with the digest in the message.
- *
- * <p>This class only handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest},
- * and throws an {@code UnsupportedCallbackException} for others.
+ * Callback handler that validates a password digest using an Spring Security {@code UserDetailsService}. Logic based on
+ * Spring Security's {@code DigestProcessingFilter}.
+ * <p>
+ * An Spring Security {@code UserDetailService} is used to load {@code UserDetails} from. The digest of the password
+ * contained in this details object is then compared with the digest in the message.
+ * <p>
+ * This class only handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest}, and throws
+ * an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see org.springframework.security.core.userdetails.UserDetailsService
@@ -78,16 +79,15 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
 	 * Handles {@code PasswordValidationCallback}s that contain a {@code DigestPasswordRequest}, and throws an
 	 * {@code UnsupportedCallbackException} for others
 	 *
-	 * @throws javax.security.auth.callback.UnsupportedCallbackException
-	 *			when the callback is not supported
+	 * @throws javax.security.auth.callback.UnsupportedCallbackException when the callback is not supported
 	 */
 	@Override
 	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
 		if (callback instanceof PasswordValidationCallback) {
 			PasswordValidationCallback passwordCallback = (PasswordValidationCallback) callback;
 			if (passwordCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
-				PasswordValidationCallback.DigestPasswordRequest request =
-						(PasswordValidationCallback.DigestPasswordRequest) passwordCallback.getRequest();
+				PasswordValidationCallback.DigestPasswordRequest request = (PasswordValidationCallback.DigestPasswordRequest) passwordCallback
+						.getRequest();
 				String username = request.getUsername();
 				UserDetails user = loadUserDetails(username);
 				if (user != null) {
@@ -98,13 +98,11 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
 				passwordCallback.setValidator(validator);
 				return;
 			}
-		}
-		else if (callback instanceof TimestampValidationCallback) {
+		} else if (callback instanceof TimestampValidationCallback) {
 			TimestampValidationCallback timestampCallback = (TimestampValidationCallback) callback;
 			timestampCallback.setValidator(new DefaultTimestampValidator());
 
-		}
-		else if (callback instanceof CleanupCallback) {
+		} else if (callback instanceof CleanupCallback) {
 			SecurityContextHolder.clearContext();
 			return;
 		}
@@ -117,8 +115,7 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
 		if (user == null) {
 			try {
 				user = userDetailsService.loadUserByUsername(username);
-			}
-			catch (UsernameNotFoundException notFound) {
+			} catch (UsernameNotFoundException notFound) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Username '" + username + "' not found");
 				}
@@ -141,16 +138,15 @@ public class SpringDigestPasswordValidationCallbackHandler extends AbstractCallb
 		public boolean validate(PasswordValidationCallback.Request request)
 				throws PasswordValidationCallback.PasswordValidationException {
 			if (super.validate(request)) {
-				UsernamePasswordAuthenticationToken authRequest =
-						new UsernamePasswordAuthenticationToken(user, user.getPassword());
+				UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(user,
+						user.getPassword());
 				if (logger.isDebugEnabled()) {
 					logger.debug("Authentication success: " + authRequest.toString());
 				}
 
 				SecurityContextHolder.getContext().setAuthentication(authRequest);
 				return true;
-			}
-			else {
+			} else {
 				return false;
 			}
 		}

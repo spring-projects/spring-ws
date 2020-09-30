@@ -18,6 +18,7 @@ package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Iterator;
 import java.util.Properties;
+
 import javax.wsdl.Binding;
 import javax.wsdl.BindingFault;
 import javax.wsdl.BindingInput;
@@ -42,8 +43,8 @@ import org.springframework.util.Assert;
 
 /**
  * Implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces that are SOAP 1.1 specific.
- *
- * <p>By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
+ * <p>
+ * By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
  * resulting WSDL can be set. Additionaly, the transport uri can be changed from the default HTTP transport by using the
  * {@link #setTransportUri(String) transportUri} property.
  *
@@ -69,8 +70,8 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	/**
 	 * Constructs a new version of the {@link Soap11Provider}.
-	 *
-	 * <p>Sets the {@link #setBindingSuffix(String) binding suffix} to {@code Soap11}.
+	 * <p>
+	 * Sets the {@link #setBindingSuffix(String) binding suffix} to {@code Soap11}.
 	 */
 	public Soap11Provider() {
 		setBindingSuffix("Soap11");
@@ -87,8 +88,8 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	}
 
 	/**
-	 * Sets the SOAP Actions for this binding. Keys are {@link BindingOperation#getName() binding operation names};
-	 * values are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
+	 * Sets the SOAP Actions for this binding. Keys are {@link BindingOperation#getName() binding operation names}; values
+	 * are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
 	 *
 	 * @param soapActions the soap
 	 */
@@ -129,13 +130,13 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	/**
 	 * Called after the {@link Binding} has been created, but before any sub-elements are added. Subclasses can override
 	 * this method to define the binding name, or add extensions to it.
-	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populateBinding(Definition, Binding)}, adds the
+	 * <p>
+	 * Default implementation calls {@link DefaultConcretePartProvider#populateBinding(Definition, Binding)}, adds the
 	 * SOAP 1.1 namespace, creates a {@link SOAPBinding}, and calls {@link #populateSoapBinding(SOAPBinding, Binding)}
 	 * sets the binding name to the port type name with the {@link #getBindingSuffix() suffix} appended to it.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param binding	 the WSDL4J {@code Binding}
+	 * @param binding the WSDL4J {@code Binding}
 	 */
 	@Override
 	protected void populateBinding(Definition definition, Binding binding) throws WSDLException {
@@ -148,9 +149,9 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	/**
 	 * Called after the {@link SOAPBinding} has been created.
-	 *
-	 * <p>Default implementation sets the binding style to {@code "document"}, and set the transport URI to the {@link
-	 * #setTransportUri(String) transportUri} property value. Subclasses can override this behavior.
+	 * <p>
+	 * Default implementation sets the binding style to {@code "document"}, and set the transport URI to the
+	 * {@link #setTransportUri(String) transportUri} property value. Subclasses can override this behavior.
 	 *
 	 * @param soapBinding the WSDL4J {@code SOAPBinding}
 	 * @throws WSDLException in case of errors
@@ -165,15 +166,16 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	}
 
 	/**
-	 * Called after the {@link BindingFault} has been created. Subclasses can override this method to define the name,
-	 * or add extensions to it.
+	 * Called after the {@link BindingFault} has been created. Subclasses can override this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation calls
+	 * {@link DefaultConcretePartProvider#populateBindingFault(Definition, BindingFault, Fault)}, creates a
+	 * {@link SOAPFault}, and calls {@link #populateSoapFault(BindingFault, SOAPFault)}.
 	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populateBindingFault(Definition, BindingFault,
-	 * Fault)}, creates a {@link SOAPFault}, and calls {@link #populateSoapFault(BindingFault, SOAPFault)}.
-	 *
-	 * @param definition   the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingFault the WSDL4J {@code BindingFault}
-	 * @param fault		   the corresponding WSDL4J {@code Fault} @throws WSDLException in case of errors
+	 * @param fault the corresponding WSDL4J {@code Fault} @throws WSDLException in case of errors
 	 */
 	@Override
 	protected void populateBindingFault(Definition definition, BindingFault bindingFault, Fault fault)
@@ -186,12 +188,12 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	/**
 	 * Called after the {@link SOAPFault} has been created.
-	 *
-	 * <p>Default implementation sets the use style to {@code "literal"}, and sets the name equal to the binding
-	 * fault. Subclasses can override this behavior.
+	 * <p>
+	 * Default implementation sets the use style to {@code "literal"}, and sets the name equal to the binding fault.
+	 * Subclasses can override this behavior.
 	 *
 	 * @param bindingFault the WSDL4J {@code BindingFault}
-	 * @param soapFault	   the WSDL4J {@code SOAPFault}
+	 * @param soapFault the WSDL4J {@code SOAPFault}
 	 * @throws WSDLException in case of errors
 	 * @see SOAPFault#setUse(String)
 	 */
@@ -201,16 +203,16 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	}
 
 	/**
-	 * Called after the {@link BindingInput} has been created. Subclasses can implement this method to define the name,
-	 * or add extensions to it.
+	 * Called after the {@link BindingInput} has been created. Subclasses can implement this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation calls
+	 * {@link DefaultConcretePartProvider#populateBindingInput(Definition, javax.wsdl.BindingInput, javax.wsdl.Input)},
+	 * creates a {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
 	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populateBindingInput(Definition,
-	 * javax.wsdl.BindingInput, javax.wsdl.Input)}, creates a {@link SOAPBody}, and calls {@link
-	 * #populateSoapBody(SOAPBody)}.
-	 *
-	 * @param definition   the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingInput the WSDL4J {@code BindingInput}
-	 * @param input		   the corresponding WSDL4J {@code Input} @throws WSDLException in case of errors
+	 * @param input the corresponding WSDL4J {@code Input} @throws WSDLException in case of errors
 	 */
 	@Override
 	protected void populateBindingInput(Definition definition, BindingInput bindingInput, Input input)
@@ -223,8 +225,8 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	/**
 	 * Called after the {@link SOAPBody} has been created.
-	 *
-	 * <p>Default implementation sets the use style to {@code "literal"}. Subclasses can override this behavior.
+	 * <p>
+	 * Default implementation sets the use style to {@code "literal"}. Subclasses can override this behavior.
 	 *
 	 * @param soapBody the WSDL4J {@code SOAPBody}
 	 * @throws WSDLException in case of errors
@@ -237,12 +239,13 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	/**
 	 * Called after the {@link BindingOperation} has been created, but before any sub-elements are added. Subclasses can
 	 * implement this method to define the binding name, or add extensions to it.
+	 * <p>
+	 * Default implementation calls
+	 * {@link DefaultConcretePartProvider#populateBindingOperation(Definition, BindingOperation)}, creates a
+	 * {@link SOAPOperation}, and calls {@link #populateSoapOperation} sets the name of the binding operation to the name
+	 * of the operation.
 	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populateBindingOperation(Definition,
-	 * BindingOperation)}, creates a {@link SOAPOperation}, and calls {@link #populateSoapOperation} sets the name of
-	 * the binding operation to the name of the operation.
-	 *
-	 * @param definition	   the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingOperation the WSDL4J {@code BindingOperation}
 	 * @throws WSDLException in case of errors
 	 */
@@ -250,19 +253,18 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	protected void populateBindingOperation(Definition definition, BindingOperation bindingOperation)
 			throws WSDLException {
 		super.populateBindingOperation(definition, bindingOperation);
-		SOAPOperation soapOperation =
-				(SOAPOperation) createSoapExtension(definition, BindingOperation.class, "operation");
+		SOAPOperation soapOperation = (SOAPOperation) createSoapExtension(definition, BindingOperation.class, "operation");
 		populateSoapOperation(soapOperation, bindingOperation);
 		bindingOperation.addExtensibilityElement(soapOperation);
 	}
 
 	/**
 	 * Called after the {@link SOAPOperation} has been created.
+	 * <p>
+	 * Default implementation sets {@code SOAPAction} to the corresponding {@link #setSoapActions(java.util.Properties)
+	 * soapActions} property, and defaults to "".
 	 *
-	 * <p>Default implementation sets {@code SOAPAction} to the corresponding {@link
-	 * #setSoapActions(java.util.Properties) soapActions} property, and defaults to "".
-	 *
-	 * @param soapOperation	   the WSDL4J {@code SOAPOperation}
+	 * @param soapOperation the WSDL4J {@code SOAPOperation}
 	 * @param bindingOperation the WSDL4J {@code BindingOperation}
 	 * @throws WSDLException in case of errors
 	 * @see SOAPOperation#setSoapActionURI(String)
@@ -276,15 +278,16 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	}
 
 	/**
-	 * Called after the {@link BindingInput} has been created. Subclasses can implement this method to define the name,
-	 * or add extensions to it.
+	 * Called after the {@link BindingInput} has been created. Subclasses can implement this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation calls
+	 * {@link DefaultConcretePartProvider#populateBindingOutput(Definition, BindingOutput, Output)}, creates a
+	 * {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
 	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populateBindingOutput(Definition, BindingOutput,
-	 * Output)}, creates a {@link SOAPBody}, and calls {@link #populateSoapBody(SOAPBody)}.
-	 *
-	 * @param definition	the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingOutput the WSDL4J {@code BindingOutput}
-	 * @param output		the corresponding WSDL4J {@code Output} @throws WSDLException in case of errors
+	 * @param output the corresponding WSDL4J {@code Output} @throws WSDLException in case of errors
 	 */
 	@Override
 	protected void populateBindingOutput(Definition definition, BindingOutput bindingOutput, Output output)
@@ -298,9 +301,10 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	/**
 	 * Called after the {@link Port} has been created, but before any sub-elements are added. Subclasses can implement
 	 * this method to define the port name, or add extensions to it.
-	 *
-	 * <p>Default implementation calls {@link DefaultConcretePartProvider#populatePort(javax.wsdl.Definition,javax.wsdl.Port)},
-	 * creates a {@link SOAPAddress}, and calls {@link #populateSoapAddress(SOAPAddress)}.
+	 * <p>
+	 * Default implementation calls
+	 * {@link DefaultConcretePartProvider#populatePort(javax.wsdl.Definition,javax.wsdl.Port)}, creates a
+	 * {@link SOAPAddress}, and calls {@link #populateSoapAddress(SOAPAddress)}.
 	 *
 	 * @param port the WSDL4J {@code Port}
 	 * @throws WSDLException in case of errors
@@ -309,7 +313,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	protected void populatePort(Definition definition, Port port) throws WSDLException {
 		for (Iterator<?> iterator = port.getBinding().getExtensibilityElements().iterator(); iterator.hasNext();) {
 			if (iterator.next() instanceof SOAPBinding) {
-				// this is a SOAP 1.1 binding, create a SOAP Address for it 
+				// this is a SOAP 1.1 binding, create a SOAP Address for it
 				super.populatePort(definition, port);
 				SOAPAddress soapAddress = (SOAPAddress) createSoapExtension(definition, Port.class, "address");
 				populateSoapAddress(soapAddress);
@@ -337,15 +341,14 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param parentType a class object indicating where in the WSDL definition this extension will exist
-	 * @param localName	 the local name of the extensibility element
+	 * @param localName the local name of the extensibility element
 	 * @return the extensibility element
 	 * @throws WSDLException in case of errors
 	 * @see ExtensionRegistry#createExtension(Class, QName)
 	 */
 	private ExtensibilityElement createSoapExtension(Definition definition, Class<?> parentType, String localName)
 			throws WSDLException {
-		return definition.getExtensionRegistry()
-				.createExtension(parentType, new QName(SOAP_11_NAMESPACE_URI, localName));
+		return definition.getExtensionRegistry().createExtension(parentType, new QName(SOAP_11_NAMESPACE_URI, localName));
 	}
 
 }

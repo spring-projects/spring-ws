@@ -1,11 +1,11 @@
 package org.springframework.ws.config.annotation;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,7 @@ public class WsConfigurationSupportTest {
 
 	@Before
 	public void setUp() throws Exception {
-		AnnotationConfigApplicationContext applicationContext =
-				new AnnotationConfigApplicationContext();
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
 		applicationContext.refresh();
 
@@ -34,8 +33,8 @@ public class WsConfigurationSupportTest {
 
 	@Test
 	public void interceptors() {
-		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext.getBean(
-				PayloadRootAnnotationMethodEndpointMapping.class);
+		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
+				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
 		assertEquals(0, endpointMapping.getOrder());
 
 		EndpointInterceptor[] interceptors = endpointMapping.getInterceptors();
@@ -45,13 +44,11 @@ public class WsConfigurationSupportTest {
 
 	@Test
 	public void defaultMethodEndpointAdapter() {
-		DefaultMethodEndpointAdapter endpointAdapter =
-				this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
+		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 		assertNotNull(endpointAdapter);
 
 		assertTrue(endpointAdapter instanceof MyDefaultMethodEndpointAdapter);
 	}
-
 
 	@Configuration
 	public static class TestConfig extends WsConfigurationSupport {
@@ -72,8 +69,7 @@ public class WsConfigurationSupportTest {
 
 	}
 
-	public static class MyDefaultMethodEndpointAdapter
-			extends DefaultMethodEndpointAdapter {
+	public static class MyDefaultMethodEndpointAdapter extends DefaultMethodEndpointAdapter {
 
 	}
 

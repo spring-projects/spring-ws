@@ -32,8 +32,7 @@ public class XPathExpressionFactoryTest {
 		try {
 			XPathExpressionFactory.createXPathExpression("");
 			Assert.fail("Should have thrown an Exception");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}

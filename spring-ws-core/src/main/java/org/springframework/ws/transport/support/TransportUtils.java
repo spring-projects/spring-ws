@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -43,11 +42,9 @@ public abstract class TransportUtils {
 		if (connection != null) {
 			try {
 				connection.close();
-			}
-			catch (IOException ex) {
+			} catch (IOException ex) {
 				logger.debug("Could not close WebServiceConnection", ex);
-			}
-			catch (Throwable ex) {
+			} catch (Throwable ex) {
 				logger.debug("Unexpected exception on closing WebServiceConnection", ex);
 			}
 		}

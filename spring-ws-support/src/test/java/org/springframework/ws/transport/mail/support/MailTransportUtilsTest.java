@@ -17,6 +17,7 @@
 package org.springframework.ws.transport.mail.support;
 
 import java.net.URI;
+
 import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 

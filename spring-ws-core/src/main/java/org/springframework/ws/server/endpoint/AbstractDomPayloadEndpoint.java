@@ -24,21 +24,20 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
 /**
  * Abstract base class for endpoints that handle the message payload as DOM elements.
- *
- * <p>Offers the message payload as a DOM {@code Element}, and allows subclasses to create a response by returning an
+ * <p>
+ * Offers the message payload as a DOM {@code Element}, and allows subclasses to create a response by returning an
  * {@code Element}.
- *
- * <p>An {@code AbstractDomPayloadEndpoint} only accept <em>one</em> payload element. Multiple payload elements are
- * not in accordance with WS-I.
+ * <p>
+ * An {@code AbstractDomPayloadEndpoint} only accept <em>one</em> payload element. Multiple payload elements are not in
+ * accordance with WS-I.
  *
  * @author Arjen Poutsma
  * @author Alef Arendsen
@@ -70,18 +69,16 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 	}
 
 	/**
-	 * Set if the XML parser should expand entity reference nodes. Default is
-	 * {@code false}.
+	 * Set if the XML parser should expand entity reference nodes. Default is {@code false}.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityRef) {
 		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
 	}
 
-
 	/**
 	 * Set if the request {@link Source} should always be transformed into a new {@link DOMResult}.
-	 *
-	 * <p>Default is {@code false}, which is faster.
+	 * <p>
+	 * Default is {@code false}, which is faster.
 	 */
 	public void setAlwaysTransform(boolean alwaysTransform) {
 		this.alwaysTransform = alwaysTransform;
@@ -107,8 +104,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 	 * @return the {@code DocumentBuilder}
 	 * @throws ParserConfigurationException if thrown by JAXP methods
 	 */
-	protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory)
-			throws ParserConfigurationException {
+	protected DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory) throws ParserConfigurationException {
 		return factory.newDocumentBuilder();
 	}
 
@@ -130,13 +126,13 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
 	/**
 	 * Returns the payload element of the given source.
-	 *
-	 * <p>Default implementation checks whether the source is a {@link DOMSource}, and returns the {@linkplain
-	 * DOMSource#getNode() node} of that. In all other cases, or when {@linkplain #setAlwaysTransform(boolean)
+	 * <p>
+	 * Default implementation checks whether the source is a {@link DOMSource}, and returns the
+	 * {@linkplain DOMSource#getNode() node} of that. In all other cases, or when {@linkplain #setAlwaysTransform(boolean)
 	 * alwaysTransform} is {@code true}, the source is transformed into a {@link DOMResult}, which is more expensive. If
 	 * the passed source is {@code null}, {@code null} is returned.
 	 *
-	 * @param source		  the source to return the root element of; can be {@code null}
+	 * @param source the source to return the root element of; can be {@code null}
 	 * @param documentBuilder the document builder to be used for transformations
 	 * @return the document element
 	 * @throws TransformerException in case of errors
@@ -149,8 +145,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 			Node node = ((DOMSource) source).getNode();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return (Element) node;
-			}
-			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				return ((Document) node).getDocumentElement();
 			}
 		}
@@ -163,14 +158,13 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
 	/**
 	 * Template method that subclasses must implement to process the request.
+	 * <p>
+	 * Offers the request payload as a DOM {@code Element}, and allows subclasses to return a response {@code Element}.
+	 * <p>
+	 * The given DOM {@code Document} is to be used for constructing {@code Node}s, by using the various {@code create}
+	 * methods.
 	 *
-	 * <p>Offers the request payload as a DOM {@code Element}, and allows subclasses to return a response
-	 * {@code Element}.
-	 *
-	 * <p>The given DOM {@code Document} is to be used for constructing {@code Node}s, by using the various
-	 * {@code create} methods.
-	 *
-	 * @param requestElement   the contents of the SOAP message as DOM elements
+	 * @param requestElement the contents of the SOAP message as DOM elements
 	 * @param responseDocument a DOM document to be used for constructing {@code Node}s
 	 * @return the response element. Can be {@code null} to specify no response.
 	 */

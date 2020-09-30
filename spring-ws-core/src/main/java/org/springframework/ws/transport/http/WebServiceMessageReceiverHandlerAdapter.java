@@ -27,14 +27,14 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectSupport;
 
 /**
- * Adapter to use the {@link WebServiceMessageReceiver} interface with the generic {@link
- * org.springframework.web.servlet.DispatcherServlet}. Requires a {@link org.springframework.ws.WebServiceMessageFactory}
- * which is used to convert the incoming {@code HttpServletRequest} into a {@code WebServiceMessage}, and
- * passes that context to the mapped {@code WebServiceMessageReceiver}. If a response is created, that is sent via
- * the {@code HttpServletResponse}.
- *
- * <p>Note that the {@code MessageDispatcher} implements the {@code WebServiceMessageReceiver} interface,
- * enabling this adapter to function as a gateway to further message handling logic.
+ * Adapter to use the {@link WebServiceMessageReceiver} interface with the generic
+ * {@link org.springframework.web.servlet.DispatcherServlet}. Requires a
+ * {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the incoming
+ * {@code HttpServletRequest} into a {@code WebServiceMessage}, and passes that context to the mapped
+ * {@code WebServiceMessageReceiver}. If a response is created, that is sent via the {@code HttpServletResponse}.
+ * <p>
+ * Note that the {@code MessageDispatcher} implements the {@code WebServiceMessageReceiver} interface, enabling this
+ * adapter to function as a gateway to further message handling logic.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
@@ -52,19 +52,16 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 	}
 
 	@Override
-	public ModelAndView handle(HttpServletRequest httpServletRequest,
-							   HttpServletResponse httpServletResponse,
-							   Object handler) throws Exception {
+	public ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			Object handler) throws Exception {
 		if (HttpTransportConstants.METHOD_POST.equals(httpServletRequest.getMethod())) {
 			WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
 			try {
 				handleConnection(connection, (WebServiceMessageReceiver) handler);
-			}
-			catch (InvalidXmlException ex) {
+			} catch (InvalidXmlException ex) {
 				handleInvalidXmlException(httpServletRequest, httpServletResponse, handler, ex);
 			}
-		}
-		else {
+		} else {
 			handleNonPostMethod(httpServletRequest, httpServletResponse, handler);
 		}
 		return null;
@@ -76,36 +73,33 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 	}
 
 	/**
-	 * Template method that is invoked when the request method is not {@code POST}. Called from {@link
-	 * #handle(HttpServletRequest, HttpServletResponse, Object)}.
+	 * Template method that is invoked when the request method is not {@code POST}. Called from
+	 * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
+	 * <p>
+	 * Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
 	 *
-	 * <p>Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
-	 *
-	 * @param httpServletRequest  current HTTP request
+	 * @param httpServletRequest current HTTP request
 	 * @param httpServletResponse current HTTP response
-	 * @param handler			  current handler
+	 * @param handler current handler
 	 */
-	protected void handleNonPostMethod(HttpServletRequest httpServletRequest,
-									   HttpServletResponse httpServletResponse,
-									   Object handler) throws Exception {
+	protected void handleNonPostMethod(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			Object handler) throws Exception {
 		httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
 
 	/**
 	 * Template method that is invoked when parsing the request results in a {@link InvalidXmlException}. Called from
 	 * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
+	 * <p>
+	 * Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
 	 *
-	 * <p>Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
-	 *
-	 * @param httpServletRequest  current HTTP request
+	 * @param httpServletRequest current HTTP request
 	 * @param httpServletResponse current HTTP response
-	 * @param handler			  current handler
-	 * @param ex				  the invalid XML exception that resulted in this method being called
+	 * @param handler current handler
+	 * @param ex the invalid XML exception that resulted in this method being called
 	 */
 	protected void handleInvalidXmlException(HttpServletRequest httpServletRequest,
-											 HttpServletResponse httpServletResponse,
-											 Object handler,
-											 InvalidXmlException ex) throws Exception {
+			HttpServletResponse httpServletResponse, Object handler, InvalidXmlException ex) throws Exception {
 		httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	}
 

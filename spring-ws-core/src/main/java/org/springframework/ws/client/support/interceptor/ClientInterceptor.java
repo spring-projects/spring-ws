@@ -25,16 +25,17 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Workflow interface that allows for customized client-side message interception. Applications can register any number
  * of existing or custom interceptors on a {@link org.springframework.ws.client.core.WebServiceTemplate}, to add common
  * pre- and postprocessing behavior without needing to modify payload handling code.
- *
- * <p>A {@code ClientInterceptor} gets called after payload creation (using {@link
- * org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive(Object)} or similar methods, and after
- * {@link org.springframework.ws.client.core.WebServiceMessageCallback callback} invocation, but before the message is
- * sent over the {@link WebServiceConnection}. This mechanism can be used for a large field of preprocessing aspects,
- * e.g. for authorization checks, or message header checks. Its main purpose is to allow for factoring out meta-data
- * (i.e. {@link SoapHeader}) related code.
- *
- * <p>Client interceptors are defined on a {@link org.springframework.ws.client.core.WebServiceTemplate}, using the {@link
- * org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[]) interceptors} property.
+ * <p>
+ * A {@code ClientInterceptor} gets called after payload creation (using
+ * {@link org.springframework.ws.client.core.WebServiceTemplate#marshalSendAndReceive(Object)} or similar methods, and
+ * after {@link org.springframework.ws.client.core.WebServiceMessageCallback callback} invocation, but before the
+ * message is sent over the {@link WebServiceConnection}. This mechanism can be used for a large field of preprocessing
+ * aspects, e.g. for authorization checks, or message header checks. Its main purpose is to allow for factoring out
+ * meta-data (i.e. {@link SoapHeader}) related code.
+ * <p>
+ * Client interceptors are defined on a {@link org.springframework.ws.client.core.WebServiceTemplate}, using the
+ * {@link org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[]) interceptors}
+ * property.
  *
  * @author Giovanni Cuccu
  * @author Arjen Poutsma
@@ -48,8 +49,8 @@ public interface ClientInterceptor {
 	 * message is sent.
 	 *
 	 * @param messageContext contains the outgoing request message
-	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate
-	 *		   blocking of the request endpoint chain
+	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate blocking of the
+	 *         request endpoint chain
 	 * @throws WebServiceClientException in case of errors
 	 * @see MessageContext#getRequest()
 	 */
@@ -58,26 +59,26 @@ public interface ClientInterceptor {
 	/**
 	 * Processes the incoming response message. Called for non-fault response messages before payload handling in the
 	 * {@link org.springframework.ws.client.core.WebServiceTemplate}.
-	 *
-	 * <p>Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
+	 * <p>
+	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has successfully completed.
 	 *
 	 * @param messageContext contains the outgoing request message
-	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate
-	 *		   blocking of the response endpoint chain
+	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate blocking of the
+	 *         response endpoint chain
 	 * @throws WebServiceClientException in case of errors
 	 * @see MessageContext#getResponse()
 	 */
 	boolean handleResponse(MessageContext messageContext) throws WebServiceClientException;
 
 	/**
-	 * Processes the incoming response fault. Called for response fault messages before payload handling in the {@link
-	 * org.springframework.ws.client.core.WebServiceTemplate}.
-	 *
-	 * <p>Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
+	 * Processes the incoming response fault. Called for response fault messages before payload handling in the
+	 * {@link org.springframework.ws.client.core.WebServiceTemplate}.
+	 * <p>
+	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has successfully completed.
 	 *
 	 * @param messageContext contains the outgoing request message
-	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate
-	 *		   blocking of the request endpoint chain
+	 * @return {@code true} to continue processing of the request interceptors; {@code false} to indicate blocking of the
+	 *         request endpoint chain
 	 * @throws WebServiceClientException in case of errors
 	 * @see MessageContext#getResponse()
 	 * @see org.springframework.ws.FaultAwareWebServiceMessage#hasFault()
@@ -85,10 +86,10 @@ public interface ClientInterceptor {
 	boolean handleFault(MessageContext messageContext) throws WebServiceClientException;
 
 	/**
-	 * Callback after completion of request and response (fault) processing. Will be called on any outcome, thus
-	 * allows for proper resource cleanup.
-	 *
-	 * <p>Note: Will only be called if this interceptor's {@link #handleRequest}  method has successfully completed.
+	 * Callback after completion of request and response (fault) processing. Will be called on any outcome, thus allows
+	 * for proper resource cleanup.
+	 * <p>
+	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has successfully completed.
 	 *
 	 * @param messageContext contains both request and response messages, the response should contains a Fault
 	 * @param ex exception thrown on handler execution, if any
@@ -96,6 +97,5 @@ public interface ClientInterceptor {
 	 * @since 2.2
 	 */
 	void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException;
-
 
 }

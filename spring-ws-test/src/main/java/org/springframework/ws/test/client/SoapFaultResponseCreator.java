@@ -16,14 +16,14 @@
 
 package org.springframework.ws.test.client;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
 import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link ResponseCreator} that responds with a SOAP fault.

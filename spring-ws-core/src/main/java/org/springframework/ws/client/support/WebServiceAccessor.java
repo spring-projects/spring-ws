@@ -30,8 +30,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 /**
  * Base class for {@code WebServiceTemplate} and other WS-accessing helpers. Defines common properties like the
  * {@link WebServiceMessageFactory} and {@link WebServiceMessageSender}.
- *
- * <p>Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
+ * <p>
+ * Not intended to be used directly. See {@link org.springframework.ws.client.core.WebServiceTemplate}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.client.core.WebServiceTemplate
@@ -60,20 +60,20 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
 	/**
 	 * Sets the single message sender used for sending messages.
-	 *
-	 * <p>This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
+	 * <p>
+	 * This message sender will be used to resolve an URI to a {@link WebServiceConnection}.
 	 *
 	 * @see #createConnection(URI)
 	 */
 	public void setMessageSender(WebServiceMessageSender messageSender) {
 		Assert.notNull(messageSender, "'messageSender' must not be null");
-		messageSenders = new WebServiceMessageSender[]{messageSender};
+		messageSenders = new WebServiceMessageSender[] { messageSender };
 	}
 
 	/**
 	 * Sets the message senders used for sending messages.
-	 *
-	 * <p>These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
+	 * <p>
+	 * These message senders will be used to resolve an URI to a {@link WebServiceConnection}.
 	 *
 	 * @see #createConnection(URI)
 	 */
@@ -90,15 +90,15 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
 	/**
 	 * Creates a connection to the given URI, or throws an exception when it cannot be resolved.
-	 *
-	 * <p>Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls {@link
-	 * WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it creates a
-	 * connection using {@link WebServiceMessageSender#createConnection(URI)} .
+	 * <p>
+	 * Default implementation iterates over all configured {@link WebServiceMessageSender} objects, and calls
+	 * {@link WebServiceMessageSender#supports(URI)} for each of them. If the sender supports the parameter URI, it
+	 * creates a connection using {@link WebServiceMessageSender#createConnection(URI)} .
 	 *
 	 * @param uri the URI to open a connection to
 	 * @return the created connection
 	 * @throws IllegalArgumentException when the uri cannot be resolved
-	 * @throws IOException				when an I/O error occurs
+	 * @throws IOException when an I/O error occurs
 	 */
 	protected WebServiceConnection createConnection(URI uri) throws IOException {
 		Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
@@ -109,8 +109,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 				if (logger.isDebugEnabled()) {
 					try {
 						logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
-					}
-					catch (URISyntaxException e) {
+					} catch (URISyntaxException e) {
 						// ignore
 					}
 				}

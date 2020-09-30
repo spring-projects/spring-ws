@@ -16,19 +16,18 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.easymock.EasyMock.*;
+
 import javax.xml.transform.dom.DOMResult;
 
+import org.junit.Test;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerHelper;
-
-import org.junit.Test;
 import org.w3c.dom.Document;
 
-import static org.easymock.EasyMock.*;
-
 public class SoapEnvelopeDiffMatcherTest {
-	
+
 	@Test
 	public void match() throws Exception {
 		StringBuilder xmlBuilder = new StringBuilder();
@@ -42,7 +41,7 @@ public class SoapEnvelopeDiffMatcherTest {
 		TransformerHelper transformerHelper = new TransformerHelper();
 		transformerHelper.transform(new StringSource(xml), result);
 		SoapMessage message = createMock(SoapMessage.class);
-		expect(message.getDocument()).andReturn((Document)result.getNode()).once();
+		expect(message.getDocument()).andReturn((Document) result.getNode()).once();
 		replay(message);
 
 		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(xml));
@@ -50,7 +49,7 @@ public class SoapEnvelopeDiffMatcherTest {
 
 		verify(message);
 	}
-	
+
 	@Test(expected = AssertionError.class)
 	public void nonMatch() throws Exception {
 		StringBuilder xmlBuilder = new StringBuilder();
@@ -65,12 +64,12 @@ public class SoapEnvelopeDiffMatcherTest {
 		TransformerHelper transformerHelper = new TransformerHelper();
 		transformerHelper.transform(new StringSource(actual), result);
 		SoapMessage message = createMock(SoapMessage.class);
-		expect(message.getDocument()).andReturn((Document)result.getNode()).once();
+		expect(message.getDocument()).andReturn((Document) result.getNode()).once();
 		replay(message);
 
 		String expected = String.format(xml, "2");
 		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
 		matcher.match(message);
 	}
-	
+
 }

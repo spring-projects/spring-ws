@@ -16,14 +16,13 @@
 
 package org.springframework.ws.client.core;
 
-import org.springframework.ws.FaultAwareWebServiceMessage;
-import org.springframework.ws.client.WebServiceFaultException;
+import static org.easymock.EasyMock.*;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.FaultAwareWebServiceMessage;
+import org.springframework.ws.client.WebServiceFaultException;
 
 public class SimpleFaultMessageResolverTest {
 
@@ -45,8 +44,7 @@ public class SimpleFaultMessageResolverTest {
 		try {
 			resolver.resolveFault(messageMock);
 			Assert.fail("WebServiceFaultExcpetion expected");
-		}
-		catch (WebServiceFaultException ex) {
+		} catch (WebServiceFaultException ex) {
 			// expected
 			Assert.assertEquals("Invalid exception message", message, ex.getMessage());
 		}

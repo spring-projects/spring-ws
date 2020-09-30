@@ -17,7 +17,6 @@
 package org.springframework.xml.xsd;
 
 import org.junit.Test;
-
 import org.springframework.core.io.Resource;
 
 public class SimpleXsdSchemaTest extends AbstractXsdSchemaTestCase {

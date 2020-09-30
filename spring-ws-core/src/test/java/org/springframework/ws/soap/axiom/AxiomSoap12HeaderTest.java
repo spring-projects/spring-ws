@@ -31,6 +31,5 @@ public class AxiomSoap12HeaderTest extends AbstractSoap12HeaderTestCase {
 	}
 
 	@Override
-	public void testGetResult() throws Exception {
-	}
+	public void testGetResult() throws Exception {}
 }

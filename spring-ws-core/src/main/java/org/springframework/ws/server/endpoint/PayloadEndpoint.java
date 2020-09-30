@@ -20,8 +20,8 @@ import javax.xml.transform.Source;
 
 /**
  * Defines the basic contract for Web Services interested in just the message payload.
- *
- * <p>The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of the requesting message.
+ * <p>
+ * The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of the requesting message.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

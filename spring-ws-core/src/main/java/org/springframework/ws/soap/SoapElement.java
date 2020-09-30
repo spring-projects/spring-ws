@@ -17,6 +17,7 @@
 package org.springframework.ws.soap;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
@@ -37,8 +38,8 @@ public interface SoapElement {
 	QName getName();
 
 	/**
-	 * Returns the {@code Source} of this element. This includes the element itself, i.e.
-	 * {@code SoapEnvelope.getSource()} will include the {@code Envelope} tag.
+	 * Returns the {@code Source} of this element. This includes the element itself, i.e. {@code SoapEnvelope.getSource()}
+	 * will include the {@code Envelope} tag.
 	 *
 	 * @return the {@code Source} of this element
 	 */
@@ -47,7 +48,7 @@ public interface SoapElement {
 	/**
 	 * Adds an attribute with the specified qualified name and value to this element.
 	 *
-	 * @param name	the qualified name of the attribute
+	 * @param name the qualified name of the attribute
 	 * @param value the value of the attribute
 	 */
 	void addAttribute(QName name, String value);
@@ -77,7 +78,7 @@ public interface SoapElement {
 	/**
 	 * Adds a namespace declaration with the specified prefix and URI to this element.
 	 *
-	 * @param prefix	   the namespace prefix. Can be empty or null to declare the default namespace
+	 * @param prefix the namespace prefix. Can be empty or null to declare the default namespace
 	 * @param namespaceUri the namespace uri
 	 * @throws SoapElementException in case of errors
 	 */

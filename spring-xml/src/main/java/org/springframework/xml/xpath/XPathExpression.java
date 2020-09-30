@@ -21,10 +21,10 @@ import java.util.List;
 import org.w3c.dom.Node;
 
 /**
- * Defines the contract for a precompiled XPath expression. Concrete instances can be obtained through the {@link
- * XPathExpressionFactory}.
- *
- * <p>Implementations of this interface are precompiled, and thus faster, but less flexible, than the XPath expressions
+ * Defines the contract for a precompiled XPath expression. Concrete instances can be obtained through the
+ * {@link XPathExpressionFactory}.
+ * <p>
+ * Implementations of this interface are precompiled, and thus faster, but less flexible, than the XPath expressions
  * used by {@link XPathOperations} implementations.
  *
  * @author Arjen Poutsma
@@ -35,13 +35,12 @@ public interface XPathExpression {
 	/**
 	 * Evaluates the given expression as a {@code boolean}. Returns the boolean evaluation of the expression, or
 	 * {@code false} if it is invalid.
-	 *
-	 * <p>The return value is determined per the {@code boolean()} function defined in the XPath specification.
-	 * This means that an expression that selects zero nodes will return {@code false}, while an expression that
-	 * selects one or more nodes will return {@code true}.
-	 * An expression that returns a string returns {@code false} for empty strings and {@code true} for all other
-	 * strings.
-	 * An expression that returns a number returns {@code false} for zero and {@code true} for non-zero numbers.
+	 * <p>
+	 * The return value is determined per the {@code boolean()} function defined in the XPath specification. This means
+	 * that an expression that selects zero nodes will return {@code false}, while an expression that selects one or more
+	 * nodes will return {@code true}. An expression that returns a string returns {@code false} for empty strings and
+	 * {@code true} for all other strings. An expression that returns a number returns {@code false} for zero and
+	 * {@code true} for non-zero numbers.
 	 *
 	 * @param node the starting point
 	 * @return the result of the evaluation
@@ -51,8 +50,8 @@ public interface XPathExpression {
 	boolean evaluateAsBoolean(Node node) throws XPathException;
 
 	/**
-	 * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or {@code null}
-	 * if it is invalid.
+	 * Evaluates the given expression as a {@link Node}. Returns the evaluation of the expression, or {@code null} if it
+	 * is invalid.
 	 *
 	 * @param node the starting point
 	 * @return the result of the evaluation
@@ -73,11 +72,11 @@ public interface XPathExpression {
 	List<Node> evaluateAsNodeList(Node node) throws XPathException;
 
 	/**
-	 * Evaluates the given expression as a number ({@code double}). Returns the numeric evaluation of the
-	 * expression, or {@link Double#NaN} if it is invalid.
-	 *
-	 * <p>The return value is determined per the {@code number()} function as defined in the XPath specification.
-	 * This means that if the expression selects multiple nodes, it will return the number value of the first node.
+	 * Evaluates the given expression as a number ({@code double}). Returns the numeric evaluation of the expression, or
+	 * {@link Double#NaN} if it is invalid.
+	 * <p>
+	 * The return value is determined per the {@code number()} function as defined in the XPath specification. This means
+	 * that if the expression selects multiple nodes, it will return the number value of the first node.
 	 *
 	 * @param node the starting point
 	 * @return the result of the evaluation
@@ -88,9 +87,9 @@ public interface XPathExpression {
 
 	/**
 	 * Evaluates the given expression as a String. Returns {@code null} if no result could be found.
-	 *
-	 * <p>The return value is determined per the {@code string()} function as defined in the XPath specification.
-	 * This means that if the expression selects multiple nodes, it will return the string value of the first node.
+	 * <p>
+	 * The return value is determined per the {@code string()} function as defined in the XPath specification. This means
+	 * that if the expression selects multiple nodes, it will return the string value of the first node.
 	 *
 	 * @param node the starting point
 	 * @return the result of the evaluation
@@ -102,7 +101,7 @@ public interface XPathExpression {
 	/**
 	 * Evaluates the given expression, mapping a single {@link Node} result to a Java object via a {@link NodeMapper}.
 	 *
-	 * @param node		 the  starting point
+	 * @param node the starting point
 	 * @param nodeMapper object that will map one object per node
 	 * @return the single mapped object
 	 * @throws XPathException in case of XPath errors
@@ -111,10 +110,9 @@ public interface XPathExpression {
 	<T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 
 	/**
-	 * Evaluates the given expression, mapping each result {@link Node} objects to a Java object via a {@link
-	 * NodeMapper}.
+	 * Evaluates the given expression, mapping each result {@link Node} objects to a Java object via a {@link NodeMapper}.
 	 *
-	 * @param node		 the  starting point
+	 * @param node the starting point
 	 * @param nodeMapper object that will map one object per node
 	 * @return the result list, containing mapped objects
 	 * @throws XPathException in case of XPath errors

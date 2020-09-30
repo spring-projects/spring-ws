@@ -26,8 +26,8 @@ import org.springframework.ws.WebServiceMessageFactory;
 /**
  * Represents a point-to-point connection that a client can use for sending {@link WebServiceMessage} objects directly
  * to a remote party.
- *
- * <p>A {@code WebServiceConnection} can be obtained using a {@link WebServiceMessageSender}.
+ * <p>
+ * A {@code WebServiceConnection} can be obtained using a {@link WebServiceMessageSender}.
  *
  * @author Arjen Poutsma
  * @see WebServiceMessageSender#createConnection(URI)
@@ -74,8 +74,8 @@ public interface WebServiceConnection extends AutoCloseable {
 
 	/**
 	 * Closes this connection.
-	 *
-	 * <p>Once a connection has been closed, it is not available for further use. A new connection needs to be created.
+	 * <p>
+	 * Once a connection has been closed, it is not available for further use. A new connection needs to be created.
 	 *
 	 * @throws IOException if an I/O error occurs when closing this connection
 	 */

@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
@@ -30,8 +31,8 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * SAAJ-specific implementation of the {@code SoapFaultDetail} interface. Wraps a {@link
- * javax.xml.soap.SOAPFaultElement}.
+ * SAAJ-specific implementation of the {@code SoapFaultDetail} interface. Wraps a
+ * {@link javax.xml.soap.SOAPFaultElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -52,8 +53,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 		try {
 			DetailEntry detailEntry = getSaajDetail().addDetailEntry(name);
 			return new SaajSoapFaultDetailElement(detailEntry);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -94,6 +94,5 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 			iterator.remove();
 		}
 	}
-
 
 }

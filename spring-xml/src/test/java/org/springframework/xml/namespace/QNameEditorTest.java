@@ -56,7 +56,8 @@ public class QNameEditorTest {
 		editor.setAsText(text);
 		QName result = (QName) editor.getValue();
 		Assert.assertNotNull("getValue returns null", result);
-		Assert.assertEquals("Parsed QName local part is not equal to original", qname.getLocalPart(), result.getLocalPart());
+		Assert.assertEquals("Parsed QName local part is not equal to original", qname.getLocalPart(),
+				result.getLocalPart());
 		Assert.assertEquals("Parsed QName prefix is not equal to original", qname.getPrefix(), result.getPrefix());
 		Assert.assertEquals("Parsed QName namespace is not equal to original", qname.getNamespaceURI(),
 				result.getNamespaceURI());

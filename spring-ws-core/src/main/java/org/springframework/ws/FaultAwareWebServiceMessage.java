@@ -19,8 +19,8 @@ package org.springframework.ws;
 import javax.xml.namespace.QName;
 
 /**
- * Sub-interface of {@link WebServiceMessage} that can contain special Fault messages. Fault messages (such as {@link
- * org.springframework.ws.soap.SoapFault} SOAP Faults) often require different processing rules.
+ * Sub-interface of {@link WebServiceMessage} that can contain special Fault messages. Fault messages (such as
+ * {@link org.springframework.ws.soap.SoapFault} SOAP Faults) often require different processing rules.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
@@ -40,7 +40,6 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 	 * Returns the fault code, if any.
 	 */
 	QName getFaultCode();
-
 
 	/**
 	 * Returns the fault reason message.

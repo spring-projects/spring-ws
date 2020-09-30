@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -79,7 +78,7 @@ public class HttpComponentsMessageSenderIntegrationTest
 		HttpRoute route3 = new HttpRoute(host3);
 		assertThat(route3.isSecure(), equalTo(false));
 		assertThat(route3.getTargetHost().getHostName(), equalTo("www.springframework.org"));
-		assertTrue((route3.getTargetHost().getPort() ==  -1) || (route3.getTargetHost().getPort() == 80));
+		assertTrue((route3.getTargetHost().getPort() == -1) || (route3.getTargetHost().getPort() == 80));
 
 		HttpComponentsMessageSender messageSender = new HttpComponentsMessageSender();
 		messageSender.setMaxTotalConnections(2);
@@ -89,8 +88,8 @@ public class HttpComponentsMessageSenderIntegrationTest
 		maxConnectionsPerHost.put(url3, "10");
 		messageSender.setMaxConnectionsPerHost(maxConnectionsPerHost);
 
-		PoolingClientConnectionManager poolingClientConnectionManager =
-				(PoolingClientConnectionManager) messageSender.getHttpClient().getConnectionManager();
+		PoolingClientConnectionManager poolingClientConnectionManager = (PoolingClientConnectionManager) messageSender
+				.getHttpClient().getConnectionManager();
 		assertThat(poolingClientConnectionManager.getMaxPerRoute(route1), equalTo(1));
 		assertThat(poolingClientConnectionManager.getMaxPerRoute(route2), equalTo(7));
 		assertThat(poolingClientConnectionManager.getMaxPerRoute(route3), equalTo(10));
@@ -111,16 +110,15 @@ public class HttpComponentsMessageSenderIntegrationTest
 			appContext.registerSingleton("messageSender", HttpComponentsMessageSender.class);
 			appContext.refresh();
 
-			HttpComponentsMessageSender messageSender = appContext
-					.getBean("messageSender", HttpComponentsMessageSender.class);
+			HttpComponentsMessageSender messageSender = appContext.getBean("messageSender",
+					HttpComponentsMessageSender.class);
 			connection = messageSender.createConnection(new URI("http://localhost:" + port));
 
 			connection.send(new SaajSoapMessage(messageFactory.createMessage()));
 			connection.receive(new SaajSoapMessageFactory(messageFactory));
 
 			appContext.close();
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				try {
 					connection.close();
@@ -146,6 +144,5 @@ public class HttpComponentsMessageSenderIntegrationTest
 
 		}
 	}
-
 
 }

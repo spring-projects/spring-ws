@@ -21,7 +21,6 @@ import org.springframework.beans.factory.xml.AbstractSimpleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-
 import org.w3c.dom.Element;
 
 /**
@@ -34,15 +33,13 @@ import org.w3c.dom.Element;
 @Deprecated
 class MarshallingEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-	private static final String GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-			"org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter";
+	private static final String GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME = "org.springframework.ws.server.endpoint.adapter.GenericMarshallingMethodEndpointAdapter";
 
-	private static final boolean genericAdapterPresent =
-			ClassUtils.isPresent(GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME,
-					MarshallingEndpointsBeanDefinitionParser.class.getClassLoader());
+	private static final boolean genericAdapterPresent = ClassUtils.isPresent(
+			GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME,
+			MarshallingEndpointsBeanDefinitionParser.class.getClassLoader());
 
-	private static final String MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-			"org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter";
+	private static final String MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME = "org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter";
 
 	@Override
 	protected boolean shouldGenerateIdAsFallback() {
@@ -52,7 +49,7 @@ class MarshallingEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinit
 	@Override
 	protected String getBeanClassName(Element element) {
 		if (genericAdapterPresent) {
-				return GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
+			return GENERIC_MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
 		}
 		return MARSHALLING_METHOD_ENDPOINT_ADAPTER_CLASS_NAME;
 	}

@@ -16,16 +16,19 @@
 
 package org.springframework.ws.soap;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Test;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTestCase {
 
@@ -124,8 +127,7 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 
 	@Test
 	public void testGetResult() throws Exception {
-		String content =
-				"<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
+		String content = "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
 		transformer.transform(new StringSource(content), soapHeader.getResult());
 		Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
 		assertTrue("Header has no children", iterator.hasNext());
@@ -139,6 +141,5 @@ public abstract class AbstractSoapHeaderTestCase extends AbstractSoapElementTest
 		transformer.transform(headerElement.getSource(), result);
 		assertXMLEqual("Invalid contents of header element", expected, result.toString());
 	}
-
 
 }

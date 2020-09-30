@@ -26,43 +26,41 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
- * Subclass of {@link MarshallingMethodEndpointAdapter} that supports {@link GenericMarshaller} and {@link
- * GenericUnmarshaller}. More specifically, this adapter is aware of the {@link Method#getGenericParameterTypes()} and
- * {@link Method#getGenericReturnType()}.
- *
- * <p>Prefer to use this adapter rather than the plain {@link MarshallingMethodEndpointAdapter} in combination with Java 5
+ * Subclass of {@link MarshallingMethodEndpointAdapter} that supports {@link GenericMarshaller} and
+ * {@link GenericUnmarshaller}. More specifically, this adapter is aware of the
+ * {@link Method#getGenericParameterTypes()} and {@link Method#getGenericReturnType()}.
+ * <p>
+ * Prefer to use this adapter rather than the plain {@link MarshallingMethodEndpointAdapter} in combination with Java 5
  * marshallers, such as the {@link Jaxb2Marshaller}.
  *
  * @author Arjen Poutsma
  * @since 1.0.2
- * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *			   org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
- *			   MarshallingPayloadMethodProcessor}.
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and
+ *             {@link org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
+ *             MarshallingPayloadMethodProcessor}.
  */
 @Deprecated
 public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEndpointAdapter {
 
 	/**
-	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link
-	 * Unmarshaller} must be injected using properties.
+	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link Unmarshaller} must
+	 * be injected using properties.
 	 *
 	 * @see #setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	public GenericMarshallingMethodEndpointAdapter() {
-	}
+	public GenericMarshallingMethodEndpointAdapter() {}
 
 	/**
-	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link
-	 * Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
+	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller. If the given
+	 * {@link Marshaller} also implements the {@link Unmarshaller} interface, it is used for both marshalling and
 	 * unmarshalling. Otherwise, an exception is thrown.
-	 *
-	 * <p>Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface,
-	 * so that you can safely use this constructor.
+	 * <p>
+	 * Note that all {@link Marshaller} implementations in Spring-WS also implement the {@link Unmarshaller} interface, so
+	 * that you can safely use this constructor.
 	 *
 	 * @param marshaller object used as marshaller and unmarshaller
-	 * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller}
-	 *									interface
+	 * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller} interface
 	 */
 	public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller) {
 		super(marshaller);
@@ -71,7 +69,7 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 	/**
 	 * Creates a new {@code GenericMarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
 	 *
-	 * @param marshaller   the marshaller to use
+	 * @param marshaller the marshaller to use
 	 * @param unmarshaller the unmarshaller to use
 	 */
 	public GenericMarshallingMethodEndpointAdapter(Marshaller marshaller, Unmarshaller unmarshaller) {
@@ -87,12 +85,10 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 	private boolean supportsReturnType(Method method) {
 		if (Void.TYPE.equals(method.getReturnType())) {
 			return true;
-		}
-		else {
+		} else {
 			if (getMarshaller() instanceof GenericMarshaller) {
 				return ((GenericMarshaller) getMarshaller()).supports(method.getGenericReturnType());
-			}
-			else {
+			} else {
 				return getMarshaller().supports(method.getReturnType());
 			}
 		}
@@ -101,12 +97,10 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 	private boolean supportsParameters(Method method) {
 		if (method.getParameterTypes().length != 1) {
 			return false;
-		}
-		else if (getUnmarshaller() instanceof GenericUnmarshaller) {
+		} else if (getUnmarshaller() instanceof GenericUnmarshaller) {
 			GenericUnmarshaller genericUnmarshaller = (GenericUnmarshaller) getUnmarshaller();
 			return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
-		}
-		else {
+		} else {
 			return getUnmarshaller().supports(method.getParameterTypes()[0]);
 		}
 	}

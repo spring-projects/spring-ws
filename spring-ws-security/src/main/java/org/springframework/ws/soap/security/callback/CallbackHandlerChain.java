@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -45,10 +46,9 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
 		boolean allUnsupported = true;
 		for (CallbackHandler callbackHandler : callbackHandlers) {
 			try {
-				callbackHandler.handle(new Callback[]{callback});
+				callbackHandler.handle(new Callback[] { callback });
 				allUnsupported = false;
-			}
-			catch (UnsupportedCallbackException ex) {
+			} catch (UnsupportedCallbackException ex) {
 				// if an UnsupportedCallbackException occurs, go to the next handler
 			}
 		}

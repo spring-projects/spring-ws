@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.saaj.support;
 
 import java.util.Iterator;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
@@ -31,7 +32,6 @@ import javax.xml.transform.sax.SAXResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
@@ -54,9 +54,9 @@ public class SaajContentHandlerTest {
 
 	@Test
 	public void testHandler() throws Exception {
-		String content = "<Root xmlns='http://springframework.org/spring-ws/1' " +
-				"xmlns:child='http://springframework.org/spring-ws/2'>" +
-				"<child:Child attribute='value'>Content</child:Child></Root>";
+		String content = "<Root xmlns='http://springframework.org/spring-ws/1' "
+				+ "xmlns:child='http://springframework.org/spring-ws/2'>"
+				+ "<child:Child attribute='value'>Content</child:Child></Root>";
 		Source source = new StringSource(content);
 		Result result = new SAXResult(handler);
 		transformer.transform(source, result);

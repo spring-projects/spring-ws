@@ -16,15 +16,16 @@
 
 package org.springframework.ws.test.support.creator;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link WebServiceMessageCreator} that creates a request based on a {@link Source}.
@@ -52,8 +53,7 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 	protected void doWithMessage(WebServiceMessage message) throws IOException {
 		try {
 			transformerHelper.transform(payload, message.getPayloadResult());
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			fail("Could not transform request payload to message: " + ex.getMessage());
 		}
 	}

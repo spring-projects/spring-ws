@@ -16,16 +16,15 @@
 
 package org.springframework.xml.transform;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
 
 import org.junit.Test;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class StringResultTest {
 

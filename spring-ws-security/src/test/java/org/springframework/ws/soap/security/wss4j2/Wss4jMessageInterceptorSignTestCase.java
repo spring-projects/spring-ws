@@ -16,18 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.junit.Assert.*;
+
 import java.util.Properties;
 
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean;
-
-import org.junit.Test;
 import org.w3c.dom.Document;
-
-import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase {
 
@@ -49,10 +48,8 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
 		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
 		cryptoFactoryBean.afterPropertiesSet();
-		interceptor.setValidationSignatureCrypto(cryptoFactoryBean
-				.getObject());
-		interceptor.setSecurementSignatureCrypto(cryptoFactoryBean
-				.getObject());
+		interceptor.setValidationSignatureCrypto(cryptoFactoryBean.getObject());
+		interceptor.setSecurementSignatureCrypto(cryptoFactoryBean.getObject());
 		interceptor.afterPropertiesSet();
 
 	}
@@ -100,7 +97,6 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
 		assertXpathExists("Absent SignatureConfirmation element",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
 
-
 	}
 
 	@Test
@@ -117,7 +113,6 @@ public abstract class Wss4jMessageInterceptorSignTestCase extends Wss4jTestCase 
 		Document document = getDocument(message);
 		assertXpathExists("Absent SignatureConfirmation element",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
-
 
 	}
 }

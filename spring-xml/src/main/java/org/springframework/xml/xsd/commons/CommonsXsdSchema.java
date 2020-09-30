@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
@@ -30,8 +31,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
-import org.w3c.dom.Document;
-
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
@@ -40,6 +39,7 @@ import org.springframework.util.Assert;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
+import org.w3c.dom.Document;
 
 /**
  * Implementation of the {@link XsdSchema} interface that uses Apache WS-Commons XML Schema.
@@ -55,7 +55,7 @@ public class CommonsXsdSchema implements XsdSchema {
 	private final XmlSchemaCollection collection;
 
 	/**
-	 * Create a new instance of the	 {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
+	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
 	 *
 	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
@@ -65,10 +65,10 @@ public class CommonsXsdSchema implements XsdSchema {
 	}
 
 	/**
-	 * Create a new instance of the	 {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and {@link
-	 * XmlSchemaCollection} reference.
+	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and
+	 * {@link XmlSchemaCollection} reference.
 	 *
-	 * @param schema	 the Commons {@code XmlSchema} object; must not be {@code null}
+	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
 	 * @param collection the Commons {@code XmlSchemaCollection} object; can be {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
 	 */
@@ -98,18 +98,15 @@ public class CommonsXsdSchema implements XsdSchema {
 			}
 			Document[] serializedSchemas = serializer.serializeSchema(schema, false);
 			return new DOMSource(serializedSchemas[0]);
-		}
-		catch (BeanInstantiationException ex) {
+		} catch (BeanInstantiationException ex) {
 			// ignore
-		}
-		catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
+		} catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
 			// ignore
 		}
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
 			schema.write(bos);
-		}
-		catch (UnsupportedEncodingException ex) {
+		} catch (UnsupportedEncodingException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
 		}
 		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
@@ -120,15 +117,13 @@ public class CommonsXsdSchema implements XsdSchema {
 	public XmlValidator createValidator() {
 		try {
 			Resource resource = new UrlResource(schema.getSourceURI());
-			return XmlValidatorFactory
-					.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-		}
-		catch (IOException ex) {
+			return XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
+		} catch (IOException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
 		}
 	}
 
-		/** Returns the wrapped Commons {@code XmlSchema} object. */
+	/** Returns the wrapped Commons {@code XmlSchema} object. */
 	public XmlSchema getSchema() {
 		return schema;
 	}

@@ -23,26 +23,28 @@ import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.test.support.MockStrategiesHelper;
 
 /**
- * <strong>Main entry point for client-side Web service testing</strong>. Typically used to test a {@link
- * WebServiceTemplate}, set up expectations on request messages, and create response messages.
- *
- * <p>The typical usage of this class is:
+ * <strong>Main entry point for client-side Web service testing</strong>. Typically used to test a
+ * {@link WebServiceTemplate}, set up expectations on request messages, and create response messages.
+ * <p>
+ * The typical usage of this class is:
  * <ol>
  * <li>Create a {@code MockWebServiceServer} instance by calling {@link #createServer(WebServiceTemplate)},
  * {@link #createServer(WebServiceGatewaySupport)}, or {@link #createServer(ApplicationContext)}.
  * <li>Set up request expectations by calling {@link #expect(RequestMatcher)}, possibly by using the default
  * {@link RequestMatcher} implementations provided in {@link RequestMatchers} (which can be statically imported).
  * Multiple expectations can be set up by chaining {@link ResponseActions#andExpect(RequestMatcher)} calls.</li>
- * <li>Create an appropriate response message by calling
- * {@link ResponseActions#andRespond(ResponseCreator) andRespond(ResponseCreator)}, possibly by using the default
- * {@link ResponseCreator} implementations provided in {@link ResponseCreators} (which can be statically imported).</li>
+ * <li>Create an appropriate response message by calling {@link ResponseActions#andRespond(ResponseCreator)
+ * andRespond(ResponseCreator)}, possibly by using the default {@link ResponseCreator} implementations provided in
+ * {@link ResponseCreators} (which can be statically imported).</li>
  * <li>Use the {@code WebServiceTemplate} as normal, either directly of through client code.</li>
- * <li>Call {@link #verify()}.</ol>
+ * <li>Call {@link #verify()}.
+ * </ol>
  * Note that because of the 'fluent' API offered by this class (and related classes), you can typically use the Code
  * Completion features (i.e. ctrl-space) in your IDE to set up the mocks.
- *
- * <p>For example:
- * <blockquote><pre>
+ * <p>
+ * For example: <blockquote>
+ * 
+ * <pre>
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
  * import org.springframework.test.context.ContextConfiguration;
@@ -84,7 +86,9 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *	   <strong>mockServer.verify();</strong>
  *	 }
  * }
- * </pre></blockquote>
+ * </pre>
+ * 
+ * </blockquote>
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
@@ -128,15 +132,15 @@ public class MockWebServiceServer {
 
 	/**
 	 * Creates a {@code MockWebServiceServer} instance based on the given {@link ApplicationContext}.
-	 *
-	 * <p>This factory method will try and find a configured {@link WebServiceTemplate} in the given application context.
-	 * If no template can be found, it will try and find a {@link WebServiceGatewaySupport}, and use its configured
-	 * template. If neither can be found, an exception is thrown.
+	 * <p>
+	 * This factory method will try and find a configured {@link WebServiceTemplate} in the given application context. If
+	 * no template can be found, it will try and find a {@link WebServiceGatewaySupport}, and use its configured template.
+	 * If neither can be found, an exception is thrown.
 	 *
 	 * @param applicationContext the application context to base the client on
 	 * @return the created server
-	 * @throws IllegalArgumentException if the given application context contains neither a {@link WebServiceTemplate}
-	 *									nor a {@link WebServiceGatewaySupport}.
+	 * @throws IllegalArgumentException if the given application context contains neither a {@link WebServiceTemplate} nor
+	 *           a {@link WebServiceGatewaySupport}.
 	 */
 	public static MockWebServiceServer createServer(ApplicationContext applicationContext) {
 		MockStrategiesHelper strategiesHelper = new MockStrategiesHelper(applicationContext);
@@ -153,8 +157,8 @@ public class MockWebServiceServer {
 	}
 
 	/**
-	 * Records an expectation specified by the given {@link RequestMatcher}. Returns a {@link ResponseActions} object
-	 * that allows for creating the response, or to set up more expectations.
+	 * Records an expectation specified by the given {@link RequestMatcher}. Returns a {@link ResponseActions} object that
+	 * allows for creating the response, or to set up more expectations.
 	 *
 	 * @param requestMatcher the request matcher expected
 	 * @return the response actions
@@ -174,12 +178,11 @@ public class MockWebServiceServer {
 		mockMessageSender.verifyConnections();
 	}
 
-    /**
-     * Reset the {@link MockWebServiceMessageSender}'s expectations.
-     */
-    public void reset() {
-	    mockMessageSender.reset();
-    }
-
+	/**
+	 * Reset the {@link MockWebServiceMessageSender}'s expectations.
+	 */
+	public void reset() {
+		mockMessageSender.reset();
+	}
 
 }

@@ -16,8 +16,12 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.easymock.EasyMock.*;
+
 import java.io.StringReader;
 import java.io.StringWriter;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
@@ -26,16 +30,12 @@ import javax.xml.transform.stream.StreamSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.easymock.EasyMock.*;
 
 public class PayloadEndpointAdapterTest {
 

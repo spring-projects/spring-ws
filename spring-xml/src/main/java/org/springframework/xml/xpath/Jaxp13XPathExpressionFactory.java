@@ -19,17 +19,17 @@ package org.springframework.xml.xpath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * JAXP 1.3-specific factory creating {@link XPathExpression} objects.
@@ -55,8 +55,7 @@ abstract class Jaxp13XPathExpressionFactory {
 			XPath xpath = createXPath();
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
 			return new Jaxp13XPathExpression(xpathExpression, expression);
-		}
-		catch (XPathExpressionException ex) {
+		} catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
 					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
 		}
@@ -78,8 +77,7 @@ abstract class Jaxp13XPathExpressionFactory {
 			xpath.setNamespaceContext(namespaceContext);
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
 			return new Jaxp13XPathExpression(xpathExpression, expression);
-		}
-		catch (XPathExpressionException ex) {
+		} catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
 					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
 		}
@@ -88,7 +86,6 @@ abstract class Jaxp13XPathExpressionFactory {
 	private static synchronized XPath createXPath() {
 		return xpathFactory.newXPath();
 	}
-
 
 	/** JAXP 1.3 implementation of the {@code XPathExpression} interface. */
 	private static class Jaxp13XPathExpression implements XPathExpression {
@@ -123,8 +120,7 @@ abstract class Jaxp13XPathExpressionFactory {
 				synchronized (xpathExpression) {
 					return xpathExpression.evaluate(node, returnType);
 				}
-			}
-			catch (XPathExpressionException ex) {
+			} catch (XPathExpressionException ex) {
 				throw new XPathException("Could not evaluate XPath expression:" + ex.getMessage(), ex);
 			}
 		}
@@ -158,12 +154,10 @@ abstract class Jaxp13XPathExpressionFactory {
 			if (result != null) {
 				try {
 					return nodeMapper.mapNode(result, 0);
-				}
-				catch (DOMException ex) {
+				} catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
-			}
-			else {
+			} else {
 				return null;
 			}
 		}
@@ -175,8 +169,7 @@ abstract class Jaxp13XPathExpressionFactory {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				try {
 					results.add(nodeMapper.mapNode(nodes.item(i), i));
-				}
-				catch (DOMException ex) {
+				} catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
 			}

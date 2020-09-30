@@ -23,7 +23,6 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractSimpleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
-
 import org.w3c.dom.Element;
 
 /**
@@ -36,8 +35,7 @@ import org.w3c.dom.Element;
 @Deprecated
 class XPathEndpointsBeanDefinitionParser extends AbstractSimpleBeanDefinitionParser {
 
-	private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME =
-			"org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter";
+	private static final String XPATH_PARAM_ANNOTATION_METHOD_ENDPOINT_ADAPTER_CLASS_NAME = "org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethodEndpointAdapter";
 
 	@Override
 	protected boolean shouldGenerateIdAsFallback() {

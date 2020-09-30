@@ -30,8 +30,8 @@ public interface EndpointExceptionResolver {
 	 * Try to resolve the given exception that got thrown during on endpoint execution.
 	 *
 	 * @param messageContext current message context
-	 * @param endpoint		 the executed endpoint, or null if none chosen at the time of the exception
-	 * @param ex			 the exception that got thrown during endpoint execution
+	 * @param endpoint the executed endpoint, or null if none chosen at the time of the exception
+	 * @param ex the exception that got thrown during endpoint execution
 	 * @return {@code true} if resolved; {@code false} otherwise
 	 */
 	boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex);

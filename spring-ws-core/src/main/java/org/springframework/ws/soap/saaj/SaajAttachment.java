@@ -18,6 +18,7 @@ package org.springframework.ws.soap.saaj;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.activation.DataHandler;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
@@ -26,8 +27,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.mime.Attachment;
 
 /**
- * SAAJ-specific implementation of the {@code Attachment} interface. Wraps a {@link
- * javax.xml.soap.AttachmentPart}.
+ * SAAJ-specific implementation of the {@code Attachment} interface. Wraps a {@link javax.xml.soap.AttachmentPart}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -55,8 +55,7 @@ class SaajAttachment implements Attachment {
 	public InputStream getInputStream() throws IOException {
 		try {
 			return saajAttachment.getDataHandler().getInputStream();
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);
 		}
 	}
@@ -65,8 +64,7 @@ class SaajAttachment implements Attachment {
 	public long getSize() {
 		try {
 			return saajAttachment.getSize();
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);
 		}
 	}
@@ -75,8 +73,7 @@ class SaajAttachment implements Attachment {
 	public DataHandler getDataHandler() {
 		try {
 			return saajAttachment.getDataHandler();
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);
 		}
 	}

@@ -20,9 +20,8 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 
 /**
- * SOAP-specific subclass of the {@code EndpointInvocationChain}. Adds associated actors (SOAP 1.1) or roles (SOAP
- * 1.2). Used by the {@code SoapMessageDispatcher} to determine the MustUnderstand headers for particular
- * endpoint.
+ * SOAP-specific subclass of the {@code EndpointInvocationChain}. Adds associated actors (SOAP 1.1) or roles (SOAP 1.2).
+ * Used by the {@code SoapMessageDispatcher} to determine the MustUnderstand headers for particular endpoint.
  *
  * @author Arjen Poutsma
  * @see #getActorsOrRoles()
@@ -47,7 +46,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	/**
 	 * Create new {@code SoapEndpointInvocationChain}.
 	 *
-	 * @param endpoint	   the endpoint object to invoke
+	 * @param endpoint the endpoint object to invoke
 	 * @param interceptors the array of interceptors to apply
 	 */
 	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors) {
@@ -57,15 +56,13 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	/**
 	 * Create new {@code EndpointInvocationChain}.
 	 *
-	 * @param endpoint			 the endpoint object to invoke
-	 * @param interceptors		 the array of interceptors to apply
-	 * @param actorsOrRoles		 the array of actorsOrRoles to set
+	 * @param endpoint the endpoint object to invoke
+	 * @param interceptors the array of interceptors to apply
+	 * @param actorsOrRoles the array of actorsOrRoles to set
 	 * @param isUltimateReceiver whether this chain fullfils the SOAP 1.2 Ultimate receiver role
 	 */
-	public SoapEndpointInvocationChain(Object endpoint,
-									   EndpointInterceptor[] interceptors,
-									   String[] actorsOrRoles,
-									   boolean isUltimateReceiver) {
+	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors, String[] actorsOrRoles,
+			boolean isUltimateReceiver) {
 		super(endpoint, interceptors);
 		this.actorsOrRoles = actorsOrRoles;
 		this.isUltimateReceiver = isUltimateReceiver;

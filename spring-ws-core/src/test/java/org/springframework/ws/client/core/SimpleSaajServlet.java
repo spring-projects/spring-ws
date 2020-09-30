@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,8 +50,7 @@ public class SimpleSaajServlet extends HttpServlet {
 		super.init(servletConfig);
 		try {
 			msgFactory = MessageFactory.newInstance();
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new ServletException("Unable to create message factory" + ex.getMessage());
 		}
 	}
@@ -89,16 +89,14 @@ public class SimpleSaajServlet extends HttpServlet {
 				if (reply.saveRequired()) {
 					reply.saveChanges();
 				}
-				resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
-						HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				resp.setStatus(
+						!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				putHeaders(reply.getMimeHeaders(), resp);
 				reply.writeTo(resp.getOutputStream());
-			}
-			else {
+			} else {
 				resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new ServletException("SAAJ POST failed " + ex.getMessage());
 		}
 	}
@@ -106,6 +104,5 @@ public class SimpleSaajServlet extends HttpServlet {
 	protected SOAPMessage onMessage(SOAPMessage message) {
 		return message;
 	}
-
 
 }

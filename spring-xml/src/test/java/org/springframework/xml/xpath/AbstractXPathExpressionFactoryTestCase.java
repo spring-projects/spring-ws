@@ -21,19 +21,19 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import org.springframework.util.StringUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
@@ -53,15 +53,13 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 		InputStream inputStream = getClass().getResourceAsStream("nonamespaces.xml");
 		try {
 			noNamespacesDocument = documentBuilder.parse(inputStream);
-		}
-		finally {
+		} finally {
 			inputStream.close();
 		}
 		inputStream = getClass().getResourceAsStream("namespaces.xml");
 		try {
 			namespacesDocument = documentBuilder.parse(inputStream);
-		}
-		finally {
+		} finally {
 			inputStream.close();
 		}
 	}
@@ -88,8 +86,8 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	@Test
 	public void testEvaluateAsBooleanNamespaces() throws IOException, SAXException {
-		XPathExpression expression =
-				createXPathExpression("/prefix1:root/prefix2:child/prefix2:boolean/text()", namespaces);
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:boolean/text()",
+				namespaces);
 		boolean result = expression.evaluateAsBoolean(namespacesDocument);
 		Assert.assertTrue("Invalid result", result);
 	}
@@ -117,8 +115,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	@Test
 	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
-		XPathExpression expression =
-				createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()", namespaces);
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()", namespaces);
 		double result = expression.evaluateAsNumber(namespacesDocument);
 		Assert.assertEquals("Invalid result", 42D, result, 0D);
 	}
@@ -192,8 +189,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	@Test
 	public void testEvaluateAsStringNamespaces() throws IOException, SAXException {
-		XPathExpression expression =
-				createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()", namespaces);
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()", namespaces);
 		String result = expression.evaluateAsString(namespacesDocument);
 		Assert.assertEquals("Invalid result", "text", result);
 	}
@@ -237,8 +233,7 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 		try {
 			createXPathExpression("\\");
 			Assert.fail("No XPathParseException thrown");
-		}
-		catch (XPathParseException ex) {
+		} catch (XPathParseException ex) {
 			// Expected behaviour
 		}
 	}

@@ -6,6 +6,6 @@
            attributeFormDefault="unqualified"
 
            xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
-    <xs:element name="BinaryData" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+	<xs:element name="BinaryData" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
 </xs:schema>
 

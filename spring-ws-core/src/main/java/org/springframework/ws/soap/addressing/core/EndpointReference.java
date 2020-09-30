@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
-
 import org.w3c.dom.Node;
 
 /**
@@ -43,8 +42,8 @@ public final class EndpointReference implements Serializable {
 	private final List<Node> referenceParameters;
 
 	/**
-	 * Creates a new instance of the {@link EndpointReference} class with the given address. The reference parameters
-	 * and properties are empty.
+	 * Creates a new instance of the {@link EndpointReference} class with the given address. The reference parameters and
+	 * properties are empty.
 	 *
 	 * @param address the endpoint address
 	 */
@@ -59,7 +58,7 @@ public final class EndpointReference implements Serializable {
 	 * Creates a new instance of the {@link EndpointReference} class with the given address, reference properties, and
 	 * reference parameters.
 	 *
-	 * @param address			  the endpoint address
+	 * @param address the endpoint address
 	 * @param referenceProperties the reference properties, as a list of {@link Node}
 	 * @param referenceParameters the reference parameters, as a list of {@link Node}
 	 */

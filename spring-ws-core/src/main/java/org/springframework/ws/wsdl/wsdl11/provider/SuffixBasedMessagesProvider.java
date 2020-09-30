@@ -16,9 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import org.w3c.dom.Element;
-
 import org.springframework.util.Assert;
+import org.w3c.dom.Element;
 
 /**
  * Implementation of the {@link MessagesProvider} interface that is based on suffixes.
@@ -105,10 +104,9 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
 		if (super.isMessageElement(element)) {
 			String elementName = getElementName(element);
 			Assert.hasText(elementName, "Element has no name");
-			return elementName.endsWith(getRequestSuffix()) || elementName.endsWith(getResponseSuffix()) ||
-					elementName.endsWith(getFaultSuffix());
-		}
-		else {
+			return elementName.endsWith(getRequestSuffix()) || elementName.endsWith(getResponseSuffix())
+					|| elementName.endsWith(getFaultSuffix());
+		} else {
 			return false;
 		}
 	}

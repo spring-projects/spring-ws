@@ -18,6 +18,7 @@ package org.springframework.ws.soap.axiom;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.activation.DataHandler;
 
 import org.springframework.util.Assert;

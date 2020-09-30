@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
@@ -42,7 +43,7 @@ import org.springframework.ws.context.MessageContext;
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
- *		javax.xml.stream.XMLEventFactory)
+ *      javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
  * @since 1.0.0
@@ -62,9 +63,9 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 	}
 
 	/**
-	 * Create a {@code XMLEventFactory} that this endpoint will use to create {@code XMLEvent}s. Can be
-	 * overridden in subclasses, adding further initialization of the factory. The resulting
-	 * {@code XMLEventFactory} is cached, so this method will only be called once.
+	 * Create a {@code XMLEventFactory} that this endpoint will use to create {@code XMLEvent}s. Can be overridden in
+	 * subclasses, adding further initialization of the factory. The resulting {@code XMLEventFactory} is cached, so this
+	 * method will only be called once.
 	 *
 	 * @return the created {@code XMLEventFactory}
 	 */
@@ -92,8 +93,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 				if (streamReader != null) {
 					try {
 						eventReader = getInputFactory().createXMLEventReader(streamReader);
-					}
-					catch (XMLStreamException ex) {
+					} catch (XMLStreamException ex) {
 						eventReader = null;
 					}
 				}
@@ -102,11 +102,9 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 		if (eventReader == null) {
 			try {
 				eventReader = getInputFactory().createXMLEventReader(source);
-			}
-			catch (XMLStreamException ex) {
+			} catch (XMLStreamException ex) {
 				eventReader = null;
-			}
-			catch (UnsupportedOperationException ex) {
+			} catch (UnsupportedOperationException ex) {
 				eventReader = null;
 			}
 		}
@@ -128,8 +126,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 		if (eventWriter == null) {
 			try {
 				eventWriter = getOutputFactory().createXMLEventWriter(result);
-			}
-			catch (XMLStreamException ex) {
+			} catch (XMLStreamException ex) {
 				// ignore
 			}
 		}
@@ -137,20 +134,19 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLEventReader}, and
-	 * a {@code XMLEventWriter} to write the response payload to.
+	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLEventReader}, and a
+	 * {@code XMLEventWriter} to write the response payload to.
 	 *
-	 * @param eventReader  the reader to read the payload events from
-	 * @param eventWriter  the writer to write payload events to
+	 * @param eventReader the reader to read the payload events from
+	 * @param eventWriter the writer to write payload events to
 	 * @param eventFactory an {@code XMLEventFactory} that can be used to create events
 	 */
-	protected abstract void invokeInternal(XMLEventReader eventReader,
-										   XMLEventConsumer eventWriter,
-										   XMLEventFactory eventFactory) throws Exception;
+	protected abstract void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
+			XMLEventFactory eventFactory) throws Exception;
 
 	/**
-	 * Implementation of the {@code XMLEventWriter} interface that creates a response
-	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
+	 * Implementation of the {@code XMLEventWriter} interface that creates a response {@code WebServiceMessage} as soon as
+	 * any method is called, thus lazily creating the response.
 	 */
 	private class ResponseCreatingEventWriter implements XMLEventWriter {
 
@@ -194,8 +190,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 					try {
 						ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 						transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
-					}
-					catch (TransformerException ex) {
+					} catch (TransformerException ex) {
 						throw new XMLStreamException(ex);
 					}
 				}

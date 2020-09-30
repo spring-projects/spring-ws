@@ -35,7 +35,7 @@ public class SchemaFactoryUtils {
 	/**
 	 * Build a {@link SchemaFactory} and set properties to prevent external entities from accessing.
 	 *
-	 * @see SchemaFactory#newInstance(String) 
+	 * @see SchemaFactory#newInstance(String)
 	 */
 	public static SchemaFactory newInstance(String schemaLanguage) {
 		SchemaFactory schemaFactory = SchemaFactory.newInstance(schemaLanguage);
@@ -44,16 +44,19 @@ public class SchemaFactoryUtils {
 			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
-				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + schemaFactory.getClass().getCanonicalName());
+				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
+						+ schemaFactory.getClass().getCanonicalName());
 			}
 
 		}
 
 		try {
-			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ResourceUtils.URL_PROTOCOL_FILE + "," + "jar:file" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
+			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA,
+					ResourceUtils.URL_PROTOCOL_FILE + "," + "jar:file" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
 		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
-				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by " + schemaFactory.getClass().getCanonicalName());
+				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
+						+ schemaFactory.getClass().getCanonicalName());
 			}
 		}
 

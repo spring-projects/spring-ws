@@ -32,6 +32,7 @@ public class XmppConnectionFactoryBeanTest {
 	public void createFactoryBean() {
 		factoryBean = new XmppConnectionFactoryBean();
 	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void noHost() throws XMPPException, IOException, SmackException {
 		factoryBean.afterPropertiesSet();

@@ -16,10 +16,15 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Locale;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -31,13 +36,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAddressingTestCase {
 
@@ -64,8 +62,7 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 
 		while (iterator.hasNext()) {
 			SoapHeaderElement headerElement = iterator.next();
-			assertTrue("Header [" + headerElement.getName() + " not understood",
-					interceptor.understands(headerElement));
+			assertTrue("Header [" + headerElement.getName() + " not understood", interceptor.understands(headerElement));
 		}
 
 		verify(strategyMock);
@@ -173,9 +170,8 @@ public abstract class AbstractAddressingInterceptorTestCase extends AbstractWsAd
 
 		URI replyAction = new URI("urn:replyAction");
 		URI faultAction = new URI("urn:replyAction");
-		interceptor =
-				new AddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[]{senderMock},
-						replyAction, faultAction);
+		interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
+				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 

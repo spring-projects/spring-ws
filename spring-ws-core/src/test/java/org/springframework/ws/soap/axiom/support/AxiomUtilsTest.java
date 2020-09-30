@@ -16,8 +16,11 @@
 
 package org.springframework.ws.soap.axiom.support;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.StringWriter;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,15 +37,12 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.springframework.xml.sax.SaxUtils;
+import org.w3c.dom.Document;
 
 public class AxiomUtilsTest {
 

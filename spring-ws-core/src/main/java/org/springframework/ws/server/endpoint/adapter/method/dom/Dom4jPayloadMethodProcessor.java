@@ -20,14 +20,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
-
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.DOMReader;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
+import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 
 /**
  * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver

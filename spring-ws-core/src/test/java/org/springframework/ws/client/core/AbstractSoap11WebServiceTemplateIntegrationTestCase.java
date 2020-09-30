@@ -16,10 +16,14 @@
 
 package org.springframework.ws.client.core;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.ServletConfig;
@@ -48,8 +52,6 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-import org.xml.sax.SAXException;
-
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -64,16 +66,13 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
+import org.xml.sax.SAXException;
 
 public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	private static Server jettyServer;
 
 	private static String baseUrl;
-
 
 	private WebServiceTemplate template;
 
@@ -110,22 +109,20 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		template.setMessageSender(new HttpComponentsMessageSender());
 	}
 
-
 	public abstract SoapMessageFactory createMessageFactory() throws Exception;
 
 	@Test
 	public void sendSourceAndReceiveToResult() throws SAXException, IOException {
 		StringResult result = new StringResult();
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
-				new StringSource(messagePayload), result);
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload), result);
 		Assert.assertTrue("Invalid result", b);
 		assertXMLEqual(messagePayload, result.toString());
 	}
 
 	@Test
 	public void sendSourceAndReceiveToResultNoResponse() {
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
-				new StringSource(messagePayload), new StringResult());
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse", new StringSource(messagePayload),
+				new StringResult());
 		Assert.assertFalse("Invalid result", b);
 	}
 
@@ -140,8 +137,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 				Assert.assertEquals("Invalid object", graph, requestObject);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				}
-				catch (TransformerException e) {
+				} catch (TransformerException e) {
 					Assert.fail(e.getMessage());
 				}
 			}
@@ -183,8 +179,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 				Assert.assertEquals("Invalid object", graph, requestObject);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				}
-				catch (TransformerException e) {
+				} catch (TransformerException e) {
 					Assert.fail(e.getMessage());
 				}
 			}
@@ -203,12 +198,11 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	@Test
 	public void notFound() {
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-					new StringSource(messagePayload), new StringResult());
+			template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound", new StringSource(messagePayload),
+					new StringResult());
 			Assert.fail("WebServiceTransportException expected");
-		}
-		catch (WebServiceTransportException ex) {
-			//expected
+		} catch (WebServiceTransportException ex) {
+			// expected
 		}
 	}
 
@@ -216,12 +210,10 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	public void fault() {
 		Result result = new StringResult();
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/soap/fault", new StringSource(messagePayload),
-					result);
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/fault", new StringSource(messagePayload), result);
 			Assert.fail("SoapFaultClientException expected");
-		}
-		catch (SoapFaultClientException ex) {
-			//expected
+		} catch (SoapFaultClientException ex) {
+			// expected
 		}
 	}
 
@@ -231,12 +223,11 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		template.setCheckConnectionForFault(false);
 		template.setCheckConnectionForError(false);
 		try {
-			template.sendSourceAndReceiveToResult(baseUrl + "/soap/badRequestFault",
-					new StringSource(messagePayload), result);
+			template.sendSourceAndReceiveToResult(baseUrl + "/soap/badRequestFault", new StringSource(messagePayload),
+					result);
 			Assert.fail("SoapFaultClientException expected");
-		}
-		catch (SoapFaultClientException ex) {
-			//expected
+		} catch (SoapFaultClientException ex) {
+			// expected
 		}
 	}
 
@@ -288,8 +279,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 			super.init(servletConfig);
 			try {
 				messageFactory = MessageFactory.newInstance();
-			}
-			catch (SOAPException ex) {
+			} catch (SOAPException ex) {
 				throw new ServletException("Unable to create message factory" + ex.getMessage());
 			}
 		}
@@ -306,17 +296,15 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 				if (reply != null) {
 					reply.saveChanges();
 					if (sc == -1) {
-						resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK :
-								HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+						resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK
+								: HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 					}
 					putHeaders(reply.getMimeHeaders(), resp);
 					reply.writeTo(resp.getOutputStream());
-				}
-				else if (sc == -1) {
+				} else if (sc == -1) {
 					resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 				}
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
 			}
 		}

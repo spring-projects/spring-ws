@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides the generic {@link org.springframework.ws.test.support.matcher.WebServiceMessageMatcher WebServiceMessageMatcher}
- * interface, and implementations.
+ * Provides the generic {@link org.springframework.ws.test.support.matcher.WebServiceMessageMatcher
+ * WebServiceMessageMatcher} interface, and implementations.
  */
 package org.springframework.ws.test.support.matcher;

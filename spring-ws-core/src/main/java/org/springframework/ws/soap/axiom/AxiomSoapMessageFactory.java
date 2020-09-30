@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Locale;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -40,7 +41,6 @@ import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -58,21 +58,21 @@ import org.springframework.xml.XMLInputFactoryUtils;
 /**
  * Axiom-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}
  * interface. Creates {@link org.springframework.ws.soap.axiom.AxiomSoapMessage AxiomSoapMessages}.
- *
- * <p>To increase reading performance on the SOAP request created by this message factory, you can set the {@link
- * #setPayloadCaching(boolean) payloadCaching} property to {@code false} (default is {@code true}). This this
+ * <p>
+ * To increase reading performance on the SOAP request created by this message factory, you can set the
+ * {@link #setPayloadCaching(boolean) payloadCaching} property to {@code false} (default is {@code true}). This this
  * will read the contents of the body directly from the stream. However, <strong>when this setting is enabled, the
  * payload can only be read once</strong>. This means that any endpoint mappings or interceptors which are based on the
- * message payload (such as the {@link PayloadRootAnnotationMethodEndpointMapping}, the {@link PayloadValidatingInterceptor}, or
- * the {@link PayloadLoggingInterceptor}) cannot be used. Instead, use an endpoint mapping that does not consume the
- * payload (i.e. the {@link SoapActionAnnotationMethodEndpointMapping}).
- *
- * <p>Additionally, this message factory can cache large attachments to disk by setting the {@link
- * #setAttachmentCaching(boolean) attachmentCaching} property to {@code true} (default is {@code false}).
+ * message payload (such as the {@link PayloadRootAnnotationMethodEndpointMapping}, the
+ * {@link PayloadValidatingInterceptor}, or the {@link PayloadLoggingInterceptor}) cannot be used. Instead, use an
+ * endpoint mapping that does not consume the payload (i.e. the {@link SoapActionAnnotationMethodEndpointMapping}).
+ * <p>
+ * Additionally, this message factory can cache large attachments to disk by setting the
+ * {@link #setAttachmentCaching(boolean) attachmentCaching} property to {@code true} (default is {@code false}).
  * Optionally, the location where attachments are stored can be defined via the {@link #setAttachmentCacheDir(File)
  * attachmentCacheDir} property (defaults to the system temp file path).
- *
- * <p>Mostly derived from {@code org.apache.axis2.transport.http.HTTPTransportUtils} and
+ * <p>
+ * Mostly derived from {@code org.apache.axis2.transport.http.HTTPTransportUtils} and
  * {@code org.apache.axis2.transport.TransportUtils}, which we cannot use since they are not part of the Axiom
  * distribution.
  *
@@ -111,12 +111,11 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	private boolean supportingExternalEntities = false;
 
-
 	/**
 	 * Indicates whether the SOAP Body payload should be cached or not. Default is {@code true}.
-	 *
-	 * <p>Setting this to {@code false} will increase performance, but also result in the fact that the message
-	 * payload can only be read once.
+	 * <p>
+	 * Setting this to {@code false} will increase performance, but also result in the fact that the message payload can
+	 * only be read once.
 	 */
 	public void setPayloadCaching(boolean payloadCaching) {
 		this.payloadCaching = payloadCaching;
@@ -124,9 +123,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	/**
 	 * Indicates whether SOAP attachments should be cached or not. Default is {@code false}.
-	 *
-	 * <p>Setting this to {@code true} will cause Axiom to store larger attachments on disk, rather than in memory.
-	 * This decreases memory consumption, but decreases performance.
+	 * <p>
+	 * Setting this to {@code true} will cause Axiom to store larger attachments on disk, rather than in memory. This
+	 * decreases memory consumption, but decreases performance.
 	 */
 	public void setAttachmentCaching(boolean attachmentCaching) {
 		this.attachmentCaching = attachmentCaching;
@@ -135,8 +134,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	/**
 	 * Sets the directory where SOAP attachments will be stored. Only used when {@link #setAttachmentCaching(boolean)
 	 * attachmentCaching} is set to {@code true}.
-	 *
-	 * <p>The parameter should be an existing, writable directory. This property defaults to the temporary directory of the
+	 * <p>
+	 * The parameter should be an existing, writable directory. This property defaults to the temporary directory of the
 	 * operating system (i.e. the value of the {@code java.io.tmpdir} system property).
 	 */
 	public void setAttachmentCacheDir(File attachmentCacheDir) {
@@ -147,11 +146,11 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	}
 
 	/**
-	 * Sets the threshold for attachments caching, in bytes. Attachments larger than this threshold will be cached in
-	 * the {@link #setAttachmentCacheDir(File) attachment cache directory}. Only used when {@link
-	 * #setAttachmentCaching(boolean) attachmentCaching} is set to {@code true}.
-	 *
-	 * <p>Defaults to 4096 bytes (i.e. 4 kilobytes).
+	 * Sets the threshold for attachments caching, in bytes. Attachments larger than this threshold will be cached in the
+	 * {@link #setAttachmentCacheDir(File) attachment cache directory}. Only used when
+	 * {@link #setAttachmentCaching(boolean) attachmentCaching} is set to {@code true}.
+	 * <p>
+	 * Defaults to 4096 bytes (i.e. 4 kilobytes).
 	 */
 	public void setAttachmentCacheThreshold(int attachmentCacheThreshold) {
 		Assert.isTrue(attachmentCacheThreshold > 0, "'attachmentCacheThreshold' must be larger than 0");
@@ -162,11 +161,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	public void setSoapVersion(SoapVersion version) {
 		if (SoapVersion.SOAP_11 == version) {
 			soapFactory = OMAbstractFactory.getSOAP11Factory();
-		}
-		else if (SoapVersion.SOAP_12 == version) {
+		} else if (SoapVersion.SOAP_12 == version) {
 			soapFactory = OMAbstractFactory.getSOAP12Factory();
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException(
 					"Invalid version [" + version + "]. " + "Expected the SOAP_11 or SOAP_12 constant");
 		}
@@ -174,8 +171,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	/**
 	 * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1 {@code <faultstring>} elements.
-	 *
-	 * <p>The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
+	 * <p>
+	 * The default is {@code true}, to comply with WS-I, but this flag can be set to {@code false} to the older W3C SOAP
 	 * 1.1 specification.
 	 *
 	 * @see <a href="http://www.ws-i.org/Profiles/BasicProfile-1.1.html#SOAP_Fault_Language">WS-I Basic Profile 1.1</a>
@@ -185,8 +182,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	}
 
 	/**
-	 * Sets whether internal entity references should be replaced with their replacement
-	 * text and report them as characters.
+	 * Sets whether internal entity references should be replaced with their replacement text and report them as
+	 * characters.
+	 * 
 	 * @see XMLInputFactory#IS_REPLACING_ENTITY_REFERENCES
 	 */
 	public void setReplacingEntityReferences(boolean replacingEntityReferences) {
@@ -195,6 +193,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	/**
 	 * Sets whether external parsed entities should be resolved.
+	 * 
 	 * @see XMLInputFactory#IS_SUPPORTING_EXTERNAL_ENTITIES
 	 */
 	public void setSupportingExternalEntities(boolean supportingExternalEntities) {
@@ -229,8 +228,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
 		if (!StringUtils.hasLength(contentType)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("TransportInputStream has no Content-Type header; defaulting to \"" +
-						soapFactory.getSOAPVersion().getMediaType() + "\"");
+				logger.debug("TransportInputStream has no Content-Type header; defaulting to \""
+						+ soapFactory.getSOAPVersion().getMediaType() + "\"");
 			}
 			contentType = soapFactory.getSOAPVersion().getMediaType().toString();
 		}
@@ -241,15 +240,12 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		try {
 			if (isMultiPartRelated(contentType)) {
 				return createMultiPartAxiomSoapMessage(inputStream, contentType, soapAction);
-			}
-			else {
+			} else {
 				return createAxiomSoapMessage(inputStream, contentType, soapAction);
 			}
-		}
-		catch (XMLStreamException ex) {
+		} catch (XMLStreamException ex) {
 			throw new AxiomSoapMessageCreationException("Could not parse request: " + ex.getMessage(), ex);
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapMessageCreationException("Could not create message: " + ex.getMessage(), ex);
 		}
 	}
@@ -281,24 +277,20 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	@SuppressWarnings("deprecation")
 	/** Creates an AxiomSoapMessage with attachments. */
-	private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream,
-															 String contentType,
-															 String soapAction) throws XMLStreamException {
-		Attachments attachments =
-				new Attachments(inputStream, contentType, attachmentCaching, attachmentCacheDir.getAbsolutePath(),
-						Integer.toString(attachmentCacheThreshold));
+	private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream, String contentType,
+			String soapAction) throws XMLStreamException {
+		Attachments attachments = new Attachments(inputStream, contentType, attachmentCaching,
+				attachmentCacheDir.getAbsolutePath(), Integer.toString(attachmentCacheThreshold));
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getRootPartInputStream(),
 				getCharSetEncoding(attachments.getRootPartContentType()));
 		SOAPModelBuilder builder;
 		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
-		if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType()) ||
-				MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
+		if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType())
+				|| MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
 			builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		}
-		else if (MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType())) {
+		} else if (MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType())) {
 			builder = new MTOMStAXSOAPModelBuilder(reader, attachments, envelopeNamespace);
-		}
-		else {
+		} else {
 			throw new AxiomSoapMessageCreationException(
 					"Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
 		}
@@ -309,11 +301,9 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	private String getSoapEnvelopeNamespace(String contentType) {
 		if (contentType.contains(SOAP11Constants.SOAP_11_CONTENT_TYPE)) {
 			return SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI;
-		}
-		else if (contentType.contains(SOAP12Constants.SOAP_12_CONTENT_TYPE)) {
+		} else if (contentType.contains(SOAP12Constants.SOAP_12_CONTENT_TYPE)) {
 			return SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI;
-		}
-		else {
+		} else {
 			throw new AxiomSoapMessageCreationException("Unknown content type '" + contentType + "'");
 		}
 
@@ -336,8 +326,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 		if (indexOfSemiColon > 0) {
 			value = contentType.substring(eqIdx + 1, indexOfSemiColon);
-		}
-		else {
+		} else {
 			value = contentType.substring(eqIdx + 1, contentType.length()).trim();
 		}
 		if (value.startsWith("\"")) {
@@ -348,21 +337,20 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		}
 		if ("null".equalsIgnoreCase(value)) {
 			return DEFAULT_CHARSET_ENCODING;
-		}
-		else {
+		} else {
 			return value.trim();
 		}
 	}
 
 	/**
 	 * Create a {@code XMLInputFactory} that this resolver will use to create {@link XMLStreamReader} objects.
-	 *
-	 * <p>Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached,
-	 * so this method will only be called once.
-	 *
-	 * <p>By default this method creates a standard {@link XMLInputFactory} and configures it
-	 * based on the {@link #setReplacingEntityReferences(boolean) replacingEntityReferences}
-	 * and {@link #setSupportingExternalEntities(boolean) supportingExternalEntities} properties.
+	 * <p>
+	 * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached, so
+	 * this method will only be called once.
+	 * <p>
+	 * By default this method creates a standard {@link XMLInputFactory} and configures it based on the
+	 * {@link #setReplacingEntityReferences(boolean) replacingEntityReferences} and
+	 * {@link #setSupportingExternalEntities(boolean) supportingExternalEntities} properties.
 	 *
 	 * @return the created factory
 	 */
@@ -373,20 +361,17 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		return inputFactory;
 	}
 
-
 	public String toString() {
 		StringBuilder builder = new StringBuilder("AxiomSoapMessageFactory[");
 		if (soapFactory.getSOAPVersion() == SOAP11Version.getSingleton()) {
 			builder.append("SOAP 1.1");
-		}
-		else if (soapFactory.getSOAPVersion() == SOAP12Version.getSingleton()) {
+		} else if (soapFactory.getSOAPVersion() == SOAP12Version.getSingleton()) {
 			builder.append("SOAP 1.2");
 		}
 		builder.append(',');
 		if (payloadCaching) {
 			builder.append("PayloadCaching enabled");
-		}
-		else {
+		} else {
 			builder.append("PayloadCaching disabled");
 		}
 		builder.append(']');

@@ -16,14 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.IOException;
+import static org.junit.Assert.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.ws.transport.TransportConstants;
+import java.io.IOException;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -32,9 +27,12 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.ws.transport.TransportConstants;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("httpserver-applicationContext.xml")
@@ -42,8 +40,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 
 	private HttpClient client;
 
-	@Autowired
-	private int port;
+	@Autowired private int port;
 
 	private String url;
 
@@ -57,8 +54,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 	public void testInvalidMethod() throws IOException {
 		GetMethod getMethod = new GetMethod(url);
 		client.executeMethod(getMethod);
-		assertEquals("Invalid Response Code", HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED,
-				getMethod.getStatusCode());
+		assertEquals("Invalid Response Code", HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED, getMethod.getStatusCode());
 		assertEquals("Response retrieved", 0, getMethod.getResponseContentLength());
 	}
 
@@ -79,8 +75,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 	public void testResponse() throws IOException {
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
-				"http://springframework.org/spring-ws/Response");
+		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Response");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
 		client.executeMethod(postMethod);
@@ -105,8 +100,7 @@ public class WebServiceHttpHandlerIntegrationTest {
 	public void testFault() throws IOException {
 		PostMethod postMethod = new PostMethod(url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod
-				.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
+		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
 		client.executeMethod(postMethod);

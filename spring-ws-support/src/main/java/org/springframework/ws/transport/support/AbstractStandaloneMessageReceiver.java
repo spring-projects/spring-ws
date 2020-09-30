@@ -54,8 +54,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
 	/**
 	 * Set whether to automatically start the receiver after initialization.
-	 *
-	 * <p>Default is {@code true}; set this to {@code false} to allow for manual startup.
+	 * <p>
+	 * Default is {@code true}; set this to {@code false} to allow for manual startup.
 	 */
 	public void setAutoStartup(boolean autoStartup) {
 		this.autoStartup = autoStartup;
@@ -74,8 +74,7 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	}
 
 	/**
-	 * Initialize this server. Starts the server if {@link #setAutoStartup(boolean) autoStartup} hasn't been turned
-	 * off.
+	 * Initialize this server. Starts the server if {@link #setAutoStartup(boolean) autoStartup} hasn't been turned off.
 	 */
 	public final void activate() throws Exception {
 		synchronized (lifecycleMonitor) {

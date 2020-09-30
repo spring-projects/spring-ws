@@ -21,7 +21,6 @@ import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.ApplicationContext;
@@ -85,8 +84,7 @@ public class DefaultStrategiesHelperTest {
 		try {
 			helper.getDefaultStrategy(Strategy.class, applicationContext);
 			Assert.fail("Expected BeanInitializationException");
-		}
-		catch (BeanInitializationException ex) {
+		} catch (BeanInitializationException ex) {
 			// expected
 		}
 	}

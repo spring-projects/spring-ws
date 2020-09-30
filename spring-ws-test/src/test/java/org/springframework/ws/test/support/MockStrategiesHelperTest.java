@@ -16,13 +16,11 @@
 
 package org.springframework.ws.test.support;
 
-import org.springframework.beans.factory.BeanInitializationException;
-import org.springframework.context.support.StaticApplicationContext;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.context.support.StaticApplicationContext;
 
 public class MockStrategiesHelperTest {
 
@@ -52,16 +50,14 @@ public class MockStrategiesHelperTest {
 		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
 		helper.getStrategy(IMyBean.class);
 	}
-	
+
 	@Test
 	public void noneWithDefault() {
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
-
 		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
 		assertNotNull(helper.getStrategy(IMyBean.class, MyBean.class));
 	}
-
 
 	public interface IMyBean {
 

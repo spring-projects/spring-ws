@@ -24,8 +24,8 @@ import javax.xml.transform.dom.DOMResult;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
- * SAAJ-specific implementation of the {@code SoapFaultDetailElement} interface. Wraps a {@link
- * javax.xml.soap.DetailEntry}.
+ * SAAJ-specific implementation of the {@code SoapFaultDetailElement} interface. Wraps a
+ * {@link javax.xml.soap.DetailEntry}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -45,8 +45,7 @@ class SaajSoapFaultDetailElement extends SaajSoapElement<DetailEntry> implements
 	public void addText(String text) {
 		try {
 			getSaajDetailEntry().addTextNode(text);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

@@ -19,6 +19,7 @@ package org.springframework.xml.validation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
@@ -26,16 +27,15 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.SAXParseException;
 
-import org.springframework.core.io.Resource;
-
 /**
- * Internal class that uses JAXP 1.5 features to create an {@code XmlValidator} with settings to prevent
- * external entity access.
+ * Internal class that uses JAXP 1.5 features to create an {@code XmlValidator} with settings to prevent external entity
+ * access.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -45,13 +45,11 @@ abstract class Jaxp15ValidatorFactory {
 
 	private static final Log log = LogFactory.getLog(Jaxp15ValidatorFactory.class);
 
-
 	static XmlValidator createValidator(Resource[] resources, String schemaLanguage) throws IOException {
 		try {
 			Schema schema = SchemaLoaderUtils.loadSchema(resources, schemaLanguage);
 			return new Jaxp15Validator(schema);
-		}
-		catch (SAXException ex) {
+		} catch (SAXException ex) {
 			throw new XmlValidationException("Could not create Schema: " + ex.getMessage(), ex);
 		}
 	}
@@ -80,7 +78,8 @@ abstract class Jaxp15ValidatorFactory {
 				validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 				if (log.isWarnEnabled()) {
-					log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + validator.getClass().getCanonicalName());
+					log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
+							+ validator.getClass().getCanonicalName());
 				}
 			}
 
@@ -88,7 +87,8 @@ abstract class Jaxp15ValidatorFactory {
 				validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 				if (log.isWarnEnabled()) {
-					log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by " + validator.getClass().getCanonicalName());
+					log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
+							+ validator.getClass().getCanonicalName());
 				}
 			}
 
@@ -96,8 +96,7 @@ abstract class Jaxp15ValidatorFactory {
 			try {
 				validator.validate(source);
 				return errorHandler.getErrors();
-			}
-			catch (SAXException ex) {
+			} catch (SAXException ex) {
 				throw new XmlValidationException("Could not validate source: " + ex.getMessage(), ex);
 			}
 		}
@@ -114,8 +113,7 @@ abstract class Jaxp15ValidatorFactory {
 		}
 
 		@Override
-		public void warning(SAXParseException ex) throws SAXException {
-		}
+		public void warning(SAXParseException ex) throws SAXException {}
 
 		@Override
 		public void error(SAXParseException ex) throws SAXException {

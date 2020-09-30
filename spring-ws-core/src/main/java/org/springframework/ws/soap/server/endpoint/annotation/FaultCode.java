@@ -32,8 +32,8 @@ public enum FaultCode {
 	/**
 	 * Constant used to indicate that a fault must be created with a custom fault code. When this value is used, the
 	 * {@code customFaultCode} string property must be used on {@link SoapFault}.
-	 *
-	 * <p>Note that custom Fault Codes are only supported on SOAP 1.1.
+	 * <p>
+	 * Note that custom Fault Codes are only supported on SOAP 1.1.
 	 *
 	 * @see SoapFault#customFaultCode()
 	 * @see Soap11Body#addFault(javax.xml.namespace.QName,String,java.util.Locale)
@@ -62,7 +62,7 @@ public enum FaultCode {
 	SENDER(new QName("SENDER")),
 
 	/**
-	 * Constant {@code QName} used to indicate that a {@code Server}  fault must be created.
+	 * Constant {@code QName} used to indicate that a {@code Server} fault must be created.
 	 *
 	 * @see SoapBody#addClientOrSenderFault(String,java.util.Locale)
 	 */
@@ -77,6 +77,5 @@ public enum FaultCode {
 	public QName value() {
 		return value;
 	}
-
 
 }

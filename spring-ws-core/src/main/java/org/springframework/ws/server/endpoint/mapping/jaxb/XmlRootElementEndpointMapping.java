@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
 import java.lang.reflect.Method;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.JAXBIntrospector;
@@ -32,8 +33,9 @@ import org.springframework.xml.transform.TransformerHelper;
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping EndpointMapping} interface that uses the
  * JAXB2 {@link XmlRootElement} annotation to map methods to request payload root elements.
- *
- * <p>Endpoints typically have the following form:
+ * <p>
+ * Endpoints typically have the following form:
+ * 
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
@@ -42,7 +44,9 @@ import org.springframework.xml.transform.TransformerHelper;
  *	  }
  * }
  * </pre>
+ * 
  * where MyRootElement is annotated with {@code @XmlRootElement}:
+ * 
  * <pre>
  * &#64;XmlRootElement(name = "myRoot", namespace = "http://springframework.org/spring-ws")
  * public class MyRootElement {
@@ -85,11 +89,9 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 			if (result != null) {
 				return result;
 			}
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			// ignore
-		}
-		catch (IllegalAccessException ex) {
+		} catch (IllegalAccessException ex) {
 			// ignore
 		}
 		return null;
@@ -100,8 +102,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 			JAXBContext context = JAXBContext.newInstance(parameterType);
 			JAXBIntrospector introspector = context.createJAXBIntrospector();
 			return introspector.getElementName(param);
-		}
-		catch (JAXBException ex) {
+		} catch (JAXBException ex) {
 			return null;
 		}
 	}

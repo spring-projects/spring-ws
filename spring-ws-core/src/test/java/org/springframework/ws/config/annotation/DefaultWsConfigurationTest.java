@@ -1,10 +1,9 @@
 package org.springframework.ws.config.annotation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -34,41 +33,39 @@ public class DefaultWsConfigurationTest {
 
 	@Test
 	public void payloadRootAnnotationMethodEndpointMapping() throws Exception {
-		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext.getBean(
-				PayloadRootAnnotationMethodEndpointMapping.class);
+		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
+				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
 		assertEquals(0, endpointMapping.getOrder());
 	}
 
 	@Test
 	public void soapActionAnnotationMethodEndpointMapping() throws Exception {
-		SoapActionAnnotationMethodEndpointMapping endpointMapping = this.applicationContext.getBean(
-				SoapActionAnnotationMethodEndpointMapping.class);
+		SoapActionAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
+				.getBean(SoapActionAnnotationMethodEndpointMapping.class);
 		assertEquals(1, endpointMapping.getOrder());
 	}
 
 	@Test
 	public void annotationActionEndpointMapping() throws Exception {
-		AnnotationActionEndpointMapping endpointMapping = this.applicationContext.getBean(
-				AnnotationActionEndpointMapping.class);
+		AnnotationActionEndpointMapping endpointMapping = this.applicationContext
+				.getBean(AnnotationActionEndpointMapping.class);
 		assertEquals(2, endpointMapping.getOrder());
 	}
 
 	@Test
 	public void defaultMethodEndpointAdapter() throws Exception {
 
-		DefaultMethodEndpointAdapter adapter =
-				this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
+		DefaultMethodEndpointAdapter adapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
 		assertFalse(adapter.getMethodArgumentResolvers().isEmpty());
 		assertFalse(adapter.getMethodReturnValueHandlers().isEmpty());
 	}
 
-
 	@EnableWs
 	@Configuration
 	public static class TestConfig {
 
-		@Bean(name="testEndpoint")
+		@Bean(name = "testEndpoint")
 		public TestEndpoint testEndpoint() {
 			return new TestEndpoint();
 		}
@@ -78,8 +75,7 @@ public class DefaultWsConfigurationTest {
 	private static class TestEndpoint {
 
 		@SoapAction("handle")
-		public void handle() {
-		}
+		public void handle() {}
 
 	}
 

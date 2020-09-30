@@ -20,7 +20,6 @@ import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
@@ -40,8 +39,8 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 	private boolean acceptGzipEncoding = true;
 
 	/**
-	 * Return whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header
-	 * with {@code gzip} as value.
+	 * Return whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header with
+	 * {@code gzip} as value.
 	 */
 	public boolean isAcceptGzipEncoding() {
 		return acceptGzipEncoding;
@@ -50,9 +49,9 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 	/**
 	 * Set whether to accept GZIP encoding, that is, whether to send the HTTP {@code Accept-Encoding} header with
 	 * {@code gzip} as value.
-	 *
-	 * <p>Default is {@code true}. Turn this flag off if you do not want GZIP response compression even if enabled on
-	 * the HTTP server.
+	 * <p>
+	 * Default is {@code true}. Turn this flag off if you do not want GZIP response compression even if enabled on the
+	 * HTTP server.
 	 */
 	public void setAcceptGzipEncoding(boolean acceptGzipEncoding) {
 		this.acceptGzipEncoding = acceptGzipEncoding;
@@ -60,7 +59,7 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 
 	@Override
 	public boolean supports(URI uri) {
-		return uri.getScheme().equals(HttpTransportConstants.HTTP_URI_SCHEME) ||
-				uri.getScheme().equals(HttpTransportConstants.HTTPS_URI_SCHEME);
+		return uri.getScheme().equals(HttpTransportConstants.HTTP_URI_SCHEME)
+				|| uri.getScheme().equals(HttpTransportConstants.HTTPS_URI_SCHEME);
 	}
 }

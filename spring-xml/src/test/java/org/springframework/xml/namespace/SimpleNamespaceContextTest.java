@@ -18,6 +18,7 @@ package org.springframework.xml.namespace;
 
 import java.util.Collections;
 import java.util.Iterator;
+
 import javax.xml.XMLConstants;
 
 import org.junit.Assert;
@@ -36,31 +37,32 @@ public class SimpleNamespaceContextTest {
 
 	@Test
 	public void testGetNamespaceURI() {
-		Assert.assertEquals("Invalid namespaceURI for default namespace", "", context
-				.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+		Assert.assertEquals("Invalid namespaceURI for default namespace", "",
+				context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
 		String defaultNamespaceUri = "defaultNamespace";
 		context.bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceUri);
-		Assert.assertEquals("Invalid namespaceURI for default namespace", defaultNamespaceUri, context
-				.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+		Assert.assertEquals("Invalid namespaceURI for default namespace", defaultNamespaceUri,
+				context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
 		Assert.assertEquals("Invalid namespaceURI for bound prefix", "namespaceURI", context.getNamespaceURI("prefix"));
 		Assert.assertEquals("Invalid namespaceURI for unbound prefix", "", context.getNamespaceURI("unbound"));
-		Assert.assertEquals("Invalid namespaceURI for namespace prefix", XMLConstants.XML_NS_URI, context
-				.getNamespaceURI(XMLConstants.XML_NS_PREFIX));
-		Assert.assertEquals("Invalid namespaceURI for attribute prefix", XMLConstants.XMLNS_ATTRIBUTE_NS_URI, context
-				.getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE));
+		Assert.assertEquals("Invalid namespaceURI for namespace prefix", XMLConstants.XML_NS_URI,
+				context.getNamespaceURI(XMLConstants.XML_NS_PREFIX));
+		Assert.assertEquals("Invalid namespaceURI for attribute prefix", XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
+				context.getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE));
 
 	}
 
 	@Test
 	public void testGetPrefix() {
 		context.bindDefaultNamespaceUri("defaultNamespaceURI");
-		Assert.assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX, context.getPrefix("defaultNamespaceURI"));
+		Assert.assertEquals("Invalid prefix for default namespace", XMLConstants.DEFAULT_NS_PREFIX,
+				context.getPrefix("defaultNamespaceURI"));
 		Assert.assertEquals("Invalid prefix for bound namespace", "prefix", context.getPrefix("namespaceURI"));
 		Assert.assertNull("Invalid prefix for unbound namespace", context.getPrefix("unbound"));
-		Assert.assertEquals("Invalid prefix for namespace", XMLConstants.XML_NS_PREFIX, context
-				.getPrefix(XMLConstants.XML_NS_URI));
-		Assert.assertEquals("Invalid prefix for attribute namespace", XMLConstants.XMLNS_ATTRIBUTE, context
-				.getPrefix(XMLConstants.XMLNS_ATTRIBUTE_NS_URI));
+		Assert.assertEquals("Invalid prefix for namespace", XMLConstants.XML_NS_PREFIX,
+				context.getPrefix(XMLConstants.XML_NS_URI));
+		Assert.assertEquals("Invalid prefix for attribute namespace", XMLConstants.XMLNS_ATTRIBUTE,
+				context.getPrefix(XMLConstants.XMLNS_ATTRIBUTE_NS_URI));
 	}
 
 	@Test
@@ -130,8 +132,8 @@ public class SimpleNamespaceContextTest {
 		String prefix1 = "prefix1";
 		String prefix2 = "prefix2";
 		String namespaceUri = "namespaceUri";
-		context.bindNamespaceUri(prefix1,  namespaceUri);
-		context.bindNamespaceUri(prefix2,  namespaceUri);
+		context.bindNamespaceUri(prefix1, namespaceUri);
+		context.bindNamespaceUri(prefix2, namespaceUri);
 		Iterator<String> iter = context.getPrefixes(namespaceUri);
 		Assert.assertTrue("iterator is empty", iter.hasNext());
 		Assert.assertEquals(prefix1, iter.next());

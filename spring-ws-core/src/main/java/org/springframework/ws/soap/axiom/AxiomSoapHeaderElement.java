@@ -22,7 +22,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-
 import org.springframework.ws.soap.SoapHeaderElement;
 
 /** Axiom-specific version of {@code org.springframework.ws.soap.SoapHeaderHeaderElement}. */
@@ -56,8 +55,7 @@ class AxiomSoapHeaderElement extends AxiomSoapElement implements SoapHeaderEleme
 	public Result getResult() {
 		try {
 			return getAxiomHeaderBlock().getSAXResult();
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 

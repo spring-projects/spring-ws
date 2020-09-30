@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Properties;
+
 import javax.wsdl.Binding;
 import javax.wsdl.BindingFault;
 import javax.wsdl.BindingInput;
@@ -113,23 +114,20 @@ public class Soap11ProviderTest {
 		BindingInput bindingInput = bindingOperation.getBindingInput();
 		Assert.assertNotNull("No binding input", bindingInput);
 		Assert.assertEquals("Invalid name", "Input", bindingInput.getName());
-		Assert.assertEquals("Invalid amount of extensibility elements", 1,
-				bindingInput.getExtensibilityElements().size());
+		Assert.assertEquals("Invalid amount of extensibility elements", 1, bindingInput.getExtensibilityElements().size());
 		SOAPBody soapBody = (SOAPBody) bindingInput.getExtensibilityElements().get(0);
 		Assert.assertEquals("Invalid soap body use", "literal", soapBody.getUse());
 
 		BindingOutput bindingOutput = bindingOperation.getBindingOutput();
 		Assert.assertNotNull("No binding output", bindingOutput);
 		Assert.assertEquals("Invalid name", "Output", bindingOutput.getName());
-		Assert.assertEquals("Invalid amount of extensibility elements", 1,
-				bindingOutput.getExtensibilityElements().size());
+		Assert.assertEquals("Invalid amount of extensibility elements", 1, bindingOutput.getExtensibilityElements().size());
 		soapBody = (SOAPBody) bindingOutput.getExtensibilityElements().get(0);
 		Assert.assertEquals("Invalid soap body use", "literal", soapBody.getUse());
 
 		BindingFault bindingFault = bindingOperation.getBindingFault("Fault");
 		Assert.assertNotNull("No binding fault", bindingFault);
-		Assert.assertEquals("Invalid amount of extensibility elements", 1,
-				bindingFault.getExtensibilityElements().size());
+		Assert.assertEquals("Invalid amount of extensibility elements", 1, bindingFault.getExtensibilityElements().size());
 		SOAPFault soapFault = (SOAPFault) bindingFault.getExtensibilityElements().get(0);
 		Assert.assertEquals("Invalid soap fault use", "literal", soapFault.getUse());
 
@@ -145,6 +143,5 @@ public class Soap11ProviderTest {
 		SOAPAddress soapAddress = (SOAPAddress) port.getExtensibilityElements().get(0);
 		Assert.assertEquals("Invalid soap address", locationUri, soapAddress.getLocationURI());
 	}
-
 
 }

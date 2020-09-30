@@ -24,12 +24,11 @@ import javax.xml.transform.stream.StreamSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.transform.ResourceSource;
+import org.w3c.dom.Document;
 
 public class LastModifiedHelperTest {
 

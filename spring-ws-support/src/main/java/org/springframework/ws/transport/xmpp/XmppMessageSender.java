@@ -21,7 +21,6 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.jivesoftware.smack.XMPPConnection;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -31,8 +30,8 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 /**
  * {@link WebServiceMessageSender} implementation that uses XMPP {@link org.jivesoftware.smack.packet.Message}s.
  * Requires a {@link #setConnection(org.jivesoftware.smack.XMPPConnection) connection}to be set.
- *
- * <p>This message sender supports URI's of the following format: <blockquote> <tt><b>xmpp:</b></tt><i>to</i> </blockquote>
+ * <p>
+ * This message sender supports URI's of the following format: <blockquote> <tt><b>xmpp:</b></tt><i>to</i> </blockquote>
  * The <i>to</i> represents a Jabber ID.
  *
  * @author Gildas Cuisinier

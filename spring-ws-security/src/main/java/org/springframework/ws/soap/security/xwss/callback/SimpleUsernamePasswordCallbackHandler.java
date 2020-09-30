@@ -17,20 +17,21 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.xml.wss.impl.callback.PasswordCallback;
-import com.sun.xml.wss.impl.callback.UsernameCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
+import com.sun.xml.wss.impl.callback.PasswordCallback;
+import com.sun.xml.wss.impl.callback.UsernameCallback;
+
 /**
  * Simple callback handler that supplies a username and password to a username token at runtime.
- *
- * <p>This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
+ * <p>
+ * This class handles {@code UsernameCallback}s and {@code PasswordCallback}s, and throws an
  * {@code UnsupportedCallbackException} for others
  *
  * @author Arjen Poutsma
@@ -44,12 +45,10 @@ public class SimpleUsernamePasswordCallbackHandler extends AbstractCallbackHandl
 
 	private String password;
 
-
 	/**
 	 * Constructs an empty instance of the {@code SimpleUsernamePasswordCallbackHandler}.
 	 */
-	public SimpleUsernamePasswordCallbackHandler() {
-	}
+	public SimpleUsernamePasswordCallbackHandler() {}
 
 	/**
 	 * Constructs an instance of the {@code SimpleUsernamePasswordCallbackHandler} with the given name and password.
@@ -78,12 +77,10 @@ public class SimpleUsernamePasswordCallbackHandler extends AbstractCallbackHandl
 		if (callback instanceof UsernameCallback) {
 			UsernameCallback usernameCallback = (UsernameCallback) callback;
 			usernameCallback.setUsername(username);
-		}
-		else if (callback instanceof PasswordCallback) {
+		} else if (callback instanceof PasswordCallback) {
 			PasswordCallback passwordCallback = (PasswordCallback) callback;
 			passwordCallback.setPassword(password);
-		}
-		else {
+		} else {
 			throw new UnsupportedCallbackException(callback);
 		}
 	}

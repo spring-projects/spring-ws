@@ -16,18 +16,17 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import javax.xml.transform.Source;
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.xml.transform.StringResult;
+import javax.xml.transform.Source;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.springframework.core.MethodParameter;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.xml.transform.StringResult;
 
 public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMethodArgumentResolverTestCase {
 
@@ -56,8 +55,7 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 			assertTrue("processor does not support " + supportedParameter.getParameterType() + " parameter",
 					processor.supportsParameter(supportedParameter));
 		}
-		MethodParameter unsupportedParameter =
-				new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
+		MethodParameter unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
 		assertFalse("processor supports invalid parameter", processor.supportsParameter(unsupportedParameter));
 	}
 
@@ -67,8 +65,7 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 			assertTrue("processor does not support " + supportedReturnType.getParameterType() + " return type",
 					processor.supportsReturnType(supportedReturnType));
 		}
-		MethodParameter unsupportedReturnType =
-				new MethodParameter(getClass().getMethod("unsupported", String.class), -1);
+		MethodParameter unsupportedReturnType = new MethodParameter(getClass().getMethod("unsupported", String.class), -1);
 		assertFalse("processor supports invalid return type", processor.supportsReturnType(unsupportedReturnType));
 	}
 
@@ -102,9 +99,7 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 		}
 	}
 
-
-	protected void testArgument(Object argument, MethodParameter parameter) {
-	}
+	protected void testArgument(Object argument, MethodParameter parameter) {}
 
 	@Test
 	public void saajReturnValue() throws Exception {
@@ -125,7 +120,6 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 	public void axiomNonCachingReturnValue() throws Exception {
 		testHandleReturnValue(createNonCachingAxiomMessageContext());
 	}
-
 
 	private void testHandleReturnValue(MessageContext messageContext) throws Exception {
 		for (MethodParameter supportedReturnType : supportedReturnTypes) {

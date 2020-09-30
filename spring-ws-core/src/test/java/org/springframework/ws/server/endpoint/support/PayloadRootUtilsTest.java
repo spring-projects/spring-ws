@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.support;
 
 import java.io.StringReader;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,14 +31,13 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.XMLInputFactoryUtils;
-import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 public class PayloadRootUtilsTest {
 

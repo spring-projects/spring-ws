@@ -17,11 +17,12 @@
 package org.springframework.ws.soap.security.callback;
 
 import java.io.Serializable;
+
 import javax.security.auth.callback.Callback;
 
 /**
- * Underlying security services instantiate and pass a {@code CleanupCallback} to the {@code handle} method of
- * a {@code CallbackHandler} to clean up security state.
+ * Underlying security services instantiate and pass a {@code CleanupCallback} to the {@code handle} method of a
+ * {@code CallbackHandler} to clean up security state.
  *
  * @author Arjen Poutsma
  * @since 1.0.4

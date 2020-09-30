@@ -16,20 +16,21 @@
 
 package org.springframework.ws.soap.security.xwss;
 
+import static org.junit.Assert.*;
+
 import java.security.cert.X509Certificate;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 import com.sun.xml.wss.impl.callback.SignatureKeyCallback;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class XwssMessageInterceptorSignTest extends AbstractXwssMessageInterceptorKeyStoreTestCase {
 
@@ -43,16 +44,14 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
 				if (callback instanceof SignatureKeyCallback) {
 					SignatureKeyCallback keyCallback = (SignatureKeyCallback) callback;
 					if (keyCallback.getRequest() instanceof SignatureKeyCallback.DefaultPrivKeyCertRequest) {
-						SignatureKeyCallback.DefaultPrivKeyCertRequest request =
-								(SignatureKeyCallback.DefaultPrivKeyCertRequest) keyCallback.getRequest();
+						SignatureKeyCallback.DefaultPrivKeyCertRequest request = (SignatureKeyCallback.DefaultPrivKeyCertRequest) keyCallback
+								.getRequest();
 						request.setX509Certificate(certificate);
 						request.setPrivateKey(privateKey);
-					}
-					else {
+					} else {
 						fail("Unexpected request");
 					}
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}
@@ -79,17 +78,15 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
 				if (callback instanceof SignatureKeyCallback) {
 					SignatureKeyCallback keyCallback = (SignatureKeyCallback) callback;
 					if (keyCallback.getRequest() instanceof SignatureKeyCallback.AliasPrivKeyCertRequest) {
-						SignatureKeyCallback.AliasPrivKeyCertRequest request =
-								(SignatureKeyCallback.AliasPrivKeyCertRequest) keyCallback.getRequest();
+						SignatureKeyCallback.AliasPrivKeyCertRequest request = (SignatureKeyCallback.AliasPrivKeyCertRequest) keyCallback
+								.getRequest();
 						assertEquals("Invalid alias", "alias", request.getAlias());
 						request.setX509Certificate(certificate);
 						request.setPrivateKey(privateKey);
-					}
-					else {
+					} else {
 						fail("Unexpected request");
 					}
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}
@@ -121,8 +118,7 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
 							return true;
 						}
 					});
-				}
-				else {
+				} else {
 					fail("Unexpected callback");
 				}
 			}

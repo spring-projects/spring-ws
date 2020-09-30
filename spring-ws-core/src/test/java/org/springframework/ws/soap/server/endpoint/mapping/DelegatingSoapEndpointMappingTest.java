@@ -16,18 +16,17 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import static org.easymock.EasyMock.*;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class DelegatingSoapEndpointMappingTest {
 

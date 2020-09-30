@@ -24,6 +24,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -43,12 +44,6 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -57,6 +52,11 @@ import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMeth
 import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.xml.transform.TraxUtils;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
 
 /**
  * Abstract base class for {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
@@ -74,22 +74,22 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	private final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class<?>, JAXBContext>();
 
 	@Override
-	public final void handleReturnValue(MessageContext messageContext,
-			MethodParameter returnType, Object returnValue) throws Exception {
+	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+			throws Exception {
 		if (returnValue != null) {
 			handleReturnValueInternal(messageContext, returnType, returnValue);
 		}
 	}
 
-	protected abstract void handleReturnValueInternal(MessageContext messageContext,
-			MethodParameter returnType, Object returnValue) throws Exception;
+	protected abstract void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType,
+			Object returnValue) throws Exception;
 
 	/**
 	 * Marshals the given {@code jaxbElement} to the response payload of the given message context.
 	 *
 	 * @param messageContext the message context to marshal to
-	 * @param clazz			 the clazz to create a marshaller for
-	 * @param jaxbElement	 the object to be marshalled
+	 * @param clazz the clazz to create a marshaller for
+	 * @param jaxbElement the object to be marshalled
 	 * @throws JAXBException in case of JAXB2 errors
 	 */
 	protected final void marshalToResponsePayload(MessageContext messageContext, Class<?> clazz, Object jaxbElement)
@@ -106,14 +106,12 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 			StreamingPayload payload = new JaxbStreamingPayload(clazz, jaxbElement);
 			streamingResponse.setStreamingPayload(payload);
-		}
-		else {
+		} else {
 			Result responsePayload = response.getPayloadResult();
 			try {
 				Jaxb2ResultCallback callback = new Jaxb2ResultCallback(clazz, jaxbElement);
 				TraxUtils.doWithResult(responsePayload, callback);
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw convertToJaxbException(ex);
 			}
 		}
@@ -123,7 +121,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	 * Unmarshals the request payload of the given message context.
 	 *
 	 * @param messageContext the message context to unmarshal from
-	 * @param clazz			 the class to unmarshal
+	 * @param clazz the class to unmarshal
 	 * @return the unmarshalled object, or {@code null} if the request has no payload
 	 * @throws JAXBException in case of JAXB2 errors
 	 */
@@ -140,8 +138,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw convertToJaxbException(ex);
 		}
 	}
@@ -150,7 +147,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	 * Unmarshals the request payload of the given message context as {@link JAXBElement}.
 	 *
 	 * @param messageContext the message context to unmarshal from
-	 * @param clazz			 the class to unmarshal
+	 * @param clazz the class to unmarshal
 	 * @return the unmarshalled element, or {@code null} if the request has no payload
 	 * @throws JAXBException in case of JAXB2 errors
 	 */
@@ -167,8 +164,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw convertToJaxbException(ex);
 		}
 	}
@@ -181,8 +177,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	private JAXBException convertToJaxbException(Exception ex) {
 		if (ex instanceof JAXBException) {
 			return (JAXBException) ex;
-		}
-		else {
+		} else {
 			return new JAXBException(ex);
 		}
 	}
@@ -220,7 +215,6 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	private Unmarshaller createUnmarshaller(Class<?> clazz) throws JAXBException {
 		return createUnmarshaller(getJaxbContext(clazz));
 	}
-
 
 	private JAXBContext getJaxbContext(Class<?> clazz) throws JAXBException {
 		Assert.notNull(clazz, "'clazz' must not be null");
@@ -419,12 +413,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
 			try {
 				marshaller.marshal(jaxbElement, streamWriter);
-			}
-			catch (JAXBException ex) {
+			} catch (JAXBException ex) {
 				throw new XMLStreamException("Could not marshal [" + jaxbElement + "]: " + ex.getMessage(), ex);
 			}
 		}
 	}
-
 
 }

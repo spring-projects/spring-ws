@@ -16,12 +16,15 @@
 
 package org.springframework.ws;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLEventReader;
@@ -43,23 +46,20 @@ import javax.xml.transform.stream.StreamSource;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.XMLInputFactoryUtils;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public abstract class AbstractWebServiceMessageTestCase {
 

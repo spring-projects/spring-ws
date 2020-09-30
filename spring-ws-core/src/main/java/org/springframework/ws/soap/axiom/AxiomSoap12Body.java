@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.soap.SOAP12Constants;
@@ -28,7 +29,6 @@ import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.soap12.Soap12Body;
@@ -96,8 +96,7 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
 			}
 			text.setText(faultStringOrReason);
 			return fault;
-		}
-		catch (SOAPProcessingException ex) {
+		} catch (SOAPProcessingException ex) {
 			throw new AxiomSoapFaultException(ex);
 		}
 	}

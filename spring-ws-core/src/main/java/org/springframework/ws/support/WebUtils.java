@@ -16,9 +16,8 @@
 package org.springframework.ws.support;
 
 /**
- * Miscellaneous utilities for web applications. Used by various framework classes.
- *
- * NOTE: These are the parts of org.springframework.web.util.WebUtils deprecated in Spring Framework 5.
+ * Miscellaneous utilities for web applications. Used by various framework classes. NOTE: These are the parts of
+ * org.springframework.web.util.WebUtils deprecated in Spring Framework 5.
  *
  * @author Greg Turnquist
  * @author Rod Johnson
@@ -29,8 +28,9 @@ package org.springframework.ws.support;
 public abstract class WebUtils {
 
 	/**
-	 * Extract the URL filename from the given request URL path.
-	 * Correctly resolves nested paths such as "/products/view.html" as well.
+	 * Extract the URL filename from the given request URL path. Correctly resolves nested paths such as
+	 * "/products/view.html" as well.
+	 * 
 	 * @param urlPath the request URL path (e.g. "/index.html")
 	 * @return the extracted URI filename (e.g. "index")
 	 */
@@ -44,9 +44,9 @@ public abstract class WebUtils {
 	}
 
 	/**
-	 * Extract the full URL filename (including file extension) from the given
-	 * request URL path. Correctly resolve nested paths such as
-	 * "/products/view.html" and remove any path and or query parameters.
+	 * Extract the full URL filename (including file extension) from the given request URL path. Correctly resolve nested
+	 * paths such as "/products/view.html" and remove any path and or query parameters.
+	 * 
 	 * @param urlPath the request URL path (e.g. "/products/index.html")
 	 * @return the extracted URI filename (e.g. "index.html")
 	 */
@@ -63,6 +63,5 @@ public abstract class WebUtils {
 		end = (paramIndex != -1 && paramIndex < end ? paramIndex : end);
 		return urlPath.substring(begin, end);
 	}
-
 
 }

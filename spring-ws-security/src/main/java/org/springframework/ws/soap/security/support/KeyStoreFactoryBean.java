@@ -23,7 +23,6 @@ import java.security.KeyStore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
@@ -31,9 +30,9 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for a {@link KeyStore}.
- *
- * <p>To load an existing key store, you must set the {@code location} property. If this property is not set, a new,
- * empty key store is created, which is most likely not what you want.
+ * <p>
+ * To load an existing key store, you must set the {@code location} property. If this property is not set, a new, empty
+ * key store is created, which is most likely not what you want.
  *
  * @author Arjen Poutsma
  * @see #setLocation(org.springframework.core.io.Resource)
@@ -106,11 +105,9 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 	public final void afterPropertiesSet() throws GeneralSecurityException, IOException {
 		if (StringUtils.hasLength(provider) && StringUtils.hasLength(type)) {
 			keyStore = KeyStore.getInstance(type, provider);
-		}
-		else if (StringUtils.hasLength(type)) {
+		} else if (StringUtils.hasLength(type)) {
 			keyStore = KeyStore.getInstance(type);
-		}
-		else {
+		} else {
 			keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 		}
 		InputStream is = null;
@@ -120,13 +117,11 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 				if (logger.isInfoEnabled()) {
 					logger.info("Loading key store from " + location);
 				}
-			}
-			else if (logger.isWarnEnabled()) {
+			} else if (logger.isWarnEnabled()) {
 				logger.warn("Creating empty key store");
 			}
 			keyStore.load(is, password);
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}

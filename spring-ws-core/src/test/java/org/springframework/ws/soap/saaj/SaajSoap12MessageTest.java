@@ -16,6 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
@@ -26,10 +30,6 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap12.AbstractSoap12MessageTestCase;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
 

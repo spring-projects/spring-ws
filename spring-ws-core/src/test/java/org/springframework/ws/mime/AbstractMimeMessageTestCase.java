@@ -16,12 +16,12 @@
 
 package org.springframework.ws.mime;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.util.Iterator;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;

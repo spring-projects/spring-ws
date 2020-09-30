@@ -16,8 +16,12 @@
 
 package org.springframework.ws.soap.addressing;
 
+import static org.custommonkey.xmlunit.XMLUnit.*;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
@@ -25,12 +29,8 @@ import javax.xml.soap.SOAPException;
 
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
-
-import static org.custommonkey.xmlunit.XMLUnit.compareXML;
-import static org.junit.Assert.*;
+import org.w3c.dom.Document;
 
 public abstract class AbstractWsAddressingTestCase {
 
@@ -42,7 +42,6 @@ public abstract class AbstractWsAddressingTestCase {
 		XMLUnit.setIgnoreWhitespace(true);
 	}
 
-
 	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
 		MimeHeaders mimeHeaders = new MimeHeaders();
 		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
@@ -50,8 +49,7 @@ public abstract class AbstractWsAddressingTestCase {
 		assertNotNull("Could not load " + fileName, is);
 		try {
 			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}

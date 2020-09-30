@@ -20,11 +20,10 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.ws.context.MessageContext;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.ws.context.MessageContext;
 
 /**
  * Test case for AbstractMapBasedEndpointMapping.
@@ -38,7 +37,7 @@ public class MapBasedSoapEndpointMappingTest {
 		context.registerSingleton("endpoint", Object.class);
 		context.registerAlias("endpoint", "alias");
 		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
-		mapping.setValidKeys(new String[]{"endpoint", "alias"});
+		mapping.setValidKeys(new String[] { "endpoint", "alias" });
 
 		mapping.setRegisterBeanNames(true);
 		mapping.setApplicationContext(context);
@@ -80,7 +79,7 @@ public class MapBasedSoapEndpointMappingTest {
 		endpointMap.put("endpoint2", endpoint2);
 
 		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
-		mapping.setValidKeys(new String[]{"endpoint1", "endpoint2"});
+		mapping.setValidKeys(new String[] { "endpoint1", "endpoint2" });
 
 		mapping.setEndpointMap(endpointMap);
 		mapping.setApplicationContext(new StaticApplicationContext());

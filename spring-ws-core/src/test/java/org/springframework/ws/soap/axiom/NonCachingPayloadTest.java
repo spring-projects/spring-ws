@@ -16,18 +16,18 @@
 
 package org.springframework.ws.soap.axiom;
 
-import java.io.StringWriter;
-import javax.xml.stream.XMLStreamWriter;
+import static org.custommonkey.xmlunit.XMLAssert.*;
 
-import org.springframework.util.xml.StaxUtils;
+import java.io.StringWriter;
+
+import javax.xml.stream.XMLStreamWriter;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
+import org.springframework.util.xml.StaxUtils;
 
 @SuppressWarnings("Since15")
 public class NonCachingPayloadTest {
@@ -60,9 +60,8 @@ public class NonCachingPayloadTest {
 		StringWriter writer = new StringWriter();
 		body.serialize(writer);
 
-		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
-				;
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
+				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>";
 		assertXMLEqual(expected, writer.toString());
 	}
 
@@ -82,9 +81,8 @@ public class NonCachingPayloadTest {
 		StringWriter writer = new StringWriter();
 		body.serialize(writer);
 
-		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>"
-				;
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
+				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>" + "</root></soapenv:Body>";
 		assertXMLEqual(expected, writer.toString());
 	}
 
@@ -103,8 +101,8 @@ public class NonCachingPayloadTest {
 		StringWriter writer = new StringWriter();
 		body.serialize(writer);
 
-		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";
+		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
+				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";
 		assertXMLEqual(expected, writer.toString());
 	}
 }

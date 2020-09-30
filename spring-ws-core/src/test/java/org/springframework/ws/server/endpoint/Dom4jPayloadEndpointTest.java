@@ -16,10 +16,10 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.junit.Assert.*;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
-
-import static org.junit.Assert.*;
 
 public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
@@ -60,6 +60,5 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 			}
 		};
 	}
-
 
 }

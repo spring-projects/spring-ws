@@ -16,20 +16,19 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import javax.xml.transform.Source;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTestCase {
 
@@ -45,8 +44,8 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
 		endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
 
-		MessageContext context =
-				new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
+		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
+				new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
 		assertFalse("Response message created", context.hasResponse());
 	}
@@ -63,8 +62,8 @@ public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTe
 
 	@Override
 	protected final void testSource(Source requestSource) throws Exception {
-		MessageContext context =
-				new DefaultMessageContext(new MockWebServiceMessage(requestSource), new MockWebServiceMessageFactory());
+		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
+				new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
 		assertTrue("No response message created", context.hasResponse());
 		assertXMLEqual(RESPONSE, ((MockWebServiceMessage) context.getResponse()).getPayloadAsString());

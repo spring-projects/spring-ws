@@ -20,15 +20,16 @@ import java.security.cert.X509Certificate;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 /**
  * "Cache" that doesn't do any caching.
- * <p>Migrated from Spring Security 2 since it has been removed in Spring Security 3.</p>
+ * <p>
+ * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
+ * </p>
  *
  * @author Luke Taylor
  */
 public class NullX509UserCache implements X509UserCache {
-	//~ Methods ========================================================================================================
+	// ~ Methods ========================================================================================================
 
 	@Override
 	public UserDetails getUserFromCache(X509Certificate certificate) {

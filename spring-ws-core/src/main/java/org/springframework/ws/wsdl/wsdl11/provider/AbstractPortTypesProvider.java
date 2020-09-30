@@ -18,6 +18,7 @@ package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Iterator;
 import java.util.List;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
 import javax.wsdl.Input;
@@ -31,7 +32,6 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -78,8 +78,8 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
 	/**
 	 * Called after the {@link PortType} has been created.
-	 *
-	 * <p>Default implementation sets the name of the port type to the defined value.
+	 * <p>
+	 * Default implementation sets the name of the port type to the defined value.
 	 *
 	 * @param portType the WSDL4J {@code PortType}
 	 * @throws WSDLException in case of errors
@@ -99,7 +99,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			Message message = (Message) iterator.next();
 			String operationName = getOperationName(message);
 			if (StringUtils.hasText(operationName)) {
-				operations.add(operationName,message);
+				operations.add(operationName, message);
 			}
 		}
 		if (operations.isEmpty() && logger.isWarnEnabled()) {
@@ -115,14 +115,12 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 					input.setMessage(message);
 					populateInput(definition, input);
 					operation.setInput(input);
-				}
-				else if (isOutputMessage(message)) {
+				} else if (isOutputMessage(message)) {
 					Output output = definition.createOutput();
 					output.setMessage(message);
 					populateOutput(definition, output);
 					operation.setOutput(output);
-				}
-				else if (isFaultMessage(message)) {
+				} else if (isFaultMessage(message)) {
 					Fault fault = definition.createFault();
 					fault.setMessage(message);
 					populateFault(definition, fault);
@@ -132,16 +130,15 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			operation.setStyle(getOperationType(operation));
 			operation.setUndefined(false);
 			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
+				logger.debug("Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
 			}
 			portType.addOperation(operation);
 		}
 	}
 
 	/**
-	 * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can
-	 * return {@code null} to indicate that a message should not be coupled to an operation.
+	 * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can return
+	 * {@code null} to indicate that a message should not be coupled to an operation.
 	 *
 	 * @param message the WSDL4J {@code Message}
 	 * @return the operation name; or {@code null}
@@ -159,11 +156,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	/**
 	 * Called after the {@link javax.wsdl.Input} has been created, but it's added to the operation. Subclasses can
 	 * override this method to define the input name.
-	 *
-	 * <p>Default implementation sets the input name to the message name.
+	 * <p>
+	 * Default implementation sets the input name to the message name.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param input		 the WSDL4J {@code Input}
+	 * @param input the WSDL4J {@code Input}
 	 */
 	protected void populateInput(Definition definition, Input input) {
 		input.setName(input.getMessage().getQName().getLocalPart());
@@ -180,11 +177,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	/**
 	 * Called after the {@link javax.wsdl.Output} has been created, but it's added to the operation. Subclasses can
 	 * override this method to define the output name.
-	 *
-	 * <p>Default implementation sets the output name to the message name.
+	 * <p>
+	 * Default implementation sets the output name to the message name.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param output	 the WSDL4J {@code Output}
+	 * @param output the WSDL4J {@code Output}
 	 */
 	protected void populateOutput(Definition definition, Output output) {
 		output.setName(output.getMessage().getQName().getLocalPart());
@@ -201,11 +198,11 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	/**
 	 * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the operation. Subclasses can
 	 * override this method to define the fault name.
-	 *
-	 * <p>Default implementation sets the fault name to the message name.
+	 * <p>
+	 * Default implementation sets the fault name to the message name.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param fault		 the WSDL4J {@code Fault}
+	 * @param fault the WSDL4J {@code Fault}
 	 */
 	protected void populateFault(Definition definition, Fault fault) {
 		fault.setName(fault.getMessage().getQName().getLocalPart());
@@ -213,9 +210,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
 	/**
 	 * Returns the {@link OperationType} for the given operation.
-	 *
-	 * <p>Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set; {@link
-	 * OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
+	 * <p>
+	 * Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set;
+	 * {@link OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
 	 *
 	 * @param operation the WSDL4J {@code Operation}
 	 * @return the operation type for the operation
@@ -223,20 +220,13 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	protected OperationType getOperationType(Operation operation) {
 		if (operation.getInput() != null && operation.getOutput() != null) {
 			return OperationType.REQUEST_RESPONSE;
-		}
-		else if (operation.getInput() != null && operation.getOutput() == null) {
+		} else if (operation.getInput() != null && operation.getOutput() == null) {
 			return OperationType.ONE_WAY;
-		}
-		else if (operation.getInput() == null && operation.getOutput() != null) {
+		} else if (operation.getInput() == null && operation.getOutput() != null) {
 			return OperationType.NOTIFICATION;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
 
-
 }
-
-
-

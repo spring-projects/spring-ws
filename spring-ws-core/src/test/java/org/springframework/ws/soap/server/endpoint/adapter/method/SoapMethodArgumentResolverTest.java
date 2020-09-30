@@ -16,6 +16,10 @@
 
 package org.springframework.ws.soap.server.endpoint.adapter.method;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
@@ -23,12 +27,6 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /** @author Arjen Poutsma */
 public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
@@ -75,7 +73,7 @@ public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolv
 
 		Object result = resolver.resolveArgument(messageContext, soapEnvelopeParameter);
 
-		assertEquals(((SoapMessage)messageContext.getRequest()).getEnvelope(), result);
+		assertEquals(((SoapMessage) messageContext.getRequest()).getEnvelope(), result);
 	}
 
 	@Test
@@ -84,7 +82,7 @@ public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolv
 
 		Object result = resolver.resolveArgument(messageContext, soapBodyParameter);
 
-		assertEquals(((SoapMessage)messageContext.getRequest()).getSoapBody(), result);
+		assertEquals(((SoapMessage) messageContext.getRequest()).getSoapBody(), result);
 	}
 
 	@Test
@@ -93,19 +91,16 @@ public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolv
 
 		Object result = resolver.resolveArgument(messageContext, soapHeaderParameter);
 
-		assertEquals(((SoapMessage)messageContext.getRequest()).getSoapHeader(), result);
+		assertEquals(((SoapMessage) messageContext.getRequest()).getSoapHeader(), result);
 	}
 
 	public void soapMessage(SoapMessage soapMessage) {
 
 	}
 
-	public void soapEnvelope(SoapEnvelope soapEnvelope) {
-	}
+	public void soapEnvelope(SoapEnvelope soapEnvelope) {}
 
-	public void soapBody(SoapBody soapBody) {
-	}
+	public void soapBody(SoapBody soapBody) {}
 
-	public void soapHeader(SoapHeader soapHeader) {
-	}
+	public void soapHeader(SoapHeader soapHeader) {}
 }

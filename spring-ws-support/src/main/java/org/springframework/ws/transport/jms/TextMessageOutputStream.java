@@ -19,6 +19,7 @@ package org.springframework.ws.transport.jms;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
 
@@ -51,8 +52,7 @@ class TextMessageOutputStream extends FilterOutputStream {
 			ByteArrayOutputStream baos = (ByteArrayOutputStream) out;
 			String text = new String(baos.toByteArray(), encoding);
 			message.setText(text);
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}

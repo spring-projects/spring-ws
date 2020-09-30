@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -68,8 +69,7 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 				if (eventReader != null) {
 					try {
 						streamReader = StaxUtils.createEventStreamReader(eventReader);
-					}
-					catch (XMLStreamException ex) {
+					} catch (XMLStreamException ex) {
 						streamReader = null;
 					}
 				}
@@ -79,11 +79,9 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 		if (streamReader == null) {
 			try {
 				streamReader = getInputFactory().createXMLStreamReader(source);
-			}
-			catch (XMLStreamException ex) {
+			} catch (XMLStreamException ex) {
 				streamReader = null;
-			}
-			catch (UnsupportedOperationException ex) {
+			} catch (UnsupportedOperationException ex) {
 				streamReader = null;
 			}
 		}
@@ -105,8 +103,7 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 		if (streamWriter == null) {
 			try {
 				streamWriter = getOutputFactory().createXMLStreamWriter(result);
-			}
-			catch (XMLStreamException ex) {
+			} catch (XMLStreamException ex) {
 				// ignore
 			}
 		}
@@ -114,8 +111,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLStreamReader},
-	 * and a {@code XMLStreamWriter} to write the response payload to.
+	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLStreamReader}, and a
+	 * {@code XMLStreamWriter} to write the response payload to.
 	 *
 	 * @param streamReader the reader to read the payload from
 	 * @param streamWriter the writer to write the payload to
@@ -123,8 +120,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 	protected abstract void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception;
 
 	/**
-	 * Implementation of the {@code XMLStreamWriter} interface that creates a response
-	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the response.
+	 * Implementation of the {@code XMLStreamWriter} interface that creates a response {@code WebServiceMessage} as soon
+	 * as any method is called, thus lazily creating the response.
 	 */
 	private class ResponseCreatingStreamWriter implements XMLStreamWriter {
 
@@ -160,8 +157,7 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 						ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 						transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
 						os = null;
-					}
-					catch (TransformerException ex) {
+					} catch (TransformerException ex) {
 						throw new XMLStreamException(ex);
 					}
 				}

@@ -56,8 +56,7 @@ abstract class SaajSoapFault extends SaajSoapElement<SOAPFault> implements SoapF
 		try {
 			Detail saajDetail = getSaajFault().addDetail();
 			return new SaajSoapFaultDetail(saajDetail);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

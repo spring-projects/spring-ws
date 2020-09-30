@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ws</groupId>
@@ -346,7 +346,7 @@
 											</excludes>
 											<searchTransitive>true</searchTransitive>
 										</bannedDependencies>
-										<dependencyConvergence />
+										<dependencyConvergence/>
 									</rules>
 									<fail>true</fail>
 								</configuration>
@@ -696,9 +696,13 @@
 								<configuration>
 									<tasks>
 										<zip destfile="${project.build.directory}/${project.artifactId}-${project.version}.zip">
-											<zipfileset src="${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar" prefix="api" />
-											<zipfileset dir="${project.build.directory}/site/reference/html" prefix="reference" />
-											<zipfileset dir="${project.build.directory}/generated-docs" includes="index.pdf" />
+											<zipfileset
+													src="${project.build.directory}/${project.artifactId}-${project.version}-javadoc.jar"
+													prefix="api"/>
+											<zipfileset dir="${project.build.directory}/site/reference/html"
+											            prefix="reference"/>
+											<zipfileset dir="${project.build.directory}/generated-docs"
+											            includes="index.pdf"/>
 										</zip>
 									</tasks>
 								</configuration>
@@ -719,7 +723,9 @@
 								<configuration>
 									<artifacts>
 										<artifact>
-											<file>${project.build.directory}/${project.artifactId}-${project.version}.zip</file>
+											<file>
+												${project.build.directory}/${project.artifactId}-${project.version}.zip
+											</file>
 											<type>zip;zip.type=docs;zip.deployed=false</type>
 										</artifact>
 									</artifacts>

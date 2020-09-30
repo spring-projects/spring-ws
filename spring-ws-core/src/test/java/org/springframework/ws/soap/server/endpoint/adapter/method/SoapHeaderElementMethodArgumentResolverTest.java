@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.server.endpoint.adapter.method;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Tareq Abedrabbo
@@ -63,21 +63,18 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 			SoapHeaderElement element = message.getSoapHeader().addHeaderElement(HEADER_QNAME);
 			element.setText(HEADER_CONTENT + i);
 		}
-		soapHeaderWithEmptyValue =
-				new MethodParameter(getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
-		soapHeaderElementParameter =
-				new MethodParameter(getClass().getMethod("soapHeaderElement", SoapHeaderElement.class), 0);
-		soapHeaderElementListParameter =
-				new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class), 0);
-		soapHeaderMismatch =
-				new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
+		soapHeaderWithEmptyValue = new MethodParameter(
+				getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
+		soapHeaderElementParameter = new MethodParameter(getClass().getMethod("soapHeaderElement", SoapHeaderElement.class),
+				0);
+		soapHeaderElementListParameter = new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class), 0);
+		soapHeaderMismatch = new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
 		soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class), 0);
 	}
 
 	@Test
 	public void supportsParameter() throws Exception {
-		assertTrue("resolver does not support soapHeaderElement",
-				resolver.supportsParameter(soapHeaderElementParameter));
+		assertTrue("resolver does not support soapHeaderElement", resolver.supportsParameter(soapHeaderElementParameter));
 		assertTrue("resolver does not support List<soapHeaderElement>",
 				resolver.supportsParameter(soapHeaderElementListParameter));
 	}
@@ -130,22 +127,16 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 		assertTrue("result List must be empty", ((List<?>) result).isEmpty());
 	}
 
-	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
-	}
+	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {}
 
-	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {
-	}
+	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {}
 
-	public void soapHeaderElementList(@SoapHeader(
-			"{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {
-	}
+	public void soapHeaderElementList(
+			@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {}
 
-	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {
-	}
+	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {}
 
-	public void soapHeaderMismatchList(@SoapHeader(
-			"{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
-	}
-
+	public void soapHeaderMismatchList(
+			@SoapHeader("{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {}
 
 }

@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -30,11 +31,10 @@ import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import org.springframework.util.StringUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Collection of generic utility methods to work with Axiom. Includes conversion from {@code OMNamespace}s to
@@ -50,25 +50,23 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 public abstract class AxiomUtils {
 
 	/**
-	 * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A
-	 * {@code OMElement} is used to resolve the namespace, or to declare a new one.
+	 * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A {@code OMElement} is
+	 * used to resolve the namespace, or to declare a new one.
 	 *
-	 * @param qName			 the {@code QName} to convert
+	 * @param qName the {@code QName} to convert
 	 * @param resolveElement the element used to resolve the Q
 	 * @return the converted SAAJ Name
-	 * @throws OMException				if conversion is unsuccessful
+	 * @throws OMException if conversion is unsuccessful
 	 * @throws IllegalArgumentException if {@code qName} is not fully qualified
 	 */
 	public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
 		String prefix = qName.getPrefix();
 		if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
 			return resolveElement.declareNamespace(qName.getNamespaceURI(), prefix);
-		}
-		else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+		} else if (StringUtils.hasLength(qName.getNamespaceURI())) {
 			// check for existing namespace, and declare if necessary
 			return resolveElement.declareNamespace(qName.getNamespaceURI(), "");
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("qName [" + qName + "] does not contain a namespace");
 		}
 	}
@@ -113,8 +111,7 @@ public abstract class AxiomUtils {
 		try {
 			if (envelope instanceof Element) {
 				return ((Element) envelope).getOwnerDocument();
-			}
-			else {
+			} else {
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				envelope.build();
 				envelope.serialize(bos);
@@ -124,8 +121,7 @@ public abstract class AxiomUtils {
 				documentBuilderFactory.setNamespaceAware(true);
 				return documentBuilderFactory.newDocumentBuilder().parse(bis);
 			}
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			throw new IllegalArgumentException("Error in converting SOAP Envelope to Document", ex);
 		}
 	}

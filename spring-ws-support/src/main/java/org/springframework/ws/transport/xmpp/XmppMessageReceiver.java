@@ -27,11 +27,10 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
- * Server-side component for receiving XMPP (Jabber) messages.	Requires a {@linkplain #setConnection(XMPPConnection)
+ * Server-side component for receiving XMPP (Jabber) messages. Requires a {@linkplain #setConnection(XMPPConnection)
  * connection} to be set, in addition to the {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * messageFactory} and {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  * messageReceiver} required by the base class.
@@ -53,8 +52,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
 	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
-	public XmppMessageReceiver() {
-	}
+	public XmppMessageReceiver() {}
 
 	/** Sets the {@code XMPPConnection} to use. Setting this property is required. */
 	public void setConnection(XMPPTCPConnection connection) {
@@ -112,8 +110,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 					XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
 					wsConnection.setMessageEncoding(messageEncoding);
 					handleConnection(wsConnection);
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					logger.error(ex);
 				}
 			}

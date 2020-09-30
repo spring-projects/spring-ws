@@ -18,10 +18,9 @@ package org.springframework.ws.server.endpoint.interceptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Element;
-
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.w3c.dom.Element;
 
 /**
  * Default implementation of the {@code EndpointInterceptor} interface, for simplified implementation of
@@ -74,6 +73,5 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
 	 * Does nothing by default.
 	 */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
-	}
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {}
 }

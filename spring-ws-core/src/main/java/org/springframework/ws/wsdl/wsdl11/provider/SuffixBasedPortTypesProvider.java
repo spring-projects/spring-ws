@@ -21,7 +21,7 @@ import javax.wsdl.Message;
 import org.springframework.util.Assert;
 
 /**
- * Implementation of the {@link	 PortTypesProvider} interface that is based on suffixes.
+ * Implementation of the {@link PortTypesProvider} interface that is based on suffixes.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -106,11 +106,9 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 		if (messageName != null) {
 			if (messageName.endsWith(getRequestSuffix())) {
 				return messageName.substring(0, messageName.length() - getRequestSuffix().length());
-			}
-			else if (messageName.endsWith(getResponseSuffix())) {
+			} else if (messageName.endsWith(getResponseSuffix())) {
 				return messageName.substring(0, messageName.length() - getResponseSuffix().length());
-			}
-			else if (messageName.endsWith(getFaultSuffix())) {
+			} else if (messageName.endsWith(getFaultSuffix())) {
 				return messageName.substring(0, messageName.length() - getFaultSuffix().length());
 			}
 		}
@@ -119,9 +117,8 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Indicates whether the given name name should be included as {@link javax.wsdl.Input} message in the definition.
-	 *
-	 * <p>This implementation checks whether the message name ends with the {@link #setRequestSuffix(String)
-	 * requestSuffix}.
+	 * <p>
+	 * This implementation checks whether the message name ends with the {@link #setRequestSuffix(String) requestSuffix}.
 	 *
 	 * @param message the message
 	 * @return {@code true} if to be included as input; {@code false} otherwise
@@ -134,8 +131,8 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Indicates whether the given name name should be included as {@link javax.wsdl.Output} message in the definition.
-	 *
-	 * <p>This implementation checks whether the message name ends with the {@link #setResponseSuffix(String)
+	 * <p>
+	 * This implementation checks whether the message name ends with the {@link #setResponseSuffix(String)
 	 * responseSuffix}.
 	 *
 	 * @param message the message
@@ -149,8 +146,8 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Indicates whether the given name name should be included as {@link javax.wsdl.Fault} message in the definition.
-	 *
-	 * <p>This implementation checks whether the message name ends with the {@link #setFaultSuffix(String) faultSuffix}.
+	 * <p>
+	 * This implementation checks whether the message name ends with the {@link #setFaultSuffix(String) faultSuffix}.
 	 *
 	 * @param message the message
 	 * @return {@code true} if to be included as fault; {@code false} otherwise

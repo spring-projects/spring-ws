@@ -23,8 +23,8 @@ import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointExceptionResolver} interface that uses the {@link
- * SoapFault} annotation to map exceptions to SOAP Faults.
+ * Implementation of the {@link org.springframework.ws.server.EndpointExceptionResolver} interface that uses the
+ * {@link SoapFault} annotation to map exceptions to SOAP Faults.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -38,15 +38,13 @@ public class SoapFaultAnnotationExceptionResolver extends AbstractSoapFaultDefin
 			SoapFaultDefinition definition = new SoapFaultDefinition();
 			if (faultAnnotation.faultCode() != FaultCode.CUSTOM) {
 				definition.setFaultCode(faultAnnotation.faultCode().value());
-			}
-			else if (StringUtils.hasLength(faultAnnotation.customFaultCode())) {
+			} else if (StringUtils.hasLength(faultAnnotation.customFaultCode())) {
 				definition.setFaultCode(QName.valueOf(faultAnnotation.customFaultCode()));
 			}
 			definition.setFaultStringOrReason(faultAnnotation.faultStringOrReason());
 			definition.setLocale(StringUtils.parseLocaleString(faultAnnotation.locale()));
 			return definition;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

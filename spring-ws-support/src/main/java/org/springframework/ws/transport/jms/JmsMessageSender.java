@@ -18,6 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import java.net.URI;
+
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -41,54 +42,54 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires a JMS {@link
- * ConnectionFactory} to operate.
- *
- * <p>This message sender supports URI's of the following format: <blockquote> <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
+ * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires a JMS
+ * {@link ConnectionFactory} to operate.
+ * <p>
+ * This message sender supports URI's of the following format: <blockquote>
+ * <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
  * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and <tt><b>&amp;</b></tt> stand for
  * themselves. The <i>destination</i> represents the name of the {@link Queue} or {@link Topic} that will be resolved by
- * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include:
- *
- * <blockquote>
- *	   <table>
- *		   <tr><th><i>param-name</i></th><th><i>Description</i></th></tr>
- *		   <tr>
- *			   <td><tt>deliveryMode</tt></td>
- *			   <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
- *			   <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
- *		   </tr>
- *		   <tr>
- *			   <td><tt>messageType</tt></td>
- *			   <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
- *		   </tr>
- *		   <tr>
- *			   <td><tt>priority</tt></td>
- *			   <td>The JMS priority (0-9) associated with the request message. See
- *			   {@link MessageProducer#setPriority(int)}</td>
- *		   </tr>
- *		   <tr>
- *			   <td><tt>replyToName</tt></td>
- *			   <td>The name of the destination to which the response message must be sent, that will be resolved by
- *			   the {@link #getDestinationResolver() destination resolver}.</td>
- *		   </tr>
- *		   <tr>
- *			   <td><tt>timeToLive</tt></td>
- *			   <td>The lifetime, in milliseconds, of the request message. See
- *			   {@link MessageProducer#setTimeToLive(long)}</td>
- *		   </tr>
- *	   </table>
+ * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include: <blockquote>
+ * <table>
+ * <tr>
+ * <th><i>param-name</i></th>
+ * <th><i>Description</i></th>
+ * </tr>
+ * <tr>
+ * <td><tt>deliveryMode</tt></td>
+ * <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
+ * <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
+ * </tr>
+ * <tr>
+ * <td><tt>messageType</tt></td>
+ * <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
+ * </tr>
+ * <tr>
+ * <td><tt>priority</tt></td>
+ * <td>The JMS priority (0-9) associated with the request message. See {@link MessageProducer#setPriority(int)}</td>
+ * </tr>
+ * <tr>
+ * <td><tt>replyToName</tt></td>
+ * <td>The name of the destination to which the response message must be sent, that will be resolved by the
+ * {@link #getDestinationResolver() destination resolver}.</td>
+ * </tr>
+ * <tr>
+ * <td><tt>timeToLive</tt></td>
+ * <td>The lifetime, in milliseconds, of the request message. See {@link MessageProducer#setTimeToLive(long)}</td>
+ * </tr>
+ * </table>
  * </blockquote>
- *
- * <p>If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
- *
- * <p>This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
- * instead. <b>Note</b> that {@code BytesMessages} are preferred, since {@code TextMessages} do not support
- * attachments and character encodings reliably.
- *
- * <p>Some examples of JMS URIs are:
- *
- * <blockquote> <tt>jms:SomeQueue</tt><br> <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
- * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br> <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
+ * <p>
+ * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
+ * <p>
+ * This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
+ * instead. <b>Note</b> that {@code BytesMessages} are preferred, since {@code TextMessages} do not support attachments
+ * and character encodings reliably.
+ * <p>
+ * Some examples of JMS URIs are: <blockquote> <tt>jms:SomeQueue</tt><br>
+ * <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
+ * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br>
+ * <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
  * @author Arjen Poutsma
  * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message Service 1.0</a>
@@ -110,15 +111,14 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 
 	/**
 	 * Create a new {@code JmsMessageSender}
-	 *
-	 * <p><b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to
-	 * prepare a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via {@link
-	 * #setConnectionFactory(ConnectionFactory)}.
+	 * <p>
+	 * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to prepare
+	 * a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via
+	 * {@link #setConnectionFactory(ConnectionFactory)}.
 	 *
 	 * @see #setConnectionFactory(ConnectionFactory)
 	 */
-	public JmsMessageSender() {
-	}
+	public JmsMessageSender() {}
 
 	/**
 	 * Create a new {@code JmsMessageSender}, given a ConnectionFactory.
@@ -144,8 +144,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	}
 
 	/**
-	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
-	 * been set.
+	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has been
+	 * set.
 	 */
 	public void setPostProcessor(MessagePostProcessor postProcessor) {
 		this.postProcessor = postProcessor;
@@ -160,9 +160,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 			jmsSession = createSession(jmsConnection);
 			Destination requestDestination = resolveRequestDestination(jmsSession, uri);
 			Message requestMessage = createRequestMessage(jmsSession, uri);
-			JmsSenderConnection wsConnection =
-					new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession, requestDestination,
-							requestMessage);
+			JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession,
+					requestDestination, requestMessage);
 			wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
 			wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
 			wsConnection.setReceiveTimeout(receiveTimeout);
@@ -172,8 +171,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 			wsConnection.setSessionTransacted(isSessionTransacted());
 			wsConnection.setPostProcessor(postProcessor);
 			return wsConnection;
-		}
-		catch (JMSException ex) {
+		} catch (JMSException ex) {
 			JmsUtils.closeSession(jmsSession);
 			ConnectionFactoryUtils.releaseConnection(jmsConnection, getConnectionFactory(), true);
 			throw new JmsTransportException(ex);
@@ -198,15 +196,12 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 		int messageType = JmsTransportUtils.getMessageType(uri);
 		if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
 			return session.createBytesMessage();
-		}
-		else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
+		} else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
 			return session.createTextMessage();
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
 		}
 
 	}
-
 
 }

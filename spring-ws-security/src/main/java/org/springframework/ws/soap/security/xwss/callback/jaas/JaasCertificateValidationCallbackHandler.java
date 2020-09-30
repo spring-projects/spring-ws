@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import java.security.cert.X509Certificate;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -28,9 +29,9 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 /**
  * Provides basic support for integrating with JAAS and certificates. Requires the {@code loginContextName} to be
  * set.Requires a {@code LoginContext} which handles {@code X500Principal}s.
- *
- * <p>This class only handles {@code CertificateValidationCallback}s, and throws an
- * {@code UnsupportedCallbackException} for others.
+ * <p>
+ * This class only handles {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException}
+ * for others.
  *
  * @author Arjen Poutsma
  * @see javax.security.auth.x500.X500Principal
@@ -40,8 +41,7 @@ import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
 public class JaasCertificateValidationCallbackHandler extends AbstractJaasValidationCallbackHandler {
 
 	/**
-	 * Handles	{@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for
-	 * others
+	 * Handles {@code CertificateValidationCallback}s, and throws an {@code UnsupportedCallbackException} for others
 	 *
 	 * @throws UnsupportedCallbackException when the callback is not supported
 	 */
@@ -49,8 +49,7 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 	protected final void handleInternal(Callback callback) throws UnsupportedCallbackException {
 		if (callback instanceof CertificateValidationCallback) {
 			((CertificateValidationCallback) callback).setValidator(new JaasCertificateValidator());
-		}
-		else {
+		} else {
 			throw new UnsupportedCallbackException(callback);
 		}
 	}
@@ -65,11 +64,9 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 			LoginContext loginContext;
 			try {
 				loginContext = new LoginContext(getLoginContextName(), subject);
-			}
-			catch (LoginException ex) {
+			} catch (LoginException ex) {
 				throw new CertificateValidationCallback.CertificateValidationException(ex);
-			}
-			catch (SecurityException ex) {
+			} catch (SecurityException ex) {
 				throw new CertificateValidationCallback.CertificateValidationException(ex);
 			}
 
@@ -78,23 +75,21 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 				Subject subj = loginContext.getSubject();
 				if (!subj.getPrincipals().isEmpty()) {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Authentication request for certificate with DN [" +
-								certificate.getSubjectX500Principal().getName() + "] successful");
+						logger.debug("Authentication request for certificate with DN ["
+								+ certificate.getSubjectX500Principal().getName() + "] successful");
 					}
 					return true;
-				}
-				else {
+				} else {
 					if (logger.isDebugEnabled()) {
-						logger.debug("Authentication request for certificate with DN [" +
-								certificate.getSubjectX500Principal().getName() + "] failed");
+						logger.debug("Authentication request for certificate with DN ["
+								+ certificate.getSubjectX500Principal().getName() + "] failed");
 					}
 					return false;
 				}
-			}
-			catch (LoginException ex) {
+			} catch (LoginException ex) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Authentication request for certificate with DN [" +
-							certificate.getSubjectX500Principal().getName() + "] failed");
+					logger.debug("Authentication request for certificate with DN ["
+							+ certificate.getSubjectX500Principal().getName() + "] failed");
 				}
 				return false;
 			}

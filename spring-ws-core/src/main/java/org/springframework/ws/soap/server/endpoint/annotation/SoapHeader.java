@@ -23,7 +23,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks an endpoint method parameter to be resolved as a single or a list of {@link org.springframework.ws.soap.SoapHeaderElement}.
+ * Marks an endpoint method parameter to be resolved as a single or a list of
+ * {@link org.springframework.ws.soap.SoapHeaderElement}.
  *
  * @author Tareq Abedrabbo
  * @since 2.0
@@ -33,8 +34,8 @@ import java.lang.annotation.Target;
 @Documented
 public @interface SoapHeader {
 	/**
-	 * The qualified name of the soap header. The format used is that of {@link javax.xml.namespace.QName#toString()}, i.e.
-	 * "{" + Namespace URI + "}" + local part, where the namespace is optional.
+	 * The qualified name of the soap header. The format used is that of {@link javax.xml.namespace.QName#toString()},
+	 * i.e. "{" + Namespace URI + "}" + local part, where the namespace is optional.
 	 */
 	String value();
 }

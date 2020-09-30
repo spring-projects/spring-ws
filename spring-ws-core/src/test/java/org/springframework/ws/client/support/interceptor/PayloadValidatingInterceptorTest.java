@@ -17,6 +17,7 @@
 package org.springframework.ws.client.support.interceptor;
 
 import java.io.InputStream;
+
 import javax.xml.XMLConstants;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
@@ -27,7 +28,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -88,8 +88,7 @@ public class PayloadValidatingInterceptorTest {
 		boolean validated;
 		try {
 			validated = interceptor.handleRequest(context);
-		}
-		catch (WebServiceClientException e) {
+		} catch (WebServiceClientException e) {
 			validated = false;
 			Assert.assertNotNull("No exception details provided in WebServiceClientException", e.getMessage());
 		}
@@ -105,8 +104,7 @@ public class PayloadValidatingInterceptorTest {
 		boolean validated;
 		try {
 			validated = interceptor.handleRequest(context);
-		}
-		catch (WebServiceClientException e) {
+		} catch (WebServiceClientException e) {
 			validated = false;
 			Assert.assertNotNull("No exception details provided in WebServiceClientException", e.getMessage());
 		}
@@ -148,8 +146,8 @@ public class PayloadValidatingInterceptorTest {
 	public void testNamespacesInType() throws Exception {
 		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
 		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
-		String previousSchemaFactory =
-				System.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
+		String previousSchemaFactory = System
+				.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 		System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 				"org.apache.xerces.jaxp.validation.XMLSchemaFactory");
 		try {
@@ -157,16 +155,14 @@ public class PayloadValidatingInterceptorTest {
 			interceptor.setSchema(new ClassPathResource(SCHEMA2, PayloadValidatingInterceptorTest.class));
 			interceptor.afterPropertiesSet();
 			MessageFactory messageFactory = MessageFactory.newInstance();
-			SOAPMessage saajMessage =
-					SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()), messageFactory);
-			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage),
-					new SaajSoapMessageFactory(messageFactory));
+			SOAPMessage saajMessage = SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()),
+					messageFactory);
+			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(messageFactory));
 
 			boolean result = interceptor.handleRequest(context);
 			Assert.assertTrue("Invalid response from interceptor", result);
 			Assert.assertFalse("Response set", context.hasResponse());
-		}
-		finally {
+		} finally {
 			// Reset the property
 			System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 					previousSchemaFactory);
@@ -179,8 +175,7 @@ public class PayloadValidatingInterceptorTest {
 			interceptor.setSchema(new ClassPathResource("invalid"));
 			interceptor.afterPropertiesSet();
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}
@@ -196,8 +191,7 @@ public class PayloadValidatingInterceptorTest {
 		boolean validated;
 		try {
 			validated = interceptor.handleRequest(context);
-		}
-		catch (WebServiceClientException e) {
+		} catch (WebServiceClientException e) {
 			validated = false;
 			Assert.assertNotNull("No exception details provided in WebServiceClientException", e.getMessage());
 		}

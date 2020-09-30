@@ -18,6 +18,7 @@ package org.springframework.ws.soap.server.endpoint;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.beans.propertyeditors.LocaleEditor;
@@ -26,27 +27,33 @@ import org.springframework.xml.namespace.QNameEditor;
 
 /**
  * PropertyEditor for {@code SoapFaultDefinition} objects. Takes strings of form
+ * 
  * <pre>
  * faultCode,faultString,locale
  * </pre>
- * where {@code faultCode} is the string representation of a {@code QName}, {@code faultStringOrReason}
- * is the optional fault string, and {@code locale} is the optional string representations for the
- * {@code faultStringOrReason}language. By default, the language is set to English, and the fault string set to the
- * exception message.
- *
- * <p>Instead of supplying a custom fault code, you can use the constants {@code SERVER} or {@code RECEIVER}
- * indicate a {@code Server}/{@code Receiver} fault, or {@code CLIENT} or {@code SENDER}
- * to{@code Client}/{@code Sender} fault respectively.
- *
- * <p>For example:
+ * 
+ * where {@code faultCode} is the string representation of a {@code QName}, {@code faultStringOrReason} is the optional
+ * fault string, and {@code locale} is the optional string representations for the {@code faultStringOrReason}language.
+ * By default, the language is set to English, and the fault string set to the exception message.
+ * <p>
+ * Instead of supplying a custom fault code, you can use the constants {@code SERVER} or {@code RECEIVER} indicate a
+ * {@code Server}/{@code Receiver} fault, or {@code CLIENT} or {@code SENDER} to{@code Client}/{@code Sender} fault
+ * respectively.
+ * <p>
+ * For example:
+ * 
  * <pre>
  * RECEIVER,Server error
  * </pre>
+ * 
  * or
+ * 
  * <pre>
  * CLIENT,Client error
  * </pre>
+ * 
  * or
+ * 
  * <pre>
  * {http://springframework.org/spring-ws}spring-ws:FatalError},A fatal error has occurred
  * </pre>
@@ -73,12 +80,11 @@ public class SoapFaultDefinitionEditor extends PropertyEditorSupport {
 	public void setAsText(String text) throws IllegalArgumentException {
 		if (!StringUtils.hasLength(text)) {
 			setValue(null);
-		}
-		else {
+		} else {
 			String[] tokens = StringUtils.commaDelimitedListToStringArray(text);
 			if (tokens.length < FAULT_STRING_INDEX) {
-				throw new IllegalArgumentException("Invalid amount of comma delimited values in [" + text +
-						"]: SoapFaultDefinitionEditor requires at least 1");
+				throw new IllegalArgumentException("Invalid amount of comma delimited values in [" + text
+						+ "]: SoapFaultDefinitionEditor requires at least 1");
 			}
 			SoapFaultDefinition definition = new SoapFaultDefinition();
 			QNameEditor qNameEditor = new QNameEditor();

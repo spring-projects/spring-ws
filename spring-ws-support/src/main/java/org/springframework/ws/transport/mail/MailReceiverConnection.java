@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Address;
@@ -110,18 +111,16 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
 			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
 				return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
-			}
-			else {
+			} else {
 				throw new URISyntaxException("", "Could not determine To header");
 			}
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}
-/*
-	 * Errors
-	 */
+	/*
+		 * Errors
+		 */
 
 	@Override
 	public String getErrorMessage() throws IOException {
@@ -147,8 +146,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 				headers.add(header.getName());
 			}
 			return headers.iterator();
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new IOException(ex.getMessage());
 		}
 	}
@@ -158,8 +156,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 		try {
 			String[] headers = requestMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -168,8 +165,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	protected InputStream getRequestInputStream() throws IOException {
 		try {
 			return requestMessage.getInputStream();
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -181,8 +177,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
 				responseContentType = value;
 			}
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -203,8 +198,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			responseMessage.setFrom(from);
 
 			responseBuffer = new ByteArrayOutputStream();
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -213,17 +207,15 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		Transport transport = null;
 		try {
-			responseMessage.setDataHandler(
-					new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
+			responseMessage
+					.setDataHandler(new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
 			transport = session.getTransport(transportUri);
 			transport.connect();
 			responseMessage.saveChanges();
 			transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
-		}
-		catch (MessagingException ex) {
+		} catch (MessagingException ex) {
 			throw new MailTransportException(ex);
-		}
-		finally {
+		} finally {
 			MailTransportUtils.closeService(transport);
 		}
 	}

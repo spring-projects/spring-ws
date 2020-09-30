@@ -21,16 +21,15 @@ import javax.xml.transform.Source;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Interceptor that validates the contents of {@code WebServiceMessage}s using a schema. Allows for both W3C XML
- * and RELAX NG schemas.
- *
- * <p>When the payload is invalid, this interceptor stops processing of the interceptor chain. Additionally, if the message
+ * Interceptor that validates the contents of {@code WebServiceMessage}s using a schema. Allows for both W3C XML and
+ * RELAX NG schemas.
+ * <p>
+ * When the payload is invalid, this interceptor stops processing of the interceptor chain. Additionally, if the message
  * is a SOAP request message, a SOAP Fault is created as reply. Invalid SOAP responses do not result in a fault.
- *
- * <p>The schema to validate against is set with the {@code schema} property or {@code schemas} property. By
- * default, only the request message is validated, but this behaviour can be changed using the
- * {@code validateRequest} and {@code validateResponse} properties. Responses that contains faults are not
- * validated.
+ * <p>
+ * The schema to validate against is set with the {@code schema} property or {@code schemas} property. By default, only
+ * the request message is validated, but this behaviour can be changed using the {@code validateRequest} and
+ * {@code validateResponse} properties. Responses that contains faults are not validated.
  *
  * @author Arjen Poutsma
  * @see #setSchema(org.springframework.core.io.Resource)

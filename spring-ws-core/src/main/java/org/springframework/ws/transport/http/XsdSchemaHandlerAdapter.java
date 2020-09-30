@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
@@ -26,19 +27,18 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xsd.XsdSchema;
+import org.w3c.dom.Document;
 
 /**
  * Adapter to use the {@link XsdSchema} interface with the generic {@code DispatcherServlet}.
- *
- * <p>Reads the source from the mapped {@link XsdSchema} implementation, and writes that as the result to the
+ * <p>
+ * Reads the source from the mapped {@link XsdSchema} implementation, and writes that as the result to the
  * {@code HttpServletResponse}. Allows for post-processing the schema in subclasses.
  *
  * @author Arjen Poutsma
@@ -66,8 +66,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 
 	/**
 	 * Sets the XPath expression used for extracting the {@code schemaLocation} attributes from the WSDL 1.1 definition.
-	 *
-	 * <p>Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
+	 * <p>
+	 * Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
 	 */
 	public void setSchemaLocationExpression(String schemaLocationExpression) {
 		this.schemaLocationExpression = schemaLocationExpression;
@@ -105,8 +105,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 			response.setContentType(CONTENT_TYPE);
 			StreamResult responseResult = new StreamResult(response.getOutputStream());
 			transformer.transform(schemaSource, responseResult);
-		}
-		else {
+		} else {
 			response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		}
 		return null;
@@ -119,15 +118,15 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		schemaLocationXPathExpression =
-				XPathExpressionFactory.createXPathExpression(schemaLocationExpression, expressionNamespaces);
+		schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(schemaLocationExpression,
+				expressionNamespaces);
 	}
 
 	/**
 	 * Returns the {@link Source} of the given schema. Allows for post-processing and transformation of the schema in
 	 * sub-classes.
-	 *
-	 * <p>Default implementation simply returns {@link XsdSchema#getSource()}.
+	 * <p>
+	 * Default implementation simply returns {@link XsdSchema#getSource()}.
 	 *
 	 * @param schema the schema
 	 * @return the source of the given schema
@@ -141,8 +140,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	 * Transforms all {@code schemaLocation} attributes to reflect the server name given {@code HttpServletRequest}.
 	 * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to {@code
 	 * transformLocation} to do the transformation for all attributes that match.
-	 *
-	 * <p>This method is only called when the {@code transformSchemaLocations} property is true.
+	 * <p>
+	 * This method is only called when the {@code transformSchemaLocations} property is true.
 	 *
 	 * @see #setSchemaLocationExpression(String)
 	 * @see #transformLocation(String, javax.servlet.http.HttpServletRequest)
@@ -150,6 +149,5 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
 		transformLocations(schemaLocationXPathExpression, definitionDocument, request);
 	}
-
 
 }

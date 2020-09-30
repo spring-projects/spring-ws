@@ -16,13 +16,17 @@
 
 package org.springframework.ws.soap.soap11;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 import org.junit.Test;
-
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapVersion;
@@ -62,7 +66,8 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		qName = new QName(NAMESPACE, "localName3", PREFIX);
 		headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
-		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(new String[]{"role1"});
+		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
+				.examineHeaderElementsToProcess(new String[] { "role1" });
 		assertNotNull("header element iterator is null", iterator);
 		assertTrue("header element iterator has no elements", iterator.hasNext());
 		checkHeaderElement(iterator.next());
@@ -93,8 +98,8 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 
 	private void checkHeaderElement(SoapHeaderElement headerElement) {
 		QName name = headerElement.getName();
-		assertTrue("Invalid name on header element", new QName(NAMESPACE, "localName1", PREFIX).equals(name) ||
-				new QName(NAMESPACE, "localName3", PREFIX).equals(name));
+		assertTrue("Invalid name on header element", new QName(NAMESPACE, "localName1", PREFIX).equals(name)
+				|| new QName(NAMESPACE, "localName3", PREFIX).equals(name));
 	}
 
 }

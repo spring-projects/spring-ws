@@ -40,7 +40,7 @@ public class WebServiceIOException extends WebServiceClientException {
 	 * Create a new instance of the {@code WebServiceIOException} class.
 	 *
 	 * @param msg the detail message
-	 * @param ex  the root {@link IOException}
+	 * @param ex the root {@link IOException}
 	 */
 	public WebServiceIOException(String msg, IOException ex) {
 		super(msg, ex);

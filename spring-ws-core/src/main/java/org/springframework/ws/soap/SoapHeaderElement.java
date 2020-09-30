@@ -52,11 +52,10 @@ public interface SoapHeaderElement extends SoapElement {
 	boolean getMustUnderstand() throws SoapHeaderException;
 
 	/**
-	 * Sets the {@code mustUnderstand} attribute for this header element. If the attribute is on, the role who
-	 * receives the header must process it.
+	 * Sets the {@code mustUnderstand} attribute for this header element. If the attribute is on, the role who receives
+	 * the header must process it.
 	 *
-	 * @param mustUnderstand {@code true} to set the {@code mustUnderstand} attribute on; {@code false}
-	 *						 to turn it off
+	 * @param mustUnderstand {@code true} to set the {@code mustUnderstand} attribute on; {@code false} to turn it off
 	 */
 	void setMustUnderstand(boolean mustUnderstand) throws SoapHeaderException;
 

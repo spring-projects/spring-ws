@@ -19,6 +19,7 @@ package org.springframework.ws.soap.saaj;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
@@ -46,11 +47,9 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 	@Override
 	public SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName) {
 		try {
-			SOAPHeaderElement headerElement =
-					getSaajHeader().addNotUnderstoodHeaderElement(headerName);
+			SOAPHeaderElement headerElement = getSaajHeader().addNotUnderstoodHeaderElement(headerName);
 			return new SaajSoapHeaderElement(headerElement);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapHeaderException(ex);
 		}
 	}
@@ -58,11 +57,9 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 	@Override
 	public SoapHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) {
 		try {
-			SOAPHeaderElement headerElement =
-					getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
+			SOAPHeaderElement headerElement = getSaajHeader().addUpgradeHeaderElement(supportedSoapUris);
 			return new SaajSoapHeaderElement(headerElement);
-		}
-		catch (SOAPException ex) {
+		} catch (SOAPException ex) {
 			throw new SaajSoapHeaderException(ex);
 		}
 	}

@@ -18,10 +18,11 @@ package org.springframework.ws.soap.security.xwss.callback;
 
 import java.util.Properties;
 
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 public class SimplePasswordValidationCallbackHandlerTest {
 
@@ -37,8 +38,8 @@ public class SimplePasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testPlainTextPasswordValid() throws Exception {
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Ernie");
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				"Bert", "Ernie");
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		handler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
@@ -47,8 +48,8 @@ public class SimplePasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testPlainTextPasswordInvalid() throws Exception {
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest("Bert", "Big bird");
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				"Bert", "Big bird");
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		handler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
@@ -57,8 +58,8 @@ public class SimplePasswordValidationCallbackHandlerTest {
 
 	@Test
 	public void testPlainTextPasswordNoSuchUser() throws Exception {
-		PasswordValidationCallback.PlainTextPasswordRequest request =
-				new PasswordValidationCallback.PlainTextPasswordRequest("Big bird", "Bert");
+		PasswordValidationCallback.PlainTextPasswordRequest request = new PasswordValidationCallback.PlainTextPasswordRequest(
+				"Big bird", "Bert");
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		handler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
@@ -71,8 +72,8 @@ public class SimplePasswordValidationCallbackHandlerTest {
 		String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
 		String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk=";
 		String creationTime = "2006-06-01T23:48:42Z";
-		PasswordValidationCallback.DigestPasswordRequest request =
-				new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
+		PasswordValidationCallback.DigestPasswordRequest request = new PasswordValidationCallback.DigestPasswordRequest(
+				username, passwordDigest, nonce, creationTime);
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		handler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
@@ -86,8 +87,8 @@ public class SimplePasswordValidationCallbackHandlerTest {
 		String nonce = "9mdsYDCrjjYRur0rxzYt2oD7";
 		String passwordDigest = "kwNstEaiFOrI7B31j7GuETYvdgk";
 		String creationTime = "2006-06-01T23:48:42Z";
-		PasswordValidationCallback.DigestPasswordRequest request =
-				new PasswordValidationCallback.DigestPasswordRequest(username, passwordDigest, nonce, creationTime);
+		PasswordValidationCallback.DigestPasswordRequest request = new PasswordValidationCallback.DigestPasswordRequest(
+				username, passwordDigest, nonce, creationTime);
 		PasswordValidationCallback callback = new PasswordValidationCallback(request);
 		handler.handleInternal(callback);
 		boolean authenticated = callback.getResult();

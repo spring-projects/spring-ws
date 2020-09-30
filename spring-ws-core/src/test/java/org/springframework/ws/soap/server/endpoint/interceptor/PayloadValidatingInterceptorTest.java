@@ -16,24 +16,22 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Locale;
+
 import javax.xml.XMLConstants;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.LocatorImpl;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -54,8 +52,9 @@ import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.LocatorImpl;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -205,8 +204,8 @@ public class PayloadValidatingInterceptorTest {
 	public void testNamespacesInType() throws Exception {
 		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
 		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
-		String previousSchemaFactory =
-				System.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
+		String previousSchemaFactory = System
+				.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 		System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 				"org.apache.xerces.jaxp.validation.XMLSchemaFactory");
 		try {
@@ -214,16 +213,14 @@ public class PayloadValidatingInterceptorTest {
 			interceptor.setSchema(new ClassPathResource(SCHEMA2, PayloadValidatingInterceptorTest.class));
 			interceptor.afterPropertiesSet();
 			MessageFactory messageFactory = MessageFactory.newInstance();
-			SOAPMessage saajMessage =
-					SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()), messageFactory);
-			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage),
-					new SaajSoapMessageFactory(messageFactory));
+			SOAPMessage saajMessage = SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()),
+					messageFactory);
+			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(messageFactory));
 
 			boolean result = interceptor.handleRequest(context, null);
 			Assert.assertTrue("Invalid response from interceptor", result);
 			Assert.assertFalse("Response set", context.hasResponse());
-		}
-		finally {
+		} finally {
 			// Reset the property
 			System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 					previousSchemaFactory);
@@ -236,8 +233,7 @@ public class PayloadValidatingInterceptorTest {
 			interceptor.setSchema(new ClassPathResource("invalid"));
 			interceptor.afterPropertiesSet();
 			Assert.fail("IllegalArgumentException expected");
-		}
-		catch (IllegalArgumentException ex) {
+		} catch (IllegalArgumentException ex) {
 			// expected
 		}
 	}
@@ -297,19 +293,18 @@ public class PayloadValidatingInterceptorTest {
 		LocatorImpl locator = new LocatorImpl();
 		locator.setLineNumber(0);
 		locator.setColumnNumber(0);
-		SAXParseException[] exceptions = new SAXParseException[]{new SAXParseException("Message 1", locator),
-				new SAXParseException("Message 2", locator),};
+		SAXParseException[] exceptions = new SAXParseException[] { new SAXParseException("Message 1", locator),
+				new SAXParseException("Message 2", locator), };
 		MessageContext messageContext = new DefaultMessageContext(new AxiomSoapMessageFactory());
 		interceptor.handleRequestValidationErrors(messageContext, exceptions);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		messageContext.getResponse().writeTo(os);
-		assertXMLEqual(
-				"<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>" + "<soapenv:Body>" +
-						"<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>" +
-						"<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>" +
-						"<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>" +
-						"<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>" +
-						"</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
+		assertXMLEqual("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+				+ "<soapenv:Header/>" + "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>"
+				+ "<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>"
+				+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>"
+				+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>"
+				+ "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
 
 	}
 
@@ -375,14 +370,11 @@ public class PayloadValidatingInterceptorTest {
 				return new SAXParseException[0];
 			}
 
-			public void warning(SAXParseException exception) throws SAXException {
-			}
+			public void warning(SAXParseException exception) throws SAXException {}
 
-			public void error(SAXParseException exception) throws SAXException {
-			}
+			public void error(SAXParseException exception) throws SAXException {}
 
-			public void fatalError(SAXParseException exception) throws SAXException {
-			}
+			public void fatalError(SAXParseException exception) throws SAXException {}
 		};
 		interceptor.setErrorHandler(errorHandler);
 		SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();

@@ -22,11 +22,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import org.springframework.util.StringUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class QNameUtilsTest {
 
@@ -113,6 +112,5 @@ public class QNameUtilsTest {
 		Assert.assertEquals("invalid prefix", "", result.getPrefix());
 		Assert.assertEquals("invalid localname", "localName", result.getLocalPart());
 	}
-
 
 }

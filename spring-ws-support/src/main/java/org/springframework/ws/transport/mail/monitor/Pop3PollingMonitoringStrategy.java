@@ -28,8 +28,8 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * servers. Since POP3 does not have a native mechanism to determine which messages are "new", this implementation
  * simply retrieves all messages in the {@link Folder}, and delete them afterwards. All messages in the POP3 mailbox are
  * therefore, by definition, new.
- *
- * <p>Setting the {@link #setDeleteMessages(boolean) deleteMessages} property is therefore ignored: messages are always
+ * <p>
+ * Setting the {@link #setDeleteMessages(boolean) deleteMessages} property is therefore ignored: messages are always
  * deleted.
  *
  * @author Arjen Poutsma
@@ -42,8 +42,7 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
 	}
 
 	@Override
-	public void setDeleteMessages(boolean deleteMessages) {
-	}
+	public void setDeleteMessages(boolean deleteMessages) {}
 
 	/**
 	 * Re-opens the folder, if it closed.
@@ -66,7 +65,7 @@ public class Pop3PollingMonitoringStrategy extends PollingMonitoringStrategy {
 	/**
 	 * Deletes the given messages from the given folder, and closes it to expunge deleted messages.
 	 *
-	 * @param folder   the folder to delete messages from
+	 * @param folder the folder to delete messages from
 	 * @param messages the messages to delete
 	 * @throws MessagingException in case of JavaMail errors
 	 */

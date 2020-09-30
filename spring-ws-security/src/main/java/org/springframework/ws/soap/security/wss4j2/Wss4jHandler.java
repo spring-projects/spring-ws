@@ -26,9 +26,8 @@ import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
-import org.w3c.dom.Document;
-
 import org.springframework.ws.context.MessageContext;
+import org.w3c.dom.Document;
 
 /**
  * @author Tareq Abed Rabbo
@@ -52,14 +51,10 @@ class Wss4jHandler extends WSHandler {
 		options.setProperty(ConfigurationConstants.MUST_UNDERSTAND, Boolean.toString(true));
 		options.setProperty(ConfigurationConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
 	}
-	
+
 	@Override
-	public void doSenderAction(
-            Document doc,
-            RequestData reqData, 
-            List<HandlerAction> actions,
-            boolean isRequest) throws WSSecurityException
-	{
+	public void doSenderAction(Document doc, RequestData reqData, List<HandlerAction> actions, boolean isRequest)
+			throws WSSecurityException {
 		super.doSenderAction(doc, reqData, actions, isRequest);
 	}
 

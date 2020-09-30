@@ -16,18 +16,16 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class SoapActionSmartEndpointInterceptorTest {
 
@@ -65,12 +63,11 @@ public class SoapActionSmartEndpointInterceptorTest {
 
 	@Test
 	public void shouldInterceptNonMatch() throws Exception {
-		SoapActionSmartEndpointInterceptor interceptor =
-				new SoapActionSmartEndpointInterceptor(delegate, "http://springframework.org/other");
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(delegate,
+				"http://springframework.org/other");
 
 		boolean result = interceptor.shouldIntercept(messageContext, null);
 		assertFalse("Interceptor should apply", result);
 	}
-
 
 }

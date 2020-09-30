@@ -32,8 +32,8 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of the {@link WebServiceConnection} interface that is based on the
- * Spring 3 {@link ClientHttpRequest} and {@link ClientHttpResponse}.
+ * Implementation of the {@link WebServiceConnection} interface that is based on the Spring 3 {@link ClientHttpRequest}
+ * and {@link ClientHttpResponse}.
  *
  * @author Krzysztof Trojan
  * @author Arjen Poutsma
@@ -98,8 +98,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		List<String> headers = response.getHeaders().get(name);
-		return headers != null ? headers.iterator() :
-				Collections.<String>emptyList().iterator();
+		return headers != null ? headers.iterator() : Collections.<String> emptyList().iterator();
 	}
 
 	@Override

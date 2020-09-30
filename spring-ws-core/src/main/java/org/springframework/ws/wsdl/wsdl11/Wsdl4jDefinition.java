@@ -23,15 +23,14 @@ import javax.wsdl.xml.WSDLWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.w3c.dom.Document;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
+import org.w3c.dom.Document;
 
 /**
- * Implementation of the {@code Wsdl11Definition} based on WSDL4J. A {@link javax.wsdl.Definition} can be given as
- * as constructor argument, or set using a property.
+ * Implementation of the {@code Wsdl11Definition} based on WSDL4J. A {@link javax.wsdl.Definition} can be given as as
+ * constructor argument, or set using a property.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -51,8 +50,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 	 *
 	 * @see #setDefinition(javax.wsdl.Definition)
 	 */
-	public Wsdl4jDefinition() {
-	}
+	public Wsdl4jDefinition() {}
 
 	/**
 	 * Constructs a new {@code Wsdl4jDefinition} based on the given {@code Definition}.
@@ -86,8 +84,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 				WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
 				Document document = wsdlWriter.getDocument(definition);
 				return new DOMSource(document);
-			}
-			catch (WSDLException ex) {
+			} catch (WSDLException ex) {
 				throw new WsdlDefinitionException(ex.getMessage(), ex);
 			}
 		}

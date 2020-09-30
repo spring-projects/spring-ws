@@ -18,7 +18,6 @@ package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -31,18 +30,18 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
  * Convenient super class for application classes that need Web service access.
- *
- * <p>Requires a {@link WebServiceMessageFactory} or a {@link WebServiceTemplate} instance to be set. It will create its
+ * <p>
+ * Requires a {@link WebServiceMessageFactory} or a {@link WebServiceTemplate} instance to be set. It will create its
  * own {@code WebServiceTemplate} if {@code WebServiceMessageFactory} is passed in.
- *
- * <p>In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
+ * <p>
+ * In addition to the message factory property, this gateway offers {@link Marshaller} and {@link Unmarshaller}
  * properties. Setting these is required when the {@link WebServiceTemplate#marshalSendAndReceive(Object) marshalling
  * methods} of the template are to be used.
- *
- * <p>Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a {@code WebServiceTemplate}}
- * directly, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link #setUnmarshaller(Unmarshaller)}, {@link
- * #setMessageSender(WebServiceMessageSender)}, {@link #setMessageSenders(WebServiceMessageSender[])}, and {@link
- * #setDefaultUri(String)}) should not be used on this class, but on the template directly.
+ * <p>
+ * Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a {@code WebServiceTemplate}} directly,
+ * the convenience setters ({@link #setMarshaller(Marshaller)}, {@link #setUnmarshaller(Unmarshaller)},
+ * {@link #setMessageSender(WebServiceMessageSender)}, {@link #setMessageSenders(WebServiceMessageSender[])}, and
+ * {@link #setDefaultUri(String)}) should not be used on this class, but on the template directly.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(WebServiceMessageFactory)
@@ -58,8 +57,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	private WebServiceTemplate webServiceTemplate;
 
 	/**
-	 * Creates a new instance of the {@code WebServiceGatewaySupport} class, with a default
-	 * {@code WebServiceTemplate}.
+	 * Creates a new instance of the {@code WebServiceGatewaySupport} class, with a default {@code WebServiceTemplate}.
 	 */
 	protected WebServiceGatewaySupport() {
 		webServiceTemplate = new WebServiceTemplate();
@@ -126,11 +124,11 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 
 	/**
 	 * Sets the {@code WebServiceTemplate} to be used by the gateway.
-	 *
-	 * <p>When using this property, the convenience setters ({@link #setMarshaller(Marshaller)}, {@link
-	 * #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)}, {@link
-	 * #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on this
-	 * class, but on the template directly.
+	 * <p>
+	 * When using this property, the convenience setters ({@link #setMarshaller(Marshaller)},
+	 * {@link #setUnmarshaller(Unmarshaller)}, {@link #setMessageSender(WebServiceMessageSender)},
+	 * {@link #setMessageSenders(WebServiceMessageSender[])}, and {@link #setDefaultUri(String)}) should not be set on
+	 * this class, but on the template directly.
 	 */
 	public final void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
 		Assert.notNull(webServiceTemplate, "'webServiceTemplate' must not be null");
@@ -189,7 +187,6 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	 *
 	 * @throws java.lang.Exception if initialization fails
 	 */
-	protected void initGateway() throws Exception {
-	}
+	protected void initGateway() throws Exception {}
 
 }

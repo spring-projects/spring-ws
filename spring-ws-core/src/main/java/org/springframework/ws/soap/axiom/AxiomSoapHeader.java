@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.axiom;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
@@ -26,7 +27,6 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -51,13 +51,10 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 	@Override
 	public SoapHeaderElement addHeaderElement(QName name) {
 		try {
-			OMNamespace namespace =
-					getAxiomFactory().createOMNamespace(name.getNamespaceURI(),
-							name.getPrefix());
+			OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
 			SOAPHeaderBlock axiomHeaderBlock = getAxiomHeader().addHeaderBlock(name.getLocalPart(), namespace);
 			return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 	}
@@ -69,8 +66,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 			if (element != null) {
 				element.detach();
 			}
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 	}
@@ -80,8 +76,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 	public Iterator<SoapHeaderElement> examineMustUnderstandHeaderElements(String role) {
 		try {
 			return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineMustUnderstandHeaderBlocks(role));
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 	}
@@ -91,8 +86,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 	public Iterator<SoapHeaderElement> examineAllHeaderElements() {
 		try {
 			return new AxiomSoapHeaderElementIterator(getAxiomHeader().examineAllHeaderBlocks());
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 	}
@@ -102,8 +96,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 	public Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException {
 		try {
 			return new AxiomSoapHeaderElementIterator(getAxiomHeader().getChildrenWithName(name));
-		}
-		catch (OMException ex) {
+		} catch (OMException ex) {
 			throw new AxiomSoapHeaderException(ex);
 		}
 	}
@@ -130,8 +123,7 @@ abstract class AxiomSoapHeader extends AxiomSoapElement implements SoapHeader {
 			try {
 				OMElement axiomHeaderBlock = axiomIterator.next();
 				return new AxiomSoapHeaderElement(axiomHeaderBlock, getAxiomFactory());
-			}
-			catch (OMException ex) {
+			} catch (OMException ex) {
 				throw new AxiomSoapHeaderException(ex);
 			}
 		}

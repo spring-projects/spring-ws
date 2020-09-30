@@ -24,8 +24,8 @@ import org.springframework.ws.WebServiceMessage;
 /**
  * Defines the methods for classes capable of sending and receiving {@link WebServiceMessage} instances across a
  * transport.
- *
- * <p>The {@code WebServiceMessageSender} is basically a factory for {@link WebServiceConnection} objects.
+ * <p>
+ * The {@code WebServiceMessageSender} is basically a factory for {@link WebServiceConnection} objects.
  *
  * @author Arjen Poutsma
  * @see WebServiceConnection

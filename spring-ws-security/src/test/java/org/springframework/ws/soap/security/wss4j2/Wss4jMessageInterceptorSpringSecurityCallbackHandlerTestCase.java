@@ -16,8 +16,14 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.Properties;
 
+import org.apache.wss4j.dom.WSConstants;
+import org.junit.After;
+import org.junit.Test;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -26,13 +32,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler;
-import org.apache.wss4j.dom.WSConstants;
-import org.junit.After;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -75,7 +74,6 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 		interceptor.setSecurementPassword("Ernie");
 		interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
 
-
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.handleRequest(messageContext);
@@ -104,18 +102,15 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		if (validating) {
 			interceptor.setValidationActions(actions);
-		}
-		else {
+		} else {
 			interceptor.setSecurementActions(actions);
 		}
-		SpringSecurityPasswordValidationCallbackHandler callbackHandler =
-				new SpringSecurityPasswordValidationCallbackHandler();
+		SpringSecurityPasswordValidationCallbackHandler callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager(users);
 		callbackHandler.setUserDetailsService(userDetailsManager);
 		if (digest) {
 			interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
-		}
-		else {
+		} else {
 			interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		}
 		interceptor.setValidationCallbackHandler(callbackHandler);

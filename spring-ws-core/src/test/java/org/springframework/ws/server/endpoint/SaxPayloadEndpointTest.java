@@ -16,17 +16,15 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.junit.Assert.*;
+
 import javax.xml.transform.Source;
 
 import org.springframework.xml.transform.StringSource;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
@@ -89,8 +87,7 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes)
-				throws SAXException {
+		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 			assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
 			assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
 			assertEquals("Invalid namespace", NAMESPACE_URI, uri);

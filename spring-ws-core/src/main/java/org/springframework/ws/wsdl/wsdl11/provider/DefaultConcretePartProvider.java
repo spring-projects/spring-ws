@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.Iterator;
+
 import javax.wsdl.Binding;
 import javax.wsdl.BindingFault;
 import javax.wsdl.BindingInput;
@@ -36,15 +37,14 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces.
- *
- * <p>Creates a {@code binding} that matches any present {@code portType}, and a service containing
- * {@code port}s that match the {@code binding}s. Lets subclasses populate these through template methods. *
+ * <p>
+ * Creates a {@code binding} that matches any present {@code portType}, and a service containing {@code port}s that
+ * match the {@code binding}s. Lets subclasses populate these through template methods. *
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -81,11 +81,11 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/**
-	 * Creates a {@link Binding} for each {@link PortType} in the definition, and calls {@link
-	 * #populateBinding(Definition,javax.wsdl.Binding)} with it. Creates a {@link BindingOperation} for each {@link
-	 * Operation} in the port type, a {@link BindingInput} for each {@link Input} in the operation, etc.
-	 *
-	 * <p>Calls the various {@code populate} methods with the created WSDL4J objects.
+	 * Creates a {@link Binding} for each {@link PortType} in the definition, and calls
+	 * {@link #populateBinding(Definition,javax.wsdl.Binding)} with it. Creates a {@link BindingOperation} for each
+	 * {@link Operation} in the port type, a {@link BindingInput} for each {@link Input} in the operation, etc.
+	 * <p>
+	 * Calls the various {@code populate} methods with the created WSDL4J objects.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @throws WSDLException in case of errors
@@ -116,18 +116,17 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	/**
 	 * Called after the {@link Binding} has been created, but before any sub-elements are added. Subclasses can override
 	 * this method to define the binding name, or add extensions to it.
-	 *
-	 * <p>Default implementation sets the binding name to the port type name with the {@link #getBindingSuffix() suffix}
+	 * <p>
+	 * Default implementation sets the binding name to the port type name with the {@link #getBindingSuffix() suffix}
 	 * appended to it.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param binding	 the WSDL4J {@code Binding}
+	 * @param binding the WSDL4J {@code Binding}
 	 */
 	protected void populateBinding(Definition definition, Binding binding) throws WSDLException {
 		QName portTypeName = binding.getPortType().getQName();
 		if (portTypeName != null) {
-			QName bindingName =
-					new QName(portTypeName.getNamespaceURI(), portTypeName.getLocalPart() + getBindingSuffix());
+			QName bindingName = new QName(portTypeName.getNamespaceURI(), portTypeName.getLocalPart() + getBindingSuffix());
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating binding [" + bindingName + "]");
 			}
@@ -145,14 +144,11 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 			if (OperationType.REQUEST_RESPONSE.equals(operation.getStyle())) {
 				createBindingInput(definition, operation, bindingOperation);
 				createBindingOutput(definition, operation, bindingOperation);
-			}
-			else if (OperationType.ONE_WAY.equals(operation.getStyle())) {
+			} else if (OperationType.ONE_WAY.equals(operation.getStyle())) {
 				createBindingInput(definition, operation, bindingOperation);
-			}
-			else if (OperationType.NOTIFICATION.equals(operation.getStyle())) {
+			} else if (OperationType.NOTIFICATION.equals(operation.getStyle())) {
 				createBindingOutput(definition, operation, bindingOperation);
-			}
-			else if (OperationType.SOLICIT_RESPONSE.equals(operation.getStyle())) {
+			} else if (OperationType.SOLICIT_RESPONSE.equals(operation.getStyle())) {
 				createBindingOutput(definition, operation, bindingOperation);
 				createBindingInput(definition, operation, bindingOperation);
 			}
@@ -171,10 +167,10 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	/**
 	 * Called after the {@link BindingOperation} has been created, but before any sub-elements are added. Subclasses can
 	 * override this method to define the binding name, or add extensions to it.
+	 * <p>
+	 * Default implementation sets the name of the binding operation to the name of the operation.
 	 *
-	 * <p>Default implementation sets the name of the binding operation to the name of the operation.
-	 *
-	 * @param definition	   the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingOperation the WSDL4J {@code BindingOperation}
 	 * @throws WSDLException in case of errors
 	 */
@@ -198,14 +194,14 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/**
-	 * Called after the {@link BindingInput} has been created. Subclasses can override this method to define the name,
-	 * or add extensions to it.
+	 * Called after the {@link BindingInput} has been created. Subclasses can override this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation set the name of the binding input to the name of the input.
 	 *
-	 * <p>Default implementation set the name of the binding input to the name of the input.
-	 *
-	 * @param definition   the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingInput the WSDL4J {@code BindingInput}
-	 * @param input		   the corresponding WSDL4J {@code Input} @throws WSDLException in case of errors
+	 * @param input the corresponding WSDL4J {@code Input} @throws WSDLException in case of errors
 	 */
 	protected void populateBindingInput(Definition definition, BindingInput bindingInput, Input input)
 			throws WSDLException {
@@ -213,14 +209,14 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/**
-	 * Called after the {@link BindingOutput} has been created. Subclasses can override this method to define the name,
-	 * or add extensions to it.
+	 * Called after the {@link BindingOutput} has been created. Subclasses can override this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation sets the name of the binding output to the name of the output.
 	 *
-	 * <p>Default implementation sets the name of the binding output to the name of the output.
-	 *
-	 * @param definition	the WSDL4J {@code Definition}
+	 * @param definition the WSDL4J {@code Definition}
 	 * @param bindingOutput the WSDL4J {@code BindingOutput}
-	 * @param output		the corresponding WSDL4J {@code Output} @throws WSDLException in case of errors
+	 * @param output the corresponding WSDL4J {@code Output} @throws WSDLException in case of errors
 	 */
 	protected void populateBindingOutput(Definition definition, BindingOutput bindingOutput, Output output)
 			throws WSDLException {
@@ -228,13 +224,13 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/**
-	 * Called after the {@link BindingFault} has been created. Subclasses can implement this method to define the name,
-	 * or add extensions to it.
-	 *
-	 * <p>Default implementation set the name of the binding fault to the name of the fault.
+	 * Called after the {@link BindingFault} has been created. Subclasses can implement this method to define the name, or
+	 * add extensions to it.
+	 * <p>
+	 * Default implementation set the name of the binding fault to the name of the fault.
 	 *
 	 * @param bindingFault the WSDL4J {@code BindingFault}
-	 * @param fault		   the corresponding WSDL4J {@code Fault} @throws WSDLException in case of errors
+	 * @param fault the corresponding WSDL4J {@code Fault} @throws WSDLException in case of errors
 	 */
 	protected void populateBindingFault(Definition definition, BindingFault bindingFault, Fault fault)
 			throws WSDLException {
@@ -243,8 +239,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	/**
 	 * Creates a single {@link Service} if not present, and calls {@link #populateService(Definition, Service)} with it.
-	 * Creates a corresponding {@link Port} for each {@link Binding}, which is passed to {@link
-	 * #populatePort(javax.wsdl.Definition,javax.wsdl.Port)}.
+	 * Creates a corresponding {@link Port} for each {@link Binding}, which is passed to
+	 * {@link #populatePort(javax.wsdl.Definition,javax.wsdl.Port)}.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @throws WSDLException in case of errors
@@ -255,8 +251,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 		Service service;
 		if (definition.getServices().isEmpty()) {
 			service = definition.createService();
-		}
-		else {
+		} else {
 			service = (Service) definition.getServices().values().iterator().next();
 		}
 		populateService(definition, service);
@@ -267,10 +262,10 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/**
-	 * Called after the {@link Service} has been created, but before any sub-elements are added. Subclasses can
-	 * implement this method to define the service name, or add extensions to it.
-	 *
-	 * <p>Default implementation sets the name to the {@link #setServiceName(String) serviceName} property.
+	 * Called after the {@link Service} has been created, but before any sub-elements are added. Subclasses can implement
+	 * this method to define the service name, or add extensions to it.
+	 * <p>
+	 * Default implementation sets the name to the {@link #setServiceName(String) serviceName} property.
 	 *
 	 * @param service the WSDL4J {@code Service}
 	 * @throws WSDLException in case of errors
@@ -315,11 +310,11 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	/**
 	 * Called after the {@link Port} has been created, but before any sub-elements are added. Subclasses can implement
 	 * this method to define the port name, or add extensions to it.
-	 *
-	 * <p>Default implementation sets the port name to the binding name.
+	 * <p>
+	 * Default implementation sets the port name to the binding name.
 	 *
 	 * @param definition the WSDL4J {@code Definition}
-	 * @param port		 the WSDL4J {@code Port}
+	 * @param port the WSDL4J {@code Port}
 	 * @throws WSDLException in case of errors
 	 */
 	protected void populatePort(Definition definition, Port port) throws WSDLException {

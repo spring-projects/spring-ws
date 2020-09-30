@@ -38,5 +38,4 @@ public interface RequestCreator {
 	 */
 	WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException;
 
-
 }

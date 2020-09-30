@@ -22,6 +22,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -42,11 +43,11 @@ public @interface SoapFault {
 
 	/**
 	 * The custom fault code, to be used if {@link #faultCode()} is set to {@link FaultCode#CUSTOM}.
-	 *
-	 * <p>The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
+	 * <p>
+	 * The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
 	 * namespace is optional.
-	 *
-	 * <p>Note that custom Fault Codes are only supported on SOAP 1.1.
+	 * <p>
+	 * Note that custom Fault Codes are only supported on SOAP 1.1.
 	 */
 	String customFaultCode() default "";
 
@@ -55,6 +56,5 @@ public @interface SoapFault {
 
 	/** The fault string locale. By default, it is English. */
 	String locale() default "en";
-
 
 }

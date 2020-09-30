@@ -16,18 +16,17 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.custommonkey.xmlunit.Diff;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
-
-import org.custommonkey.xmlunit.Diff;
 import org.w3c.dom.Document;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} payloads.
@@ -67,8 +66,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(source, result);
 			return (Document) result.getNode();
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}

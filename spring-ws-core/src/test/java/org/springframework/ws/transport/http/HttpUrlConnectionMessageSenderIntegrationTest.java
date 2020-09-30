@@ -16,11 +16,11 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.time.Duration;
 
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 public class HttpUrlConnectionMessageSenderIntegrationTest
 		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpUrlConnectionMessageSender> {
@@ -36,8 +36,7 @@ public class HttpUrlConnectionMessageSenderIntegrationTest
 		this.messageSender.setConnectionTimeout(Duration.ofSeconds(3));
 		this.messageSender.setReadTimeout(Duration.ofSeconds(5));
 
-		try (HttpUrlConnection connection =
-					 (HttpUrlConnection) this.messageSender.createConnection(this.connectionUri)) {
+		try (HttpUrlConnection connection = (HttpUrlConnection) this.messageSender.createConnection(this.connectionUri)) {
 			assertThat(connection.getConnection().getConnectTimeout()).isEqualTo(3000);
 			assertThat(connection.getConnection().getReadTimeout()).isEqualTo(5000);
 		}

@@ -16,7 +16,10 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import java.io.InputStream;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,14 +33,11 @@ import javax.xml.soap.SOAPMessage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import org.w3c.dom.Document;
 
 public class SaajUtilsTest {
 
@@ -124,8 +124,8 @@ public class SaajUtilsTest {
 		factory.setNamespaceAware(true);
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(getClass().getResourceAsStream("soapMessage.xml"));
-		SOAPMessage soapMessage =
-				SaajUtils.loadMessage(new ClassPathResource("soapMessage.xml", getClass()), messageFactory);
+		SOAPMessage soapMessage = SaajUtils.loadMessage(new ClassPathResource("soapMessage.xml", getClass()),
+				messageFactory);
 		assertXMLEqual(soapMessage.getSOAPPart(), document);
 	}
 

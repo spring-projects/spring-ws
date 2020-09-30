@@ -16,8 +16,11 @@
 
 package org.springframework.ws.transport.jms;
 
+import static org.junit.Assert.*;
+
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
+
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -26,6 +29,9 @@ import javax.jms.TextMessage;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
@@ -38,21 +44,13 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("jms-sender-applicationContext.xml")
 public class JmsMessageSenderIntegrationTest {
 
-	@Autowired
-	private JmsMessageSender messageSender;
+	@Autowired private JmsMessageSender messageSender;
 
-	@Autowired
-	private JmsTemplate jmsTemplate;
+	@Autowired private JmsTemplate jmsTemplate;
 
 	private MessageFactory messageFactory;
 
@@ -84,8 +82,7 @@ public class JmsMessageSenderIntegrationTest {
 				public Message createMessage(Session session) throws JMSException {
 					BytesMessage response = session.createBytesMessage();
 					response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
-							SoapVersion.SOAP_11.getContentType());
+					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
 					response.writeBytes(buf);
 					return response;
 				}
@@ -94,8 +91,7 @@ public class JmsMessageSenderIntegrationTest {
 			assertNotNull("No response received", response);
 			assertEquals("Invalid SOAPAction", SOAP_ACTION, response.getSoapAction());
 			assertFalse("Message is fault", response.hasFault());
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}
@@ -107,8 +103,7 @@ public class JmsMessageSenderIntegrationTest {
 		WebServiceConnection connection = null;
 		try {
 			String responseQueueName = "SenderResponseQueue";
-			URI uri = new URI(
-					"jms:SenderRequestQueue?replyToName=" + responseQueueName + "&deliveryMode=NON_PERSISTENT");
+			URI uri = new URI("jms:SenderRequestQueue?replyToName=" + responseQueueName + "&deliveryMode=NON_PERSISTENT");
 			connection = messageSender.createConnection(uri);
 			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
 			soapRequest.setSoapAction(SOAP_ACTION);
@@ -126,8 +121,7 @@ public class JmsMessageSenderIntegrationTest {
 					BytesMessage response = session.createBytesMessage();
 					response.setJMSCorrelationID(request.getJMSMessageID());
 					response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
-							SoapVersion.SOAP_11.getContentType());
+					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
 					response.writeBytes(buf);
 					return response;
 				}
@@ -136,8 +130,7 @@ public class JmsMessageSenderIntegrationTest {
 			assertNotNull("No response received", response);
 			assertEquals("Invalid SOAPAction", SOAP_ACTION, response.getSoapAction());
 			assertFalse("Message is fault", response.hasFault());
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}
@@ -165,8 +158,7 @@ public class JmsMessageSenderIntegrationTest {
 				public Message createMessage(Session session) throws JMSException {
 					TextMessage response = session.createTextMessage();
 					response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
-							SoapVersion.SOAP_11.getContentType());
+					response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
 					response.setText(text);
 					return response;
 				}
@@ -175,8 +167,7 @@ public class JmsMessageSenderIntegrationTest {
 			assertNotNull("No response received", response);
 			assertEquals("Invalid SOAPAction", SOAP_ACTION, response.getSoapAction());
 			assertFalse("Message is fault", response.hasFault());
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}
@@ -199,8 +190,7 @@ public class JmsMessageSenderIntegrationTest {
 			messageFactory.createMessage().writeTo(bos);
 			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
 			assertNull("Response received", response);
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}
@@ -226,8 +216,7 @@ public class JmsMessageSenderIntegrationTest {
 			BytesMessage request = (BytesMessage) jmsTemplate.receive();
 			assertNotNull("No message received", request);
 			assertTrue("Message not processed", request.getBooleanProperty("processed"));
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}

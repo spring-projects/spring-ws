@@ -16,13 +16,12 @@
 
 package org.springframework.ws.test.client;
 
+import static org.easymock.EasyMock.*;
+
 import java.net.URI;
 
-import org.springframework.ws.WebServiceMessage;
-
 import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.WebServiceMessage;
 
 public class UriMatcherTest {
 

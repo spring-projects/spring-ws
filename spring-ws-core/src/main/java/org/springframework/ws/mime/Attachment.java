@@ -18,6 +18,7 @@ package org.springframework.ws.mime;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.activation.DataHandler;
 
 /**
@@ -45,8 +46,8 @@ public interface Attachment {
 	String getContentType();
 
 	/**
-	 * Return an {@code InputStream} to read the contents of the attachment from. The user is responsible for
-	 * closing the stream.
+	 * Return an {@code InputStream} to read the contents of the attachment from. The user is responsible for closing the
+	 * stream.
 	 *
 	 * @return the contents of the file as stream, or an empty stream if empty
 	 * @throws IOException in case of access I/O errors

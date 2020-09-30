@@ -37,9 +37,9 @@ import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
- *
- * <p>An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from. The digest of the
- * password contained in this details object is then compared with the digest in the message.
+ * <p>
+ * An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from. The digest of the password
+ * contained in this details object is then compared with the digest in the message.
  *
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
@@ -66,15 +66,13 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(userDetailsService, "userDetailsService is required");
 	}
-	
-
 
 	/**
 	 * Invoked when the callback has a {@link WSPasswordCallback#USERNAME_TOKEN} usage.
-	 *
-	 * <p>This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
-	 *
-	 * <p>Default implementation throws an {@link UnsupportedCallbackException}.
+	 * <p>
+	 * This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
+	 * <p>
+	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
 	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
 		UserDetails user = loadUserDetails(callback.getIdentifier());
@@ -89,8 +87,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 			throws IOException, UnsupportedCallbackException {
 		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
 		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
-		UsernamePasswordAuthenticationToken authRequest =
-				new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), user.getAuthorities());
+		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
+				principal.getPassword(), user.getAuthorities());
 		if (logger.isDebugEnabled()) {
 			logger.debug("Authentication success: " + authRequest.toString());
 		}
@@ -108,8 +106,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		if (user == null) {
 			try {
 				user = userDetailsService.loadUserByUsername(username);
-			}
-			catch (UsernameNotFoundException notFound) {
+			} catch (UsernameNotFoundException notFound) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Username '" + username + "' not found");
 				}

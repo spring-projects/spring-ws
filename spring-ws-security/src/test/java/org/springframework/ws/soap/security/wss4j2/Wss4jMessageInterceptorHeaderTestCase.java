@@ -21,10 +21,10 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 import java.util.Properties;
+
 import javax.xml.namespace.QName;
 
 import org.junit.Test;
-
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -63,7 +63,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 		interceptorThatKeepsSecurityHeader.setRemoveSecurityHeader(false);
 		interceptorThatKeepsSecurityHeader.afterPropertiesSet();
 	}
-	
+
 	@Test
 	public void testValidateUsernameTokenPlainText() throws Exception {
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
@@ -114,13 +114,13 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
 	}
 
-	@Test(expected=WsSecurityValidationException.class)
+	@Test(expected = WsSecurityValidationException.class)
 	public void testEmptySecurityHeader() throws Exception {
 		SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.validateMessage(message, messageContext);
 	}
-	
+
 	@Test
 	public void testPreserveCustomHeaders() throws Exception {
 		interceptor.setSecurementActions("UsernameToken");

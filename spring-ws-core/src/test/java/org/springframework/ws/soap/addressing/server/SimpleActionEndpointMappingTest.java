@@ -16,10 +16,14 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import static org.junit.Assert.*;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -29,11 +33,6 @@ import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCase {
 
@@ -49,8 +48,8 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCas
 		Endpoint2 endpoint2 = new Endpoint2();
 		map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
 		map.put("http://example.com/fabrikam/mail/Add", endpoint2);
-		mapping.setPreInterceptors(new EndpointInterceptor[]{new PayloadLoggingInterceptor()});
-		mapping.setPostInterceptors(new EndpointInterceptor[]{new PayloadValidatingInterceptor()});
+		mapping.setPreInterceptors(new EndpointInterceptor[] { new PayloadLoggingInterceptor() });
+		mapping.setPostInterceptors(new EndpointInterceptor[] { new PayloadValidatingInterceptor() });
 		mapping.setAddress(new URI("mailto:fabrikam@example.com"));
 		mapping.setActionMap(map);
 		mapping.afterPropertiesSet();

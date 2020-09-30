@@ -24,8 +24,8 @@ import org.springframework.ws.soap.SoapMessage;
 /**
  * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UUID} to generate a Message Id. The UUID
  * is prefixed by {@code urn:uuid:}.
- *
- * <p>Note that the {@link UUID} class is only available on Java 5 and above.
+ * <p>
+ * Note that the {@link UUID} class is only available on Java 5 and above.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

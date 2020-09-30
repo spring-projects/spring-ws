@@ -24,7 +24,6 @@ import org.apache.axiom.soap.RolePlayer;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
-
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
@@ -57,7 +56,7 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
 				}
 			};
 		}
-		Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>)getAxiomHeader().getHeadersToProcess(rolePlayer);
+		Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>) getAxiomHeader().getHeadersToProcess(rolePlayer);
 		return new AxiomSoapHeaderElementIterator(result);
 	}
 }

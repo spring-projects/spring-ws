@@ -16,6 +16,16 @@
 
 package org.springframework.ws.soap.addressing.server;
 
+import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
+
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,15 +41,6 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-import java.io.IOException;
-import java.io.InputStream;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Arjen Poutsma
@@ -87,8 +88,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 		try {
 			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
 			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
-		}
-		finally {
+		} finally {
 			is.close();
 		}
 	}

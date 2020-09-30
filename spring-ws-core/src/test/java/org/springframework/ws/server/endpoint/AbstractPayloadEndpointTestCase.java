@@ -16,19 +16,18 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTestCase {
 

@@ -16,18 +16,18 @@
 
 package org.springframework.ws.test.support.matcher;
 
-import java.io.IOException;
+import static org.springframework.ws.test.support.AssertionErrors.*;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Abstract base class for SOAP-specific {@link WebServiceMessageMatcher} implementations.
- *
- * <p>Asserts that the message given to {@link #match(WebServiceMessage)} is a {@link SoapMessage}, and invokes {@link
- * #match(SoapMessage)} with it if so.
+ * <p>
+ * Asserts that the message given to {@link #match(WebServiceMessage)} is a {@link SoapMessage}, and invokes
+ * {@link #match(SoapMessage)} with it if so.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -45,7 +45,7 @@ public abstract class AbstractSoapMessageMatcher implements WebServiceMessageMat
 	 * {@link SoapMessage}.
 	 *
 	 * @param soapMessage the soap message
-	 * @throws IOException	  in case of I/O errors
+	 * @throws IOException in case of I/O errors
 	 * @throws AssertionError if expectations are not met
 	 */
 	protected abstract void match(SoapMessage soapMessage) throws IOException, AssertionError;

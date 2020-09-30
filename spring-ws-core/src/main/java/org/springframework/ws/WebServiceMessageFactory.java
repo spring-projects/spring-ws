@@ -22,8 +22,8 @@ import java.io.InputStream;
 /**
  * The {@code WebServiceMessageFactory} serves as a factory for {@link org.springframework.ws.WebServiceMessage
  * WebServiceMessages}.
- *
- * <p>Allows the creation of empty messages, or messages based on {@code InputStream}s.
+ * <p>
+ * Allows the creation of empty messages, or messages based on {@code InputStream}s.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.WebServiceMessage
@@ -40,8 +40,8 @@ public interface WebServiceMessageFactory {
 
 	/**
 	 * Reads a {@link WebServiceMessage} from the given input stream.
-	 *
-	 * <p>If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
+	 * <p>
+	 * If the given stream is an instance of {@link org.springframework.ws.transport.TransportInputStream
 	 * TransportInputStream}, the headers will be read from the request.
 	 *
 	 * @param inputStream the input stream to read the message from

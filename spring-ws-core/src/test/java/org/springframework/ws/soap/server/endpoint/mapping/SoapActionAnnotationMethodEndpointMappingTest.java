@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import static org.easymock.EasyMock.*;
+
 import java.lang.reflect.Method;
 
-import static org.easymock.EasyMock.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -120,17 +120,15 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 		}
 
-		@SoapActions({@SoapAction("http://springframework.org/spring-ws/SoapAction1"),
-				@SoapAction("http://springframework.org/spring-ws/SoapAction2")})
-		public void doItMultiple() {
-		}
+		@SoapActions({ @SoapAction("http://springframework.org/spring-ws/SoapAction1"),
+				@SoapAction("http://springframework.org/spring-ws/SoapAction2") })
+		public void doItMultiple() {}
 
 		@SoapAction("http://springframework.org/spring-ws/SoapAction3")
 		@SoapAction("http://springframework.org/spring-ws/SoapAction4")
 		public void doItRepeatable() {
 
 		}
-
 
 	}
 }

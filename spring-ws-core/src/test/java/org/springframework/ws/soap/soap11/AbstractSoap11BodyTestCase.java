@@ -16,9 +16,16 @@
 
 package org.springframework.ws.soap.soap11;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
+import org.junit.Test;
 import org.springframework.ws.soap.AbstractSoapBodyTestCase;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -26,11 +33,6 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Test;
-
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.junit.Assert.*;
 
 public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCase {
 
@@ -57,9 +59,9 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		SoapFault fault = soapBody.addMustUnderstandFault("SOAP Must Understand Error", null);
 		assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "MustUnderstand"),
 				fault.getFaultCode());
-		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<faultcode>" + soapBody.getName().getPrefix() + ":MustUnderstand</faultcode>" +
-				"<faultstring>SOAP Must Understand Error</faultstring></SOAP-ENV:Fault>");
+		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<faultcode>"
+				+ soapBody.getName().getPrefix() + ":MustUnderstand</faultcode>"
+				+ "<faultstring>SOAP Must Understand Error</faultstring></SOAP-ENV:Fault>");
 	}
 
 	@Test
@@ -67,9 +69,9 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		SoapFault fault = soapBody.addClientOrSenderFault("faultString", null);
 		assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"),
 				fault.getFaultCode());
-		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<faultcode>" + soapBody.getName().getPrefix() + ":Client</faultcode>" +
-				"<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
+		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<faultcode>"
+				+ soapBody.getName().getPrefix() + ":Client</faultcode>" + "<faultstring>faultString</faultstring>"
+				+ "</SOAP-ENV:Fault>");
 	}
 
 	@Test
@@ -77,9 +79,9 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		SoapFault fault = soapBody.addServerOrReceiverFault("faultString", null);
 		assertEquals("Invalid fault code", new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"),
 				fault.getFaultCode());
-		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<faultcode>" + soapBody.getName().getPrefix() + ":Server</faultcode>" +
-				"<faultstring>faultString</faultstring>" + "</SOAP-ENV:Fault>");
+		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<faultcode>"
+				+ soapBody.getName().getPrefix() + ":Server</faultcode>" + "<faultstring>faultString</faultstring>"
+				+ "</SOAP-ENV:Fault>");
 	}
 
 	@Test
@@ -96,10 +98,10 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		String actor = "http://www.springframework.org/actor";
 		fault.setFaultActorOrRole(actor);
 		assertEquals("Invalid fault actor", actor, fault.getFaultActorOrRole());
-		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' " +
-				"xmlns:spring='http://www.springframework.org'>" + "<faultcode>spring:fault</faultcode>" +
-				"<faultstring xml:lang='en'>" + faultString + "</faultstring>" + "<faultactor>" + actor +
-				"</faultactor>" + "</SOAP-ENV:Fault>");
+		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' "
+				+ "xmlns:spring='http://www.springframework.org'>" + "<faultcode>spring:fault</faultcode>"
+				+ "<faultstring xml:lang='en'>" + faultString + "</faultstring>" + "<faultactor>" + actor + "</faultactor>"
+				+ "</SOAP-ENV:Fault>");
 	}
 
 	@Test
@@ -132,26 +134,24 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		detailContents = new StringSource("<detailContents xmlns='namespace'/>");
 		transformer.transform(detailContents, detailElement2.getResult());
 		assertPayloadEqual(
-				"<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='http://www.springframework.org'>" +
-						"<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>" +
-						"<detail>" +
-						"<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
-						"<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>" +
-						"</detail>" + "</SOAP-ENV:Fault>");
+				"<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='http://www.springframework.org'>"
+						+ "<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>" + "<detail>"
+						+ "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>"
+						+ "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>"
+						+ "</detail>" + "</SOAP-ENV:Fault>");
 
 	}
 
 	@Test
 	public void testAddFaultWithDetailResult() throws Exception {
-		SoapFault fault = ((Soap11Body) soapBody)
-				.addFault(new QName("namespace", "localPart", "prefix"), "Fault", null);
+		SoapFault fault = ((Soap11Body) soapBody).addFault(new QName("namespace", "localPart", "prefix"), "Fault", null);
 		SoapFaultDetail detail = fault.addFaultDetail();
 		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
 		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
-		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" +
-				"<faultcode xmlns:prefix='namespace'>prefix:localPart</faultcode>" +
-				"<faultstring>Fault</faultstring>" + "<detail>" + "<detailContents xmlns='namespace'/>" +
-				"<detailContents xmlns='namespace'/>" + "</detail></SOAP-ENV:Fault>");
+		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>"
+				+ "<faultcode xmlns:prefix='namespace'>prefix:localPart</faultcode>" + "<faultstring>Fault</faultstring>"
+				+ "<detail>" + "<detailContents xmlns='namespace'/>" + "<detailContents xmlns='namespace'/>"
+				+ "</detail></SOAP-ENV:Fault>");
 	}
 
 }

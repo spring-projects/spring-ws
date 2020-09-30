@@ -16,17 +16,16 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.junit.Assert.*;
+
 import org.apache.wss4j.dom.engine.WSSecurityEngine;
 import org.junit.Test;
-
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-
-import static org.junit.Assert.*;
 
 public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 

@@ -30,8 +30,8 @@ import com.sun.mail.imap.IMAPFolder;
 /**
  * Implementation of the {@link MonitoringStrategy} interface that uses the IMAP IDLE command for asynchronous message
  * detection.
- *
- * <p><b>Note</b> that this implementation is only suitable for use with IMAP servers which support the IDLE command.
+ * <p>
+ * <b>Note</b> that this implementation is only suitable for use with IMAP servers which support the IDLE command.
  * Additionally, this strategy requires JavaMail version 1.4.1.
  *
  * @author Arjen Poutsma
@@ -55,8 +55,7 @@ public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 		folder.addMessageCountListener(messageCountListener);
 		try {
 			imapFolder.idle();
-		}
-		finally {
+		} finally {
 			folder.removeMessageCountListener(messageCountListener);
 		}
 	}
@@ -70,8 +69,7 @@ public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 					try {
 						// this will return the flow to the idle call, above
 						message.getLineCount();
-					}
-					catch (MessagingException ex) {
+					} catch (MessagingException ex) {
 						// ignore
 					}
 				}

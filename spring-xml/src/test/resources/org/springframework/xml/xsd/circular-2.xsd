@@ -3,8 +3,8 @@
             targetNamespace="urn:1"
             xmlns:tns="urn:1" elementFormDefault="qualified"
             attributeFormDefault="unqualified">
-    <xsd:include schemaLocation="circular-3.xsd"/>
-    <xsd:simpleType name="B1">
-        <xsd:restriction base="tns:C1"/>
-    </xsd:simpleType>
+	<xsd:include schemaLocation="circular-3.xsd"/>
+	<xsd:simpleType name="B1">
+		<xsd:restriction base="tns:C1"/>
+	</xsd:simpleType>
 </xsd:schema>

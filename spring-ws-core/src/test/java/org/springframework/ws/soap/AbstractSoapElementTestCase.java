@@ -17,6 +17,7 @@
 package org.springframework.ws.soap;
 
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -24,7 +25,6 @@ import javax.xml.transform.TransformerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 public abstract class AbstractSoapElementTestCase {
@@ -65,6 +65,5 @@ public abstract class AbstractSoapElementTestCase {
 		String namespace = "http://springframework.org/spring-ws";
 		soapElement.addNamespaceDeclaration(prefix, namespace);
 	}
-
 
 }

@@ -16,13 +16,12 @@
 
 package org.springframework.ws.soap;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 import org.springframework.ws.AbstractWebServiceMessageFactoryTestCase;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractSoapMessageFactoryTestCase extends AbstractWebServiceMessageFactoryTestCase {
 

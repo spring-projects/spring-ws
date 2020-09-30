@@ -3,20 +3,20 @@
         targetNamespace="http://www.springframework.org/spring-ws/test/validation"
         xmlns:tns="http://www.springframework.org/spring-ws/test/validation" elementFormDefault="qualified">
 
-    <element name="product" type="tns:ProductType"/>
+	<element name="product" type="tns:ProductType"/>
 
-    <complexType name="ProductType">
-        <sequence>
-            <element name="number" type="integer"/>
-            <element name="size" type="tns:SizeType"/>
-        </sequence>
-        <attribute name="effDate" type="date"/>
-    </complexType>
+	<complexType name="ProductType">
+		<sequence>
+			<element name="number" type="integer"/>
+			<element name="size" type="tns:SizeType"/>
+		</sequence>
+		<attribute name="effDate" type="date"/>
+	</complexType>
 
-    <simpleType name="SizeType">
-        <restriction base="integer">
-            <minInclusive value="2"/>
-            <maxInclusive value="18"/>
-        </restriction>
-    </simpleType>
+	<simpleType name="SizeType">
+		<restriction base="integer">
+			<minInclusive value="2"/>
+			<maxInclusive value="18"/>
+		</restriction>
+	</simpleType>
 </schema>

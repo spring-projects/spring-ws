@@ -18,6 +18,7 @@ package org.springframework.ws.soap.server.endpoint;
 
 import java.io.IOException;
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
@@ -30,7 +31,6 @@ import javax.xml.transform.Source;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -56,8 +56,8 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage request = messageFactory.createMessage();
 		request.getSOAPBody().addBodyElement(new QName("http://www.springframework.org/spring-ws", "request"));
-		messageContext =
-				new DefaultMessageContext(new SaajSoapMessage(request), new SaajSoapMessageFactory(messageFactory));
+		messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
+				new SaajSoapMessageFactory(messageFactory));
 	}
 
 	@Test
@@ -65,15 +65,14 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		Person p = new Person("", -1);
 		PersonMarshaller marshaller = new PersonMarshaller(p);
 
-		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
-				new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
+		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint = new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
-					@Override
-					protected Object invokeInternal(Object requestObject) throws Exception {
-						Assert.fail("No expected");
-						return null;
-					}
-				};
+			@Override
+			protected Object invokeInternal(Object requestObject) throws Exception {
+				Assert.fail("No expected");
+				return null;
+			}
+		};
 		endpoint.setValidator(new PersonValidator());
 		endpoint.setMessageSource(messageSource);
 		endpoint.setMarshaller(marshaller);
@@ -107,14 +106,13 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 	public void testValidationCorrect() throws Exception {
 		Person p = new Person("John", 42);
 		PersonMarshaller marshaller = new PersonMarshaller(p);
-		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint =
-				new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
+		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint = new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
-					@Override
-					protected Object invokeInternal(Object requestObject) throws Exception {
-						return null;
-					}
-				};
+			@Override
+			protected Object invokeInternal(Object requestObject) throws Exception {
+				return null;
+			}
+		};
 		endpoint.setValidator(new PersonValidator());
 		endpoint.setMessageSource(messageSource);
 		endpoint.setMarshaller(marshaller);
@@ -139,8 +137,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 			Person p = (Person) obj;
 			if (p.getAge() < 0) {
 				e.rejectValue("age", "age.negativevalue");
-			}
-			else if (p.getAge() > 110) {
+			} else if (p.getAge() > 110) {
 				e.rejectValue("age", "too.darn.old");
 			}
 		}
@@ -197,8 +194,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		@Override
-		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
-		}
+		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {}
 	}
 
 }

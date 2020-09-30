@@ -16,11 +16,10 @@
 
 package org.springframework.xml.sax;
 
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 public class SaxUtilsTest {
 

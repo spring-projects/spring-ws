@@ -34,7 +34,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -43,10 +42,10 @@ import org.springframework.ws.transport.WebServiceConnection;
 /**
  * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
  * HttpClient</a> to execute POST requests.
- *
- * <p>Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
- * Authentication can also be set by injecting a {@link Credentials} instance (such as the {@link
- * UsernamePasswordCredentials}).
+ * <p>
+ * Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
+ * Authentication can also be set by injecting a {@link Credentials} instance (such as the
+ * {@link UsernamePasswordCredentials}).
  *
  * @author Alan Stewart
  * @author Barry Pitman
@@ -70,12 +69,12 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	private AuthScope authScope = AuthScope.ANY;
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a
-	 * default {@link org.apache.http.impl.conn.PoolingClientConnectionManager}.
+	 * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a default
+	 * {@link org.apache.http.impl.conn.PoolingClientConnectionManager}.
 	 */
 	public HttpComponentsMessageSender() {
-		org.apache.http.impl.client.DefaultHttpClient defaultClient =
-				new org.apache.http.impl.client.DefaultHttpClient(new org.apache.http.impl.conn.PoolingClientConnectionManager());
+		org.apache.http.impl.client.DefaultHttpClient defaultClient = new org.apache.http.impl.client.DefaultHttpClient(
+				new org.apache.http.impl.conn.PoolingClientConnectionManager());
 		defaultClient.addRequestInterceptor(new RemoveSoapHeadersInterceptor(), 0);
 
 		this.httpClient = defaultClient;
@@ -84,13 +83,12 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with the given
-	 * {@link HttpClient} instance.
+	 * Create a new instance of the {@code HttpClientMessageSender} with the given {@link HttpClient} instance.
 	 * <p>
-	 * This constructor does not change the given {@code HttpClient} in any way. As such,
-	 * it does not set timeouts, nor does it
-	 * {@linkplain org.apache.http.impl.client.DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor) add}
-	 * the {@link RemoveSoapHeadersInterceptor}.
+	 * This constructor does not change the given {@code HttpClient} in any way. As such, it does not set timeouts, nor
+	 * does it
+	 * {@linkplain org.apache.http.impl.client.DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor)
+	 * add} the {@link RemoveSoapHeadersInterceptor}.
 	 *
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
@@ -161,9 +159,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 		}
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
 		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
-			throw new IllegalArgumentException("maxTotalConnections is not supported on " +
-					connectionManager.getClass().getName() + ". Use " + org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() +
-					" instead");
+			throw new IllegalArgumentException(
+					"maxTotalConnections is not supported on " + connectionManager.getClass().getName() + ". Use "
+							+ org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() + " instead");
 		}
 		((org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager).setMaxTotal(maxTotalConnections);
 	}
@@ -177,8 +175,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 * http://www.example.com:8080=7
 	 * http://www.springframework.org=10
 	 * </pre>
-	 *
-	 * <p>The host can be specified as a URI (with scheme and port).
+	 * <p>
+	 * The host can be specified as a URI (with scheme and port).
 	 *
 	 * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
 	 * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
@@ -186,12 +184,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
 		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
-			throw new IllegalArgumentException("maxConnectionsPerHost is not supported on " +
-					connectionManager.getClass().getName() + ". Use " + org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() +
-					" instead");
+			throw new IllegalArgumentException(
+					"maxConnectionsPerHost is not supported on " + connectionManager.getClass().getName() + ". Use "
+							+ org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() + " instead");
 		}
-		org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager =
-				(org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager;
+		org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager = (org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager;
 
 		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
 			URI uri = new URI(entry.getKey());
@@ -212,8 +209,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	/**
 	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
-	 *
-	 * <p>By default, the {@link AuthScope#ANY} is used.
+	 * <p>
+	 * By default, the {@link AuthScope#ANY} is used.
 	 *
 	 * @see #setCredentials(Credentials)
 	 */
@@ -223,10 +220,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (credentials != null &&
-				getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
-			((org.apache.http.impl.client.DefaultHttpClient) getHttpClient())
-					.getCredentialsProvider().setCredentials(authScope, credentials);
+		if (credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
+			((org.apache.http.impl.client.DefaultHttpClient) getHttpClient()).getCredentialsProvider()
+					.setCredentials(authScope, credentials);
 		}
 	}
 
@@ -234,16 +230,15 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		HttpPost httpPost = new HttpPost(uri);
 		if (isAcceptGzipEncoding()) {
-			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
-					HttpTransportConstants.CONTENT_ENCODING_GZIP);
+			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING, HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
 		HttpContext httpContext = createContext(uri);
 		return new HttpComponentsConnection(getHttpClient(), httpPost, httpContext);
 	}
 
 	/**
-	 * Template method that allows for creation of a {@link HttpContext} for the given uri. Default implementation
-	 * returns {@code null}.
+	 * Template method that allows for creation of a {@link HttpContext} for the given uri. Default implementation returns
+	 * {@code null}.
 	 *
 	 * @param uri the URI to create the context for
 	 * @return the context, or {@code null}
@@ -259,8 +254,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	/**
 	 * HttpClient {@link org.apache.http.HttpRequestInterceptor} implementation that removes {@code Content-Length} and
-	 * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set these
-	 * headers themselves, and HttpClient throws an exception if they have been set.
+	 * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set
+	 * these headers themselves, and HttpClient throws an exception if they have been set.
 	 */
 	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 

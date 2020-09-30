@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.jms;
 
+import static org.junit.Assert.*;
+
 import javax.annotation.Resource;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
@@ -25,38 +27,29 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("jms-receiver-applicationContext.xml")
 public class WebServiceMessageListenerIntegrationTest {
 
-	private static final String CONTENT =
-			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<SOAP-ENV:Body>\n" +
-					"<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n" +
-					"<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String CONTENT = "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>"
+			+ "<SOAP-ENV:Body>\n" + "<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n"
+			+ "<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-	@Autowired
-	private JmsTemplate jmsTemplate;
+	@Autowired private JmsTemplate jmsTemplate;
 
-	@Resource
-	private Queue responseQueue;
+	@Resource private Queue responseQueue;
 
-	@Resource
-	private Queue requestQueue;
+	@Resource private Queue requestQueue;
 
-	@Autowired
-	private Topic requestTopic;
-
+	@Autowired private Topic requestTopic;
 
 	@Test
 	public void testReceiveQueueBytesMessage() throws Exception {

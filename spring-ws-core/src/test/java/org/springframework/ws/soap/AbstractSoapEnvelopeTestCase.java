@@ -16,9 +16,9 @@
 
 package org.springframework.ws.soap;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public abstract class AbstractSoapEnvelopeTestCase extends AbstractSoapElementTestCase {
 

@@ -132,9 +132,9 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 		List<String> headerValues = headersListMappedByLowerCaseName.get(name.toLowerCase());
 
 		if (headerValues == null) {
-		    return Collections.<String>emptyList().iterator();
+			return Collections.<String> emptyList().iterator();
 		} else {
-		    return headerValues.iterator();
+			return headerValues.iterator();
 		}
 	}
 
@@ -152,8 +152,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	protected InputStream getRawResponseInputStream() throws IOException {
 		if (connection.getResponseCode() / 100 != 2) {
 			return connection.getErrorStream();
-		}
-		else {
+		} else {
 			return connection.getInputStream();
 		}
 	}

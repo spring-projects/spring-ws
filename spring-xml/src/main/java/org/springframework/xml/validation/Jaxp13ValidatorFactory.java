@@ -19,14 +19,14 @@ package org.springframework.xml.validation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
+import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import org.springframework.core.io.Resource;
 
 /**
  * Internal class that uses JAXP 1.0 features to create {@code XmlValidator} instances.
@@ -41,8 +41,7 @@ abstract class Jaxp13ValidatorFactory {
 		try {
 			Schema schema = SchemaLoaderUtils.loadSchema(resources, schemaLanguage);
 			return new Jaxp13Validator(schema);
-		}
-		catch (SAXException ex) {
+		} catch (SAXException ex) {
 			throw new XmlValidationException("Could not create Schema: " + ex.getMessage(), ex);
 		}
 	}
@@ -70,8 +69,7 @@ abstract class Jaxp13ValidatorFactory {
 			try {
 				validator.validate(source);
 				return errorHandler.getErrors();
-			}
-			catch (SAXException ex) {
+			} catch (SAXException ex) {
 				throw new XmlValidationException("Could not validate source: " + ex.getMessage(), ex);
 			}
 		}
@@ -88,8 +86,7 @@ abstract class Jaxp13ValidatorFactory {
 		}
 
 		@Override
-		public void warning(SAXParseException ex) throws SAXException {
-		}
+		public void warning(SAXParseException ex) throws SAXException {}
 
 		@Override
 		public void error(SAXParseException ex) throws SAXException {

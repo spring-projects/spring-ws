@@ -17,6 +17,7 @@
 package org.springframework.ws.test.server;
 
 import java.io.IOException;
+
 import javax.xml.transform.Source;
 
 import org.springframework.core.io.Resource;
@@ -29,16 +30,15 @@ import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
- * Factory methods for {@link RequestCreator} classes. Typically used to provide input for {@link
- * MockWebServiceClient#sendRequest(RequestCreator)}.
+ * Factory methods for {@link RequestCreator} classes. Typically used to provide input for
+ * {@link MockWebServiceClient#sendRequest(RequestCreator)}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
 public abstract class RequestCreators {
 
-	private RequestCreators() {
-	}
+	private RequestCreators() {}
 
 	// Payload
 
@@ -65,7 +65,7 @@ public abstract class RequestCreators {
 	}
 
 	// SOAP
-	
+
 	/**
 	 * Create a request with the given {@link Source} XML as SOAP envelope.
 	 *
@@ -106,6 +106,5 @@ public abstract class RequestCreators {
 			return adaptee.createMessage(messageFactory);
 		}
 	}
-
 
 }

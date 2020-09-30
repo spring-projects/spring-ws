@@ -16,10 +16,16 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import static org.easymock.EasyMock.*;
+
 import java.lang.reflect.Method;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
 import org.springframework.ws.WebServiceMessage;
@@ -29,12 +35,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class GenericMarshallingMethodEndpointAdapterTest {
 
@@ -195,8 +195,7 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 		return type;
 	}
 
-	public void unsupportedMultipleParams(String s1, String s2) {
-	}
+	public void unsupportedMultipleParams(String s1, String s2) {}
 
 	public String unsupportedWrongParam(String s) {
 		return s;
@@ -209,6 +208,5 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 	private static class MyGenericType<T> {
 
 	}
-
 
 }

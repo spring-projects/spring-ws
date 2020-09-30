@@ -17,6 +17,7 @@
 package org.springframework.ws.server.endpoint.adapter;
 
 import java.lang.reflect.Method;
+
 import javax.xml.transform.Source;
 
 import org.springframework.ws.WebServiceMessage;
@@ -27,23 +28,27 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
+ * 
  * <pre>
  * void handleMyMessage(Source request);
  * </pre>
+ * 
  * or
+ * 
  * <pre>
  * Source handleMyMessage(Source request);
  * </pre>
- * I.e. methods that take a single {@link Source} parameter, and return either {@code void} or a {@link Source}.
- * The method can have any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
- *
- * <p>This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
+ * 
+ * I.e. methods that take a single {@link Source} parameter, and return either {@code void} or a {@link Source}. The
+ * method can have any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
+ * <p>
+ * This adapter is registered by default by the {@link MessageDispatcher} and {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
- * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and {@link
- *			   org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor
- *			   SourcePayloadMethodProcessor}.
+ * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and
+ *             {@link org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor
+ *             SourcePayloadMethodProcessor}.
  */
 @Deprecated
 public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
@@ -51,9 +56,8 @@ public class PayloadMethodEndpointAdapter extends AbstractMethodEndpointAdapter 
 	@Override
 	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
 		Method method = methodEndpoint.getMethod();
-		return (Void.TYPE.isAssignableFrom(method.getReturnType()) ||
-				Source.class.isAssignableFrom(method.getReturnType())) && method.getParameterTypes().length == 1 &&
-				Source.class.isAssignableFrom(method.getParameterTypes()[0]);
+		return (Void.TYPE.isAssignableFrom(method.getReturnType()) || Source.class.isAssignableFrom(method.getReturnType()))
+				&& method.getParameterTypes().length == 1 && Source.class.isAssignableFrom(method.getParameterTypes()[0]);
 
 	}
 

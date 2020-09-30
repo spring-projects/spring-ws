@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -35,19 +36,19 @@ import javax.jms.Topic;
 import org.springframework.ws.transport.jms.JmsTransportConstants;
 
 /**
- * Collection of utility methods to work with JMS transports. Includes methods to retrieve JMS properties from an {@link
- * URI}.
+ * Collection of utility methods to work with JMS transports. Includes methods to retrieve JMS properties from an
+ * {@link URI}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
 public abstract class JmsTransportUtils {
 
-	private static final String[] CONVERSION_TABLE = new String[]{JmsTransportConstants.HEADER_CONTENT_TYPE,
+	private static final String[] CONVERSION_TABLE = new String[] { JmsTransportConstants.HEADER_CONTENT_TYPE,
 			JmsTransportConstants.PROPERTY_CONTENT_TYPE, JmsTransportConstants.HEADER_CONTENT_LENGTH,
 			JmsTransportConstants.PROPERTY_CONTENT_LENGTH, JmsTransportConstants.HEADER_SOAP_ACTION,
 			JmsTransportConstants.PROPERTY_SOAP_ACTION, JmsTransportConstants.HEADER_ACCEPT_ENCODING,
-			JmsTransportConstants.PROPERTY_ACCEPT_ENCODING};
+			JmsTransportConstants.PROPERTY_ACCEPT_ENCODING };
 
 	private static final Pattern DESTINATION_NAME_PATTERN = Pattern.compile("^([^\\?]+)");
 
@@ -61,8 +62,7 @@ public abstract class JmsTransportUtils {
 
 	private static final Pattern REPLY_TO_NAME_PATTERN = Pattern.compile("replyToName=([^&]+)");
 
-	private JmsTransportUtils() {
-	}
+	private JmsTransportUtils() {}
 
 	/**
 	 * Converts the given transport header to a JMS property name. Returns the given header name if no match is found.
@@ -77,7 +77,7 @@ public abstract class JmsTransportUtils {
 			}
 		}
 		return headerName;
-			}
+	}
 
 	/**
 	 * Converts the given JMS property name to a transport header name. Returns the given property name if no match is
@@ -92,7 +92,7 @@ public abstract class JmsTransportUtils {
 				return CONVERSION_TABLE[i - 1];
 			}
 		}
-			return propertyName;
+		return propertyName;
 	}
 
 	/**
@@ -108,12 +108,10 @@ public abstract class JmsTransportUtils {
 		String destinationName;
 		if (destination instanceof Queue) {
 			destinationName = ((Queue) destination).getQueueName();
-		}
-		else if (destination instanceof Topic) {
+		} else if (destination instanceof Topic) {
 			Topic topic = (Topic) destination;
 			destinationName = topic.getTopicName();
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("Destination [ " + destination + "] is neither Queue nor Topic");
 		}
 		return new URI(JmsTransportConstants.JMS_URI_SCHEME, destinationName, null);
@@ -131,8 +129,7 @@ public abstract class JmsTransportUtils {
 	}
 
 	/**
-	 * Returns an iterator over all header names in the given message. Delegates to {@link
-	 * #jmsPropertyToHeader(String)}.
+	 * Returns an iterator over all header names in the given message. Delegates to {@link #jmsPropertyToHeader(String)}.
 	 */
 	public static Iterator<String> getHeaderNames(Message message) throws JMSException {
 		Enumeration<?> properties = message.getPropertyNames();
@@ -148,17 +145,16 @@ public abstract class JmsTransportUtils {
 	}
 
 	/**
-	 * Returns an iterator over all the header values of the given message and header name. Delegates to {@link
-	 * #headerToJmsProperty(String)}.
+	 * Returns an iterator over all the header values of the given message and header name. Delegates to
+	 * {@link #headerToJmsProperty(String)}.
 	 */
 	public static Iterator<String> getHeaders(Message message, String name) throws JMSException {
 		String propertyName = headerToJmsProperty(name);
 		String value = message.getStringProperty(propertyName);
 		if (value != null) {
 			return Collections.singletonList(value).iterator();
-		}
-		else {
-			return Collections.<String>emptyList().iterator();
+		} else {
+			return Collections.<String> emptyList().iterator();
 		}
 	}
 
@@ -173,11 +169,9 @@ public abstract class JmsTransportUtils {
 		String deliveryMode = getStringParameter(DELIVERY_MODE_PATTERN, uri);
 		if ("NON_PERSISTENT".equals(deliveryMode)) {
 			return DeliveryMode.NON_PERSISTENT;
-		}
-		else if ("PERSISTENT".equals(deliveryMode)) {
+		} else if ("PERSISTENT".equals(deliveryMode)) {
 			return DeliveryMode.PERSISTENT;
-		}
-		else {
+		} else {
 			return Message.DEFAULT_DELIVERY_MODE;
 		}
 	}
@@ -192,8 +186,7 @@ public abstract class JmsTransportUtils {
 		String deliveryMode = getStringParameter(MESSAGE_TYPE_PATTERN, uri);
 		if ("TEXT_MESSAGE".equals(deliveryMode)) {
 			return JmsTransportConstants.TEXT_MESSAGE_TYPE;
-		}
-		else {
+		} else {
 			return JmsTransportConstants.BYTES_MESSAGE_TYPE;
 		}
 	}
@@ -238,8 +231,7 @@ public abstract class JmsTransportUtils {
 		if (matcher.find() && matcher.groupCount() == 1) {
 			try {
 				return Integer.parseInt(matcher.group(1));
-			}
-			catch (NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				// fall through to default value
 			}
 		}
@@ -251,8 +243,7 @@ public abstract class JmsTransportUtils {
 		if (matcher.find() && matcher.groupCount() == 1) {
 			try {
 				return Long.parseLong(matcher.group(1));
-			}
-			catch (NumberFormatException ex) {
+			} catch (NumberFormatException ex) {
 				// fall through to default value
 			}
 		}

@@ -16,17 +16,16 @@
 
 package org.springframework.ws.context;
 
-import java.util.Arrays;
+import static org.easymock.EasyMock.*;
 
-import org.springframework.ws.MockWebServiceMessage;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.WebServiceMessageFactory;
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.WebServiceMessageFactory;
 
 public class DefaultMessageContextTest {
 

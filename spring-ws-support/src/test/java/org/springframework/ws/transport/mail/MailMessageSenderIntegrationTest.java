@@ -17,20 +17,20 @@
 package org.springframework.ws.transport.mail;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
-
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.transport.WebServiceConnection;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.jvnet.mock_javamail.Mailbox;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.transport.WebServiceConnection;
 
 public class MailMessageSenderIntegrationTest {
 
@@ -67,8 +67,7 @@ public class MailMessageSenderIntegrationTest {
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 			Assert.assertEquals("No mail message sent", 1, Mailbox.get("server@example.com").size());
-		}
-		finally {
+		} finally {
 			if (connection != null) {
 				connection.close();
 			}

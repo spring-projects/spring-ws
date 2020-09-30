@@ -45,9 +45,8 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
 	 * Delegates to {@link #invokeInternal(org.springframework.ws.context.MessageContext,MethodEndpoint)}.
 	 *
 	 * @param messageContext the current message context
-	 * @param endpoint		 the endpoint to use. This object must have previously been passed to the
-	 *						 {@code supportsInternal} method of this interface, which must have returned
-	 *						 {@code true}
+	 * @param endpoint the endpoint to use. This object must have previously been passed to the {@code supportsInternal}
+	 *          method of this interface, which must have returned {@code true}
 	 * @throws Exception in case of errors
 	 */
 	@Override
@@ -70,7 +69,6 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
 	 * @param methodEndpoint the method endpoint to use
 	 * @throws Exception in case of errors
 	 */
-	protected abstract void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint)
-			throws Exception;
+	protected abstract void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception;
 
 }

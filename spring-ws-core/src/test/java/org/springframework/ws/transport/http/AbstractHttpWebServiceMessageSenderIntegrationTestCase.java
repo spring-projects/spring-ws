@@ -16,11 +16,15 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.zip.GZIPOutputStream;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,7 +48,6 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -57,9 +60,6 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T extends AbstractHttpWebServiceMessageSender> {
 
@@ -75,15 +75,13 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 
 	private static final String REQUEST = "<Request xmlns='http://springframework.org/spring-ws/' />";
 
-	private static final String SOAP_REQUEST =
-			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
-					REQUEST + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String SOAP_REQUEST = "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>"
+			+ REQUEST + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
 	private static final String RESPONSE = "<Response  xmlns='http://springframework.org/spring-ws/' />";
 
-	private static final String SOAP_RESPONSE =
-			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
-					RESPONSE + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String SOAP_RESPONSE = "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>"
+			+ RESPONSE + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
 	private Context jettyContext;
 
@@ -178,15 +176,14 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		servlet.setResponse(true);
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
 		jettyServer.start();
-		FaultAwareWebServiceConnection connection =
-				(FaultAwareWebServiceConnection) messageSender.createConnection(connectionUri);
+		FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
+				.createConnection(connectionUri);
 		SOAPMessage request = createRequest();
 		try {
 			connection.send(new SaajSoapMessage(request));
 			connection.receive(messageFactory);
 			Assert.assertTrue("Response has no fault", connection.hasFault());
-		}
-		finally {
+		} finally {
 			connection.close();
 		}
 	}
@@ -194,8 +191,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 	private void validateResponse(Servlet servlet) throws Exception {
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
 		jettyServer.start();
-		FaultAwareWebServiceConnection connection =
-				(FaultAwareWebServiceConnection) messageSender.createConnection(connectionUri);
+		FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
+				.createConnection(connectionUri);
 		SOAPMessage request = createRequest();
 		try {
 			connection.send(new SaajSoapMessage(request));
@@ -211,8 +208,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.transform(response.getPayloadSource(), result);
 			assertXMLEqual("Invalid response", RESPONSE, result.toString());
-		}
-		finally {
+		} finally {
 			connection.close();
 		}
 	}
@@ -227,8 +223,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 			connection.send(new SaajSoapMessage(request));
 			WebServiceMessage response = connection.receive(messageFactory);
 			Assert.assertNull("Response", response);
-		}
-		finally {
+		} finally {
 			connection.close();
 		}
 	}
@@ -275,8 +270,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 			try {
 				assertEquals("Invalid header value received on server side", REQUEST_HEADER_VALUE,
 						httpServletRequest.getHeader(REQUEST_HEADER_NAME));
-				String receivedRequest =
-						new String(FileCopyUtils.copyToByteArray(httpServletRequest.getInputStream()), "UTF-8");
+				String receivedRequest = new String(FileCopyUtils.copyToByteArray(httpServletRequest.getInputStream()),
+						"UTF-8");
 				assertXMLEqual("Invalid request received", SOAP_REQUEST, receivedRequest);
 				if (gzip) {
 					assertEquals("Invalid Accept-Encoding header value received on server side", "gzip",
@@ -296,14 +291,12 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 					OutputStream os;
 					if (gzip) {
 						os = new GZIPOutputStream(httpServletResponse.getOutputStream());
-					}
-					else {
+					} else {
 						os = httpServletResponse.getOutputStream();
 					}
 					FileCopyUtils.copy(SOAP_RESPONSE.getBytes("UTF-8"), os);
 				}
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				throw new ServletException(ex);
 			}
 		}

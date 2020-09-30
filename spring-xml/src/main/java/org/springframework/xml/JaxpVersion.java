@@ -21,8 +21,8 @@ import org.springframework.util.ClassUtils;
 /**
  * Helper class used to find the current version of JAXP. We cannot depend on the Java version, since JAXP can be
  * upgraded independently of the Java version.
- *
- * <p>Only distinguishes between JAXP 1.0, 1.1, 1.3, 1.4, and 1.5, since JAXP 1.2 was a maintenance release with no new
+ * <p>
+ * Only distinguishes between JAXP 1.0, 1.1, 1.3, 1.4, and 1.5, since JAXP 1.2 was a maintenance release with no new
  * classes.
  *
  * @author Arjen Poutsma
@@ -57,7 +57,7 @@ public abstract class JaxpVersion {
 	public static final int JAXP_15 = 5;
 
 	private static final String JAXP_14_CLASS_NAME = "javax.xml.transform.stax.StAXSource";
-	
+
 	private static final String JAXP_15_CLASS_NAME = "javax.xml.validation.SchemaFactoryConfigurationError";
 
 	private static int jaxpVersion;

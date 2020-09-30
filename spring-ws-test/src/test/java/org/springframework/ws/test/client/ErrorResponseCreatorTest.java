@@ -16,11 +16,11 @@
 
 package org.springframework.ws.test.client;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class ErrorResponseCreatorTest {
 

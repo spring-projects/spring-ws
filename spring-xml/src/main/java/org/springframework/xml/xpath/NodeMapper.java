@@ -36,7 +36,7 @@ public interface NodeMapper<T> {
 	/**
 	 * Maps a single node to an arbitrary object.
 	 *
-	 * @param node	  the node to map
+	 * @param node the node to map
 	 * @param nodeNum the number of the current node
 	 * @return object for the current node
 	 * @throws DOMException in case of DOM errors

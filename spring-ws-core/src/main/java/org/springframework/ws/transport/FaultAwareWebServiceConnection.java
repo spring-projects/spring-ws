@@ -17,6 +17,7 @@
 package org.springframework.ws.transport;
 
 import java.io.IOException;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.ws.soap.SoapFault;
@@ -33,8 +34,8 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
 	/**
 	 * Indicates whether this connection received a fault.
-	 *
-	 * <p>Typically implemented by looking at an HTTP status code.
+	 * <p>
+	 * Typically implemented by looking at an HTTP status code.
 	 *
 	 * @return {@code true} if this connection received a fault; {@code false} otherwise.
 	 * @throws IOException in case of I/O errors
@@ -43,8 +44,8 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
 	/**
 	 * Sets whether this connection will send a fault.
-	 *
-	 * <p>Typically implemented by setting an HTTP status code.
+	 * <p>
+	 * Typically implemented by setting an HTTP status code.
 	 *
 	 * @param fault {@code true} if this will send a fault; {@code false} otherwise.
 	 * @throws IOException in case of I/O errors
@@ -55,8 +56,8 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 
 	/**
 	 * Sets a specific fault code.
-	 *
-	 * <p>Typically implemented by setting an HTTP status code.
+	 * <p>
+	 * Typically implemented by setting an HTTP status code.
 	 *
 	 * @param faultCode the fault code to be set on the connection, or {@code null} for no fault.
 	 * @throws IOException in case of I/O errors

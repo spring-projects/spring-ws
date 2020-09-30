@@ -17,27 +17,34 @@
 package org.springframework.xml.namespace;
 
 import java.beans.PropertyEditorSupport;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.util.StringUtils;
 
 /**
  * PropertyEditor for {@code javax.xml.namespace.QName}, to populate a property of type QName from a String value.
- *
- * <p>Expects the syntax
+ * <p>
+ * Expects the syntax
+ * 
  * <pre>
  * localPart
  * </pre>
+ * 
  * or
+ * 
  * <pre>
  * {namespace}localPart
  * </pre>
+ * 
  * or
+ * 
  * <pre>
  * {namespace}prefix:localPart
  * </pre>
- * This resembles the {@code toString()} representation of {@code QName} itself, but allows for prefixes to be
- * specified as well.
+ * 
+ * This resembles the {@code toString()} representation of {@code QName} itself, but allows for prefixes to be specified
+ * as well.
  *
  * @author Arjen Poutsma
  * @see javax.xml.namespace.QName
@@ -57,17 +64,14 @@ public class QNameEditor extends PropertyEditorSupport {
 		Object value = getValue();
 		if (value == null || !(value instanceof QName)) {
 			return "";
-		}
-		else {
+		} else {
 			QName qName = (QName) value;
 			String prefix = qName.getPrefix();
 			if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
 				return "{" + qName.getNamespaceURI() + "}" + prefix + ":" + qName.getLocalPart();
-			}
-			else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+			} else if (StringUtils.hasLength(qName.getNamespaceURI())) {
 				return "{" + qName.getNamespaceURI() + "}" + qName.getLocalPart();
-			}
-			else {
+			} else {
 				return qName.getLocalPart();
 			}
 		}

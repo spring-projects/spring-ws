@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.core.MethodParameter;
@@ -36,12 +37,17 @@ import org.springframework.xml.namespace.QNameUtils;
  * Implementation of {@link MethodArgumentResolver} that supports resolving {@link SoapHeaderElement} parameters. Target
  * method parameters must be annotated with {@link SoapHeader} to indicate the SOAP header to resolve. This resolver
  * supports simple {@link SoapHeaderElement} parameters and {@link List} parameters for elements that appear multiple
- * times in the same SOAP header. </p> The following snippet shows an example of supported declarations.
- * <pre><code>
+ * times in the same SOAP header.
+ * </p>
+ * The following snippet shows an example of supported declarations.
+ * 
+ * <pre>
+ * <code>
  * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
  *
  * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
- * </code></pre>
+ * </code>
+ * </pre>
  *
  * @author Tareq Abedrabbo
  * @author Arjen Poutsma
@@ -86,8 +92,8 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 
 		String paramValue = parameter.getParameterAnnotation(SoapHeader.class).value();
 
-		Assert.isTrue(QNameUtils.validateQName(paramValue), "Invalid header qualified name [" + paramValue + "]. " +
-				"QName must be of the form '{namespace}localPart'.");
+		Assert.isTrue(QNameUtils.validateQName(paramValue),
+				"Invalid header qualified name [" + paramValue + "]. " + "QName must be of the form '{namespace}localPart'.");
 
 		QName qname = QName.valueOf(paramValue);
 
@@ -95,8 +101,7 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 
 		if (SoapHeaderElement.class.equals(parameterType)) {
 			return extractSoapHeader(qname, soapHeader);
-		}
-		else if (List.class.equals(parameterType)) {
+		} else if (List.class.equals(parameterType)) {
 			return extractSoapHeaderList(qname, soapHeader);
 		}
 		// should not happen
@@ -115,7 +120,7 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 	}
 
 	private List<SoapHeaderElement> extractSoapHeaderList(QName qname,
-														  org.springframework.ws.soap.SoapHeader soapHeader) {
+			org.springframework.ws.soap.SoapHeader soapHeader) {
 		List<SoapHeaderElement> result = new ArrayList<SoapHeaderElement>();
 		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
 		while (elements.hasNext()) {

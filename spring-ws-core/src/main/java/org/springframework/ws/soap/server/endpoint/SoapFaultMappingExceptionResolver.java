@@ -36,20 +36,19 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 	/**
 	 * Set the mappings between exception class names and SOAP Faults. The exception class name can be a substring, with
 	 * no wildcard support at present.
-	 *
-	 * <p>The values of the given properties object should use the format described in
-	 * {@code SoapFaultDefinitionEditor}.
-	 *
-	 * <p>Follows the same matching algorithm as {@code SimpleMappingExceptionResolver}.
+	 * <p>
+	 * The values of the given properties object should use the format described in {@code SoapFaultDefinitionEditor}.
+	 * <p>
+	 * Follows the same matching algorithm as {@code SimpleMappingExceptionResolver}.
 	 *
 	 * @param mappings exception patterns (can also be fully qualified class names) as keys, fault definition texts as
-	 *				   values
+	 *          values
 	 * @see SoapFaultDefinitionEditor
 	 */
 	public void setExceptionMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
 			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-				exceptionMappings.put((String)entry.getKey(), (String)entry.getValue());
+				exceptionMappings.put((String) entry.getKey(), (String) entry.getValue());
 			}
 		}
 	}
@@ -76,10 +75,10 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 	}
 
 	/**
-	 * Return the depth to the superclass matching. {@code 0} means ex matches exactly. Returns {@code -1} if
-	 * there's no match. Otherwise, returns depth. Lowest depth wins.
-	 *
-	 * <p>Follows the same algorithm as RollbackRuleAttribute, and SimpleMappingExceptionResolver
+	 * Return the depth to the superclass matching. {@code 0} means ex matches exactly. Returns {@code -1} if there's no
+	 * match. Otherwise, returns depth. Lowest depth wins.
+	 * <p>
+	 * Follows the same algorithm as RollbackRuleAttribute, and SimpleMappingExceptionResolver
 	 */
 	protected int getDepth(String exceptionMapping, Exception ex) {
 		return getDepth(exceptionMapping, ex.getClass(), 0);

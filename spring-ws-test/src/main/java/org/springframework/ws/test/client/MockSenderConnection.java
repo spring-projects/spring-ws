@@ -75,8 +75,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 			for (RequestMatcher requestMatcher : requestMatchers) {
 				requestMatcher.match(uri, message);
 			}
-		}
-		else {
+		} else {
 			throw new AssertionError("Unexpected send() for [" + message + "]");
 		}
 		this.request = message;
@@ -86,8 +85,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		if (responseCreator != null) {
 			return responseCreator.createResponse(uri, request, messageFactory);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -106,8 +104,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	public String getErrorMessage() throws IOException {
 		if (responseCreator instanceof ErrorResponseCreator) {
 			return ((ErrorResponseCreator) responseCreator).getErrorMessage();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

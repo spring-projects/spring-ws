@@ -20,10 +20,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.springframework.core.io.Resource;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
 
 /**
@@ -56,12 +55,10 @@ public abstract class SaxUtils {
 	public static String getSystemId(Resource resource) {
 		try {
 			return new URI(resource.getURL().toExternalForm()).toString();
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			logger.debug("Could not get System ID from [" + resource + "], ex");
 			return null;
-		}
-		catch (URISyntaxException e) {
+		} catch (URISyntaxException e) {
 			logger.debug("Could not get System ID from [" + resource + "], ex");
 			return null;
 		}

@@ -16,17 +16,16 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
 
 public class XPathExpectationsHelperTest {
 
@@ -188,8 +187,7 @@ public class XPathExpectationsHelperTest {
 		assertNotNull(matcher);
 
 		WebServiceMessage message = createMock(WebServiceMessage.class);
-		expect(message.getPayloadSource())
-				.andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>"));
+		expect(message.getPayloadSource()).andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>"));
 
 		replay(message);
 
@@ -206,8 +204,8 @@ public class XPathExpectationsHelperTest {
 		assertNotNull(matcher);
 
 		WebServiceMessage message = createMock(WebServiceMessage.class);
-		expect(message.getPayloadSource())
-				.andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>")).times(2);
+		expect(message.getPayloadSource()).andReturn(new StringSource("<a:a xmlns:a=\"http://example.org\"><a:b/></a:a>"))
+				.times(2);
 
 		replay(message);
 

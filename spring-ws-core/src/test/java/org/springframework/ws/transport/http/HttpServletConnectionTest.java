@@ -16,7 +16,11 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
@@ -27,7 +31,6 @@ import javax.xml.transform.TransformerFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.soap.SoapVersion;
@@ -36,9 +39,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
 
 public class HttpServletConnectionTest {
 
@@ -54,9 +54,8 @@ public class HttpServletConnectionTest {
 
 	private static final String CONTENT = "<Request xmlns='http://springframework.org/spring-ws/' />";
 
-	private static final String SOAP_CONTENT =
-			"<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>" +
-					CONTENT + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
+	private static final String SOAP_CONTENT = "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>"
+			+ CONTENT + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
 	private SaajSoapMessageFactory messageFactory;
 
@@ -103,8 +102,7 @@ public class HttpServletConnectionTest {
 
 		connection.send(message);
 
-		assertEquals("Invalid header", HEADER_VALUE,
-				httpServletResponse.getHeader(HEADER_NAME));
+		assertEquals("Invalid header", HEADER_VALUE, httpServletResponse.getHeader(HEADER_NAME));
 		assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
 	}
 

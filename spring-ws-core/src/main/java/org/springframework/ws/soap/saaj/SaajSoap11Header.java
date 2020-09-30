@@ -19,6 +19,7 @@ package org.springframework.ws.soap.saaj;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;

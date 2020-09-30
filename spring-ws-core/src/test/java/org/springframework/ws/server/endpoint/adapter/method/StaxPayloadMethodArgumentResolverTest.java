@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import static org.junit.Assert.*;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -23,14 +25,11 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /** @author Arjen Poutsma */
 @SuppressWarnings("Since15")
@@ -131,7 +130,6 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 		testEventReader(result);
 	}
 
-
 	private void testStreamReader(Object result) throws XMLStreamException {
 		assertTrue("resolver does not return XMLStreamReader", result instanceof XMLStreamReader);
 		XMLStreamReader streamReader = (XMLStreamReader) result;
@@ -152,13 +150,9 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 		assertEquals("Invalid local name", LOCAL_NAME, startElement.getName().getLocalPart());
 	}
 
+	public void invalid(XMLStreamReader streamReader) {}
 
-	public void invalid(XMLStreamReader streamReader) {
-	}
+	public void streamReader(@RequestPayload XMLStreamReader streamReader) {}
 
-	public void streamReader(@RequestPayload XMLStreamReader streamReader) {
-	}
-
-	public void eventReader(@RequestPayload XMLEventReader streamReader) {
-	}
+	public void eventReader(@RequestPayload XMLEventReader streamReader) {}
 }

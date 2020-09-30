@@ -23,9 +23,9 @@ import org.springframework.validation.Validator;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Extension of the {@link AbstractMarshallingPayloadEndpoint} which validates the request payload with {@link
- * Validator}(s). The desired validators can be set using properties, and <strong>must</strong> {@link
- * Validator#supports(Class) support} the request object.
+ * Extension of the {@link AbstractMarshallingPayloadEndpoint} which validates the request payload with
+ * {@link Validator}(s). The desired validators can be set using properties, and <strong>must</strong>
+ * {@link Validator#supports(Class) support} the request object.
  *
  * @author Arjen Poutsma
  * @since 1.0.2
@@ -58,12 +58,12 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 	}
 
 	/**
-	 * Set the primary {@link Validator} for this endpoint. The {@link Validator} is must support the unmarshalled
-	 * class. If there are one or more existing validators set already when this method is called, only the specified
-	 * validator will be kept. Use {@link #setValidators(Validator[])} to set multiple validators.
+	 * Set the primary {@link Validator} for this endpoint. The {@link Validator} is must support the unmarshalled class.
+	 * If there are one or more existing validators set already when this method is called, only the specified validator
+	 * will be kept. Use {@link #setValidators(Validator[])} to set multiple validators.
 	 */
 	public void setValidator(Validator validator) {
-		this.validators = new Validator[]{validator};
+		this.validators = new Validator[] { validator };
 	}
 
 	/** Return the Validators for this controller. */
@@ -92,12 +92,11 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 	}
 
 	/**
-	 * Callback for post-processing validation errors. Called when validator(s) have been specified, and validation
-	 * fails.
+	 * Callback for post-processing validation errors. Called when validator(s) have been specified, and validation fails.
 	 *
 	 * @param messageContext the message context
-	 * @param requestObject	 the object unmarshalled from the {@link MessageContext#getRequest() request}
-	 * @param errors		 validation errors holder
+	 * @param requestObject the object unmarshalled from the {@link MessageContext#getRequest() request}
+	 * @param errors validation errors holder
 	 * @return {@code true} to continue and call {@link #invokeInternal(Object)}; {@code false} otherwise
 	 */
 	protected abstract boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors);

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns="namespace1">
-    <prefix:child xmlns:prefix="namespace2">
-        <prefix:text>text</prefix:text>
-        <prefix:number>42.0</prefix:number>
-        <prefix:boolean>1</prefix:boolean>
-    </prefix:child>
+	<prefix:child xmlns:prefix="namespace2">
+		<prefix:text>text</prefix:text>
+		<prefix:number>42.0</prefix:number>
+		<prefix:boolean>1</prefix:boolean>
+	</prefix:child>
 </root>

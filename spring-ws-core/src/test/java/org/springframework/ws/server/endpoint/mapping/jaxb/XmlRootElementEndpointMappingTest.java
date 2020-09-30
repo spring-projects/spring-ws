@@ -16,14 +16,15 @@
 
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.Method;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class XmlRootElementEndpointMappingTest {
 
@@ -41,8 +42,7 @@ public class XmlRootElementEndpointMappingTest {
 		assertEquals(new QName("myNamespace", "myRoot"), name);
 	}
 
-	public void rootElement(MyRootElement rootElement) {
-	}
+	public void rootElement(MyRootElement rootElement) {}
 
 	@XmlRootElement(name = "myRoot", namespace = "myNamespace")
 	public static class MyRootElement {

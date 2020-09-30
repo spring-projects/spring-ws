@@ -21,9 +21,8 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.util.Assert;
-
 import org.jivesoftware.smack.packet.Message;
+import org.springframework.util.Assert;
 
 /**
  * Input stream that wraps a {@link Message}.
@@ -45,6 +44,5 @@ class MessageInputStream extends FilterInputStream {
 		byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
 		return new ByteArrayInputStream(contents);
 	}
-
 
 }

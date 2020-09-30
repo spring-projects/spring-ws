@@ -19,13 +19,13 @@ package org.springframework.ws.transport.http;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.w3c.dom.Document;
-
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.TraxUtils;
+import org.w3c.dom.Document;
 
 /**
  * Utility class that determines the last modified date of a given {@link Source}.
@@ -35,8 +35,7 @@ import org.springframework.xml.transform.TraxUtils;
  */
 class LastModifiedHelper {
 
-	private LastModifiedHelper() {
-	}
+	private LastModifiedHelper() {}
 
 	/**
 	 * Returns the last modified date of the given {@link Source}.
@@ -48,8 +47,7 @@ class LastModifiedHelper {
 		if (source instanceof DOMSource) {
 			Document document = TraxUtils.getDocument((DOMSource) source);
 			return document != null ? getLastModified(document.getDocumentURI()) : -1;
-		}
-		else {
+		} else {
 			return getLastModified(source.getSystemId());
 		}
 	}
@@ -64,8 +62,7 @@ class LastModifiedHelper {
 						return documentFile.lastModified();
 					}
 				}
-			}
-			catch (URISyntaxException e) {
+			} catch (URISyntaxException e) {
 				// ignore
 			}
 		}

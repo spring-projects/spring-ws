@@ -18,6 +18,8 @@ package org.springframework.ws.test.support;
 
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -26,9 +28,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class for for loading default implementations of an interface.
@@ -71,15 +70,13 @@ public class MockStrategiesHelper {
 		Map<String, T> map = applicationContext.getBeansOfType(type);
 		if (map.isEmpty()) {
 			return null;
-		}
-		else if (map.size() == 1) {
+		} else if (map.size() == 1) {
 			Map.Entry<String, T> entry = map.entrySet().iterator().next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Using " + ClassUtils.getShortName(type) + " [" + entry.getKey() + "]");
 			}
 			return entry.getValue();
-		}
-		else {
+		} else {
 			throw new BeanInitializationException(
 					"Could not find exactly 1 " + ClassUtils.getShortName(type) + " in application context");
 		}
@@ -99,11 +96,10 @@ public class MockStrategiesHelper {
 		T t = getStrategy(type);
 		if (t != null) {
 			return t;
-		}
-		else {
+		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("No " + ClassUtils.getShortName(type) + " found, using default " +
-						ClassUtils.getShortName(defaultType));
+				logger.debug(
+						"No " + ClassUtils.getShortName(type) + " found, using default " + ClassUtils.getShortName(defaultType));
 			}
 			T defaultStrategy = BeanUtils.instantiateClass(defaultType);
 			if (defaultStrategy instanceof ApplicationContextAware) {
@@ -114,14 +110,12 @@ public class MockStrategiesHelper {
 				InitializingBean initializingBean = (InitializingBean) defaultStrategy;
 				try {
 					initializingBean.afterPropertiesSet();
-				}
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					throw new BeanCreationException("Invocation of init method failed", ex);
 				}
 			}
 			return defaultStrategy;
 		}
 	}
-
 
 }

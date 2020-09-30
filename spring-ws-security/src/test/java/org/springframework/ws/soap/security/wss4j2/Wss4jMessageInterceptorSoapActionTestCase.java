@@ -16,18 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.junit.Assert.*;
+
 import java.util.Properties;
 
+import org.apache.wss4j.dom.WSConstants;
+import org.junit.Test;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler;
-import org.apache.wss4j.dom.WSConstants;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTestCase {
 
@@ -102,6 +101,5 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
 		assertEquals("Soap Action is different from expected", SOAP_ACTION, message.getSoapAction());
 
 	}
-
 
 }

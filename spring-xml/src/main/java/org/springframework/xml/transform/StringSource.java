@@ -19,13 +19,14 @@ package org.springframework.xml.transform;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+
 import javax.xml.transform.stream.StreamSource;
 
 import org.springframework.util.Assert;
 
 /**
- * Convenient subclass of {@code StreamSource} that reads from a {@code StringReader}. The string to be read
- * can be set via the constructor.
+ * Convenient subclass of {@code StreamSource} that reads from a {@code StringReader}. The string to be read can be set
+ * via the constructor.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -17,7 +17,7 @@
 package org.springframework.ws.test.client;
 
 /**
- * Allows for setting up responses and additional expectations. Implementations of this interface are returned by 
+ * Allows for setting up responses and additional expectations. Implementations of this interface are returned by
  * {@link MockWebServiceServer#expect(RequestMatcher)}.
  *
  * @author Arjen Poutsma

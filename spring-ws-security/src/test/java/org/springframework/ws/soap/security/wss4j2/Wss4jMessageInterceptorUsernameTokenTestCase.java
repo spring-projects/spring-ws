@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.Properties;
 
@@ -132,22 +132,20 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		if (validating) {
 			interceptor.setValidationActions(actions);
-		}
-		else {
+		} else {
 			interceptor.setSecurementActions(actions);
 		}
 		SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
 		callbackHandler.setUsers(users);
 		if (digest) {
 			interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
-		}
-		else {
+		} else {
 			interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		}
 		interceptor.setValidationCallbackHandler(callbackHandler);
-		
+
 		interceptor.setBspCompliant(false);
-		
+
 		interceptor.afterPropertiesSet();
 		return interceptor;
 	}

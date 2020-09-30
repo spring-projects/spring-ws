@@ -28,7 +28,7 @@ public class XMLReaderFactoryUtils {
 	/**
 	 * Build a {@link XMLReader} and set properties to prevent external entity access.
 	 *
-	 * @see XMLReaderFactory#createXMLReader() 
+	 * @see XMLReaderFactory#createXMLReader()
 	 */
 	public static XMLReader createXMLReader() throws SAXException {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();

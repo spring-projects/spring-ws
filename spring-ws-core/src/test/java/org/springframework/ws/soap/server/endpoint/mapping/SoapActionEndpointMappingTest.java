@@ -18,14 +18,13 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 
 import javax.xml.soap.MessageFactory;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 public class SoapActionEndpointMappingTest {
 

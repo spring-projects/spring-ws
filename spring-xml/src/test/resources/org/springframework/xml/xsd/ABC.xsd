@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns0="urn:2" xmlns:tns="urn:1"
             attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:1">
-    <xsd:import namespace="urn:2"/>
-    <xsd:complexType name="A">
-        <xsd:complexContent>
-            <xsd:extension base="tns:B"/>
-        </xsd:complexContent>
-    </xsd:complexType>
-    <xsd:complexType name="B">
-        <xsd:sequence>
-            <xsd:element name="c" type="tns:C"/>
-            <xsd:element name="d" type="ns0:D"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    <xsd:simpleType name="C">
-        <xsd:restriction base="xsd:string"/>
-    </xsd:simpleType>
+	<xsd:import namespace="urn:2"/>
+	<xsd:complexType name="A">
+		<xsd:complexContent>
+			<xsd:extension base="tns:B"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="B">
+		<xsd:sequence>
+			<xsd:element name="c" type="tns:C"/>
+			<xsd:element name="d" type="ns0:D"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="C">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
 </xsd:schema>

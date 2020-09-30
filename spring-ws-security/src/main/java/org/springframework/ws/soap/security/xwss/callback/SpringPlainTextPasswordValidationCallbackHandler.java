@@ -17,10 +17,9 @@
 package org.springframework.ws.soap.security.xwss.callback;
 
 import java.io.IOException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
-
-import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,16 +31,18 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
+import com.sun.xml.wss.impl.callback.PasswordValidationCallback;
+
 /**
- * Callback handler that validates a certificate uses an Spring Security {@code AuthenticationManager}. Logic based
- * on Spring Security's {@code BasicProcessingFilter}.
- *
- * <p>This handler requires an Spring Security {@code AuthenticationManager} to operate. It can be set using the
- * {@code authenticationManager} property. An Spring Security {@code UsernamePasswordAuthenticationToken} is
- * created with the username as principal and password as credentials.
- *
- * <p>This class only handles {@code PasswordValidationCallback}s that contain a
- * {@code PlainTextPasswordRequest}, and throws an {@code UnsupportedCallbackException} for others.
+ * Callback handler that validates a certificate uses an Spring Security {@code AuthenticationManager}. Logic based on
+ * Spring Security's {@code BasicProcessingFilter}.
+ * <p>
+ * This handler requires an Spring Security {@code AuthenticationManager} to operate. It can be set using the
+ * {@code authenticationManager} property. An Spring Security {@code UsernamePasswordAuthenticationToken} is created
+ * with the username as principal and password as credentials.
+ * <p>
+ * This class only handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and
+ * throws an {@code UnsupportedCallbackException} for others.
  *
  * @author Arjen Poutsma
  * @see org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -71,11 +72,10 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
 	}
 
 	/**
-	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws
-	 * an {@code UnsupportedCallbackException} for others.
+	 * Handles {@code PasswordValidationCallback}s that contain a {@code PlainTextPasswordRequest}, and throws an
+	 * {@code UnsupportedCallbackException} for others.
 	 *
-	 * @throws javax.security.auth.callback.UnsupportedCallbackException
-	 *			when the callback is not supported
+	 * @throws javax.security.auth.callback.UnsupportedCallbackException when the callback is not supported
 	 */
 	@Override
 	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
@@ -85,8 +85,7 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
 				validationCallback.setValidator(new SpringSecurityPlainTextPasswordValidator());
 				return;
 			}
-		}
-		else if (callback instanceof CleanupCallback) {
+		} else if (callback instanceof CleanupCallback) {
 			SecurityContextHolder.clearContext();
 			return;
 		}
@@ -98,21 +97,19 @@ public class SpringPlainTextPasswordValidationCallbackHandler extends AbstractCa
 		@Override
 		public boolean validate(PasswordValidationCallback.Request request)
 				throws PasswordValidationCallback.PasswordValidationException {
-			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest =
-					(PasswordValidationCallback.PlainTextPasswordRequest) request;
+			PasswordValidationCallback.PlainTextPasswordRequest plainTextRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
 			try {
-				Authentication authResult = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-						plainTextRequest.getUsername(), plainTextRequest.getPassword()));
+				Authentication authResult = authenticationManager.authenticate(
+						new UsernamePasswordAuthenticationToken(plainTextRequest.getUsername(), plainTextRequest.getPassword()));
 				if (logger.isDebugEnabled()) {
 					logger.debug("Authentication success: " + authResult.toString());
 				}
 				SecurityContextHolder.getContext().setAuthentication(authResult);
 				return true;
-			}
-			catch (AuthenticationException failed) {
+			} catch (AuthenticationException failed) {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Authentication request for user '" + plainTextRequest.getUsername() + "' failed: " +
-							failed.toString());
+					logger.debug(
+							"Authentication request for user '" + plainTextRequest.getUsername() + "' failed: " + failed.toString());
 				}
 				SecurityContextHolder.clearContext();
 				return ignoreFailure;

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,14 +32,13 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.ResourceSource;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.ResourceSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -57,8 +57,7 @@ public abstract class AbstractXPathTemplateTestCase {
 	public final void setUp() throws Exception {
 		template = createTemplate();
 		namespaces = new ResourceSource(new ClassPathResource("namespaces.xml", AbstractXPathTemplateTestCase.class));
-		nonamespaces =
-				new ResourceSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class));
+		nonamespaces = new ResourceSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class));
 	}
 
 	protected abstract XPathOperations createTemplate() throws Exception;
@@ -132,8 +131,8 @@ public abstract class AbstractXPathTemplateTestCase {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document document = documentBuilder.parse(SaxUtils.createInputSource(
-				new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class)));
+		Document document = documentBuilder.parse(
+				SaxUtils.createInputSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class)));
 
 		String result = template.evaluateAsString("/root/child/text", new DOMSource(document));
 		Assert.assertEquals("Invalid result", "text", result);
@@ -176,8 +175,7 @@ public abstract class AbstractXPathTemplateTestCase {
 		try {
 			template.evaluateAsBoolean("\\", namespaces);
 			Assert.fail("No XPathException thrown");
-		}
-		catch (XPathException ex) {
+		} catch (XPathException ex) {
 			// Expected behaviour
 		}
 	}

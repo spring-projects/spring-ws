@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -52,7 +53,7 @@ public class SoapFaultDefinition {
 	public static final QName SENDER = new QName("SENDER");
 
 	/**
-	 * Constant {@code QName} used to indicate that a {@code Server}  fault must be created.
+	 * Constant {@code QName} used to indicate that a {@code Server} fault must be created.
 	 *
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String,java.util.Locale)
 	 */

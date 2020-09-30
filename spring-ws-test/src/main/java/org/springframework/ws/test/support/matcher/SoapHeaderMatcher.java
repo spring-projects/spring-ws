@@ -16,16 +16,17 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.springframework.ws.test.support.AssertionErrors.*;
+
 import java.io.IOException;
 import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
  * Matches SOAP headers.
@@ -38,8 +39,7 @@ public class SoapHeaderMatcher extends AbstractSoapMessageMatcher {
 	private final QName soapHeaderName;
 
 	/**
-	 * Creates a new instance of the {@code SoapHeaderMatcher} that checks for the presence of the given SOAP header
-	 * name.
+	 * Creates a new instance of the {@code SoapHeaderMatcher} that checks for the presence of the given SOAP header name.
 	 *
 	 * @param soapHeaderName the header name to check for
 	 */

@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.xmpp.XmppTransportConstants;
 
@@ -35,15 +34,13 @@ import org.springframework.ws.transport.xmpp.XmppTransportConstants;
  */
 public abstract class XmppTransportUtils {
 
-	private XmppTransportUtils() {
-	}
+	private XmppTransportUtils() {}
 
 	/**
 	 * Converts the given XMPP destination into a {@code xmpp} URI.
 	 */
 	public static URI toUri(Message requestMessage) throws URISyntaxException {
-		return new URI(XmppTransportConstants.XMPP_URI_SCHEME,
-				requestMessage.getTo().asUnescapedString(), null);
+		return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo().asUnescapedString(), null);
 	}
 
 	public static String getTo(URI uri) {
@@ -57,8 +54,7 @@ public abstract class XmppTransportUtils {
 	public static String getErrorMessage(Message message) {
 		if (message == null || !Message.Type.error.equals(message.getType())) {
 			return null;
-		}
-		else {
+		} else {
 			return message.getBody();
 		}
 	}
@@ -77,9 +73,8 @@ public abstract class XmppTransportUtils {
 		String value = JivePropertiesManager.getProperty(message, name).toString();
 		if (value != null) {
 			return Collections.singletonList(value).iterator();
-		}
-		else {
-			return Collections.<String>emptyList().iterator();
+		} else {
+			return Collections.<String> emptyList().iterator();
 		}
 	}
 

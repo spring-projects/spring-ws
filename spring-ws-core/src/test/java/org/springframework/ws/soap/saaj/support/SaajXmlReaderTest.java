@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
@@ -27,12 +29,9 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
-import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
 
 public class SaajXmlReaderTest {
 

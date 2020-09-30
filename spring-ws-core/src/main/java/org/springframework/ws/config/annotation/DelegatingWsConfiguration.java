@@ -9,10 +9,9 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResol
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
 
 /**
- * A sub-class of {@code WsConfigurationSupport} that detects and delegates
- * to all beans of type {@link WsConfigurer} allowing them to customize the
- * configuration provided by {@code WsConfigurationSupport}. This is the
- * class actually imported by {@link EnableWs @EnableWs}.
+ * A sub-class of {@code WsConfigurationSupport} that detects and delegates to all beans of type {@link WsConfigurer}
+ * allowing them to customize the configuration provided by {@code WsConfigurationSupport}. This is the class actually
+ * imported by {@link EnableWs @EnableWs}.
  *
  * @author Arjen Poutsma
  * @since 2.2
@@ -40,8 +39,7 @@ public class DelegatingWsConfiguration extends WsConfigurationSupport {
 	}
 
 	@Override
-	protected void addReturnValueHandlers(
-			List<MethodReturnValueHandler> returnValueHandlers) {
+	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 		this.configurers.addReturnValueHandlers(returnValueHandlers);
 	}
 }

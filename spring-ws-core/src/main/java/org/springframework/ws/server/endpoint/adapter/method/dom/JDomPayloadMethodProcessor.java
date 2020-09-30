@@ -19,14 +19,13 @@ package org.springframework.ws.server.endpoint.adapter.method.dom;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
 import org.jdom2.transform.JDOMResult;
 import org.jdom2.transform.JDOMSource;
+import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.w3c.dom.Node;
 
 /**
@@ -51,8 +50,7 @@ public class JDomPayloadMethodProcessor extends AbstractPayloadSourceMethodProce
 			DOMBuilder domBuilder = new DOMBuilder();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return domBuilder.build((org.w3c.dom.Element) node);
-			}
-			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = domBuilder.build((org.w3c.dom.Document) node);
 				return document.getRootElement();
 			}

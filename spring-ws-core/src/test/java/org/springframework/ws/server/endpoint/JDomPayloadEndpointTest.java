@@ -16,10 +16,10 @@
 
 package org.springframework.ws.server.endpoint;
 
+import static org.junit.Assert.*;
+
 import org.jdom2.Element;
 import org.jdom2.Namespace;
-
-import static org.junit.Assert.*;
 
 public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 

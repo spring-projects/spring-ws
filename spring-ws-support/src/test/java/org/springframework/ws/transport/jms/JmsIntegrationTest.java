@@ -16,6 +16,9 @@
 
 package org.springframework.ws.transport.jms;
 
+import org.custommonkey.xmlunit.XMLAssert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -23,17 +26,11 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("jms-applicationContext.xml")
 public class JmsIntegrationTest {
 
-	@Autowired
-	private WebServiceTemplate webServiceTemplate;
-
+	@Autowired private WebServiceTemplate webServiceTemplate;
 
 	public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
 		this.webServiceTemplate = webServiceTemplate;

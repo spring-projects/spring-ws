@@ -16,17 +16,16 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.easymock.EasyMock.*;
+
 import java.io.IOException;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class SchemaValidatingMatcherTest {
 
@@ -48,8 +47,8 @@ public class SchemaValidatingMatcherTest {
 
 	@Test
 	public void singleSchemaMatch() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
@@ -62,8 +61,9 @@ public class SchemaValidatingMatcherTest {
 
 	@Test(expected = AssertionError.class)
 	public void singleSchemaNonMatch() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+				.times(2);
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
@@ -76,8 +76,8 @@ public class SchemaValidatingMatcherTest {
 
 	@Test
 	public void multipleSchemaMatch() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
@@ -90,8 +90,9 @@ public class SchemaValidatingMatcherTest {
 
 	@Test(expected = AssertionError.class)
 	public void multipleSchemaNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+				.times(2);
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
@@ -104,8 +105,9 @@ public class SchemaValidatingMatcherTest {
 
 	@Test(expected = AssertionError.class)
 	public void multipleSchemaDifferentOrderNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+				.times(2);
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
@@ -118,8 +120,9 @@ public class SchemaValidatingMatcherTest {
 
 	@Test(expected = AssertionError.class)
 	public void xmlValidatorNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(new StringSource(
-				"<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>")).times(2);
+		expect(message.getPayloadSource()).andReturn(
+				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+				.times(2);
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 

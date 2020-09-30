@@ -17,6 +17,7 @@
 package org.springframework.ws.soap.security.support;
 
 import java.security.KeyStore;
+
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
@@ -26,8 +27,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Spring factory bean for an array of {@link KeyManager}s.
- *
- * <p>Uses the {@link KeyManagerFactory} to create the {@code KeyManager}s.
+ * <p>
+ * Uses the {@link KeyManagerFactory} to create the {@code KeyManager}s.
  *
  * @author Stephen More
  * @author Arjen Poutsma
@@ -99,12 +100,11 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String algorithm =
-				StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
+		String algorithm = StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
 
-		KeyManagerFactory keyManagerFactory =
-				StringUtils.hasLength(this.provider) ? KeyManagerFactory.getInstance(algorithm, this.provider) :
-						KeyManagerFactory.getInstance(algorithm);
+		KeyManagerFactory keyManagerFactory = StringUtils.hasLength(this.provider)
+				? KeyManagerFactory.getInstance(algorithm, this.provider)
+				: KeyManagerFactory.getInstance(algorithm);
 
 		keyManagerFactory.init(keyStore, password);
 

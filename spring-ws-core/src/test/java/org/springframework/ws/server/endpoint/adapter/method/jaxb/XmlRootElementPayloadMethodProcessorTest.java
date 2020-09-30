@@ -16,9 +16,15 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
+import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,12 +36,6 @@ import javax.xml.transform.sax.SAXSource;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -49,11 +49,11 @@ import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.xml.sax.AbstractXmlReader;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 public class XmlRootElementPayloadMethodProcessorTest {
 
@@ -77,8 +77,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 	public void supportsParameter() {
 		assertTrue("processor does not support @XmlRootElement parameter",
 				processor.supportsParameter(rootElementParameter));
-		assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(
-				typeParameter));
+		assertTrue("processor does not support @XmlType parameter", processor.supportsParameter(typeParameter));
 	}
 
 	@Test
@@ -89,7 +88,8 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 	@Test
 	public void resolveArgumentRootElement() throws JAXBException {
-		WebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'><string>Foo</string></root>");
+		WebServiceMessage request = new MockWebServiceMessage(
+				"<root xmlns='http://springframework.org'><string>Foo</string></root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = processor.resolveArgument(messageContext, rootElementParameter);
@@ -100,7 +100,8 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 	@Test
 	public void resolveArgumentType() throws JAXBException {
-		WebServiceMessage request = new MockWebServiceMessage("<type xmlns='http://springframework.org'><string>Foo</string></type>");
+		WebServiceMessage request = new MockWebServiceMessage(
+				"<type xmlns='http://springframework.org'><string>Foo</string></type>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = processor.resolveArgument(messageContext, typeParameter);
@@ -117,12 +118,12 @@ public class XmlRootElementPayloadMethodProcessorTest {
 			public void parse(String systemId) throws IOException, SAXException {
 				parse();
 			}
-			
+
 			@Override
 			public void parse(InputSource input) throws IOException, SAXException {
 				parse();
 			}
-			
+
 			private void parse() throws SAXException {
 				ContentHandler handler = getContentHandler();
 				// <root xmlns='http://springframework.org'><string>Foo</string></root>
@@ -138,19 +139,19 @@ public class XmlRootElementPayloadMethodProcessorTest {
 			}
 		};
 		final SAXSource source = new SAXSource(xmlReader, new InputSource());
-		
+
 		// Create a mock WebServiceMessage that returns the SAXSource as payload source.
 		WebServiceMessage request = new WebServiceMessage() {
 			@Override
 			public void writeTo(OutputStream outputStream) throws IOException {
 				throw new UnsupportedOperationException();
 			}
-			
+
 			@Override
 			public Source getPayloadSource() {
 				return source;
 			}
-			
+
 			@Override
 			public Result getPayloadResult() {
 				throw new UnsupportedOperationException();
@@ -159,7 +160,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		// Create a message context with that request. Note that the message factory doesn't matter here:
 		// it is required but not used.
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-		
+
 		Object result = processor.resolveArgument(messageContext, rootElementParameter);
 		assertTrue("result not a MyRootElement", result instanceof MyRootElement);
 		MyRootElement rootElement = (MyRootElement) result;
@@ -175,7 +176,8 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
 		assertTrue("context has no response", messageContext.hasResponse());
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", response.getPayloadAsString());
+		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
+				response.getPayloadAsString());
 	}
 
 	@Test
@@ -203,16 +205,17 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		StringResult payloadResult = new StringResult();
 		transformer.transform(response.getPayloadSource(), payloadResult);
 
-		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>",
-				payloadResult.toString());
+		assertXMLEqual("<root xmlns='http://springframework.org'><string>Foo</string></root>", payloadResult.toString());
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
-		
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
-				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
+
+		assertXMLEqual(
+				"<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>"
+						+ "<root xmlns='http://springframework.org'><string>Foo</string></root>"
+						+ "</soapenv:Body></soapenv:Envelope>",
+				messageResult);
 
 	}
 
@@ -233,9 +236,11 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		response.writeTo(bos);
 		String messageResult = bos.toString("UTF-8");
 
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>" +
-				"<root xmlns='http://springframework.org'><string>Foo</string></root>" +
-				"</soapenv:Body></soapenv:Envelope>", messageResult);
+		assertXMLEqual(
+				"<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>"
+						+ "<root xmlns='http://springframework.org'><string>Foo</string></root>"
+						+ "</soapenv:Body></soapenv:Envelope>",
+				messageResult);
 
 	}
 
@@ -244,8 +249,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		return rootElement;
 	}
 
-	public void type(@RequestPayload MyType type) {
-	}
+	public void type(@RequestPayload MyType type) {}
 
 	@XmlRootElement(name = "root", namespace = "http://springframework.org")
 	public static class MyRootElement {
@@ -276,6 +280,5 @@ public class XmlRootElementPayloadMethodProcessorTest {
 			this.string = string;
 		}
 	}
-
 
 }

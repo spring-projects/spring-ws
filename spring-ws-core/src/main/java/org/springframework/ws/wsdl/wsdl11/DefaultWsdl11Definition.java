@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11;
 
 import java.util.Properties;
+
 import javax.xml.transform.Source;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -31,11 +32,12 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
  * Convenient implementation of {@link Wsdl11Definition} that creates a SOAP 1.1 or 1.2 binding based on naming
- * conventions in one or more inlined XSD schemas. Delegates to {@link InliningXsdSchemaTypesProvider}, {@link
- * DefaultMessagesProvider}, {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
+ * conventions in one or more inlined XSD schemas. Delegates to {@link InliningXsdSchemaTypesProvider},
+ * {@link DefaultMessagesProvider}, {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
  * equivalent to using a {@link ProviderBasedWsdl4jDefinition} with all these providers.
- *
- * <p>Example configuration:
+ * <p>
+ * Example configuration:
+ * 
  * <pre>
  * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition&quot;&gt;
  *	 &lt;property name=&quot;schema&quot;&gt;
@@ -76,8 +78,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	/**
 	 * Sets the target namespace used for this definition.
-	 *
-	 * <p>Defaults to the target namespace of the defined schema.
+	 * <p>
+	 * Defaults to the target namespace of the defined schema.
 	 */
 	public void setTargetNamespace(String targetNamespace) {
 		delegate.setTargetNamespace(targetNamespace);
@@ -124,8 +126,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	/**
 	 * Indicates whether a SOAP 1.1 binding should be created.
-	 *
-	 * <p>Defaults to {@code true}.
+	 * <p>
+	 * Defaults to {@code true}.
 	 */
 	public void setCreateSoap11Binding(boolean createSoap11Binding) {
 		soapProvider.setCreateSoap11Binding(createSoap11Binding);
@@ -133,8 +135,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	/**
 	 * Indicates whether a SOAP 1.2 binding should be created.
-	 *
-	 * <p>Defaults to {@code false}.
+	 * <p>
+	 * Defaults to {@code false}.
 	 */
 	public void setCreateSoap12Binding(boolean createSoap12Binding) {
 		soapProvider.setCreateSoap12Binding(createSoap12Binding);
@@ -162,8 +164,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	/**
 	 * Sets the service name.
-	 *
-	 * <p>Defaults to the port type name, with the suffix {@code Service} appended to it.
+	 * <p>
+	 * Defaults to the port type name, with the suffix {@code Service} appended to it.
 	 */
 	public void setServiceName(String serviceName) {
 		soapProvider.setServiceName(serviceName);
@@ -172,8 +174,8 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (!StringUtils.hasText(delegate.getTargetNamespace()) && typesProvider.getSchemaCollection() != null &&
-				typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
+		if (!StringUtils.hasText(delegate.getTargetNamespace()) && typesProvider.getSchemaCollection() != null
+				&& typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
 			XsdSchema schema = typesProvider.getSchemaCollection().getXsdSchemas()[0];
 			setTargetNamespace(schema.getTargetNamespace());
 		}

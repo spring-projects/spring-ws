@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
@@ -42,8 +43,7 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 	}
 
 	@Override
-	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
-			throws JAXBException {
+	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
 		ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
 		Class<?> clazz = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 		return unmarshalElementFromRequestPayload(messageContext, clazz);
@@ -56,8 +56,8 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 	}
 
 	@Override
-	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-			throws JAXBException {
+	protected void handleReturnValueInternal(MessageContext messageContext, MethodParameter returnType,
+			Object returnValue) throws JAXBException {
 		JAXBElement<?> element = (JAXBElement<?>) returnValue;
 		marshalToResponsePayload(messageContext, element.getDeclaredType(), element);
 	}

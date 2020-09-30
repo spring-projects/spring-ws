@@ -30,8 +30,8 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * methods for handling incoming JMS {@link BytesMessage} and {@link TextMessage} requests. Also contains a
  * {@code textMessageEncoding} property, which determines the encoding used to read from and write to
  * {@code TextMessages}. This property defaults to {@code UTF-8}.
- *
- * <p>Used by {@link WebServiceMessageListener}.
+ * <p>
+ * Used by {@link WebServiceMessageListener}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -51,8 +51,8 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
 	}
 
 	/**
-	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has
-	 * been set.
+	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has been
+	 * set.
 	 */
 	public void setPostProcessor(MessagePostProcessor postProcessor) {
 		this.postProcessor = postProcessor;
@@ -69,13 +69,11 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
 		JmsReceiverConnection connection;
 		if (request instanceof BytesMessage) {
 			connection = new JmsReceiverConnection((BytesMessage) request, session);
-		}
-		else if (request instanceof TextMessage) {
+		} else if (request instanceof TextMessage) {
 			connection = new JmsReceiverConnection((TextMessage) request, textMessageEncoding, session);
-		}
-		else {
-			throw new IllegalArgumentException("Wrong message type: [" + request.getClass() +
-					"]. Only BytesMessages or TextMessages can be handled.");
+		} else {
+			throw new IllegalArgumentException(
+					"Wrong message type: [" + request.getClass() + "]. Only BytesMessages or TextMessages can be handled.");
 		}
 		connection.setPostProcessor(postProcessor);
 

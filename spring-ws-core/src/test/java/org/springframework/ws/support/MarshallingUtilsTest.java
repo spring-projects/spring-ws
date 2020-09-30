@@ -16,9 +16,13 @@
 
 package org.springframework.ws.support;
 
+import static org.easymock.EasyMock.*;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.mime.MimeContainer;
@@ -28,11 +32,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import static org.easymock.EasyMock.*;
 
 public class MarshallingUtilsTest {
 
@@ -120,6 +119,5 @@ public class MarshallingUtilsTest {
 
 		verify(marshallerMock, messageMock);
 	}
-
 
 }

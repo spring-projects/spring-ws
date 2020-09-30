@@ -37,5 +37,4 @@ public interface WebServiceMessageCreator {
 	 */
 	WebServiceMessage createMessage(WebServiceMessageFactory messageFactory) throws IOException;
 
-
 }

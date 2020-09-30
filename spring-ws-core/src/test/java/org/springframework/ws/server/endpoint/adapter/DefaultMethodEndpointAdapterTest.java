@@ -16,15 +16,15 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -62,8 +62,7 @@ public class DefaultMethodEndpointAdapterTest {
 		argumentResolver2 = createMock("intResolver", MethodArgumentResolver.class);
 		returnValueHandler = createMock(MethodReturnValueHandler.class);
 		adapter.setMethodArgumentResolvers(Arrays.asList(argumentResolver1, argumentResolver2));
-		adapter.setMethodReturnValueHandlers(
-				Collections.singletonList(returnValueHandler));
+		adapter.setMethodReturnValueHandlers(Collections.singletonList(returnValueHandler));
 		supportedEndpoint = new MethodEndpoint(this, "supported", String.class, Integer.class);
 		nullReturnValue = new MethodEndpoint(this, "nullReturnValue", String.class);
 		unsupportedEndpoint = new MethodEndpoint(this, "unsupported", String.class);
@@ -102,7 +101,6 @@ public class DefaultMethodEndpointAdapterTest {
 
 		replay(argumentResolver1, argumentResolver2, returnValueHandler);
 
-
 		boolean result = adapter.supports(unsupportedEndpoint);
 		assertFalse("adapter does not support method", result);
 
@@ -136,7 +134,8 @@ public class DefaultMethodEndpointAdapterTest {
 		// arg 1
 		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
 		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(new Integer(42));
+		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class)))
+				.andReturn(new Integer(42));
 
 		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
 		returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), eq(value));
@@ -180,14 +179,12 @@ public class DefaultMethodEndpointAdapterTest {
 		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
 		expect(argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
 
-
 		replay(argumentResolver1, argumentResolver2, returnValueHandler);
 
 		try {
 			adapter.invoke(messageContext, exceptionEndpoint);
 			fail("IOException expected");
-		}
-		catch (IOException expected) {
+		} catch (IOException expected) {
 			// expected
 		}
 		assertEquals("Invalid argument passed", value, supportedArgument);

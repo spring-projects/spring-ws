@@ -16,22 +16,20 @@
 
 package org.springframework.xml.xsd.commons;
 
+import static org.junit.Assert.*;
+
 import javax.xml.transform.dom.DOMSource;
 
+import org.apache.ws.commons.schema.XmlSchema;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
+import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
 import org.springframework.xml.xsd.XsdSchema;
-
-import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
@@ -54,6 +52,5 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 		assertNotNull("No expectedContentTypes found",
 				elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
 	}
-
 
 }

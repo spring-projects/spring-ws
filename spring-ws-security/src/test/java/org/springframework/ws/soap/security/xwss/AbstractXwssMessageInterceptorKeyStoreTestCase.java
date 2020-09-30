@@ -34,8 +34,7 @@ public abstract class AbstractXwssMessageInterceptorKeyStoreTestCase extends Abs
 		try {
 			is = getClass().getResourceAsStream("test-keystore.jks");
 			keyStore.load(is, "password".toCharArray());
-		}
-		finally {
+		} finally {
 			if (is != null) {
 				is.close();
 			}

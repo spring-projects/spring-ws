@@ -16,12 +16,13 @@
 
 package org.springframework.ws.transport.support;
 
+import static org.easymock.EasyMock.*;
+
 import javax.xml.namespace.QName;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
@@ -29,8 +30,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import static org.easymock.EasyMock.*;
 
 public class WebServiceMessageReceiverObjectSupportTest {
 
@@ -92,8 +91,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 			@Override
 			public void receive(MessageContext messageContext) throws Exception {
 				Assert.assertNotNull("No message context", messageContext);
-				MockWebServiceMessage response =
-						(MockWebServiceMessage) messageContext.getResponse();
+				MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 				response.setFaultCode(faultCode);
 			}
 		};

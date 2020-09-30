@@ -1,7 +1,6 @@
 package org.springframework.ws.soap.security;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,21 +32,17 @@ public class SkipValidationWsSecurityInterceptorTest {
 		interceptor = new AbstractWsSecurityInterceptor() {
 
 			@Override
-			protected void validateMessage(SoapMessage soapMessage,
-					MessageContext messageContext)
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 					throws WsSecurityValidationException {
 				fail("validation must be skipped.");
 			}
 
 			@Override
-			protected void secureMessage(SoapMessage soapMessage,
-					MessageContext messageContext)
-					throws WsSecuritySecurementException {
-			}
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {}
 
 			@Override
-			protected void cleanUp() {
-			}
+			protected void cleanUp() {}
 		};
 		interceptor.setSkipValidationIfNoHeaderPresent(true);
 	}
@@ -56,7 +51,7 @@ public class SkipValidationWsSecurityInterceptorTest {
 	public void testSkipValidationOnNoHeader() throws Exception {
 		doTestSkipValidation("noHeader-soap.xml");
 	}
-	
+
 	@Test
 	public void testSkipValidationOnEmptyHeader() throws Exception {
 		doTestSkipValidation("emptyHeader-soap.xml");
@@ -66,29 +61,23 @@ public class SkipValidationWsSecurityInterceptorTest {
 	public void testSkipValidationOnNoSecurityHeader() throws Exception {
 		doTestSkipValidation("noSecurityHeader-soap.xml");
 	}
-	
 
 	private void doTestSkipValidation(String fileName) throws Exception {
 		SoapMessage message = loadSaajMessage(fileName);
-		MessageContext messageContext = new DefaultMessageContext(message,
-				soapMessageFactory);
-		assertTrue("handeRequest result must be true", interceptor
-				.handleRequest(messageContext, null));
-		
+		MessageContext messageContext = new DefaultMessageContext(message, soapMessageFactory);
+		assertTrue("handeRequest result must be true", interceptor.handleRequest(messageContext, null));
+
 	}
-	
-	private SaajSoapMessage loadSaajMessage(String fileName)
-			throws SOAPException, IOException {
+
+	private SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
 		MimeHeaders mimeHeaders = new MimeHeaders();
 		mimeHeaders.addHeader("Content-Type", "text/xml");
 		Resource resource = new ClassPathResource(fileName, getClass());
 		InputStream is = resource.getInputStream();
 		try {
-			assertTrue("Could not load SAAJ message [" + resource + "]",
-					resource.exists());
+			assertTrue("Could not load SAAJ message [" + resource + "]", resource.exists());
 			is = resource.getInputStream();
-			return new SaajSoapMessage(messageFactory.createMessage(
-					mimeHeaders, is));
+			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
 		} finally {
 			is.close();
 		}

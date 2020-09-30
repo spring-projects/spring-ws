@@ -59,15 +59,17 @@ public class TransformerFactoryUtils {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 		} catch (IllegalArgumentException e) {
 			if (log.isWarnEnabled()) {
-				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + factory.getClass().getCanonicalName());
+				log.warn(
+						XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + factory.getClass().getCanonicalName());
 			}
 		}
-		
+
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 		} catch (IllegalArgumentException e) {
 			if (log.isWarnEnabled()) {
-				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by " + factory.getClass().getCanonicalName());
+				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by "
+						+ factory.getClass().getCanonicalName());
 			}
 		}
 

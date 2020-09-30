@@ -18,6 +18,7 @@ package org.springframework.ws.server.endpoint.support;
 
 import java.io.InputStream;
 import java.io.Reader;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
@@ -29,14 +30,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
-
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerHelper;
-import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -46,13 +46,12 @@ import org.springframework.xml.transform.TraxUtils;
  */
 public abstract class PayloadRootUtils {
 
-	private PayloadRootUtils() {
-	}
+	private PayloadRootUtils() {}
 
 	/**
 	 * Returns the root qualified name of the given source, transforming it if necessary.
 	 *
-	 * @param source			 the source to get the root element from
+	 * @param source the source to get the root element from
 	 * @param transformerFactory a transformer factory, necessary if the given source is not a {@code DOMSource}
 	 * @return the root element, or {@code null} if {@code source} is {@code null}
 	 */
@@ -71,19 +70,16 @@ public abstract class PayloadRootUtils {
 			TraxUtils.doWithSource(source, callback);
 			if (callback.result != null) {
 				return callback.result;
-			}
-			else {
+			} else {
 				// we have no other option than to transform
 				DOMResult domResult = new DOMResult();
 				transformerHelper.transform(source, domResult);
 				Document document = (Document) domResult.getNode();
 				return QNameUtils.getQNameForNode(document.getDocumentElement());
 			}
-		}
-		catch (TransformerException ex) {
+		} catch (TransformerException ex) {
 			throw ex;
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			return null;
 		}
 	}
@@ -96,8 +92,7 @@ public abstract class PayloadRootUtils {
 		public void domSource(Node node) throws Exception {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				result = QNameUtils.getQNameForNode(node);
-			}
-			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = (Document) node;
 				result = QNameUtils.getQNameForNode(document.getDocumentElement());
 			}
@@ -112,8 +107,7 @@ public abstract class PayloadRootUtils {
 			if (event != null) {
 				if (event.isStartElement()) {
 					result = event.asStartElement().getName();
-				}
-				else if (event.isEndElement()) {
+				} else if (event.isEndElement()) {
 					result = event.asEndElement().getName();
 				}
 			}
@@ -124,13 +118,12 @@ public abstract class PayloadRootUtils {
 			if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
 				try {
 					streamReader.nextTag();
-				}
-				catch (XMLStreamException ex) {
+				} catch (XMLStreamException ex) {
 					throw new IllegalStateException("Could not read next tag: " + ex.getMessage(), ex);
 				}
 			}
-			if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT ||
-					streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
+			if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT
+					|| streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
 				result = streamReader.getName();
 			}
 		}
@@ -155,6 +148,5 @@ public abstract class PayloadRootUtils {
 			// Do nothing
 		}
 	}
-
 
 }
