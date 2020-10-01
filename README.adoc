@@ -88,10 +88,10 @@ For releases, they are sent to maven central.
 Since the pipeline uses Docker, it's easy to:
 
 * Debug what went wrong on your local machine.
-* Test out a a tweak to your `test.sh` script before sending it out.
+* Test out a tweak to your `test.sh` script before sending it out.
 * Experiment against a new image before submitting your pull request.
 
-All of these use cases are great reasons to essentially run what Jenkins does on your local machine.
+All of these use cases are great reasons to know what Jenkins does, on your local machine.
 
 IMPORTANT: To do this you must have Docker installed on your machine.
 
