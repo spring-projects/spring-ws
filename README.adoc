@@ -51,10 +51,10 @@ The pipeline will build and release the "release" branch. It will also build a n
 Since the pipeline uses Docker, it's easy to:
 
 * Debug what went wrong on your local machine.
-* Test out a a tweak to your `test.sh` script before sending it out.
+* Test out for a tweak to your `test.sh` script before sending it out.
 * Experiment against a new image before submitting your pull request.
 
-All of these use cases are great reasons to essentially run what Jenkins does on your local machine.
+All of these use cases  that are great reasons to know which essentially runs and  what Jenkins on your local machine.
 
 IMPORTANT: To do this you must have Docker installed on your machine.
 
