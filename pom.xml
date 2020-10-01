@@ -101,7 +101,7 @@
 		<jdom2.version>2.0.6</jdom2.version>
 		<jetty.version>6.1.26</jetty.version>
 		<jms.version>2.0.1</jms.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>5.6.2</junit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<log4j2.version>2.11.0</log4j2.version>
 		<mail.version>1.4.7</mail.version>
@@ -119,7 +119,8 @@
 		<wss4j.version>2.2.3</wss4j.version>
 		<xmlsec.version>2.1.4</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
-		<xmlunit.version>1.5</xmlunit.version>
+		<xmlunit1.version>1.6</xmlunit1.version>
+		<xmlunit.version>2.7.0</xmlunit.version>
 		<xws-security.version>3.0</xws-security.version>
 		<xom.version>1.2.5</xom.version>
 		<docs.resources.version>0.1.3.RELEASE</docs.resources.version>
@@ -142,6 +143,15 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${junit.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -151,11 +161,14 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -165,10 +178,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>xmlunit</groupId>
-			<artifactId>xmlunit</artifactId>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-assertj</artifactId>
 			<version>${xmlunit.version}</version>
 			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.assertj</groupId>
+					<artifactId>assertj-core</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.assertj</groupId>

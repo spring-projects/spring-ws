@@ -16,11 +16,12 @@
 
 package org.springframework.xml.transform;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
 
@@ -28,14 +29,16 @@ public class ResourceSourceTest {
 
 	@Test
 	public void testStringSource() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		DOMResult result = new DOMResult();
 		ResourceSource source = new ResourceSource(new ClassPathResource("resourceSource.xml", getClass()));
 		transformer.transform(source, result);
 		Element rootElement = (Element) result.getNode().getFirstChild();
-		Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
-		Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-		Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+
+		assertThat(rootElement.getLocalName()).isEqualTo("content");
+		assertThat(rootElement.getPrefix()).isEqualTo("prefix");
+		assertThat(rootElement.getNamespaceURI()).isEqualTo("namespace");
 	}
 
 }

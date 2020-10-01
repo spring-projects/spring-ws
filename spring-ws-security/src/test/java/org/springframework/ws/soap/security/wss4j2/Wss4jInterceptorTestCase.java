@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.apache.wss4j.dom.engine.WSSecurityEngine;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -31,11 +31,14 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 
 	@Test
 	public void testHandleRequest() throws Exception {
+
 		SoapMessage request = loadSoap11Message("empty-soap.xml");
 		final Object requestMessage = getMessage(request);
 		SoapMessage validatedRequest = loadSoap11Message("empty-soap.xml");
 		final Object validatedRequestMessage = getMessage(validatedRequest);
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
 			@Override
 			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
 					throws WsSecuritySecurementException {
@@ -45,17 +48,21 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 			@Override
 			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 					throws WsSecurityValidationException {
-				assertEquals("Invalid message", requestMessage, getMessage(soapMessage));
+
+				assertThat(getMessage(soapMessage)).isEqualTo(requestMessage);
 				setMessage(soapMessage, validatedRequestMessage);
 			}
 		};
+
 		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
 		interceptor.handleRequest(context, null);
-		assertEquals("Invalid request", validatedRequestMessage, getMessage((SoapMessage) context.getRequest()));
+
+		assertThat(getMessage((SoapMessage) context.getRequest())).isEqualTo(validatedRequestMessage);
 	}
 
 	@Test
 	public void testHandleResponse() throws Exception {
+
 		SoapMessage securedResponse = loadSoap11Message("empty-soap.xml");
 		final Object securedResponseMessage = getMessage(securedResponse);
 
@@ -74,18 +81,21 @@ public abstract class Wss4jInterceptorTestCase extends Wss4jTestCase {
 			}
 
 		};
+
 		SoapMessage request = loadSoap11Message("empty-soap.xml");
 		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
 		context.getResponse();
 		interceptor.handleResponse(context, null);
-		assertEquals("Invalid response", securedResponseMessage, getMessage((SoapMessage) context.getResponse()));
+
+		assertThat(getMessage((SoapMessage) context.getResponse())).isEqualTo(securedResponseMessage);
 	}
 
 	@Test
 	public void testHandleCustomSecurityEngine() {
+
 		WSSecurityEngine engine = new WSSecurityEngine();
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);
-		assertEquals(engine, ReflectionTestUtils.getField(interceptor, "securityEngine"));
-	}
 
+		assertThat(ReflectionTestUtils.getField(interceptor, "securityEngine")).isEqualTo(engine);
+	}
 }

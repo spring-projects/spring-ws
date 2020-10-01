@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.soap12;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -36,15 +36,20 @@ import org.springframework.ws.transport.TransportInputStream;
 public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
 	@Override
-	public void testCreateEmptyMessage() throws Exception {
+	public void testCreateEmptyMessage() {
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage();
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
 	}
 
 	@Override
 	public void testCreateSoapMessageNoAttachment() throws Exception {
+
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		String soapAction = "\"http://springframework.org/spring-ws/Action\"";
@@ -52,15 +57,17 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-		assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
-		assertFalse("Message is a XOP pacakge", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
+		assertThat(soapMessage.getSoapAction()).isEqualTo(soapAction);
+		assertThat(soapMessage.isXopPackage()).isFalse();
 	}
 
 	@Override
-	public void testCreateSoapMessageIllFormedXml() throws Exception {
+	public void doTestCreateSoapMessageIllFormedXml() throws Exception {
+
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-ill-formed.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml");
@@ -71,6 +78,7 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 
 	@Override
 	public void testCreateSoapMessageSwA() throws Exception {
+
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-attachment.bin");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type",
@@ -78,16 +86,22 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-		assertFalse("Message is a XOP package", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
+		assertThat(soapMessage.isXopPackage()).isFalse();
+
 		Attachment attachment = soapMessage.getAttachment("interface21");
-		assertNotNull("No attachment read", attachment);
+
+		assertThat(attachment).isNotNull();
 	}
 
 	@Override
 	public void testCreateSoapMessageMtom() throws Exception {
+
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type",
@@ -97,26 +111,31 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-		assertTrue("Message is not a XOP package", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
+		assertThat(soapMessage.isXopPackage()).isTrue();
+
 		Iterator<Attachment> iter = soapMessage.getAttachments();
-		assertTrue("No attachments read", iter.hasNext());
+
+		assertThat(iter.hasNext()).isTrue();
 
 		Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:40864869929B855F971176851454452@apache.org>");
-		assertNotNull("No attachment read", attachment);
+
+		assertThat(attachment).isNotNull();
 	}
 
 	@Override
 	public void testCreateSoapMessageMissingContentType() throws Exception {
+
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12.xml");
 		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_12, soapMessage.getVersion());
-	}
 
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
+	}
 }

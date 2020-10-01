@@ -16,16 +16,17 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -56,8 +57,9 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
 	private FaultAwareWebServiceMessage requestMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		adapter = new WebServiceMessageReceiverHandlerAdapter();
 		httpRequest = new MockHttpServletRequest();
 		httpResponse = new MockHttpServletResponse();
@@ -69,45 +71,41 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
 	@Test
 	public void testHandleNonPost() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_GET);
 		replayMockControls();
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {}
-		};
-		adapter.handle(httpRequest, httpResponse, endpoint);
-		Assert.assertEquals("METHOD_NOT_ALLOWED expected", HttpServletResponse.SC_METHOD_NOT_ALLOWED,
-				httpResponse.getStatus());
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) messageContext -> {});
+
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+
 		verifyMockControls();
 	}
 
 	@Test
 	public void testHandlePostNoResponse() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
-		httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+		httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
 		httpRequest.setContentType("text/xml; charset=\"utf-8\"");
 		httpRequest.setCharacterEncoding("UTF-8");
 		expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(responseMock);
 
 		replayMockControls();
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {}
-		};
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) messageContext -> {});
 
-		adapter.handle(httpRequest, httpResponse, endpoint);
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_ACCEPTED);
+		assertThat(httpResponse.getContentAsString()).hasSize(0);
 
-		Assert.assertEquals("Invalid status code on response", HttpServletResponse.SC_ACCEPTED, httpResponse.getStatus());
-		Assert.assertEquals("Response written", 0, httpResponse.getContentAsString().length());
 		verifyMockControls();
 	}
 
 	@Test
 	public void testHandlePostResponse() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
-		httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+		httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
 		httpRequest.setContentType("text/xml; charset=\"utf-8\"");
 		httpRequest.setCharacterEncoding("UTF-8");
 		expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(requestMock);
@@ -116,24 +114,19 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 		responseMock.writeTo(isA(OutputStream.class));
 
 		replayMockControls();
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-				messageContext.getResponse();
-			}
-		};
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) MessageContext::getResponse);
 
-		adapter.handle(httpRequest, httpResponse, endpoint);
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
 
-		Assert.assertEquals("Invalid status code on response", HttpServletResponse.SC_OK, httpResponse.getStatus());
 		verifyMockControls();
 	}
 
 	@Test
 	public void testHandlePostFault() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
-		httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+		httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
 		httpRequest.setContentType("text/xml; charset=\"utf-8\"");
 		httpRequest.setCharacterEncoding("UTF-8");
 		expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(requestMock);
@@ -142,41 +135,30 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 		responseMock.writeTo(isA(OutputStream.class));
 
 		replayMockControls();
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-				messageContext.getResponse();
-			}
-		};
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) MessageContext::getResponse);
 
-		adapter.handle(httpRequest, httpResponse, endpoint);
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-		Assert.assertEquals("Invalid status code on response", HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-				httpResponse.getStatus());
 		verifyMockControls();
 	}
 
 	@Test
 	public void testHandleNotFound() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
-		httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+		httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
 		httpRequest.setContentType("text/xml; charset=\"utf-8\"");
 		httpRequest.setCharacterEncoding("UTF-8");
 		expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andReturn(requestMock);
 
 		replayMockControls();
 
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) messageContext -> {
+			throw new NoEndpointFoundException(messageContext.getRequest());
+		});
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {
-				throw new NoEndpointFoundException(messageContext.getRequest());
-			}
-		};
-
-		adapter.handle(httpRequest, httpResponse, endpoint);
-		Assert.assertEquals("No 404 returned", HttpServletResponse.SC_NOT_FOUND, httpResponse.getStatus());
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_NOT_FOUND);
 
 		verifyMockControls();
 
@@ -184,22 +166,18 @@ public class WebServiceMessageReceiverHandlerAdapterTest {
 
 	@Test
 	public void testHandleInvalidXml() throws Exception {
+
 		httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
-		httpRequest.setContent(REQUEST.getBytes("UTF-8"));
+		httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
 		httpRequest.setContentType("text/xml; charset=\"utf-8\"");
 		httpRequest.setCharacterEncoding("UTF-8");
 		expect(factoryMock.createWebServiceMessage(isA(InputStream.class))).andThrow(new InvalidXmlException(null, null));
 
 		replayMockControls();
 
-		WebServiceMessageReceiver endpoint = new WebServiceMessageReceiver() {
+		adapter.handle(httpRequest, httpResponse, (WebServiceMessageReceiver) messageContext -> {});
 
-			@Override
-			public void receive(MessageContext messageContext) throws Exception {}
-		};
-
-		adapter.handle(httpRequest, httpResponse, endpoint);
-		Assert.assertEquals("No 400 returned", HttpServletResponse.SC_BAD_REQUEST, httpResponse.getStatus());
+		assertThat(httpResponse.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
 
 		verifyMockControls();
 	}

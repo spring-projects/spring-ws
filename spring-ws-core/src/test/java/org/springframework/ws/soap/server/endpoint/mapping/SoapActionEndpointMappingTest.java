@@ -16,11 +16,12 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.soap.MessageFactory;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -32,28 +33,33 @@ public class SoapActionEndpointMappingTest {
 
 	private MessageContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		mapping = new SoapActionEndpointMapping();
 		context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
 	}
 
 	@Test
 	public void testGetLookupKeyForMessage() throws Exception {
+
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
 		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-		Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+
+		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(soapAction);
 	}
 
 	@Test
 	public void testGetLookupKeyForMessageQuoted() throws Exception {
+
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
 		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
-		Assert.assertEquals("Invalid lookup key", soapAction, mapping.getLookupKeyForMessage(context));
+
+		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(soapAction);
 	}
 
 	@Test
-	public void testValidateLookupKey() throws Exception {
-		Assert.assertTrue("Soapaction not valid", mapping.validateLookupKey("SoapAction"));
+	public void testValidateLookupKey() {
+		assertThat(mapping.validateLookupKey("SoapAction")).isTrue();
 	}
 }

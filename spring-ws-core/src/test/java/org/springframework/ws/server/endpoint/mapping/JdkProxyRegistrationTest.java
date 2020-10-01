@@ -16,25 +16,25 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("jdk-proxy-registration.xml")
 public class JdkProxyRegistrationTest {
 
@@ -44,11 +44,15 @@ public class JdkProxyRegistrationTest {
 
 	@Test
 	public void registration() throws NoSuchMethodException {
+
 		MethodEndpoint jdkProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
-		assertNotNull("jdk proxy endpoint not registered", jdkProxy);
+
+		assertThat(jdkProxy).isNotNull();
+
 		Method doIt = MyEndpointImpl.class.getMethod("doIt", Source.class);
 		MethodEndpoint expected = new MethodEndpoint("jdkProxyEndpoint", applicationContext, doIt);
-		assertEquals("Invalid endpoint registered", expected, jdkProxy);
+
+		assertThat(jdkProxy).isEqualTo(expected);
 	}
 
 	@Endpoint

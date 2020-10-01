@@ -16,30 +16,32 @@
 
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class XmlRootElementEndpointMappingTest {
 
 	private XmlRootElementEndpointMapping mapping;
 
-	@Before
+	@BeforeEach
 	public void createMapping() throws NoSuchMethodException {
 		mapping = new XmlRootElementEndpointMapping();
 	}
 
 	@Test
 	public void rootElement() throws NoSuchMethodException {
+
 		Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
 		QName name = mapping.getLookupKeyForMethod(rootElement);
-		assertEquals(new QName("myNamespace", "myRoot"), name);
+
+		assertThat(name).isEqualTo(new QName("myNamespace", "myRoot"));
 	}
 
 	public void rootElement(MyRootElement rootElement) {}

@@ -16,12 +16,12 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -58,8 +58,9 @@ public class XPathParamMethodArgumentResolverTest {
 
 	private MethodParameter namespaceClassParameter;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		resolver = new XPathParamMethodArgumentResolver();
 		Method supportedTypes = getClass().getMethod("supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
 				NodeList.class, String.class);
@@ -76,118 +77,137 @@ public class XPathParamMethodArgumentResolverTest {
 
 	@Test
 	public void supportsParameter() {
-		assertTrue("resolver does not support boolean parameter", resolver.supportsParameter(booleanParameter));
-		assertTrue("resolver does not support double parameter", resolver.supportsParameter(doubleParameter));
-		assertTrue("resolver does not support Node parameter", resolver.supportsParameter(nodeParameter));
-		assertTrue("resolver does not support NodeList parameter", resolver.supportsParameter(nodeListParameter));
-		assertTrue("resolver does not support String parameter", resolver.supportsParameter(stringParameter));
-		assertTrue("resolver does not support String parameter", resolver.supportsParameter(convertedParameter));
-		assertFalse("resolver supports parameter without @XPathParam", resolver.supportsParameter(unsupportedParameter));
+
+		assertThat(resolver.supportsParameter(booleanParameter)).isTrue();
+		assertThat(resolver.supportsParameter(doubleParameter)).isTrue();
+		assertThat(resolver.supportsParameter(nodeParameter)).isTrue();
+		assertThat(resolver.supportsParameter(nodeListParameter)).isTrue();
+		assertThat(resolver.supportsParameter(stringParameter)).isTrue();
+		assertThat(resolver.supportsParameter(convertedParameter)).isTrue();
+		assertThat(resolver.supportsParameter(unsupportedParameter)).isFalse();
 	}
 
 	@Test
 	public void resolveBoolean() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, booleanParameter);
 
-		assertTrue("resolver does not return boolean", result instanceof Boolean);
+		assertThat(result).isInstanceOf(Boolean.class);
+
 		Boolean b = (Boolean) result;
-		assertTrue("Invalid boolean value", b);
+
+		assertThat(b).isTrue();
 	}
 
 	@Test
 	public void resolveDouble() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, doubleParameter);
 
-		assertTrue("resolver does not return double", result instanceof Double);
+		assertThat(result).isInstanceOf(Double.class);
+
 		Double d = (Double) result;
-		assertEquals("Invalid double value", 42D, d, 0D);
+
+		assertThat(d).isEqualTo(42D);
 	}
 
 	@Test
 	public void resolveNode() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, nodeParameter);
 
-		assertTrue("resolver does not return Node", result instanceof Node);
+		assertThat(result).isInstanceOf(Node.class);
+
 		Node node = (Node) result;
-		assertEquals("Invalid node value", "child", node.getLocalName());
+
+		assertThat(node.getLocalName()).isEqualTo("child");
 	}
 
 	@Test
 	public void resolveNodeList() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, nodeListParameter);
 
-		assertTrue("resolver does not return NodeList", result instanceof NodeList);
+		assertThat(result).isInstanceOf(NodeList.class);
+
 		NodeList nodeList = (NodeList) result;
-		assertEquals("Invalid NodeList value", 1, nodeList.getLength());
-		assertEquals("Invalid Node value", "child", nodeList.item(0).getLocalName());
+
+		assertThat(nodeList.getLength()).isEqualTo(1);
+		assertThat(nodeList.item(0).getLocalName()).isEqualTo("child");
 	}
 
 	@Test
 	public void resolveString() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, stringParameter);
 
-		assertTrue("resolver does not return String", result instanceof String);
+		assertThat(result).isInstanceOf(String.class);
+
 		String s = (String) result;
-		assertEquals("Invalid string value", "text", s);
+
+		assertThat(s).isEqualTo("text");
 	}
 
 	@Test
 	public void resolveConvertedType() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, convertedParameter);
 
-		assertTrue("resolver does not return String", result instanceof Integer);
-		Integer i = (Integer) result;
-		assertEquals("Invalid integer value", new Integer(42), i);
+		assertThat(result).isInstanceOf(Integer.class);
+		assertThat(result).isEqualTo(42);
 	}
 
 	@Test
 	public void resolveNamespacesMethod() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, namespaceMethodParameter);
 
-		assertTrue("resolver does not return String", result instanceof String);
-		String s = (String) result;
-		assertEquals("Invalid string value", "text", s);
+		assertThat(result).isInstanceOf(String.class);
+		assertThat(result).isEqualTo("text");
 	}
 
 	@Test
 	public void resolveNamespacesClass() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		Object result = resolver.resolveArgument(messageContext, namespaceClassParameter);
 
-		assertTrue("resolver does not return String", result instanceof String);
-		String s = (String) result;
-		assertEquals("Invalid string value", "text", s);
+		assertThat(result).isInstanceOf(String.class);
+		assertThat(result).isEqualTo("text");
 	}
 
 	public void unsupported(String s) {}
 
-	public void supportedTypes(@XPathParam("/root/child") boolean param1, @XPathParam("/root/child/number") double param2,
-			@XPathParam("/root/child") Node param3, @XPathParam("/root/*") NodeList param4,
+	public void supportedTypes( //
+			@XPathParam("/root/child") boolean param1, //
+			@XPathParam("/root/child/number") double param2, //
+			@XPathParam("/root/child") Node param3, //
+			@XPathParam("/root/*") NodeList param4, //
 			@XPathParam("/root/child/text") String param5) {}
 
 	public void convertedType(@XPathParam("/root/child/number") int param) {}

@@ -16,7 +16,6 @@
 
 package org.springframework.ws.transport;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ public class MockTransportInputStream extends TransportInputStream {
 	private InputStream inputStream;
 
 	public MockTransportInputStream(InputStream inputStream, Map<String, String> headers) {
+
 		Assert.notNull(inputStream, "inputStream must not be null");
 		Assert.notNull(headers, "headers must not be null");
 		this.inputStream = inputStream;
@@ -40,23 +40,25 @@ public class MockTransportInputStream extends TransportInputStream {
 	}
 
 	public MockTransportInputStream(InputStream inputStream) {
+
 		Assert.notNull(inputStream, "inputStream must not be null");
 		this.inputStream = inputStream;
 		headers = new HashMap<String, String>();
 	}
 
 	@Override
-	protected InputStream createInputStream() throws IOException {
+	protected InputStream createInputStream() {
 		return inputStream;
 	}
 
 	@Override
-	public Iterator<String> getHeaderNames() throws IOException {
+	public Iterator<String> getHeaderNames() {
 		return headers.keySet().iterator();
 	}
 
 	@Override
-	public Iterator<String> getHeaders(String name) throws IOException {
+	public Iterator<String> getHeaders(String name) {
+
 		String[] values = StringUtils.delimitedListToStringArray(headers.get(name), ", ");
 		return Arrays.asList(values).iterator();
 	}

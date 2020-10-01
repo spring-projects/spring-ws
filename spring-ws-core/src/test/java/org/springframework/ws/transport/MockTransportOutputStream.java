@@ -16,7 +16,6 @@
 
 package org.springframework.ws.transport;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +29,13 @@ public class MockTransportOutputStream extends TransportOutputStream {
 	private OutputStream outputStream;
 
 	public MockTransportOutputStream(OutputStream outputStream) {
+
 		Assert.notNull(outputStream, "outputStream must not be null");
 		this.outputStream = outputStream;
 	}
 
 	@Override
-	protected OutputStream createOutputStream() throws IOException {
+	protected OutputStream createOutputStream() {
 		return outputStream;
 	}
 
@@ -44,7 +44,7 @@ public class MockTransportOutputStream extends TransportOutputStream {
 	}
 
 	@Override
-	public void addHeader(String name, String value) throws IOException {
+	public void addHeader(String name, String value) {
 		headers.put(name, value);
 	}
 }

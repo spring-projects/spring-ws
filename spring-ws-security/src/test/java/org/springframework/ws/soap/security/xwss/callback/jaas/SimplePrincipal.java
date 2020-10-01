@@ -40,6 +40,7 @@ public final class SimplePrincipal implements Principal {
 	}
 
 	public boolean equals(Object o) {
+
 		if (!(o instanceof SimplePrincipal)) {
 			return false;
 		}

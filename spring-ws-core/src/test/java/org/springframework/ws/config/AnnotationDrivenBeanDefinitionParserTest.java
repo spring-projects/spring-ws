@@ -16,14 +16,13 @@
 
 package org.springframework.ws.config;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.EndpointAdapter;
@@ -57,69 +56,57 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 
 	private ApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml", getClass());
 	}
 
 	@Test
 	public void endpointMappings() {
+
 		Map<String, EndpointMapping> result = applicationContext.getBeansOfType(EndpointMapping.class);
-		assertEquals("invalid amount of endpoint mappings found", 3, result.size());
-		assertContainsInstanceOf(result.values(), PayloadRootAnnotationMethodEndpointMapping.class);
-		assertContainsInstanceOf(result.values(), SoapActionAnnotationMethodEndpointMapping.class);
-		assertContainsInstanceOf(result.values(), AnnotationActionEndpointMapping.class);
+
+		assertThat(result).hasSize(3);
+		assertThat(result.values()).hasAtLeastOneElementOfType(PayloadRootAnnotationMethodEndpointMapping.class);
+		assertThat(result.values()).hasAtLeastOneElementOfType(SoapActionAnnotationMethodEndpointMapping.class);
+		assertThat(result.values()).hasAtLeastOneElementOfType(AnnotationActionEndpointMapping.class);
 	}
 
 	@Test
 	public void endpointAdapters() {
+
 		Map<String, EndpointAdapter> result = applicationContext.getBeansOfType(EndpointAdapter.class);
-		assertEquals("invalid amount of endpoint mappings found", 1, result.size());
+
+		assertThat(result).hasSize(1);
+
 		DefaultMethodEndpointAdapter endpointAdapter = (DefaultMethodEndpointAdapter) result.values().iterator().next();
 
 		List<MethodArgumentResolver> argumentResolvers = endpointAdapter.getMethodArgumentResolvers();
-		assertTrue("No argumentResolvers created", !argumentResolvers.isEmpty());
-		assertContainsInstanceOf(argumentResolvers, MessageContextMethodArgumentResolver.class);
-		assertContainsInstanceOf(argumentResolvers, XPathParamMethodArgumentResolver.class);
-		assertContainsInstanceOf(argumentResolvers, SoapMethodArgumentResolver.class);
-		assertContainsInstanceOf(argumentResolvers, SoapHeaderElementMethodArgumentResolver.class);
-		assertContainsInstanceOf(argumentResolvers, DomPayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, SourcePayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, Dom4jPayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, XmlRootElementPayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, JaxbElementPayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, JDomPayloadMethodProcessor.class);
-		assertContainsInstanceOf(argumentResolvers, StaxPayloadMethodArgumentResolver.class);
-		assertContainsInstanceOf(argumentResolvers, XomPayloadMethodProcessor.class);
+
+		assertThat(argumentResolvers).isNotEmpty();
+		assertThat(argumentResolvers).hasOnlyElementsOfTypes(MessageContextMethodArgumentResolver.class,
+				XPathParamMethodArgumentResolver.class, SoapMethodArgumentResolver.class,
+				SoapHeaderElementMethodArgumentResolver.class, DomPayloadMethodProcessor.class,
+				SourcePayloadMethodProcessor.class, Dom4jPayloadMethodProcessor.class,
+				XmlRootElementPayloadMethodProcessor.class, JaxbElementPayloadMethodProcessor.class,
+				JDomPayloadMethodProcessor.class, StaxPayloadMethodArgumentResolver.class, XomPayloadMethodProcessor.class);
 
 		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
-		assertTrue("No returnValueHandlers created", !returnValueHandlers.isEmpty());
-		assertContainsInstanceOf(returnValueHandlers, DomPayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, SourcePayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, Dom4jPayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, XmlRootElementPayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, JaxbElementPayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, JDomPayloadMethodProcessor.class);
-		assertContainsInstanceOf(returnValueHandlers, XomPayloadMethodProcessor.class);
+
+		assertThat(returnValueHandlers).isNotEmpty();
+		assertThat(returnValueHandlers).hasOnlyElementsOfTypes(DomPayloadMethodProcessor.class,
+				SourcePayloadMethodProcessor.class, Dom4jPayloadMethodProcessor.class,
+				XmlRootElementPayloadMethodProcessor.class, JaxbElementPayloadMethodProcessor.class,
+				JDomPayloadMethodProcessor.class, XomPayloadMethodProcessor.class);
 	}
 
 	@Test
 	public void endpointExceptionResolver() {
+
 		Map<String, EndpointExceptionResolver> result = applicationContext.getBeansOfType(EndpointExceptionResolver.class);
-		assertEquals("invalid amount of endpoint exception resolvers found", 2, result.size());
-		assertContainsInstanceOf(result.values(), SoapFaultAnnotationExceptionResolver.class);
-		assertContainsInstanceOf(result.values(), SimpleSoapExceptionResolver.class);
-	}
 
-	private <T> void assertContainsInstanceOf(Collection<T> collection, Class<? extends T> clazz) {
-		boolean found = false;
-		for (T item : collection) {
-			if (item.getClass().equals(clazz)) {
-				found = true;
-				break;
-			}
-		}
-		assertTrue("No [" + clazz.getName() + "] instance found in " + collection, found);
+		assertThat(result).hasSize(2);
+		assertThat(result.values()).hasAtLeastOneElementOfType(SoapFaultAnnotationExceptionResolver.class);
+		assertThat(result.values()).hasAtLeastOneElementOfType(SimpleSoapExceptionResolver.class);
 	}
-
 }

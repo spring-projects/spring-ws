@@ -27,7 +27,8 @@ public class AxiomNonStreamingSoap12WebServiceTemplateIntegrationTest
 		extends AbstractSoap12WebServiceTemplateIntegrationTestCase {
 
 	@Override
-	public SoapMessageFactory createMessageFactory() throws Exception {
+	public SoapMessageFactory createMessageFactory() {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 		return messageFactory;

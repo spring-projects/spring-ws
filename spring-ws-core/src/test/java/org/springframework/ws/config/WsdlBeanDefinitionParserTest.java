@@ -16,11 +16,12 @@
 
 package org.springframework.ws.config;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
@@ -34,25 +35,32 @@ public class WsdlBeanDefinitionParserTest {
 
 	private ApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
 	}
 
 	@Test
-	public void staticWsdl() throws Exception {
+	public void staticWsdl() {
+
 		Map<String, SimpleWsdl11Definition> result = applicationContext.getBeansOfType(SimpleWsdl11Definition.class);
-		Assert.assertFalse("no WSDL definitions found", result.isEmpty());
+
+		assertThat(result).isNotEmpty();
+
 		String beanName = result.keySet().iterator().next();
-		Assert.assertEquals("invalid bean name", "simple", beanName);
+
+		assertThat(beanName).isEqualTo("simple");
 	}
 
 	@Test
-	public void dynamicWsdl() throws Exception {
+	public void dynamicWsdl() {
+
 		Map<String, ?> result = applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
-		Assert.assertFalse("no WSDL definitions found", result.isEmpty());
+
+		assertThat(result).isNotEmpty();
 
 		result = applicationContext.getBeansOfType(CommonsXsdSchemaCollection.class);
-		Assert.assertFalse("no XSD definitions found", result.isEmpty());
+
+		assertThat(result).isNotEmpty();
 	}
 }

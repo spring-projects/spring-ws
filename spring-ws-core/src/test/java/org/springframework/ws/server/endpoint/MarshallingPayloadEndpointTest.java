@@ -16,9 +16,8 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -31,9 +30,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -48,6 +46,7 @@ import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.xmlunit.assertj.XmlAssert;
 
 public class MarshallingPayloadEndpointTest {
 
@@ -57,49 +56,63 @@ public class MarshallingPayloadEndpointTest {
 
 	private WebServiceMessageFactory factoryMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		factoryMock = createMock(WebServiceMessageFactory.class);
-
 		context = new DefaultMessageContext(request, factoryMock);
 	}
 
 	@Test
 	public void testInvoke() throws Exception {
+
 		Unmarshaller unmarshaller = new SimpleMarshaller() {
+
 			@Override
 			public Object unmarshal(Source source) throws XmlMappingException {
+
 				try {
 					StringWriter writer = new StringWriter();
 					transformer.transform(source, new StreamResult(writer));
-					assertXMLEqual("Invalid source", "<request/>", writer.toString());
+
+					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
+
 					return 42L;
 				} catch (Exception e) {
-					Assert.fail(e.getMessage());
+
+					fail(e.getMessage());
 					return null;
 				}
 			}
 		};
+
 		Marshaller marshaller = new SimpleMarshaller() {
+
 			@Override
 			public void marshal(Object graph, Result result) throws XmlMappingException {
-				Assert.assertEquals("Invalid graph", "result", graph);
+
+				assertThat(graph).isEqualTo("result");
+
 				try {
 					transformer.transform(new StreamSource(new StringReader("<result/>")), result);
 				} catch (TransformerException e) {
-					Assert.fail(e.getMessage());
+					fail(e.getMessage());
 				}
 			}
 		};
+
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+
 			@Override
 			protected Object invokeInternal(Object requestObject) throws Exception {
-				Assert.assertEquals("Invalid request object", 42L, requestObject);
+
+				assertThat(requestObject).isEqualTo(42L);
 				return "result";
 			}
 		};
+
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
@@ -110,73 +123,94 @@ public class MarshallingPayloadEndpointTest {
 
 		endpoint.invoke(context);
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
-		Assert.assertNotNull("Invalid result", response);
-		assertXMLEqual("Invalid response", "<result/>", response.getPayloadAsString());
+
+		assertThat(response).isNotNull();
+		XmlAssert.assertThat(response.getPayloadAsString()).and("<result/>").ignoreWhitespace().areIdentical();
 
 		verify(factoryMock);
 	}
 
 	@Test
 	public void testInvokeNullResponse() throws Exception {
+
 		Unmarshaller unmarshaller = new SimpleMarshaller() {
+
 			@Override
 			public Object unmarshal(Source source) throws XmlMappingException {
+
 				try {
 					StringWriter writer = new StringWriter();
 					transformer.transform(source, new StreamResult(writer));
-					assertXMLEqual("Invalid source", "<request/>", writer.toString());
+
+					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
+
 					return (long) 42;
 				} catch (Exception e) {
-					Assert.fail(e.getMessage());
+					fail(e.getMessage());
 					return null;
 				}
 			}
 		};
+
 		Marshaller marshaller = new SimpleMarshaller() {
+
 			@Override
 			public void marshal(Object graph, Result result) throws XmlMappingException {
-				Assert.fail("marshal not expected");
+				fail("marshal not expected");
 			}
 		};
+
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+
 			@Override
 			protected Object invokeInternal(Object requestObject) throws Exception {
-				Assert.assertEquals("Invalid request object", (long) 42, requestObject);
+
+				assertThat(requestObject).isEqualTo(42L);
 				return null;
 			}
 		};
+
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
 		replay(factoryMock);
 		endpoint.invoke(context);
-		Assert.assertFalse("Response created", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
+
 		verify(factoryMock);
 	}
 
 	@Test
 	public void testInvokeNoRequest() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage((StringBuilder) null);
 		context = new DefaultMessageContext(request, factoryMock);
+
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
 			@Override
 			protected Object invokeInternal(Object requestObject) throws Exception {
-				Assert.assertNull("No request expected", requestObject);
+
+				assertThat(requestObject).isNull();
 				return null;
 			}
 		};
+
 		endpoint.setMarshaller(new SimpleMarshaller());
 		endpoint.setUnmarshaller(new SimpleMarshaller());
 		endpoint.afterPropertiesSet();
 		replay(factoryMock);
 		endpoint.invoke(context);
-		Assert.assertFalse("Response created", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
+
 		verify(factoryMock);
 	}
 
 	@Test
 	public void testInvokeMimeMarshaller() throws Exception {
+
 		MimeUnmarshaller unmarshaller = createMock(MimeUnmarshaller.class);
 		MimeMarshaller marshaller = createMock(MimeMarshaller.class);
 		MimeMessage request = createMock("request", MimeMessage.class);
@@ -192,19 +226,23 @@ public class MarshallingPayloadEndpointTest {
 		replay(factoryMock, unmarshaller, marshaller, request, response);
 
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
+
 			@Override
 			protected Object invokeInternal(Object requestObject) throws Exception {
-				Assert.assertEquals("Invalid request object", 42L, requestObject);
+
+				assertThat(requestObject).isEqualTo(42L);
 				return "result";
 			}
 		};
+
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
 
 		context = new DefaultMessageContext(request, factoryMock);
 		endpoint.invoke(context);
-		Assert.assertNotNull("Invalid result", response);
+
+		assertThat(response).isNotNull();
 
 		verify(factoryMock, unmarshaller, marshaller, request, response);
 	}

@@ -16,22 +16,22 @@
 
 package org.springframework.ws.transport.mail;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.xmlunit.assertj.XmlAssert;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("mail-applicationContext.xml")
 public class MailIntegrationTest {
 
@@ -39,21 +39,21 @@ public class MailIntegrationTest {
 
 	@Autowired private GenericApplicationContext applicationContext;
 
-	@After
-	public void clearMailbox() throws Exception {
+	@AfterEach
+	public void clearMailbox() {
 		Mailbox.clearAll();
 	}
 
 	@Test
 	public void testMailTransport() throws Exception {
+
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
 		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
 		applicationContext.close();
-		assertEquals("Server mail message not deleted", 0, Mailbox.get("server@example.com").size());
-		assertEquals("No client mail message received", 1, Mailbox.get("client@example.com").size());
-		XMLAssert.assertXMLEqual("Invalid content received", content, result.toString());
 
+		assertThat(Mailbox.get("server@example.com")).isEmpty();
+		assertThat(Mailbox.get("client@example.com")).hasSize(1);
+		XmlAssert.assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
 	}
-
 }

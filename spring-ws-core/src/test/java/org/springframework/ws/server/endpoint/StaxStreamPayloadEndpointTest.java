@@ -16,12 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.stream.XMLOutputFactory;
@@ -32,7 +27,7 @@ import javax.xml.transform.Transformer;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
@@ -42,6 +37,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.xmlunit.assertj.XmlAssert;
 
 /**
  * Test case for AbstractStaxStreamPayloadEndpoint.
@@ -53,38 +49,43 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {
+
 		return new AbstractStaxStreamPayloadEndpoint() {
 			@Override
 			protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
-				assertNotNull("No StreamReader passed", streamReader);
+				assertThat(streamReader).isNotNull();
 			}
 		};
 	}
 
 	@Override
 	protected MessageEndpoint createNoRequestPayloadEndpoint() {
+
 		return new AbstractStaxStreamPayloadEndpoint() {
 			@Override
 			protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
-				assertNull("StreamReader passed", streamReader);
+				assertThat(streamReader).isNull();
 			}
 		};
 	}
 
 	@Override
 	protected MessageEndpoint createResponseEndpoint() {
+
 		return new AbstractStaxStreamPayloadEndpoint() {
 			@Override
 			protected void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception {
-				assertNotNull("No streamReader passed", streamReader);
-				assertNotNull("No streamWriter passed", streamReader);
-				assertEquals("Not a start element", XMLStreamConstants.START_ELEMENT, streamReader.next());
-				assertEquals("Invalid start event local name", REQUEST_ELEMENT, streamReader.getLocalName());
-				assertEquals("Invalid start event namespace", NAMESPACE_URI, streamReader.getNamespaceURI());
-				assertTrue("streamReader has no next element", streamReader.hasNext());
-				assertEquals("Not a end element", XMLStreamConstants.END_ELEMENT, streamReader.next());
-				assertEquals("Invalid end event local name", REQUEST_ELEMENT, streamReader.getLocalName());
-				assertEquals("Invalid end event namespace", NAMESPACE_URI, streamReader.getNamespaceURI());
+
+				assertThat(streamReader).isNotNull();
+				assertThat(streamWriter).isNotNull();
+				assertThat(streamReader.next()).isEqualTo(XMLStreamConstants.START_ELEMENT);
+				assertThat(streamReader.getLocalName()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(streamReader.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+				assertThat(streamReader.hasNext()).isTrue();
+				assertThat(streamReader.next()).isEqualTo(XMLStreamConstants.END_ELEMENT);
+				assertThat(streamReader.getLocalName()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(streamReader.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+
 				streamWriter.setDefaultNamespace(NAMESPACE_URI);
 				streamWriter.writeStartElement(NAMESPACE_URI, RESPONSE_ELEMENT);
 				streamWriter.writeDefaultNamespace(NAMESPACE_URI);
@@ -95,8 +96,10 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 			@Override
 			protected XMLOutputFactory createXmlOutputFactory() {
+
 				XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 				outputFactory.setProperty("javax.xml.stream.isRepairingNamespaces", Boolean.TRUE);
+
 				return outputFactory;
 			}
 		};
@@ -104,6 +107,7 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 	@Test
 	public void testSaajResponse() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage());
@@ -114,14 +118,18 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		MessageEndpoint endpoint = createResponseEndpoint();
 		endpoint.invoke(context);
-		assertTrue("context has not response", context.hasResponse());
+
+		assertThat(context.hasResponse()).isTrue();
+
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+
+		XmlAssert.assertThat(stringResult.toString()).and(RESPONSE).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testAxiomResponse() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
@@ -132,14 +140,18 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		MessageEndpoint endpoint = createResponseEndpoint();
 		endpoint.invoke(context);
-		assertTrue("context has not response", context.hasResponse());
+
+		assertThat(context.hasResponse()).isTrue();
+
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+
+		XmlAssert.assertThat(stringResult.toString()).and(RESPONSE).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testAxiomNoResponse() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
@@ -150,11 +162,13 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		MessageEndpoint endpoint = createNoResponseEndpoint();
 		endpoint.invoke(context);
-		assertFalse("context has response", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Test
 	public void testAxiomResponseNoPayloadCaching() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
@@ -166,15 +180,18 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		MessageEndpoint endpoint = createResponseEndpoint();
 		endpoint.invoke(context);
-		assertTrue("context has not response", context.hasResponse());
+
+		assertThat(context.hasResponse()).isTrue();
 
 		StringResult stringResult = new StringResult();
 		transformer.transform(context.getResponse().getPayloadSource(), stringResult);
-		assertXMLEqual(RESPONSE, stringResult.toString());
+
+		XmlAssert.assertThat(stringResult.toString()).and(RESPONSE).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testAxiomNoResponseNoPayloadCaching() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory);
@@ -186,7 +203,8 @@ public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCa
 
 		MessageEndpoint endpoint = createNoResponseEndpoint();
 		endpoint.invoke(context);
-		assertFalse("context has response", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 }

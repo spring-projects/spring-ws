@@ -16,6 +16,8 @@
 
 package org.springframework.xml.validation;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,10 +26,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -45,8 +46,9 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 	private InputStream invalidInputStream;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		Resource[] schemaResource = new Resource[] {
 				new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class) };
 		validator = createValidator(schemaResource, XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -54,8 +56,9 @@ public abstract class AbstractValidatorFactoryTestCase {
 		invalidInputStream = AbstractValidatorFactoryTestCase.class.getResourceAsStream("invalidDocument.xml");
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
+
 		validInputStream.close();
 		invalidInputStream.close();
 	}
@@ -64,13 +67,15 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 	@Test
 	public void testHandleValidMessageStream() throws Exception {
+
 		SAXParseException[] errors = validator.validate(new StreamSource(validInputStream));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
 	}
 
 	@Test
 	public void testValidateTwice() throws Exception {
+
 		validator.validate(new StreamSource(validInputStream));
 		validInputStream = AbstractValidatorFactoryTestCase.class.getResourceAsStream("validDocument.xml");
 		validator.validate(new StreamSource(validInputStream));
@@ -78,47 +83,54 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 	@Test
 	public void testHandleInvalidMessageStream() throws Exception {
+
 		SAXParseException[] errors = validator.validate(new StreamSource(invalidInputStream));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 3, errors.length);
+
+		assertThat(errors).hasSize(3);
 	}
 
 	@Test
 	public void testHandleValidMessageSax() throws Exception {
+
 		SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(validInputStream)));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
 	}
 
 	@Test
 	public void testHandleInvalidMessageSax() throws Exception {
+
 		SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(invalidInputStream)));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 3, errors.length);
+
+		assertThat(errors).hasSize(3);
 	}
 
 	@Test
 	public void testHandleValidMessageDom() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(validInputStream));
 		SAXParseException[] errors = validator.validate(new DOMSource(document));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
+		;
 	}
 
 	@Test
 	public void testHandleInvalidMessageDom() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(invalidInputStream));
 		SAXParseException[] errors = validator.validate(new DOMSource(document));
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 3, errors.length);
+
+		assertThat(errors).hasSize(3);
 	}
 
 	@Test
 	public void testMultipleSchemasValidMessage() throws Exception {
+
 		Resource[] schemaResources = new Resource[] {
 				new ClassPathResource("multipleSchemas1.xsd", AbstractValidatorFactoryTestCase.class),
 				new ClassPathResource("multipleSchemas2.xsd", AbstractValidatorFactoryTestCase.class) };
@@ -127,16 +139,21 @@ public abstract class AbstractValidatorFactoryTestCase {
 		Source document = new ResourceSource(
 				new ClassPathResource("multipleSchemas1.xml", AbstractValidatorFactoryTestCase.class));
 		SAXParseException[] errors = validator.validate(document);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
+
 		validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
 		document = new ResourceSource(
 				new ClassPathResource("multipleSchemas2.xml", AbstractValidatorFactoryTestCase.class));
 		errors = validator.validate(document);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
+		;
 	}
 
 	@Test
 	public void customErrorHandler() throws Exception {
+
 		ValidationErrorHandler myHandler = new ValidationErrorHandler() {
 			public SAXParseException[] getErrors() {
 				return new SAXParseException[0];
@@ -148,9 +165,10 @@ public abstract class AbstractValidatorFactoryTestCase {
 
 			public void fatalError(SAXParseException exception) throws SAXException {}
 		};
+
 		SAXParseException[] errors = validator.validate(new StreamSource(invalidInputStream), myHandler);
-		Assert.assertNotNull("Null returned for errors", errors);
-		Assert.assertEquals("ValidationErrors returned", 0, errors.length);
+
+		assertThat(errors).isEmpty();
 	}
 
 }

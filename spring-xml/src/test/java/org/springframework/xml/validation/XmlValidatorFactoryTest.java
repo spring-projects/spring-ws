@@ -16,14 +16,15 @@
 
 package org.springframework.xml.validation;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -32,31 +33,25 @@ public class XmlValidatorFactoryTest {
 
 	@Test
 	public void testCreateValidator() throws Exception {
+
 		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
 		XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-		Assert.assertNotNull("No validator returned", validator);
+
+		assertThat(validator).isNotNull();
 	}
 
 	@Test
-	public void testNonExistentResource() throws Exception {
-		Resource resource = new NonExistentResource();
-		try {
-			XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-			Assert.fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+	public void testNonExistentResource() {
+
+		assertThatIllegalArgumentException().isThrownBy(
+				() -> XmlValidatorFactory.createValidator(new NonExistentResource(), XmlValidatorFactory.SCHEMA_W3C_XML));
 	}
 
 	@Test
-	public void testInvalidSchemaLanguage() throws Exception {
-		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
-		try {
-			XmlValidatorFactory.createValidator(resource, "bla");
-			Assert.fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+	public void testInvalidSchemaLanguage() {
+
+		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
+				.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class), "bla"));
 	}
 
 	private static class NonExistentResource extends AbstractResource {

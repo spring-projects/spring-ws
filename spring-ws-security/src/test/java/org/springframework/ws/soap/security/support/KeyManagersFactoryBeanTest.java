@@ -16,31 +16,34 @@
 
 package org.springframework.ws.soap.security.support;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.net.ssl.KeyManager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class KeyManagersFactoryBeanTest {
 
 	@Test
 	public void defaults() throws Exception {
+
 		KeyManagersFactoryBean factoryBean = new KeyManagersFactoryBean();
 		factoryBean.afterPropertiesSet();
 		KeyManager[] keyManagers = factoryBean.getObject();
-		assertNotNull(keyManagers);
-		assertEquals(1, keyManagers.length);
+
+		assertThat(keyManagers).isNotNull();
+		assertThat(keyManagers).hasSize(1);
 	}
 
 	@Test
 	public void algorithm() throws Exception {
+
 		KeyManagersFactoryBean factoryBean = new KeyManagersFactoryBean();
 		factoryBean.setAlgorithm("PKIX");
 		factoryBean.afterPropertiesSet();
 		KeyManager[] keyManagers = factoryBean.getObject();
-		assertNotNull(keyManagers);
-		assertEquals(1, keyManagers.length);
-	}
 
+		assertThat(keyManagers).isNotNull();
+		assertThat(keyManagers).hasSize(1);
+	}
 }

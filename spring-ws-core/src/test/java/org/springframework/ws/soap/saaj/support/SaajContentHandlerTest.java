@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Iterator;
 
 import javax.xml.soap.MessageFactory;
@@ -29,9 +31,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.sax.SAXResult;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
@@ -43,8 +44,9 @@ public class SaajContentHandlerTest {
 
 	private SOAPEnvelope envelope;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage message = messageFactory.createMessage();
 		envelope = message.getSOAPPart().getEnvelope();
@@ -54,6 +56,7 @@ public class SaajContentHandlerTest {
 
 	@Test
 	public void testHandler() throws Exception {
+
 		String content = "<Root xmlns='http://springframework.org/spring-ws/1' "
 				+ "xmlns:child='http://springframework.org/spring-ws/2'>"
 				+ "<child:Child attribute='value'>Content</child:Child></Root>";
@@ -62,14 +65,21 @@ public class SaajContentHandlerTest {
 		transformer.transform(source, result);
 		Name rootName = envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
 		Iterator<?> iterator = envelope.getBody().getChildElements(rootName);
-		Assert.assertTrue("No child found", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
+
 		SOAPBodyElement rootElement = (SOAPBodyElement) iterator.next();
 		Name childName = envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
 		iterator = rootElement.getChildElements(childName);
-		Assert.assertTrue("No child found", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
+
 		SOAPElement childElement = (SOAPElement) iterator.next();
-		Assert.assertEquals("Invalid contents", "Content", childElement.getValue());
+
+		assertThat(childElement.getValue()).isEqualTo("Content");
+
 		Name attributeName = envelope.createName("attribute");
-		Assert.assertEquals("Invalid attribute value", "value", childElement.getAttributeValue(attributeName));
+
+		assertThat(childElement.getAttributeValue(attributeName)).isEqualTo("value");
 	}
 }

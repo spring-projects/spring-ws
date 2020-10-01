@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.soap11;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.mime.Attachment;
 import org.springframework.ws.soap.AbstractSoapMessageFactoryTestCase;
@@ -36,15 +36,20 @@ import org.springframework.ws.transport.TransportInputStream;
 public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
 	@Test
-	public void testCreateEmptySoap11Message() throws Exception {
+	public void testCreateEmptySoap11Message() {
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage();
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
 	}
 
 	@Override
 	public void testCreateSoapMessageNoAttachment() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/xml");
@@ -53,15 +58,19 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-		assertEquals("Invalid soap action", soapAction, soapMessage.getSoapAction());
-		assertFalse("Message a XOP pacakge", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
+		assertThat(soapMessage.getSoapAction()).isEqualTo(soapAction);
+		assertThat(soapMessage.isXopPackage()).isFalse();
 	}
 
 	@Override
-	public void testCreateSoapMessageIllFormedXml() throws Exception {
+	public void doTestCreateSoapMessageIllFormedXml() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-ill-formed.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/xml");
@@ -72,6 +81,7 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 
 	@Override
 	public void testCreateSoapMessageSwA() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-attachment.bin");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type",
@@ -79,19 +89,27 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-		assertFalse("Message a XOP package", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
+		assertThat(soapMessage.isXopPackage()).isFalse();
+
 		Iterator<Attachment> iter = soapMessage.getAttachments();
-		assertTrue("No attachments read", iter.hasNext());
+
+		assertThat(iter.hasNext()).isTrue();
+
 		Attachment attachment = soapMessage.getAttachment("interface21");
-		assertNotNull("No attachment read", attachment);
-		assertEquals("Invalid content id", "interface21", attachment.getContentId());
+
+		assertThat(attachment).isNotNull();
+		assertThat(attachment.getContentId()).isEqualTo("interface21");
 	}
 
 	@Override
 	public void testCreateSoapMessageMtom() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type",
@@ -101,19 +119,26 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-		assertTrue("Message not a XOP package", soapMessage.isXopPackage());
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
+		assertThat(soapMessage.isXopPackage()).isTrue();
+
 		Iterator<Attachment> iter = soapMessage.getAttachments();
-		assertTrue("No attachments read", iter.hasNext());
+
+		assertThat(iter.hasNext()).isTrue();
 
 		Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
-		assertNotNull("No attachment read", attachment);
+
+		assertThat(attachment).isNotNull();
 	}
 
 	@Test
 	public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-mtom.bin");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type",
@@ -123,59 +148,70 @@ public abstract class AbstractSoap11MessageFactoryTestCase extends AbstractSoapM
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-		assertTrue("Message not a XOP package", soapMessage.isXopPackage());
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
+		assertThat(soapMessage.isXopPackage()).isTrue();
 		Iterator<Attachment> iter = soapMessage.getAttachments();
-		assertTrue("No attachments read", iter.hasNext());
+
+		assertThat(iter.hasNext()).isTrue();
 
 		Attachment attachment = soapMessage.getAttachment("<1.urn:uuid:492264AB42E57108E01176731445504@apache.org>");
-		assertNotNull("No attachment read", attachment);
+
+		assertThat(attachment).isNotNull();
 	}
 
 	@Test
 	public void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf8-bom.xml");
-		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> headers = new HashMap<>();
 		headers.put("Content-Type", "text/xml; charset=UTF-8");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+
+		assertThat(message.getVersion()).isEqualTo(SoapVersion.SOAP_11);
 	}
 
 	@Test
 	public void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-be-bom.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/xml; charset=UTF-16");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+
+		assertThat(message.getVersion()).isEqualTo(SoapVersion.SOAP_11);
 	}
 
 	@Test
 	public void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11-utf16-le-bom.xml");
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "text/xml; charset=UTF-16");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		SoapMessage message = (SoapMessage) messageFactory.createWebServiceMessage(tis);
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, message.getVersion());
+
+		assertThat(message.getVersion()).isEqualTo(SoapVersion.SOAP_11);
 	}
 
 	@Override
 	public void testCreateSoapMessageMissingContentType() throws Exception {
+
 		InputStream is = AbstractSoap11MessageFactoryTestCase.class.getResourceAsStream("soap11.xml");
 		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
-		SoapMessage soapMessage = (SoapMessage) message;
-		assertEquals("Invalid soap version", SoapVersion.SOAP_11, soapMessage.getVersion());
-	}
 
+		assertThat(message).isInstanceOf(SoapMessage.class);
+
+		SoapMessage soapMessage = (SoapMessage) message;
+
+		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_11);
+	}
 }

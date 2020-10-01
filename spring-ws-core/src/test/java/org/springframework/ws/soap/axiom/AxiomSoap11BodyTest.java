@@ -18,7 +18,7 @@ package org.springframework.ws.soap.axiom;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
@@ -27,14 +27,17 @@ import org.springframework.xml.transform.StringSource;
 public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
 
 	@Override
-	protected SoapBody createSoapBody() throws Exception {
+	protected SoapBody createSoapBody() {
+
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
+
 		return axiomSoapMessage.getSoapBody();
 	}
 
 	@Test
 	public void testPayloadNoCaching() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);
 		messageFactory.setSoapVersion(SoapVersion.SOAP_11);
@@ -46,5 +49,4 @@ public class AxiomSoap11BodyTest extends AbstractSoap11BodyTestCase {
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		assertPayloadEqual(payload);
 	}
-
 }

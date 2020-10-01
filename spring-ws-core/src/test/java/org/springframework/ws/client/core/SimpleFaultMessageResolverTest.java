@@ -16,11 +16,11 @@
 
 package org.springframework.ws.client.core;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.client.WebServiceFaultException;
 
@@ -28,26 +28,23 @@ public class SimpleFaultMessageResolverTest {
 
 	private SimpleFaultMessageResolver resolver;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		resolver = new SimpleFaultMessageResolver();
 	}
 
 	@Test
-	public void testResolveFault() throws Exception {
+	public void testResolveFault() {
+
 		FaultAwareWebServiceMessage messageMock = createMock(FaultAwareWebServiceMessage.class);
 		String message = "message";
 		expect(messageMock.getFaultReason()).andReturn(message);
 
 		replay(messageMock);
 
-		try {
-			resolver.resolveFault(messageMock);
-			Assert.fail("WebServiceFaultExcpetion expected");
-		} catch (WebServiceFaultException ex) {
-			// expected
-			Assert.assertEquals("Invalid exception message", message, ex.getMessage());
-		}
+		assertThatExceptionOfType(WebServiceFaultException.class).isThrownBy(() -> resolver.resolveFault(messageMock))
+				.withMessage(message);
+
 		verify(messageMock);
 	}
 }

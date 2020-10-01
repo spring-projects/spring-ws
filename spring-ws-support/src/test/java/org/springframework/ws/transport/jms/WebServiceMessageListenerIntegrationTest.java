@@ -16,26 +16,24 @@
 
 package org.springframework.ws.transport.jms;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
+
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Resource;
 import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.Queue;
-import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-receiver-applicationContext.xml")
 public class WebServiceMessageListenerIntegrationTest {
 
@@ -53,43 +51,48 @@ public class WebServiceMessageListenerIntegrationTest {
 
 	@Test
 	public void testReceiveQueueBytesMessage() throws Exception {
-		final byte[] b = CONTENT.getBytes("UTF-8");
-		jmsTemplate.send(requestQueue, new MessageCreator() {
-			public Message createMessage(Session session) throws JMSException {
-				BytesMessage request = session.createBytesMessage();
-				request.setJMSReplyTo(responseQueue);
-				request.writeBytes(b);
-				return request;
-			}
+
+		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
+
+		jmsTemplate.send(requestQueue, session -> {
+			BytesMessage request = session.createBytesMessage();
+			request.setJMSReplyTo(responseQueue);
+			request.writeBytes(b);
+			return request;
 		});
+
 		BytesMessage response = (BytesMessage) jmsTemplate.receive(responseQueue);
-		assertNotNull("No response received", response);
+
+		assertThat(response).isNotNull();
 	}
 
 	@Test
-	public void testReceiveQueueTextMessage() throws Exception {
-		jmsTemplate.send(requestQueue, new MessageCreator() {
-			public Message createMessage(Session session) throws JMSException {
-				TextMessage request = session.createTextMessage(CONTENT);
-				request.setJMSReplyTo(responseQueue);
-				return request;
-			}
+	public void testReceiveQueueTextMessage() {
+
+		jmsTemplate.send(requestQueue, session -> {
+
+			TextMessage request = session.createTextMessage(CONTENT);
+			request.setJMSReplyTo(responseQueue);
+			return request;
 		});
+
 		TextMessage response = (TextMessage) jmsTemplate.receive(responseQueue);
-		assertNotNull("No response received", response);
+
+		assertThat(response).isNotNull();
 	}
 
 	@Test
 	public void testReceiveTopic() throws Exception {
-		final byte[] b = CONTENT.getBytes("UTF-8");
-		jmsTemplate.send(requestTopic, new MessageCreator() {
-			public Message createMessage(Session session) throws JMSException {
-				BytesMessage request = session.createBytesMessage();
-				request.writeBytes(b);
-				return request;
-			}
+
+		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
+
+		jmsTemplate.send(requestTopic, session -> {
+
+			BytesMessage request = session.createBytesMessage();
+			request.writeBytes(b);
+			return request;
 		});
+
 		Thread.sleep(100);
 	}
-
 }

@@ -16,57 +16,63 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.transform.Source;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.StringSource;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractMessageEndpointTestCase extends AbstractEndpointTestCase {
 
 	private MessageEndpoint endpoint;
 
-	@Before
+	@BeforeEach
 	public void createEndpoint() throws Exception {
 		endpoint = createResponseEndpoint();
 	}
 
 	@Test
 	public void testNoResponse() throws Exception {
+
 		endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
 				new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
-		assertFalse("Response message created", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Test
 	public void testNoRequestPayload() throws Exception {
+
 		endpoint = createNoRequestPayloadEndpoint();
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage((StringBuilder) null),
 				new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
-		assertFalse("Response message created", context.hasResponse());
+
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Override
 	protected final void testSource(Source requestSource) throws Exception {
+
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
 				new MockWebServiceMessageFactory());
 		endpoint.invoke(context);
-		assertTrue("No response message created", context.hasResponse());
-		assertXMLEqual(RESPONSE, ((MockWebServiceMessage) context.getResponse()).getPayloadAsString());
+
+		assertThat(context.hasResponse()).isTrue();
+		XmlAssert.assertThat(((MockWebServiceMessage) context.getResponse()).getPayloadAsString()).and(RESPONSE)
+				.ignoreWhitespace().areSimilar();
 	}
 
 	protected abstract MessageEndpoint createNoResponseEndpoint();

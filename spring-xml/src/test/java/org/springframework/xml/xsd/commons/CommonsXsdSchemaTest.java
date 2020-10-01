@@ -16,13 +16,13 @@
 
 package org.springframework.xml.xsd.commons;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.transform.dom.DOMSource;
 
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
@@ -35,22 +35,27 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 
 	@Override
 	protected XsdSchema createSchema(Resource resource) throws Exception {
+
 		XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 		XmlSchema schema = schemaCollection.read(SaxUtils.createInputSource(resource));
+
 		return new CommonsXsdSchema(schema);
 	}
 
 	@Test
 	public void testXmime() throws Exception {
+
 		Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema schema = createSchema(resource);
 		String namespace = "urn:test";
-		assertEquals("Invalid target namespace", namespace, schema.getTargetNamespace());
+
+		assertThat(schema.getTargetNamespace()).isEqualTo(namespace);
+
 		Document result = (Document) ((DOMSource) schema.getSource()).getNode();
 		Element schemaElement = result.getDocumentElement();
 		Element elementElement = (Element) schemaElement.getFirstChild();
-		assertNotNull("No expectedContentTypes found",
-				elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes"));
+
+		assertThat(elementElement.getAttributeNS("http://www.w3.org/2005/05/xmlmime", "expectedContentTypes")).isNotNull();
 	}
 
 }

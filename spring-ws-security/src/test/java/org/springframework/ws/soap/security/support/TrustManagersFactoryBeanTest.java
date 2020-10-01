@@ -16,31 +16,34 @@
 
 package org.springframework.ws.soap.security.support;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.net.ssl.TrustManager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TrustManagersFactoryBeanTest {
 
 	@Test
 	public void defaults() throws Exception {
+
 		TrustManagersFactoryBean factoryBean = new TrustManagersFactoryBean();
 		factoryBean.afterPropertiesSet();
 		TrustManager[] trustManagers = factoryBean.getObject();
-		assertNotNull(trustManagers);
-		assertEquals(1, trustManagers.length);
+
+		assertThat(trustManagers).isNotNull();
+		assertThat(trustManagers).hasSize(1);
 	}
 
 	@Test
 	public void algorithm() throws Exception {
+
 		TrustManagersFactoryBean factoryBean = new TrustManagersFactoryBean();
 		factoryBean.setAlgorithm("PKIX");
 		factoryBean.afterPropertiesSet();
 		TrustManager[] trustManagers = factoryBean.getObject();
-		assertNotNull(trustManagers);
-		assertEquals(1, trustManagers.length);
-	}
 
+		assertThat(trustManagers).isNotNull();
+		assertThat(trustManagers).hasSize(1);
+	}
 }

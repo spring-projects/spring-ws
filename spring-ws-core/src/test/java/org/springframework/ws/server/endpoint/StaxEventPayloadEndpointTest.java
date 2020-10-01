@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Collections;
 
@@ -38,53 +38,63 @@ public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCas
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {
+
 		return new AbstractStaxEventPayloadEndpoint() {
 			@Override
 			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
-					XMLEventFactory eventFactory) throws Exception {
-				assertNotNull("No EventReader passed", eventReader);
+					XMLEventFactory eventFactory) {
+				assertThat(eventReader).isNotNull();
 			}
 		};
 	}
 
 	@Override
 	protected MessageEndpoint createNoRequestPayloadEndpoint() {
+
 		return new AbstractStaxEventPayloadEndpoint() {
 
 			@Override
 			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
-					XMLEventFactory eventFactory) throws Exception {
-				assertNull("EventReader passed", eventReader);
+					XMLEventFactory eventFactory) {
+				assertThat(eventReader).isNull();
 			}
 		};
 	}
 
 	@Override
 	protected MessageEndpoint createResponseEndpoint() {
+
 		return new AbstractStaxEventPayloadEndpoint() {
 
 			@Override
 			protected void invokeInternal(XMLEventReader eventReader, XMLEventConsumer eventWriter,
 					XMLEventFactory eventFactory) throws XMLStreamException {
-				assertNotNull("eventReader not given", eventReader);
-				assertNotNull("eventWriter not given", eventWriter);
-				assertNotNull("eventFactory not given", eventFactory);
-				assertTrue("eventReader has not next element", eventReader.hasNext());
+
+				assertThat(eventReader).isNotNull();
+				assertThat(eventWriter).isNotNull();
+				assertThat(eventFactory).isNotNull();
+				assertThat(eventReader.hasNext()).isTrue();
+
 				XMLEvent event = eventReader.nextEvent();
-				assertTrue("Not a start document", event.isStartDocument());
+
+				assertThat(event.isStartDocument()).isTrue();
+
 				event = eventReader.nextEvent();
-				assertTrue("Not a start element", event.isStartElement());
-				assertEquals("Invalid start event local name", REQUEST_ELEMENT,
-						event.asStartElement().getName().getLocalPart());
-				assertEquals("Invalid start event namespace", NAMESPACE_URI,
-						event.asStartElement().getName().getNamespaceURI());
-				assertTrue("eventReader has not next element", eventReader.hasNext());
+
+				assertThat(event.isStartElement()).isTrue();
+				assertThat(event.asStartElement().getName().getLocalPart()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(event.asStartElement().getName().getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+				assertThat(eventReader.hasNext()).isTrue();
+
 				event = eventReader.nextEvent();
-				assertTrue("Not a end element", event.isEndElement());
-				assertEquals("Invalid end event local name", REQUEST_ELEMENT, event.asEndElement().getName().getLocalPart());
-				assertEquals("Invalid end event namespace", NAMESPACE_URI, event.asEndElement().getName().getNamespaceURI());
+
+				assertThat(event.isEndElement()).isTrue();
+				assertThat(event.asEndElement().getName().getLocalPart()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(event.asEndElement().getName().getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+
 				Namespace namespace = eventFactory.createNamespace(NAMESPACE_URI);
 				QName name = new QName(NAMESPACE_URI, RESPONSE_ELEMENT);
+
 				eventWriter.add(eventFactory.createStartElement(name, null, Collections.singleton(namespace).iterator()));
 				eventWriter.add(eventFactory.createEndElement(name, Collections.singleton(namespace).iterator()));
 				eventWriter.add(eventFactory.createEndDocument());

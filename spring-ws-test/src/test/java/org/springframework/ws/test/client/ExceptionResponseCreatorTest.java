@@ -16,23 +16,31 @@
 
 package org.springframework.ws.test.client;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ExceptionResponseCreatorTest {
 
-	@Test(expected = IOException.class)
-	public void ioException() throws Exception {
-		ExceptionResponseCreator callback = new ExceptionResponseCreator(new IOException());
+	@Test
+	public void ioException() {
 
-		callback.createResponse(null, null, null);
+		assertThatIOException().isThrownBy(() -> {
+
+			ExceptionResponseCreator callback = new ExceptionResponseCreator(new IOException());
+			callback.createResponse(null, null, null);
+		});
 	}
 
-	@Test(expected = RuntimeException.class)
-	public void runtimeException() throws Exception {
-		ExceptionResponseCreator callback = new ExceptionResponseCreator(new RuntimeException());
+	@Test
+	public void runtimeException() {
 
-		callback.createResponse(null, null, null);
+		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
+
+			ExceptionResponseCreator callback = new ExceptionResponseCreator(new RuntimeException());
+			callback.createResponse(null, null, null);
+		});
 	}
 }

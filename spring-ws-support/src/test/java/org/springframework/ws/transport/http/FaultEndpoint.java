@@ -25,7 +25,8 @@ import org.springframework.ws.soap.SoapMessage;
 public class FaultEndpoint implements MessageEndpoint {
 
 	@Override
-	public void invoke(MessageContext messageContext) throws Exception {
+	public void invoke(MessageContext messageContext) {
+
 		SoapMessage response = (SoapMessage) messageContext.getResponse();
 		response.getSoapBody().addServerOrReceiverFault("Something went wrong", Locale.ENGLISH);
 	}

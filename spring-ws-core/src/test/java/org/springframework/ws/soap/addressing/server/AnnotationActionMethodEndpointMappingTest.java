@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,9 +26,8 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -54,37 +53,46 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	private MessageFactory messageFactory;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		XMLUnit.setIgnoreWhitespace(true);
+
 		applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
 		applicationContext.registerSingleton("interceptor", MyInterceptor.class);
 		applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
 		applicationContext.registerSingleton("endpoint", MyEndpoint.class);
 		applicationContext.refresh();
+
 		mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
 	}
 
 	@Test
 	public void mapping() throws Exception {
+
 		MessageContext messageContext = createMessageContext();
 
 		EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
-		assertNotNull("MethodEndpoint not registered", chain);
+
+		assertThat(chain).isNotNull();
+
 		MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt");
-		assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
-		assertEquals("No smart interceptors registered", 2, chain.getInterceptors().length);
-		assertTrue(chain.getInterceptors()[0] instanceof AddressingEndpointInterceptor);
-		assertTrue(chain.getInterceptors()[1] instanceof MyInterceptor);
+
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
+		assertThat(chain.getInterceptors()).hasSize(2);
+		assertThat(chain.getInterceptors()[0]).isInstanceOf(AddressingEndpointInterceptor.class);
+		assertThat(chain.getInterceptors()[1]).isInstanceOf(MyInterceptor.class);
 	}
 
 	private MessageContext createMessageContext() throws SOAPException, IOException {
+
 		MimeHeaders mimeHeaders = new MimeHeaders();
 		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
 		InputStream is = getClass().getResourceAsStream("valid.xml");
-		assertNotNull("Could not load valid.xml", is);
+
+		assertThat(is).isNotNull();
+
 		try {
 			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
 			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));

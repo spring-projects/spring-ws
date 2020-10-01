@@ -16,12 +16,12 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -32,6 +32,7 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 
 	@Test
 	public void testAddTimestamp() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("Timestamp");
 		interceptor.afterPropertiesSet();
@@ -39,12 +40,14 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		MessageContext context = getSoap11MessageContext(message);
 		interceptor.secureMessage(message, context);
 		Document document = getDocument(message);
+
 		assertXpathExists("timestamp header not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp",
 				document);
 	}
 
 	@Test
 	public void testValidateTimestamp() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setValidationActions("Timestamp");
 		interceptor.afterPropertiesSet();
@@ -52,22 +55,28 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 
 		MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.validateMessage(message, context);
+
 		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
 				getDocument(message));
 	}
 
-	@Test(expected = WsSecurityValidationException.class)
+	@Test
 	public void testValidateTimestampWithExpiredTtl() throws Exception {
-		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setValidationActions("Timestamp");
-		interceptor.afterPropertiesSet();
-		SoapMessage message = loadSoap11Message("expiredTimestamp-soap.xml");
-		MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, context);
+
+		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
+
+			Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+			interceptor.setValidationActions("Timestamp");
+			interceptor.afterPropertiesSet();
+			SoapMessage message = loadSoap11Message("expiredTimestamp-soap.xml");
+			MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
+			interceptor.validateMessage(message, context);
+		});
 	}
 
 	@Test
 	public void testSecureTimestampWithCustomTtl() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("Timestamp");
 		interceptor.setTimestampStrict(true);
@@ -88,16 +97,19 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'");
 
 		long actualTtl = format.parse(expires).getTime() - format.parse(created).getTime();
-		assertEquals("invalid ttl", 1000 * ttlInSeconds, actualTtl);
+
+		assertThat(actualTtl).isEqualTo(1000 * ttlInSeconds);
 	}
 
 	private SoapMessage getMessageWithTimestamp() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("Timestamp");
 		interceptor.afterPropertiesSet();
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext context = getSoap11MessageContext(message);
 		interceptor.secureMessage(message, context);
+
 		return message;
 	}
 }

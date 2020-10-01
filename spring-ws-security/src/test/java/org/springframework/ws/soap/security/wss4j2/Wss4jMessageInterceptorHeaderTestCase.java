@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ import java.util.Properties;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -44,6 +44,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
 	@Override
 	protected void onSetup() throws Exception {
+
 		Properties users = new Properties();
 		users.setProperty("Bert", "Ernie");
 		interceptor = new Wss4jSecurityInterceptor();
@@ -66,39 +67,43 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
 	@Test
 	public void testValidateUsernameTokenPlainText() throws Exception {
+
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.validateMessage(message, messageContext);
 		Object result = getMessage(message);
-		assertNotNull("No result returned", result);
+
+		assertThat(result).isNotNull();
 
 		for (Iterator<SoapHeaderElement> i = message.getEnvelope().getHeader().examineAllHeaderElements(); i.hasNext();) {
+
 			SoapHeaderElement element = i.next();
 			QName name = element.getName();
 			if (name.getNamespaceURI()
 					.equals("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd")) {
 				fail("Security Header not removed");
 			}
-
 		}
 
 		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
 				getDocument(message));
 		assertXpathExists("header1 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header1", getDocument(message));
 		assertXpathExists("header2 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header2", getDocument(message));
-
 	}
 
 	@Test
 	public void testValidateUsernameTokenPlainTextButKeepSecurityHeader() throws Exception {
+
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptorThatKeepsSecurityHeader.validateMessage(message, messageContext);
 		Object result = getMessage(message);
-		assertNotNull("No result returned", result);
+
+		assertThat(result).isNotNull();
 
 		boolean foundSecurityHeader = false;
 		for (Iterator<SoapHeaderElement> i = message.getEnvelope().getHeader().examineAllHeaderElements(); i.hasNext();) {
+
 			SoapHeaderElement element = i.next();
 			QName name = element.getName();
 			if (name.getNamespaceURI()
@@ -107,22 +112,26 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 			}
 
 		}
-		assertTrue(foundSecurityHeader);
 
+		assertThat(foundSecurityHeader).isTrue();
 		assertXpathExists("header1 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header1", getDocument(message));
 		assertXpathExists("header2 not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/header2", getDocument(message));
-
 	}
 
-	@Test(expected = WsSecurityValidationException.class)
-	public void testEmptySecurityHeader() throws Exception {
-		SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
-		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, messageContext);
+	@Test
+	public void testEmptySecurityHeader() {
+
+		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
+
+			SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
+			MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+			interceptor.validateMessage(message, messageContext);
+		});
 	}
 
 	@Test
 	public void testPreserveCustomHeaders() throws Exception {
+
 		interceptor.setSecurementActions("UsernameToken");
 		interceptor.setSecurementUsername("Bert");
 		interceptor.setSecurementPassword("Ernie");
@@ -132,6 +141,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		message.writeTo(os);
 		String document = os.toString("UTF-8");
+
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);
 		assertXpathNotExists("Header 2 exist", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2", document);
@@ -144,6 +154,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 		os = new ByteArrayOutputStream();
 		message.writeTo(os);
 		document = os.toString("UTF-8");
+
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);
 		assertXpathEvaluatesTo("Header 2 does not exist", "test2", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2",
@@ -152,6 +163,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 		os = new ByteArrayOutputStream();
 		message.writeTo(os);
 		document = os.toString("UTF-8");
+
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);
 		assertXpathEvaluatesTo("Header 2 does not exist", "test2", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2",

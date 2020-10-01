@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,7 +30,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -45,6 +45,7 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 	@Test
 	public void testSignAndValidate() throws Exception {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		interceptor.setSecurementActions("Signature");
 		interceptor.setEnableSignatureConfirmation(false);
@@ -61,10 +62,13 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(
 				new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
-		assertTrue("No security header", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
+
 		SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();
 		iterator = securityHeader.getChildElements(new QName("http://www.w3.org/2000/09/xmldsig#", "Signature"));
-		assertTrue("No signature header", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		message.writeTo(bos);
@@ -79,5 +83,4 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 		interceptor.validateMessage(message, messageContext);
 	}
-
 }

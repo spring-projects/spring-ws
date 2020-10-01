@@ -29,7 +29,8 @@ public class AxiomSoap11MessageTest extends AbstractSoap11MessageTestCase {
 	}
 
 	@Override
-	protected SoapMessage createSoapMessage() throws Exception {
+	protected SoapMessage createSoapMessage() {
+
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		return new AxiomSoapMessage(axiomFactory);
 	}

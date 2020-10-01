@@ -16,12 +16,12 @@
 
 package org.springframework.xml.transform;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.*;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMSource;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,13 +30,16 @@ public class StringResultTest {
 
 	@Test
 	public void testStringResult() throws Exception {
+
 		Document document = DocumentBuilderFactoryUtils.newInstance().newDocumentBuilder().newDocument();
 		Element element = document.createElementNS("namespace", "prefix:localName");
 		document.appendChild(element);
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		StringResult result = new StringResult();
 		transformer.transform(new DOMSource(document), result);
-		assertXMLEqual("Invalid result", "<prefix:localName xmlns:prefix='namespace'/>", result.toString());
+
+		assertThat(result.toString()).and("<prefix:localName xmlns:prefix='namespace'/>").ignoreWhitespace().areIdentical();
 	}
 
 }

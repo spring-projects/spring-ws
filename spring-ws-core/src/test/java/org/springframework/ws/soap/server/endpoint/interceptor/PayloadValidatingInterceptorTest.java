@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -29,9 +29,8 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
@@ -55,6 +54,7 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
+import org.xmlunit.assertj.XmlAssert;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -82,8 +82,9 @@ public class PayloadValidatingInterceptorTest {
 
 	private static final String SCHEMA2 = "schema2.xsd";
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		interceptor = new PayloadValidatingInterceptor();
 		interceptor.setSchema(new ClassPathResource(SCHEMA, getClass()));
 		interceptor.setValidateRequest(true);
@@ -97,46 +98,56 @@ public class PayloadValidatingInterceptorTest {
 
 	@Test
 	public void testHandleInvalidRequestSoap11() throws Exception {
+
 		SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
 		InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
 		transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
 		context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
-		Assert.assertTrue("Context has no response", context.hasResponse());
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isTrue();
+
 		SoapMessage response = (SoapMessage) context.getResponse();
-		Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
+
+		assertThat(response.getSoapBody().hasFault()).isTrue();
+
 		Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-		Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
-				fault.getFaultCode());
-		Assert.assertEquals("Invalid fault string on fault", PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
-				fault.getFaultStringOrReason());
-		Assert.assertNotNull("No Detail on fault", fault.getFaultDetail());
+
+		assertThat(fault.getFaultCode()).isEqualTo(SoapVersion.SOAP_11.getClientOrSenderFaultName());
+		assertThat(fault.getFaultStringOrReason()).isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
+		assertThat(fault.getFaultDetail()).isNotNull();
 	}
 
 	@Test
 	public void testHandleInvalidRequestSoap12() throws Exception {
+
 		SoapMessage invalidMessage = soap12Factory.createWebServiceMessage();
 		InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
 		transformer.transform(new StreamSource(inputStream), invalidMessage.getPayloadResult());
 		context = new DefaultMessageContext(invalidMessage, soap12Factory);
 
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
-		Assert.assertTrue("Context has no response", context.hasResponse());
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isTrue();
+
 		SoapMessage response = (SoapMessage) context.getResponse();
-		Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
+
+		assertThat(response.getSoapBody().hasFault()).isTrue();
+
 		Soap12Fault fault = (Soap12Fault) response.getSoapBody().getFault();
-		Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_12.getClientOrSenderFaultName(),
-				fault.getFaultCode());
-		Assert.assertEquals("Invalid fault string on fault", PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON,
-				fault.getFaultReasonText(Locale.ENGLISH));
-		Assert.assertNotNull("No Detail on fault", fault.getFaultDetail());
+
+		assertThat(fault.getFaultCode()).isEqualTo(SoapVersion.SOAP_12.getClientOrSenderFaultName());
+		assertThat(fault.getFaultReasonText(Locale.ENGLISH))
+				.isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
+		assertThat(fault.getFaultDetail()).isNotNull();
 	}
 
 	@Test
 	public void testHandleInvalidRequestOverridenProperties() throws Exception {
+
 		String faultString = "fout";
 		Locale locale = new Locale("nl");
 		interceptor.setFaultStringOrReason(faultString);
@@ -149,45 +160,55 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
-		Assert.assertTrue("Context has no response", context.hasResponse());
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isTrue();
+
 		SoapMessage response = (SoapMessage) context.getResponse();
-		Assert.assertTrue("Response has no fault", response.getSoapBody().hasFault());
+
+		assertThat(response.getSoapBody().hasFault()).isTrue();
+
 		Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
-		Assert.assertEquals("Invalid fault code on fault", SoapVersion.SOAP_11.getClientOrSenderFaultName(),
-				fault.getFaultCode());
-		Assert.assertEquals("Invalid fault string on fault", faultString, fault.getFaultStringOrReason());
-		Assert.assertEquals("Invalid fault string locale on fault", locale, fault.getFaultStringLocale());
-		Assert.assertNull("Detail on fault", fault.getFaultDetail());
+
+		assertThat(fault.getFaultCode()).isEqualTo(SoapVersion.SOAP_11.getClientOrSenderFaultName());
+		assertThat(fault.getFaultStringOrReason()).isEqualTo(faultString);
+		assertThat(fault.getFaultStringLocale()).isEqualTo(locale);
+		assertThat(fault.getFaultDetail()).isNull();
 	}
 
 	@Test
 	public void testHandlerInvalidRequest() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		request.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void testHandleValidRequest() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		request.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
-		Assert.assertFalse("Response set", context.hasResponse());
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Test
 	public void testHandleInvalidResponse() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
 		response.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
 		boolean result = interceptor.handleResponse(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
@@ -197,11 +218,13 @@ public class PayloadValidatingInterceptorTest {
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
 		response.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
 		boolean result = interceptor.handleResponse(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
+
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void testNamespacesInType() throws Exception {
+
 		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
 		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
 		String previousSchemaFactory = System
@@ -218,8 +241,9 @@ public class PayloadValidatingInterceptorTest {
 			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(messageFactory));
 
 			boolean result = interceptor.handleRequest(context, null);
-			Assert.assertTrue("Invalid response from interceptor", result);
-			Assert.assertFalse("Response set", context.hasResponse());
+
+			assertThat(result).isTrue();
+			assertThat(context.hasResponse()).isFalse();
 		} finally {
 			// Reset the property
 			System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
@@ -228,29 +252,31 @@ public class PayloadValidatingInterceptorTest {
 	}
 
 	@Test
-	public void testNonExistingSchema() throws Exception {
-		try {
+	public void testNonExistingSchema() {
+
+		assertThatIllegalArgumentException().isThrownBy(() -> {
+
 			interceptor.setSchema(new ClassPathResource("invalid"));
 			interceptor.afterPropertiesSet();
-			Assert.fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+		});
 	}
 
 	@Test
 	public void testHandlerInvalidRequestMultipleSchemas() throws Exception {
+
 		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage(new ClassPathResource(INVALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void testHandleValidRequestMultipleSchemas() throws Exception {
+
 		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
@@ -258,12 +284,14 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
-		Assert.assertFalse("Response set", context.hasResponse());
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Test
 	public void testHandleInvalidResponseMultipleSchemas() throws Exception {
+
 		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
@@ -272,11 +300,13 @@ public class PayloadValidatingInterceptorTest {
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
 		response.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
 		boolean result = interceptor.handleResponse(context, null);
-		Assert.assertFalse("Invalid response from interceptor", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void testHandleValidResponseMultipleSchemas() throws Exception {
+
 		interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
 		interceptor.afterPropertiesSet();
@@ -285,11 +315,13 @@ public class PayloadValidatingInterceptorTest {
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
 		response.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
 		boolean result = interceptor.handleResponse(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
+
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void testCreateRequestValidationFaultAxiom() throws Exception {
+
 		LocatorImpl locator = new LocatorImpl();
 		locator.setLineNumber(0);
 		locator.setColumnNumber(0);
@@ -299,17 +331,21 @@ public class PayloadValidatingInterceptorTest {
 		interceptor.handleRequestValidationErrors(messageContext, exceptions);
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		messageContext.getResponse().writeTo(os);
-		assertXMLEqual("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-				+ "<soapenv:Header/>" + "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>"
-				+ "<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>"
-				+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>"
-				+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>"
-				+ "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>", os.toString());
+
+		XmlAssert.assertThat(os.toString())
+				.and("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>"
+						+ "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>"
+						+ "<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>"
+						+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>"
+						+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>"
+						+ "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>")
+				.ignoreWhitespace().areIdentical();
 
 	}
 
 	@Test
 	public void testXsdSchema() throws Exception {
+
 		PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
 		SimpleXsdSchema schema = new SimpleXsdSchema(new ClassPathResource(SCHEMA, getClass()));
 		schema.afterPropertiesSet();
@@ -321,12 +357,14 @@ public class PayloadValidatingInterceptorTest {
 		request.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
-		Assert.assertFalse("Response set", context.hasResponse());
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
 	}
 
 	@Test
 	public void testAxiom() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(true);
 		messageFactory.afterPropertiesSet();
@@ -340,12 +378,13 @@ public class PayloadValidatingInterceptorTest {
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 		MessageContext context = new DefaultMessageContext(message, messageFactory);
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
 
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void testMultipleNamespacesAxiom() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(true);
 		messageFactory.afterPropertiesSet();
@@ -359,12 +398,13 @@ public class PayloadValidatingInterceptorTest {
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
 		MessageContext context = new DefaultMessageContext(message, messageFactory);
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
 
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void customErrorHandler() throws Exception {
+
 		ValidationErrorHandler errorHandler = new ValidationErrorHandler() {
 			public SAXParseException[] getErrors() {
 				return new SAXParseException[0];
@@ -376,6 +416,7 @@ public class PayloadValidatingInterceptorTest {
 
 			public void fatalError(SAXParseException exception) throws SAXException {}
 		};
+
 		interceptor.setErrorHandler(errorHandler);
 		SoapMessage invalidMessage = soap11Factory.createWebServiceMessage();
 		InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
@@ -383,8 +424,8 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
 		boolean result = interceptor.handleRequest(context, null);
-		Assert.assertTrue("Invalid response from interceptor", result);
-		Assert.assertFalse("Context has response", context.hasResponse());
-	}
 
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
+	}
 }

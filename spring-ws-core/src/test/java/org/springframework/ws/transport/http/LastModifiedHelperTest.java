@@ -16,14 +16,15 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -36,31 +37,38 @@ public class LastModifiedHelperTest {
 
 	private long expected;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		resource = new ClassPathResource("single.xsd", getClass());
 		expected = resource.lastModified();
 	}
 
 	@Test
 	public void testSaxSource() throws Exception {
+
 		long result = LastModifiedHelper.getLastModified(new ResourceSource(resource));
-		Assert.assertEquals("Invalid last modified", expected, result);
+
+		assertThat(result).isEqualTo(expected);
 	}
 
 	@Test
 	public void testDomSource() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.parse(resource.getFile());
 		long result = LastModifiedHelper.getLastModified(new DOMSource(document));
-		Assert.assertEquals("Invalid last modified", expected, result);
+
+		assertThat(result).isEqualTo(expected);
 	}
 
 	@Test
 	public void testStreamSource() throws Exception {
+
 		long result = LastModifiedHelper.getLastModified(new StreamSource(resource.getFile()));
-		Assert.assertEquals("Invalid last modified", expected, result);
+
+		assertThat(result).isEqualTo(expected);
 	}
 }

@@ -16,15 +16,15 @@
 
 package org.springframework.xml.dom;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.*;
 
 import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -54,8 +54,9 @@ public class DomContentHandlerTest {
 
 	private DocumentBuilder documentBuilder;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -65,32 +66,37 @@ public class DomContentHandlerTest {
 
 	@Test
 	public void testContentHandlerDocumentNamespacePrefixes() throws Exception {
+
 		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		handler = new DomContentHandler(result);
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_1)));
-		assertXMLEqual("Invalid result", expected, result);
+
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	@Test
 	public void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
+
 		handler = new DomContentHandler(result);
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_1)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_1)));
-		assertXMLEqual("Invalid result", expected, result);
+
+		assertThat(result).and(expected).areSimilar();
 	}
 
 	@Test
 	public void testContentHandlerElement() throws Exception {
+
 		Element rootElement = result.createElementNS("namespace", "root");
 		result.appendChild(rootElement);
 		handler = new DomContentHandler(rootElement);
 		expected = documentBuilder.parse(new InputSource(new StringReader(XML_2_EXPECTED)));
 		xmlReader.setContentHandler(handler);
 		xmlReader.parse(new InputSource(new StringReader(XML_2_SNIPPET)));
-		assertXMLEqual("Invalid result", expected, result);
 
+		assertThat(result).and(expected).areSimilar();
 	}
 }

@@ -16,14 +16,14 @@
 
 package org.springframework.ws.soap.server.endpoint.adapter.method;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
@@ -54,8 +54,9 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 
 	private MethodParameter soapHeaderMismatchList;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		resolver = new SoapHeaderElementMethodArgumentResolver();
 		messageContext = createSaajMessageContext();
 		SoapMessage message = (SoapMessage) messageContext.getRequest();
@@ -73,58 +74,68 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	}
 
 	@Test
-	public void supportsParameter() throws Exception {
-		assertTrue("resolver does not support soapHeaderElement", resolver.supportsParameter(soapHeaderElementParameter));
-		assertTrue("resolver does not support List<soapHeaderElement>",
-				resolver.supportsParameter(soapHeaderElementListParameter));
+	public void supportsParameter() {
+
+		assertThat(resolver.supportsParameter(soapHeaderElementParameter)).isTrue();
+		assertThat(resolver.supportsParameter(soapHeaderElementListParameter)).isTrue();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void failOnEmptyValue() throws Exception {
-		resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue);
+	@Test
+	public void failOnEmptyValue() {
+
+		assertThatIllegalArgumentException()
+				.isThrownBy(() -> resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue));
 	}
 
 	@Test
 	public void resolveSoapHeaderElement() throws Exception {
+
 		Object result = resolver.resolveArgument(messageContext, soapHeaderElementParameter);
 
-		assertTrue("result must be a SoapHeaderElement", SoapHeaderElement.class.isAssignableFrom(result.getClass()));
+		assertThat(SoapHeaderElement.class).isAssignableFrom(result.getClass());
 
 		SoapHeaderElement element = (SoapHeaderElement) result;
 
-		assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
-		assertEquals("header text must be equal to [" + HEADER_CONTENT + "0]", HEADER_CONTENT + "0", element.getText());
+		assertThat(element.getName()).isEqualTo(HEADER_QNAME);
+		assertThat(element.getText()).isEqualTo(HEADER_CONTENT + "0");
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
 	public void resolveSoapHeaderElementList() throws Exception {
+
 		Object result = resolver.resolveArgument(messageContext, soapHeaderElementListParameter);
 
-		assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
+		assertThat(List.class).isAssignableFrom(result.getClass());
 
 		List<SoapHeaderElement> elements = (List) result;
 
-		assertTrue("size", elements.size() > 1);
+		assertThat(elements.size()).isGreaterThan(1);
+
 		for (int i = 0; i < elements.size(); i++) {
+
 			SoapHeaderElement element = elements.get(i);
-			assertTrue("headers must be equal", element.getName().equals(HEADER_QNAME));
-			assertEquals("header must be equal to [" + HEADER_CONTENT + i + "]", HEADER_CONTENT + i,
-					elements.get(i).getText());
+
+			assertThat(element.getName()).isEqualTo(HEADER_QNAME);
+			assertThat(element.getText()).isEqualTo(HEADER_CONTENT + i);
 		}
 	}
 
 	@Test
 	public void resolveSoapHeaderMismatch() throws Exception {
+
 		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatch);
-		assertNull(result);
+
+		assertThat(result).isNull();
 	}
 
 	@Test
 	public void resolveSoapHeaderMismatchList() throws Exception {
+
 		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatchList);
-		assertTrue("result must be a List", List.class.isAssignableFrom(result.getClass()));
-		assertTrue("result List must be empty", ((List<?>) result).isEmpty());
+
+		assertThat(List.class).isAssignableFrom(result.getClass());
+		assertThat((List<?>) result).isEmpty();
 	}
 
 	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {}

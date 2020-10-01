@@ -23,7 +23,7 @@ import org.springframework.ws.server.endpoint.MessageEndpoint;
 public class ResponseEndpoint implements MessageEndpoint {
 
 	@Override
-	public void invoke(MessageContext messageContext) throws Exception {
+	public void invoke(MessageContext messageContext) {
 		messageContext.getResponse();
 	}
 }

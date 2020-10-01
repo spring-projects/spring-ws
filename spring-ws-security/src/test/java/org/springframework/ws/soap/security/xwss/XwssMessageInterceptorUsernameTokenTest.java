@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.security.xwss;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
@@ -36,215 +36,236 @@ public class XwssMessageInterceptorUsernameTokenTest extends AbstractXwssMessage
 
 	@Test
 	public void testAddUsernameTokenDigest() throws Exception {
+
 		interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-digest-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
+
+				assertThat(callback).isInstanceOfAny(UsernameCallback.class, PasswordCallback.class);
+
 				if (callback instanceof UsernameCallback) {
 					((UsernameCallback) callback).setUsername("Bert");
 				} else if (callback instanceof PasswordCallback) {
 					PasswordCallback passwordCallback = (PasswordCallback) callback;
 					passwordCallback.setPassword("Ernie");
-				} else {
-					fail("Unexpected callback");
 				}
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
 		interceptor.secureMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathEvaluatesTo("Invalid Username", "Bert",
+
+		assertThat(result).isNotNull();
+		assertXpathEvaluatesTo("Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", result);
-		assertXpathExists("Password does not exist",
+		assertXpathExists(
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']",
 				result);
-		assertXpathExists("Nonce does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Nonce", result);
-		assertXpathExists("Created does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsu:Created", result);
+		assertXpathExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Nonce", result);
+		assertXpathExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsu:Created", result);
 	}
 
 	@Test
 	public void testAddUsernameTokenPlainText() throws Exception {
+
 		interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-plainText-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
+
+				assertThat(callback).isInstanceOfAny(UsernameCallback.class, PasswordCallback.class);
+
 				if (callback instanceof UsernameCallback) {
 					((UsernameCallback) callback).setUsername("Bert");
 				} else if (callback instanceof PasswordCallback) {
 					PasswordCallback passwordCallback = (PasswordCallback) callback;
 					passwordCallback.setPassword("Ernie");
-				} else {
-					fail("Unexpected callback");
 				}
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
 		interceptor.secureMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathEvaluatesTo("Invalid Username", "Bert",
+
+		assertThat(result).isNotNull();
+		assertXpathEvaluatesTo("Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", result);
-		assertXpathEvaluatesTo("Invalid Password", "Ernie",
+		assertXpathEvaluatesTo("Ernie",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText']/text()",
 				result);
 	}
 
 	@Test
 	public void testAddUsernameTokenPlainTextNonce() throws Exception {
+
 		interceptor.setPolicyConfiguration(new ClassPathResource("usernameToken-plainText-nonce-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
+
+				assertThat(callback).isInstanceOfAny(UsernameCallback.class, PasswordCallback.class);
+
 				if (callback instanceof UsernameCallback) {
 					((UsernameCallback) callback).setUsername("Bert");
 				} else if (callback instanceof PasswordCallback) {
 					PasswordCallback passwordCallback = (PasswordCallback) callback;
 					passwordCallback.setPassword("Ernie");
-				} else {
-					fail("Unexpected callback");
 				}
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("empty-soap.xml");
 		interceptor.secureMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathEvaluatesTo("Invalid Username", "Bert",
+
+		assertThat(result).isNotNull();
+		assertXpathEvaluatesTo("Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", result);
-		assertXpathEvaluatesTo("Invalid Password", "Ernie",
+		assertXpathEvaluatesTo("Ernie",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText']/text()",
 				result);
-		assertXpathExists("Nonce does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Nonce", result);
-		assertXpathExists("Created does not exist",
-				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsu:Created", result);
+		assertXpathExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Nonce", result);
+		assertXpathExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsu:Created", result);
 	}
 
 	@Test
 	public void testValidateUsernameTokenPlainText() throws Exception {
+
 		interceptor.setPolicyConfiguration(new ClassPathResource("requireUsernameToken-plainText-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
-				if (callback instanceof PasswordValidationCallback) {
-					PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-					validationCallback.setValidator(new PasswordValidationCallback.PasswordValidator() {
-						public boolean validate(PasswordValidationCallback.Request request) {
-							if (request instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
-								PasswordValidationCallback.PlainTextPasswordRequest passwordRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
-								assertEquals("Invalid username", "Bert", passwordRequest.getUsername());
-								assertEquals("Invalid password", "Ernie", passwordRequest.getPassword());
-								return true;
-							} else {
-								fail("Unexpected request");
-								return false;
-							}
-						}
-					});
-				} else {
-					fail("Unexpected callback");
-				}
+
+				assertThat(callback).isInstanceOf(PasswordValidationCallback.class);
+
+				PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
+				validationCallback.setValidator(request -> {
+
+					assertThat(request).isInstanceOf(PasswordValidationCallback.PlainTextPasswordRequest.class);
+
+					PasswordValidationCallback.PlainTextPasswordRequest passwordRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
+
+					assertThat(passwordRequest.getUsername()).isEqualTo("Bert");
+					assertThat(passwordRequest.getPassword()).isEqualTo("Ernie");
+
+					return true;
+				});
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("usernameTokenPlainText-soap.xml");
 		interceptor.validateMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
+
+		assertThat(result).isNotNull();
+		assertXpathNotExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
 	}
 
 	@Test
 	public void testValidateUsernameTokenPlainTextNonce() throws Exception {
+
 		interceptor
 				.setPolicyConfiguration(new ClassPathResource("requireUsernameToken-plainText-nonce-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
+
+				assertThat(callback).isInstanceOfAny(PasswordValidationCallback.class, TimestampValidationCallback.class);
+
 				if (callback instanceof PasswordValidationCallback) {
+
 					PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-					validationCallback.setValidator(new PasswordValidationCallback.PasswordValidator() {
-						public boolean validate(PasswordValidationCallback.Request request) {
-							if (request instanceof PasswordValidationCallback.PlainTextPasswordRequest) {
-								PasswordValidationCallback.PlainTextPasswordRequest passwordRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
-								assertEquals("Invalid username", "Bert", passwordRequest.getUsername());
-								assertEquals("Invalid password", "Ernie", passwordRequest.getPassword());
-								return true;
-							} else {
-								fail("Unexpected request");
-								return false;
-							}
-						}
+					validationCallback.setValidator(request -> {
+
+						assertThat(request).isInstanceOf(PasswordValidationCallback.PlainTextPasswordRequest.class);
+
+						PasswordValidationCallback.PlainTextPasswordRequest passwordRequest = (PasswordValidationCallback.PlainTextPasswordRequest) request;
+
+						assertThat(passwordRequest.getUsername()).isEqualTo("Bert");
+						assertThat(passwordRequest.getPassword()).isEqualTo("Ernie");
+
+						return true;
 					});
 				} else if (callback instanceof TimestampValidationCallback) {
+
 					TimestampValidationCallback validationCallback = (TimestampValidationCallback) callback;
-					validationCallback.setValidator(new TimestampValidationCallback.TimestampValidator() {
-						public void validate(TimestampValidationCallback.Request request) {}
-					});
-				} else {
-					fail("Unexpected callback");
+					validationCallback.setValidator(request -> {});
 				}
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("usernameTokenPlainText-nonce-soap.xml");
 		interceptor.validateMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
+
+		assertThat(result).isNotNull();
+		assertXpathNotExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
 	}
 
 	@Test
 	public void testValidateUsernameTokenDigest() throws Exception {
+
 		interceptor.setPolicyConfiguration(new ClassPathResource("requireUsernameToken-digest-config.xml", getClass()));
+
 		CallbackHandler handler = new AbstractCallbackHandler() {
 
 			@Override
 			protected void handleInternal(Callback callback) {
+
+				assertThat(callback).isInstanceOfAny(PasswordValidationCallback.class, TimestampValidationCallback.class);
+
 				if (callback instanceof PasswordValidationCallback) {
+
 					PasswordValidationCallback validationCallback = (PasswordValidationCallback) callback;
-					if (validationCallback.getRequest() instanceof PasswordValidationCallback.DigestPasswordRequest) {
-						PasswordValidationCallback.DigestPasswordRequest passwordRequest = (PasswordValidationCallback.DigestPasswordRequest) validationCallback
-								.getRequest();
-						assertEquals("Invalid username", "Bert", passwordRequest.getUsername());
-						passwordRequest.setPassword("Ernie");
-						validationCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
-					} else {
-						fail("Unexpected request");
-					}
+
+					assertThat(validationCallback.getRequest())
+							.isInstanceOf(PasswordValidationCallback.DigestPasswordRequest.class);
+
+					PasswordValidationCallback.DigestPasswordRequest passwordRequest = (PasswordValidationCallback.DigestPasswordRequest) validationCallback
+							.getRequest();
+
+					assertThat(passwordRequest.getUsername()).isEqualTo("Bert");
+
+					passwordRequest.setPassword("Ernie");
+					validationCallback.setValidator(new PasswordValidationCallback.DigestPasswordValidator());
 				} else if (callback instanceof TimestampValidationCallback) {
+
 					TimestampValidationCallback validationCallback = (TimestampValidationCallback) callback;
-					validationCallback.setValidator(new TimestampValidationCallback.TimestampValidator() {
-						public void validate(TimestampValidationCallback.Request request) {}
-					});
-				} else {
-					fail("Unexpected callback");
+					validationCallback.setValidator(request -> {});
 				}
 			}
 		};
+
 		interceptor.setCallbackHandler(handler);
 		interceptor.afterPropertiesSet();
 		SaajSoapMessage message = loadSaajMessage("usernameTokenDigest-soap.xml");
 		interceptor.validateMessage(message, null);
 		SOAPMessage result = message.getSaajMessage();
-		assertNotNull("No result returned", result);
-		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
-	}
 
+		assertThat(result).isNotNull();
+		assertXpathNotExists("/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security", result);
+	}
 }

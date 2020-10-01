@@ -16,25 +16,25 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("cglib-proxy-registration.xml")
 public class CgLibProxyRegistrationTest {
 
@@ -44,11 +44,15 @@ public class CgLibProxyRegistrationTest {
 
 	@Test
 	public void registration() throws NoSuchMethodException {
+
 		MethodEndpoint cglibProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
-		assertNotNull("cg lib proxy endpoint not registered", cglibProxy);
+
+		assertThat(cglibProxy).isNotNull();
+
 		Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
 		MethodEndpoint expected = new MethodEndpoint("cgLibProxyEndpoint", applicationContext, doIt);
-		assertEquals("Invalid endpoint registered", expected, cglibProxy);
+
+		assertThat(cglibProxy).isEqualTo(expected);
 	}
 
 	@Endpoint

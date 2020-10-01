@@ -25,16 +25,18 @@ public class AxiomSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryT
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+
 		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
 		factory.setSoapVersion(SoapVersion.SOAP_12);
 		factory.afterPropertiesSet();
+
 		return factory;
 	}
 
 	@Override
-	public void testCreateSoapMessageIllFormedXml() throws Exception {
+	public void doTestCreateSoapMessageIllFormedXml() {
+
 		// Axiom parses the contents of XML lazily, so it will not throw an InvalidXmlException when a message is parsed
 		throw new InvalidXmlException(null, null);
 	}
-
 }

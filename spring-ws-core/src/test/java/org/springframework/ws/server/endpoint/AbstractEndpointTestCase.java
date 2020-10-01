@@ -31,7 +31,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.XMLInputFactoryUtils;
@@ -55,6 +55,7 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testDomSource() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -64,6 +65,7 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testSaxSource() throws Exception {
+
 		XMLReader reader = XMLReaderFactory.createXMLReader();
 		InputSource inputSource = new InputSource(new StringReader(REQUEST));
 		testSource(new SAXSource(reader, inputSource));
@@ -71,6 +73,7 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testStaxSourceEventReader() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
 		testSource(new SAXSource(StaxUtils.createXMLReader(eventReader), new InputSource()));
@@ -78,6 +81,7 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testStaxSourceStreamReader() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
 		testSource(new SAXSource(StaxUtils.createXMLReader(streamReader), new InputSource()));
@@ -85,12 +89,14 @@ public abstract class AbstractEndpointTestCase {
 
 	@Test
 	public void testStreamSourceInputStream() throws Exception {
+
 		InputStream is = new ByteArrayInputStream(REQUEST.getBytes("UTF-8"));
 		testSource(new StreamSource(is));
 	}
 
 	@Test
 	public void testStreamSourceReader() throws Exception {
+
 		Reader reader = new StringReader(REQUEST);
 		testSource(new StreamSource(reader));
 	}

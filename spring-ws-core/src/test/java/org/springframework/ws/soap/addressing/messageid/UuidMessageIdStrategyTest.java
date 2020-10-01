@@ -16,27 +16,32 @@
 
 package org.springframework.ws.soap.addressing.messageid;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.net.URI;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class UuidMessageIdStrategyTest {
 
 	private MessageIdStrategy strategy;
 
-	@Before
-	public final void setUp() throws Exception {
+	@BeforeEach
+	public final void setUp() {
 		strategy = new UuidMessageIdStrategy();
 	}
 
 	@Test
 	public void testStrategy() {
+
 		URI messageId1 = strategy.newMessageId(null);
-		Assert.assertNotNull("Empty messageId", messageId1);
+
+		assertThat(messageId1).isNotNull();
+
 		URI messageId2 = strategy.newMessageId(null);
-		Assert.assertNotNull("Empty messageId", messageId2);
-		Assert.assertFalse("Equal messageIds", messageId1.equals(messageId2));
+
+		assertThat(messageId2).isNotNull();
+		assertThat(messageId2).isNotEqualTo(messageId1);
 	}
 }

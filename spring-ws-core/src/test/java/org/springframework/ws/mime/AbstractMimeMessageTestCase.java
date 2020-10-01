@@ -16,12 +16,12 @@
 
 package org.springframework.ws.mime;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -40,6 +40,7 @@ public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMess
 
 	@Override
 	protected final WebServiceMessage createWebServiceMessage() throws Exception {
+
 		mimeMessage = createMimeMessage();
 		picture = new ClassPathResource("spring-ws.png", AbstractMimeMessageTestCase.class);
 		contentId = "spring-ws";
@@ -50,42 +51,55 @@ public abstract class AbstractMimeMessageTestCase extends AbstractWebServiceMess
 	protected abstract MimeMessage createMimeMessage() throws Exception;
 
 	@Test
-	public void testEmptyMessage() throws Exception {
+	public void testEmptyMessage() {
+
 		Iterator<Attachment> iterator = mimeMessage.getAttachments();
-		assertFalse("Empty MimeMessage has attachments", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Test
 	public void testAddAttachment() throws Exception {
+
 		Attachment attachment = mimeMessage.addAttachment(contentId, picture, contentType);
 		testAttachment(attachment);
 	}
 
 	@Test
 	public void testGetAttachment() throws Exception {
+
 		mimeMessage.addAttachment(contentId, picture, contentType);
 		Attachment attachment = mimeMessage.getAttachment(contentId);
-		assertNotNull("Not Attachment found", attachment);
+
+		assertThat(attachment).isNotNull();
+
 		testAttachment(attachment);
 	}
 
 	@Test
 	public void testGetAttachments() throws Exception {
+
 		mimeMessage.addAttachment(contentId, picture, contentType);
 		Iterator<Attachment> iterator = mimeMessage.getAttachments();
-		assertNotNull("Attachment iterator is null", iterator);
-		assertTrue("Attachment iterator has no elements", iterator.hasNext());
+
+		assertThat(iterator).isNotNull();
+		assertThat(iterator.hasNext()).isTrue();
+
 		Attachment attachment = iterator.next();
 		testAttachment(attachment);
-		assertFalse("Attachment iterator has too many elements", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	private void testAttachment(Attachment attachment) throws IOException {
-		assertEquals("Invalid content id", contentId, attachment.getContentId());
-		assertEquals("Invalid content type", contentType, attachment.getContentType());
-		assertTrue("Invalid size", attachment.getSize() != 0);
+
+		assertThat(attachment.getContentId()).isEqualTo(contentId);
+		assertThat(attachment.getContentType()).isEqualTo(contentType);
+		assertThat(attachment.getSize()).isNotEqualTo(0);
+
 		byte[] contents = FileCopyUtils.copyToByteArray(attachment.getInputStream());
-		assertTrue("No contents", contents.length > 0);
+
+		assertThat(contents.length).isGreaterThan(0);
 	}
 
 }

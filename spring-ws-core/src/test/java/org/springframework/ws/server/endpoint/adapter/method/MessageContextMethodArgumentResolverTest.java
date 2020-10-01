@@ -16,10 +16,10 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -31,23 +31,26 @@ public class MessageContextMethodArgumentResolverTest {
 
 	private MethodParameter supported;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws NoSuchMethodException {
+
 		resolver = new MessageContextMethodArgumentResolver();
 		supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
 	}
 
 	@Test
-	public void supportsParameter() throws Exception {
-		assertTrue("resolver does not support MessageContext", resolver.supportsParameter(supported));
+	public void supportsParameter() {
+		assertThat(resolver.supportsParameter(supported)).isTrue();
 	}
 
 	@Test
 	public void resolveArgument() throws Exception {
+
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		MessageContext result = resolver.resolveArgument(messageContext, supported);
-		assertSame("Invalid message context returned", messageContext, result);
+
+		assertThat(result).isSameAs(messageContext);
 	}
 
 	public void supported(MessageContext messageContext) {}

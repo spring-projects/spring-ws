@@ -16,9 +16,9 @@
 
 package org.springframework.ws.soap;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.AbstractWebServiceMessageFactoryTestCase;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
@@ -26,13 +26,19 @@ import org.springframework.ws.WebServiceMessage;
 public abstract class AbstractSoapMessageFactoryTestCase extends AbstractWebServiceMessageFactoryTestCase {
 
 	@Test
-	public void testCreateEmptySoapMessage() throws Exception {
+	public void testCreateEmptySoapMessage() {
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage();
-		assertTrue("Not a SoapMessage", message instanceof SoapMessage);
+
+		assertThat(message).isInstanceOf(SoapMessage.class);
 	}
 
-	@Test(expected = InvalidXmlException.class)
-	public abstract void testCreateSoapMessageIllFormedXml() throws Exception;
+	@Test
+	public void testCreateSoapMessageIllFormedXml() {
+		assertThatExceptionOfType(InvalidXmlException.class).isThrownBy(this::doTestCreateSoapMessageIllFormedXml);
+	}
+
+	public abstract void doTestCreateSoapMessageIllFormedXml() throws Exception;
 
 	@Test
 	public abstract void testCreateSoapMessageNoAttachment() throws Exception;

@@ -16,13 +16,13 @@
 
 package org.springframework.ws.config;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
@@ -32,47 +32,58 @@ import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEn
 public class InterceptorsBeanDefinitionParserTest {
 
 	@Test
-	public void namespace() throws Exception {
+	public void namespace() {
+
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserTest.xml", getClass());
 		Map<String, ?> result = applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class);
-		assertEquals("no smart interceptors found", 8, result.size());
+
+		assertThat(result).hasSize(8);
 
 		result = applicationContext.getBeansOfType(PayloadRootSmartSoapEndpointInterceptor.class);
-		assertEquals("no interceptors found", 3, result.size());
+
+		assertThat(result).hasSize(3);
 
 		result = applicationContext.getBeansOfType(SoapActionSmartEndpointInterceptor.class);
-		assertEquals("no interceptors found", 3, result.size());
+
+		assertThat(result).hasSize(3);
 	}
 
 	@Test
-	public void ordering() throws Exception {
+	public void ordering() {
+
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserOrderTest.xml", getClass());
 
 		List<DelegatingSmartEndpointInterceptor> interceptors = new ArrayList<DelegatingSmartEndpointInterceptor>(
 				applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class).values());
-		assertEquals("not enough smart interceptors found", 6, interceptors.size());
+
+		assertThat(interceptors).hasSize(6);
 
 		for (int i = 0; i < interceptors.size(); i++) {
+
 			DelegatingSmartEndpointInterceptor delegatingInterceptor = interceptors.get(i);
 			MyInterceptor interceptor = (MyInterceptor) delegatingInterceptor.getDelegate();
-			assertEquals("Invalid ordering found for [" + delegatingInterceptor + "]", i, interceptor.getOrder());
+
+			assertThat(interceptor.getOrder()).isEqualTo(i);
 		}
 	}
 
 	@Test
-	public void injection() throws Exception {
+	public void injection() {
+
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserInjectionTest.xml", getClass());
 
 		List<DelegatingSmartEndpointInterceptor> interceptors = new ArrayList<DelegatingSmartEndpointInterceptor>(
 				applicationContext.getBeansOfType(DelegatingSmartEndpointInterceptor.class).values());
-		assertEquals("not enough smart interceptors found", 1, interceptors.size());
+
+		assertThat(interceptors).hasSize(1);
 
 		DummyInterceptor interceptor = (DummyInterceptor) interceptors.get(0).getDelegate();
-		assertNotNull(interceptor.getPropertyDependency());
-		assertNotNull(interceptor.getAutowiredDependency());
+
+		assertThat(interceptor.getPropertyDependency()).isNotNull();
+		assertThat(interceptor.getAutowiredDependency()).isNotNull();
 	}
 
 }

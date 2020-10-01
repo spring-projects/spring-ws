@@ -16,7 +16,7 @@
 
 package org.springframework.xml.xsd;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,10 +24,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -35,6 +33,7 @@ import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractXsdSchemaTestCase {
 
@@ -42,78 +41,92 @@ public abstract class AbstractXsdSchemaTestCase {
 
 	protected Transformer transformer;
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
 	public void testSingle() throws Exception {
+
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema single = createSchema(resource);
-		String namespace = "http://www.springframework.org/spring-ws/single/schema";
-		Assert.assertEquals("Invalid target namespace", namespace, single.getTargetNamespace());
+
+		assertThat(single.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/single/schema");
+
 		resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(single.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testIncludes() throws Exception {
+
 		Resource resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema including = createSchema(resource);
-		String namespace = "http://www.springframework.org/spring-ws/include/schema";
-		Assert.assertEquals("Invalid target namespace", namespace, including.getTargetNamespace());
+
+		assertThat(including.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/include/schema");
+
 		resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTestCase.class);
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(including.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testImports() throws Exception {
+
 		Resource resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema importing = createSchema(resource);
-		String namespace = "http://www.springframework.org/spring-ws/importing/schema";
-		Assert.assertEquals("Invalid target namespace", namespace, importing.getTargetNamespace());
+
+		assertThat(importing.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/importing/schema");
+
 		resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTestCase.class);
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testXmlNamespace() throws Exception {
+
 		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema importing = createSchema(resource);
-		String namespace = "http://www.springframework.org/spring-ws/xmlNamespace";
-		Assert.assertEquals("Invalid target namespace", namespace, importing.getTargetNamespace());
+
+		assertThat(importing.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/xmlNamespace");
+
 		resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
-		assertXMLEqual("Invalid Source returned", expected, result);
+
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testCreateValidator() throws Exception {
+
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
 		XsdSchema single = createSchema(resource);
 		XmlValidator validator = single.createValidator();
-		Assert.assertNotNull("No XmlValidator returned", validator);
+
+		assertThat(validator).isNotNull();
 	}
 
 	protected abstract XsdSchema createSchema(Resource resource) throws Exception;

@@ -23,7 +23,7 @@ import org.springframework.ws.server.endpoint.PayloadEndpoint;
 public class EchoPayloadEndpoint implements PayloadEndpoint {
 
 	@Override
-	public Source invoke(Source request) throws Exception {
+	public Source invoke(Source request) {
 		return request;
 	}
 }

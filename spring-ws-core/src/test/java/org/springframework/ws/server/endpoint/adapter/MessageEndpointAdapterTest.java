@@ -16,11 +16,11 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -32,19 +32,20 @@ public class MessageEndpointAdapterTest {
 
 	private MessageEndpoint endpointMock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		adapter = new MessageEndpointAdapter();
 		endpointMock = createMock(MessageEndpoint.class);
 	}
 
 	@Test
-	public void testSupports() throws Exception {
-		Assert.assertTrue("MessageEndpointAdapter does not support MessageEndpoint", adapter.supports(endpointMock));
+	public void testSupports() {
+		assertThat(adapter.supports(endpointMock)).isTrue();
 	}
 
 	@Test
 	public void testInvoke() throws Exception {
+
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		endpointMock.invoke(context);

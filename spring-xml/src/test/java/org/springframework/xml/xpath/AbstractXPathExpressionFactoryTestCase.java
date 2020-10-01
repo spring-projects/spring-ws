@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xpath;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -25,15 +27,15 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.util.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xpath.internal.XPathProcessorException;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
@@ -43,20 +45,25 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	private Map<String, String> namespaces = new HashMap<String, String>();
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		namespaces.put("prefix1", "namespace1");
 		namespaces.put("prefix2", "namespace2");
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
 		InputStream inputStream = getClass().getResourceAsStream("nonamespaces.xml");
+
 		try {
 			noNamespacesDocument = documentBuilder.parse(inputStream);
 		} finally {
 			inputStream.close();
 		}
 		inputStream = getClass().getResourceAsStream("namespaces.xml");
+
 		try {
 			namespacesDocument = documentBuilder.parse(inputStream);
 		} finally {
@@ -66,176 +73,210 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	@Test
 	public void testThatToStringReturnsOriginalXpathExpression() {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
-		Assert.assertEquals("/prefix1:root/prefix2:otherchild", expression.toString());
+
+		assertThat("/prefix1:root/prefix2:otherchild").isEqualTo(expression.toString());
 	}
 
 	@Test
 	public void testEvaluateAsBooleanInvalidNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		boolean result = expression.evaluateAsBoolean(namespacesDocument);
-		Assert.assertFalse("Invalid result [" + result + "]", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void testEvaluateAsBooleanInvalidNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		boolean result = expression.evaluateAsBoolean(noNamespacesDocument);
-		Assert.assertFalse("Invalid result [" + result + "]", result);
+
+		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void testEvaluateAsBooleanNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:boolean/text()",
 				namespaces);
 		boolean result = expression.evaluateAsBoolean(namespacesDocument);
-		Assert.assertTrue("Invalid result", result);
+
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void testEvaluateAsBooleanNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/child/boolean/text()");
 		boolean result = expression.evaluateAsBoolean(noNamespacesDocument);
-		Assert.assertTrue("Invalid result", result);
+
+		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void testEvaluateAsDoubleInvalidNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
-		Assert.assertTrue("Invalid result [" + result + "]", Double.isNaN(result));
+
+		assertThat(result).isNaN();
 	}
 
 	@Test
 	public void testEvaluateAsDoubleInvalidNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
-		Assert.assertTrue("Invalid result [" + result + "]", Double.isNaN(result));
+
+		assertThat(result).isNaN();
 	}
 
 	@Test
 	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()", namespaces);
 		double result = expression.evaluateAsNumber(namespacesDocument);
-		Assert.assertEquals("Invalid result", 42D, result, 0D);
+
+		assertThat(result).isEqualTo(42.0D);
 	}
 
 	@Test
 	public void testEvaluateAsDoubleNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/child/number/text()");
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
-		Assert.assertEquals("Invalid result", 42D, result, 0D);
+
+		assertThat(result).isEqualTo(42.0D);
 	}
 
 	@Test
 	public void testEvaluateAsNodeInvalidNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		Node result = expression.evaluateAsNode(namespacesDocument);
-		Assert.assertNull("Invalid result [" + result + "]", result);
+
+		assertThat(result).isNull();
 	}
 
 	@Test
 	public void testEvaluateAsNodeInvalidNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		Node result = expression.evaluateAsNode(noNamespacesDocument);
-		Assert.assertNull("Invalid result [" + result + "]", result);
+
+		assertThat(result).isNull();
 	}
 
 	@Test
 	public void testEvaluateAsNodeNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child", namespaces);
 		Node result = expression.evaluateAsNode(namespacesDocument);
-		Assert.assertNotNull("Invalid result", result);
-		Assert.assertEquals("Invalid localname", "child", result.getLocalName());
+
+		assertThat(result).isNotNull();
+		assertThat(result.getLocalName()).isEqualTo("child");
 	}
 
 	@Test
 	public void testEvaluateAsNodeNoNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/root/child");
 		Node result = expression.evaluateAsNode(noNamespacesDocument);
-		Assert.assertNotNull("Invalid result", result);
-		Assert.assertEquals("Invalid localname", "child", result.getLocalName());
+
+		assertThat(result).isNotNull();
+		assertThat(result.getLocalName()).isEqualTo("child");
 	}
 
 	@Test
 	public void testEvaluateAsNodeListNamespaces() throws IOException, SAXException {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/*", namespaces);
 		List<Node> results = expression.evaluateAsNodeList(namespacesDocument);
-		Assert.assertNotNull("Invalid result", results);
-		Assert.assertEquals("Invalid amount of results", 3, results.size());
+
+		assertThat(results).isNotNull();
+		assertThat(results).hasSize(3);
 	}
 
 	@Test
-	public void testEvaluateAsNodeListNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeListNoNamespaces() {
+
 		XPathExpression expression = createXPathExpression("/root/child/*");
 		List<Node> results = expression.evaluateAsNodeList(noNamespacesDocument);
-		Assert.assertNotNull("Invalid result", results);
-		Assert.assertEquals("Invalid amount of results", 3, results.size());
+
+		assertThat(results).isNotNull();
+		assertThat(results).hasSize(3);
 	}
 
 	@Test
-	public void testEvaluateAsStringInvalidNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsStringInvalidNamespaces() {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		String result = expression.evaluateAsString(namespacesDocument);
-		Assert.assertFalse("Invalid result [" + result + "]", StringUtils.hasText(result));
+
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	public void testEvaluateAsStringInvalidNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsStringInvalidNoNamespaces() {
+
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		String result = expression.evaluateAsString(noNamespacesDocument);
-		Assert.assertFalse("Invalid result [" + result + "]", StringUtils.hasText(result));
+
+		assertThat(result).isEmpty();
 	}
 
 	@Test
-	public void testEvaluateAsStringNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsStringNamespaces() {
+
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()", namespaces);
 		String result = expression.evaluateAsString(namespacesDocument);
-		Assert.assertEquals("Invalid result", "text", result);
+
+		assertThat(result).isEqualTo("text");
 	}
 
 	@Test
-	public void testEvaluateAsStringNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsStringNoNamespaces() {
+
 		XPathExpression expression = createXPathExpression("/root/child/text/text()");
 		String result = expression.evaluateAsString(noNamespacesDocument);
-		Assert.assertEquals("Invalid result", "text", result);
+
+		assertThat(result).isEqualTo("text");
 	}
 
 	@Test
-	public void testEvaluateAsObject() throws Exception {
+	public void testEvaluateAsObject() {
+
 		XPathExpression expression = createXPathExpression("/root/child");
 		String result = expression.evaluateAsObject(noNamespacesDocument, new NodeMapper<String>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}
 		});
-		Assert.assertNotNull("Invalid result", result);
-		Assert.assertEquals("Invalid localname", "child", result);
+
+		assertThat(result).isNotNull();
+		assertThat(result).isEqualTo("child");
 	}
 
 	@Test
 	public void testEvaluate() throws Exception {
+
 		XPathExpression expression = createXPathExpression("/root/child/*");
 		List<String> results = expression.evaluate(noNamespacesDocument, new NodeMapper<String>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}
 		});
-		Assert.assertNotNull("Invalid result", results);
-		Assert.assertEquals("Invalid amount of results", 3, results.size());
-		Assert.assertEquals("Invalid first result", "text", results.get(0));
-		Assert.assertEquals("Invalid first result", "number", results.get(1));
-		Assert.assertEquals("Invalid first result", "boolean", results.get(2));
+
+		assertThat(results).isNotNull();
+		assertThat(results).containsExactly("text", "number", "boolean");
 	}
 
 	@Test
 	public void testInvalidExpression() {
-		try {
-			createXPathExpression("\\");
-			Assert.fail("No XPathParseException thrown");
-		} catch (XPathParseException ex) {
-			// Expected behaviour
-		}
+		assertThatExceptionOfType(XPathParseException.class).isThrownBy(() -> createXPathExpression("\\"));
 	}
 
 	protected abstract XPathExpression createXPathExpression(String expression);

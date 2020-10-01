@@ -16,18 +16,21 @@
 
 package org.springframework.xml.sax;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 public class SaxUtilsTest {
 
 	@Test
-	public void testGetSystemId() throws Exception {
+	public void testGetSystemId() {
+
 		Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
 		String systemId = SaxUtils.getSystemId(resource);
-		Assert.assertNotNull("No systemId returned", systemId);
-		Assert.assertTrue("Invalid system id", systemId.endsWith("path%20with%20spaces/file%20with%20spaces.txt"));
+
+		assertThat(systemId).isNotNull();
+		assertThat(systemId).endsWith("path%20with%20spaces/file%20with%20spaces.txt");
 	}
 }

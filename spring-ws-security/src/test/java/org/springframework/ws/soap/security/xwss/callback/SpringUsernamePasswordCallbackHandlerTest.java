@@ -16,10 +16,11 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,29 +32,34 @@ public class SpringUsernamePasswordCallbackHandlerTest {
 
 	private SpringUsernamePasswordCallbackHandler handler;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
+
 		handler = new SpringUsernamePasswordCallbackHandler();
 		Authentication authentication = new UsernamePasswordAuthenticationToken("Bert", "Ernie");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() {
 		SecurityContextHolder.clearContext();
 	}
 
 	@Test
 	public void testUsernameCallback() throws Exception {
+
 		UsernameCallback usernameCallback = new UsernameCallback();
 		handler.handleInternal(usernameCallback);
-		Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+
+		assertThat(usernameCallback.getUsername()).isEqualTo("Bert");
 	}
 
 	@Test
 	public void testPasswordCallback() throws Exception {
+
 		PasswordCallback passwordCallback = new PasswordCallback();
 		handler.handleInternal(passwordCallback);
-		Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+
+		assertThat(passwordCallback.getPassword()).isEqualTo("Ernie");
 	}
 }

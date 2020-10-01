@@ -16,24 +16,26 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 public class SimpleWsdl11DefinitionTest {
 
 	private SimpleWsdl11Definition definition;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		definition = new SimpleWsdl11Definition();
 		definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
 		definition.afterPropertiesSet();
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
-		Assert.assertNotNull("No source returned", definition.getSource());
+	public void testGetSource() {
+		assertThat(definition.getSource()).isNotNull();
 	}
 }

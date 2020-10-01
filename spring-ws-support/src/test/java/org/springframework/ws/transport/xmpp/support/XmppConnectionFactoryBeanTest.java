@@ -16,37 +16,38 @@
 
 package org.springframework.ws.transport.xmpp.support;
 
-import java.io.IOException;
+import static org.assertj.core.api.Assertions.*;
 
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /** @author Arjen Poutsma */
 public class XmppConnectionFactoryBeanTest {
 
 	private XmppConnectionFactoryBean factoryBean;
 
-	@Before
+	@BeforeEach
 	public void createFactoryBean() {
 		factoryBean = new XmppConnectionFactoryBean();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void noHost() throws XMPPException, IOException, SmackException {
-		factoryBean.afterPropertiesSet();
+	@Test
+	public void noHost() {
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.afterPropertiesSet());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void noUsername() throws XMPPException, IOException, SmackException {
-		factoryBean.setHost("jabber.org");
-		factoryBean.afterPropertiesSet();
+	@Test
+	public void noUsername() {
+
+		assertThatIllegalArgumentException().isThrownBy(() -> {
+
+			factoryBean.setHost("jabber.org");
+			factoryBean.afterPropertiesSet();
+		});
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void wrongPort() throws XMPPException {
-		factoryBean.setPort(-10);
+	@Test
+	public void wrongPort() {
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.setPort(-10));
 	}
-
 }

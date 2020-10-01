@@ -17,12 +17,10 @@
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
 import java.security.Principal;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 import javax.security.auth.x500.X500Principal;
 
@@ -39,6 +37,7 @@ public class CertificateLoginModule implements LoginModule {
 
 	@Override
 	public boolean commit() {
+
 		if (!loginSuccessful) {
 			subject.getPrincipals().clear();
 			subject.getPrivateCredentials().clear();
@@ -54,7 +53,8 @@ public class CertificateLoginModule implements LoginModule {
 	}
 
 	@Override
-	public boolean login() throws LoginException {
+	public boolean login() {
+
 		if (subject == null) {
 			return false;
 		}
@@ -62,23 +62,26 @@ public class CertificateLoginModule implements LoginModule {
 		String name = getName(subject);
 
 		loginSuccessful = "CN=Arjen Poutsma,OU=Spring-WS,O=Interface21,L=Amsterdam,ST=Unknown,C=NL".equals(name);
+
 		return loginSuccessful;
 	}
 
 	@Override
 	public boolean logout() {
+
 		subject.getPrincipals().clear();
 		subject.getPrivateCredentials().clear();
 		return true;
 	}
 
 	private String getName(Subject subject) {
-		for (Iterator<Principal> iterator = subject.getPrincipals().iterator(); iterator.hasNext();) {
-			Principal principal = iterator.next();
+
+		for (Principal principal : subject.getPrincipals()) {
 			if (principal instanceof X500Principal) {
 				return principal.getName();
 			}
 		}
+
 		return null;
 	}
 }

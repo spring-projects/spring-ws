@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
@@ -26,9 +28,8 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -43,8 +44,9 @@ public class DefaultMessagesProviderTest {
 
 	private DocumentBuilder documentBuilder;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		provider = new DefaultMessagesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
 		definition = factory.newDefinition();
@@ -55,6 +57,7 @@ public class DefaultMessagesProviderTest {
 
 	@Test
 	public void testAddMessages() throws Exception {
+
 		String definitionNamespace = "http://springframework.org/spring-ws";
 		definition.addNamespace("tns", definitionNamespace);
 		definition.setTargetNamespace(definitionNamespace);
@@ -72,26 +75,33 @@ public class DefaultMessagesProviderTest {
 
 		provider.addMessages(definition);
 
-		Assert.assertEquals("Invalid amount of messages created", 3, definition.getMessages().size());
+		assertThat(definition.getMessages()).hasSize(3);
 
 		Message message = definition.getMessage(new QName(definitionNamespace, "GetOrderRequest"));
-		Assert.assertNotNull("Message not created", message);
+
+		assertThat(message).isNotNull();
+
 		Part part = message.getPart("GetOrderRequest");
-		Assert.assertNotNull("Part not created", part);
-		Assert.assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderRequest"),
-				part.getElementName());
+
+		assertThat(part).isNotNull();
+		assertThat(part.getElementName()).isEqualTo(new QName(schemaNamespace, "GetOrderRequest"));
 
 		message = definition.getMessage(new QName(definitionNamespace, "GetOrderResponse"));
-		Assert.assertNotNull("Message not created", message);
+
+		assertThat(message).isNotNull();
+
 		part = message.getPart("GetOrderResponse");
-		Assert.assertNotNull("Part not created", part);
-		Assert.assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderResponse"),
-				part.getElementName());
+
+		assertThat(part).isNotNull();
+		assertThat(part.getElementName()).isEqualTo(new QName(schemaNamespace, "GetOrderResponse"));
 
 		message = definition.getMessage(new QName(definitionNamespace, "GetOrderFault"));
-		Assert.assertNotNull("Message not created", message);
+
+		assertThat(message).isNotNull();
+
 		part = message.getPart("GetOrderFault");
-		Assert.assertNotNull("Part not created", part);
-		Assert.assertEquals("Invalid element on part", new QName(schemaNamespace, "GetOrderFault"), part.getElementName());
+
+		assertThat(part).isNotNull();
+		assertThat(part.getElementName()).isEqualTo(new QName(schemaNamespace, "GetOrderFault"));
 	}
 }

@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.io.InputStream;
@@ -23,10 +24,9 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Collections;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,32 +48,31 @@ public class SpringCertificateValidationCallbackHandlerTest {
 
 	private CertificateValidationCallback callback;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		callbackHandler = new SpringCertificateValidationCallbackHandler();
 		authenticationManager = createMock(AuthenticationManager.class);
 		callbackHandler.setAuthenticationManager(authenticationManager);
 		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		InputStream is = null;
-		try {
-			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
+
+		try (InputStream is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks")
+				.getInputStream()) {
 			keyStore.load(is, "password".toCharArray());
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
+
 		certificate = (X509Certificate) keyStore.getCertificate("alias");
 		callback = new CertificateValidationCallback(certificate);
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() {
 		SecurityContextHolder.clearContext();
 	}
 
 	@Test
 	public void testValidateCertificateValid() throws Exception {
+
 		expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
 				.andReturn(new TestingAuthenticationToken(certificate, null, Collections.<GrantedAuthority> emptyList()));
 
@@ -81,14 +80,16 @@ public class SpringCertificateValidationCallbackHandlerTest {
 
 		callbackHandler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
-		Assert.assertTrue("Not authenticated", authenticated);
-		Assert.assertNotNull("No Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+		assertThat(authenticated).isTrue();
+		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNotNull();
 
 		verify(authenticationManager);
 	}
 
 	@Test
 	public void testValidateCertificateInvalid() throws Exception {
+
 		expect(authenticationManager.authenticate(isA(X509AuthenticationToken.class)))
 				.andThrow(new BadCredentialsException(""));
 
@@ -96,21 +97,23 @@ public class SpringCertificateValidationCallbackHandlerTest {
 
 		callbackHandler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
-		Assert.assertFalse("Authenticated", authenticated);
-		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
+
+		assertThat(authenticated).isFalse();
+		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
 
 		verify(authenticationManager);
 	}
 
 	@Test
 	public void testCleanUp() throws Exception {
+
 		TestingAuthenticationToken authentication = new TestingAuthenticationToken(new Object(), new Object(),
 				Collections.<GrantedAuthority> emptyList());
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		CleanupCallback cleanupCallback = new CleanupCallback();
 		callbackHandler.handleInternal(cleanupCallback);
-		Assert.assertNull("Authentication created", SecurityContextHolder.getContext().getAuthentication());
-	}
 
+		assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+	}
 }

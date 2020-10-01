@@ -16,27 +16,30 @@
 
 package org.springframework.xml.xpath;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class XPathExpressionFactoryBeanTest {
 
 	private XPathExpressionFactoryBean factoryBean;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		factoryBean = new XPathExpressionFactoryBean();
 	}
 
 	@Test
 	public void testFactoryBean() throws Exception {
+
 		factoryBean.setExpression("/root");
 		factoryBean.afterPropertiesSet();
 		Object result = factoryBean.getObject();
-		Assert.assertNotNull("No result obtained", result);
-		Assert.assertTrue("No XPathExpression returned", result instanceof XPathExpression);
-		Assert.assertTrue("Not a singleton", factoryBean.isSingleton());
-		Assert.assertEquals("Not a XPathExpresison", XPathExpression.class, factoryBean.getObjectType());
+
+		assertThat(result).isNotNull();
+		assertThat(result).isInstanceOf(XPathExpression.class);
+		assertThat(factoryBean.isSingleton()).isTrue();
+		assertThat(factoryBean.getObject()).isInstanceOf(XPathExpression.class);
 	}
 }

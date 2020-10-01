@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>xmlunit</groupId>
 			<artifactId>xmlunit</artifactId>
-			<version>${xmlunit.version}</version>
+			<version>${xmlunit1.version}</version>
 		</dependency>
 
 		<dependency>

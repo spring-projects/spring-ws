@@ -16,23 +16,23 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("bridged-method-registration.xml")
 public class BridgedMethodRegistrationTest {
 
@@ -42,11 +42,15 @@ public class BridgedMethodRegistrationTest {
 
 	@Test
 	public void registration() throws NoSuchMethodException {
+
 		MethodEndpoint bridgedMethod = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
-		assertNotNull("bridged method endpoint not registered", bridgedMethod);
+
+		assertThat(bridgedMethod).isNotNull();
+
 		Method doIt = B.class.getMethod("doIt");
 		MethodEndpoint expected = new MethodEndpoint("bridgedMethodEndpoint", applicationContext, doIt);
-		assertEquals("Invalid endpoint registered", expected, bridgedMethod);
+
+		assertThat(bridgedMethod).isEqualTo(expected);
 	}
 
 	@Endpoint

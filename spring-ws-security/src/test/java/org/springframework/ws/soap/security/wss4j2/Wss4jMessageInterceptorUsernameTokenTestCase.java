@@ -16,12 +16,12 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Properties;
 
 import org.apache.wss4j.dom.WSConstants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -39,6 +39,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 	@Test
 	public void testValidateUsernameTokenPlainText() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -48,6 +49,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 	@Test
 	public void testValidateUsernameTokenDigest() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("UsernameToken");
 		interceptor.setSecurementUsername("Bert");
@@ -60,15 +62,18 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 		interceptor = prepareInterceptor("UsernameToken", true, true);
 		interceptor.validateMessage(message, messageContext);
+
 		assertValidateUsernameToken(message);
 	}
 
 	@Test
 	public void testValidateUsernameTokenWithQualifiedType() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextQualifiedType-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.validateMessage(message, messageContext);
+
 		assertValidateUsernameToken(message);
 	}
 
@@ -82,11 +87,13 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 		MessageContext messageContext = getSoap11MessageContext(message);
 
 		interceptor.secureMessage(message, messageContext);
+
 		assertAddUsernameTokenPlainText(message);
 	}
 
 	@Test
 	public void testAddUsernameTokenDigest() throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, true);
 		interceptor.setSecurementUsername("Bert");
 		interceptor.setSecurementPassword("Ernie");
@@ -94,20 +101,27 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 		MessageContext messageContext = getSoap11MessageContext(message);
 		interceptor.secureMessage(message, messageContext);
+
 		assertAddUsernameTokenDigest(message);
 	}
 
-	protected void assertValidateUsernameToken(SoapMessage message) throws Exception {
+	protected void assertValidateUsernameToken(SoapMessage message) {
+
 		Object result = getMessage(message);
-		assertNotNull("No result returned", result);
+
+		assertThat(result).isNotNull();
 		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
 				getDocument(message));
 	}
 
-	protected void assertAddUsernameTokenPlainText(SoapMessage message) throws Exception {
+	protected void assertAddUsernameTokenPlainText(SoapMessage message) {
+
 		Object result = getMessage(message);
-		assertNotNull("No result returned", result);
+
+		assertThat(result).isNotNull();
+
 		Document doc = getDocument(message);
+
 		assertXpathEvaluatesTo("Invalid Username", "Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
 		assertXpathEvaluatesTo("Invalid Password", "Ernie",
@@ -115,20 +129,22 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 				doc);
 	}
 
-	protected void assertAddUsernameTokenDigest(SoapMessage message) throws Exception {
+	protected void assertAddUsernameTokenDigest(SoapMessage message) {
+
 		Object result = getMessage(message);
 		Document doc = getDocument(message);
-		assertNotNull("No result returned", result);
+
+		assertThat(result).isNotNull();
 		assertXpathEvaluatesTo("Invalid Username", "Bert",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
 		assertXpathExists("Password does not exist",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest']",
 				doc);
-
 	}
 
 	protected Wss4jSecurityInterceptor prepareInterceptor(String actions, boolean validating, boolean digest)
 			throws Exception {
+
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		if (validating) {
 			interceptor.setValidationActions(actions);

@@ -16,9 +16,9 @@
 
 package org.springframework.ws.soap;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractSoapEnvelopeTestCase extends AbstractSoapElementTestCase {
 
@@ -26,6 +26,7 @@ public abstract class AbstractSoapEnvelopeTestCase extends AbstractSoapElementTe
 
 	@Override
 	protected final SoapElement createSoapElement() throws Exception {
+
 		soapEnvelope = createSoapEnvelope();
 		return soapEnvelope;
 	}
@@ -33,14 +34,18 @@ public abstract class AbstractSoapEnvelopeTestCase extends AbstractSoapElementTe
 	protected abstract SoapEnvelope createSoapEnvelope() throws Exception;
 
 	@Test
-	public void testGetHeader() throws Exception {
+	public void testGetHeader() {
+
 		SoapHeader header = soapEnvelope.getHeader();
-		assertNotNull("No header returned", header);
+
+		assertThat(header).isNotNull();
 	}
 
 	@Test
-	public void testGetBody() throws Exception {
+	public void testGetBody() {
+
 		SoapBody body = soapEnvelope.getBody();
-		assertNotNull("No body returned", body);
+
+		assertThat(body).isNotNull();
 	}
 }

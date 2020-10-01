@@ -21,20 +21,20 @@ import static org.springframework.ws.test.server.ResponseMatchers.*;
 
 import javax.xml.transform.Source;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.test.server.MockWebServiceClient;
 import org.springframework.xml.transform.StringSource;
 
 /**
  * @author Arjen Poutsma
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("integration-test.xml")
 public class ServerIntegrationTest {
 
@@ -42,13 +42,14 @@ public class ServerIntegrationTest {
 
 	private MockWebServiceClient mockClient;
 
-	@Before
+	@BeforeEach
 	public void createClient() {
 		mockClient = MockWebServiceClient.createClient(applicationContext);
 	}
 
 	@Test
-	public void basic() throws Exception {
+	public void basic() {
+
 		Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws'>"
 				+ "<customerName>John Doe</customerName>" + "</customerCountRequest>");
 		Source expectedResponsePayload = new StringSource(
@@ -57,5 +58,4 @@ public class ServerIntegrationTest {
 
 		mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
 	}
-
 }

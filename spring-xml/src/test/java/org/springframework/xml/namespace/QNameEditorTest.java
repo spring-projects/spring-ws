@@ -16,50 +16,58 @@
 
 package org.springframework.xml.namespace;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.namespace.QName;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class QNameEditorTest {
 
 	private QNameEditor editor;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		editor = new QNameEditor();
 	}
 
 	@Test
-	public void testNamespaceLocalPartPrefix() throws Exception {
+	public void testNamespaceLocalPartPrefix() {
+
 		QName qname = new QName("namespace", "localpart", "prefix");
 		doTest(qname);
 	}
 
 	@Test
-	public void testNamespaceLocalPart() throws Exception {
+	public void testNamespaceLocalPart() {
+
 		QName qname = new QName("namespace", "localpart");
 		doTest(qname);
 	}
 
 	@Test
-	public void testLocalPart() throws Exception {
+	public void testLocalPart() {
+
 		QName qname = new QName("localpart");
 		doTest(qname);
 	}
 
 	private void doTest(QName qname) {
+
 		editor.setValue(qname);
+
 		String text = editor.getAsText();
-		Assert.assertNotNull("getAsText returns null", text);
+
+		assertThat(text).isNotNull();
+
 		editor.setAsText(text);
 		QName result = (QName) editor.getValue();
-		Assert.assertNotNull("getValue returns null", result);
-		Assert.assertEquals("Parsed QName local part is not equal to original", qname.getLocalPart(),
-				result.getLocalPart());
-		Assert.assertEquals("Parsed QName prefix is not equal to original", qname.getPrefix(), result.getPrefix());
-		Assert.assertEquals("Parsed QName namespace is not equal to original", qname.getNamespaceURI(),
-				result.getNamespaceURI());
+
+		assertThat(result).isNotNull();
+		assertThat(result.getLocalPart()).isEqualTo(qname.getLocalPart());
+		assertThat(result.getPrefix()).isEqualTo(qname.getPrefix());
+		assertThat(result.getNamespaceURI()).isEqualTo(qname.getNamespaceURI());
 	}
 }

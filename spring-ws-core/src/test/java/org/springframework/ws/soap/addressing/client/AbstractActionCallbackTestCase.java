@@ -27,9 +27,9 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
@@ -48,8 +48,9 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 
 	private WebServiceConnection connectionMock;
 
-	@Before
-	public void createMocks() throws Exception {
+	@BeforeEach
+	public void createMocks() {
+
 		strategyMock = createMock(MessageIdStrategy.class);
 
 		connectionMock = createMock(WebServiceConnection.class);
@@ -58,13 +59,14 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		TransportContextHolder.setTransportContext(transportContext);
 	}
 
-	@After
-	public void clearContext() throws Exception {
+	@AfterEach
+	public void clearContext() {
 		TransportContextHolder.setTransportContext(null);
 	}
 
 	@Test
 	public void testValid() throws Exception {
+
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI to = new URI("mailto:fabrikam@example.com");
 		callback = new ActionCallback(action, getVersion(), to);
@@ -78,13 +80,14 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+		assertXMLNotSimilar(expected, message);
 
 		verify(strategyMock, connectionMock);
 	}
 
 	@Test
 	public void testDefaults() throws Exception {
+
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
 		callback = new ActionCallback(action, getVersion());
@@ -100,11 +103,14 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
-		assertXMLSimilar("Invalid message", expected, message);
+
+		assertXMLNotSimilar(expected, message);
+
 		verify(strategyMock, connectionMock);
 	}
 
 	private SaajSoapMessage createDeleteMessage() throws SOAPException {
+
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		SOAPBody saajBody = saajMessage.getSOAPBody();
 		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));

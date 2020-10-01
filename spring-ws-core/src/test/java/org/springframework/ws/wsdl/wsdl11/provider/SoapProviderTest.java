@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Properties;
 
 import javax.wsdl.Binding;
@@ -31,9 +33,8 @@ import javax.wsdl.Service;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SoapProviderTest {
 
@@ -41,8 +42,9 @@ public class SoapProviderTest {
 
 	private Definition definition;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		provider = new SoapProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
 		definition = factory.newDefinition();
@@ -50,6 +52,7 @@ public class SoapProviderTest {
 
 	@Test
 	public void testPopulateBinding() throws Exception {
+
 		String namespace = "http://springframework.org/spring-ws";
 		definition.addNamespace("tns", namespace);
 		definition.setTargetNamespace(namespace);
@@ -89,18 +92,24 @@ public class SoapProviderTest {
 		provider.addServices(definition);
 
 		Binding binding = definition.getBinding(new QName(namespace, "PortTypeSoap11"));
-		Assert.assertNotNull("No SOAP 1.1 binding created", binding);
+
+		assertThat(binding).isNotNull();
+
 		binding = definition.getBinding(new QName(namespace, "PortTypeSoap12"));
-		Assert.assertNotNull("No SOAP 1.2 binding created", binding);
+
+		assertThat(binding).isNotNull();
 
 		Service service = definition.getService(new QName(namespace, "Service"));
-		Assert.assertNotNull("No Service created", service);
-		Assert.assertEquals("Invalid amount of ports", 2, service.getPorts().size());
+
+		assertThat(service).isNotNull();
+		assertThat(service.getPorts()).hasSize(2);
 
 		Port port = service.getPort("PortTypeSoap11");
-		Assert.assertNotNull("No SOAP 1.1 port created", port);
-		port = service.getPort("PortTypeSoap12");
-		Assert.assertNotNull("No SOAP 1.2 port created", port);
-	}
 
+		assertThat(port).isNotNull();
+
+		port = service.getPort("PortTypeSoap12");
+
+		assertThat(port).isNotNull();
+	}
 }

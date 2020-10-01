@@ -31,6 +31,7 @@ public class MockWebServiceMessageFactory implements WebServiceMessageFactory {
 
 	@Override
 	public MockWebServiceMessage createWebServiceMessage(InputStream inputStream) throws IOException {
+
 		try {
 			return new MockWebServiceMessage(new StreamSource(inputStream));
 		} catch (TransformerException ex) {

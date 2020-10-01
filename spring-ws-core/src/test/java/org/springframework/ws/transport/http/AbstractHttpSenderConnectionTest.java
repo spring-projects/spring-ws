@@ -16,8 +16,8 @@
 
 package org.springframework.ws.transport.http;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import java.util.Random;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.easymock.Capture;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
@@ -44,6 +44,7 @@ public class AbstractHttpSenderConnectionTest {
 	 * @throws Exception
 	 */
 	private void testSupportsStreaming(boolean chunking) throws Exception {
+
 		byte[] content = new byte[16 * 1024];
 		new Random().nextBytes(content);
 		CountingInputStream rawInputStream = new CountingInputStream(new ByteArrayInputStream(content));
@@ -65,9 +66,8 @@ public class AbstractHttpSenderConnectionTest {
 
 		connection.receive(messageFactory);
 
-		assertTrue("The raw input stream has been completely consumed", rawInputStream.getCount() < content.length);
-		assertArrayEquals("Unexpected content received by the message factory", content,
-				IOUtils.toByteArray(inputStreamCapture.getValue()));
+		assertThat(rawInputStream.getCount()).isLessThan(content.length);
+		assertThat(IOUtils.toByteArray(inputStreamCapture.getValue())).isEqualTo(content);
 	}
 
 	@Test

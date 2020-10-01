@@ -16,9 +16,10 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -32,7 +33,7 @@ public class MessageMethodEndpointAdapterTest {
 
 	private MessageContext messageContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		adapter = new MessageMethodEndpointAdapter();
 		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
@@ -40,28 +41,36 @@ public class MessageMethodEndpointAdapterTest {
 
 	@Test
 	public void testSupported() throws NoSuchMethodException {
+
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[] { MessageContext.class });
-		Assert.assertTrue("Method unsupported", adapter.supportsInternal(methodEndpoint));
+		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
 	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
-		Assert.assertFalse("Method supported", adapter.supportsInternal(new MethodEndpoint(this,
-				"unsupportedMultipleParams", new Class[] { MessageContext.class, MessageContext.class })));
+
+		assertThat(adapter.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams",
+				new Class[] { MessageContext.class, MessageContext.class }))).isFalse();
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
-		Assert.assertFalse("Method supported",
-				adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[] { String.class })));
+
+		assertThat(
+				adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[] { String.class })))
+						.isFalse();
 	}
 
 	@Test
 	public void testInvokeSupported() throws Exception {
+
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[] { MessageContext.class });
-		Assert.assertFalse("Method invoked", supportedInvoked);
+
+		assertThat(supportedInvoked).isFalse();
+
 		adapter.invoke(messageContext, methodEndpoint);
-		Assert.assertTrue("Method not invoked", supportedInvoked);
+
+		assertThat(supportedInvoked).isTrue();
 	}
 
 	public void supported(MessageContext context) {

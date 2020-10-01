@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -46,10 +46,13 @@ public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProces
 
 	@Override
 	protected void testArgument(Object argument, MethodParameter parameter) {
-		assertTrue("argument not a element", argument instanceof Element);
+
+		assertThat(argument).isInstanceOf(Element.class);
+
 		Element element = (Element) argument;
-		assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-		assertEquals("Invalid local name", LOCAL_NAME, element.getName());
+
+		assertThat(element.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+		assertThat(element.getName()).isEqualTo(LOCAL_NAME);
 	}
 
 	@Override

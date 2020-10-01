@@ -16,12 +16,13 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.MessageContext;
 
@@ -32,6 +33,7 @@ public class MapBasedSoapEndpointMappingTest {
 
 	@Test
 	public void testBeanNames() throws Exception {
+
 		StaticApplicationContext context = new StaticApplicationContext();
 		context.registerSingleton("endpointMapping", MyMapBasedEndpointMapping.class);
 		context.registerSingleton("endpoint", Object.class);
@@ -44,20 +46,21 @@ public class MapBasedSoapEndpointMappingTest {
 
 		// try bean
 		mapping.setKey("endpoint");
-		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNotNull();
 
 		// try alias
 		mapping.setKey("alias");
-		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNotNull();
 
 		// try non-mapped values
 		mapping.setKey("endpointMapping");
-		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNull();
 
 	}
 
 	@Test
 	public void testDisabledBeanNames() throws Exception {
+
 		StaticApplicationContext context = new StaticApplicationContext();
 		context.registerSingleton("endpoint", Object.class);
 
@@ -67,12 +70,13 @@ public class MapBasedSoapEndpointMappingTest {
 		mapping.setApplicationContext(context);
 
 		mapping.setKey("endpoint");
-		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNull();
 	}
 
 	@Test
 	public void testEndpointMap() throws Exception {
-		Map<String, Object> endpointMap = new TreeMap<String, Object>();
+
+		Map<String, Object> endpointMap = new TreeMap<>();
 		Object endpoint1 = new Object();
 		Object endpoint2 = new Object();
 		endpointMap.put("endpoint1", endpoint1);
@@ -86,15 +90,15 @@ public class MapBasedSoapEndpointMappingTest {
 
 		// try endpoint1
 		mapping.setKey("endpoint1");
-		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNotNull();
 
 		// try endpoint2
 		mapping.setKey("endpoint2");
-		Assert.assertNotNull("No endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNotNull();
 
 		// try non-mapped values
 		mapping.setKey("endpoint3");
-		Assert.assertNull("Endpoint returned", mapping.getEndpointInternal(null));
+		assertThat(mapping.getEndpointInternal(null)).isNull();
 	}
 
 	private static class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
@@ -108,6 +112,7 @@ public class MapBasedSoapEndpointMappingTest {
 		}
 
 		public void setValidKeys(String[] validKeys) {
+
 			this.validKeys = validKeys;
 			Arrays.sort(this.validKeys);
 		}

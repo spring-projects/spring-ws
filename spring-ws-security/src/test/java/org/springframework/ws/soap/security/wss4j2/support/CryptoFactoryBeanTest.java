@@ -16,25 +16,27 @@
 
 package org.springframework.ws.soap.security.wss4j2.support;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Properties;
 
 import org.apache.wss4j.common.crypto.Merlin;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 public class CryptoFactoryBeanTest {
 
 	private CryptoFactoryBean factoryBean;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
 		factoryBean = new CryptoFactoryBean();
 	}
 
 	@Test
 	public void testSetConfiguration() throws Exception {
+
 		Properties configuration = new Properties();
 		configuration.setProperty("org.apache.ws.security.crypto.provider",
 				"org.apache.ws.security.components.crypto.Merlin");
@@ -46,18 +48,21 @@ public class CryptoFactoryBeanTest {
 		factoryBean.afterPropertiesSet();
 
 		Object result = factoryBean.getObject();
-		Assert.assertNotNull("No result", result);
-		Assert.assertTrue("Not a Merlin instance", result instanceof Merlin);
+
+		assertThat(result).isNotNull();
+		assertThat(result).isInstanceOf(Merlin.class);
 	}
 
 	@Test
 	public void testProperties() throws Exception {
+
 		factoryBean.setKeyStoreType("jceks");
 		factoryBean.setKeyStorePassword("123456");
 		factoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
 		factoryBean.afterPropertiesSet();
 		Object result = factoryBean.getObject();
-		Assert.assertNotNull("No result", result);
-		Assert.assertTrue("Not a Merlin instance", result instanceof Merlin);
+
+		assertThat(result).isNotNull();
+		assertThat(result).isInstanceOf(Merlin.class);
 	}
 }

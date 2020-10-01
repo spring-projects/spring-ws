@@ -15,11 +15,12 @@
  */
 package org.springframework.ws.client.support.interceptor;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
 
@@ -30,11 +31,12 @@ public class ClientInterceptorAdapterTest {
 
 	@Test
 	public void handleEmptyInterceptor() {
+
 		ClientInterceptor interceptor = new ClientInterceptorAdapter() {};
 
-		Assert.assertTrue(interceptor.handleRequest(null));
-		Assert.assertTrue(interceptor.handleResponse(null));
-		Assert.assertTrue(interceptor.handleFault(null));
+		assertThat(interceptor.handleRequest(null)).isTrue();
+		assertThat(interceptor.handleResponse(null)).isTrue();
+		assertThat(interceptor.handleFault(null)).isTrue();
 
 		interceptor.afterCompletion(null, null);
 	}
@@ -43,18 +45,15 @@ public class ClientInterceptorAdapterTest {
 	public void handleTestAdapter() {
 		TestClientInterceptorAdapter interceptor = new TestClientInterceptorAdapter(new ArrayList<>());
 
-		Assert.assertFalse(interceptor.handleRequest(null));
-		Assert.assertFalse(interceptor.handleResponse(null));
-		Assert.assertFalse(interceptor.handleFault(null));
+		assertThat(interceptor.handleRequest(null)).isFalse();
+		assertThat(interceptor.handleResponse(null)).isFalse();
+		assertThat(interceptor.handleFault(null)).isFalse();
 
 		interceptor.afterCompletion(null, null);
 
 		List<String> bits = interceptor.getBits();
 
-		Assert.assertTrue(bits.contains("handled request"));
-		Assert.assertTrue(bits.contains("handled response"));
-		Assert.assertTrue(bits.contains("handled fault"));
-		Assert.assertTrue(bits.contains("handled afterCompletion"));
+		assertThat(bits).containsExactly("handled request", "handled response", "handled fault", "handled afterCompletion");
 	}
 
 	static class TestClientInterceptorAdapter extends ClientInterceptorAdapter {
@@ -71,18 +70,21 @@ public class ClientInterceptorAdapterTest {
 
 		@Override
 		public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+
 			bits.add("handled request");
 			return false;
 		}
 
 		@Override
 		public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
+
 			bits.add("handled response");
 			return false;
 		}
 
 		@Override
 		public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
+
 			bits.add("handled fault");
 			return false;
 		}
@@ -92,5 +94,4 @@ public class ClientInterceptorAdapterTest {
 			bits.add("handled afterCompletion");
 		}
 	}
-
 }

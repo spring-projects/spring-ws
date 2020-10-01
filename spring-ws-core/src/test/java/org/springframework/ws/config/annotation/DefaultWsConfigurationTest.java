@@ -1,9 +1,9 @@
 package org.springframework.ws.config.annotation;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,9 @@ public class DefaultWsConfigurationTest {
 
 	private ApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
 		applicationContext.refresh();
@@ -32,33 +33,39 @@ public class DefaultWsConfigurationTest {
 	}
 
 	@Test
-	public void payloadRootAnnotationMethodEndpointMapping() throws Exception {
+	public void payloadRootAnnotationMethodEndpointMapping() {
+
 		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
-		assertEquals(0, endpointMapping.getOrder());
+
+		assertThat(endpointMapping.getOrder()).isEqualTo(0);
 	}
 
 	@Test
-	public void soapActionAnnotationMethodEndpointMapping() throws Exception {
+	public void soapActionAnnotationMethodEndpointMapping() {
+
 		SoapActionAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 				.getBean(SoapActionAnnotationMethodEndpointMapping.class);
-		assertEquals(1, endpointMapping.getOrder());
+
+		assertThat(endpointMapping.getOrder()).isEqualTo(1);
 	}
 
 	@Test
-	public void annotationActionEndpointMapping() throws Exception {
+	public void annotationActionEndpointMapping() {
+
 		AnnotationActionEndpointMapping endpointMapping = this.applicationContext
 				.getBean(AnnotationActionEndpointMapping.class);
-		assertEquals(2, endpointMapping.getOrder());
+
+		assertThat(endpointMapping.getOrder()).isEqualTo(2);
 	}
 
 	@Test
-	public void defaultMethodEndpointAdapter() throws Exception {
+	public void defaultMethodEndpointAdapter() {
 
 		DefaultMethodEndpointAdapter adapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
-		assertFalse(adapter.getMethodArgumentResolvers().isEmpty());
-		assertFalse(adapter.getMethodReturnValueHandlers().isEmpty());
+		assertThat(adapter.getMethodArgumentResolvers()).isNotEmpty();
+		assertThat(adapter.getMethodReturnValueHandlers()).isNotEmpty();
 	}
 
 	@EnableWs

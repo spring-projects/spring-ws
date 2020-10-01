@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,14 +36,17 @@ public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
 	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+
 		return new AbstractDomPayloadEndpoint() {
 
 			@Override
 			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-				assertNotNull("No requestElement passed", requestElement);
-				assertNotNull("No responseDocument passed", responseDocument);
-				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
-				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+
+				assertThat(requestElement).isNotNull();
+				assertThat(responseDocument).isNotNull();
+				assertThat(requestElement.getLocalName()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(requestElement.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+
 				return responseDocument.createElementNS(NAMESPACE_URI, RESPONSE_ELEMENT);
 			}
 		};
@@ -51,11 +54,13 @@ public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
 	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+
 		return new AbstractDomPayloadEndpoint() {
 
 			@Override
 			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
-				assertNull("RequestElement passed", requestElement);
+
+				assertThat(requestElement).isNull();
 				return null;
 			}
 		};

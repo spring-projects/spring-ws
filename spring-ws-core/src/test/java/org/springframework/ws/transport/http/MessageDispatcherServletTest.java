@@ -16,7 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -26,10 +26,8 @@ import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
@@ -45,6 +43,7 @@ import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
 
 public class MessageDispatcherServletTest {
 
@@ -52,32 +51,40 @@ public class MessageDispatcherServletTest {
 
 	private MessageDispatcherServlet servlet;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		config = new MockServletConfig(new MockServletContext(), "spring-ws");
 		servlet = new MessageDispatcherServlet();
 	}
 
 	private void assertStrategies(Class<?> expectedClass, List<?> actual) {
-		Assert.assertEquals("Invalid amount of strategies", 1, actual.size());
+
+		assertThat(actual).hasSize(1);
+
 		Object strategy = actual.get(0);
-		Assert.assertTrue("Invalid strategy", expectedClass.isAssignableFrom(strategy.getClass()));
+
+		assertThat(expectedClass).isAssignableFrom(strategy.getClass());
 	}
 
 	@Test
 	public void testDefaultStrategies() throws ServletException {
+
 		servlet.setContextClass(StaticWebApplicationContext.class);
 		servlet.init(config);
 		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-		Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
+
+		assertThat(messageDispatcher).isNotNull();
 	}
 
 	@Test
 	public void testDetectedStrategies() throws ServletException {
+
 		servlet.setContextClass(DetectWebApplicationContext.class);
 		servlet.init(config);
 		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
-		Assert.assertNotNull("No messageDispatcher created", messageDispatcher);
+
+		assertThat(messageDispatcher).isNotNull();
 		assertStrategies(PayloadRootQNameEndpointMapping.class, messageDispatcher.getEndpointMappings());
 		assertStrategies(PayloadEndpointAdapter.class, messageDispatcher.getEndpointAdapters());
 		assertStrategies(SimpleSoapExceptionResolver.class, messageDispatcher.getEndpointExceptionResolvers());
@@ -85,6 +92,7 @@ public class MessageDispatcherServletTest {
 
 	@Test
 	public void testDetectWsdlDefinitions() throws Exception {
+
 		servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
 		servlet.init(config);
 		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
@@ -95,17 +103,19 @@ public class MessageDispatcherServletTest {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
-		XMLUnit.setIgnoreWhitespace(true);
-		assertXMLEqual("Invalid WSDL written", expected, result);
+
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	private static class DetectWebApplicationContext extends StaticWebApplicationContext {
 
 		@Override
 		public void refresh() throws BeansException, IllegalStateException {
+
 			registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
 			registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
 			registerSingleton("simpleExceptionResolver", SimpleSoapExceptionResolver.class);
+
 			super.refresh();
 		}
 	}
@@ -114,9 +124,11 @@ public class MessageDispatcherServletTest {
 
 		@Override
 		public void refresh() throws BeansException, IllegalStateException {
+
 			MutablePropertyValues mpv = new MutablePropertyValues();
 			mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));
 			registerSingleton("definition", SimpleWsdl11Definition.class, mpv);
+
 			super.refresh();
 		}
 	}

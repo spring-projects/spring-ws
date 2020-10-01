@@ -16,11 +16,11 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -34,8 +34,9 @@ public class DelegatingSoapEndpointMappingTest {
 
 	private EndpointMapping mock;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		endpointMapping = new DelegatingSoapEndpointMapping();
 		mock = createMock(EndpointMapping.class);
 		endpointMapping.setDelegate(mock);
@@ -43,6 +44,7 @@ public class DelegatingSoapEndpointMappingTest {
 
 	@Test
 	public void testGetEndpointMapping() throws Exception {
+
 		String role = "http://www.springframework.org/spring-ws/role";
 		endpointMapping.setActorOrRole(role);
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
@@ -52,9 +54,9 @@ public class DelegatingSoapEndpointMappingTest {
 		replay(mock);
 
 		SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) endpointMapping.getEndpoint(context);
-		Assert.assertNotNull("No chain returned", resultChain);
-		Assert.assertEquals("Invalid ampount of roles returned", 1, resultChain.getActorsOrRoles().length);
-		Assert.assertEquals("Invalid role returned", role, resultChain.getActorsOrRoles()[0]);
+
+		assertThat(resultChain).isNotNull();
+		assertThat(resultChain.getActorsOrRoles()).containsExactly(role);
 
 		verify(mock);
 	}

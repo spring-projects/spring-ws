@@ -16,15 +16,16 @@
 
 package org.springframework.ws.soap;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 public abstract class AbstractSoapElementTestCase {
@@ -33,8 +34,9 @@ public abstract class AbstractSoapElementTestCase {
 
 	protected Transformer transformer;
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
+
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		soapElement = createSoapElement();
@@ -43,27 +45,32 @@ public abstract class AbstractSoapElementTestCase {
 	protected abstract SoapElement createSoapElement() throws Exception;
 
 	@Test
-	public void testAttributes() throws Exception {
+	public void testAttributes() {
+
 		QName name = new QName("http://springframework.org/spring-ws", "attribute");
 		String value = "value";
 		soapElement.addAttribute(name, value);
-		Assert.assertEquals("Invalid attribute value", value, soapElement.getAttributeValue(name));
+
+		assertThat(soapElement.getAttributeValue(name)).isEqualTo(value);
+
 		Iterator<QName> allAttributes = soapElement.getAllAttributes();
-		Assert.assertTrue("Iterator is empty", allAttributes.hasNext());
+
+		assertThat(allAttributes.hasNext()).isTrue();
 	}
 
 	@Test
-	public void testAddNamespaceDeclaration() throws Exception {
+	public void testAddNamespaceDeclaration() {
+
 		String prefix = "p";
 		String namespace = "http://springframework.org/spring-ws";
 		soapElement.addNamespaceDeclaration(prefix, namespace);
 	}
 
 	@Test
-	public void testAddDefaultNamespaceDeclaration() throws Exception {
+	public void testAddDefaultNamespaceDeclaration() {
+
 		String prefix = "";
 		String namespace = "http://springframework.org/spring-ws";
 		soapElement.addNamespaceDeclaration(prefix, namespace);
 	}
-
 }

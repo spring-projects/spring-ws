@@ -16,24 +16,22 @@
 
 package org.springframework.xml.xpath;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class XPathExpressionFactoryTest {
 
 	@Test
-	public void testCreateXPathExpression() throws Exception {
+	public void testCreateXPathExpression() {
+
 		XPathExpression expression = XPathExpressionFactory.createXPathExpression("/root");
-		Assert.assertNotNull("No expression returned", expression);
+
+		assertThat(expression).isNotNull();
 	}
 
 	@Test
-	public void testCreateEmptyXPathExpression() throws Exception {
-		try {
-			XPathExpressionFactory.createXPathExpression("");
-			Assert.fail("Should have thrown an Exception");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+	public void testCreateEmptyXPathExpression() {
+		assertThatIllegalArgumentException().isThrownBy(() -> XPathExpressionFactory.createXPathExpression(""));
 	}
 }

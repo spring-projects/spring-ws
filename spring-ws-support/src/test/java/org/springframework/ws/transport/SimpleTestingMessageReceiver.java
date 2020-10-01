@@ -26,8 +26,11 @@ public class SimpleTestingMessageReceiver extends TransformerObjectSupport imple
 
 	@Override
 	public void receive(MessageContext messageContext) throws Exception {
+
 		Assert.notNull(messageContext, "MessageContext is null");
+
 		logger.info("Received " + messageContext.getRequest());
+
 		Transformer transformer = createTransformer();
 		transformer.transform(messageContext.getRequest().getPayloadSource(),
 				messageContext.getResponse().getPayloadResult());

@@ -16,18 +16,17 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTestCase {
 
@@ -35,34 +34,43 @@ public abstract class AbstractPayloadEndpointTestCase extends AbstractEndpointTe
 
 	private Transformer transformer;
 
-	@Before
+	@BeforeEach
 	public void createEndpoint() throws Exception {
+
 		endpoint = createResponseEndpoint();
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
 	public void testNoResponse() throws Exception {
+
 		endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
 		Source resultSource = endpoint.invoke(requestSource);
-		assertNull("Response source returned", resultSource);
+
+		assertThat(resultSource).isNull();
 	}
 
 	@Test
 	public void testNoRequest() throws Exception {
+
 		endpoint = createNoRequestEndpoint();
 		Source resultSource = endpoint.invoke(null);
-		assertNull("Response source returned", resultSource);
+
+		assertThat(resultSource).isNull();
 	}
 
 	@Override
 	protected final void testSource(Source requestSource) throws Exception {
+
 		Source responseSource = endpoint.invoke(requestSource);
-		assertNotNull("No response source returned", responseSource);
+
+		assertThat(responseSource).isNotNull();
+
 		StringResult result = new StringResult();
 		transformer.transform(responseSource, result);
-		assertXMLEqual(RESPONSE, result.toString());
+
+		XmlAssert.assertThat(result.toString()).and(RESPONSE).ignoreWhitespace().areSimilar();
 	}
 
 	protected abstract PayloadEndpoint createNoResponseEndpoint() throws Exception;

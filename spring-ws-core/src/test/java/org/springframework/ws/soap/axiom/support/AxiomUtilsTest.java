@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.axiom.support;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import java.util.Locale;
@@ -33,79 +33,89 @@ import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
 
 public class AxiomUtilsTest {
 
 	private OMElement element;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		OMNamespace namespace = factory.createOMNamespace("http://www.springframework.org", "prefix");
 		element = factory.createOMElement("element", namespace);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
-	public void testToNamespaceDeclared() throws Exception {
+	public void testToNamespaceDeclared() {
+
 		QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-		Assert.assertNotNull("Invalid namespace", namespace);
-		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
+
+		assertThat(namespace).isNotNull();
+		assertThat(namespace.getNamespaceURI()).isEqualTo(qName.getNamespaceURI());
 	}
 
 	@Test
-	public void testToNamespaceUndeclared() throws Exception {
+	public void testToNamespaceUndeclared() {
+
 		QName qName = new QName("http://www.example.com", "localPart");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-		Assert.assertNotNull("Invalid namespace", namespace);
-		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-		Assert.assertFalse("Invalid prefix", "prefix".equals(namespace.getPrefix()));
+
+		assertThat(namespace).isNotNull();
+		assertThat(namespace.getNamespaceURI()).isEqualTo(qName.getNamespaceURI());
+		assertThat(namespace.getPrefix()).isNotEqualTo("prefix");
 	}
 
 	@Test
-	public void testToNamespacePrefixDeclared() throws Exception {
+	public void testToNamespacePrefixDeclared() {
+
 		QName qName = new QName(element.getNamespace().getNamespaceURI(), "localPart", "prefix");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-		Assert.assertNotNull("Invalid namespace", namespace);
-		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-		Assert.assertEquals("Invalid prefix", "prefix", namespace.getPrefix());
+
+		assertThat(namespace).isNotNull();
+		assertThat(namespace.getNamespaceURI()).isEqualTo(qName.getNamespaceURI());
+		assertThat(namespace.getPrefix()).isEqualTo("prefix");
 	}
 
 	@Test
-	public void testToNamespacePrefixUndeclared() throws Exception {
+	public void testToNamespacePrefixUndeclared() {
+
 		QName qName = new QName("http://www.example.com", "localPart", "otherPrefix");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, element);
-		Assert.assertNotNull("Invalid namespace", namespace);
-		Assert.assertEquals("Invalid namespace", qName.getNamespaceURI(), namespace.getNamespaceURI());
-		Assert.assertEquals("Invalid prefix", qName.getPrefix(), namespace.getPrefix());
+
+		assertThat(namespace).isNotNull();
+		assertThat(namespace.getNamespaceURI()).isEqualTo(qName.getNamespaceURI());
+		assertThat(namespace.getPrefix()).isEqualTo(qName.getPrefix());
 	}
 
 	@Test
-	public void testToLanguage() throws Exception {
-		Assert.assertEquals("Invalid conversion", "fr-CA", AxiomUtils.toLanguage(Locale.CANADA_FRENCH));
-		Assert.assertEquals("Invalid conversion", "en", AxiomUtils.toLanguage(Locale.ENGLISH));
+	public void testToLanguage() {
+
+		assertThat(AxiomUtils.toLanguage(Locale.CANADA_FRENCH)).isEqualTo("fr-CA");
+		assertThat(AxiomUtils.toLanguage(Locale.ENGLISH)).isEqualTo("en");
 	}
 
 	@Test
-	public void testToLocale() throws Exception {
-		Assert.assertEquals("Invalid conversion", Locale.CANADA_FRENCH, AxiomUtils.toLocale("fr-CA"));
-		Assert.assertEquals("Invalid conversion", Locale.ENGLISH, AxiomUtils.toLocale("en"));
+	public void testToLocale() {
+
+		assertThat(AxiomUtils.toLocale("fr-CA")).isEqualTo(Locale.CANADA_FRENCH);
+		assertThat(AxiomUtils.toLocale("en")).isEqualTo(Locale.ENGLISH);
 	}
 
 	@Test
 	@SuppressWarnings("Since15")
 	public void testToDocument() throws Exception {
+
 		Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
@@ -118,11 +128,12 @@ public class AxiomUtilsTest {
 
 		Document result = AxiomUtils.toDocument(soapMessage.getSOAPEnvelope());
 
-		assertXMLEqual("Invalid document generated from SOAPEnvelope", expected, result);
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testToEnvelope() throws Exception {
+
 		Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 
 		byte[] buf = FileCopyUtils.copyToByteArray(resource.getFile());
@@ -138,6 +149,6 @@ public class AxiomUtilsTest {
 		envelope.serialize(writer);
 		String result = writer.toString();
 
-		assertXMLEqual("Invalid SOAPEnvelope generated from document", expected, result);
+		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 }

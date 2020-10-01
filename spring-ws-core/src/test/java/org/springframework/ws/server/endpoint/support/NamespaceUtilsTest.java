@@ -16,14 +16,14 @@
 
 package org.springframework.ws.server.endpoint.support;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.reflect.Method;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.Namespaces;
 
@@ -32,19 +32,23 @@ public class NamespaceUtilsTest {
 
 	@Test
 	public void getNamespaceContextMethod() throws NoSuchMethodException {
+
 		Method method = getClass().getMethod("method");
 		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
-		assertEquals("method1", namespaceContext.getNamespaceURI("prefix1"));
-		assertEquals("method2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+
+		assertThat(namespaceContext.getNamespaceURI("prefix1")).isEqualTo("method1");
+		assertThat(namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo("method2");
 
 	}
 
 	@Test
 	public void getNamespaceContextClass() throws NoSuchMethodException {
+
 		Method method = getClass().getMethod("getNamespaceContextClass");
 		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
-		assertEquals("class1", namespaceContext.getNamespaceURI("prefix1"));
-		assertEquals("class2", namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX));
+
+		assertThat(namespaceContext.getNamespaceURI("prefix1")).isEqualTo("class1");
+		assertThat(namespaceContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo("class2");
 
 	}
 

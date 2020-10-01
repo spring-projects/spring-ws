@@ -16,30 +16,32 @@
 
 package org.springframework.ws.soap.soap12;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.AbstractSoapEnvelopeTestCase;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractSoap12EnvelopeTestCase extends AbstractSoapEnvelopeTestCase {
 
 	@Test
-	public void testGetName() throws Exception {
-		assertEquals("Invalid qualified name", new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Envelope"),
-				soapEnvelope.getName());
+	public void testGetName() {
+		assertThat(soapEnvelope.getName()).isEqualTo(new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Envelope"));
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
+
 		StringResult result = new StringResult();
 		transformer.transform(soapEnvelope.getSource(), result);
-		assertXMLEqual("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/>" + "<Body/></Envelope>",
-				result.toString());
+
+		XmlAssert.assertThat(result.toString())
+				.and("<Envelope xmlns='http://www.w3.org/2003/05/soap-envelope'><Header/>" + "<Body/></Envelope>")
+				.ignoreWhitespace().areSimilar();
 	}
 
 }

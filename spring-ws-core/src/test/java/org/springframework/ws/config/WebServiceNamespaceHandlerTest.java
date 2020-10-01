@@ -16,11 +16,12 @@
 
 package org.springframework.ws.config;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointAdapter;
@@ -29,15 +30,17 @@ public class WebServiceNamespaceHandlerTest {
 
 	private ApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
 	}
 
 	@Test
 	public void testMarshallingMethods() throws Exception {
+
 		Map<String, MarshallingMethodEndpointAdapter> result = applicationContext
 				.getBeansOfType(MarshallingMethodEndpointAdapter.class);
-		Assert.assertFalse("no MarshallingMethodEndpointAdapter found", result.isEmpty());
+
+		assertThat(result).isNotEmpty();
 	}
 }

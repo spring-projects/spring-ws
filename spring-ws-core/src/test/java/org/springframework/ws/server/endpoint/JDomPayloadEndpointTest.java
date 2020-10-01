@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -36,13 +36,16 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
 	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+
 		return new AbstractJDomPayloadEndpoint() {
 
 			@Override
 			protected Element invokeInternal(Element requestElement) throws Exception {
-				assertNotNull("No requestElement passed", requestElement);
-				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getName());
-				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+
+				assertThat(requestElement).isNotNull();
+				assertThat(requestElement.getName()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(requestElement.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+
 				return new Element(RESPONSE_ELEMENT, Namespace.getNamespace("tns", NAMESPACE_URI));
 			}
 		};
@@ -50,11 +53,13 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
 	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+
 		return new AbstractJDomPayloadEndpoint() {
 
 			@Override
 			protected Element invokeInternal(Element requestElement) throws Exception {
-				assertNull("RequestElement passed", requestElement);
+
+				assertThat(requestElement).isNull();
 				return null;
 			}
 		};

@@ -16,12 +16,13 @@
 
 package org.springframework.ws.client.support.destination;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -29,19 +30,20 @@ public class Wsdl11DestinationProviderTest {
 
 	private Wsdl11DestinationProvider provider;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		provider = new Wsdl11DestinationProvider();
 	}
 
 	@Test
 	public void testSimple() throws URISyntaxException {
+
 		Resource wsdl = new ClassPathResource("simple.wsdl", getClass());
 		provider.setWsdl(wsdl);
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/myService"), result);
+		assertThat(result).isEqualTo(new URI("http://example.com/myService"));
 	}
 
 	@Test
@@ -51,7 +53,7 @@ public class Wsdl11DestinationProviderTest {
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap11"), result);
+		assertThat(result).isEqualTo(new URI("http://example.com/soap11"));
 	}
 
 	@Test
@@ -62,6 +64,6 @@ public class Wsdl11DestinationProviderTest {
 
 		URI result = provider.getDestination();
 
-		Assert.assertEquals("Invalid URI returned", new URI("http://example.com/soap12"), result);
+		assertThat(result).isEqualTo(new URI("http://example.com/soap12"));
 	}
 }

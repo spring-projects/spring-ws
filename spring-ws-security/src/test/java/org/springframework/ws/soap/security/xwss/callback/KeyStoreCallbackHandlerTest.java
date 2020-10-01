@@ -16,20 +16,21 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class KeyStoreCallbackHandlerTest {
 
 	private KeyStoreCallbackHandler handler;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
 		handler = new KeyStoreCallbackHandler();
 	}
 
 	@Test
-	public void testLoadDefaultTrustStore() throws Exception {
+	public void testLoadDefaultTrustStore() {
+
 		System.setProperty("javax.net.ssl.trustStore", "/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/");
 		handler.loadDefaultTrustStore();
 	}

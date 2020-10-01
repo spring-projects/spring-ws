@@ -1,11 +1,9 @@
 package org.springframework.ws.soap.security.wss4j2;
 
-import java.io.IOException;
 import java.security.cert.X509Certificate;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.crypto.Crypto;
 import org.apache.wss4j.common.crypto.CryptoType;
@@ -15,7 +13,7 @@ import org.apache.wss4j.common.saml.bean.KeyInfoBean;
 import org.apache.wss4j.common.saml.bean.SubjectBean;
 import org.apache.wss4j.common.saml.bean.Version;
 import org.apache.wss4j.common.saml.builder.SAML2Constants;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -28,6 +26,7 @@ public abstract class Wss4jMessageInterceptorSamlTestCase extends Wss4jTestCase 
 
 	@Override
 	protected void onSetup() throws Exception {
+
 		interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("SAMLTokenSigned");
 		interceptor.setValidationActions("SAMLTokenSigned Signature");
@@ -47,11 +46,11 @@ public abstract class Wss4jMessageInterceptorSamlTestCase extends Wss4jTestCase 
 		interceptor.setValidationSignatureCrypto(crypto);
 		interceptor.setSecurementSamlCallbackHandler(getSamlCalbackHandler(crypto, userCertificate));
 		interceptor.afterPropertiesSet();
-
 	}
 
 	@Test
 	public void testAddSAML() throws Exception {
+
 		interceptor.setSecurementPassword("123456");
 		interceptor.setSecurementUsername("rsaKey");
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
@@ -78,16 +77,18 @@ public abstract class Wss4jMessageInterceptorSamlTestCase extends Wss4jTestCase 
 		private X509Certificate userCertificate;
 
 		public SamlCallbackHandler(Crypto crypto, X509Certificate userCertificate) {
+
 			this.crypto = crypto;
 			this.userCertificate = userCertificate;
 		}
 
 		@Override
-		public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+		public void handle(Callback[] callbacks) {
 
-			for (int i = 0; i < callbacks.length; i++) {
-				if (callbacks[i] instanceof SAMLCallback) {
-					SAMLCallback callback = (SAMLCallback) callbacks[i];
+			for (Callback value : callbacks) {
+				if (value instanceof SAMLCallback) {
+
+					SAMLCallback callback = (SAMLCallback) value;
 					callback.setSamlVersion(Version.SAML_20);
 					callback.setIssuerCrypto(crypto);
 					callback.setIssuerKeyName("rsaKey");
@@ -102,7 +103,5 @@ public abstract class Wss4jMessageInterceptorSamlTestCase extends Wss4jTestCase 
 				}
 			}
 		}
-
 	}
-
 }

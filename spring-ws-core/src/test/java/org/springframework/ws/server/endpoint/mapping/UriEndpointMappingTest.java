@@ -16,14 +16,14 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.net.URI;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -37,19 +37,21 @@ public class UriEndpointMappingTest {
 
 	private MessageContext context;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		mapping = new UriEndpointMapping();
 		context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
-	@After
+	@AfterEach
 	public void clearContext() {
 		TransportContextHolder.setTransportContext(null);
 	}
 
 	@Test
 	public void getLookupKeyForMessage() throws Exception {
+
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
 
@@ -58,13 +60,14 @@ public class UriEndpointMappingTest {
 
 		replay(connectionMock);
 
-		Assert.assertEquals("Invalid lookup key", uri.toString(), mapping.getLookupKeyForMessage(context));
+		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(uri.toString());
 
 		verify(connectionMock);
 	}
 
 	@Test
 	public void getLookupKeyForMessagePath() throws Exception {
+
 		mapping.setUsePath(true);
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
@@ -75,14 +78,15 @@ public class UriEndpointMappingTest {
 
 		replay(connectionMock);
 
-		Assert.assertEquals("Invalid lookup key", "/foo/bar", mapping.getLookupKeyForMessage(context));
+		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo("/foo/bar");
 
 		verify(connectionMock);
 	}
 
 	@Test
-	public void testValidateLookupKey() throws Exception {
-		Assert.assertTrue("URI not valid", mapping.validateLookupKey("http://example.com/services"));
-		Assert.assertFalse("URI not valid", mapping.validateLookupKey("some string"));
+	public void testValidateLookupKey() {
+
+		assertThat(mapping.validateLookupKey("http://example.com/services")).isTrue();
+		assertThat(mapping.validateLookupKey("some string")).isFalse();
 	}
 }

@@ -29,6 +29,7 @@ public class SaajSoap12WebServiceTemplateIntegrationTest extends AbstractSoap12W
 
 	@Override
 	public SoapMessageFactory createMessageFactory() throws Exception {
+
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		return new SaajSoapMessageFactory(messageFactory);
 	}

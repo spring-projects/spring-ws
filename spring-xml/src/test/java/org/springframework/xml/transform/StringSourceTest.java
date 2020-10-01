@@ -16,25 +16,28 @@
 
 package org.springframework.xml.transform;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
 public class StringSourceTest {
 
 	@Test
 	public void testStringSource() throws TransformerException {
+
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		String content = "<prefix:content xmlns:prefix='namespace'/>";
 		DOMResult result = new DOMResult();
 		transformer.transform(new StringSource(content), result);
 		Element rootElement = (Element) result.getNode().getFirstChild();
-		Assert.assertEquals("Invalid local name", "content", rootElement.getLocalName());
-		Assert.assertEquals("Invalid prefix", "prefix", rootElement.getPrefix());
-		Assert.assertEquals("Invalid namespace", "namespace", rootElement.getNamespaceURI());
+
+		assertThat(rootElement.getLocalName()).isEqualTo("content");
+		assertThat(rootElement.getPrefix()).isEqualTo("prefix");
+		assertThat(rootElement.getNamespaceURI()).isEqualTo("namespace");
 	}
 }

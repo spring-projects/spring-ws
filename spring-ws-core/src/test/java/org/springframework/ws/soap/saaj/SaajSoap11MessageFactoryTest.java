@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.saaj;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
@@ -36,19 +36,21 @@ public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTe
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		return new SaajSoapMessageFactory(messageFactory);
 	}
 
 	@Test
 	public void properties() throws IOException {
+
 		Map<String, ?> properties = Collections.singletonMap(SOAPMessage.WRITE_XML_DECLARATION, "true");
 		((SaajSoapMessageFactory) messageFactory).setMessageProperties(properties);
 		SoapMessage soapMessage = (SoapMessage) messageFactory.createWebServiceMessage();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		soapMessage.writeTo(os);
 		String result = os.toString("UTF-8");
-		assertTrue("XML declaration not written", result.startsWith("<?xml version=\"1.0\""));
-	}
 
+		assertThat(result).startsWith("<?xml version=\"1.0\"");
+	}
 }

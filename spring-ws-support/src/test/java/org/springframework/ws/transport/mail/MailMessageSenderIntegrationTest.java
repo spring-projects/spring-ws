@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.mail;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.net.URI;
 
 import javax.xml.namespace.QName;
@@ -23,10 +25,9 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPMessage;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -40,8 +41,9 @@ public class MailMessageSenderIntegrationTest {
 
 	private static final String SOAP_ACTION = "http://springframework.org/DoIt";
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		messageSender = new MailMessageSender();
 		messageSender.setFrom("Spring-WS SOAP Client <client@example.com>");
 		messageSender.setTransportUri("smtp://smtp.example.com");
@@ -50,28 +52,25 @@ public class MailMessageSenderIntegrationTest {
 		messageSender.afterPropertiesSet();
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	public void tearDown() {
 		Mailbox.clearAll();
 	}
 
 	@Test
 	public void testSendAndReceiveQueueNoResponse() throws Exception {
-		WebServiceConnection connection = null;
-		try {
-			URI mailTo = new URI("mailto:server@example.com?subject=SOAP%20Test");
-			connection = messageSender.createConnection(mailTo);
+
+		URI mailTo = new URI("mailto:server@example.com?subject=SOAP%20Test");
+
+		try (WebServiceConnection connection = messageSender.createConnection(mailTo)) {
+
 			SOAPMessage saajMessage = messageFactory.createMessage();
 			saajMessage.getSOAPBody().addBodyElement(new QName("http://springframework.org", "test"));
 			SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
-			Assert.assertEquals("No mail message sent", 1, Mailbox.get("server@example.com").size());
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
+
+			assertThat(Mailbox.get("server@example.com")).hasSize(1);
 		}
 	}
-
 }

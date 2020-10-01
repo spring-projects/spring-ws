@@ -16,23 +16,26 @@
 
 package org.springframework.ws;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public abstract class AbstractWebServiceMessageFactoryTestCase {
 
 	protected WebServiceMessageFactory messageFactory;
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
 		messageFactory = createMessageFactory();
 	}
 
 	@Test
 	public void testCreateEmptyMessage() throws Exception {
+
 		WebServiceMessage message = messageFactory.createWebServiceMessage();
-		Assert.assertNotNull("WebServiceMessage is null", message);
+
+		assertThat(message).isNotNull();
 	}
 
 	protected abstract WebServiceMessageFactory createMessageFactory() throws Exception;

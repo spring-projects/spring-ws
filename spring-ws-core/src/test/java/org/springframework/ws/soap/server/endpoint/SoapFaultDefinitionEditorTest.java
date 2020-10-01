@@ -16,71 +16,80 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SoapFaultDefinitionEditorTest {
 
 	private SoapFaultDefinitionEditor editor;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		editor = new SoapFaultDefinitionEditor();
 	}
 
 	@Test
-	public void testSetAsTextNoLocale() throws Exception {
+	public void testSetAsTextNoLocale() {
+
 		editor.setAsText("Server, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-		Assert.assertNotNull("fault not set", definition);
-		Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-		Assert.assertEquals("Invalid fault string locale", Locale.ENGLISH, definition.getLocale());
+
+		assertThat(definition).isNotNull();
+		assertThat(definition.getFaultCode()).isEqualTo(new QName("Server"));
+		assertThat(definition.getFaultStringOrReason()).isEqualTo("Server error");
+		assertThat(definition.getLocale()).isEqualTo(Locale.ENGLISH);
 	}
 
 	@Test
-	public void testSetAsTextLocale() throws Exception {
+	public void testSetAsTextLocale() {
+
 		editor.setAsText("Server, Server error, nl");
 		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-		Assert.assertNotNull("fault not set", definition);
-		Assert.assertEquals("Invalid fault code", new QName("Server"), definition.getFaultCode());
-		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
-		Assert.assertEquals("Invalid fault string locale", new Locale("nl"), definition.getLocale());
+
+		assertThat(definition).isNotNull();
+		assertThat(definition.getFaultCode()).isEqualTo(new QName("Server"));
+		assertThat(definition.getFaultStringOrReason()).isEqualTo("Server error");
+		assertThat(definition.getLocale()).isEqualTo(new Locale("nl"));
 	}
 
 	@Test
-	public void testSetAsTextSender() throws Exception {
+	public void testSetAsTextSender() {
+
 		editor.setAsText("SENDER, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-		Assert.assertNotNull("fault not set", definition);
-		Assert.assertEquals("Invalid fault code", SoapFaultDefinition.SENDER, definition.getFaultCode());
-		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+
+		assertThat(definition).isNotNull();
+		assertThat(definition.getFaultCode()).isEqualTo(SoapFaultDefinition.SENDER);
+		assertThat(definition.getFaultStringOrReason()).isEqualTo("Server error");
 	}
 
 	@Test
-	public void testSetAsTextReceiver() throws Exception {
+	public void testSetAsTextReceiver() {
+
 		editor.setAsText("RECEIVER, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
-		Assert.assertNotNull("fault not set", definition);
-		Assert.assertEquals("Invalid fault code", SoapFaultDefinition.RECEIVER, definition.getFaultCode());
-		Assert.assertEquals("Invalid fault string", "Server error", definition.getFaultStringOrReason());
+
+		assertThat(definition).isNotNull();
+		assertThat(definition.getFaultCode()).isEqualTo(SoapFaultDefinition.RECEIVER);
+		assertThat(definition.getFaultStringOrReason()).isEqualTo("Server error");
 	}
 
 	@Test
-	public void testSetAsTextIllegalArgument() throws Exception {
-		try {
-			editor.setAsText("SOAP-ENV:Server");
-		} catch (IllegalArgumentException ex) {}
+	public void testSetAsTextIllegalArgument() {
+		editor.setAsText("SOAP-ENV:Server");
 	}
 
 	@Test
-	public void testSetAsTextEmpty() throws Exception {
+	public void testSetAsTextEmpty() {
+
 		editor.setAsText("");
-		Assert.assertNull("definition not set to null", editor.getValue());
+
+		assertThat(editor.getValue()).isNull();
 	}
 }

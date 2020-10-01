@@ -16,6 +16,7 @@
 
 package org.springframework.xml.transform;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.io.ByteArrayInputStream;
@@ -26,6 +27,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,8 +46,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.XMLInputFactoryUtils;
@@ -63,18 +64,23 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testGetDocument() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
-		Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(document)));
+
+		assertThat(TraxUtils.getDocument(new DOMSource(document))).isSameAs(document);
+
 		Element element = document.createElement("element");
 		document.appendChild(element);
-		Assert.assertSame("Invalid document", document, TraxUtils.getDocument(new DOMSource(element)));
+
+		assertThat(TraxUtils.getDocument(new DOMSource(element))).isSameAs(document);
 	}
 
 	@Test
 	public void testDoWithDomSource() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
@@ -91,6 +97,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithDomResult() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
@@ -107,6 +114,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithSaxSource() throws Exception {
+
 		XMLReader reader = XMLReaderFactory.createXMLReader();
 		InputSource inputSource = new InputSource();
 
@@ -122,6 +130,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithSaxResult() throws Exception {
+
 		ContentHandler contentHandler = new DefaultHandler();
 		LexicalHandler lexicalHandler = new DefaultHandler2();
 
@@ -139,6 +148,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxSourceEventReader() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
 
@@ -154,6 +164,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxResultEventWriter() throws Exception {
+
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
 
@@ -169,6 +180,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxSourceStreamReader() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
 
@@ -184,6 +196,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStaxResultStreamWriter() throws Exception {
+
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
 
@@ -199,7 +212,8 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStreamSourceInputStream() throws Exception {
-		byte[] xml = "<element/>".getBytes("UTF-8");
+
+		byte[] xml = "<element/>".getBytes(StandardCharsets.UTF_8);
 		InputStream inputStream = new ByteArrayInputStream(xml);
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
@@ -214,6 +228,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStreamResultOutputStream() throws Exception {
+
 		OutputStream outputStream = new ByteArrayOutputStream();
 
 		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
@@ -228,6 +243,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStreamSourceReader() throws Exception {
+
 		String xml = "<element/>";
 		Reader reader = new StringReader(xml);
 
@@ -243,6 +259,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithStreamResultWriter() throws Exception {
+
 		Writer writer = new StringWriter();
 
 		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
@@ -257,6 +274,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithSystemIdSource() throws Exception {
+
 		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);
@@ -271,6 +289,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithSystemIdResult() throws Exception {
+
 		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
 		TraxUtils.ResultCallback mock = createMock(TraxUtils.ResultCallback.class);
@@ -285,6 +304,7 @@ public class TraxUtilsTest {
 
 	@Test
 	public void testDoWithInvalidSource() throws Exception {
+
 		Source source = new Source() {
 
 			public void setSystemId(String systemId) {}
@@ -294,12 +314,7 @@ public class TraxUtilsTest {
 			}
 		};
 
-		try {
-			TraxUtils.doWithSource(source, null);
-			Assert.fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> TraxUtils.doWithSource(source, null));
 	}
 
 	@Test
@@ -313,11 +328,6 @@ public class TraxUtilsTest {
 			}
 		};
 
-		try {
-			TraxUtils.doWithResult(result, null);
-			Assert.fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException ex) {
-			// expected
-		}
+		assertThatIllegalArgumentException().isThrownBy(() -> TraxUtils.doWithResult(result, null));
 	}
 }

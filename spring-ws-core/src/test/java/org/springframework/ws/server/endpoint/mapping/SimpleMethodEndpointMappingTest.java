@@ -16,9 +16,10 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -28,37 +29,43 @@ public class SimpleMethodEndpointMappingTest {
 
 	private SimpleMethodEndpointMapping mapping;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		mapping = new SimpleMethodEndpointMapping();
 		mapping.setMethodPrefix("prefix");
 		mapping.setMethodSuffix("Suffix");
+
 		MyBean bean = new MyBean();
+
 		mapping.setEndpoints(new Object[] { bean });
 		mapping.afterPropertiesSet();
 	}
 
 	@Test
-	public void testRegistration() throws Exception {
-		Assert.assertNotNull("Endpoint not registered", mapping.lookupEndpoint("MyRequest"));
-		Assert.assertNull("Endpoint registered", mapping.lookupEndpoint("request"));
+	public void testRegistration() {
+
+		assertThat(mapping.lookupEndpoint("MyRequest")).isNotNull();
+		assertThat(mapping.lookupEndpoint("request")).isNull();
 	}
 
 	@Test
 	public void testGetLookupKeyForMessageNoNamespace() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage("<MyRequest/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-		String result = mapping.getLookupKeyForMessage(messageContext);
-		Assert.assertEquals("Invalid lookup key", "MyRequest", result);
+
+		assertThat(mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
 	}
 
 	@Test
 	public void testGetLookupKeyForMessageNamespace() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<MyRequest xmlns='http://springframework.org/spring-ws/' />");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-		String result = mapping.getLookupKeyForMessage(messageContext);
-		Assert.assertEquals("Invalid lookup key", "MyRequest", result);
+
+		assertThat(mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
 	}
 
 	private static class MyBean {

@@ -16,21 +16,19 @@
 
 package org.springframework.ws.soap;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Locale;
 
 import javax.xml.transform.dom.DOMResult;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCase {
 
@@ -38,6 +36,7 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
 	@Override
 	protected final SoapElement createSoapElement() throws Exception {
+
 		soapBody = createSoapBody();
 		return soapBody;
 	}
@@ -46,13 +45,16 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 
 	@Test
 	public void testPayload() throws Exception {
+
 		String payload = "<payload xmlns='http://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+
 		assertPayloadEqual(payload);
 	}
 
 	@Test
 	public void testGetPayloadResultTwice() throws Exception {
+
 		String payload = "<payload xmlns='http://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
@@ -60,26 +62,31 @@ public abstract class AbstractSoapBodyTestCase extends AbstractSoapElementTestCa
 		transformer.transform(soapBody.getSource(), domResult);
 		Element bodyElement = ((Document) domResult.getNode()).getDocumentElement();
 		NodeList children = bodyElement.getChildNodes();
-		assertEquals("Invalid amount of child nodes", 1, children.getLength());
+
+		assertThat(children.getLength()).isEqualTo(1);
 	}
 
 	@Test
-	public void testNoFault() throws Exception {
-		assertFalse("body has fault", soapBody.hasFault());
+	public void testNoFault() {
+		assertThat(soapBody.hasFault()).isFalse();
 	}
 
 	@Test
 	public void testAddFaultWithExistingPayload() throws Exception {
+
 		StringSource contents = new StringSource("<payload xmlns='http://www.springframework.org' />");
 		transformer.transform(contents, soapBody.getPayloadResult());
 		soapBody.addMustUnderstandFault("faultString", Locale.ENGLISH);
-		assertTrue("Body has no fault", soapBody.hasFault());
+
+		assertThat(soapBody.hasFault()).isTrue();
 	}
 
 	protected void assertPayloadEqual(String expectedPayload) throws Exception {
+
 		StringResult result = new StringResult();
 		transformer.transform(soapBody.getPayloadSource(), result);
-		assertXMLEqual("Invalid payload contents", expectedPayload, result.toString());
+
+		XmlAssert.assertThat(result.toString()).and(expectedPayload).ignoreWhitespace().areSimilar();
 	}
 
 }

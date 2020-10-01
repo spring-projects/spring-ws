@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -40,8 +40,9 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 	private StaticApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("mapping", SoapActionAnnotationMethodEndpointMapping.class);
 		applicationContext.registerSingleton("endpoint", MyEndpoint.class);
@@ -51,6 +52,7 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 	@Test
 	public void registrationSingle() throws Exception {
+
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction");
 		WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
@@ -58,16 +60,20 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
 		EndpointInvocationChain chain = mapping.getEndpoint(context);
-		Assert.assertNotNull("MethodEndpoint not registered", chain);
+
+		assertThat(chain).isNotNull();
+
 		Method doIt = MyEndpoint.class.getMethod("doIt", new Class[0]);
 		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
-		Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
 		verify(requestMock, factoryMock);
 	}
 
 	@Test
 	public void registrationMultiple() throws Exception {
+
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction1");
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction2");
@@ -79,18 +85,21 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
 		EndpointInvocationChain chain = mapping.getEndpoint(context);
-		Assert.assertNotNull("MethodEndpoint not registered", chain);
-		Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+		assertThat(chain).isNotNull();
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
 		chain = mapping.getEndpoint(context);
-		Assert.assertNotNull("MethodEndpoint not registered", chain);
-		Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+		assertThat(chain).isNotNull();
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
 		verify(requestMock, factoryMock);
 	}
 
 	@Test
 	public void registrationRepeatable() throws Exception {
+
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction3");
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction4");
@@ -102,12 +111,14 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
 		EndpointInvocationChain chain = mapping.getEndpoint(context);
-		Assert.assertNotNull("MethodEndpoint not registered", chain);
-		Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+		assertThat(chain).isNotNull();
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
 		chain = mapping.getEndpoint(context);
-		Assert.assertNotNull("MethodEndpoint not registered", chain);
-		Assert.assertEquals("Invalid endpoint registered", expected, chain.getEndpoint());
+
+		assertThat(chain).isNotNull();
+		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
 		verify(requestMock, factoryMock);
 	}

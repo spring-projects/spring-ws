@@ -16,9 +16,9 @@
 
 package org.springframework.ws.test.support;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.support.StaticApplicationContext;
 
@@ -26,37 +26,45 @@ public class MockStrategiesHelperTest {
 
 	@Test
 	public void none() {
+
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
 		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-		assertNull(helper.getStrategy(IMyBean.class));
+
+		assertThat(helper.getStrategy(IMyBean.class)).isNull();
 	}
 
 	@Test
 	public void one() {
+
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("myBean", MyBean.class);
 
 		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-		assertNotNull(helper.getStrategy(IMyBean.class));
+		assertThat(helper.getStrategy(IMyBean.class)).isNotNull();
 	}
 
-	@Test(expected = BeanInitializationException.class)
+	@Test
 	public void many() {
-		StaticApplicationContext applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("myBean1", MyBean.class);
-		applicationContext.registerSingleton("myBean2", MyBean.class);
 
-		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-		helper.getStrategy(IMyBean.class);
+		assertThatExceptionOfType(BeanInitializationException.class).isThrownBy(() -> {
+
+			StaticApplicationContext applicationContext = new StaticApplicationContext();
+			applicationContext.registerSingleton("myBean1", MyBean.class);
+			applicationContext.registerSingleton("myBean2", MyBean.class);
+
+			MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
+			helper.getStrategy(IMyBean.class);
+		});
 	}
 
 	@Test
 	public void noneWithDefault() {
+
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
 		MockStrategiesHelper helper = new MockStrategiesHelper(applicationContext);
-		assertNotNull(helper.getStrategy(IMyBean.class, MyBean.class));
+		assertThat(helper.getStrategy(IMyBean.class, MyBean.class)).isNotNull();
 	}
 
 	public interface IMyBean {

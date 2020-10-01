@@ -18,7 +18,7 @@ package org.springframework.ws.soap.axiom;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
@@ -27,7 +27,8 @@ import org.springframework.xml.transform.StringSource;
 public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
 	@Override
-	protected SoapBody createSoapBody() throws Exception {
+	protected SoapBody createSoapBody() {
+
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP12Factory();
 		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
 		return axiomSoapMessage.getSoapBody();
@@ -35,6 +36,7 @@ public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
 	@Test
 	public void testPayloadNoCaching() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);
 		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
@@ -44,6 +46,7 @@ public class AxiomSoap12BodyTest extends AbstractSoap12BodyTestCase {
 
 		String payload = "<payload xmlns='http://www.springframework.org' />";
 		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+
 		assertPayloadEqual(payload);
 	}
 }

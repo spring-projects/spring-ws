@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Message;
 import javax.wsdl.Operation;
@@ -23,9 +25,8 @@ import javax.wsdl.PortType;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SuffixBasedPortTypesProviderTest {
 
@@ -33,8 +34,9 @@ public class SuffixBasedPortTypesProviderTest {
 
 	private Definition definition;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		provider = new SuffixBasedPortTypesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
 		definition = factory.newDefinition();
@@ -42,6 +44,7 @@ public class SuffixBasedPortTypesProviderTest {
 
 	@Test
 	public void testAddPortTypes() throws Exception {
+
 		String namespace = "http://springframework.org/spring-ws";
 		definition.addNamespace("tns", namespace);
 		definition.setTargetNamespace(namespace);
@@ -62,12 +65,14 @@ public class SuffixBasedPortTypesProviderTest {
 		provider.addPortTypes(definition);
 
 		PortType portType = definition.getPortType(new QName(namespace, "PortType"));
-		Assert.assertNotNull("No port type created", portType);
+
+		assertThat(portType).isNotNull();
 
 		Operation operation = portType.getOperation("Operation", "OperationRequest", "OperationResponse");
-		Assert.assertNotNull("No operation created", operation);
-		Assert.assertNotNull("No input created", operation.getInput());
-		Assert.assertNotNull("No output created", operation.getOutput());
-		Assert.assertFalse("No fault created", operation.getFaults().isEmpty());
+
+		assertThat(operation).isNotNull();
+		assertThat(operation.getInput()).isNotNull();
+		assertThat(operation.getOutput()).isNotNull();
+		assertThat(operation.getFaults()).isNotEmpty();
 	}
 }

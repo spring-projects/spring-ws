@@ -16,21 +16,19 @@
 
 package org.springframework.ws.soap.soap11;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
-import org.junit.Test;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
+import org.xmlunit.assertj.XmlAssert;
 
 public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTestCase {
 
@@ -38,25 +36,28 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 
 	@Test
 	public void testGetType() {
-		assertTrue("Invalid type returned", soapHeader instanceof Soap11Header);
+		assertThat(soapHeader).isInstanceOf(Soap11Header.class);
 	}
 
 	@Test
-	public void testGetName() throws Exception {
-		assertEquals("Invalid qualified name", new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Header"),
-				soapHeader.getName());
+	public void testGetName() {
+		assertThat(soapHeader.getName()).isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Header"));
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
+
 		StringResult result = new StringResult();
 		transformer.transform(soapHeader.getSource(), result);
-		assertXMLEqual("Invalid contents of header",
-				"<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />", result.toString());
+
+		XmlAssert.assertThat(result.toString())
+				.and("<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />").ignoreWhitespace()
+				.areSimilar();
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessActors() throws Exception {
+	public void testExamineHeaderElementsToProcessActors() {
+
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("role1");
@@ -68,16 +69,22 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
 		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
 				.examineHeaderElementsToProcess(new String[] { "role1" });
-		assertNotNull("header element iterator is null", iterator);
-		assertTrue("header element iterator has no elements", iterator.hasNext());
+
+		assertThat(iterator).isNotNull();
+		assertThat(iterator.hasNext()).isTrue();
+
 		checkHeaderElement(iterator.next());
-		assertTrue("header element iterator has no elements", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
+
 		checkHeaderElement(iterator.next());
-		assertFalse("header element iterator has too many elements", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessNoActors() throws Exception {
+	public void testExamineHeaderElementsToProcessNoActors() {
+
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("");
@@ -88,18 +95,25 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
 		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(new String[0]);
-		assertNotNull("header element iterator is null", iterator);
-		assertTrue("header element iterator has no elements", iterator.hasNext());
+
+		assertThat(iterator).isNotNull();
+		assertThat(iterator.hasNext()).isTrue();
+
 		checkHeaderElement(iterator.next());
-		assertTrue("header element iterator has no elements", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isTrue();
+
 		checkHeaderElement(iterator.next());
-		assertFalse("header element iterator has too many elements", iterator.hasNext());
+
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	private void checkHeaderElement(SoapHeaderElement headerElement) {
+
 		QName name = headerElement.getName();
-		assertTrue("Invalid name on header element", new QName(NAMESPACE, "localName1", PREFIX).equals(name)
-				|| new QName(NAMESPACE, "localName3", PREFIX).equals(name));
+
+		assertThat(name).is(new Condition<>(value -> value.equals(new QName(NAMESPACE, "localName1", PREFIX))
+				|| value.equals(new QName(NAMESPACE, "localName3", PREFIX)), ""));
 	}
 
 }

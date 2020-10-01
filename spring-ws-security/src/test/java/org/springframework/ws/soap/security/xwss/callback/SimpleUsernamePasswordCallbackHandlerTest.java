@@ -16,9 +16,10 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.sun.xml.wss.impl.callback.PasswordCallback;
 import com.sun.xml.wss.impl.callback.UsernameCallback;
@@ -27,8 +28,9 @@ public class SimpleUsernamePasswordCallbackHandlerTest {
 
 	private SimpleUsernamePasswordCallbackHandler handler;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
+
 		handler = new SimpleUsernamePasswordCallbackHandler();
 		handler.setUsername("Bert");
 		handler.setPassword("Ernie");
@@ -36,15 +38,19 @@ public class SimpleUsernamePasswordCallbackHandlerTest {
 
 	@Test
 	public void testUsernameCallback() throws Exception {
+
 		UsernameCallback usernameCallback = new UsernameCallback();
 		handler.handleInternal(usernameCallback);
-		Assert.assertEquals("Invalid username", "Bert", usernameCallback.getUsername());
+
+		assertThat(usernameCallback.getUsername()).isEqualTo("Bert");
 	}
 
 	@Test
 	public void testPasswordCallback() throws Exception {
+
 		PasswordCallback passwordCallback = new PasswordCallback();
 		handler.handleInternal(passwordCallback);
-		Assert.assertEquals("Invalid username", "Ernie", passwordCallback.getPassword());
+
+		assertThat(passwordCallback.getPassword()).isEqualTo("Ernie");
 	}
 }

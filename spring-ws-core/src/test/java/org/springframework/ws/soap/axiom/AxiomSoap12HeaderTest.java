@@ -24,12 +24,14 @@ import org.springframework.ws.soap.soap12.AbstractSoap12HeaderTestCase;
 public class AxiomSoap12HeaderTest extends AbstractSoap12HeaderTestCase {
 
 	@Override
-	protected SoapHeader createSoapHeader() throws Exception {
+	protected SoapHeader createSoapHeader() {
+
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP12Factory();
 		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
+
 		return axiomSoapMessage.getSoapHeader();
 	}
 
 	@Override
-	public void testGetResult() throws Exception {}
+	public void testGetResult() {}
 }

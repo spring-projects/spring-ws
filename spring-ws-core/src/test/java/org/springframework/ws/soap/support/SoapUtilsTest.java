@@ -16,61 +16,73 @@
 
 package org.springframework.ws.soap.support;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 public class SoapUtilsTest {
 
 	@Test
-	public void testExtractActionFromContentType() throws Exception {
+	public void testExtractActionFromContentType() {
+
 		String soapAction = "http://springframework.org/spring-ws/Action";
 
 		String contentType = "application/soap+xml; action=" + soapAction;
 		String result = SoapUtils.extractActionFromContentType(contentType);
-		Assert.assertEquals("Invalid SOAP action", soapAction, result);
+
+		assertThat(result).isEqualTo(soapAction);
 
 		contentType = "application/soap+xml; action	  = " + soapAction;
 		result = SoapUtils.extractActionFromContentType(contentType);
-		Assert.assertEquals("Invalid SOAP action", soapAction, result);
+
+		assertThat(result).isEqualTo(soapAction);
 
 		contentType = "application/soap+xml; action=" + soapAction + " ; charset=UTF-8";
 		result = SoapUtils.extractActionFromContentType(contentType);
-		Assert.assertEquals("Invalid SOAP action", soapAction, result);
+
+		assertThat(result).isEqualTo(soapAction);
 
 		contentType = "application/soap+xml; charset=UTF-8; action=" + soapAction;
 		result = SoapUtils.extractActionFromContentType(contentType);
-		Assert.assertEquals("Invalid SOAP action", soapAction, result);
+
+		assertThat(result).isEqualTo(soapAction);
 	}
 
 	@Test
-	public void testEscapeAction() throws Exception {
+	public void testEscapeAction() {
+
 		String result = SoapUtils.escapeAction("action");
-		Assert.assertEquals("Invalid SOAP action", "\"action\"", result);
+
+		assertThat(result).isEqualTo("\"action\"");
 
 		result = SoapUtils.escapeAction("\"action\"");
-		Assert.assertEquals("Invalid SOAP action", "\"action\"", result);
+
+		assertThat(result).isEqualTo("\"action\"");
 
 		result = SoapUtils.escapeAction("");
-		Assert.assertEquals("Invalid SOAP action", "\"\"", result);
+
+		assertThat(result).isEqualTo("\"\"");
 
 		result = SoapUtils.escapeAction(null);
-		Assert.assertEquals("Invalid SOAP action", "\"\"", result);
+
+		assertThat(result).isEqualTo("\"\"");
 
 	}
 
 	@Test
-	public void testSetActionInContentType() throws Exception {
+	public void testSetActionInContentType() {
+
 		String soapAction = "http://springframework.org/spring-ws/Action";
 		String contentType = "application/soap+xml";
 
 		String result = SoapUtils.setActionInContentType(contentType, soapAction);
-		Assert.assertEquals("Invalid SOAP action", soapAction, SoapUtils.extractActionFromContentType(result));
+
+		assertThat(SoapUtils.extractActionFromContentType(result)).isEqualTo(soapAction);
 
 		String anotherSoapAction = "http://springframework.org/spring-ws/AnotherAction";
 		String contentTypeWithAction = "application/soap+xml; action=http://springframework.org/spring-ws/Action";
 		result = SoapUtils.setActionInContentType(contentTypeWithAction, anotherSoapAction);
-		Assert.assertEquals("Invalid SOAP action", anotherSoapAction, SoapUtils.extractActionFromContentType(result));
 
+		assertThat(SoapUtils.extractActionFromContentType(result)).isEqualTo(anotherSoapAction);
 	}
-
 }

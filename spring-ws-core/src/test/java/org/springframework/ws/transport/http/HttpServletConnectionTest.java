@@ -16,8 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 
@@ -28,9 +27,8 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ws.soap.SoapVersion;
@@ -39,6 +37,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.xmlunit.assertj.XmlAssert;
 
 public class HttpServletConnectionTest {
 
@@ -61,8 +60,9 @@ public class HttpServletConnectionTest {
 
 	private TransformerFactory transformerFactory;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		httpServletRequest = new MockHttpServletRequest();
 		httpServletResponse = new MockHttpServletResponse();
 		connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
@@ -73,26 +73,33 @@ public class HttpServletConnectionTest {
 
 	@Test
 	public void receive() throws Exception {
+
 		byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
 		httpServletRequest.addHeader("Content-Type", "text/xml");
 		httpServletRequest.addHeader("Content-Length", Integer.toString(bytes.length));
 		httpServletRequest.addHeader(HEADER_NAME, HEADER_VALUE);
 		httpServletRequest.setContent(bytes);
 		SaajSoapMessage message = (SaajSoapMessage) connection.receive(messageFactory);
-		Assert.assertNotNull("No message received", message);
+
+		assertThat(message).isNotNull();
+
 		StringResult result = new StringResult();
 		Transformer transformer = transformerFactory.newTransformer();
 		transformer.transform(message.getPayloadSource(), result);
-		assertXMLEqual("Invalid message", CONTENT, result.toString());
+
+		XmlAssert.assertThat(result.toString()).and(CONTENT).ignoreWhitespace().areIdentical();
+
 		SOAPMessage saajMessage = message.getSaajMessage();
 		String[] headerValues = saajMessage.getMimeHeaders().getHeader(HEADER_NAME);
-		Assert.assertNotNull("Response has no header", headerValues);
-		assertEquals("Response has invalid header", 1, headerValues.length);
-		assertEquals("Response has invalid header values", HEADER_VALUE, headerValues[0]);
+
+		assertThat(headerValues).isNotNull();
+		assertThat(headerValues).hasSize(1);
+		assertThat(headerValues[0]).isEqualTo(HEADER_VALUE);
 	}
 
 	@Test
 	public void send() throws Exception {
+
 		SaajSoapMessage message = messageFactory.createWebServiceMessage();
 		SOAPMessage saajMessage = message.getSaajMessage();
 		MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
@@ -102,23 +109,24 @@ public class HttpServletConnectionTest {
 
 		connection.send(message);
 
-		assertEquals("Invalid header", HEADER_VALUE, httpServletResponse.getHeader(HEADER_NAME));
-		assertXMLEqual("Invalid content", SOAP_CONTENT, httpServletResponse.getContentAsString());
+		assertThat(httpServletResponse.getHeader(HEADER_NAME)).isEqualTo(HEADER_VALUE);
+		XmlAssert.assertThat(httpServletResponse.getContentAsString()).and(SOAP_CONTENT).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void faultCodes() throws IOException {
+
 		connection.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
-		assertEquals(500, httpServletResponse.getStatus());
+		assertThat(httpServletResponse.getStatus()).isEqualTo(500);
 
 		connection.setFaultCode(SoapVersion.SOAP_11.getServerOrReceiverFaultName());
-		assertEquals(500, httpServletResponse.getStatus());
+		assertThat(httpServletResponse.getStatus()).isEqualTo(500);
 
 		connection.setFaultCode(SoapVersion.SOAP_12.getClientOrSenderFaultName());
-		assertEquals(400, httpServletResponse.getStatus());
+		assertThat(httpServletResponse.getStatus()).isEqualTo(400);
 
 		connection.setFaultCode(SoapVersion.SOAP_12.getServerOrReceiverFaultName());
-		assertEquals(500, httpServletResponse.getStatus());
+		assertThat(httpServletResponse.getStatus()).isEqualTo(500);
 	}
 
 }

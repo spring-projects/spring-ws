@@ -16,56 +16,62 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import nu.xom.Element;
 
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
-	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+	protected PayloadEndpoint createNoResponseEndpoint() {
+
 		return new AbstractXomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
+			protected Element invokeInternal(Element requestElement) {
 				return null;
 			}
 		};
 	}
 
 	@Override
-	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+	protected PayloadEndpoint createResponseEndpoint() {
+
 		return new AbstractXomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
-				assertNotNull("No requestElement passed", requestElement);
-				assertEquals("Invalid request element", REQUEST_ELEMENT, requestElement.getLocalName());
-				assertEquals("Invalid request element", NAMESPACE_URI, requestElement.getNamespaceURI());
+			protected Element invokeInternal(Element requestElement) {
+
+				assertThat(requestElement).isNotNull();
+				assertThat(requestElement.getLocalName()).isEqualTo(REQUEST_ELEMENT);
+				assertThat(requestElement.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+
 				return new Element(RESPONSE_ELEMENT, NAMESPACE_URI);
 			}
 		};
 	}
 
 	@Override
-	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+	protected PayloadEndpoint createNoRequestEndpoint() {
+
 		return new AbstractXomPayloadEndpoint() {
 
 			@Override
 			protected Element invokeInternal(Element requestElement) throws Exception {
-				assertNull("RequestElement passed", requestElement);
+
+				assertThat(requestElement).isNull();
 				return null;
 			}
 		};
 	}
 
 	@Override
-	public void testStaxSourceEventReader() throws Exception {
+	public void testStaxSourceEventReader() {
 		// overriden, because XOM doesn't not support it
 	}
 
 	@Override
-	public void testStaxSourceStreamReader() throws Exception {
+	public void testStaxSourceStreamReader() {
 		// overriden, because XOM doesn't not support it
 	}
 

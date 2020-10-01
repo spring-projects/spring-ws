@@ -16,19 +16,21 @@
 
 package org.springframework.ws.test.client;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ErrorResponseCreatorTest {
 
 	@Test
 	public void callback() throws IOException {
+
 		String errorMessage = "Error message";
 		ErrorResponseCreator callback = new ErrorResponseCreator(errorMessage);
 		callback.createResponse(null, null, null);
-		assertEquals(errorMessage, callback.getErrorMessage());
+
+		assertThat(callback.getErrorMessage()).isEqualTo(errorMessage);
 	}
 }

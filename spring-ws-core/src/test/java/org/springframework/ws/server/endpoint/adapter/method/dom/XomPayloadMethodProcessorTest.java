@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import nu.xom.Element;
 
@@ -45,10 +45,13 @@ public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
 
 	@Override
 	protected void testArgument(Object argument, MethodParameter parameter) {
-		assertTrue("argument not a element", argument instanceof Element);
+
+		assertThat(argument).isInstanceOf(Element.class);
+
 		Element node = (Element) argument;
-		assertEquals("Invalid namespace", NAMESPACE_URI, node.getNamespaceURI());
-		assertEquals("Invalid local name", LOCAL_NAME, node.getLocalName());
+
+		assertThat(node.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+		assertThat(node.getLocalName()).isEqualTo(LOCAL_NAME);
 	}
 
 	@Override

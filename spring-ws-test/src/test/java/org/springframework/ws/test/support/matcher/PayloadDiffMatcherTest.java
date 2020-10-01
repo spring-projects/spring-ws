@@ -16,11 +16,12 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import javax.xml.soap.MessageFactory;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -29,7 +30,8 @@ import org.springframework.xml.transform.StringSource;
 public class PayloadDiffMatcherTest {
 
 	@Test
-	public void match() throws Exception {
+	public void match() {
+
 		String xml = "<element xmlns='http://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
@@ -41,25 +43,33 @@ public class PayloadDiffMatcherTest {
 		verify(message);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void nonMatch() throws Exception {
-		String actual = "<element1 xmlns='http://example.com'/>";
-		WebServiceMessage message = createMock(WebServiceMessage.class);
-		expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
-		replay(message);
+	@Test
+	public void nonMatch() {
 
-		String expected = "<element2 xmlns='http://example.com'/>";
-		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
-		matcher.match(message);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			String actual = "<element1 xmlns='http://example.com'/>";
+			WebServiceMessage message = createMock(WebServiceMessage.class);
+			expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
+			replay(message);
+
+			String expected = "<element2 xmlns='http://example.com'/>";
+			PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
+			matcher.match(message);
+		});
 	}
 
-	@Test(expected = AssertionError.class)
-	public void noPayload() throws Exception {
-		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
-		MessageFactory messageFactory = MessageFactory.newInstance();
-		SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
+	@Test
+	public void noPayload() {
 
-		matcher.createDiff(soapMessage);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
+			MessageFactory messageFactory = MessageFactory.newInstance();
+			SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
+
+			matcher.createDiff(soapMessage);
+		});
 	}
 
 }

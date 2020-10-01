@@ -16,18 +16,18 @@
 
 package org.springframework.ws.test.client.integration;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.ws.test.client.RequestMatchers.*;
 import static org.springframework.ws.test.client.ResponseCreators.*;
 
 import javax.xml.transform.Source;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.test.client.MockWebServiceServer;
 import org.springframework.xml.transform.StringSource;
 
@@ -37,7 +37,7 @@ import org.springframework.xml.transform.StringSource;
  *
  * @author Arjen Poutsma
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration("integration-test.xml")
 public class ClientIntegrationTest {
 
@@ -45,13 +45,14 @@ public class ClientIntegrationTest {
 
 	private MockWebServiceServer mockServer;
 
-	@Before
-	public void createServer() throws Exception {
+	@BeforeEach
+	public void createServer() {
 		mockServer = MockWebServiceServer.createServer(client);
 	}
 
 	@Test
-	public void basic() throws Exception {
+	public void basic() {
+
 		Source expectedRequestPayload = new StringSource(
 				"<customerCountRequest xmlns='http://springframework.org/spring-ws'>" + "<customerName>John Doe</customerName>"
 						+ "</customerCountRequest>");
@@ -61,9 +62,9 @@ public class ClientIntegrationTest {
 		mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
 		int result = client.getCustomerCount();
-		assertEquals(10, result);
+
+		assertThat(result).isEqualTo(10);
 
 		mockServer.verify();
 	}
-
 }

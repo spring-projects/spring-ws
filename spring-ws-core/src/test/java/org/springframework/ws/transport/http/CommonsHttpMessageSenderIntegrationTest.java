@@ -18,18 +18,16 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MessageFactory;
 
 import org.apache.commons.httpclient.URIException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
@@ -49,7 +47,8 @@ public class CommonsHttpMessageSenderIntegrationTest
 	}
 
 	@Test
-	public void testMaxConnections() throws URISyntaxException, URIException {
+	public void testMaxConnections() throws URIException {
+
 		CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
 		messageSender.setMaxTotalConnections(2);
 		Map<String, String> maxConnectionsPerHost = new HashMap<String, String>();
@@ -62,13 +61,16 @@ public class CommonsHttpMessageSenderIntegrationTest
 
 	@Test
 	public void testContextClose() throws Exception {
+
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		int port = FreePortScanner.getFreePort();
 		Server jettyServer = new Server(port);
 		Context jettyContext = new Context(jettyServer, "/");
 		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
 		jettyServer.start();
+
 		WebServiceConnection connection = null;
+
 		try {
 
 			StaticApplicationContext appContext = new StaticApplicationContext();
@@ -83,6 +85,7 @@ public class CommonsHttpMessageSenderIntegrationTest
 			connection.send(new SaajSoapMessage(messageFactory.createMessage()));
 			connection.receive(new SaajSoapMessageFactory(messageFactory));
 		} finally {
+
 			if (connection != null) {
 				try {
 					connection.close();
@@ -101,11 +104,10 @@ public class CommonsHttpMessageSenderIntegrationTest
 	private class EchoServlet extends HttpServlet {
 
 		@Override
-		protected void doPost(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
+		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 			response.setContentType("text/xml");
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
-
 		}
 	}
 

@@ -29,19 +29,14 @@ public abstract class AbstractXwssMessageInterceptorKeyStoreTestCase extends Abs
 
 	@Override
 	protected void onSetup() throws Exception {
+
 		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		InputStream is = null;
-		try {
-			is = getClass().getResourceAsStream("test-keystore.jks");
+
+		try (InputStream is = getClass().getResourceAsStream("test-keystore.jks")) {
 			keyStore.load(is, "password".toCharArray());
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
+
 		certificate = (X509Certificate) keyStore.getCertificate("alias");
 		privateKey = (PrivateKey) keyStore.getKey("alias", "password".toCharArray());
-
 	}
-
 }

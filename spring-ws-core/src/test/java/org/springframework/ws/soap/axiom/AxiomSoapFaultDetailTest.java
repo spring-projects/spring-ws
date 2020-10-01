@@ -16,14 +16,15 @@
 
 package org.springframework.ws.soap.axiom;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.StringReader;
 
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
 
@@ -48,8 +49,9 @@ public class AxiomSoapFaultDetailTest {
 
 	private AxiomSoapMessage succeedingMessage;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(new StringReader(FAILING_FAULT));
 		SOAPMessage soapMessage = builder.getSOAPMessage();
 
@@ -63,24 +65,32 @@ public class AxiomSoapFaultDetailTest {
 	}
 
 	@Test
-	public void testGetDetailEntriesWorksWithWhitespaceNodes() throws Exception {
-		SoapFault fault = failingMessage.getSoapBody().getFault();
-		Assert.assertNotNull("Fault is null", fault);
-		Assert.assertNotNull("Fault detail is null", fault.getFaultDetail());
-		SoapFaultDetail detail = fault.getFaultDetail();
-		Assert.assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
-		detail.getDetailEntries().next();
+	public void testGetDetailEntriesWorksWithWhitespaceNodes() {
 
+		SoapFault fault = failingMessage.getSoapBody().getFault();
+
+		assertThat(fault).isNotNull();
+		assertThat(fault.getFaultDetail()).isNotNull();
+
+		SoapFaultDetail detail = fault.getFaultDetail();
+
+		assertThat(detail.getDetailEntries().hasNext()).isTrue();
+
+		detail.getDetailEntries().next();
 	}
 
 	@Test
-	public void testGetDetailEntriesWorksWithoutWhitespaceNodes() throws Exception {
+	public void testGetDetailEntriesWorksWithoutWhitespaceNodes() {
+
 		SoapFault fault = succeedingMessage.getSoapBody().getFault();
-		Assert.assertNotNull("Fault is null", fault);
-		Assert.assertNotNull("Fault detail is null", fault.getFaultDetail());
+
+		assertThat(fault).isNotNull();
+		assertThat(fault.getFaultDetail()).isNotNull();
+
 		SoapFaultDetail detail = fault.getFaultDetail();
-		Assert.assertTrue("No next detail entry present", detail.getDetailEntries().hasNext());
+
+		assertThat(detail.getDetailEntries().hasNext()).isTrue();
+
 		detail.getDetailEntries().next();
 	}
-
 }

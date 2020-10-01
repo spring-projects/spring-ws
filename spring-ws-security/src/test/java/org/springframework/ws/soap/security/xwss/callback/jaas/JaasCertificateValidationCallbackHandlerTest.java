@@ -16,13 +16,14 @@
 
 package org.springframework.ws.soap.security.xwss.callback.jaas;
 
+import static org.assertj.core.api.Assertions.*;
+
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 import com.sun.xml.wss.impl.callback.CertificateValidationCallback;
@@ -33,30 +34,29 @@ public class JaasCertificateValidationCallbackHandlerTest {
 
 	private CertificateValidationCallback callback;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		System.setProperty("java.security.auth.login.config", getClass().getResource("jaas.config").toString());
 		callbackHandler = new JaasCertificateValidationCallbackHandler();
 		callbackHandler.setLoginContextName("Certificate");
 		KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-		InputStream is = null;
-		try {
-			is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks").getInputStream();
+
+		try (InputStream is = new ClassPathResource("/org/springframework/ws/soap/security/xwss/test-keystore.jks")
+				.getInputStream()) {
 			keyStore.load(is, "password".toCharArray());
-		} finally {
-			if (is != null) {
-				is.close();
-			}
 		}
+
 		X509Certificate certificate = (X509Certificate) keyStore.getCertificate("alias");
 		callback = new CertificateValidationCallback(certificate);
 	}
 
 	@Test
 	public void testValidateCertificateValid() throws Exception {
+
 		callbackHandler.handleInternal(callback);
 		boolean authenticated = callback.getResult();
-		Assert.assertTrue("Not authenticated", authenticated);
-	}
 
+		assertThat(authenticated).isTrue();
+	}
 }

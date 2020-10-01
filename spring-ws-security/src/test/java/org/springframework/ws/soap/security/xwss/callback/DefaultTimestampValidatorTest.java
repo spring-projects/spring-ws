@@ -16,8 +16,8 @@
 
 package org.springframework.ws.soap.security.xwss.callback;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.sun.xml.wss.impl.callback.TimestampValidationCallback;
 
@@ -25,13 +25,14 @@ public class DefaultTimestampValidatorTest {
 
 	private DefaultTimestampValidator validator;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
 		validator = new DefaultTimestampValidator();
 	}
 
 	@Test
 	public void testValidate() throws Exception {
+
 		TimestampValidationCallback.Request request = new TimestampValidationCallback.UTCTimestampRequest(
 				"2006-09-25T20:42:50Z", "2107-09-25T20:42:50Z", 100, Long.MAX_VALUE);
 		validator.validate(request);
@@ -39,6 +40,7 @@ public class DefaultTimestampValidatorTest {
 
 	@Test
 	public void testValidateNoExpired() throws Exception {
+
 		TimestampValidationCallback.Request request = new TimestampValidationCallback.UTCTimestampRequest(
 				"2006-09-25T20:42:50Z", null, 100, Long.MAX_VALUE);
 		validator.validate(request);

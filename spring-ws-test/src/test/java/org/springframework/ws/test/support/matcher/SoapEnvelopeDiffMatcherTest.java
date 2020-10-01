@@ -16,11 +16,12 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import javax.xml.transform.dom.DOMResult;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerHelper;
@@ -30,6 +31,7 @@ public class SoapEnvelopeDiffMatcherTest {
 
 	@Test
 	public void match() throws Exception {
+
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
 		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
@@ -50,26 +52,29 @@ public class SoapEnvelopeDiffMatcherTest {
 		verify(message);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void nonMatch() throws Exception {
-		StringBuilder xmlBuilder = new StringBuilder();
-		xmlBuilder.append("<?xml version='1.0'?>");
-		xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
-		xmlBuilder.append("<soap:Header><header xmlns='http://example.com'/></soap:Header>");
-		xmlBuilder.append("<soap:Body><payload%s xmlns='http://example.com'/></soap:Body>");
-		xmlBuilder.append("</soap:Envelope>");
-		String xml = xmlBuilder.toString();
-		String actual = String.format(xml, "1");
-		DOMResult result = new DOMResult();
-		TransformerHelper transformerHelper = new TransformerHelper();
-		transformerHelper.transform(new StringSource(actual), result);
-		SoapMessage message = createMock(SoapMessage.class);
-		expect(message.getDocument()).andReturn((Document) result.getNode()).once();
-		replay(message);
+	@Test
+	public void nonMatch() {
 
-		String expected = String.format(xml, "2");
-		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
-		matcher.match(message);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			StringBuilder xmlBuilder = new StringBuilder();
+			xmlBuilder.append("<?xml version='1.0'?>");
+			xmlBuilder.append("<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>");
+			xmlBuilder.append("<soap:Header><header xmlns='http://example.com'/></soap:Header>");
+			xmlBuilder.append("<soap:Body><payload%s xmlns='http://example.com'/></soap:Body>");
+			xmlBuilder.append("</soap:Envelope>");
+			String xml = xmlBuilder.toString();
+			String actual = String.format(xml, "1");
+			DOMResult result = new DOMResult();
+			TransformerHelper transformerHelper = new TransformerHelper();
+			transformerHelper.transform(new StringSource(actual), result);
+			SoapMessage message = createMock(SoapMessage.class);
+			expect(message.getDocument()).andReturn((Document) result.getNode()).once();
+			replay(message);
+
+			String expected = String.format(xml, "2");
+			SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
+			matcher.match(message);
+		});
 	}
-
 }

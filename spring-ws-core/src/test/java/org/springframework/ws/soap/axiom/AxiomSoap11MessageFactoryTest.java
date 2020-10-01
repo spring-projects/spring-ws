@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.axiom;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,9 +24,7 @@ import java.io.InputStream;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 
-import org.custommonkey.xmlunit.XMLAssert;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -35,6 +33,7 @@ import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+import org.xmlunit.assertj.XmlAssert;
 
 public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
 
@@ -42,6 +41,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 
 		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
@@ -50,24 +50,27 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 	}
 
 	@Override
-	public void testCreateSoapMessageIllFormedXml() throws Exception {
+	public void doTestCreateSoapMessageIllFormedXml() {
+
 		// Axiom parses the contents of XML lazily, so it will not throw an InvalidXmlException when a message is parsed
 		throw new InvalidXmlException(null, null);
 	}
 
 	@Test
 	public void testGetCharsetEncoding() {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 
-		assertEquals("Invalid charset", "utf-8", messageFactory.getCharSetEncoding("text/html; charset=utf-8"));
-		assertEquals("Invalid charset", "utf-8",
-				messageFactory.getCharSetEncoding("application/xop+xml;type=text/xml; charset=utf-8"));
-		assertEquals("Invalid charset", "utf-8",
-				messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""));
+		assertThat(messageFactory.getCharSetEncoding("text/html; charset=utf-8")).isEqualTo("utf-8");
+		assertThat(messageFactory.getCharSetEncoding("application/xop+xml;type=text/xml; charset=utf-8"))
+				.isEqualTo("utf-8");
+		assertThat(messageFactory.getCharSetEncoding("application/xop+xml;type=\"text/xml; charset=utf-8\""))
+				.isEqualTo("utf-8");
 	}
 
 	@Test
 	public void testRepetitiveReadCaching() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(true);
 		messageFactory.afterPropertiesSet();
@@ -84,6 +87,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 
 	@Test
 	public void testRepetitiveReadNoCaching() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);
 		messageFactory.afterPropertiesSet();
@@ -95,6 +99,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 
 		StringResult result = new StringResult();
 		transformer.transform(message.getPayloadSource(), result);
+
 		try {
 			transformer.transform(message.getPayloadSource(), result);
 			fail("TransformerException expected");
@@ -108,6 +113,7 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 	 */
 	@Test
 	public void testSWS502() throws Exception {
+
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);
 		messageFactory.afterPropertiesSet();
@@ -126,15 +132,13 @@ public class AxiomSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryT
 		StringResult result = new StringResult();
 		transformer.transform(message.getPayloadSource(), result);
 
-		XMLUnit.setIgnoreWhitespace(true);
 		String expectedPayload = "<ns1:sendMessageResponse xmlns:ns1='urn:Sole' xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' soapenv:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>"
 				+ "<sendMessageReturn xsi:type='soapenc:string' xmlns:soapenc='http://schemas.xmlsoap.org/soap/encoding/'>"
 				+ "<![CDATA[<?xml version='1.0' encoding='UTF-8'?>" + "<PDresponse>" + "<isStatusOK>true</isStatusOK>"
 				+ "<status>0</status>"
 				+ "<payLoad><![CDATA[<?xml version='1.0' encoding='UTF-8'?><response>ok</response>]]]]>><![CDATA[</payLoad>"
 				+ "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
-		XMLAssert.assertXMLEqual(expectedPayload, result.toString());
 
+		XmlAssert.assertThat(result.toString()).and(expectedPayload).ignoreWhitespace().areIdentical();
 	}
-
 }

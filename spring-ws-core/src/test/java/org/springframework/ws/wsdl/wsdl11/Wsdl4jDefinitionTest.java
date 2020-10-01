@@ -16,7 +16,7 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.InputStream;
 
@@ -29,14 +29,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xmlunit.assertj.XmlAssert;
 
 public class Wsdl4jDefinitionTest {
 
@@ -44,31 +43,37 @@ public class Wsdl4jDefinitionTest {
 
 	private Transformer transformer;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
-		XMLUnit.setIgnoreWhitespace(true);
+
 		WSDLFactory factory = WSDLFactory.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
 		InputStream is = getClass().getResourceAsStream("complete.wsdl");
+
 		try {
 			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
 			definition = new Wsdl4jDefinition(wsdl4jDefinition);
 		} finally {
 			is.close();
 		}
+
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
+
 		Source source = definition.getSource();
-		Assert.assertNotNull("Source is null", source);
+
+		assertThat(source).isNotNull();
+
 		DOMResult result = new DOMResult();
 		transformer.transform(source, result);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("complete.wsdl"));
-		assertXMLEqual(expected, (Document) result.getNode());
+
+		XmlAssert.assertThat(result.getNode()).and(expected).ignoreWhitespace().areIdentical();
 	}
 }

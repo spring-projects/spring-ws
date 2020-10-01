@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -50,17 +50,22 @@ public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcesso
 
 	@Override
 	protected void testArgument(Object argument, MethodParameter parameter) {
-		assertTrue("argument not a element", argument instanceof Element);
+
+		assertThat(argument).isInstanceOf(Element.class);
+
 		Element element = (Element) argument;
-		assertEquals("Invalid namespace", NAMESPACE_URI, element.getNamespaceURI());
-		assertEquals("Invalid local name", LOCAL_NAME, element.getLocalName());
+
+		assertThat(element.getNamespaceURI()).isEqualTo(NAMESPACE_URI);
+		assertThat(element.getLocalName()).isEqualTo(LOCAL_NAME);
 	}
 
 	@Override
 	protected Element getReturnValue(MethodParameter returnType) throws ParserConfigurationException {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
+
 		return document.createElementNS(NAMESPACE_URI, LOCAL_NAME);
 	}
 

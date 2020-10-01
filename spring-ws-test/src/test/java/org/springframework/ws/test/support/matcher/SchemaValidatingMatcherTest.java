@@ -16,12 +16,13 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
@@ -37,8 +38,9 @@ public class SchemaValidatingMatcherTest {
 
 	private WebServiceMessage message;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
+
 		message = createMock(WebServiceMessage.class);
 		schema = new ClassPathResource("schemaValidatingMatcherTest.xsd", SchemaValidatingMatcherTest.class);
 		schema1 = new ClassPathResource("schemaValidatingMatcherTest-1.xsd", SchemaValidatingMatcherTest.class);
@@ -47,23 +49,9 @@ public class SchemaValidatingMatcherTest {
 
 	@Test
 	public void singleSchemaMatch() throws IOException, AssertionError {
+
 		expect(message.getPayloadSource()).andReturn(
 				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
-
-		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
-
-		replay(message);
-
-		matcher.match(message);
-
-		verify(message);
-	}
-
-	@Test(expected = AssertionError.class)
-	public void singleSchemaNonMatch() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(
-				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
-				.times(2);
 
 		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
@@ -75,7 +63,27 @@ public class SchemaValidatingMatcherTest {
 	}
 
 	@Test
+	public void singleSchemaNonMatch() throws AssertionError {
+
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			expect(message.getPayloadSource()).andReturn(
+					new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+					.times(2);
+
+			SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
+
+			replay(message);
+
+			matcher.match(message);
+
+			verify(message);
+		});
+	}
+
+	@Test
 	public void multipleSchemaMatch() throws IOException, AssertionError {
+
 		expect(message.getPayloadSource()).andReturn(
 				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
 
@@ -88,48 +96,60 @@ public class SchemaValidatingMatcherTest {
 		verify(message);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void multipleSchemaNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(
-				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
-				.times(2);
+	@Test
+	public void multipleSchemaNotOk() throws AssertionError {
 
-		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-		replay(message);
+			expect(message.getPayloadSource()).andReturn(
+					new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+					.times(2);
 
-		matcher.match(message);
+			SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
-		verify(message);
+			replay(message);
+
+			matcher.match(message);
+
+			verify(message);
+		});
 	}
 
-	@Test(expected = AssertionError.class)
-	public void multipleSchemaDifferentOrderNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(
-				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
-				.times(2);
+	@Test
+	public void multipleSchemaDifferentOrderNotOk() throws AssertionError {
 
-		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-		replay(message);
+			expect(message.getPayloadSource()).andReturn(
+					new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+					.times(2);
 
-		matcher.match(message);
+			SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema1, schema2);
 
-		verify(message);
+			replay(message);
+
+			matcher.match(message);
+
+			verify(message);
+		});
 	}
 
-	@Test(expected = AssertionError.class)
-	public void xmlValidatorNotOk() throws IOException, AssertionError {
-		expect(message.getPayloadSource()).andReturn(
-				new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
-				.times(2);
+	@Test
+	public void xmlValidatorNotOk() throws AssertionError {
 
-		SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-		replay(message);
+			expect(message.getPayloadSource()).andReturn(
+					new StringSource("<test xmlns=\"http://www.example.org/schema\"><number>a</number><text>text</text></test>"))
+					.times(2);
 
-		matcher.match(message);
+			SchemaValidatingMatcher matcher = new SchemaValidatingMatcher(schema);
 
-		verify(message);
+			replay(message);
+
+			matcher.match(message);
+
+			verify(message);
+		});
 	}
 }

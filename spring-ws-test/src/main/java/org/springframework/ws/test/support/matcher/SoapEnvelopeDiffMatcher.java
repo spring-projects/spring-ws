@@ -48,12 +48,14 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	}
 
 	public SoapEnvelopeDiffMatcher(Source expected) {
+
 		Assert.notNull(expected, "'expected' must not be null");
 		this.expected = expected;
 	}
 
 	@Override
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
+
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
 		Diff diff = new Diff(expectedDocument, actualDocument);
@@ -61,6 +63,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	}
 
 	private Document createDocumentFromSource(Source source) {
+
 		try {
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(source, result);

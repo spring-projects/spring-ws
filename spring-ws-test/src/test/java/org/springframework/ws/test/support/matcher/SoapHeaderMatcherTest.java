@@ -16,14 +16,15 @@
 
 package org.springframework.ws.test.support.matcher;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -34,14 +35,16 @@ public class SoapHeaderMatcherTest {
 
 	private QName expectedHeaderName;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
+
 		expectedHeaderName = new QName("http://example.com", "header");
 		matcher = new SoapHeaderMatcher(expectedHeaderName);
 	}
 
 	@Test
 	public void match() throws Exception {
+
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		saajMessage.getSOAPHeader().addHeaderElement(expectedHeaderName);
@@ -50,20 +53,28 @@ public class SoapHeaderMatcherTest {
 		matcher.match(soapMessage);
 	}
 
-	@Test(expected = AssertionError.class)
-	public void nonMatch() throws Exception {
-		MessageFactory messageFactory = MessageFactory.newInstance();
-		SOAPMessage saajMessage = messageFactory.createMessage();
-		SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
+	@Test
+	public void nonMatch() {
 
-		matcher.match(soapMessage);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			MessageFactory messageFactory = MessageFactory.newInstance();
+			SOAPMessage saajMessage = messageFactory.createMessage();
+			SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
+
+			matcher.match(soapMessage);
+		});
 	}
 
-	@Test(expected = AssertionError.class)
-	public void nonSoap() throws Exception {
-		WebServiceMessage message = createMock(WebServiceMessage.class);
+	@Test
+	public void nonSoap() {
 
-		matcher.match(message);
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			WebServiceMessage message = createMock(WebServiceMessage.class);
+
+			matcher.match(message);
+		});
 	}
 
 }

@@ -20,8 +20,8 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
 
@@ -36,8 +36,9 @@ public class WebServiceMessageMatcherAdapterTest {
 
 	private WebServiceMessageMatcherAdapter adapter;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
+
 		message = createMock(WebServiceMessage.class);
 		adaptee = createMock(WebServiceMessageMatcher.class);
 		adapter = new WebServiceMessageMatcherAdapter(adaptee);
@@ -45,6 +46,7 @@ public class WebServiceMessageMatcherAdapterTest {
 
 	@Test
 	public void match() throws IOException {
+
 		adaptee.match(message);
 
 		replay(message, adaptee);

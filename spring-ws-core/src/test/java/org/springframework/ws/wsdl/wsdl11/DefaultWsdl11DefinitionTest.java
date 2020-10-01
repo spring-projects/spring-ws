@@ -16,7 +16,7 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,9 +24,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -43,19 +42,20 @@ public class DefaultWsdl11DefinitionTest {
 
 	private DocumentBuilder documentBuilder;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		definition = new DefaultWsdl11Definition();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
 	public void testSingle() throws Exception {
+
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
@@ -73,12 +73,12 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
 
-		assertXMLEqual("Invalid WSDL built", expected, result);
-
+		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testInclude() throws Exception {
+
 		ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
@@ -95,11 +95,13 @@ public class DefaultWsdl11DefinitionTest {
 
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
-		assertXMLEqual("Invalid WSDL built", expected, result);
+
+		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testImport() throws Exception {
+
 		ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
@@ -116,11 +118,13 @@ public class DefaultWsdl11DefinitionTest {
 
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
-		assertXMLEqual("Invalid WSDL built", expected, result);
+
+		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testSoap11And12() throws Exception {
+
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
@@ -140,8 +144,6 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
 
-		assertXMLEqual("Invalid WSDL built", expected, result);
-
+		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
-
 }

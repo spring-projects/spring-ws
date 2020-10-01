@@ -24,9 +24,11 @@ import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTestCase;
 public class AxiomSoap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {
 
 	@Override
-	protected SoapEnvelope createSoapEnvelope() throws Exception {
+	protected SoapEnvelope createSoapEnvelope() {
+
 		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
 		AxiomSoapMessage axiomSoapMessage = new AxiomSoapMessage(axiomFactory);
+
 		return axiomSoapMessage.getEnvelope();
 	}
 }

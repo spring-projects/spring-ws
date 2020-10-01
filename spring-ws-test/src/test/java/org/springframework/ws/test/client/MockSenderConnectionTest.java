@@ -16,37 +16,45 @@
 
 package org.springframework.ws.test.client;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.ws.test.client.ResponseCreators.*;
 
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.xml.transform.StringSource;
 
 public class MockSenderConnectionTest {
 
 	@Test
 	public void error() throws IOException {
+
 		String testErrorMessage = "Test Error Message";
 		MockSenderConnection connection = new MockSenderConnection();
 		connection.andRespond(withError(testErrorMessage));
-		assertTrue(connection.hasError());
-		assertEquals(testErrorMessage, connection.getErrorMessage());
+
+		assertThat(connection.hasError()).isTrue();
+		assertThat(connection.getErrorMessage()).isEqualTo(testErrorMessage);
 	}
 
 	@Test
 	public void normal() throws IOException {
+
 		MockSenderConnection connection = new MockSenderConnection();
 		connection.andRespond(withPayload(new StringSource("<response/>")));
-		assertFalse(connection.hasError());
-		assertNull(connection.getErrorMessage());
+
+		assertThat(connection.hasError()).isFalse();
+		assertThat(connection.getErrorMessage()).isNull();
 	}
 
-	@Test(expected = AssertionError.class)
-	public void noRequestMatchers() throws IOException {
-		MockSenderConnection connection = new MockSenderConnection();
-		connection.andRespond(withPayload(new StringSource("<response/>")));
-		connection.send(null);
+	@Test
+	public void noRequestMatchers() {
+
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+
+			MockSenderConnection connection = new MockSenderConnection();
+			connection.andRespond(withPayload(new StringSource("<response/>")));
+			connection.send(null);
+		});
 	}
 }

@@ -1,11 +1,11 @@
 package org.springframework.ws.config.annotation;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -25,8 +25,9 @@ public class WsConfigurerAdapterTest {
 
 	private ApplicationContext applicationContext;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
+
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
 		applicationContext.refresh();
@@ -36,37 +37,46 @@ public class WsConfigurerAdapterTest {
 
 	@Test
 	public void interceptors() {
+
 		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
-		assertEquals(0, endpointMapping.getOrder());
+
+		assertThat(endpointMapping.getOrder()).isEqualTo(0);
 
 		EndpointInterceptor[] interceptors = endpointMapping.getInterceptors();
-		assertEquals(1, interceptors.length);
-		assertTrue(interceptors[0] instanceof MyInterceptor);
+
+		assertThat(interceptors).hasSize(1);
+		assertThat(interceptors[0]).isInstanceOf(MyInterceptor.class);
 	}
 
 	@Test
 	public void argumentResolvers() {
+
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
 		List<MethodArgumentResolver> argumentResolvers = endpointAdapter.getCustomMethodArgumentResolvers();
-		assertEquals(1, argumentResolvers.size());
-		assertTrue(argumentResolvers.get(0) instanceof MyMethodArgumentResolver);
+
+		assertThat(argumentResolvers).hasSize(1);
+		assertThat(argumentResolvers.get(0)).isInstanceOf(MyMethodArgumentResolver.class);
 
 		argumentResolvers = endpointAdapter.getMethodArgumentResolvers();
-		assertFalse(argumentResolvers.isEmpty());
+
+		assertThat(argumentResolvers).isNotEmpty();
 	}
 
 	@Test
 	public void returnValueHandlers() {
+
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 
 		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getCustomMethodReturnValueHandlers();
-		assertEquals(1, returnValueHandlers.size());
-		assertTrue(returnValueHandlers.get(0) instanceof MyReturnValueHandler);
+
+		assertThat(returnValueHandlers).hasSize(1);
+		assertThat(returnValueHandlers.get(0)).isInstanceOf(MyReturnValueHandler.class);
 
 		returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
-		assertFalse(returnValueHandlers.isEmpty());
+
+		assertThat(returnValueHandlers).isNotEmpty();
 	}
 
 	@Configuration
@@ -115,5 +125,4 @@ public class WsConfigurerAdapterTest {
 		public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
 				throws Exception {}
 	}
-
 }

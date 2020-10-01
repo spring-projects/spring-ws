@@ -16,11 +16,12 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
+import static org.assertj.core.api.Assertions.*;
+
 import javax.xml.namespace.QName;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -30,28 +31,32 @@ public class PayloadRootQNameEndpointMappingTest {
 
 	private PayloadRootQNameEndpointMapping mapping;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		mapping = new PayloadRootQNameEndpointMapping();
 	}
 
 	@Test
 	public void testResolveQNames() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		QName qName = mapping.resolveQName(context);
-		Assert.assertNotNull("mapping returns null", qName);
-		Assert.assertEquals("mapping returns invalid qualified name", new QName("root"), qName);
+
+		assertThat(qName).isNotNull();
+		assertThat(qName).isEqualTo(new QName("root"));
 	}
 
 	@Test
 	public void testGetQNameNameNamespace() throws Exception {
+
 		MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		QName qName = mapping.resolveQName(context);
-		Assert.assertNotNull("mapping returns null", qName);
-		Assert.assertEquals("mapping returns invalid method name", new QName("namespace", "localname", "prefix"), qName);
+
+		assertThat(qName).isNotNull();
+		assertThat(qName).isEqualTo(new QName("namespace", "localname", "prefix"));
 	}
 }

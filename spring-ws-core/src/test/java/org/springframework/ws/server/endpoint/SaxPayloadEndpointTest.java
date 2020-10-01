@@ -16,20 +16,20 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import javax.xml.transform.Source;
 
 import org.springframework.xml.transform.StringSource;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 
 	@Override
-	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {
+	protected PayloadEndpoint createNoResponseEndpoint() {
+
 		return new AbstractSaxPayloadEndpoint() {
 
 			@Override
@@ -45,7 +45,8 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 	}
 
 	@Override
-	protected PayloadEndpoint createResponseEndpoint() throws Exception {
+	protected PayloadEndpoint createResponseEndpoint() {
+
 		return new AbstractSaxPayloadEndpoint() {
 
 			@Override
@@ -61,17 +62,19 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 	}
 
 	@Override
-	protected PayloadEndpoint createNoRequestEndpoint() throws Exception {
+	protected PayloadEndpoint createNoRequestEndpoint() {
+
 		return new AbstractSaxPayloadEndpoint() {
 
 			@Override
-			protected ContentHandler createContentHandler() throws Exception {
+			protected ContentHandler createContentHandler() {
+
 				fail("Not expected");
 				return null;
 			}
 
 			@Override
-			protected Source getResponse(ContentHandler contentHandler) throws Exception {
+			protected Source getResponse(ContentHandler contentHandler) {
 				return null;
 			}
 		};
@@ -80,17 +83,19 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
 	private static class TestContentHandler extends DefaultHandler {
 
 		@Override
-		public void endElement(String uri, String localName, String qName) throws SAXException {
-			assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
-			assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
-			assertEquals("Invalid namespace", NAMESPACE_URI, uri);
+		public void endElement(String uri, String localName, String qName) {
+
+			assertThat(localName).isEqualTo(REQUEST_ELEMENT);
+			assertThat(qName).isEqualTo(localName);
+			assertThat(uri).isEqualTo(NAMESPACE_URI);
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-			assertEquals("Invalid local name", REQUEST_ELEMENT, localName);
-			assertEquals("Invalid qName", REQUEST_ELEMENT, localName);
-			assertEquals("Invalid namespace", NAMESPACE_URI, uri);
+		public void startElement(String uri, String localName, String qName, Attributes attributes) {
+
+			assertThat(localName).isEqualTo(REQUEST_ELEMENT);
+			assertThat(qName).isEqualTo(localName);
+			assertThat(uri).isEqualTo(NAMESPACE_URI);
 		}
 	}
 }

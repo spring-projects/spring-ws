@@ -236,6 +236,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	@Override
 	public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
+
 		Assert.isInstanceOf(SoapMessage.class, message);
 		SoapMessage soapMessage = (SoapMessage) message;
 		URI messageId = getMessageIdStrategy().newMessageId(soapMessage);

@@ -16,7 +16,7 @@
 
 package org.springframework.ws;
 
-import static org.custommonkey.xmlunit.XMLAssert.*;
+import static org.xmlunit.assertj.XmlAssert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,9 +43,8 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -70,22 +69,24 @@ public abstract class AbstractWebServiceMessageTestCase {
 	private Resource payload;
 
 	private String getExpectedString() throws IOException {
+
 		StringWriter expectedWriter = new StringWriter();
 		FileCopyUtils.copy(new InputStreamReader(payload.getInputStream(), "UTF-8"), expectedWriter);
 		return expectedWriter.toString();
 	}
 
-	@Before
+	@BeforeEach
 	public final void setUp() throws Exception {
+
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		transformer = transformerFactory.newTransformer();
 		webServiceMessage = createWebServiceMessage();
 		payload = new ClassPathResource("payload.xml", AbstractWebServiceMessageTestCase.class);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	@Test
 	public void testDomPayload() throws Exception {
+
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -95,12 +96,15 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Document resultDocument = documentBuilder.newDocument();
 		DOMResult domResult = new DOMResult(resultDocument);
 		transformer.transform(webServiceMessage.getPayloadSource(), domResult);
-		assertXMLEqual(payloadDocument, resultDocument);
+
+		assertThat(resultDocument).and(payloadDocument).ignoreWhitespace().areIdentical();
+
 		validateMessage();
 	}
 
 	@Test
 	public void testEventReaderPayload() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(eventReader);
@@ -111,33 +115,41 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Result staxResult = StaxUtils.createCustomStaxResult(eventWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
 		eventWriter.flush();
-		assertXMLEqual(getExpectedString(), stringWriter.toString());
+
+		assertThat(stringWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
+
 		validateMessage();
 	}
 
 	@Test
 	public void testReaderPayload() throws Exception {
+
 		Reader reader = new InputStreamReader(payload.getInputStream(), "UTF-8");
 		StreamSource streamSource = new StreamSource(reader, payload.getURL().toString());
 		transformer.transform(streamSource, webServiceMessage.getPayloadResult());
 		StringWriter resultWriter = new StringWriter();
 		StreamResult streamResult = new StreamResult(resultWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
-		assertXMLEqual(getExpectedString(), resultWriter.toString());
+
+		assertThat(resultWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testSaxPayload() throws Exception {
+
 		SAXSource saxSource = new SAXSource(SaxUtils.createInputSource(payload));
 		transformer.transform(saxSource, webServiceMessage.getPayloadResult());
 		StringResult stringResult = new StringResult();
 		transformer.transform(webServiceMessage.getPayloadSource(), stringResult);
-		assertXMLEqual(getExpectedString(), stringResult.toString());
+
+		assertThat(stringResult.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
+
 		validateMessage();
 	}
 
 	@Test
 	public void testStreamPayload() throws Exception {
+
 		StreamSource streamSource = new StreamSource(payload.getInputStream(), payload.getURL().toString());
 		transformer.transform(streamSource, webServiceMessage.getPayloadResult());
 		ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
@@ -145,12 +157,15 @@ public abstract class AbstractWebServiceMessageTestCase {
 		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
 		ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
 		FileCopyUtils.copy(payload.getInputStream(), expectedStream);
-		assertXMLEqual(expectedStream.toString("UTF-8"), resultStream.toString("UTF-8"));
+
+		assertThat(resultStream.toString("UTF-8")).and(expectedStream.toString("UTF-8")).ignoreWhitespace().areIdentical();
+
 		validateMessage();
 	}
 
 	@Test
 	public void testStreamReaderPayload() throws Exception {
+
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(streamReader);
@@ -161,11 +176,14 @@ public abstract class AbstractWebServiceMessageTestCase {
 		Result staxResult = StaxUtils.createCustomStaxResult(streamWriter);
 		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
 		streamWriter.flush();
-		assertXMLEqual(getExpectedString(), stringWriter.toString());
+
+		assertThat(stringWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
+
 		validateMessage();
 	}
 
 	private void validateMessage() throws Exception {
+
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
 		xmlReader.setContentHandler(new DefaultHandler());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
