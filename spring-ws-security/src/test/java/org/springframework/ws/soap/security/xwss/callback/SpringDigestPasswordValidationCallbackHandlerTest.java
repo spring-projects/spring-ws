@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.*;
 
 import java.util.Collections;
 
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,15 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 
 	private PasswordValidationCallback callback;
 
+	/**
+	 * add a tearDown method at the beginning, 
+	 * in case {@code SecurityContextHolder} not cleaned before this class
+	 */
+	@BeforeClass
+	public static void beforeClassTearDown() { 
+		SecurityContextHolder.clearContext();
+	}
+	
 	@BeforeEach
 	public void setUp() {
 
