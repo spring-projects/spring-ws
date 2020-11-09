@@ -79,7 +79,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	 * to clean {@code SecurityContextHolder} after this class
 	 */
 	@AfterAll
-	public static void beforeClassTearDown() { 
+	public static void afterClassTearDown() { 
 		SecurityContextHolder.clearContext();
 	}
 
