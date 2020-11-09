@@ -24,6 +24,8 @@ import java.util.Collections;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
@@ -48,6 +50,15 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	private WSPasswordCallback passwordCallback;
 
 	private UserDetails user;
+	
+	/**
+	 * add a tearDown method at the beginning, 
+	 * in case {@code SecurityContextHolder} not cleaned before this class
+	 */
+	@BeforeAll
+	public static void beforeClassTearDown() { 
+		SecurityContextHolder.clearContext();
+	}
 
 	@BeforeEach
 	public void setUp() {
@@ -61,6 +72,15 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		callback = new UsernameTokenPrincipalCallback(principal);
 
 		passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
+	}
+	
+	/**
+	 * add a tearDown method at the end, 
+	 * to clean {@code SecurityContextHolder} after this class
+	 */
+	@AfterAll
+	public static void beforeClassTearDown() { 
+		SecurityContextHolder.clearContext();
 	}
 
 	@Test
