@@ -74,6 +74,11 @@ public class Wsdl4jDefinitionTest {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("complete.wsdl"));
 
-		XmlAssert.assertThat(result.getNode()).and(expected).ignoreWhitespace().areIdentical();
+		XmlAssert.assertThat(result.getNode())
+				.and(expected)
+				.ignoreWhitespace()
+				.normalizeWhitespace()
+				.withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAllAttributes))
+				.areSimilar();
 	}
 }

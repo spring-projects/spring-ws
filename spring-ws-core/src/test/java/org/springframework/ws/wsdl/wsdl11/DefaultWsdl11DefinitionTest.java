@@ -73,7 +73,11 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
 
-		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
+		assertThat(result).and(expected)
+				.ignoreWhitespace()
+				.normalizeWhitespace()
+				.withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAllAttributes))
+				.areSimilar();
 	}
 
 	@Test
@@ -96,7 +100,11 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
 
-		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
+		assertThat(result).and(expected)
+				.ignoreWhitespace()
+				.normalizeWhitespace()
+				.withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAllAttributes))
+				.areSimilar();
 	}
 
 	@Test
@@ -119,7 +127,11 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
 
-		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
+		assertThat(result).and(expected)
+				.ignoreWhitespace()
+				.normalizeWhitespace()
+				.withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAllAttributes))
+				.areSimilar();
 	}
 
 	@Test
@@ -144,6 +156,10 @@ public class DefaultWsdl11DefinitionTest {
 		Document result = (Document) domResult.getNode();
 		Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
 
-		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
+		assertThat(result).and(expected)
+				.ignoreWhitespace()
+				.normalizeWhitespace()
+				.withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndAllAttributes))
+				.areSimilar();
 	}
 }
