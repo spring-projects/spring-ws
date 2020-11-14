@@ -36,6 +36,8 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xmlunit.assertj.XmlAssert;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelectors;
 
 public class Wsdl4jDefinitionTest {
 

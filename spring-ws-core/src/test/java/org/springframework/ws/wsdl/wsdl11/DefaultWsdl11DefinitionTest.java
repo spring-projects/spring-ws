@@ -33,6 +33,8 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 import org.w3c.dom.Document;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelectors;
 
 public class DefaultWsdl11DefinitionTest {
 
