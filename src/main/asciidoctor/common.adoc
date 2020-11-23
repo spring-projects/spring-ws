@@ -3,20 +3,22 @@
 [[common]]
 = Shared components
 
-In this chapter, we will explore the components which are shared between client- and server-side Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so it is important to understand what they do, even if you do not use them directly.
+This chapter explores the components that are shared between client- and server-side Spring-WS development. These interfaces and classes represent the building blocks of Spring-WS, so you need to understand what they do, even if you do not use them directly.
 
 [[web-service-messages]]
-== Web service messages
+== Web Service Messages
+
+This section describes the messages and message factories that Spring-WS uses.
 
 [[web-service-message]]
 === `WebServiceMessage`
 
-One of the core interfaces of Spring Web Services is the `WebServiceMessage`. This interface represents a protocol-agnostic XML message. The interface contains methods that provide access to the payload of the message, in the form of a `javax.xml.transform.Source` or a `javax.xml.transform.Result`. `Source` and `Result` are tagging interfaces that represent an abstraction over XML input and output. Concrete implementations wrap various XML representations, as indicated in the following table. 
+One of the core interfaces of Spring Web Services is the `WebServiceMessage`. This interface represents a protocol-agnostic XML message. The interface contains methods that provide access to the payload of the message, in the form of a `javax.xml.transform.Source` or a `javax.xml.transform.Result`. `Source` and `Result` are tagging interfaces that represent an abstraction over XML input and output. Concrete implementations wrap various XML representations, as indicated in the following table:
 
 [cols="2", options="header"]
 |===
-| Source/Result implementation
-| Wraps XML representation
+| Source or Result implementation
+| Wrapped XML representation
 
 | `javax.xml.transform.dom.DOMSource`
 | `org.w3c.dom.Node`
@@ -37,26 +39,26 @@ One of the core interfaces of Spring Web Services is the `WebServiceMessage`. Th
 | `java.io.File`, `java.io.OutputStream`, or `java.io.Writer`
 |===
 
-In addition to reading from and writing to the payload, a Web service message can write itself to an output stream.
+In addition to reading from and writing to the payload, a web service message can write itself to an output stream.
 
 [[soap-message]]
 === `SoapMessage`
 
-The `SoapMessage` is a subclass of `WebServiceMessage`. It contains SOAP-specific methods, such as getting SOAP Headers, SOAP Faults, etc. Generally, your code should not be dependent on `SoapMessage`, because the content of the SOAP Body (the payload of the message) can be obtained via `getPayloadSource()` and `getPayloadResult()` in the `WebServiceMessage`. Only when it is necessary to perform SOAP-specific actions, such as adding a header, getting an attachment, etc., should you need to cast `WebServiceMessage` to `SoapMessage`.
+`SoapMessage` is a subclass of `WebServiceMessage`. It contains SOAP-specific methods, such as getting SOAP Headers, SOAP Faults, and so on. Generally, your code should not be dependent on `SoapMessage`, because the content of the SOAP Body (the payload of the message) can be obtained by using `getPayloadSource()` and `getPayloadResult()` in the `WebServiceMessage`. Only when it is necessary to perform SOAP-specific actions (such as adding a header, getting an attachment, and so on) should you need to cast `WebServiceMessage` to `SoapMessage`.
 
 [[message-factories]]
 === Message Factories
 
-Concrete message implementations are created by a `WebServiceMessageFactory`. This factory can create an empty message, or read a message based on an input stream. There are two concrete implementations of `WebServiceMessageFactory`; one is based on SAAJ, the SOAP with Attachments API for Java, the other based on Axis 2's AXIOM, the AXis Object Model.
+Concrete message implementations are created by a `WebServiceMessageFactory`. This factory can create an empty message or read a message from an input stream. There are two concrete implementations of `WebServiceMessageFactory`. One is based on SAAJ, the SOAP with Attachments API for Java. The other is based on Axis 2's AXIOM (AXis Object Model).
 
 ==== `SaajSoapMessageFactory`
 
-The `SaajSoapMessageFactory` uses the SOAP with Attachments API for Java to create `SoapMessage` implementations. *SAAJ* is part of *J2EE* 1.4, so it should be supported under most modern application servers. Here is an overview of the *SAAJ* versions supplied by common application servers: 
+The `SaajSoapMessageFactory` uses the SOAP with Attachments API for Java (SAAJ) to create `SoapMessage` implementations. SAAJ is part of J2EE 1.4, so it should be supported under most modern application servers. Here is an overview of the SAAJ versions supplied by common application servers:
 
 [cols="2", options="header"]
 |===
 | Application Server
-| *SAAJ* Version
+| SAAJ Version
 
 | BEA WebLogic 8
 | 1.1
@@ -70,44 +72,49 @@ The `SaajSoapMessageFactory` uses the SOAP with Attachments API for Java to crea
 | SUN Glassfish 1
 | 1.3
 
-2+|^1^Weblogic 9 has a known bug in the *SAAJ* 1.2 implementation: it implement all the 1.2 interfaces, but throws a `UnsupportedOperationException` when called. Spring Web Services has a workaround: it uses *SAAJ* 1.1 when operating on WebLogic 9.
+2+|^1^Weblogic 9 has a known bug in the SAAJ 1.2 implementation: it implements all the 1.2 interfaces but throws an `UnsupportedOperationException` when called. Spring Web Services has a workaround: It uses SAAJ 1.1 when operating on WebLogic 9.
 |===
 
-Additionally, Java SE 6 includes *SAAJ* 1.3. You wire up a `SaajSoapMessageFactory` like so:
+Additionally, Java SE 6 includes SAAJ 1.3. You can wire up a `SaajSoapMessageFactory` as follows:
 
+====
 [source,xml]
 ----
 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
 ----
+====
 
-NOTE: *SAAJ* is based on DOM, the Document Object Model. This means that all SOAP messages are stored *in memory*. For larger SOAP messages, this may not be very performant. In that case, the `AxiomSoapMessageFactory` might be more applicable.
+NOTE: SAAJ is based on DOM, the Document Object Model. This means that all SOAP messages are stored in memory. For larger SOAP messages, this may not be performant. In that case, the `AxiomSoapMessageFactory` might be more applicable.
 
 ==== `AxiomSoapMessageFactory`
 
-The `AxiomSoapMessageFactory` uses the AXis 2 Object Model to create `SoapMessage` implementations. *AXIOM* is based on *StAX*, the Streaming API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more efficient for larger messages.
+The `AxiomSoapMessageFactory` uses the AXis 2 Object Model (AXIOM) to create `SoapMessage` implementations. AXIOM is based on StAX, the Streaming API for XML. StAX provides a pull-based mechanism for reading XML messages, which can be more efficient for larger messages.
 
-To increase reading performance on the `AxiomSoapMessageFactory`, you can set the `payloadCaching` property to false (default is true). This will read the contents of the SOAP body directly from the socket stream. When this setting is enabled, the payload can only be read once. This means that you have to make sure that any pre-processing (logging etc.) of the message does not consume it.
+To increase reading performance on the `AxiomSoapMessageFactory`, you can set the `payloadCaching` property to false (default is true). Doing so causesthe contents of the SOAP body to be read directly from the socket stream. When this setting is enabled, the payload can be read only once. This means that you have to make sure that any pre-processing (logging or other work) of the message does not consume it.
 
-You use the `AxiomSoapMessageFactory` as follows:
+You can use the `AxiomSoapMessageFactory` as follows:
 
+====
 [source,xml]
 ----
 <bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
     <property name="payloadCaching" value="true"/>
 </bean>
 ----
+====
 
-In addition to payload caching, *AXIOM* also supports full streaming messages, as defined in the `StreamingWebServiceMessage`. This means that the payload can be directly set on the response message, rather than being written to a DOM tree or buffer.
+In addition to payload caching, AXIOM supports full streaming messages, as defined in the `StreamingWebServiceMessage`. This means that you can directly set the payload on the response message, rather than writing it to a DOM tree or buffer.
 
-Full streaming for *AXIOM* is used when a handler method returns a *JAXB2*-supported object. It will automatically set this marshalled object into the response message, and write it out to the outgoing socket stream when the response is going out.
+Full streaming for AXIOM is used when a handler method returns a JAXB2-supported object. It automatically sets this marshalled object into the response message and writes it out to the outgoing socket stream when the response is going out.
 
-For more information about full streaming, refer to the class-level Javadoc for `StreamingWebServiceMessage` and `StreamingPayload`.
+For more information about full streaming, see the class-level Javadoc for `StreamingWebServiceMessage` and `StreamingPayload`.
 
 [[soap_11_or_12]]
-==== *SOAP* 1.1 or 1.2
+==== SOAP 1.1 or 1.2
 
-Both the `SaajSoapMessageFactory` and the `AxiomSoapMessageFactory` have a `soapVersion` property, where you can inject a `SoapVersion` constant. By default, the version is 1.1, but you can set it to 1.2 like so:
+Both the `SaajSoapMessageFactory` and the `AxiomSoapMessageFactory` have a `soapVersion` property, where you can inject a `SoapVersion` constant. By default, the version is 1.1, but you can set it to 1.2:
 
+====
 [source,xml]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -126,14 +133,15 @@ Both the `SaajSoapMessageFactory` and the `AxiomSoapMessageFactory` have a `soap
 
 </beans>
 ----
+====
 
-In the example above, we define a `SaajSoapMessageFactory` that only accepts *SOAP* 1.2 messages.
+In the preceding example, we define a `SaajSoapMessageFactory` that accepts only SOAP 1.2 messages.
 
 [WARNING]
 ====
-Even though both versions of *SOAP* are quite similar in format, the 1.2 version is not backwards compatible with 1.1 because it uses a different XML namespace. Other major differences between *SOAP* 1.1 and 1.2 include the different structure of a Fault, and the fact that `SOAPAction` HTTP headers are effectively deprecated, thought they still work.
+Even though both versions of SOAP are quite similar in format, the 1.2 version is not backwards compatible with 1.1, because it uses a different XML namespace. Other major differences between SOAP 1.1 and 1.2 include the different structure of a fault and the fact that `SOAPAction` HTTP headers are effectively deprecated, though they still work.
 
-One important thing to note with *SOAP* version numbers, or WS-* specification version numbers in general, is that the latest version of a specification is generally not the most popular version. For *SOAP*, this means that currently, the best version to use is 1.1. Version 1.2 might become more popular in the future, but currently 1.1 is the safest bet.
+One important thing to note with SOAP version numbers (or WS-* specification version numbers in general) is that the latest version of a specification is generally not the most popular version. For SOAP, this means that (currently) the best version to use is 1.1. Version 1.2 might become more popular in the future, but 1.1 is currently the safest bet.
 ====
 
 [[message-context]]
@@ -141,15 +149,16 @@ One important thing to note with *SOAP* version numbers, or WS-* specification v
 
 Typically, messages come in pairs: a request and a response. A request is created on the client-side, which is sent over some transport to the server-side, where a response is generated. This response gets sent back to the client, where it is read.
 
-In Spring Web Services, such a conversation is contained in a `MessageContext`, which has properties to get request and response messages. On the client-side, the message context is created by the <<client-web-service-template,`WebServiceTemplate`>>. On the server-side, the message context is read from the transport-specific input stream. For example, in HTTP, it is read from the `HttpServletRequest` and the response is written back to the `HttpServletResponse`.
+In Spring Web Services, such a conversation is contained in a `MessageContext`, which has properties to get request and response messages. On the client-side, the message context is created by the <<client-web-service-template,`WebServiceTemplate`>>. On the server-side, the message context is read from the transport-specific input stream. For example, in HTTP, it is read from the `HttpServletRequest`, and the response is written back to the `HttpServletResponse`.
 
 [[transport-context]]
 == `TransportContext`
 
-One of the key properties of the SOAP protocol is that it tries to be transport-agnostic. This is why, for instance, Spring-WS does not support mapping messages to endpoints by HTTP request URL, but rather by mesage content.
+One of the key properties of the SOAP protocol is that it tries to be transport-agnostic. This is why, for instance, Spring-WS does not support mapping messages to endpoints by HTTP request URL but rather by message content.
 
-However, sometimes it is necessary to get access to the underlying transport, either on the client or server side. For this, Spring Web Services has the `TransportContext`. The transport context allows access to the underlying `WebServiceConnection`, which typically is a `HttpServletConnection` on the server side; or a `HttpUrlConnection` or `CommonsHttpConnection` on the client side. For example, you can obtain the IP address of the current request in a server-side endpoint or interceptor like so:
+However, it is sometimes necessary to get access to the underlying transport, either on the client or the server side. For this, Spring Web Services has the `TransportContext`. The transport context allows access to the underlying `WebServiceConnection`, which typically is a `HttpServletConnection` on the server side or a `HttpUrlConnection` or `CommonsHttpConnection` on the client side. For example, you can obtain the IP address of the current request in a server-side endpoint or interceptor:
 
+====
 [source,java]
 ----
 TransportContext context = TransportContextHolder.getTransportContext();
@@ -157,6 +166,7 @@ HttpServletConnection connection = (HttpServletConnection )context.getConnection
 HttpServletRequest request = connection.getHttpServletRequest();
 String ipAddress = request.getRemoteAddr();
 ----
+====
 
 [[xpath]]
 == Handling XML With XPath
@@ -171,8 +181,9 @@ Spring Web Services has two ways to use XPath within your application: the faste
 [[xpath-expression]]
 === `XPathExpression`
 
-The `XPathExpression` is an abstraction over a compiled XPath expression, such as the Java 5 `javax.xml.xpath.XPathExpression`, or the Jaxen `XPath` class. To construct an expression in an application context, there is the `XPathExpressionFactoryBean`. Here is an example which uses this factory bean:
+The `XPathExpression` is an abstraction over a compiled XPath expression, such as the Java 5 `javax.xml.xpath.XPathExpression` interface or the Jaxen `XPath` class. To construct an expression in an application context, you can use `XPathExpressionFactoryBean`. The following example uses this factory bean:
 
+====
 [source,xml]
 ----
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -190,9 +201,11 @@ The `XPathExpression` is an abstraction over a compiled XPath expression, such a
 
 </beans>
 ----
+====
 
-The expression above does not use namespaces, but we could set those using the `namespaces` property of the factory bean. The expression can be used in the code as follows:
+The preceding expression does not use namespaces, but we could set those by using the `namespaces` property of the factory bean. The expression can be used in the code as follows:
 
+====
 [source,java]
 ----
 package sample;
@@ -212,9 +225,11 @@ public class MyXPathClass {
 
 }
 ----
+====
 
-For a more flexible approach, you can use a `NodeMapper`, which is similar to the `RowMapper` in Spring's JDBC support. The following example shows how we can use it:
+For a more flexible approach, you can use a `NodeMapper`, which is similar to the `RowMapper` in Spring's JDBC support. The following example shows how to use it:
 
+====
 [source,java]
 ----
 package sample;
@@ -237,18 +252,20 @@ public class MyXPathClass  {
               return new Contact(nameElement.getTextContent(), phoneElement.getTextContent());
            }
         });
-      PlainText Section qName:lineannotation level:5, chunks:[// do something with list of Contact objects] attrs:[:]
+      PlainText Section qName; // do something with the list of Contact objects
    }
 }
 ----
+====
 
-Similar to mapping rows in Spring JDBC's `RowMapper`, each result node is mapped using an anonymous inner class. In this case, we create a `Contact` object, which we use later on.
+Similar to mapping rows in Spring JDBC's `RowMapper`, each result node is mapped by using an anonymous inner class. In this case, we create a `Contact` object, which we use later on.
 
 [[xpath-template]]
 === `XPathTemplate`
 
-The `XPathExpression` only allows you to evaluate a single, pre-compiled expression. A more flexible, though slower, alternative is the `XpathTemplate`. This class follows the common template pattern used throughout Spring (JdbcTemplate, JmsTemplate, etc.). Here is an example:
+The `XPathExpression` lets you evaluate only a single, pre-compiled expression. A more flexible, though slower, alternative is the `XpathTemplate`. This class follows the common template pattern used throughout Spring (`JdbcTemplate`, `JmsTemplate`, and others). The following listing shows an example:
 
+====
 [source,java,subs="verbatim,quotes"]
 ----
 package sample;
@@ -264,20 +281,22 @@ public class MyXPathClass {
 
 }
 ----
+====
 
 [[logging]]
 == Message Logging and Tracing
 
-When developing or debugging a Web service, it can be quite useful to look at the content of a (SOAP) message when it arrives, or just before it is sent. Spring Web Services offer this functionality, via the standard Commons Logging interface.
+When developing or debugging a web service, it can be quite useful to look at the content of a (SOAP) message when it arrives or before it is sent. Spring Web Services offer this functionality, through the standard Commons Logging interface.
 
-WARNING: Make sure to use Commons Logging version 1.1 or higher. Earlier versions have class loading issues, and do not integrate with the Log4J TRACE level.
+WARNING: Make sure to use Commons Logging version 1.1 or higher. Earlier versions have class loading issues and do not integrate with the Log4J TRACE level.
 
-To log all server-side messages, simply set the `org.springframework.ws.server.MessageTracing` logger to level DEBUG or TRACE. On the debug level, only the payload root element is logged; on the TRACE level, the entire message content. If you only want to log sent messages, use the `org.springframework.ws.server.MessageTracing.sent` logger; or `org.springframework.ws.server.MessageTracing.received` to log received messages.
+To log all server-side messages, set the `org.springframework.ws.server.MessageTracing` logger level to `DEBUG` or `TRACE`. On the `DEBUG` level, only the payload root element is logged. On the `TRACE` level, the entire message content is logged. If you want to log only sent messages, use the `org.springframework.ws.server.MessageTracing.sent` logger. Similarly, you can use `org.springframework.ws.server.MessageTracing.received` to log only received messages.
 
 On the client-side, similar loggers exist: `org.springframework.ws.client.MessageTracing.sent` and `org.springframework.ws.client.MessageTracing.received`.
 
-Here is an example `log4j.properties` configuration, logging the full content of sent messages on the client side, and only the payload root element for client-side received messages. On the server-side, the payload root is logged for both sent and received messages:
+The following example of a `log4j.properties` configuration file logs the full content of sent messages on the client side and only the payload root element for client-side received messages. On the server-side, the payload root is logged for both sent and received messages:
 
+====
 [source]
 ----
 log4j.rootCategory=INFO, stdout
@@ -290,12 +309,15 @@ log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
 log4j.appender.stdout.layout.ConversionPattern=%p [%c{3}] %m%n
 ----
+====
 
-With this configuration, a typical output will be:
+With this configuration, a typical output is:
 
+====
 ----
 TRACE [client.MessageTracing.sent] Sent request [<SOAP-ENV:Envelope xmlns:SOAP-ENV="...
 DEBUG [server.MessageTracing.received] Received request [SaajSoapMessage {http://example.com}request] ...
 DEBUG [server.MessageTracing.sent] Sent response [SaajSoapMessage {http://example.com}response] ...
 DEBUG [client.MessageTracing.received] Received response [SaajSoapMessage {http://example.com}response] ...
 ----
+====
