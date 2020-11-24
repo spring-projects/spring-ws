@@ -50,19 +50,12 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	private WSPasswordCallback passwordCallback;
 
 	private UserDetails user;
-	
-	/**
-	 * add a tearDown method at the beginning, 
-	 * in case {@code SecurityContextHolder} not cleaned before this class
-	 */
-	@BeforeAll
-	public static void beforeClassTearDown() { 
-		SecurityContextHolder.clearContext();
-	}
 
 	@BeforeEach
 	public void setUp() {
-
+		// add clearContext() at the beginning of each method in case {@code SecurityContextHolder} isn't clean
+		SecurityContextHolder.clearContext();
+		
 		callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
 		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
@@ -72,15 +65,6 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		callback = new UsernameTokenPrincipalCallback(principal);
 
 		passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
-	}
-	
-	/**
-	 * add a tearDown method at the end, 
-	 * to clean {@code SecurityContextHolder} after this class
-	 */
-	@AfterAll
-	public static void afterClassTearDown() { 
-		SecurityContextHolder.clearContext();
 	}
 
 	@Test
