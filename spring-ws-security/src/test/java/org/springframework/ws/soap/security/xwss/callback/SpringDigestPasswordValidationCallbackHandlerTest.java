@@ -47,18 +47,11 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 	private String password;
 
 	private PasswordValidationCallback callback;
-
-	/**
-	 * add a tearDown method at the beginning, 
-	 * in case {@code SecurityContextHolder} not cleaned before this class
-	 */
-	@BeforeAll
-	public static void beforeClassTearDown() { 
-		SecurityContextHolder.clearContext();
-	}
 	
 	@BeforeEach
 	public void setUp() {
+		// add clearContext() at the beginning of each method in case {@code SecurityContextHolder} isn't clean
+		SecurityContextHolder.clearContext();
 
 		callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
 		userDetailsService = createMock(UserDetailsService.class);
