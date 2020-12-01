@@ -100,7 +100,7 @@ See the current https://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and 
 
 == Issue Tracking
 
-Spring Web Services uses https://jira.spring.io/browse/SWS[JIRA] for issue tracking purposes
+Spring Web Services uses https://github.com/spring-projects/spring-ws/issues[Github] for issue tracking purposes.
 
 == License
 

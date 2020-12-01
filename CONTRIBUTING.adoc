@@ -8,8 +8,8 @@ This project adheres to the Contributor Covenant link:CODE_OF_CONDUCT.adoc[code 
 conduct]. By participating, you  are expected to uphold this code. Please report
 unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
-== Using JIRA issues
-We use JIRA issues to track bugs and enhancements. If you have a general usage question
+== Using Github issues
+We use Github issues to track bugs and enhancements. If you have a general usage question
 please ask on https://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
 broader community monitor the https://stackoverflow.com/tags/spring-ws[`spring-ws`]
 tag.
