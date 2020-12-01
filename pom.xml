@@ -86,7 +86,7 @@
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
 		<activemq.version>4.1.2</activemq.version>
-		<aspectj.version>1.8.13</aspectj.version>
+		<aspectj.version>1.9.6</aspectj.version>
 		<assertj.version>3.9.0</assertj.version>
 		<axiom.version>1.2.20</axiom.version>
 		<commons-httpclient.version>3.1</commons-httpclient.version>
@@ -239,7 +239,6 @@
 		<profile>
 			<id>spring-buildsnapshot</id>
 			<properties>
-				<aspectj.version>1.9.1</aspectj.version>
 				<spring.version>5.3.2-SNAPSHOT</spring.version>
 				<spring-security.version>5.4.2-SNAPSHOT</spring-security.version>
 			</properties>
