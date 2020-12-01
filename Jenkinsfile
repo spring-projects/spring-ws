@@ -212,7 +212,7 @@ pipeline {
 		}
 		stage('Promote to Bintray') {
 			when {
-				branch 'release'
+				branch 'release-3.x'
 			}
 			agent {
 				docker {
@@ -246,7 +246,7 @@ pipeline {
 		}
 		stage('Sync to Maven Central') {
 			when {
-				branch 'release'
+				branch 'release-3.x'
 			}
 			agent {
 				docker {
