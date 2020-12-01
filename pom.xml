@@ -101,7 +101,7 @@
 		<jdom2.version>2.0.6</jdom2.version>
 		<jetty.version>6.1.26</jetty.version>
 		<jms.version>2.0.1</jms.version>
-		<junit.version>5.6.2</junit.version>
+		<junit.version>5.7.0</junit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<log4j2.version>2.11.0</log4j2.version>
 		<mail.version>1.4.7</mail.version>
