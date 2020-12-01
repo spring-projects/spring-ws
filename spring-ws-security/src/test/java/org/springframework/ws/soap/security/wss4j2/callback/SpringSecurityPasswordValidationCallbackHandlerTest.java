@@ -51,7 +51,9 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
 	@BeforeEach
 	public void setUp() {
-
+		// add clearContext() at the beginning of each method in case {@code SecurityContextHolder} isn't clean
+		SecurityContextHolder.clearContext();
+		
 		callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
 		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");

@@ -46,9 +46,11 @@ public class SpringDigestPasswordValidationCallbackHandlerTest {
 	private String password;
 
 	private PasswordValidationCallback callback;
-
+	
 	@BeforeEach
 	public void setUp() {
+		// add clearContext() at the beginning of each method in case {@code SecurityContextHolder} isn't clean
+		SecurityContextHolder.clearContext();
 
 		callbackHandler = new SpringDigestPasswordValidationCallbackHandler();
 		userDetailsService = createMock(UserDetailsService.class);
