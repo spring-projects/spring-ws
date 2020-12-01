@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.mock_javamail.Mailbox;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -37,8 +36,6 @@ public class MailIntegrationTest {
 
 	@Autowired private WebServiceTemplate webServiceTemplate;
 
-	@Autowired private GenericApplicationContext applicationContext;
-
 	@AfterEach
 	public void clearMailbox() {
 		Mailbox.clearAll();
@@ -50,7 +47,6 @@ public class MailIntegrationTest {
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
 		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-		applicationContext.close();
 
 		assertThat(Mailbox.get("server@example.com")).isEmpty();
 		assertThat(Mailbox.get("client@example.com")).hasSize(1);

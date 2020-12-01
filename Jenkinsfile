@@ -50,17 +50,6 @@ pipeline {
 						sh "PROFILE=springnext,convergence ci/test.sh"
 					}
 				}
-				stage("Test: springnext-buildsnapshot (jdk8)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk8:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext-buildsnapshot,convergence ci/test.sh"
-					}
-				}
 				stage("Test: spring-buildsnapshot (jdk8)") {
 					agent {
 						docker {
@@ -83,28 +72,6 @@ pipeline {
 						sh "PROFILE=distribute,java11,convergence ci/test.sh"
 					}
 				}
-				stage("Test: springnext (jdk11)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk11:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: springnext-buildsnapshot (jdk11)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk11:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext-buildsnapshot,java11,convergence ci/test.sh"
-					}
-				}
 				stage("Test: spring-buildsnapshot (jdk11)") {
 					agent {
 						docker {
@@ -125,28 +92,6 @@ pipeline {
 					}
 					steps {
 						sh "PROFILE=distribute,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: springnext (jdk15)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk15:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: springnext-buildsnapshot (jdk15)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk15:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext-buildsnapshot,java11,convergence ci/test.sh"
 					}
 				}
 				stage("Test: spring-buildsnapshot (jdk15)") {
