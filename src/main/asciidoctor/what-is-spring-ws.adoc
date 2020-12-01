@@ -37,7 +37,7 @@ You can confidently use Spring-WS in your project.
 
 == Runtime environment
 
-Spring Web Services requires a standard Java 7 Runtime Environment. Java 8 is also supported. Spring-WS is built on Spring Framework 4.0.9, but higher versions are supported.
+Spring Web Services requires a standard Java 6 Runtime Environment. Spring-WS is built on Spring Framework 4.0.9, but higher versions are supported.
 
 Spring-WS consists of a number of modules, which are described in the remainder of this section.
 
