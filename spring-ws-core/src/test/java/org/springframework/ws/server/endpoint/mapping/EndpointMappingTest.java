@@ -189,7 +189,9 @@ public class EndpointMappingTest {
 
 		assertThat(result).isNotNull();
 		assertThat(MyEndpoint.constructorCount).isEqualTo(2);
+		MyEndpoint.reset();
 	}
+
 
 	private static class MyEndpoint {
 
@@ -197,6 +199,10 @@ public class EndpointMappingTest {
 
 		private MyEndpoint() {
 			constructorCount++;
+		}
+
+		private static void reset() {
+			constructorCount = 0;
 		}
 	}
 
