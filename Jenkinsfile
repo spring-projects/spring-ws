@@ -26,6 +26,7 @@ pipeline {
 				}
 			}
 		}
+
 		stage("Test: baseline (jdk8)") {
 			agent {
 				docker {
@@ -37,6 +38,7 @@ pipeline {
 				sh "PROFILE=distribute,convergence ci/test.sh"
 			}
 		}
+
 		stage("Test other configurations") {
 			parallel {
 				stage("Test: spring-buildsnapshot (jdk8)") {
@@ -96,16 +98,21 @@ pipeline {
 				}
 			}
 		}
-		stage('Deploy to Artifactory') {
+
+		stage('Deploy') {
 			agent {
 				docker {
-					image 'adoptopenjdk/openjdk8:latest'
-					args '-v $HOME/.m2:/root/.m2'
+					image 'springci/spring-ws-openjdk8-with-jq:latest'
+					args '-v $HOME/.m2:/tmp/jenkins-home/.m2'
 				}
 			}
+			options { timeout(time: 20, unit: 'MINUTES') }
 
 			environment {
 				ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
+				SONATYPE = credentials('oss-token')
+				KEYRING = credentials('spring-signing-secring.gpg')
+				PASSPHRASE = credentials('spring-gpg-passphrase')
 			}
 
 			steps {
@@ -114,8 +121,6 @@ pipeline {
 							script: "ci/version.sh",
 							returnStdout: true
 					).trim()
-
-					RELEASE_TYPE = 'snapshot'
 
 					if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
 						RELEASE_TYPE = "milestone"
@@ -123,36 +128,34 @@ pipeline {
 						RELEASE_TYPE = 'snapshot'
 					} else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
 						RELEASE_TYPE = 'release'
+					} else {
+						RELEASE_TYPE = 'snapshot'
 					}
 
-					OUTPUT = sh(
-							script: "PROFILE=distribute,docs,${RELEASE_TYPE} ci/build.sh",
-							returnStdout: true
-					).trim()
-
-					echo "$OUTPUT"
-
-					build_info_path = OUTPUT.split('\n')
-							.find { it.contains('Artifactory Build Info Recorder') }
-							.split('Saving Build Info to ')[1]
-							.trim()[1..-2]
-
-					dir(build_info_path + '/..') {
-						stash name: 'build_info', includes: "*.json"
+					if (RELEASE_TYPE == 'release') {
+						sh "PROFILE=distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
+					} else {
+						sh "PROFILE=distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
 					}
 				}
 			}
 		}
-		stage('Promote to Bintray') {
+
+		stage('Release documentation') {
 			when {
-				branch 'release'
+				anyOf {
+					branch 'master'
+					branch 'release'
+					branch 'issue/test-release'
+				}
 			}
 			agent {
 				docker {
-					image 'springci/spring-ws-openjdk8-with-jq:latest'
-					args '-v $HOME/.m2:/root/.m2'
+					image 'adoptopenjdk/openjdk8:latest'
+					args '-v $HOME/.m2:/tmp/jenkins-home/.m2'
 				}
 			}
+			options { timeout(time: 20, unit: 'MINUTES') }
 
 			environment {
 				ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
@@ -160,49 +163,12 @@ pipeline {
 
 			steps {
 				script {
-					PROJECT_VERSION = sh(
-							script: "ci/version.sh",
-							returnStdout: true
-					).trim()
-
-					if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
-						unstash name: 'build_info'
-						sh "ci/promote-to-bintray.sh"
-					} else {
-						echo "${PROJECT_VERSION} is not a candidate for promotion to Bintray."
-					}
-				}
-			}
-		}
-		stage('Sync to Maven Central') {
-			when {
-				branch 'release'
-			}
-			agent {
-				docker {
-					image 'springci/spring-ws-openjdk8-with-jq:latest'
-					args '-v $HOME/.m2:/root/.m2'
-				}
-			}
-
-			environment {
-				BINTRAY = credentials('Bintray-spring-operator')
-				SONATYPE = credentials('oss-token')
-			}
-
-			steps {
-				script {
-					PROJECT_VERSION = sh(
-							script: "ci/version.sh",
-							returnStdout: true
-					).trim()
-
-					if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
-						unstash name: 'build_info'
-						sh "ci/sync-to-maven-central.sh"
-					} else {
-						echo "${PROJECT_VERSION} is not a candidate for syncing to Maven Central."
-					}
+					sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw -Pdistribute,docs ' +
+							'-Dartifactory.server=https://repo.spring.io ' +
+							"-Dartifactory.username=${ARTIFACTORY_USR} " +
+							"-Dartifactory.password=${ARTIFACTORY_PSW} " +
+							"-Dartifactory.distribution-repository=temp-private-local " +
+							'-Dmaven.test.skip=true -Dmaven.deploy.skip=true deploy -B'
 				}
 			}
 		}
