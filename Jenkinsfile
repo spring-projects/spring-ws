@@ -39,17 +39,6 @@ pipeline {
 		}
 		stage("Test other configurations") {
 			parallel {
-				stage("Test: springnext (jdk8)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk8:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					steps {
-						sh "PROFILE=springnext,convergence ci/test.sh"
-					}
-				}
 				stage("Test: spring-buildsnapshot (jdk8)") {
 					agent {
 						docker {
@@ -121,11 +110,8 @@ pipeline {
 
 			steps {
 				script {
-					// Warm up this plugin quietly before using it.
-					sh "./mvnw -q org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version"
-
 					PROJECT_VERSION = sh(
-							script: "./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -o | grep -v INFO",
+							script: "ci/version.sh",
 							returnStdout: true
 					).trim()
 
@@ -174,11 +160,8 @@ pipeline {
 
 			steps {
 				script {
-					// Warm up this plugin quietly before using it.
-					sh "./mvnw -q org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version"
-
 					PROJECT_VERSION = sh(
-							script: "./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -o | grep -v INFO",
+							script: "ci/version.sh",
 							returnStdout: true
 					).trim()
 
@@ -209,11 +192,8 @@ pipeline {
 
 			steps {
 				script {
-					// Warm up this plugin quietly before using it.
-					sh "./mvnw -q org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version"
-
 					PROJECT_VERSION = sh(
-							script: "./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -o | grep -v INFO",
+							script: "ci/version.sh",
 							returnStdout: true
 					).trim()
 
