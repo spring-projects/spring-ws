@@ -183,11 +183,8 @@ pipeline {
 
 			steps {
 				script {
-					// Warm up this plugin quietly before using it.
-					sh "./mvnw -q org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version"
-
 					PROJECT_VERSION = sh(
-							script: "./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version -o | grep -v INFO",
+							script: "ci/version.sh",
 							returnStdout: true
 					).trim()
 
@@ -201,14 +198,13 @@ pipeline {
 						RELEASE_TYPE = 'snapshot'
 					}
 
-
 					if (RELEASE_TYPE == 'release') {
 						sh "PROFILE=distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
 
 						slackSend(
-                                color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
-                                channel: '#spring-ws',
-                                message: "@here Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
+							color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+							channel: '#spring-ws',
+							message: "@here Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
 					} else {
 						sh "PROFILE=distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
 					}
@@ -234,7 +230,6 @@ pipeline {
 
 			steps {
 				script {
-
 					sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw -Pdistribute,docs ' +
 							'-Dartifactory.server=https://repo.spring.io ' +
 							"-Dartifactory.username=${ARTIFACTORY_USR} " +
