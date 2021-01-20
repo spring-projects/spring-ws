@@ -6,8 +6,8 @@
 	<servers>
 		<server>
 			<id>sonatype</id>
-			<username>${env.USERNAME}</username>
-			<password>${env.PASSWORD}</password>
+			<username>${env.SONATYPE_USR}</username>
+			<password>${env.SONATYPE_PSW}</password>
 		</server>
 	</servers>
 
