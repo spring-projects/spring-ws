@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.util.Iterator;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -42,23 +41,20 @@ import org.springframework.ws.transport.WebServiceConnection;
 public class OkHttpConnection extends AbstractHttpSenderConnection {
 
 	private final OkHttpClient okHttpClient;
-	private final URI uri;
 
-	private final MediaType requestMediaType;
+	private final URI uri;
 	private final Request.Builder requestBuilder;
 	private ByteArrayOutputStream requestBuffer;
 
 	private Response response;
 	private InputStream responseBuffer;
 
-	public OkHttpConnection(OkHttpClient okHttpClient, URI uri, MediaType requestMediaType) {
+	public OkHttpConnection(OkHttpClient okHttpClient, URI uri) {
 		Assert.notNull(okHttpClient, "okHttpClient must not be null");
 		Assert.notNull(uri, "uri must not be null");
-		Assert.notNull(requestMediaType, "requestMediaType must not be null");
 
 		this.okHttpClient = okHttpClient;
 		this.uri = uri;
-		this.requestMediaType = requestMediaType;
 		this.requestBuilder = new Request.Builder();
 	}
 
@@ -86,7 +82,7 @@ public class OkHttpConnection extends AbstractHttpSenderConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		requestBuilder
 				.url(uri.toURL())
-				.post(RequestBody.create(requestBuffer.toByteArray(), requestMediaType));
+				.post(RequestBody.create(requestBuffer.toByteArray()));
 
 		requestBuffer = null;
 
