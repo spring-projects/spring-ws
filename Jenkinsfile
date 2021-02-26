@@ -11,22 +11,6 @@ pipeline {
 	}
 
 	stages {
-		stage('Publish OpenJDK 8 + jq docker image') {
-			when {
-				changeset "ci/Dockerfile"
-			}
-			agent any
-
-			steps {
-				script {
-					def image = docker.build("springci/spring-ws-openjdk8-with-jq", "ci/")
-					docker.withRegistry('', 'hub.docker.com-springbuildmaster') {
-						image.push()
-					}
-				}
-			}
-		}
-
 		stage("Test: baseline (jdk8)") {
 			agent {
 				docker {
@@ -199,7 +183,7 @@ pipeline {
 					}
 
 					if (RELEASE_TYPE == 'release') {
-						sh "PROFILE=distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
+						sh "PROFILE=distribute,central ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
 
 						slackSend(
 							color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
