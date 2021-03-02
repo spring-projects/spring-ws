@@ -151,7 +151,6 @@ pipeline {
 				anyOf {
 					branch 'master'
 					branch 'release'
-					branch 'issue/test-release'
 				}
 			}
 			agent {
