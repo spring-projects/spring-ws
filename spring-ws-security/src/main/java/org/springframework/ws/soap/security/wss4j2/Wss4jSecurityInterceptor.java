@@ -668,7 +668,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		requestData.setCallbackHandler(validationCallbackHandler);
 
+		messageContext.setProperty(WSHandlerConstants.TIMESTAMP_STRICT, timestampStrict);
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(validationTimeToLive));
+		messageContext.setProperty(WSHandlerConstants.TTL_FUTURE_TIMESTAMP, Integer.toString(futureTimeToLive));
+		
+		requestData.setTimeStampStrict(timestampStrict);
+		requestData.setTimeStampTTL(validationTimeToLive);
+		requestData.setTimeStampFutureTTL(futureTimeToLive);
 
 		requestData.setAllowRSA15KeyTransportAlgorithm(allowRSA15KeyTransportAlgorithm);
 

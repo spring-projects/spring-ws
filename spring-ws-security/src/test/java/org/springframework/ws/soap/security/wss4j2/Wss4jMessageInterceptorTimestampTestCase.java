@@ -75,6 +75,22 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 	}
 
 	@Test
+	public void testValidateTimestampWithExpiredTtlCustomTtl() throws Exception {
+
+		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
+
+			Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+			interceptor.setValidationActions("Timestamp");
+			interceptor.setValidationTimeToLive(1);
+			interceptor.afterPropertiesSet();
+			SoapMessage message = getMessageWithTimestamp();
+			Thread.sleep(2000);
+			MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
+			interceptor.validateMessage(message, context);
+		});
+	}
+
+	@Test
 	public void testSecureTimestampWithCustomTtl() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
