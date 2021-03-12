@@ -56,6 +56,10 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback;
+import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.http.HttpServletConnection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -678,6 +682,23 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		}
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
+		
+		// Add TLS certificates to request data if mutual auth TLS is used
+		TransportContext transportCtx = TransportContextHolder.getTransportContext();
+		if (transportCtx != null && transportCtx.getConnection() != null) {
+			WebServiceConnection conn = transportCtx.getConnection();
+			if (conn instanceof HttpServletConnection) {
+				HttpServletConnection httpConn = (HttpServletConnection) conn;
+				if (httpConn.getHttpServletRequest() != null) {
+					X509Certificate[] tlsCerts = (X509Certificate[]) httpConn.getHttpServletRequest()
+						.getAttribute("javax.servlet.request.X509Certificate");
+					if (tlsCerts != null && tlsCerts.length > 0) {
+						logger.debug("Adding TLS certificates for validation");
+						requestData.setTlsCerts(tlsCerts);
+					}
+				}
+			}
+		}
 
 		return requestData;
 	}
