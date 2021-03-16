@@ -111,7 +111,7 @@
 		<smack.version>4.2.1</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
 		<spring.version>5.3.5</spring.version>
-		<spring-security.version>5.5.0-M1</spring-security.version>
+		<spring-security.version>5.5.0-M3</spring-security.version>
 		<stax.version>1.7.8</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
