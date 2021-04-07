@@ -434,7 +434,7 @@ The following example shows how to set up the server-side XMPP components:
 
 === MTOM
 
-https://en.wikipedia.org/wiki/Message_Transmission_Optimization_Mechanism[MTOM] is the mechanism for sending binary data to and from Web Services. You can look at how to implement this with Spring WS through the https://github.com/spring-projects/spring-ws-samples/tree/master/mtom[MTOM sample].
+https://en.wikipedia.org/wiki/Message_Transmission_Optimization_Mechanism[MTOM] is the mechanism for sending binary data to and from Web Services. You can look at how to implement this with Spring WS through the https://github.com/spring-projects/spring-ws-samples/tree/main/mtom[MTOM sample].
 
 [[server-endpoints]]
 == Endpoints
