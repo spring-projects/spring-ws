@@ -8,4 +8,4 @@ set -euo pipefail
 echo 'Deploying to Artifactory...'
 
 MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" \
-  ./mvnw -P${PROFILE} -Dmaven.test.skip=true clean deploy -B
+  ./mvnw -s settings.xml -P${PROFILE} -Dmaven.test.skip=true clean deploy -B
