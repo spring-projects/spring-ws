@@ -86,10 +86,10 @@ pipeline {
 						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
 					}
 				}
-				stage("Test: baseline (jdk15)") {
+				stage("Test: baseline (jdk16)") {
 					agent {
 						docker {
-							image 'adoptopenjdk/openjdk15:latest'
+							image 'adoptopenjdk/openjdk16:latest'
 							args '-v $HOME/.m2:/root/.m2'
 						}
 					}
@@ -100,10 +100,10 @@ pipeline {
 						sh "PROFILE=distribute,java11,convergence ci/test.sh"
 					}
 				}
-				stage("Test: spring-buildsnapshot (jdk15)") {
+				stage("Test: spring-buildsnapshot (jdk16)") {
 					agent {
 						docker {
-							image 'adoptopenjdk/openjdk15:latest'
+							image 'adoptopenjdk/openjdk16:latest'
 							args '-v $HOME/.m2:/root/.m2'
 						}
 					}
