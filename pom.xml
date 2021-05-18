@@ -477,10 +477,8 @@
 			<id>central</id>
 
 			<properties>
-				<maven.main.skip>true</maven.main.skip>
 				<maven.test.skip>true</maven.test.skip>
 				<maven.kotlin.skip>true</maven.kotlin.skip>
-				<maven.install.skip>true</maven.install.skip>
 				<skipTests>true</skipTests>
 			</properties>
 
