@@ -240,7 +240,6 @@
 			<id>spring-buildsnapshot</id>
 			<properties>
 				<spring.version>5.3.8-SNAPSHOT</spring.version>
-				<spring-security.version>5.5.1-SNAPSHOT</spring-security.version>
 			</properties>
 		</profile>
 
