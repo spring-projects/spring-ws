@@ -9,11 +9,33 @@
 	<fileSets>
 		<fileSet>
 			<!--
-				Adds reference manual (html and pdf) to the distribution archive
+				Adds reference manual (html) to the distribution archive
 				under the 'docs/reference' directory see pom.xml 'maven-javadoc-plugin' declaration.
 			-->
-			<directory>target/site/reference</directory>
-			<outputDirectory>reference</outputDirectory>
+			<directory>target/site/reference/html</directory>
+			<outputDirectory>reference/html</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<!--
+				Adds reference manual (pdf) to the distribution archive
+				under the 'docs/reference' directory see pom.xml 'maven-javadoc-plugin' declaration.
+			-->
+			<directory>target/site/reference/pdf</directory>
+			<includes>
+				<include>index.pdf</include>
+			</includes>
+			<outputDirectory>reference/pdf</outputDirectory>
+		</fileSet>
+		<fileSet>
+		<!--
+			Adds reference manual (epub) to the distribution archive
+			under the 'docs/reference' directory see pom.xml 'maven-javadoc-plugin' declaration.
+		-->
+			<directory>target/site/reference/epub</directory>
+			<includes>
+				<include>index.epub</include>
+			</includes>
+			<outputDirectory>reference/epub</outputDirectory>
 		</fileSet>
 		<fileSet>
 			<!--
