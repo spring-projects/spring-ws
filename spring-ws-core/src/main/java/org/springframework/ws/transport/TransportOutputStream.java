@@ -45,12 +45,16 @@ public abstract class TransportOutputStream extends OutputStream {
 
 	@Override
 	public void close() throws IOException {
-		getOutputStream().close();
+		if (outputStream != null) {
+			getOutputStream().close();
+		}
 	}
 
 	@Override
 	public void flush() throws IOException {
-		getOutputStream().flush();
+		if (outputStream != null) {
+			getOutputStream().flush();
+		}
 	}
 
 	@Override
