@@ -18,9 +18,10 @@ package org.springframework.ws.soap.saaj.support;
 
 import static org.xmlunit.assertj.XmlAssert.*;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPMessage;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;

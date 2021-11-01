@@ -16,13 +16,14 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.Node;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPHeaderElement;
+
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.Node;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
@@ -32,7 +33,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
 
 /**
- * SAAJ-specific implementation of the {@code SoapHeader} interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
+ * SAAJ-specific implementation of the {@code SoapHeader} interface. Wraps a {@link jakarta.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

@@ -2,20 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+	<bean id="connectionFactory" class="org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory">
 		<property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
 	</bean>
 
-	<bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
-		<property name="physicalName" value="RequestQueue"/>
+	<bean id="requestQueue" class="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+		<property name="address" value="RequestQueue"/>
 	</bean>
 
-	<bean id="requestTopic" class="org.apache.activemq.command.ActiveMQTopic">
-		<property name="physicalName" value="RequestTopic"/>
+	<bean id="requestTopic" class="org.apache.activemq.artemis.jms.client.ActiveMQTopic">
+		<property name="address" value="RequestTopic"/>
 	</bean>
 
-	<bean id="responseQueue" class="org.apache.activemq.command.ActiveMQQueue">
-		<property name="physicalName" value="ResponseQueue"/>
+	<bean id="responseQueue" class="org.apache.activemq.artemis.jms.client.ActiveMQQueue">
+		<property name="address" value="ResponseQueue"/>
 	</bean>
 
 	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">

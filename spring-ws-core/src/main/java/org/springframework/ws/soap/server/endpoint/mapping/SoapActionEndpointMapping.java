@@ -23,7 +23,6 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.mapping.AbstractMapBasedEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 
@@ -36,16 +35,16 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  * <p>
  * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
  * {@code java.util.Properties} class, like as follows:
- * 
+ *
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
  * http://www.springframework.org/spring-ws/samples/airline/GetFlights=getFlightsEndpoint
  * </pre>
- * 
+ *
  * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
  * <p>
  * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
- * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the
+ * which directly read from the transport request (such as the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory} with the
  * {@code payloadCaching} disabled).
  *
  * @author Arjen Poutsma

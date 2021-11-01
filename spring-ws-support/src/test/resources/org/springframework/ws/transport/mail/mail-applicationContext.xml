@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="session" class="javax.mail.Session" factory-method="getInstance">
+	<bean id="session" class="jakarta.mail.Session" factory-method="getInstance">
 		<constructor-arg>
 			<props/>
 		</constructor-arg>
@@ -10,11 +10,22 @@
 
 	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
-	<bean id="messagingReceiver" class="org.springframework.ws.transport.mail.MailMessageReceiver">
+    <bean id="greenmail" class="com.icegreen.greenmail.spring.GreenMailBean">
+        <property name="autostart" value="true"/>
+        <property name="smtpProtocol" value="true"/>
+        <property name="imapProtocol" value="true"/>
+        <property name="users">
+            <list>
+                <value>system:password@localhost</value>
+            </list>
+        </property>
+    </bean>
+
+	<bean id="messagingReceiver" class="org.springframework.ws.transport.mail.MailMessageReceiver" depends-on="greenmail">
 		<property name="messageFactory" ref="messageFactory"/>
-		<property name="from" value="Spring-WS SOAP Server &lt;server@example.com&gt;"/>
-		<property name="storeUri" value="imap://server@example.com/INBOX"/>
-		<property name="transportUri" value="smtp://smtp.example.com"/>
+		<property name="from" value="Spring-WS SOAP Server &lt;server@localhost&gt;"/>
+		<property name="storeUri" value="imap://system:password@localhost:3143/INBOX"/>
+		<property name="transportUri" value="smtp://system:password@localhost:3025"/>
 		<property name="messageReceiver" ref="messageDispatcher"/>
 		<property name="session" ref="session"/>
 		<property name="monitoringStrategy">
@@ -34,18 +45,18 @@
 		</property>
 	</bean>
 
-	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate" depends-on="greenmail">
 		<constructor-arg ref="messageFactory"/>
 		<property name="messageSender">
 			<bean class="org.springframework.ws.transport.mail.MailMessageSender">
-				<property name="from" value="Spring-WS SOAP Client &lt;client@example.com&gt;"/>
-				<property name="transportUri" value="smtp://smtp.example.com"/>
-				<property name="storeUri" value="imap://client@example.com/INBOX"/>
+				<property name="from" value="Spring-WS SOAP Client &lt;client@localhost&gt;"/>
+				<property name="transportUri" value="smtp://system:password@localhost:3025"/>
+				<property name="storeUri" value="imap://system:password@localhost:3143/INBOX"/>
 				<property name="receiveSleepTime" value="1000"/>
 				<property name="session" ref="session"/>
 			</bean>
 		</property>
-		<property name="defaultUri" value="mailto:server@example.com?subject=SOAP%20Test"/>
+		<property name="defaultUri" value="mailto:server@localhost?subject=SOAP%20Test"/>
 	</bean>
 
 

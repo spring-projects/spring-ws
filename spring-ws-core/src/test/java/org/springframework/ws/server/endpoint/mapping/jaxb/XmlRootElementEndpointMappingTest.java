@@ -18,9 +18,10 @@ package org.springframework.ws.server.endpoint.mapping.jaxb;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.lang.reflect.Method;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
 import org.junit.jupiter.api.BeforeEach;

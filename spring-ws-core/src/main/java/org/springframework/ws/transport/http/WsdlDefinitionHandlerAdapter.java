@@ -16,11 +16,12 @@
 
 package org.springframework.ws.transport.http;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
@@ -64,7 +65,7 @@ import org.w3c.dom.Document;
  * @see WsdlDefinition
  * @see #setTransformLocations(boolean)
  * @see #setLocationExpression(String)
- * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+ * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
  * @since 1.0.0
  */
 public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSupport
@@ -184,7 +185,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 *
 	 * @see #setLocationExpression(String)
 	 * @see #setTransformLocations(boolean)
-	 * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
 		transformLocations(locationXPathExpression, definitionDocument, request);
@@ -199,7 +200,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 *
 	 * @see #setSchemaLocationExpression(String)
 	 * @see #setTransformSchemaLocations(boolean)
-	 * @see #transformLocation(String,javax.servlet.http.HttpServletRequest)
+	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
 		transformLocations(schemaLocationXPathExpression, definitionDocument, request);

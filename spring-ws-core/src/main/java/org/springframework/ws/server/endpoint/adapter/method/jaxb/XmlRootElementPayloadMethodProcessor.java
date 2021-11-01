@@ -16,10 +16,10 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;

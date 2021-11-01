@@ -16,9 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
-import java.util.List;
+import jakarta.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 	/**
 	 * Transforms the locations of the given definition document using the given XPath expression.
-	 * 
+	 *
 	 * @param xPathExpression the XPath expression
 	 * @param definitionDocument the definition document
 	 * @param request the request, used to determine the location to transform to

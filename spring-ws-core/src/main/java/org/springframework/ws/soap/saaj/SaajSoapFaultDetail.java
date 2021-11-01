@@ -16,13 +16,14 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.DetailEntry;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFaultElement;
+
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.Detail;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFaultElement;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
@@ -32,7 +33,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
  * SAAJ-specific implementation of the {@code SoapFaultDetail} interface. Wraps a
- * {@link javax.xml.soap.SOAPFaultElement}.
+ * {@link jakarta.xml.soap.SOAPFaultElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

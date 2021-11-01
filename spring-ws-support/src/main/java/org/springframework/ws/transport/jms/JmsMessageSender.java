@@ -19,19 +19,12 @@ package org.springframework.ws.transport.jms;
 import java.io.IOException;
 import java.net.URI;
 
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
-
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.Session;
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
@@ -58,7 +51,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * <tr>
  * <td><tt>deliveryMode</tt></td>
  * <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
- * <tt>NON_PERSISTENT</tt>. See {@link MessageProducer#setDeliveryMode(int)}</td>
+ * <tt>NON_PERSISTENT</tt>. See {@link jakarta.jms.MessageProducer#setDeliveryMode(int)}</td>
  * </tr>
  * <tr>
  * <td><tt>messageType</tt></td>
@@ -66,7 +59,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * </tr>
  * <tr>
  * <td><tt>priority</tt></td>
- * <td>The JMS priority (0-9) associated with the request message. See {@link MessageProducer#setPriority(int)}</td>
+ * <td>The JMS priority (0-9) associated with the request message. See {@link jakarta.jms.MessageProducer#setPriority(int)}</td>
  * </tr>
  * <tr>
  * <td><tt>replyToName</tt></td>
@@ -75,14 +68,14 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * </tr>
  * <tr>
  * <td><tt>timeToLive</tt></td>
- * <td>The lifetime, in milliseconds, of the request message. See {@link MessageProducer#setTimeToLive(long)}</td>
+ * <td>The lifetime, in milliseconds, of the request message. See {@link jakarta.jms.MessageProducer#setTimeToLive(long)}</td>
  * </tr>
  * </table>
  * </blockquote>
  * <p>
  * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
  * <p>
- * This class uses {@link BytesMessage} messages by default, but can be configured to send {@link TextMessage} messages
+ * This class uses {@link jakarta.jms.BytesMessage} messages by default, but can be configured to send {@link jakarta.jms.TextMessage} messages
  * instead. <b>Note</b> that {@code BytesMessages} are preferred, since {@code TextMessages} do not support attachments
  * and character encodings reliably.
  * <p>
@@ -100,7 +93,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	/** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
 	public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
-	/** Default encoding used to read fromn and write to {@link TextMessage} messages. */
+	/** Default encoding used to read fromn and write to {@link jakarta.jms.TextMessage} messages. */
 	public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
 
 	private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
@@ -132,13 +125,13 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	/**
 	 * Set the timeout to use for receive calls. The default is -1, which means no timeout.
 	 *
-	 * @see MessageConsumer#receive(long)
+	 * @see jakarta.jms.MessageConsumer#receive(long)
 	 */
 	public void setReceiveTimeout(long receiveTimeout) {
 		this.receiveTimeout = receiveTimeout;
 	}
 
-	/** Sets the encoding used to read from {@link TextMessage} messages. Defaults to {@code UTF-8}. */
+	/** Sets the encoding used to read from {@link jakarta.jms.TextMessage} messages. Defaults to {@code UTF-8}. */
 	public void setTextMessageEncoding(String textMessageEncoding) {
 		this.textMessageEncoding = textMessageEncoding;
 	}

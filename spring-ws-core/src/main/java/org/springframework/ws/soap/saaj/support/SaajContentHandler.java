@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import jakarta.xml.soap.Name;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -36,8 +36,8 @@ import org.xml.sax.SAXException;
  * {@code SOAPElement}s.
  *
  * @author Arjen Poutsma
- * @see javax.xml.soap.Node
- * @see javax.xml.soap.SOAPElement
+ * @see jakarta.xml.soap.Node
+ * @see jakarta.xml.soap.SOAPElement
  * @since 1.0.0
  */
 public class SaajContentHandler implements ContentHandler {

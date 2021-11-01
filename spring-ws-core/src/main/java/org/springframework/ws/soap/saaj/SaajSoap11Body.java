@@ -16,12 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
+
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapVersion;
@@ -29,7 +30,7 @@ import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
 /**
- * SAAJ-specific implementation of the {@code Soap11Body} interface. Wraps a {@link javax.xml.soap.SOAPBody}.
+ * SAAJ-specific implementation of the {@code Soap11Body} interface. Wraps a {@link jakarta.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

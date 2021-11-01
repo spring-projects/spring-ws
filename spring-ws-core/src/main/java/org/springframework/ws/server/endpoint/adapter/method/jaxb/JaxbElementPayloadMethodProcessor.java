@@ -16,11 +16,11 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;

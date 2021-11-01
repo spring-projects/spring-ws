@@ -16,12 +16,12 @@
 
 package org.springframework.ws.soap.saaj.support;
 
-import java.util.Iterator;
+import jakarta.xml.soap.Name;
+import jakarta.xml.soap.Node;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.Text;
 
-import javax.xml.soap.Name;
-import javax.xml.soap.Node;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.Text;
+import java.util.Iterator;
 
 import org.springframework.util.StringUtils;
 import org.springframework.xml.sax.AbstractXmlReader;
@@ -37,8 +37,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * and calls the corresponding methods on the SAX callback interfaces.
  *
  * @author Arjen Poutsma
- * @see javax.xml.soap.Node
- * @see javax.xml.soap.SOAPElement
+ * @see jakarta.xml.soap.Node
+ * @see jakarta.xml.soap.SOAPElement
  * @since 1.0.0
  */
 public class SaajXmlReader extends AbstractXmlReader {

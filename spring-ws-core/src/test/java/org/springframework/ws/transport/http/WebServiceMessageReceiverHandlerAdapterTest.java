@@ -19,11 +19,11 @@ package org.springframework.ws.transport.http;
 import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

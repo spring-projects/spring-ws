@@ -18,10 +18,10 @@ package org.springframework.ws.transport.jms.support;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.net.URI;
+import jakarta.jms.DeliveryMode;
+import jakarta.jms.Message;
 
-import javax.jms.DeliveryMode;
-import javax.jms.Message;
+import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.transport.jms.JmsTransportConstants;

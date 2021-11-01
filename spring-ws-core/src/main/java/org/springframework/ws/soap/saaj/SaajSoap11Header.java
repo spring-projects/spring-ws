@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPHeaderElement;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPHeader;
-import javax.xml.soap.SOAPHeaderElement;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
- * SAAJ-specific implementation of the {@code Soap11Header} interface. Wraps a {@link javax.xml.soap.SOAPHeader}.
+ * SAAJ-specific implementation of the {@code Soap11Header} interface. Wraps a {@link jakarta.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

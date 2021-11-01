@@ -35,8 +35,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xpath.internal.XPathProcessorException;
-
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
 	private Document noNamespacesDocument;

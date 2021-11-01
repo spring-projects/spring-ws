@@ -21,13 +21,14 @@ import static org.easymock.EasyMock.*;
 import static org.springframework.ws.test.client.RequestMatchers.*;
 import static org.springframework.ws.test.client.ResponseCreators.*;
 
+import jakarta.xml.soap.MessageFactory;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
 import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.BeforeEach;

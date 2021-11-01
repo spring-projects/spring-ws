@@ -16,18 +16,18 @@
 
 package org.springframework.ws.transport.jms;
 
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
+
 import java.io.ByteArrayInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-
 import org.springframework.util.Assert;
 
 /**
- * Input stream that wraps a {@link javax.jms.TextMessage}.
+ * Input stream that wraps a {@link TextMessage}.
  *
  * @author Arjen Poutsma
  * @since 1.5.3

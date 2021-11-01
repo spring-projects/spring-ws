@@ -16,15 +16,14 @@
 
 package org.springframework.ws.transport.mail;
 
+import jakarta.mail.Session;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
-
-import javax.mail.Session;
-import javax.mail.URLName;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;

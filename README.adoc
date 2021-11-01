@@ -38,9 +38,9 @@ You can also import the project into your IDE.
 2. With the release tagged, push the tagged version to the release branch.
 +
 ----
-% git checkout -b release
+% git checkout -b release-4.0.x
 % git reset --hard <tag>
-% git push -f origin release
+% git push -f origin release-4.0.x
 ----
 
 NOTE: You can chain the previous set of commands together using `&&`.

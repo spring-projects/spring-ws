@@ -16,24 +16,15 @@
 
 package org.springframework.ws.transport.jms;
 
+import jakarta.jms.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.IllegalStateException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
-
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TemporaryQueue;
-import javax.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
@@ -230,7 +221,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		}
 	}
 
-	/** @see org.springframework.jms.core.JmsTemplate#isSessionLocallyTransacted(Session) */
+	/** @see org.springframework.jms.core.JmsTemplate#isSessionLocallyTransacted(Session) (Session) */
 	private boolean isSessionLocallyTransacted(Session session) {
 		return sessionTransacted && !ConnectionFactoryUtils.isSessionTransactional(session, connectionFactory);
 	}

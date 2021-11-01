@@ -16,7 +16,8 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.SOAPHeaderElement;
+import jakarta.xml.soap.SOAPHeaderElement;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
@@ -25,7 +26,7 @@ import org.springframework.ws.soap.SoapHeaderException;
 
 /**
  * SAAJ-specific implementation of the {@code SoapHeaderElement} interface. Wraps a
- * {@link javax.xml.soap.SOAPHeaderElement}.
+ * {@link jakarta.xml.soap.SOAPHeaderElement}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

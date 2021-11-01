@@ -16,11 +16,11 @@
 
 package org.springframework.ws.transport.jms;
 
+import jakarta.jms.BytesMessage;
+import jakarta.jms.JMSException;
+
 import java.io.IOException;
 import java.io.OutputStream;
-
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
 
 import org.springframework.util.Assert;
 

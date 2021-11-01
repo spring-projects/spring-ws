@@ -18,14 +18,12 @@ package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.io.ByteArrayOutputStream;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,10 +35,6 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.xmlunit.assertj.XmlAssert;
 
 public class JaxbElementPayloadMethodProcessorTest {
@@ -132,42 +126,6 @@ public class JaxbElementPayloadMethodProcessorTest {
 		processor.handleReturnValue(messageContext, stringReturnType, null);
 
 		assertThat(messageContext.hasResponse()).isFalse();
-	}
-
-	@Test
-	public void handleReturnValueAxiom() throws Exception {
-
-		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-		MessageContext messageContext = new DefaultMessageContext(messageFactory);
-
-		MyType type = new MyType();
-		type.setString("Foo");
-		JAXBElement<MyType> element = new JAXBElement<>(new QName("http://springframework.org", "type"), MyType.class,
-				type);
-
-		processor.handleReturnValue(messageContext, supportedReturnType, element);
-
-		assertThat(messageContext.hasResponse()).isTrue();
-
-		AxiomSoapMessage response = (AxiomSoapMessage) messageContext.getResponse();
-
-		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
-		StringResult payloadResult = new StringResult();
-		transformer.transform(response.getPayloadSource(), payloadResult);
-
-		XmlAssert.assertThat(payloadResult.toString())
-				.and("<type xmlns='http://springframework.org'><string>Foo</string></type>").ignoreWhitespace().areIdentical();
-
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		response.writeTo(bos);
-		String messageResult = bos.toString("UTF-8");
-
-		XmlAssert.assertThat(messageResult).and(
-				"<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'><soapenv:Header/><soapenv:Body>"
-						+ "<type xmlns='http://springframework.org'><string>Foo</string></type>"
-						+ "</soapenv:Body></soapenv:Envelope>")
-				.ignoreWhitespace().areIdentical();
-
 	}
 
 	@ResponsePayload

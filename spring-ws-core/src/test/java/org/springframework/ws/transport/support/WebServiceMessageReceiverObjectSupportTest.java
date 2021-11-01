@@ -17,7 +17,7 @@
 package org.springframework.ws.transport.support;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 import javax.xml.namespace.QName;
 
@@ -47,20 +47,18 @@ public class WebServiceMessageReceiverObjectSupportTest {
 		receiverSupport = new MyReceiverSupport();
 		messageFactory = new MockWebServiceMessageFactory();
 		receiverSupport.setMessageFactory(messageFactory);
-		connectionMock = createStrictMock(FaultAwareWebServiceConnection.class);
+		connectionMock = mock(FaultAwareWebServiceConnection.class);
 		request = new MockWebServiceMessage();
 	}
 
 	@Test
 	public void handleConnectionResponse() throws Exception {
 
-		expect(connectionMock.receive(messageFactory)).andReturn(request);
+		when(connectionMock.receive(messageFactory)).thenReturn(request);
 
 		connectionMock.setFaultCode(null);
 		connectionMock.send(isA(WebServiceMessage.class));
 		connectionMock.close();
-
-		replay(connectionMock);
 
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
@@ -73,20 +71,18 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 		receiverSupport.handleConnection(connectionMock, receiver);
 
-		verify(connectionMock);
-	}
+        verify(connectionMock).receive(messageFactory);
+    }
 
 	@Test
 	public void handleConnectionFaultResponse() throws Exception {
 
 		final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
 
-		expect(connectionMock.receive(messageFactory)).andReturn(request);
+		when(connectionMock.receive(messageFactory)).thenReturn(request);
 		connectionMock.setFaultCode(faultCode);
 		connectionMock.send(isA(WebServiceMessage.class));
 		connectionMock.close();
-
-		replay(connectionMock);
 
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
@@ -101,16 +97,14 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 		receiverSupport.handleConnection(connectionMock, receiver);
 
-		verify(connectionMock);
+		verify(connectionMock).receive(messageFactory);
 	}
 
 	@Test
 	public void handleConnectionNoResponse() throws Exception {
 
-		expect(connectionMock.receive(messageFactory)).andReturn(request);
+        when(connectionMock.receive(messageFactory)).thenReturn(request);
 		connectionMock.close();
-
-		replay(connectionMock);
 
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
@@ -121,7 +115,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 		receiverSupport.handleConnection(connectionMock, receiver);
 
-		verify(connectionMock);
+		verify(connectionMock).receive(messageFactory);
 	}
 
 	private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {

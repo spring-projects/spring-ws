@@ -16,17 +16,17 @@
 
 package org.springframework.ws.transport.jms;
 
+import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
-
 import org.springframework.util.Assert;
 
 /**
- * Writer that wraps a {@link javax.jms.TextMessage}.
+ * Writer that wraps a {@link TextMessage}.
  *
  * @author Arjen Poutsma
  * @since 1.5.3

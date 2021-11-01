@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:latest
+FROM openjdk:17-bullseye
 
 RUN apt-get update && apt-get install -y jq gpg
 

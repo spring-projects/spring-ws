@@ -16,17 +16,17 @@
 
 package org.springframework.ws.transport.mail;
 
-import java.util.Properties;
+import jakarta.mail.Folder;
+import jakarta.mail.FolderClosedException;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 
-import javax.mail.Folder;
-import javax.mail.FolderClosedException;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import java.util.Properties;
 
 import org.springframework.scheduling.SchedulingAwareRunnable;
 import org.springframework.util.Assert;

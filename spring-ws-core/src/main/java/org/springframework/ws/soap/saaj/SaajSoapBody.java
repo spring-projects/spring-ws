@@ -16,8 +16,9 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
@@ -27,7 +28,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 
 /**
- * SAAJ-specific abstract base class of the {@code SoapBody} interface. Wraps a {@link javax.xml.soap.SOAPBody}.
+ * SAAJ-specific abstract base class of the {@code SoapBody} interface. Wraps a {@link jakarta.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

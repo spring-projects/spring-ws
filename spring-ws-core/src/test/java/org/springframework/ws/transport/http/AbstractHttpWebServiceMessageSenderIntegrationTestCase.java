@@ -18,32 +18,35 @@ package org.springframework.ws.transport.http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -80,7 +83,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 	private static final String SOAP_RESPONSE = "<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'><SOAP-ENV:Header/><SOAP-ENV:Body>"
 			+ RESPONSE + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-	private Context jettyContext;
+	private ServletContextHandler jettyContext;
 
 	private MessageFactory saajMessageFactory;
 
@@ -97,8 +100,14 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 
 		int port = FreePortScanner.getFreePort();
 		connectionUri = new URI("http", null, "localhost", port, null, null, null);
+
 		jettyServer = new Server(port);
-		jettyContext = new Context(jettyServer, "/");
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
+
+		jettyContext = new ServletContextHandler();
+		jettyContext.setServer(jettyServer);
+
 		messageSender = createMessageSender();
 
 		if (messageSender instanceof InitializingBean) {
@@ -182,6 +191,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		servlet.setResponse(true);
 
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 
 		FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
@@ -201,6 +211,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 	private void validateResponse(Servlet servlet) throws Exception {
 
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 		FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
 				.createConnection(connectionUri);
@@ -232,6 +243,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 	private void validateNonResponse(Servlet servlet) throws Exception {
 
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 
 		WebServiceConnection connection = messageSender.createConnection(connectionUri);
@@ -259,7 +271,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 	}
 
 	@SuppressWarnings("serial")
-	private class MyServlet extends HttpServlet {
+	public class MyServlet extends HttpServlet {
 
 		private int responseStatus = HttpServletResponse.SC_OK;
 

@@ -16,18 +16,18 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.activation.DataHandler;
+import jakarta.xml.soap.AttachmentPart;
+import jakarta.xml.soap.SOAPException;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.activation.DataHandler;
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPException;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.mime.Attachment;
 
 /**
- * SAAJ-specific implementation of the {@code Attachment} interface. Wraps a {@link javax.xml.soap.AttachmentPart}.
+ * SAAJ-specific implementation of the {@code Attachment} interface. Wraps a {@link jakarta.xml.soap.AttachmentPart}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

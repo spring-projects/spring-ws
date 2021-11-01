@@ -16,16 +16,16 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import javax.xml.transform.TransformerException;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
@@ -39,10 +39,10 @@ public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSup
 
 	protected static final String XML = "<" + LOCAL_NAME + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
-	protected MessageContext createSaajMessageContext() throws javax.xml.soap.SOAPException {
+	protected MessageContext createSaajMessageContext() throws SOAPException {
 
-		javax.xml.soap.MessageFactory saajFactory = javax.xml.soap.MessageFactory.newInstance();
-		javax.xml.soap.SOAPMessage saajMessage = saajFactory.createMessage();
+		MessageFactory saajFactory = MessageFactory.newInstance();
+		SOAPMessage saajMessage = saajFactory.createMessage();
 		saajMessage.getSOAPBody().addChildElement(LOCAL_NAME, "", NAMESPACE_URI);
 
 		return new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(saajFactory));
@@ -56,10 +56,10 @@ public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSup
 
 	protected MessageContext createCachingAxiomMessageContext() throws Exception {
 
-		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
 		transform(new StringSource(XML), request.getPayloadResult());
-		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+		SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
 		soapMessageFactory.afterPropertiesSet();
 
 		return new DefaultMessageContext(request, soapMessageFactory);
@@ -67,11 +67,10 @@ public class AbstractMethodArgumentResolverTestCase extends TransformerObjectSup
 
 	protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
 
-		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
-		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
 		transform(new StringSource(XML), request.getPayloadResult());
-		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
-		soapMessageFactory.setPayloadCaching(false);
+		SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
 		soapMessageFactory.afterPropertiesSet();
 
 		return new DefaultMessageContext(request, soapMessageFactory);

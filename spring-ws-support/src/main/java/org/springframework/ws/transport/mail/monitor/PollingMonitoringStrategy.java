@@ -16,8 +16,8 @@
 
 package org.springframework.ws.transport.mail.monitor;
 
-import javax.mail.Folder;
-import javax.mail.MessagingException;
+import jakarta.mail.Folder;
+import jakarta.mail.MessagingException;
 
 /**
  * Implementation of the {@link MonitoringStrategy} interface that uses a simple polling mechanism. Defines a

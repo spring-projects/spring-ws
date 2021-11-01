@@ -17,7 +17,7 @@
 package org.springframework.ws.transport.http;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -26,8 +26,8 @@ import java.util.Random;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
-import org.easymock.Capture;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
@@ -49,20 +49,19 @@ public class AbstractHttpSenderConnectionTest {
 		new Random().nextBytes(content);
 		CountingInputStream rawInputStream = new CountingInputStream(new ByteArrayInputStream(content));
 
-		AbstractHttpSenderConnection connection = createNiceMock(AbstractHttpSenderConnection.class);
-		expect(connection.getResponseCode()).andReturn(200);
+		AbstractHttpSenderConnection connection = spy(AbstractHttpSenderConnection.class);
+		when(connection.getResponseCode()).thenReturn(200);
 		// Simulate response with chunking enabled
-		expect(connection.getResponseContentLength()).andReturn(chunking ? -1L : content.length);
-		expect(connection.getRawResponseInputStream()).andReturn(rawInputStream);
-		expect(connection.getResponseHeaders(anyObject())).andReturn(Collections.emptyIterator());
+		when(connection.getResponseContentLength()).thenReturn(chunking ? -1L : content.length);
+		when(connection.getRawResponseInputStream()).thenReturn(rawInputStream);
+		when(connection.getResponseHeaders(any())).thenReturn(Collections.emptyIterator());
 
 		// Create a mock message factory to capture the InputStream passed to it
-		WebServiceMessageFactory messageFactory = createNiceMock(WebServiceMessageFactory.class);
-		WebServiceMessage message = createNiceMock(WebServiceMessage.class);
-		Capture<InputStream> inputStreamCapture = new Capture<>();
-		expect(messageFactory.createWebServiceMessage(capture(inputStreamCapture))).andReturn(message);
+		WebServiceMessageFactory messageFactory = spy(WebServiceMessageFactory.class);
+		WebServiceMessage message = spy(WebServiceMessage.class);
 
-		replay(connection, messageFactory, message);
+		ArgumentCaptor<InputStream> inputStreamCapture = ArgumentCaptor.forClass(InputStream.class);
+		when(messageFactory.createWebServiceMessage(inputStreamCapture.capture())).thenReturn(message);
 
 		connection.receive(messageFactory);
 

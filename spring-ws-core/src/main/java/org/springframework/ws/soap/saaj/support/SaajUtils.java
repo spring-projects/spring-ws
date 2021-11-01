@@ -16,19 +16,20 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.Name;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -78,7 +79,7 @@ public abstract class SaajUtils {
 	}
 
 	/**
-	 * Gets the SAAJ version for the specified {@link javax.xml.soap.SOAPElement}. Returns {@link #SAAJ_13} as of
+	 * Gets the SAAJ version for the specified {@link jakarta.xml.soap.SOAPElement}. Returns {@link #SAAJ_13} as of
 	 * Spring-WS 2.2.
 	 *
 	 * @return a code comparable to the SAAJ_XX codes in this class
@@ -147,7 +148,7 @@ public abstract class SaajUtils {
 	}
 
 	/**
-	 * Converts a {@code javax.xml.soap.Name} to a {@code javax.xml.namespace.QName}.
+	 * Converts a {@code jakarta.xml.soap.Name} to a {@code javax.xml.namespace.QName}.
 	 *
 	 * @param name the {@code Name} to convert
 	 * @return the converted {@code QName}

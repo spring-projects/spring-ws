@@ -16,6 +16,12 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,12 +29,6 @@ import java.io.PushbackInputStream;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,8 +49,8 @@ import org.xml.sax.SAXParseException;
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
  * Wraps a SAAJ {@link MessageFactory}. This factory will use SAAJ 1.3 when found, or fall back to SAAJ 1.2 or even 1.1.
  * <p>
- * A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(javax.xml.soap.MessageFactory)
- * constructor}, or by the {@link #setMessageFactory(javax.xml.soap.MessageFactory)} property. When a SAAJ message
+ * A SAAJ {@link MessageFactory} can be injected to the {@link #SaajSoapMessageFactory(jakarta.xml.soap.MessageFactory)
+ * constructor}, or by the {@link #setMessageFactory(jakarta.xml.soap.MessageFactory)} property. When a SAAJ message
  * factory is injected, the {@link #setSoapVersion(org.springframework.ws.soap.SoapVersion)} property is ignored.
  *
  * @author Arjen Poutsma
@@ -90,8 +90,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/**
 	 * Sets the SAAJ message properties. These properties will be set on created messages.
-	 * 
-	 * @see javax.xml.soap.SOAPMessage#setProperty(String, Object)
+	 *
+	 * @see jakarta.xml.soap.SOAPMessage#setProperty(String, Object)
 	 */
 	public void setMessageProperties(Map<String, ?> messageProperties) {
 		this.messageProperties = messageProperties;
@@ -269,7 +269,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	 * Template method that allows for post-processing of the given {@link SOAPMessage}.
 	 * <p>
 	 * Default implementation sets {@linkplain SOAPMessage#setProperty(String, Object) message properties}, if any.
-	 * 
+	 *
 	 * @param soapMessage the message to post process
 	 * @see #setMessageProperties(java.util.Map)
 	 */

@@ -18,25 +18,26 @@ package org.springframework.ws.transport.http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.soap.MessageFactory;
-
 import org.apache.http.HttpHost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.assertj.core.api.Condition;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -105,13 +106,21 @@ public class HttpComponentsMessageSenderIntegrationTest
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		int port = FreePortScanner.getFreePort();
+
 		Server jettyServer = new Server(port);
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
+
+		ServletContextHandler jettyContext = new ServletContextHandler();
+		jettyContext.setContextPath("/");
+
+		jettyContext.addServlet(EchoServlet.class, "/");
+
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 
 		WebServiceConnection connection = null;
-		
+
 		try {
 
 			StaticApplicationContext appContext = new StaticApplicationContext();
@@ -142,7 +151,7 @@ public class HttpComponentsMessageSenderIntegrationTest
 	}
 
 	@SuppressWarnings("serial")
-	private class EchoServlet extends HttpServlet {
+	public static class EchoServlet extends HttpServlet {
 
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

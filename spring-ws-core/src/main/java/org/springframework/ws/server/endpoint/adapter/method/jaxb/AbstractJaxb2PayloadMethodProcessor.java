@@ -16,6 +16,14 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBIntrospector;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.UnmarshallerHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,13 +33,6 @@ import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBIntrospector;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.UnmarshallerHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -184,7 +185,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	/**
 	 * Creates a new {@link Marshaller} to be used for marshalling objects to XML. Defaults to
-	 * {@link javax.xml.bind.JAXBContext#createMarshaller()}, but can be overridden in subclasses for further
+	 * {@link jakarta.xml.bind.JAXBContext#createMarshaller()}, but can be overridden in subclasses for further
 	 * customization.
 	 *
 	 * @param jaxbContext the JAXB context to create a marshaller for
@@ -201,7 +202,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	/**
 	 * Creates a new {@link Unmarshaller} to be used for unmarshalling XML to objects. Defaults to
-	 * {@link javax.xml.bind.JAXBContext#createUnmarshaller()}, but can be overridden in subclasses for further
+	 * {@link jakarta.xml.bind.JAXBContext#createUnmarshaller()}, but can be overridden in subclasses for further
 	 * customization.
 	 *
 	 * @param jaxbContext the JAXB context to create a unmarshaller for

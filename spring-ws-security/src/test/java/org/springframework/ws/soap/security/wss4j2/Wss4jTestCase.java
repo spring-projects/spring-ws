@@ -18,18 +18,17 @@ package org.springframework.ws.soap.security.wss4j2;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.dom.DOMSource;
 
-import org.apache.axiom.om.OMXMLBuilderFactory;
-import org.apache.axiom.soap.SOAPModelBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -39,9 +38,6 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.soap.axiom.AxiomSoapMessage;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
@@ -55,8 +51,6 @@ public abstract class Wss4jTestCase {
 
 	protected MessageFactory saajSoap12MessageFactory;
 
-	protected final boolean axiomTest = this.getClass().getSimpleName().startsWith("Axiom");
-
 	protected final boolean saajTest = this.getClass().getSimpleName().startsWith("Saaj");
 
 	protected Jaxp13XPathTemplate xpathTemplate = new Jaxp13XPathTemplate();
@@ -64,8 +58,8 @@ public abstract class Wss4jTestCase {
 	@BeforeEach
 	public final void setUp() throws Exception {
 
-		if (!axiomTest && !saajTest) {
-			throw new IllegalArgumentException("test class name must start with either Axiom or Saaj");
+		if (!saajTest) {
+			throw new IllegalArgumentException("test class name must start with Saaj");
 		}
 
 		saajSoap11MessageFactory = MessageFactory.newInstance();
@@ -148,46 +142,10 @@ public abstract class Wss4jTestCase {
 		}
 	}
 
-	protected AxiomSoapMessage loadAxiom11Message(String fileName) throws Exception {
-
-		Resource resource = new ClassPathResource(fileName, getClass());
-
-		assertThat(resource.exists()).isTrue();
-
-		try (InputStream is = resource.getInputStream()) {
-
-			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
-			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
-			builder.detach();
-			return new AxiomSoapMessage(soapMessage, "", true, true);
-		}
-	}
-
-	@SuppressWarnings("Since15")
-	protected AxiomSoapMessage loadAxiom12Message(String fileName) throws Exception {
-
-		Resource resource = new ClassPathResource(fileName, getClass());
-
-		assertThat(resource.exists()).isTrue();
-
-		try (InputStream is = resource.getInputStream()) {
-
-			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
-			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
-			builder.detach();
-			return new AxiomSoapMessage(soapMessage, "", true, true);
-		}
-	}
-
 	protected Object getMessage(SoapMessage soapMessage) {
 
 		if (soapMessage instanceof SaajSoapMessage) {
 			return ((SaajSoapMessage) soapMessage).getSaajMessage();
-		}
-
-		if (soapMessage instanceof AxiomSoapMessage) {
-			return ((AxiomSoapMessage) soapMessage).getAxiomMessage();
-
 		}
 
 		throw new IllegalArgumentException("Illegal message: " + soapMessage);
@@ -200,21 +158,12 @@ public abstract class Wss4jTestCase {
 			return;
 		}
 
-		if (soapMessage instanceof AxiomSoapMessage) {
-			((AxiomSoapMessage) soapMessage).setAxiomMessage((org.apache.axiom.soap.SOAPMessage) message);
-			return;
-		}
-
 		throw new IllegalArgumentException("Illegal message: " + message);
 	}
 
 	protected void onSetup() throws Exception {}
 
 	protected SoapMessage loadSoap11Message(String fileName) throws Exception {
-
-		if (axiomTest) {
-			return loadAxiom11Message(fileName);
-		}
 
 		if (saajTest) {
 			return loadSaaj11Message(fileName);
@@ -225,10 +174,6 @@ public abstract class Wss4jTestCase {
 
 	protected SoapMessage loadSoap12Message(String fileName) throws Exception {
 
-		if (axiomTest) {
-			return loadAxiom12Message(fileName);
-		}
-
 		if (saajTest) {
 			return loadSaaj12Message(fileName);
 		}
@@ -237,10 +182,6 @@ public abstract class Wss4jTestCase {
 	}
 
 	protected SoapMessageFactory getSoap11MessageFactory() {
-
-		if (axiomTest) {
-			return new AxiomSoapMessageFactory();
-		}
 
 		if (saajTest) {
 			return new SaajSoapMessageFactory(saajSoap11MessageFactory);
@@ -252,9 +193,7 @@ public abstract class Wss4jTestCase {
 	protected SoapMessageFactory getSoap12MessageFactory() {
 
 		SoapMessageFactory messageFactory;
-		if (axiomTest) {
-			messageFactory = new AxiomSoapMessageFactory();
-		} else if (saajTest) {
+		if (saajTest) {
 			messageFactory = new SaajSoapMessageFactory(saajSoap12MessageFactory);
 		} else
 			throw new IllegalArgumentException();
@@ -264,9 +203,6 @@ public abstract class Wss4jTestCase {
 
 	protected Document getDocument(SoapMessage message) {
 
-		if (axiomTest) {
-			return AxiomUtils.toDocument(((AxiomSoapMessage) message).getAxiomMessage().getSOAPEnvelope());
-		}
 		if (saajTest) {
 			return ((SaajSoapMessage) message).getSaajMessage().getSOAPPart();
 		}

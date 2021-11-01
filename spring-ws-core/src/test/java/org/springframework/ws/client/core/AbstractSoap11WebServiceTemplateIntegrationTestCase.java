@@ -18,38 +18,43 @@ package org.springframework.ws.client.core;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.activation.DataHandler;
+import jakarta.mail.util.ByteArrayDataSource;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
-import javax.activation.DataHandler;
-import javax.mail.util.ByteArrayDataSource;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -75,6 +80,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	private String messagePayload = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 
+	private Logger logger = LogManager.getLogger();
+
 	@BeforeAll
 	public static void startJetty() throws Exception {
 
@@ -82,20 +89,28 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		baseUrl = "http://localhost:" + port;
 
 		jettyServer = new Server(port);
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
 
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new EchoSoapServlet()), "/soap/echo");
-		jettyContext.addServlet(new ServletHolder(new SoapFaultServlet()), "/soap/fault");
+		ServletContextHandler jettyContext = new ServletContextHandler();
+		jettyContext.setContextPath("/");
 
-		SoapFaultServlet badRequestFault = new SoapFaultServlet();
-		badRequestFault.setSc(400);
+		jettyContext.addServlet(EchoSoapServlet.class, "/soap/echo");
+		jettyContext.addServlet(SoapFaultServlet.class, "/soap/fault");
 
-		jettyContext.addServlet(new ServletHolder(badRequestFault), "/soap/badRequestFault");
-		jettyContext.addServlet(new ServletHolder(new NoResponseSoapServlet()), "/soap/noResponse");
-		jettyContext.addServlet(new ServletHolder(new AttachmentsServlet()), "/soap/attachment");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
+		ServletHolder badRequestFault = jettyContext.addServlet(SoapFaultServlet.class, "/soap/badRequestFault");
+		badRequestFault.setInitParameter("sc", "400");
 
+		jettyContext.addServlet(NoResponseSoapServlet.class, "/soap/noResponse");
+		jettyContext.addServlet(AttachmentsServlet.class, "/soap/attachment");
+
+		ServletHolder notfound = jettyContext.addServlet(ErrorServlet.class, "/errors/notfound");
+		notfound.setInitParameter("sc", "404");
+
+		ServletHolder errors = jettyContext.addServlet(ErrorServlet.class, "/errors/server");
+		errors.setInitParameter("sc", "500");
+
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 	}
 
@@ -118,6 +133,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 	@Test
 	public void sendSourceAndReceiveToResult() {
+
+		logger.info(">>> Test case");
 
 		StringResult result = new StringResult();
 		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload), result);
@@ -364,7 +381,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	}
 
 	@SuppressWarnings("serial")
-	private static class EchoSoapServlet extends AbstractSoapServlet {
+	public static class EchoSoapServlet extends AbstractSoapServlet {
 
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) {
@@ -373,7 +390,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	}
 
 	@SuppressWarnings("serial")
-	private static class NoResponseSoapServlet extends AbstractSoapServlet {
+	public static class NoResponseSoapServlet extends AbstractSoapServlet {
 
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) {
@@ -382,7 +399,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	}
 
 	@SuppressWarnings("serial")
-	private static class SoapFaultServlet extends AbstractSoapServlet {
+	public static class SoapFaultServlet extends AbstractSoapServlet {
 
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
@@ -395,7 +412,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	}
 
 	@SuppressWarnings("serial")
-	private static class AttachmentsServlet extends AbstractSoapServlet {
+	public static class AttachmentsServlet extends AbstractSoapServlet {
 
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) {

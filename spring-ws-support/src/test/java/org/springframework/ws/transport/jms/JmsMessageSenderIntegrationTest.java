@@ -18,15 +18,19 @@ package org.springframework.ws.transport.jms;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.jms.BytesMessage;
+import jakarta.jms.TextMessage;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
-import javax.jms.BytesMessage;
-import javax.jms.TextMessage;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
-
+import org.apache.activemq.artemis.core.config.Configuration;
+import org.apache.activemq.artemis.core.config.impl.ConfigurationImpl;
+import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,9 +57,24 @@ public class JmsMessageSenderIntegrationTest {
 
 	private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
+	private EmbeddedActiveMQ server;
+
 	@BeforeEach
 	public void createMessageFactory() throws Exception {
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+
+		Configuration config = new ConfigurationImpl();
+		config.addAcceptorConfiguration("vm", "vm://0");
+		config.addAcceptorConfiguration("tcp", "tcp://127.0.0.1:61616");
+		config.setSecurityEnabled(false);
+		server = new EmbeddedActiveMQ();
+		server.setConfiguration(config);
+		server.start();
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		server.stop();
 	}
 
 	@Test

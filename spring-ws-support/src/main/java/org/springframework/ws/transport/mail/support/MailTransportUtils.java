@@ -16,19 +16,17 @@
 
 package org.springframework.ws.transport.mail.support;
 
+import jakarta.mail.Folder;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Service;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Service;
-import javax.mail.Store;
-import javax.mail.Transport;
-import javax.mail.URLName;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,8 +79,8 @@ public abstract class MailTransportUtils {
 	 * in manual JavaMail code.
 	 *
 	 * @param service the JavaMail Service to close (may be {@code null})
-	 * @see Transport
-	 * @see Store
+	 * @see jakarta.mail.Transport
+	 * @see jakarta.mail.Store
 	 */
 	public static void closeService(Service service) {
 		if (service != null) {

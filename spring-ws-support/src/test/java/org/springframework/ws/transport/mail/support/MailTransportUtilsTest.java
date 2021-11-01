@@ -18,10 +18,10 @@ package org.springframework.ws.transport.mail.support;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.net.URI;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.InternetAddress;
 
-import javax.mail.URLName;
-import javax.mail.internet.InternetAddress;
+import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 

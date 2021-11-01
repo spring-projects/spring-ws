@@ -16,9 +16,10 @@
 
 package org.springframework.ws.support;
 
+import jakarta.activation.DataHandler;
+
 import java.io.IOException;
 
-import javax.activation.DataHandler;
 import javax.xml.transform.Source;
 
 import org.springframework.oxm.Marshaller;

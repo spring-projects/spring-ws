@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{5} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="console" />
+        </Root>
+<!--        <Logger name="org.eclipse.jetty" additivity="false" level="debug">-->
+<!--            <AppenderRef ref="console" />-->
+<!--        </Logger>-->
+<!--        <Logger name="org.springframework.ws" additivity="false" level="debug">-->
+<!--            <AppenderRef ref="console" />-->
+<!--        </Logger>-->
+<!--        <Logger name="org.springframework.web" additivity="false" level="debug">-->
+<!--            <AppenderRef ref="console" />-->
+<!--        </Logger>-->
+    </Loggers>
+</Configuration>

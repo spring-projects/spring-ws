@@ -16,10 +16,10 @@
 
 package org.springframework.ws.mime;
 
+import jakarta.activation.DataHandler;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.activation.DataHandler;
 
 /**
  * Represents an attachment to a {@link org.springframework.ws.mime.MimeMessage}

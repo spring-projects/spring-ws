@@ -16,8 +16,9 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.SOAPException;
+import jakarta.xml.soap.DetailEntry;
+import jakarta.xml.soap.SOAPException;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
@@ -25,7 +26,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 
 /**
  * SAAJ-specific implementation of the {@code SoapFaultDetailElement} interface. Wraps a
- * {@link javax.xml.soap.DetailEntry}.
+ * {@link jakarta.xml.soap.DetailEntry}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

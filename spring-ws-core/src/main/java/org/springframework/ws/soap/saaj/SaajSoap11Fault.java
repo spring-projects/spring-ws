@@ -16,15 +16,15 @@
 
 package org.springframework.ws.soap.saaj;
 
-import java.util.Locale;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
 
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
+import java.util.Locale;
 
 import org.springframework.ws.soap.soap11.Soap11Fault;
 
 /**
- * SAAJ-specific implementation of the {@code Soap11Fault} interface. Wraps a {@link javax.xml.soap.SOAPFault}.
+ * SAAJ-specific implementation of the {@code Soap11Fault} interface. Wraps a {@link jakarta.xml.soap.SOAPFault}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

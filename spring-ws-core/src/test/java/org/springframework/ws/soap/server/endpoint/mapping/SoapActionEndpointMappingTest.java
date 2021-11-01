@@ -18,7 +18,7 @@ package org.springframework.ws.soap.server.endpoint.mapping;
 
 import static org.assertj.core.api.Assertions.*;
 
-import javax.xml.soap.MessageFactory;
+import jakarta.xml.soap.MessageFactory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -16,10 +16,10 @@
 
 package org.springframework.ws.transport.jms;
 
-import javax.jms.BytesMessage;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Message;
+import jakarta.jms.Session;
+import jakarta.jms.TextMessage;
 
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.ws.transport.WebServiceMessageReceiver;

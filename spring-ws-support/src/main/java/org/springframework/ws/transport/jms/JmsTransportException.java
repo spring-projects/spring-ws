@@ -16,7 +16,7 @@
 
 package org.springframework.ws.transport.jms;
 
-import javax.jms.JMSException;
+import jakarta.jms.JMSException;
 
 import org.springframework.ws.transport.TransportException;
 

@@ -18,8 +18,8 @@ package org.springframework.ws.transport.http;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -272,7 +272,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 		this.xsdSchemaHandlerAdapterBeanName = xsdSchemaHandlerAdapterBeanName;
 	}
 
-	@Override
+    @Override
 	protected void doService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
 			throws Exception {
 		WsdlDefinition definition = getWsdlDefinition(httpServletRequest);

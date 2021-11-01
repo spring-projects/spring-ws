@@ -18,13 +18,14 @@ package org.springframework.ws.client.core;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -32,12 +33,14 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.pox.dom.DomPoxMessageFactory;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
@@ -60,11 +63,23 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 
 		int port = FreePortScanner.getFreePort();
 		baseUrl = "http://localhost:" + port;
+
 		jettyServer = new Server(port);
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new PoxServlet()), "/pox");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(404)), "/errors/notfound");
-		jettyContext.addServlet(new ServletHolder(new ErrorServlet(500)), "/errors/server");
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
+
+		ServletContextHandler jettyContext = new ServletContextHandler();
+		jettyContext.setContextPath("/");
+
+		jettyContext.addServlet(PoxServlet.class, "/pox");
+
+		ServletHolder notfound = jettyContext.addServlet(ErrorServlet.class, "/errors/notfound");
+		notfound.setInitParameter("sc", "404");
+
+		ServletHolder errors = jettyContext.addServlet(ErrorServlet.class, "/errors/server");
+		errors.setInitParameter("sc", "500");
+
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 	}
 
@@ -94,7 +109,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 
 	/** Servlet that returns and error message for a given status code. */
 	@SuppressWarnings("serial")
-	private static class ErrorServlet extends HttpServlet {
+	public static class ErrorServlet extends HttpServlet {
 
 		private int sc;
 
@@ -110,7 +125,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 
 	/** Simple POX Servlet. */
 	@SuppressWarnings("serial")
-	private static class PoxServlet extends HttpServlet {
+	public static class PoxServlet extends HttpServlet {
 
 		private DocumentBuilderFactory documentBuilderFactory;
 

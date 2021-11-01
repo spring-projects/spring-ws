@@ -19,9 +19,10 @@ package org.springframework.ws.test.support.matcher;
 import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
+
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

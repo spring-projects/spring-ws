@@ -16,9 +16,9 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPMessage;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.soap11.AbstractSoap11HeaderTestCase;

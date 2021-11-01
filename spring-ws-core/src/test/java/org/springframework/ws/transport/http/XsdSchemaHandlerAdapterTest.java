@@ -18,10 +18,11 @@ package org.springframework.ws.transport.http;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 

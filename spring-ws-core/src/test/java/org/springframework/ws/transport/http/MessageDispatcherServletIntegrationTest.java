@@ -18,23 +18,25 @@ package org.springframework.ws.transport.http;
 
 import static org.xmlunit.assertj.XmlAssert.*;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConnection;
+import jakarta.xml.soap.SOAPConnectionFactory;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.File;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConnection;
-import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.ws.transport.support.EchoPayloadEndpoint;
 import org.springframework.ws.transport.support.FreePortScanner;
 
@@ -51,19 +53,29 @@ public class MessageDispatcherServletIntegrationTest {
 
 	private SOAPConnectionFactory connectionFactory;
 
-	@BeforeAll
-	public static void startJetty() throws Exception {
+	@BeforeEach
+	public void startJetty() throws Exception {
 
 		int port = FreePortScanner.getFreePort();
 		url = "http://localhost:" + port;
+
 		jettyServer = new Server(port);
-		Context jettyContext = new Context(jettyServer, "/");
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
+
+		ServletContextHandler jettyContext = new ServletContextHandler();
+		jettyContext.setContextPath("/");
+
 		String resourceBase = new File(MessageDispatcherServletIntegrationTest.class.getResource("WEB-INF").toURI())
 				.getParent();
+
 		jettyContext.setResourceBase(resourceBase);
-		ServletHolder servletHolder = new ServletHolder(new MessageDispatcherServlet());
+
+		ServletHolder servletHolder = new ServletHolder(MessageDispatcherServlet.class);
 		servletHolder.setName("sws");
 		jettyContext.addServlet(servletHolder, "/");
+
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 	}
 
@@ -74,8 +86,8 @@ public class MessageDispatcherServletIntegrationTest {
 		connectionFactory = SOAPConnectionFactory.newInstance();
 	}
 
-	@AfterAll
-	public static void stopJetty() throws Exception {
+	@AfterEach
+	public void stopJetty() throws Exception {
 
 		if (jettyServer.isRunning()) {
 			jettyServer.stop();

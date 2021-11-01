@@ -18,12 +18,13 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.lang.reflect.Method;
 import java.util.Collections;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 
 import org.apache.commons.logging.LogFactory;

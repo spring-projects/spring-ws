@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPHeader;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
@@ -27,7 +27,7 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapVersion;
 
 /**
- * SAAJ-specific implementation of the {@code SoapEnvelope} interface. Wraps a {@link javax.xml.soap.SOAPEnvelope}.
+ * SAAJ-specific implementation of the {@code SoapEnvelope} interface. Wraps a {@link jakarta.xml.soap.SOAPEnvelope}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

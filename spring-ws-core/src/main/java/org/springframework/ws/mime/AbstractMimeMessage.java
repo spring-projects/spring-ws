@@ -16,14 +16,14 @@
 
 package org.springframework.ws.mime;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
@@ -81,7 +81,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public OutputStream getOutputStream() {
-			throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+			throw new UnsupportedOperationException("Read-only jakarta.activation.DataSource");
 		}
 
 		@Override

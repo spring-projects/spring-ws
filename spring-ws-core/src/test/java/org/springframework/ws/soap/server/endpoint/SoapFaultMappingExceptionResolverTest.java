@@ -18,13 +18,13 @@ package org.springframework.ws.soap.server.endpoint;
 
 import static org.assertj.core.api.Assertions.*;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
+
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
-
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPMessage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

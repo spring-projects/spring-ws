@@ -16,21 +16,22 @@
 
 package org.springframework.ws.transport.http;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.soap.MessageFactory;
-
 import org.apache.commons.httpclient.URIException;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.Test;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -64,9 +65,17 @@ public class CommonsHttpMessageSenderIntegrationTest
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		int port = FreePortScanner.getFreePort();
+
 		Server jettyServer = new Server(port);
-		Context jettyContext = new Context(jettyServer, "/");
-		jettyContext.addServlet(new ServletHolder(new EchoServlet()), "/");
+		Connector connector = new ServerConnector(jettyServer);
+		jettyServer.addConnector(connector);
+
+		ServletContextHandler jettyContext = new ServletContextHandler();
+		jettyContext.setContextPath("/");
+
+		jettyContext.addServlet(EchoServlet.class, "/");
+
+		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 
 		WebServiceConnection connection = null;
@@ -101,7 +110,7 @@ public class CommonsHttpMessageSenderIntegrationTest
 	}
 
 	@SuppressWarnings("serial")
-	private class EchoServlet extends HttpServlet {
+	public static class EchoServlet extends HttpServlet {
 
 		@Override
 		protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -110,5 +119,4 @@ public class CommonsHttpMessageSenderIntegrationTest
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
 		}
 	}
-
 }

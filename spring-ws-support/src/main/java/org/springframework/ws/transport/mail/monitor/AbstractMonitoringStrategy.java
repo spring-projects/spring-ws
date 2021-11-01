@@ -16,14 +16,14 @@
 
 package org.springframework.ws.transport.mail.monitor;
 
-import javax.mail.FetchProfile;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.search.AndTerm;
-import javax.mail.search.FlagTerm;
-import javax.mail.search.SearchTerm;
+import jakarta.mail.FetchProfile;
+import jakarta.mail.Flags;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.search.AndTerm;
+import jakarta.mail.search.FlagTerm;
+import jakarta.mail.search.SearchTerm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,8 +43,8 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 	private boolean deleteMessages = true;
 
 	/**
-	 * Sets whether messages should be marked as {@link javax.mail.Flags.Flag#DELETED DELETED} after they have been read.
-	 * Default is {@code true}.
+	 * Sets whether messages should be marked as {@link jakarta.mail.Flags.Flag#DELETED DELETED} after they have been
+	 * read. Default is {@code true}.
 	 */
 	public void setDeleteMessages(boolean deleteMessages) {
 		this.deleteMessages = deleteMessages;
@@ -95,9 +95,9 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
 	/**
 	 * Retrieves new messages from the given folder. This implementation creates a {@link SearchTerm} that searches for
-	 * all messages in the folder that are {@link javax.mail.Flags.Flag#RECENT RECENT}, not
-	 * {@link javax.mail.Flags.Flag#ANSWERED ANSWERED}, and not {@link javax.mail.Flags.Flag#DELETED DELETED}. The search
-	 * term is used to {@link Folder#search(SearchTerm) search} for new messages.
+	 * all messages in the folder that are {@link jakarta.mail.Flags.Flag#RECENT RECENT}, not
+	 * {@link jakarta.mail.Flags.Flag#ANSWERED ANSWERED}, and not {@link jakarta.mail.Flags.Flag#DELETED DELETED}. The
+	 * search term is used to {@link Folder#search(SearchTerm) search} for new messages.
 	 *
 	 * @param folder the folder to retrieve new messages from
 	 * @return the new messages

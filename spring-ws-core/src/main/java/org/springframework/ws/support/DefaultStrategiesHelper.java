@@ -16,13 +16,13 @@
 
 package org.springframework.ws.support;
 
+import jakarta.servlet.ServletContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-
-import javax.servlet.ServletContext;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;

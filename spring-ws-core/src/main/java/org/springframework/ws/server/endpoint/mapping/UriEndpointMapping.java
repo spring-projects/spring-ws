@@ -20,7 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
@@ -38,22 +38,22 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * <p>
  * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the {@code
  * java.util.Properties} class, like as follows:
- * 
+ *
  * <pre>
  * http://example.com:8080/services/bookFlight=bookFlightEndpoint
  * jms://exampleQueue=getFlightsEndpoint
  * </pre>
- * 
+ *
  * or, when the {@code usePath} property is enabled:
- * 
+ *
  * <pre>
  * /services/bookFlight=bookFlightEndpoint
  * </pre>
- * 
+ *
  * The syntax is [URI|PATH]=ENDPOINT_BEAN_NAME.
  * <p>
  * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
- * which directly read from the transport request (such as the {@link AxiomSoapMessageFactory} with the {@code
+ * which directly read from the transport request (such as the {@link SaajSoapMessageFactory} with the {@code
  * payloadCaching} disabled). However, this endpoint mapping obviously is transport specific.
  *
  * @author Arjen Poutsma

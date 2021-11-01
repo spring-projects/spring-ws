@@ -16,9 +16,9 @@
 
 package org.springframework.ws.transport.mail.monitor;
 
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 
 /**
  * Defines the contract for objects that monitor a given folder for new messages. Allows for multiple implementation

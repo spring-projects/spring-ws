@@ -16,11 +16,12 @@
 
 package org.springframework.ws.transport.http;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
@@ -144,7 +145,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	 * This method is only called when the {@code transformSchemaLocations} property is true.
 	 *
 	 * @see #setSchemaLocationExpression(String)
-	 * @see #transformLocation(String, javax.servlet.http.HttpServletRequest)
+	 * @see #transformLocation(String, jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
 		transformLocations(schemaLocationXPathExpression, definitionDocument, request);

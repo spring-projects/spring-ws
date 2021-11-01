@@ -16,12 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
+
 import java.util.Iterator;
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 
 import org.springframework.ws.soap.soap12.Soap12Fault;
 

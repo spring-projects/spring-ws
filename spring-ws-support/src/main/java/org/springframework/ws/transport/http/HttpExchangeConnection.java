@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.http;
 
+import jakarta.xml.soap.SOAPConstants;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPConstants;
 
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;

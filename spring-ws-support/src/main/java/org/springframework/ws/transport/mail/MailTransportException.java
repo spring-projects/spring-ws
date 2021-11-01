@@ -16,8 +16,7 @@
 
 package org.springframework.ws.transport.mail;
 
-import javax.mail.MessagingException;
-
+import jakarta.mail.MessagingException;
 import org.springframework.ws.transport.TransportException;
 
 /**

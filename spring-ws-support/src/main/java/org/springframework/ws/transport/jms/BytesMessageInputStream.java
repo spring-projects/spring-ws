@@ -16,12 +16,12 @@
 
 package org.springframework.ws.transport.jms;
 
+import jakarta.jms.BytesMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.MessageEOFException;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import javax.jms.BytesMessage;
-import javax.jms.JMSException;
-import javax.jms.MessageEOFException;
 
 import org.springframework.util.Assert;
 

@@ -11,7 +11,7 @@ pipeline {
 	}
 
 	stages {
-		stage('Publish OpenJDK 8 + jq docker image') {
+		stage('Publish OpenJDK 17 + jq docker image') {
 			when {
 				changeset "ci/Dockerfile"
 			}
@@ -19,7 +19,7 @@ pipeline {
 
 			steps {
 				script {
-					def image = docker.build("springci/spring-ws-openjdk8-with-jq", "ci/")
+					def image = docker.build("springci/spring-ws-openjdk17-with-jq", "ci/")
 					docker.withRegistry('', 'hub.docker.com-springbuildmaster') {
 						image.push()
 					}
@@ -27,10 +27,10 @@ pipeline {
 			}
 		}
 
-		stage("Test: baseline (jdk8)") {
+		stage("Test: baseline (jdk17)") {
 			agent {
 				docker {
-					image 'adoptopenjdk/openjdk8:latest'
+					image 'openjdk:17-bullseye'
 					args '-v $HOME/.m2:/root/.m2'
 				}
 			}
@@ -44,10 +44,10 @@ pipeline {
 
 		stage("Test other configurations") {
 			parallel {
-				stage("Test: spring-buildsnapshot (jdk8)") {
+				stage("Test: spring-buildsnapshot (jdk17)") {
 					agent {
 						docker {
-							image 'adoptopenjdk/openjdk8:latest'
+							image 'openjdk:17-bullseye'
 							args '-v $HOME/.m2:/root/.m2'
 						}
 					}
@@ -58,69 +58,13 @@ pipeline {
 						sh "PROFILE=spring-buildsnapshot,convergence ci/test.sh"
 					}
 				}
-				stage("Test: baseline (jdk11)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk11:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					environment {
-						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
-					}
-					steps {
-						sh "PROFILE=distribute,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: spring-buildsnapshot (jdk11)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk11:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					environment {
-						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
-					}
-					steps {
-						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: baseline (jdk16)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk16:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					environment {
-						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
-					}
-					steps {
-						sh "PROFILE=distribute,java11,convergence ci/test.sh"
-					}
-				}
-				stage("Test: spring-buildsnapshot (jdk16)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk16:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					environment {
-						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
-					}
-					steps {
-						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
-					}
-				}
 			}
 		}
 
 		stage('Deploy') {
 			agent {
 				docker {
-					image 'springci/spring-ws-openjdk8-with-jq:latest'
+					image 'springci/spring-ws-openjdk17-with-jq:latest'
 					args '-v $HOME/.m2:/tmp/jenkins-home/.m2'
 				}
 			}
@@ -167,13 +111,13 @@ pipeline {
 		stage('Release documentation') {
 			when {
 				anyOf {
-					branch 'main'
-					branch 'release'
+					branch '4.0.x'
+					branch 'release-4.0.x'
 				}
 			}
 			agent {
 				docker {
-					image 'adoptopenjdk/openjdk8:latest'
+					image 'openjdk:17-bullseye'
 					args '-v $HOME/.m2:/tmp/jenkins-home/.m2'
 				}
 			}

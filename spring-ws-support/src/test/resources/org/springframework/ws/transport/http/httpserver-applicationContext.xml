@@ -7,7 +7,7 @@
 		<property name="targetMethod" value="getFreePort"/>
 	</bean>
 
-	<bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
+	<bean id="httpServer" class="org.springframework.ws.transport.http.SimpleHttpServerFactoryBean">
 		<property name="port" ref="port"/>
 		<property name="contexts">
 			<map>

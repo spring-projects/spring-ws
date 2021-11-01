@@ -19,7 +19,7 @@ package org.springframework.ws.test.support.matcher;
 import static org.assertj.core.api.Assertions.*;
 import static org.easymock.EasyMock.*;
 
-import javax.xml.soap.MessageFactory;
+import jakarta.xml.soap.MessageFactory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;

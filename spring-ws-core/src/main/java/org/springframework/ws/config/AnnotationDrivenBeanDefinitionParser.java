@@ -59,7 +59,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	private static final boolean dom4jPresent = ClassUtils.isPresent("org.dom4j.Element",
 			AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
-	private static final boolean jaxb2Present = ClassUtils.isPresent("javax.xml.bind.Binder",
+	private static final boolean jaxb2Present = ClassUtils.isPresent("jakarta.xml.bind.Binder",
 			AnnotationDrivenBeanDefinitionParser.class.getClassLoader());
 
 	private static final boolean jdomPresent = ClassUtils.isPresent("org.jdom2.Element",

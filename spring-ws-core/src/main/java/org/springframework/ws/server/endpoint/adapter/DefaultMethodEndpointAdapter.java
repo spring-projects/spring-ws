@@ -54,7 +54,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	private static final String DOM4J_CLASS_NAME = "org.dom4j.Element";
 
-	private static final String JAXB2_CLASS_NAME = "javax.xml.bind.Binder";
+	private static final String JAXB2_CLASS_NAME = "jakarta.xml.bind.Binder";
 
 	private static final String JDOM_CLASS_NAME = "org.jdom2.Element";
 

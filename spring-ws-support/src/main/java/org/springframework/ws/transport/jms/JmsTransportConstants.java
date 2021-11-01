@@ -16,8 +16,8 @@
 
 package org.springframework.ws.transport.jms;
 
-import javax.jms.BytesMessage;
-import javax.jms.TextMessage;
+import jakarta.jms.BytesMessage;
+import jakarta.jms.TextMessage;
 
 import org.springframework.ws.transport.TransportConstants;
 

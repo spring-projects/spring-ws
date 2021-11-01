@@ -16,10 +16,8 @@
 
 package org.springframework.xml.transform;
 
-import static org.easymock.EasyMock.*;
+import static org.mockito.Mockito.*;
 import static org.xmlunit.assertj.XmlAssert.*;
-
-import java.io.IOException;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -28,7 +26,6 @@ import javax.xml.transform.TransformerException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 
 public class TransformerHelperTest {
 
@@ -39,15 +36,11 @@ public class TransformerHelperTest {
 	public void setUp() throws Exception {
 
 		helper = new TransformerHelper();
-		transformer = createMock(Transformer.class);
+		transformer = mock(Transformer.class);
 	}
 
 	@Test
-	public void defaultTransformerFactory() throws TransformerException, IOException, SAXException {
-		doTest();
-	}
-
-	private void doTest() throws TransformerException, SAXException, IOException {
+	public void defaultTransformerFactory() throws TransformerException {
 
 		String xml = "<root xmlns='http://springframework.org/spring-ws'><child>text</child></root>";
 		Source source = new StringSource(xml);

@@ -16,10 +16,10 @@
 
 package org.springframework.ws.mime;
 
+import jakarta.activation.DataHandler;
+
 import java.io.File;
 import java.util.Iterator;
-
-import javax.activation.DataHandler;
 
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.WebServiceMessage;

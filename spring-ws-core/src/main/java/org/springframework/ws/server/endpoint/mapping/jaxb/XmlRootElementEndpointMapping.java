@@ -16,12 +16,13 @@
 
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBIntrospector;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.lang.reflect.Method;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBIntrospector;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 
 import org.springframework.core.MethodParameter;
@@ -35,7 +36,7 @@ import org.springframework.xml.transform.TransformerHelper;
  * JAXB2 {@link XmlRootElement} annotation to map methods to request payload root elements.
  * <p>
  * Endpoints typically have the following form:
- * 
+ *
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
@@ -44,9 +45,9 @@ import org.springframework.xml.transform.TransformerHelper;
  *	  }
  * }
  * </pre>
- * 
+ *
  * where MyRootElement is annotated with {@code @XmlRootElement}:
- * 
+ *
  * <pre>
  * &#64;XmlRootElement(name = "myRoot", namespace = "http://springframework.org/spring-ws")
  * public class MyRootElement {
