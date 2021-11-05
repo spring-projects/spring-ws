@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ws</groupId>
@@ -117,7 +116,7 @@
 		<woodstox.version>4.2.0</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
 		<wss4j.version>2.3.0</wss4j.version>
-		<xmlsec.version>2.2.0</xmlsec.version>
+		<xmlsec.version>2.3.0</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
 		<xmlunit1.version>1.6</xmlunit1.version>
 		<xmlunit.version>2.7.0</xmlunit.version>
@@ -267,7 +266,7 @@
 											</excludes>
 											<searchTransitive>true</searchTransitive>
 										</bannedDependencies>
-										<dependencyConvergence/>
+										<dependencyConvergence />
 									</rules>
 									<fail>true</fail>
 								</configuration>
