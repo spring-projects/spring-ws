@@ -146,14 +146,10 @@
 
         <!--// Mail-->
         <dependency>
-            <groupId>jakarta.mail</groupId>
-            <artifactId>jakarta.mail-api</artifactId>
-            <version>${jakarta-mail.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>${jakarta-mail.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
