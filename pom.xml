@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ws</groupId>
@@ -266,10 +267,25 @@
 											</excludes>
 											<searchTransitive>true</searchTransitive>
 										</bannedDependencies>
-										<dependencyConvergence />
+										<dependencyConvergence/>
 									</rules>
 									<fail>true</fail>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.basepom.maven</groupId>
+						<artifactId>duplicate-finder-maven-plugin</artifactId>
+						<version>1.5.0</version>
+						<executions>
+							<execution>
+								<id>check-for-duplicates</id>
+								<goals>
+									<goal>check</goal>
+								</goals>
+								<phase>validate</phase>
 							</execution>
 						</executions>
 					</plugin>
