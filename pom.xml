@@ -95,9 +95,11 @@
         <ehcache.version>2.10.6</ehcache.version>
         <greenmail.version>2.0.0-alpha-2</greenmail.version>
         <httpclient.version>4.5.3</httpclient.version>
-        <jakarta-api.version>9.0.0</jakarta-api.version>
+        <jakarta-annotation.version>2.0.0</jakarta-annotation.version>
         <jakarta-jms.version>3.0.0</jakarta-jms.version>
         <jakarta-mail.version>2.0.1</jakarta-mail.version>
+        <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
+        <jakarta-soap.version>2.0.1</jakarta-soap.version>
         <jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
         <jaxen.version>1.1.4</jaxen.version>
         <jdom2.version>2.0.6</jdom2.version>
@@ -157,12 +159,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakarta-api.version}</version>
         </dependency>
 
         <dependency>
