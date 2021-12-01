@@ -112,7 +112,7 @@
 		<soap-api.version>1.4.0</soap-api.version>
 		<spring.version>5.3.7</spring.version>
 		<spring-security.version>5.5.0</spring-security.version>
-		<stax.version>1.7.8</stax.version>
+		<stax.version>1.8.3</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
