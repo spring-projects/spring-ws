@@ -46,6 +46,7 @@ You can also import the project into your IDE.
 NOTE: You can chain the previous set of commands together using `&&`.
 
 The pipeline will build and release the "release" branch. It will also build a new a new snapshot and stage it on artifactory.
+For releases that go to Maven Central, the user much manually check out and verify the artifacts before releasing them.
 
 === Running CI tasks locally
 
