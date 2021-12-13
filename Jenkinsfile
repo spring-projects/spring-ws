@@ -100,7 +100,7 @@ pipeline {
 						slackSend(
                                 color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
                                 channel: '#spring-ws',
-                                message: "@here Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
+                                message: "Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
 					} else {
 						sh "PROFILE=distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
 					}
