@@ -102,8 +102,7 @@
 		<jetty.version>6.1.26</jetty.version>
 		<jms.version>2.0.1</jms.version>
 		<junit.version>5.7.0</junit.version>
-		<log4j.version>1.2.17</log4j.version>
-		<log4j2.version>2.11.0</log4j2.version>
+		<log4j2.version>2.15.0</log4j2.version>
 		<mail.version>1.4.7</mail.version>
 		<mock-javamail.version>1.9</mock-javamail.version>
 		<saaj-impl.version>1.5.2</saaj-impl.version>
