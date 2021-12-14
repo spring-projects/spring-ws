@@ -244,7 +244,7 @@
 			</properties>
 			<repositories>
 				<repository>
-					<id>spring-snapshots</id>
+					<id>spring-libs-snapshot</id>
 					<name>Spring Snapshots</name>
 					<url>https://repo.spring.io/snapshot</url>
 					<snapshots>
@@ -252,7 +252,7 @@
 					</snapshots>
 				</repository>
 				<repository>
-					<id>spring-milestones</id>
+					<id>spring-libs-milestone</id>
 					<name>Spring Milestones</name>
 					<url>https://repo.spring.io/milestone</url>
 					<snapshots>
@@ -260,7 +260,7 @@
 					</snapshots>
 				</repository>
 				<repository>
-					<id>spring-release</id>
+					<id>spring-libs-release</id>
 					<name>Spring Releases</name>
 					<url>https://repo.spring.io/release</url>
 					<snapshots>
@@ -279,7 +279,7 @@
 			</properties>
 			<repositories>
 				<repository>
-					<id>spring-snapshots</id>
+					<id>spring-libs-snapshot</id>
 					<name>Spring Snapshots</name>
 					<url>https://repo.spring.io/snapshot</url>
 					<snapshots>
@@ -287,7 +287,7 @@
 					</snapshots>
 				</repository>
 				<repository>
-					<id>spring-milestones</id>
+					<id>spring-libs-milestone</id>
 					<name>Spring Milestones</name>
 					<url>https://repo.spring.io/milestone</url>
 					<snapshots>
@@ -295,7 +295,7 @@
 					</snapshots>
 				</repository>
 				<repository>
-					<id>spring-release</id>
+					<id>spring-libs-release</id>
 					<name>Spring Releases</name>
 					<url>https://repo.spring.io/release</url>
 					<snapshots>
@@ -854,7 +854,7 @@
 
 	<repositories>
 		<repository>
-			<id>spring-snapshots</id>
+			<id>spring-libs-snapshot</id>
 			<name>Spring Snapshots</name>
 			<url>https://repo.spring.io/snapshot</url>
 			<snapshots>
@@ -862,7 +862,7 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>spring-milestones</id>
+			<id>spring-libs-milestone</id>
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
 			<snapshots>
@@ -870,7 +870,7 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>spring-release</id>
+			<id>spring-libs-release</id>
 			<name>Spring Releases</name>
 			<url>https://repo.spring.io/release</url>
 			<snapshots>
