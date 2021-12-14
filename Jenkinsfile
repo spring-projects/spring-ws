@@ -198,7 +198,10 @@ pipeline {
 
 		stage('Release documentation') {
 			when {
-				branch 'release-3.x'
+				anyOf {
+					branch '3.x'
+					branch 'release-3.x'
+				}
 			}
 			agent {
 				docker {
