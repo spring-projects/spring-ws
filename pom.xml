@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.springframework.ws</groupId>
 	<artifactId>spring-ws</artifactId>
-	<version>3.1.2-SNAPSHOT</version>
+	<version>3.1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Spring Web Services</name>
@@ -102,8 +102,7 @@
 		<jetty.version>6.1.26</jetty.version>
 		<jms.version>2.0.1</jms.version>
 		<junit.version>5.7.0</junit.version>
-		<log4j.version>1.2.17</log4j.version>
-		<log4j2.version>2.11.0</log4j2.version>
+		<log4j2.version>2.15.0</log4j2.version>
 		<mail.version>1.4.7</mail.version>
 		<mock-javamail.version>1.9</mock-javamail.version>
 		<saaj-impl.version>1.5.2</saaj-impl.version>
@@ -112,12 +111,12 @@
 		<soap-api.version>1.4.0</soap-api.version>
 		<spring.version>5.3.7</spring.version>
 		<spring-security.version>5.5.0</spring-security.version>
-		<stax.version>1.7.8</stax.version>
+		<stax.version>1.8.3</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
 		<wsdl4j.version>1.6.3</wsdl4j.version>
 		<wss4j.version>2.3.0</wss4j.version>
-		<xmlsec.version>2.2.0</xmlsec.version>
+		<xmlsec.version>2.3.0</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
 		<xmlunit1.version>1.6</xmlunit1.version>
 		<xmlunit.version>2.7.0</xmlunit.version>
@@ -271,6 +270,21 @@
 									</rules>
 									<fail>true</fail>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.basepom.maven</groupId>
+						<artifactId>duplicate-finder-maven-plugin</artifactId>
+						<version>1.5.0</version>
+						<executions>
+							<execution>
+								<id>check-for-duplicates</id>
+								<goals>
+									<goal>check</goal>
+								</goals>
+								<phase>validate</phase>
 							</execution>
 						</executions>
 					</plugin>

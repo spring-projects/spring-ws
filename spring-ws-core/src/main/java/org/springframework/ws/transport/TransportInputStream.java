@@ -47,7 +47,9 @@ public abstract class TransportInputStream extends InputStream {
 
 	@Override
 	public void close() throws IOException {
-		getInputStream().close();
+		if (inputStream != null) {
+			getInputStream().close();
+		}
 	}
 
 	@Override
