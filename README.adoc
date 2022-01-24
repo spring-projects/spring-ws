@@ -64,9 +64,21 @@ But part of the release process requires a local check, which DOES depend upon y
 ----
 % git push -f origin release-3.x
 ----
++
+5. Login to maven central and verify the release.
+6. Close the repository.
+7. Release the repository.
+8. Announce on VMware Slack.
+9. Once completed, push the `3.x` branch for next version's snapshots.
++
+----
+% git checkout 3.x
+% git push
+% git push --tags
+----
 
-The pipeline will build and release the "release-3.x" branch. It will also build a new snapshot and stage it on artifactory.
-For releases that go to Maven Central, the user must manually check out and verify the artifacts before releasing them.
+The pipeline will build and release the "release-3.x" branch on artifactory for milestones and RCs.
+For releases, they are sent to maven central.
 
 === Running CI tasks locally
 
