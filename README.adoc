@@ -31,8 +31,8 @@ You can also import the project into your IDE.
 
 Before you make a release, follow this checklist:
 
-* Are you use the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
-* Are you use the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
+* Are you using the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
+* Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
 * Is it time to switch from milestone to release candidate? Or from release candidate to release?
 
