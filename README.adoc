@@ -64,10 +64,23 @@ But part of the release process requires a local check, which DOES depend upon y
 ----
 % git push -f origin release-4.0.x
 ----
++
+5. For milestones and release candidates, verify the artifacts on artifactory.
+6. For releases, login to maven central.
+* Verify the release.
+* Close the repository.
+* Release the repository.
+7. Announce on VMware Slack.
+8. Once completed, push the `4.0.x` branch for next version's snapshots.
++
+----
+% git checkout 4.0.x
+% git push
+% git push --tags
+----
 
-NOTE: You can chain the previous set of commands together using `&&`.
-
-The pipeline will build and release the "release" branch. It will also build a new a new snapshot and stage it on artifactory.
+The pipeline will build and release the "release-4.0.x" branch on artifactory for milestones and RCs.
+For releases, they are sent to maven central.
 
 === Running CI tasks locally
 
