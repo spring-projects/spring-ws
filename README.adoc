@@ -94,7 +94,7 @@ All of these use cases are great reasons to essentially run what Jenkins does on
 
 IMPORTANT: To do this you must have Docker installed on your machine.
 
-1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github adoptopenjdk/openjdk8:latest /bin/bash`
+1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github openjdk:17-bullseye /bin/bash`
 +
 This will launch the Docker image and mount your source code at `spring-ws-github`.
 +
@@ -108,7 +108,7 @@ Since the container is binding to your source, you can make edits from your IDE 
 
 If you need to test the `build.sh` script, then do this:
 
-1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github adoptopenjdk/openjdk8:latest /bin/bash`
+1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github openjdk:17-bullseye /bin/bash`
 +
 This will launch the Docker image and mount your source code at `spring-ws-github` and the temporary
 artifactory output directory at `spring-ws-artifactory`.
