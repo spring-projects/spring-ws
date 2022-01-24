@@ -263,6 +263,9 @@
     <profiles>
         <profile>
             <id>spring-buildsnapshot</id>
+            <properties>
+                <spring.version>6.0.0-SNAPSHOT</spring.version>
+            </properties>
         </profile>
 
         <profile>
