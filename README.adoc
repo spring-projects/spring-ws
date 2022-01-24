@@ -29,17 +29,39 @@ You can also import the project into your IDE.
 
 == Making a release
 
+Before you make a release, follow this checklist:
+
+* Are you use the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
+* Are you use the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
+* Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
+* Is it time to switch from milestone to release candidate? Or from release candidate to release?
+
+NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
+But part of the release process requires a local check, which DOES depend upon your environment.
+
 1. Create a new release (on the main branch).
 +
 ----
 % ci/create-release.sh <release version> <next snapshot version>
 ----
 +
-2. With the release tagged, push the tagged version to the release branch.
+2. With the release tagged, update the release branch to the newly created tag.
 +
 ----
 % git checkout -b release
 % git reset --hard <tag>
+----
++
+3. Verify this builds locally and passes all tests.
++
+----
+% ./mvnw clean package
+% ./mvnw -Pspring-buildsnapshot clean package
+----
++
+4. Push the tagged version to the release branch.
++
+----
 % git push -f origin release
 ----
 
