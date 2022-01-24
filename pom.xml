@@ -265,6 +265,7 @@
             <id>spring-buildsnapshot</id>
             <properties>
                 <spring.version>6.0.0-SNAPSHOT</spring.version>
+                <spring-security.version>6.0.0-SNAPSHOT</spring-security.version>
             </properties>
         </profile>
 
