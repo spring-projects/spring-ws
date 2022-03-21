@@ -110,7 +110,7 @@
 		<smack.version>4.2.1</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
 		<spring.version>5.3.17</spring.version>
-		<spring-security.version>5.5.4</spring-security.version>
+		<spring-security.version>5.5.5</spring-security.version>
 		<stax.version>1.8.3</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
 		<woodstox.version>4.2.0</woodstox.version>
@@ -239,7 +239,7 @@
 			<id>spring-buildsnapshot</id>
 			<properties>
 				<spring.version>5.3.18-SNAPSHOT</spring.version>
-				<spring-security.version>5.5.5-SNAPSHOT</spring-security.version>
+				<spring-security.version>5.5.6-SNAPSHOT</spring-security.version>
 			</properties>
 		</profile>
 
