@@ -72,11 +72,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 
 		try {
 			key = keyStore.getKey(id, symmetricKeyPassword != null ? symmetricKeyPassword : privateKeyPassword.toCharArray());
-		} catch (UnrecoverableKeyException e) {
-			throw new IOException("Could not get key", e);
-		} catch (KeyStoreException e) {
-			throw new IOException("Could not get key", e);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
 			throw new IOException("Could not get key", e);
 		}
 

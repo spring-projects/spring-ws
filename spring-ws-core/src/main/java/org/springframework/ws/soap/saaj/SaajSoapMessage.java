@@ -194,9 +194,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			SOAPMessage saajMessage = messageFactory.createMessage(getSaajMessage().getMimeHeaders(), bis);
 			setSaajMessage(saajMessage);
 			return saajMessage.getSOAPPart();
-		} catch (SOAPException ex) {
-			throw new SaajSoapMessageException("Could not save changes", ex);
-		} catch (IOException ex) {
+		} catch (SOAPException | IOException ex) {
 			throw new SaajSoapMessageException("Could not save changes", ex);
 		}
 	}
@@ -221,9 +219,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 				this.saajMessage = messageFactory.createMessage(saajMessage.getMimeHeaders(), bis);
 
-			} catch (SOAPException ex) {
-				throw new SaajSoapMessageException("Could not read input stream", ex);
-			} catch (IOException ex) {
+			} catch (SOAPException | IOException ex) {
 				throw new SaajSoapMessageException("Could not read input stream", ex);
 			}
 		}

@@ -142,9 +142,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		try {
 			connection.sendStanza(responseMessage);
-		} catch (SmackException.NotConnectedException e) {
-			throw new IOException(e);
-		} catch (InterruptedException e) {
+		} catch (SmackException.NotConnectedException | InterruptedException e) {
 			throw new IOException(e);
 		}
 	}

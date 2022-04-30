@@ -81,7 +81,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 					try {
 						streamReader = StaxUtils.createEventStreamReader(eventReader);
 					} catch (XMLStreamException ex) {
-						streamReader = null;
+						// ignore
 					}
 				}
 			}
@@ -89,10 +89,8 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (streamReader == null) {
 			try {
 				streamReader = inputFactory.createXMLStreamReader(requestSource);
-			} catch (XMLStreamException ex) {
-				streamReader = null;
-			} catch (UnsupportedOperationException ex) {
-				streamReader = null;
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
+				// ignore
 			}
 		}
 		if (streamReader == null) {
@@ -113,7 +111,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 					try {
 						eventReader = inputFactory.createXMLEventReader(streamReader);
 					} catch (XMLStreamException ex) {
-						eventReader = null;
+						// ignore
 					}
 				}
 
@@ -122,10 +120,8 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (eventReader == null) {
 			try {
 				eventReader = inputFactory.createXMLEventReader(requestSource);
-			} catch (XMLStreamException ex) {
-				eventReader = null;
-			} catch (UnsupportedOperationException ex) {
-				eventReader = null;
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
+				// ignore
 			}
 		}
 		if (eventReader == null) {

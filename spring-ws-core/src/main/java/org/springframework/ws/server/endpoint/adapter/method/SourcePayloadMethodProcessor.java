@@ -81,9 +81,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 			XMLStreamReader streamReader;
 			try {
 				streamReader = inputFactory.createXMLStreamReader(requestPayload);
-			} catch (UnsupportedOperationException ignored) {
-				streamReader = null;
-			} catch (XMLStreamException ignored) {
+			} catch (UnsupportedOperationException | XMLStreamException ignored) {
 				streamReader = null;
 			}
 			if (streamReader == null) {
