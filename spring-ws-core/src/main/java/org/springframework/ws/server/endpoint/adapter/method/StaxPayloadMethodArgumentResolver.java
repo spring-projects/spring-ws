@@ -81,7 +81,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 					try {
 						streamReader = StaxUtils.createEventStreamReader(eventReader);
 					} catch (XMLStreamException ex) {
-						streamReader = null;
+						// ignore
 					}
 				}
 			}
@@ -111,7 +111,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 					try {
 						eventReader = inputFactory.createXMLEventReader(streamReader);
 					} catch (XMLStreamException ex) {
-						eventReader = null;
+						// ignore
 					}
 				}
 
