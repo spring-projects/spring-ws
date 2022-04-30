@@ -137,9 +137,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		requestMessage.setFrom(connection.getUser());
 		try {
 			connection.sendStanza(requestMessage);
-		} catch (SmackException.NotConnectedException e) {
-			throw new IOException(e);
-		} catch (InterruptedException e) {
+		} catch (SmackException.NotConnectedException | InterruptedException e) {
 			throw new IOException(e);
 		}
 	}

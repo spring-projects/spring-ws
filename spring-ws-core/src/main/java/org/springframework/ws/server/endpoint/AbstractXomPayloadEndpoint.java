@@ -133,7 +133,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 		}
 
 		@Override
-		public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException {
+		public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException, ParsingException {
 			try {
 				Builder builder = new Builder(reader);
 				Document document;
@@ -147,8 +147,6 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				}
 				element = document.getRootElement();
 			} catch (ValidityException ex) {
-				throw new XomParsingException(ex);
-			} catch (ParsingException ex) {
 				throw new XomParsingException(ex);
 			}
 		}

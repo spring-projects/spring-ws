@@ -102,10 +102,8 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 		if (eventReader == null) {
 			try {
 				eventReader = getInputFactory().createXMLEventReader(source);
-			} catch (XMLStreamException ex) {
-				eventReader = null;
-			} catch (UnsupportedOperationException ex) {
-				eventReader = null;
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
+				// ignore
 			}
 		}
 		if (eventReader == null) {
