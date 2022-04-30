@@ -90,7 +90,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 			try {
 				streamReader = inputFactory.createXMLStreamReader(requestSource);
 			} catch (XMLStreamException | UnsupportedOperationException ex) {
-				streamReader = null;
+				// ignore
 			}
 		}
 		if (streamReader == null) {
