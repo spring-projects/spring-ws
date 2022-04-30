@@ -173,14 +173,11 @@ public abstract class SaajUtils {
 	 */
 	public static SOAPMessage loadMessage(Resource resource, MessageFactory messageFactory)
 			throws SOAPException, IOException {
-		InputStream is = resource.getInputStream();
-		try {
+		try (InputStream is = resource.getInputStream()){
 			MimeHeaders mimeHeaders = new MimeHeaders();
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_LENGTH, Long.toString(resource.getFile().length()));
 			return messageFactory.createMessage(mimeHeaders, is);
-		} finally {
-			is.close();
 		}
 	}
 

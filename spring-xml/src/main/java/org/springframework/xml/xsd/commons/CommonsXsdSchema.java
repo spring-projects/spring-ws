@@ -98,9 +98,7 @@ public class CommonsXsdSchema implements XsdSchema {
 			}
 			Document[] serializedSchemas = serializer.serializeSchema(schema, false);
 			return new DOMSource(serializedSchemas[0]);
-		} catch (BeanInstantiationException ex) {
-			// ignore
-		} catch (XmlSchemaSerializer.XmlSchemaSerializerException ex) {
+		} catch (BeanInstantiationException | XmlSchemaSerializer.XmlSchemaSerializerException ex) {
 			// ignore
 		}
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

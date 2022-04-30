@@ -288,9 +288,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 				}
 			}
 			outputStream.flush();
-		} catch (XMLStreamException ex) {
-			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
-		} catch (OMException ex) {
+		} catch (XMLStreamException | OMException ex) {
 			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
 		}
 	}

@@ -37,31 +37,28 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xmlunit.assertj.XmlAssert;
 
-public class Wsdl4jDefinitionTest {
+class Wsdl4jDefinitionTest {
 
 	private Wsdl4jDefinition definition;
 
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		WSDLFactory factory = WSDLFactory.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
-		InputStream is = getClass().getResourceAsStream("complete.wsdl");
 
-		try {
+		try (InputStream is = getClass().getResourceAsStream("complete.wsdl")){
 			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
 			definition = new Wsdl4jDefinition(wsdl4jDefinition);
-		} finally {
-			is.close();
 		}
 
 		transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		Source source = definition.getSource();
 

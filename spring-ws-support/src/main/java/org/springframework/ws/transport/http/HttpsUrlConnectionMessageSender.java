@@ -163,9 +163,7 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 						+ StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd + "]");
 			}
 			return sslContext.getSocketFactory();
-		} catch (NoSuchAlgorithmException ex) {
-			throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-		} catch (NoSuchProviderException ex) {
+		} catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
 			throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
 		} catch (KeyManagementException ex) {
 			throw new HttpsTransportException("Could not initialize SSLContext: " + ex.getMessage(), ex);

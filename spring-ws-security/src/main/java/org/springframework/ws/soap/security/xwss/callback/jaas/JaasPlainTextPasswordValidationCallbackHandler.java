@@ -83,9 +83,7 @@ public class JaasPlainTextPasswordValidationCallbackHandler extends AbstractJaas
 						}
 					}
 				});
-			} catch (LoginException ex) {
-				throw new PasswordValidationCallback.PasswordValidationException(ex);
-			} catch (SecurityException ex) {
+			} catch (LoginException | SecurityException ex) {
 				throw new PasswordValidationCallback.PasswordValidationException(ex);
 			}
 

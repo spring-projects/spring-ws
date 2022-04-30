@@ -64,9 +64,7 @@ public class JaasCertificateValidationCallbackHandler extends AbstractJaasValida
 			LoginContext loginContext;
 			try {
 				loginContext = new LoginContext(getLoginContextName(), subject);
-			} catch (LoginException ex) {
-				throw new CertificateValidationCallback.CertificateValidationException(ex);
-			} catch (SecurityException ex) {
+			} catch (LoginException | SecurityException ex) {
 				throw new CertificateValidationCallback.CertificateValidationException(ex);
 			}
 

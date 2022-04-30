@@ -79,10 +79,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 		if (streamReader == null) {
 			try {
 				streamReader = getInputFactory().createXMLStreamReader(source);
-			} catch (XMLStreamException ex) {
-				streamReader = null;
-			} catch (UnsupportedOperationException ex) {
-				streamReader = null;
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
+				// ignore
 			}
 		}
 		if (streamReader == null) {

@@ -55,10 +55,7 @@ public abstract class SaxUtils {
 	public static String getSystemId(Resource resource) {
 		try {
 			return new URI(resource.getURL().toExternalForm()).toString();
-		} catch (IOException ex) {
-			logger.debug("Could not get System ID from [" + resource + "], ex");
-			return null;
-		} catch (URISyntaxException e) {
+		} catch (IOException | URISyntaxException ex) {
 			logger.debug("Could not get System ID from [" + resource + "], ex");
 			return null;
 		}

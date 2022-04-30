@@ -89,9 +89,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 			if (result != null) {
 				return result;
 			}
-		} catch (InstantiationException e) {
-			// ignore
-		} catch (IllegalAccessException ex) {
+		} catch (InstantiationException | IllegalAccessException e) {
 			// ignore
 		}
 		return null;

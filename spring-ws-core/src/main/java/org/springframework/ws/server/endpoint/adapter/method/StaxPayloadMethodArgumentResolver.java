@@ -89,9 +89,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (streamReader == null) {
 			try {
 				streamReader = inputFactory.createXMLStreamReader(requestSource);
-			} catch (XMLStreamException ex) {
-				streamReader = null;
-			} catch (UnsupportedOperationException ex) {
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
 				streamReader = null;
 			}
 		}
@@ -122,9 +120,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (eventReader == null) {
 			try {
 				eventReader = inputFactory.createXMLEventReader(requestSource);
-			} catch (XMLStreamException ex) {
-				eventReader = null;
-			} catch (UnsupportedOperationException ex) {
+			} catch (XMLStreamException | UnsupportedOperationException ex) {
 				eventReader = null;
 			}
 		}
