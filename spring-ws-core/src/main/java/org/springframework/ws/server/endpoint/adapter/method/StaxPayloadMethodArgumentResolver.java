@@ -121,7 +121,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 			try {
 				eventReader = inputFactory.createXMLEventReader(requestSource);
 			} catch (XMLStreamException | UnsupportedOperationException ex) {
-				eventReader = null;
+				// ignore
 			}
 		}
 		if (eventReader == null) {
