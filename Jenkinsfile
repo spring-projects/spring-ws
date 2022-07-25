@@ -86,20 +86,6 @@ pipeline {
 						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
 					}
 				}
-				stage("Test: baseline (jdk16)") {
-					agent {
-						docker {
-							image 'adoptopenjdk/openjdk16:latest'
-							args '-v $HOME/.m2:/root/.m2'
-						}
-					}
-					environment {
-						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
-					}
-					steps {
-						sh "PROFILE=distribute,java11,convergence ci/test.sh"
-					}
-				}
 				stage("Test: spring-buildsnapshot (jdk16)") {
 					agent {
 						docker {
