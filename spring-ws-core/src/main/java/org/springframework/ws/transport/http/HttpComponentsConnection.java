@@ -83,7 +83,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	/*
-	  * URI
+	  * URI of the original request 
 	  */
 	@Override
 	public URI getUri() {
