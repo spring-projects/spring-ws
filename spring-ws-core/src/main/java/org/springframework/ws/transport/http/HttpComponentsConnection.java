@@ -86,8 +86,8 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	  * URI
 	  */
 	@Override
-	public URI getUri() throws URISyntaxException {
-		return new URI(httpPost.getURI().toString());
+	public URI getUri() {
+		return httpPost.getURI();
 	}
 
 	/*
