@@ -112,7 +112,7 @@
         <slf4j.version>1.7.32</slf4j.version>
         <smack.version>4.2.1</smack.version>
         <spring.version>6.0.0-M6</spring.version>
-        <spring-security.version>6.0.0-M1</spring-security.version>
+        <spring-security.version>6.0.0-M6</spring-security.version>
         <stax.version>2.0.1</stax.version>
         <woodstox.version>4.2.0</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
