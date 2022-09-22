@@ -109,7 +109,7 @@
         <mail.version>1.4.7</mail.version>
         <mockito.version>4.0.0</mockito.version>
         <saaj-impl.version>2.0.1</saaj-impl.version>
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>2.0.0</slf4j.version>
         <smack.version>4.2.1</smack.version>
         <spring.version>6.0.0-M6</spring.version>
         <spring-security.version>6.0.0-M6</spring-security.version>
