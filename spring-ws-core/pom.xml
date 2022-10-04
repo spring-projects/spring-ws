@@ -115,8 +115,8 @@
 			<optional>true</optional>
 			<exclusions>
 				<exclusion>
-					<groupId>org.codehaus.woodstox</groupId>
-					<artifactId>wstx-asl</artifactId>
+					<groupId>com.fasterxml.woodstox</groupId>
+					<artifactId>woodstox-core</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>commons-logging</groupId>

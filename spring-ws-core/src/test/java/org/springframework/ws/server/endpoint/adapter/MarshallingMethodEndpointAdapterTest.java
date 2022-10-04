@@ -16,7 +16,7 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.*;
 
 import java.lang.reflect.Method;

@@ -41,13 +41,12 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
 		RolePlayer rolePlayer = null;
 		if (!ObjectUtils.isEmpty(actors)) {
 			rolePlayer = new RolePlayer() {
 
-				public List<?> getRoles() {
+				public List<String> getRoles() {
 					return Arrays.asList(actors);
 				}
 

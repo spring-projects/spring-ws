@@ -25,11 +25,7 @@ import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.soap.RolePlayer;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPHeader;
-import org.apache.axiom.soap.SOAPHeaderBlock;
-import org.apache.axiom.soap.SOAPProcessingException;
+import org.apache.axiom.soap.*;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -77,14 +73,13 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] roles,
 			final boolean isUltimateDestination) throws SoapHeaderException {
 		RolePlayer rolePlayer = null;
 		if (!ObjectUtils.isEmpty(roles)) {
 			rolePlayer = new RolePlayer() {
 
-				public List<?> getRoles() {
+				public List<String> getRoles() {
 					return Arrays.asList(roles);
 				}
 
