@@ -11,22 +11,6 @@ pipeline {
 	}
 
 	stages {
-		stage('Publish OpenJDK 8 + jq docker image') {
-			when {
-				changeset "ci/Dockerfile"
-			}
-			agent any
-
-			steps {
-				script {
-					def image = docker.build("springci/spring-ws-openjdk8-with-jq", "ci/")
-					docker.withRegistry('', 'hub.docker.com-springbuildmaster') {
-						image.push()
-					}
-				}
-			}
-		}
-
 		stage("Test: baseline (jdk8)") {
 			agent {
 				docker {
@@ -153,8 +137,8 @@ pipeline {
 		stage('Release documentation') {
 			when {
 				anyOf {
-					branch 'main'
-					branch 'release'
+					branch '3.1.x'
+					branch 'release-3.1'
 				}
 			}
 			agent {
