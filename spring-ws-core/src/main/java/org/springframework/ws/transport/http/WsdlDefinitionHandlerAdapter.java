@@ -78,7 +78,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 
 	private static final String CONTENT_TYPE = "text/xml";
 
-	private Map<String, String> expressionNamespaces = new HashMap<String, String>();
+	private Map<String, String> expressionNamespaces = new HashMap<>();
 
 	private String locationExpression = DEFAULT_LOCATION_EXPRESSION;
 
