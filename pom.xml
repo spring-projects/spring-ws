@@ -93,7 +93,7 @@
 		<commons-io.version>2.11.0</commons-io.version>
 		<dom4j.version>1.6.1</dom4j.version>
 		<easymock.version>3.6</easymock.version>
-		<ehcache.version>2.10.6</ehcache.version>
+		<ehcache.version>2.10.9.2</ehcache.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<javax-mail.version>1.6.0</javax-mail.version>
 		<javax-servlet.version>3.1.0</javax-servlet.version>
