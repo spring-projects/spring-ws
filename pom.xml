@@ -109,7 +109,7 @@
 		<slf4j.version>1.7.25</slf4j.version>
 		<smack.version>4.2.1</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
-		<spring.version>5.3.17</spring.version>
+		<spring.version>5.3.23</spring.version>
 		<spring-security.version>5.5.5</spring-security.version>
 		<stax.version>1.8.3</stax.version>
 		<sun-mail.version>1.6.0</sun-mail.version>
@@ -232,7 +232,7 @@
 		<profile>
 			<id>spring-buildsnapshot</id>
 			<properties>
-				<spring.version>5.3.18-SNAPSHOT</spring.version>
+				<spring.version>5.3.24-SNAPSHOT</spring.version>
 				<spring-security.version>5.5.6-SNAPSHOT</spring-security.version>
 			</properties>
 		</profile>
