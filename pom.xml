@@ -104,7 +104,7 @@
 		<junit.version>5.9.1</junit.version>
 		<log4j2.version>2.19.0</log4j2.version>
 		<mock-javamail.version>1.9</mock-javamail.version>
-		<saaj-impl.version>1.5.2</saaj-impl.version>
+		<saaj-impl.version>2.0.1</saaj-impl.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<smack.version>4.2.1</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
