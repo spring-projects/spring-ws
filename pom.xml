@@ -106,7 +106,7 @@
 		<mock-javamail.version>1.9</mock-javamail.version>
 		<saaj-impl.version>2.0.1</saaj-impl.version>
 		<slf4j.version>2.0.3</slf4j.version>
-		<smack.version>4.2.1</smack.version>
+		<smack.version>4.3.5</smack.version>
 		<soap-api.version>1.4.0</soap-api.version>
 		<spring.version>5.3.23</spring.version>
 		<spring-security.version>5.7.3</spring-security.version>
