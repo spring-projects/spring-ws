@@ -1,856 +1,856 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<groupId>org.springframework.ws</groupId>
-	<artifactId>spring-ws</artifactId>
-	<version>3.2.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-
-	<name>Spring Web Services</name>
-	<url>https://spring.io/projects/spring-ws</url>
-	<description>Spring-based Web Services support</description>
-
-	<developers>
-		<developer>
-			<id>apoutsma</id>
-			<name>Arjen Poutsma</name>
-			<email>apoutsma@pivotal.io</email>
-			<organization>Pivotal Software, Inc.</organization>
-			<roles>
-				<role>Project Creator</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>tareqa</id>
-			<name>Tareq Abed Rabbo</name>
-			<email>tareq.abedrabbo@gmail.com</email>
-			<organization>Pivotal Software, Inc.</organization>
-			<roles>
-				<role>Developer</role>
-			</roles>
-		</developer>
-		<developer>
-			<id>gturnquist</id>
-			<name>Greg Turnquist</name>
-			<email>gturnquist@pivotal.io</email>
-			<organization>Pivotal Software, Inc.</organization>
-			<roles>
-				<role>Project Lead</role>
-			</roles>
-		</developer>
-	</developers>
-
-	<organization>
-		<name>Pivotal Software</name>
-		<url>https://spring.io</url>
-	</organization>
-
-	<licenses>
-		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
-			<comments>
-				Copyright 2011 the original author or authors.
-
-				Licensed under the Apache License, Version 2.0 (the "License");
-				you may not use this file except in compliance with the License.
-				You may obtain a copy of the License at
-
-				https://www.apache.org/licenses/LICENSE-2.0
-
-				Unless required by applicable law or agreed to in writing, software
-				distributed under the License is distributed on an "AS IS" BASIS,
-				WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-				implied.
-				See the License for the specific language governing permissions and
-				limitations under the License.
-			</comments>
-		</license>
-	</licenses>
-
-	<modules>
-		<module>spring-ws-core</module>
-		<module>spring-ws-security</module>
-		<module>spring-ws-support</module>
-		<module>spring-ws-test</module>
-		<module>spring-xml</module>
-	</modules>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-
-		<activemq.version>4.1.2</activemq.version>
-		<aspectj.version>1.9.6</aspectj.version>
-		<assertj.version>3.9.0</assertj.version>
-		<axiom.version>1.4.0</axiom.version>
-		<commons-httpclient.version>3.1</commons-httpclient.version>
-		<commons-io.version>2.11.0</commons-io.version>
-		<dom4j.version>1.6.1</dom4j.version>
-		<easymock.version>3.6</easymock.version>
-		<ehcache.version>2.10.9.2</ehcache.version>
-		<httpclient.version>4.5.3</httpclient.version>
-		<javax-mail.version>1.6.2</javax-mail.version>
-		<javax-servlet.version>4.0.1</javax-servlet.version>
-		<jaxen.version>1.1.6</jaxen.version>
-		<jdom2.version>2.0.6.1</jdom2.version>
-		<jetty.version>6.1.26</jetty.version>
-		<jms.version>2.0.1</jms.version>
-		<junit.version>5.9.1</junit.version>
-		<log4j2.version>2.19.0</log4j2.version>
-		<mock-javamail.version>1.9</mock-javamail.version>
-		<saaj-impl.version>2.0.1</saaj-impl.version>
-		<slf4j.version>2.0.3</slf4j.version>
-		<smack.version>4.3.5</smack.version>
-		<soap-api.version>1.4.0</soap-api.version>
-		<spring.version>5.3.23</spring.version>
-		<spring-security.version>5.7.3</spring-security.version>
-		<stax.version>2.0.1</stax.version>
-		<sun-mail.version>1.6.0</sun-mail.version>
-		<woodstox.version>4.4.1</woodstox.version>
-		<wsdl4j.version>1.6.3</wsdl4j.version>
-		<wss4j.version>2.4.1</wss4j.version>
-		<xmlsec.version>3.0.1</xmlsec.version>
-		<xml-bind.version>4.0.0</xml-bind.version>
-		<xml-schema-core.version>2.2.2</xml-schema-core.version>
-		<xmlunit1.version>1.6</xmlunit1.version>
-		<xmlunit.version>2.7.0</xmlunit.version>
-		<xws-security.version>3.0</xws-security.version>
-		<xom.version>1.2.5</xom.version>
-		<spring-asciidoctor-backends.version>0.0.3</spring-asciidoctor-backends.version>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-framework-bom</artifactId>
-				<version>${spring.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework.security</groupId>
-				<artifactId>spring-security-bom</artifactId>
-				<version>${spring-security.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-		</dependencies>
-	</dependencyManagement>
-
-	<dependencies>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.easymock</groupId>
-			<artifactId>easymock</artifactId>
-			<version>${easymock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.xmlunit</groupId>
-			<artifactId>xmlunit-assertj</artifactId>
-			<version>${xmlunit.version}</version>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.assertj</groupId>
-					<artifactId>assertj-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.assertj</groupId>
-			<artifactId>assertj-core</artifactId>
-			<version>${assertj.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>${sun-mail.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.woodstox</groupId>
-			<artifactId>woodstox-core-asl</artifactId>
-			<version>${woodstox.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.1</version>
-				<configuration>
-					<useSystemClassLoader>false</useSystemClassLoader>
-				</configuration>
-			</plugin>
-
-		</plugins>
-	</build>
-
-	<profiles>
-		<profile>
-			<id>spring-buildsnapshot</id>
-			<properties>
-				<spring.version>5.3.24-SNAPSHOT</spring.version>
-				<spring-security.version>5.7.4-SNAPSHOT</spring-security.version>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>convergence</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<version>3.0.0-M2</version>
-						<executions>
-							<execution>
-								<id>default-cli</id>
-								<goals>
-									<goal>enforce</goal>
-								</goals>
-								<phase>validate</phase>
-								<configuration>
-									<rules>
-										<bannedDependencies>
-											<excludes>
-												<exclude>commons-logging:*:*</exclude>
-											</excludes>
-											<searchTransitive>true</searchTransitive>
-										</bannedDependencies>
-										<dependencyConvergence/>
-									</rules>
-									<fail>true</fail>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.basepom.maven</groupId>
-						<artifactId>duplicate-finder-maven-plugin</artifactId>
-						<version>1.5.0</version>
-						<executions>
-							<execution>
-								<id>check-for-duplicates</id>
-								<goals>
-									<goal>check</goal>
-								</goals>
-								<phase>validate</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-
-		<profile>
-			<id>distribute</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.0</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-							<additionalparam>-quiet</additionalparam>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>snapshot</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jfrog.buildinfo</groupId>
-						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
-						<inherited>false</inherited>
-						<executions>
-							<execution>
-								<id>build-info</id>
-								<goals>
-									<goal>publish</goal>
-								</goals>
-								<configuration>
-									<buildInfo>
-										<buildUrl>{{BUILD_URL}}</buildUrl>
-									</buildInfo>
-									<deployProperties>
-										<zip.name>spring-ws</zip.name>
-										<zip.displayname>spring-ws</zip.displayname>
-										<zip.deployed>false</zip.deployed>
-										<zip.type>docs</zip.type>
-										<archives>*:*:*:*@zip</archives>
-									</deployProperties>
-									<publisher>
-										<contextUrl>https://repo.spring.io</contextUrl>
-										<username>{{ARTIFACTORY_USR}}</username>
-										<password>{{ARTIFACTORY_PSW}}</password>
-										<repoKey>libs-snapshot-local</repoKey>
-										<snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
-									</publisher>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>milestone</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jfrog.buildinfo</groupId>
-						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
-						<inherited>false</inherited>
-						<executions>
-							<execution>
-								<id>build-info</id>
-								<goals>
-									<goal>publish</goal>
-								</goals>
-								<configuration>
-									<buildInfo>
-										<buildUrl>{{BUILD_URL}}</buildUrl>
-									</buildInfo>
-									<deployProperties>
-										<zip.name>spring-ws</zip.name>
-										<zip.displayname>spring-ws</zip.displayname>
-										<zip.deployed>false</zip.deployed>
-										<zip.type>docs</zip.type>
-										<archives>*:*:*:*@zip</archives>
-									</deployProperties>
-									<publisher>
-										<contextUrl>https://repo.spring.io</contextUrl>
-										<username>{{ARTIFACTORY_USR}}</username>
-										<password>{{ARTIFACTORY_PSW}}</password>
-										<repoKey>libs-milestone-local</repoKey>
-										<snapshotRepoKey>libs-milestone-local</snapshotRepoKey>
-									</publisher>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>central</id>
-
-			<properties>
-				<maven.test.skip>true</maven.test.skip>
-				<maven.kotlin.skip>true</maven.kotlin.skip>
-				<skipTests>true</skipTests>
-			</properties>
-
-			<build>
-				<pluginManagement>
-					<plugins>
-
-						<!-- Sign JARs -->
-
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-gpg-plugin</artifactId>
-							<version>1.6</version>
-							<executions>
-								<execution>
-									<id>sign-artifacts</id>
-									<phase>verify</phase>
-									<goals>
-										<goal>sign</goal>
-									</goals>
-									<configuration>
-										<gpgArguments>
-											<arg>--pinentry-mode</arg>
-											<arg>loopback</arg>
-										</gpgArguments>
-									</configuration>
-								</execution>
-							</executions>
-						</plugin>
-
-						<!-- Deploy to Sonatype OSS Nexus -->
-
-						<plugin>
-							<groupId>org.sonatype.plugins</groupId>
-							<artifactId>nexus-staging-maven-plugin</artifactId>
-							<version>1.6.8</version>
-							<extensions>true</extensions>
-							<configuration>
-								<serverId>sonatype</serverId>
-								<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-								<autoReleaseAfterClose>false</autoReleaseAfterClose>
-								<keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
-								<skipStagingRepositoryClose>true</skipStagingRepositoryClose>
-							</configuration>
-						</plugin>
-					</plugins>
-
-				</pluginManagement>
-
-				<plugins>
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-					</plugin>
-
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-					</plugin>
-
-				</plugins>
-
-			</build>
-
-			<distributionManagement>
-				<repository>
-					<id>sonatype</id>
-					<url>https://s01.oss.sonatype.org//service/local/staging/deploy/maven2/</url>
-				</repository>
-			</distributionManagement>
-
-		</profile>
-
-		<profile>
-			<id>docs</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-resources-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>copy-asciidoc-resources</id>
-								<phase>generate-resources</phase>
-								<inherited>false</inherited>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
-									<resources>
-										<resource>
-											<directory>src/main/asciidoctor</directory>
-											<filtering>false</filtering>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.asciidoctor</groupId>
-						<artifactId>asciidoctor-maven-plugin</artifactId>
-						<version>2.2.2</version>
-						<dependencies>
-							<dependency>
-								<groupId>org.asciidoctor</groupId>
-								<artifactId>asciidoctorj-pdf</artifactId>
-								<version>2.3.0</version>
-							</dependency>
-							<dependency>
-								<groupId>io.spring.asciidoctor.backends</groupId>
-								<artifactId>spring-asciidoctor-backends</artifactId>
-								<version>${spring-asciidoctor-backends.version}</version>
-							</dependency>
-						</dependencies>
-						<executions>
-							<execution>
-								<id>html</id>
-								<phase>generate-resources</phase>
-								<inherited>false</inherited>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<backend>spring-html</backend>
-									<outputDirectory>${project.build.directory}/site/reference/html</outputDirectory>
-									<sourceHighlighter>highlight.js</sourceHighlighter>
-									<attributes>
-										// these attributes are required to use the doc resources
-										<docinfo>shared</docinfo>
-										<stylesdir>css/</stylesdir>
-										<stylesheet>site.css</stylesheet>
-										<linkcss>true</linkcss>
-										<icons>font</icons>
-										<highlightjsdir>js/highlight</highlightjsdir>
-										<highlightjs-theme>github</highlightjs-theme>
-										<sectanchors>true</sectanchors>
-									</attributes>
-								</configuration>
-							</execution>
-
-							<execution>
-								<id>pdf</id>
-								<phase>generate-resources</phase>
-								<inherited>false</inherited>
-								<goals>
-									<goal>process-asciidoc</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/site/reference/pdf</outputDirectory>
-									<backend>pdf</backend>
-									<sourceHighlighter>coderay</sourceHighlighter>
-								</configuration>
-							</execution>
-						</executions>
-
-						<configuration>
-							<sourceDirectory>${project.build.directory}/refdocs/</sourceDirectory>
-							<sourceDocumentName>index.adoc</sourceDocumentName>
-							<doctype>book</doctype>
-							<attributes>
-								<version>${project.version}</version>
-								<projectName>${project.name}</projectName>
-								<projectVersion>${project.version}</projectVersion>
-								<allow-uri-read>true</allow-uri-read>
-								<toclevels>4</toclevels>
-								<numbered>true</numbered>
-								<baseDir>${project.basedir}</baseDir>
-							</attributes>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-							<!--<additionalparam>-quiet</additionalparam>-->
-						</configuration>
-						<executions>
-							<execution>
-								<id>aggregate</id>
-								<goals>
-									<goal>aggregate</goal>
-								</goals>
-								<phase>prepare-package</phase>
-								<inherited>false</inherited>
-								<configuration>
-									<outputDirectory>${project.root}/target/site/apidocs</outputDirectory>
-								</configuration>
-							</execution>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-
-					<!--
-						Creates two zip files for download as well as API and reference documentation distribution.
-					-->
-
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>docs</id>
-								<goals>
-									<goal>single</goal>
-								</goals>
-								<phase>package</phase>
-								<configuration>
-									<descriptors>
-										<descriptor>docs.xml</descriptor>
-									</descriptors>
-									<finalName>spring-ws-${project.version}</finalName>
-									<appendAssemblyId>true</appendAssemblyId>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.jfrog.buildinfo</groupId>
-						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
-						<executions>
-							<execution>
-								<id>deploy-docs</id>
-								<goals>
-									<goal>publish</goal>
-								</goals>
-								<phase>deploy</phase>
-								<configuration>
-									<artifactory>
-										<includeEnvVars>false</includeEnvVars>
-									</artifactory>
-									<deployProperties>
-										<zip.name>spring-ws-docs</zip.name>
-										<zip.displayname>spring-ws-docs</zip.displayname>
-										<zip.deployed>false</zip.deployed>
-										<zip.type>docs</zip.type>
-									</deployProperties>
-									<buildInfo>
-										<!-- Retain only a single build -->
-										<buildName>Spring Docs spring-ws ${project.version}</buildName>
-										<buildRetentionCount>1</buildRetentionCount>
-									</buildInfo>
-									<publisher>
-										<contextUrl>{{artifactory.server}}</contextUrl>
-										<username>{{artifactory.username}}</username>
-										<password>{{artifactory.password}}</password>
-										<repoKey>{{artifactory.distribution-repository}}</repoKey>
-										<snapshotRepoKey>{{artifactory.distribution-repository}}</snapshotRepoKey>
-										<includePatterns>*-docs.zip</includePatterns>
-									</publisher>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
-			<id>java11</id>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>2.22.1</version>
-						<configuration>
-							<useSystemClassLoader>false</useSystemClassLoader>
-							<argLine>
-								--illegal-access=permit
-							</argLine>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-
-			<dependencies>
-				<dependency>
-					<groupId>com.sun.xml.ws</groupId>
-					<artifactId>jaxws-ri</artifactId>
-					<version>2.3.3</version>
-					<type>pom</type>
-					<exclusions>
-						<exclusion>
-							<groupId>com.fasterxml.woodstox</groupId>
-							<artifactId>woodstox-core</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>org.jvnet.staxex</groupId>
-							<artifactId>stax-ex</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>com.sun.xml.messaging.saaj</groupId>
-							<artifactId>saaj-impl</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>org.jvnet.mimepull</groupId>
-							<artifactId>mimepull</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>org.codehaus.woodstox</groupId>
-							<artifactId>stax2-api</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>jakarta.xml.bind</groupId>
-							<artifactId>jakarta.xml.bind-api</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-
-				<dependency>
-					<groupId>com.sun.xml.messaging.saaj</groupId>
-					<artifactId>saaj-impl</artifactId>
-					<version>${saaj-impl.version}</version>
-					<exclusions>
-						<exclusion>
-							<groupId>javax.xml.soap</groupId>
-							<artifactId>javax.xml.soap-api</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>jakarta.xml.soap</groupId>
-							<artifactId>jakarta.xml.soap-api</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>org.jvnet.staxex</groupId>
-							<artifactId>stax-ex</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-
-				<dependency>
-					<groupId>javax.xml.soap</groupId>
-					<artifactId>javax.xml.soap-api</artifactId>
-					<version>${soap-api.version}</version>
-				</dependency>
-
-				<dependency>
-					<groupId>org.jvnet.staxex</groupId>
-					<artifactId>stax-ex</artifactId>
-					<version>${stax.version}</version>
-				</dependency>
-
-				<dependency>
-					<groupId>javax.xml.ws</groupId>
-					<artifactId>jaxws-api</artifactId>
-					<version>2.3.1</version>
-					<exclusions>
-						<exclusion>
-							<groupId>javax.xml.bind</groupId>
-							<artifactId>jaxb-api</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-
-				<dependency>
-					<groupId>jakarta.xml.bind</groupId>
-					<artifactId>jakarta.xml.bind-api</artifactId>
-					<version>${xml-bind.version}</version>
-					<exclusions>
-						<exclusion>
-							<groupId>jakarta.activation</groupId>
-							<artifactId>jakarta.activation-api</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-
-			</dependencies>
-		</profile>
-
-	</profiles>
-
-	<repositories>
-		<repository>
-			<id>spring-release</id>
-			<name>Spring Releases</name>
-			<url>https://repo.spring.io/release</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-libs-snapshot</id>
-			<url>https://repo.spring.io/libs-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-libs-milestone</id>
-			<url>https://repo.spring.io/libs-milestone</url>
-		</repository>
-		<repository>
-			<id>spring-libs-release</id>
-			<url>https://repo.spring.io/libs-release</url>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-libs-snapshot</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/libs-snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-libs-milestone</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/libs-milestone</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-libs-release</id>
-			<name>Spring Releases</name>
-			<url>https://repo.spring.io/libs-release</url>
-		</pluginRepository>
-	</pluginRepositories>
-
-	<scm>
-		<url>https://github.com/spring-projects/spring-ws</url>
-		<connection>scm:git:git://github.com/spring-projects/spring-ws.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:spring-projects/spring-ws.git</developerConnection>
-	</scm>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework.ws</groupId>
+    <artifactId>spring-ws</artifactId>
+    <version>3.2.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Spring Web Services</name>
+    <url>https://spring.io/projects/spring-ws</url>
+    <description>Spring-based Web Services support</description>
+
+    <developers>
+        <developer>
+            <id>apoutsma</id>
+            <name>Arjen Poutsma</name>
+            <email>apoutsma@pivotal.io</email>
+            <organization>Pivotal Software, Inc.</organization>
+            <roles>
+                <role>Project Creator</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>tareqa</id>
+            <name>Tareq Abed Rabbo</name>
+            <email>tareq.abedrabbo@gmail.com</email>
+            <organization>Pivotal Software, Inc.</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>gturnquist</id>
+            <name>Greg Turnquist</name>
+            <email>gturnquist@pivotal.io</email>
+            <organization>Pivotal Software, Inc.</organization>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <organization>
+        <name>Pivotal Software</name>
+        <url>https://spring.io</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <comments>
+                Copyright 2011 the original author or authors.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                https://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+                implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            </comments>
+        </license>
+    </licenses>
+
+    <modules>
+        <module>spring-ws-core</module>
+        <module>spring-ws-security</module>
+        <module>spring-ws-support</module>
+        <module>spring-ws-test</module>
+        <module>spring-xml</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+
+        <activemq.version>4.1.2</activemq.version>
+        <aspectj.version>1.9.6</aspectj.version>
+        <assertj.version>3.9.0</assertj.version>
+        <axiom.version>1.4.0</axiom.version>
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <dom4j.version>1.6.1</dom4j.version>
+        <easymock.version>3.6</easymock.version>
+        <ehcache.version>2.10.9.2</ehcache.version>
+        <httpclient.version>4.5.3</httpclient.version>
+        <javax-mail.version>1.6.1</javax-mail.version>
+        <javax-servlet.version>4.0.1</javax-servlet.version>
+        <jaxen.version>1.1.6</jaxen.version>
+        <jdom2.version>2.0.6.1</jdom2.version>
+        <jetty.version>6.1.26</jetty.version>
+        <jms.version>2.0.1</jms.version>
+        <junit.version>5.9.1</junit.version>
+        <log4j2.version>2.17.1</log4j2.version>
+        <mock-javamail.version>1.9</mock-javamail.version>
+        <saaj-impl.version>1.5.3</saaj-impl.version>
+        <slf4j.version>2.0.3</slf4j.version>
+        <smack.version>4.3.5</smack.version>
+        <soap-api.version>1.4.0</soap-api.version>
+        <spring.version>5.3.23</spring.version>
+        <spring-security.version>5.7.3</spring-security.version>
+        <stax.version>2.0.1</stax.version>
+        <sun-mail.version>1.6.0</sun-mail.version>
+        <woodstox.version>4.4.1</woodstox.version>
+        <wsdl4j.version>1.6.3</wsdl4j.version>
+        <wss4j.version>2.4.1</wss4j.version>
+        <xmlsec.version>3.0.1</xmlsec.version>
+        <xml-bind.version>2.3.3</xml-bind.version>
+        <xml-schema-core.version>2.2.2</xml-schema-core.version>
+        <xmlunit1.version>1.6</xmlunit1.version>
+        <xmlunit.version>2.7.0</xmlunit.version>
+        <xws-security.version>3.0</xws-security.version>
+        <xom.version>1.2.5</xom.version>
+        <spring-asciidoctor-backends.version>0.0.3</spring-asciidoctor-backends.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-bom</artifactId>
+                <version>${spring-security.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>${easymock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-assertj</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.assertj</groupId>
+                    <artifactId>assertj-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>${sun-mail.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-asl</artifactId>
+            <version>${woodstox.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>spring-buildsnapshot</id>
+            <properties>
+                <spring.version>5.3.24-SNAPSHOT</spring.version>
+                <spring-security.version>5.7.4-SNAPSHOT</spring-security.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>convergence</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.0.0-M2</version>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <rules>
+                                        <bannedDependencies>
+                                            <excludes>
+                                                <exclude>commons-logging:*:*</exclude>
+                                            </excludes>
+                                            <searchTransitive>true</searchTransitive>
+                                        </bannedDependencies>
+                                        <dependencyConvergence/>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.basepom.maven</groupId>
+                        <artifactId>duplicate-finder-maven-plugin</artifactId>
+                        <version>1.5.0</version>
+                        <executions>
+                            <execution>
+                                <id>check-for-duplicates</id>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>validate</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+        <profile>
+            <id>distribute</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <additionalparam>-quiet</additionalparam>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>snapshot</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jfrog.buildinfo</groupId>
+                        <artifactId>artifactory-maven-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>build-info</id>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <configuration>
+                                    <buildInfo>
+                                        <buildUrl>{{BUILD_URL}}</buildUrl>
+                                    </buildInfo>
+                                    <deployProperties>
+                                        <zip.name>spring-ws</zip.name>
+                                        <zip.displayname>spring-ws</zip.displayname>
+                                        <zip.deployed>false</zip.deployed>
+                                        <zip.type>docs</zip.type>
+                                        <archives>*:*:*:*@zip</archives>
+                                    </deployProperties>
+                                    <publisher>
+                                        <contextUrl>https://repo.spring.io</contextUrl>
+                                        <username>{{ARTIFACTORY_USR}}</username>
+                                        <password>{{ARTIFACTORY_PSW}}</password>
+                                        <repoKey>libs-snapshot-local</repoKey>
+                                        <snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+                                    </publisher>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>milestone</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jfrog.buildinfo</groupId>
+                        <artifactId>artifactory-maven-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>build-info</id>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <configuration>
+                                    <buildInfo>
+                                        <buildUrl>{{BUILD_URL}}</buildUrl>
+                                    </buildInfo>
+                                    <deployProperties>
+                                        <zip.name>spring-ws</zip.name>
+                                        <zip.displayname>spring-ws</zip.displayname>
+                                        <zip.deployed>false</zip.deployed>
+                                        <zip.type>docs</zip.type>
+                                        <archives>*:*:*:*@zip</archives>
+                                    </deployProperties>
+                                    <publisher>
+                                        <contextUrl>https://repo.spring.io</contextUrl>
+                                        <username>{{ARTIFACTORY_USR}}</username>
+                                        <password>{{ARTIFACTORY_PSW}}</password>
+                                        <repoKey>libs-milestone-local</repoKey>
+                                        <snapshotRepoKey>libs-milestone-local</snapshotRepoKey>
+                                    </publisher>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>central</id>
+
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+                <maven.kotlin.skip>true</maven.kotlin.skip>
+                <skipTests>true</skipTests>
+            </properties>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+
+                        <!-- Sign JARs -->
+
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.6</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                    <configuration>
+                                        <gpgArguments>
+                                            <arg>--pinentry-mode</arg>
+                                            <arg>loopback</arg>
+                                        </gpgArguments>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+
+                        <!-- Deploy to Sonatype OSS Nexus -->
+
+                        <plugin>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <version>1.6.8</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <serverId>sonatype</serverId>
+                                <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                                <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                                <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
+                                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+
+                </pluginManagement>
+
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+
+                </plugins>
+
+            </build>
+
+            <distributionManagement>
+                <repository>
+                    <id>sonatype</id>
+                    <url>https://s01.oss.sonatype.org//service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+
+        </profile>
+
+        <profile>
+            <id>docs</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-asciidoc-resources</id>
+                                <phase>generate-resources</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/refdocs/</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/asciidoctor</directory>
+                                            <filtering>false</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>2.2.2</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-pdf</artifactId>
+                                <version>2.3.0</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>io.spring.asciidoctor.backends</groupId>
+                                <artifactId>spring-asciidoctor-backends</artifactId>
+                                <version>${spring-asciidoctor-backends.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>html</id>
+                                <phase>generate-resources</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>spring-html</backend>
+                                    <outputDirectory>${project.build.directory}/site/reference/html</outputDirectory>
+                                    <sourceHighlighter>highlight.js</sourceHighlighter>
+                                    <attributes>
+                                        // these attributes are required to use the doc resources
+                                        <docinfo>shared</docinfo>
+                                        <stylesdir>css/</stylesdir>
+                                        <stylesheet>site.css</stylesheet>
+                                        <linkcss>true</linkcss>
+                                        <icons>font</icons>
+                                        <highlightjsdir>js/highlight</highlightjsdir>
+                                        <highlightjs-theme>github</highlightjs-theme>
+                                        <sectanchors>true</sectanchors>
+                                    </attributes>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>pdf</id>
+                                <phase>generate-resources</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/site/reference/pdf</outputDirectory>
+                                    <backend>pdf</backend>
+                                    <sourceHighlighter>coderay</sourceHighlighter>
+                                </configuration>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+                            <sourceDirectory>${project.build.directory}/refdocs/</sourceDirectory>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <doctype>book</doctype>
+                            <attributes>
+                                <version>${project.version}</version>
+                                <projectName>${project.name}</projectName>
+                                <projectVersion>${project.version}</projectVersion>
+                                <allow-uri-read>true</allow-uri-read>
+                                <toclevels>4</toclevels>
+                                <numbered>true</numbered>
+                                <baseDir>${project.basedir}</baseDir>
+                            </attributes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.4</version>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                            <!--<additionalparam>-quiet</additionalparam>-->
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>aggregate</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                                <inherited>false</inherited>
+                                <configuration>
+                                    <outputDirectory>${project.root}/target/site/apidocs</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!--
+                        Creates two zip files for download as well as API and reference documentation distribution.
+                    -->
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>docs</id>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                                <phase>package</phase>
+                                <configuration>
+                                    <descriptors>
+                                        <descriptor>docs.xml</descriptor>
+                                    </descriptors>
+                                    <finalName>spring-ws-${project.version}</finalName>
+                                    <appendAssemblyId>true</appendAssemblyId>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.jfrog.buildinfo</groupId>
+                        <artifactId>artifactory-maven-plugin</artifactId>
+                        <version>2.6.1</version>
+                        <executions>
+                            <execution>
+                                <id>deploy-docs</id>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <phase>deploy</phase>
+                                <configuration>
+                                    <artifactory>
+                                        <includeEnvVars>false</includeEnvVars>
+                                    </artifactory>
+                                    <deployProperties>
+                                        <zip.name>spring-ws-docs</zip.name>
+                                        <zip.displayname>spring-ws-docs</zip.displayname>
+                                        <zip.deployed>false</zip.deployed>
+                                        <zip.type>docs</zip.type>
+                                    </deployProperties>
+                                    <buildInfo>
+                                        <!-- Retain only a single build -->
+                                        <buildName>Spring Docs spring-ws ${project.version}</buildName>
+                                        <buildRetentionCount>1</buildRetentionCount>
+                                    </buildInfo>
+                                    <publisher>
+                                        <contextUrl>{{artifactory.server}}</contextUrl>
+                                        <username>{{artifactory.username}}</username>
+                                        <password>{{artifactory.password}}</password>
+                                        <repoKey>{{artifactory.distribution-repository}}</repoKey>
+                                        <snapshotRepoKey>{{artifactory.distribution-repository}}</snapshotRepoKey>
+                                        <includePatterns>*-docs.zip</includePatterns>
+                                    </publisher>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>java11</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.22.2</version>
+                        <configuration>
+                            <useSystemClassLoader>false</useSystemClassLoader>
+                            <argLine>
+                                --illegal-access=permit
+                                --add-opens java.base/java.lang=ALL-UNNAMED
+                                --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+                                --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+                                --add-opens java.xml.crypto/com.sun.org.apache.xml.internal.security=ALL-UNNAMED
+                                --add-opens java.xml.crypto/org.jcp.xml.dsig.internal.dom=ALL-UNNAMED
+                                --add-exports java.base/java.lang=ALL-UNNAMED
+                                --add-exports java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+                                --add-exports java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+                                --add-exports java.xml.crypto/com.sun.org.apache.xml.internal.security=ALL-UNNAMED
+                                --add-exports java.xml.crypto/org.jcp.xml.dsig.internal.dom=ALL-UNNAMED
+                            </argLine>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.xml.ws</groupId>
+                    <artifactId>jaxws-ri</artifactId>
+                    <version>2.3.3</version>
+                    <type>pom</type>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>com.fasterxml.woodstox</groupId>
+                            <artifactId>woodstox-core</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jvnet.staxex</groupId>
+                            <artifactId>stax-ex</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>com.sun.xml.messaging.saaj</groupId>
+                            <artifactId>saaj-impl</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jvnet.mimepull</groupId>
+                            <artifactId>mimepull</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.codehaus.woodstox</groupId>
+                            <artifactId>stax2-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>jakarta.xml.bind</groupId>
+                            <artifactId>jakarta.xml.bind-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
+                <dependency>
+                    <groupId>com.sun.xml.messaging.saaj</groupId>
+                    <artifactId>saaj-impl</artifactId>
+                    <version>${saaj-impl.version}</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.xml.soap</groupId>
+                            <artifactId>javax.xml.soap-api</artifactId>
+                        </exclusion>
+                        <exclusion>
+                            <groupId>org.jvnet.staxex</groupId>
+                            <artifactId>stax-ex</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.xml.soap</groupId>
+                    <artifactId>javax.xml.soap-api</artifactId>
+                    <version>${soap-api.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.jvnet.staxex</groupId>
+                    <artifactId>stax-ex</artifactId>
+                    <version>${stax.version}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>javax.xml.ws</groupId>
+                    <artifactId>jaxws-api</artifactId>
+                    <version>2.3.1</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+
+                <dependency>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                    <version>2.3.3</version>
+                </dependency>
+
+            </dependencies>
+        </profile>
+
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>spring-release</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-libs-snapshot</id>
+            <url>https://repo.spring.io/libs-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-libs-milestone</id>
+            <url>https://repo.spring.io/libs-milestone</url>
+        </repository>
+        <repository>
+            <id>spring-libs-release</id>
+            <url>https://repo.spring.io/libs-release</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/libs-snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-libs-milestone</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-libs-release</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <scm>
+        <url>https://github.com/spring-projects/spring-ws</url>
+        <connection>scm:git:git://github.com/spring-projects/spring-ws.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:spring-projects/spring-ws.git</developerConnection>
+    </scm>
 
 </project>
