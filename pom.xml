@@ -92,7 +92,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <easymock.version>4.3</easymock.version>
-        <ehcache.version>2.10.6</ehcache.version>
+        <ehcache.version>2.10.9.2</ehcache.version>
         <greenmail.version>2.0.0-alpha-2</greenmail.version>
         <httpclient.version>4.5.3</httpclient.version>
         <jakarta-annotation.version>2.0.0</jakarta-annotation.version>
