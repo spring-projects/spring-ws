@@ -89,7 +89,7 @@
         <aspectj.version>1.9.6</aspectj.version>
         <assertj.version>3.9.0</assertj.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <easymock.version>4.3</easymock.version>
         <ehcache.version>2.10.6</ehcache.version>
