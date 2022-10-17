@@ -114,7 +114,7 @@
         <spring.version>6.0.0-RC1</spring.version>
         <spring-security.version>6.0.0-M6</spring-security.version>
         <stax.version>2.0.1</stax.version>
-        <woodstox.version>4.2.0</woodstox.version>
+        <woodstox.version>4.4.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.1</wss4j.version>
         <xmlsec.version>2.3.1</xmlsec.version>
