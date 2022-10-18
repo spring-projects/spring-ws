@@ -1,6 +1,7 @@
 image:https://spring.io/badges/spring-ws/ga.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
 image:https://spring.io/badges/spring-ws/snapshot.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
 
+image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F4.0.x&subject=4.0.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
 image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain&subject=3.1.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
 image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.x&subject=3.0.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
 image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F2.x&subject=2.4.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
