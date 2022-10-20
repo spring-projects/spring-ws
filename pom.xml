@@ -76,6 +76,7 @@
         <module>spring-ws-support</module>
         <module>spring-ws-test</module>
         <module>spring-xml</module>
+        <module>spring-ws-bom</module>
     </modules>
 
     <properties>
