@@ -22,12 +22,26 @@ pipeline {
 				ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 			}
 			steps {
-				sh "PROFILE=distribute,convergence ci/test.sh"
+				sh "PROFILE=distribute,convergence,testing ci/test.sh"
 			}
 		}
 
 		stage("Test other configurations") {
 			parallel {
+				stage("Test: Axiom 1.3)") {
+					agent {
+						docker {
+							image 'adoptopenjdk/openjdk8:latest'
+							args '-v $HOME/.m2:/root/.m2'
+						}
+					}
+					environment {
+						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
+					}
+					steps {
+						sh "PROFILE=axiom-1.3,convergence,testing ci/test.sh"
+					}
+				}
 				stage("Test: spring-buildsnapshot (jdk8)") {
 					agent {
 						docker {
@@ -39,7 +53,35 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-						sh "PROFILE=spring-buildsnapshot,convergence ci/test.sh"
+						sh "PROFILE=spring-buildsnapshot,convergence,testing ci/test.sh"
+					}
+				}
+				stage("Test: spring-security-5.6 (jdk8)") {
+					agent {
+						docker {
+							image 'adoptopenjdk/openjdk8:latest'
+							args '-v $HOME/.m2:/root/.m2'
+						}
+					}
+					environment {
+						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
+					}
+					steps {
+						sh "PROFILE=spring-security-5.6,convergence,testing ci/test.sh"
+					}
+				}
+				stage("Test: spring-security-5.7 (jdk8)") {
+					agent {
+						docker {
+							image 'adoptopenjdk/openjdk8:latest'
+							args '-v $HOME/.m2:/root/.m2'
+						}
+					}
+					environment {
+						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
+					}
+					steps {
+						sh "PROFILE=spring-security-5.7,convergence,testing ci/test.sh"
 					}
 				}
 				stage("Test: baseline (jdk11)") {
@@ -53,7 +95,7 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-						sh "PROFILE=distribute,java11,convergence ci/test.sh"
+						sh "PROFILE=distribute,java11,convergence,testing ci/test.sh"
 					}
 				}
 				stage("Test: spring-buildsnapshot (jdk11)") {
@@ -67,7 +109,7 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
+						sh "PROFILE=spring-buildsnapshot,java11,convergence,testing ci/test.sh"
 					}
 				}
 				stage("Test: spring-buildsnapshot (jdk16)") {
@@ -81,7 +123,7 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-						sh "PROFILE=spring-buildsnapshot,java11,convergence ci/test.sh"
+						sh "PROFILE=spring-buildsnapshot,java11,convergence,testing ci/test.sh"
 					}
 				}
 			}

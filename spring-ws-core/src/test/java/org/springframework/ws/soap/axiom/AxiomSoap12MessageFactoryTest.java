@@ -19,6 +19,7 @@ package org.springframework.ws.soap.axiom;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.soap12.AbstractSoap12MessageFactoryTestCase;
 
 public class AxiomSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryTestCase {

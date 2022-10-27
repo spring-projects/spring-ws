@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.axiom;
 
+import java.util.Iterator;
+
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -26,21 +28,21 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.xml.StaxUtils;
-import org.springframework.ws.soap.axiom.support.AxiomUtils;
 
 /**
- * Abstract base class for {@link Payload} implementations.
+ * Abstract base class for Axiom 1.4 {@link Payload} implementations.
  *
  * @author Arjen Poutsma
- * @since 2.0
+ * @author Greg Turnquist
+ * @since 3.1
  */
-abstract class AbstractPayload extends Payload {
+abstract class AxiomAbstractPayload implements Payload {
 
 	private final SOAPBody axiomBody;
 
 	private final SOAPFactory axiomFactory;
 
-	protected AbstractPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
+	protected AxiomAbstractPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
 		Assert.notNull(axiomBody, "'axiomBody' must not be null");
 		Assert.notNull(axiomFactory, "'axiomFactory' must not be null");
 		this.axiomBody = axiomBody;
@@ -58,7 +60,7 @@ abstract class AbstractPayload extends Payload {
 				return null;
 			}
 		} catch (OMException ex) {
-			throw new AxiomSoapBodyException(ex);
+			throw new RuntimeException(ex);
 		}
 	}
 
@@ -66,7 +68,10 @@ abstract class AbstractPayload extends Payload {
 
 	@Override
 	public final Result getResult() {
-		AxiomUtils.removeContents(getAxiomBody());
+		for (Iterator<?> iterator = getAxiomBody().getChildren(); iterator.hasNext();) {
+			iterator.next();
+			iterator.remove();
+		}
 		return getResultInternal();
 	}
 
@@ -83,5 +88,4 @@ abstract class AbstractPayload extends Payload {
 	protected OMElement getPayloadElement() throws OMException {
 		return getAxiomBody().getFirstElement();
 	}
-
 }

@@ -19,6 +19,7 @@ package org.springframework.ws.soap.axiom;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTestCase;
 
 public class AxiomSoap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {

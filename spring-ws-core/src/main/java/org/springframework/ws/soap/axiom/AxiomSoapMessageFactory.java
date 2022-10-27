@@ -29,16 +29,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.impl.MTOMConstants;
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP11Version;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAP12Version;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPMessage;
-import org.apache.axiom.soap.SOAPModelBuilder;
-import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
+import org.apache.axiom.soap.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -48,6 +39,7 @@ import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingIntercep
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 import org.springframework.ws.soap.support.SoapUtils;
@@ -184,7 +176,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	/**
 	 * Sets whether internal entity references should be replaced with their replacement text and report them as
 	 * characters.
-	 * 
+	 *
 	 * @see XMLInputFactory#IS_REPLACING_ENTITY_REFERENCES
 	 */
 	public void setReplacingEntityReferences(boolean replacingEntityReferences) {
@@ -193,7 +185,7 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	/**
 	 * Sets whether external parsed entities should be resolved.
-	 * 
+	 *
 	 * @see XMLInputFactory#IS_SUPPORTING_EXTERNAL_ENTITIES
 	 */
 	public void setSupportingExternalEntities(boolean supportingExternalEntities) {
@@ -268,10 +260,17 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	/** Creates an AxiomSoapMessage without attachments. */
 	private AxiomSoapMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
 			throws XMLStreamException {
-		XMLStreamReader reader = inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
-		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
-		SOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		SOAPMessage soapMessage = builder.getSOAPMessage();
+
+		SOAPMessage soapMessage;
+
+		if (AxiomUtils.AXIOM14_IS_PRESENT()) {
+			soapMessage = Axiom14Utils.getSOAPMessage(inputFactory, inputStream, getCharSetEncoding(contentType),
+					soapFactory);
+		} else {
+			soapMessage = Axiom12Utils.getSOAPMessage(inputFactory, inputStream, getCharSetEncoding(contentType),
+					getSoapEnvelopeNamespace(contentType), soapFactory);
+		}
+
 		return new AxiomSoapMessage(soapMessage, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
@@ -283,19 +282,20 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 				attachmentCacheDir.getAbsolutePath(), Integer.toString(attachmentCacheThreshold));
 		XMLStreamReader reader = inputFactory.createXMLStreamReader(attachments.getRootPartInputStream(),
 				getCharSetEncoding(attachments.getRootPartContentType()));
-		SOAPModelBuilder builder;
-		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
-		if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType())
-				|| MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
-			builder = new StAXSOAPModelBuilder(reader, soapFactory, envelopeNamespace);
-		} else if (MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType())) {
-			builder = new MTOMStAXSOAPModelBuilder(reader, attachments, envelopeNamespace);
-		} else {
-			throw new AxiomSoapMessageCreationException(
-					"Unknown attachment type: [" + attachments.getAttachmentSpecType() + "]");
+
+		SOAPMessage soapMessage;
+
+		try {
+			if (AxiomUtils.AXIOM14_IS_PRESENT()) {
+				soapMessage = Axiom14Utils.getSOAPMessage(attachments, soapFactory, reader);
+			} else {
+				soapMessage = Axiom12Utils.getSOAPMessage(getSoapEnvelopeNamespace(contentType), attachments, soapFactory,
+						reader);
+			}
+		} catch (RuntimeException e) {
+			throw new AxiomSoapMessageCreationException(e.getMessage());
 		}
-		return new AxiomSoapMessage(builder.getSOAPMessage(), attachments, soapAction, payloadCaching,
-				langAttributeOnSoap11FaultString);
+		return new AxiomSoapMessage(soapMessage, attachments, soapAction, payloadCaching, langAttributeOnSoap11FaultString);
 	}
 
 	private String getSoapEnvelopeNamespace(String contentType) {

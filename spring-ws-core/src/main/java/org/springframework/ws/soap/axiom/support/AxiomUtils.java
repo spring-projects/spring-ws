@@ -25,12 +25,9 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 
-import org.apache.axiom.om.OMContainer;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMXMLBuilderFactory;
+import org.apache.axiom.om.*;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
@@ -47,7 +44,18 @@ import org.w3c.dom.Element;
  * @since 1.0.0
  */
 @SuppressWarnings("Since15")
-public abstract class AxiomUtils {
+public final class AxiomUtils {
+
+	private AxiomUtils() {
+		throw new RuntimeException("Utility class not meant to be instantiated.");
+	}
+
+	/**
+	 * Detect if Axiom 1.4 is on the classpath.
+	 */
+	public static boolean AXIOM14_IS_PRESENT() {
+		return ClassUtils.isPresent("org.apache.axiom.om.ds.StringOMDataSource", null);
+	}
 
 	/**
 	 * Converts a {@code javax.xml.namespace.QName} to a {@code org.apache.axiom.om.OMNamespace}. A {@code OMElement} is
@@ -92,7 +100,9 @@ public abstract class AxiomUtils {
 		return StringUtils.parseLocaleString(language);
 	}
 
-	/** Removes the contents (i.e. children) of the container. */
+	/**
+	 * Removes the contents (i.e. children) of the container.
+	 */
 	public static void removeContents(OMContainer container) {
 		for (Iterator<?> iterator = container.getChildren(); iterator.hasNext();) {
 			iterator.next();
@@ -136,5 +146,4 @@ public abstract class AxiomUtils {
 	public static SOAPEnvelope toEnvelope(Document document) {
 		return OMXMLBuilderFactory.createSOAPModelBuilder(new DOMSource(document)).getSOAPEnvelope();
 	}
-
 }

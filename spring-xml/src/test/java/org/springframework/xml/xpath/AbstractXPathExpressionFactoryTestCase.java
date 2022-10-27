@@ -16,7 +16,8 @@
 
 package org.springframework.xml.xpath;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +35,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import com.sun.org.apache.xpath.internal.XPathProcessorException;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 

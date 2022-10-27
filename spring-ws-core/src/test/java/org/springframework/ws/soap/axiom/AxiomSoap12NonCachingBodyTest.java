@@ -18,6 +18,8 @@ package org.springframework.ws.soap.axiom;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
 
 public class AxiomSoap12NonCachingBodyTest extends AbstractSoap12BodyTestCase {

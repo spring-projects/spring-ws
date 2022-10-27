@@ -42,9 +42,9 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 	protected AxiomSoapBody(SOAPBody axiomBody, SOAPFactory axiomFactory, boolean payloadCaching) {
 		super(axiomBody, axiomFactory);
 		if (payloadCaching) {
-			payload = new CachingPayload(axiomBody, axiomFactory);
+			payload = AxiomPayloadUtils.createCachingPayload(axiomBody, axiomFactory);
 		} else {
-			payload = new NonCachingPayload(axiomBody, axiomFactory);
+			payload = AxiomPayloadUtils.createNonCachingPayload(axiomBody, axiomFactory);
 		}
 	}
 

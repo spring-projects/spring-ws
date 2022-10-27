@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.axiom;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.apache.axiom.om.OMSourcedElement;
 import org.springframework.ws.soap.SoapBody;

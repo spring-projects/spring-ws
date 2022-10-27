@@ -35,17 +35,18 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.springframework.util.xml.StaxUtils;
 
 /**
- * Non-caching payload in Axiom.
+ * Non-caching payload in Axiom 1.2.
  *
  * @author Jim Cummings
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.2
  */
-class NonCachingPayload extends AbstractPayload {
+class Axiom12NonCachingPayload extends AxiomAbstractPayload {
 
 	private static final int BUF_SIZE = 1024;
 
-	NonCachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
+	Axiom12NonCachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
 		super(axiomBody, axiomFactory);
 	}
 
@@ -77,7 +78,7 @@ class NonCachingPayload extends AbstractPayload {
 			try {
 				this.delegate = StAXUtils.createXMLStreamWriter(baos);
 			} catch (XMLStreamException ex) {
-				throw new AxiomSoapBodyException("Could not determine payload root element", ex);
+				throw new RuntimeException("Could not determine payload root element", ex);
 			}
 		}
 
@@ -286,6 +287,5 @@ class NonCachingPayload extends AbstractPayload {
 		public void writeProcessingInstruction(String target, String data) throws XMLStreamException {
 			delegate.writeProcessingInstruction(target, data);
 		}
-
 	}
 }

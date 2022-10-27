@@ -21,6 +21,8 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTestCase;
 import org.springframework.xml.transform.StringSource;
 

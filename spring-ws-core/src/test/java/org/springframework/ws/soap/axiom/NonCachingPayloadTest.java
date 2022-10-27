@@ -16,7 +16,7 @@
 
 package org.springframework.ws.soap.axiom;
 
-import static org.xmlunit.assertj.XmlAssert.*;
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 import java.io.StringWriter;
 
@@ -28,6 +28,8 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.util.xml.StaxUtils;
+import org.springframework.ws.soap.axiom.AxiomPayloadUtils;
+import org.springframework.ws.soap.axiom.Payload;
 
 @SuppressWarnings("Since15")
 public class NonCachingPayloadTest {
@@ -41,7 +43,7 @@ public class NonCachingPayloadTest {
 
 		SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 		body = soapFactory.createSOAPBody();
-		payload = new NonCachingPayload(body, soapFactory);
+		payload = AxiomPayloadUtils.createNonCachingPayload(body, soapFactory);
 	}
 
 	@Test

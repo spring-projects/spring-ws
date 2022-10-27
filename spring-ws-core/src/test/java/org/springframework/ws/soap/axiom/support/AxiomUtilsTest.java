@@ -16,20 +16,7 @@
 
 package org.springframework.ws.soap.axiom.support;
 
-import static org.assertj.core.api.Assertions.*;
-
-import java.io.StringWriter;
-import java.util.Locale;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.OMXMLBuilderFactory;
+import org.apache.axiom.om.*;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
@@ -38,10 +25,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.w3c.dom.Document;
 import org.xmlunit.assertj.XmlAssert;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringWriter;
+import java.util.Locale;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AxiomUtilsTest {
 

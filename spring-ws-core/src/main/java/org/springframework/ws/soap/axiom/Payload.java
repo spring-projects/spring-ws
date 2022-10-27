@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ws.soap.axiom;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 /**
- * Defines the contract for payloads in Axiom.
+ * Defines the contract for payloads.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.2
  */
-abstract class Payload {
+interface Payload {
 
 	/**
 	 * Returns the source of the payload.
 	 *
 	 * @return the source of the payload
 	 */
-	public abstract Source getSource();
+	Source getSource();
 
 	/**
 	 * Returns the result of the payload.
 	 *
 	 * @return the result of the payload
 	 */
-	public abstract Result getResult();
+	Result getResult();
 }

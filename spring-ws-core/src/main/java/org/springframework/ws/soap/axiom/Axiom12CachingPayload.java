@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,16 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
 
 /**
- * Caching payload in Axiom.
+ * Caching payload in Axiom 1.2.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.2
  */
 @SuppressWarnings("Since15")
-class CachingPayload extends AbstractPayload {
+class Axiom12CachingPayload extends AxiomAbstractPayload {
 
-	CachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
+	Axiom12CachingPayload(SOAPBody axiomBody, SOAPFactory axiomFactory) {
 		super(axiomBody, axiomFactory);
 	}
 
@@ -48,5 +49,4 @@ class CachingPayload extends AbstractPayload {
 	public Result getResultInternal() {
 		return getAxiomBody().getSAXResult();
 	}
-
 }

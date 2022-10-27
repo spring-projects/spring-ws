@@ -47,7 +47,7 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
 		if (!ObjectUtils.isEmpty(actors)) {
 			rolePlayer = new RolePlayer() {
 
-				public List<?> getRoles() {
+				public List getRoles() {
 					return Arrays.asList(actors);
 				}
 
