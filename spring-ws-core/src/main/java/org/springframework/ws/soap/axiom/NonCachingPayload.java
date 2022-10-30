@@ -17,7 +17,6 @@
 package org.springframework.ws.soap.axiom;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -26,10 +25,11 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Result;
 
+import org.apache.axiom.blob.Blobs;
 import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.ds.StringOMDataSource;
+import org.apache.axiom.om.ds.BlobOMDataSource;
 import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
@@ -135,15 +135,11 @@ class NonCachingPayload extends AbstractPayload {
 			if (elementDepth <= 0 && !payloadAdded) {
 				delegate.flush();
 				if (baos.size() > 0) {
-					try {
-						OMDataSource dataSource = new StringOMDataSource(baos.toString(encoding));
-						OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
-						OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, name.getLocalPart(), namespace);
-						getAxiomBody().addChild(payloadElement);
-						payloadAdded = true;
-					} catch (UnsupportedEncodingException e) {
-						throw new RuntimeException(e);
-					}
+					OMDataSource dataSource = new BlobOMDataSource(Blobs.createBlob(baos.toByteArray()), encoding);
+					OMNamespace namespace = getAxiomFactory().createOMNamespace(name.getNamespaceURI(), name.getPrefix());
+					OMElement payloadElement = getAxiomFactory().createOMElement(dataSource, name.getLocalPart(), namespace);
+					getAxiomBody().addChild(payloadElement);
+					payloadAdded = true;
 				}
 			}
 		}
