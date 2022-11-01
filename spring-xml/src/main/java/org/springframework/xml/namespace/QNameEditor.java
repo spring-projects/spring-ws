@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,23 +26,23 @@ import org.springframework.util.StringUtils;
  * PropertyEditor for {@code javax.xml.namespace.QName}, to populate a property of type QName from a String value.
  * <p>
  * Expects the syntax
- * 
+ *
  * <pre>
  * localPart
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * {namespace}localPart
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * {namespace}prefix:localPart
  * </pre>
- * 
+ *
  * This resembles the {@code toString()} representation of {@code QName} itself, but allows for prefixes to be specified
  * as well.
  *

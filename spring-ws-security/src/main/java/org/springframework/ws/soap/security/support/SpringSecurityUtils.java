@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public abstract class SpringSecurityUtils {
 
 	/**
 	 * Checks the validity of a user's account and credentials.
-	 * 
+	 *
 	 * @param user the user to check
 	 * @throws AccountExpiredException if the account has expired
 	 * @throws CredentialsExpiredException if the credentials have expired

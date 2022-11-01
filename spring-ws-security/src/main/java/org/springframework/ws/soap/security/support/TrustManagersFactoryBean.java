@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 
 	/**
 	 * Sets the algorithm of the {@code TrustManager} to use. If this is not set, the default is used.
-	 * 
+	 *
 	 * @see TrustManagerFactory#getDefaultAlgorithm()
 	 */
 	public void setAlgorithm(String algorithm) {
@@ -63,7 +63,7 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 
 	/**
 	 * Sets the source of certificate authorities and related trust material.
-	 * 
+	 *
 	 * @see TrustManagerFactory#init(KeyStore)
 	 */
 	public void setKeyStore(KeyStore keyStore) {

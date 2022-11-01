@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
  * <p>
  * <h3>Examples</h3> For instance, if you want to use the {@code KeyStoreCallbackHandler} to validate incoming
  * certificates or signatures, you would use a trust store, like so:
- * 
+ *
  * <pre>
  * &lt;bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler"&gt;
  *	   &lt;property name="trustStore" ref="trustStore"/&gt;
@@ -105,9 +105,9 @@ import com.sun.xml.wss.impl.callback.SignatureVerificationKeyCallback;
  *	   &lt;property name="password" value="changeit"/&gt;
  * &lt;/bean&gt;
  * </pre>
- * 
+ *
  * If you want to use it to decrypt incoming certificates or sign outgoing messages, you would use a key store, like so:
- * 
+ *
  * <pre>
  * &lt;bean id="keyStoreHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler"&gt;
  *	   &lt;property name="keyStore" ref="keyStore"/&gt;

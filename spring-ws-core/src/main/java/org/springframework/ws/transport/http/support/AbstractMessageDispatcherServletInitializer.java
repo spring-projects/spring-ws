@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	 * it to the patterns returned from {@link #getServletMappings()}.
 	 * <p>
 	 * Further customization can be achieved by overriding {@link #customizeRegistration(ServletRegistration.Dynamic)}.
-	 * 
+	 *
 	 * @param servletContext the context to register the servlet against
 	 */
 	protected void registerMessageDispatcherServlet(ServletContext servletContext) {
@@ -97,7 +97,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	/**
 	 * Return the name under which the {@link MessageDispatcherServlet} will be registered. Defaults to
 	 * {@link #DEFAULT_SERVLET_NAME}.
-	 * 
+	 *
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected String getServletName() {
@@ -110,7 +110,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	 * The returned context is delegated to Spring's
 	 * {@link MessageDispatcherServlet#MessageDispatcherServlet(WebApplicationContext)}. As such, it typically contains
 	 * endpoints, interceptors and other web service-related beans.
-	 * 
+	 *
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected abstract WebApplicationContext createServletApplicationContext();
@@ -118,7 +118,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	/**
 	 * Specify the servlet mapping(s) for the {@code MessageDispatcherServlet}. Defaults to
 	 * {@link #DEFAULT_SERVLET_MAPPINGS}.
-	 * 
+	 *
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected String[] getServletMappings() {
@@ -144,7 +144,7 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	/**
 	 * Optionally perform further registration customization once
 	 * {@link #registerMessageDispatcherServlet(ServletContext)} has completed.
-	 * 
+	 *
 	 * @param registration the {@code MessageDispatcherServlet} registration to be customized
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */

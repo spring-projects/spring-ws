@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -367,7 +367,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * Trigger afterCompletion callbacks on the mapped EndpointInterceptors. Will just invoke afterCompletion for all
 	 * interceptors whose handleRequest invocation has successfully completed and returned true, in addition to the last
 	 * interceptor who returned {@code false}.
-	 * 
+	 *
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that successfully completed
 	 * @param ex Exception thrown on handler execution, or {@code null} if none

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  * <p>
  * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
  * {@code java.util.Properties} class, like as follows:
- * 
+ *
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
  * http://www.springframework.org/spring-ws/samples/airline/GetFlights=getFlightsEndpoint
  * </pre>
- * 
+ *
  * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
  * <p>
  * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * {@link Action @Action} annotation to map methods to a WS-Addressing {@code Action} header.
  * <p>
  * Endpoints typically have the following form:
- * 
+ *
  * <pre>
  * &#64;Endpoint
  * &#64;Address("mailto:joe@fabrikam123.example")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -763,7 +763,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * Trigger afterCompletion callbacks on the mapped ClientInterceptors. Will just invoke afterCompletion for all
 	 * interceptors whose handleRequest invocation has successfully completed and returned true, in addition to the last
 	 * interceptor who returned {@code false}.
-	 * 
+	 *
 	 * @param interceptorIndex index of last interceptor that successfully completed
 	 * @param messageContext the message context
 	 * @param ex Exception thrown on handler execution, or {@code null} if none

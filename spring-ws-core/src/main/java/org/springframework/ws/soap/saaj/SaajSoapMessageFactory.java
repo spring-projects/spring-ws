@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/**
 	 * Sets the SAAJ message properties. These properties will be set on created messages.
-	 * 
+	 *
 	 * @see javax.xml.soap.SOAPMessage#setProperty(String, Object)
 	 */
 	public void setMessageProperties(Map<String, ?> messageProperties) {
@@ -269,7 +269,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	 * Template method that allows for post-processing of the given {@link SOAPMessage}.
 	 * <p>
 	 * Default implementation sets {@linkplain SOAPMessage#setProperty(String, Object) message properties}, if any.
-	 * 
+	 *
 	 * @param soapMessage the message to post process
 	 * @see #setMessageProperties(java.util.Map)
 	 */
