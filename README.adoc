@@ -34,6 +34,7 @@ Before you make a release, follow this checklist:
 * Are you using the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
+* Have you run ALL test scenarios? (Don't forget `testing` profile.)
 * Is it time to switch from milestone to release candidate? Or from release candidate to release?
 
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
@@ -55,8 +56,8 @@ But part of the release process requires a local check, which DOES depend upon y
 3. Verify this builds locally and passes all tests.
 +
 ----
-% ./mvnw clean package
-% ./mvnw -Pspring-buildsnapshot clean package
+% ./mvnw -Ptesting clean test
+% ./mvnw -Pspring-buildsnapshot,testing clean test
 ----
 +
 4. Push the tagged version to the release branch.
