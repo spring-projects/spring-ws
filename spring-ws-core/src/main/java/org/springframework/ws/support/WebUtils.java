@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ public abstract class WebUtils {
 	/**
 	 * Extract the URL filename from the given request URL path. Correctly resolves nested paths such as
 	 * "/products/view.html" as well.
-	 * 
+	 *
 	 * @param urlPath the request URL path (e.g. "/index.html")
 	 * @return the extracted URI filename (e.g. "index")
 	 */
@@ -46,7 +46,7 @@ public abstract class WebUtils {
 	/**
 	 * Extract the full URL filename (including file extension) from the given request URL path. Correctly resolve nested
 	 * paths such as "/products/view.html" and remove any path and or query parameters.
-	 * 
+	 *
 	 * @param urlPath the request URL path (e.g. "/products/index.html")
 	 * @return the extracted URI filename (e.g. "index.html")
 	 */

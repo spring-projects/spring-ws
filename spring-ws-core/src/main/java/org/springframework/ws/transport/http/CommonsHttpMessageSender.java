@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,14 +153,14 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	/**
 	 * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
 	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
-	 * 
+	 *
 	 * <pre>
 	 * https://www.example.com=1
 	 * http://www.example.com:8080=7
 	 * www.springframework.org=10
 	 * *=5
 	 * </pre>
-	 * 
+	 *
 	 * The host can be specified as hostname, or as URI (with scheme and port). The special host name {@code *} can be
 	 * used to specify {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
 	 *

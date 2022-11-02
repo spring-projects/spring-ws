@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,12 +46,12 @@ import org.w3c.dom.Element;
  * <p>
  * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
  * {@code java.util.Properties} class, like as follows:
- * 
+ *
  * <pre>
  * BookFlight=bookFlightEndpoint
  * GetFlights=getFlightsEndpoint
  * </pre>
- * 
+ *
  * The syntax is XPATH_EVALUATION=ENDPOINT_BEAN_NAME. The key is the evaluation of the XPath expression for the incoming
  * message, the value is the name of the endpoint.
  *

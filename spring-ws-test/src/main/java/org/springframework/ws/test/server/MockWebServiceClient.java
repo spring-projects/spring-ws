@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * Completion features (i.e. ctrl-space) in your IDE to set up the mocks.
  * <p>
  * For example: <blockquote>
- * 
+ *
  * <pre>
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * <strong>import org.springframework.ws.test.server.MockWebServiceClient</strong>;
  * <strong>import static org.springframework.ws.test.server.RequestCreators.*</strong>;
  * <strong>import static org.springframework.ws.test.server.ResponseMatchers.*</strong>;
- * 
+ *
  * &#064;RunWith(SpringJUnit4ClassRunner.class)
  * &#064;ContextConfiguration("applicationContext.xml")
  * public class MyWebServiceIntegrationTest {
@@ -97,7 +97,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  *	 }
  * }
  * </pre>
- * 
+ *
  * </blockquote>
  *
  * @author Arjen Poutsma

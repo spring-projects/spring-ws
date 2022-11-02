@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -155,14 +155,14 @@ public class WsConfigurationSupport {
 
 	/**
 	 * Add custom {@link MethodArgumentResolver}s to use in addition to the ones registered by default.
-	 * 
+	 *
 	 * @param argumentResolvers the list of custom converters; initially an empty list.
 	 */
 	protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {}
 
 	/**
 	 * Add custom {@link MethodReturnValueHandler}s in addition to the ones registered by default.
-	 * 
+	 *
 	 * @param returnValueHandlers the list of custom handlers; initially an empty list.
 	 */
 	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {}

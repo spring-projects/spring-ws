@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -198,7 +198,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Inject a customize {@link WSSecurityEngine}.
-	 * 
+	 *
 	 * @param securityEngine
 	 */
 	public Wss4jSecurityInterceptor(WSSecurityEngine securityEngine) {
@@ -253,13 +253,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * The encryption mode specifier is either {@code {Content}} or {@code {Element}}. Please refer to the W3C XML
 	 * Encryption specification about the differences between Element and Content encryption. The encryption mode defaults
 	 * to {@code Content} if it is omitted. Example of a list:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;property name="securementEncryptionParts"
 	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
 	 *			   {Element}{}UserName" />
 	 * </pre>
-	 * 
+	 *
 	 * The first entry of the list identifies the element {@code CreditCard} in the namespace
 	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the namespace
 	 * identifier, and the encryption modifier are case sensitive.
@@ -328,7 +328,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Defines which signature algorithm to use.
-	 * 
+	 *
 	 * @see WSConstants#RSA
 	 * @see WSConstants#DSA
 	 */
@@ -370,12 +370,12 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * formats.
 	 * <p>
 	 * To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
-	 * 
+	 *
 	 * <pre>
 	 * &lt;property name="securementSignatureParts"
 	 *	 value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
 	 * </pre>
-	 * 
+	 *
 	 * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
 	 * sensitive string)
 	 * <p>
@@ -420,7 +420,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Sets the SAML Callback used for generating SAML tokens.
-	 * 
+	 *
 	 * @param samlCallback
 	 */
 	public void setSecurementSamlCallbackHandler(CallbackHandler samlCallbackHandler) {
@@ -518,7 +518,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Sets the web service specification settings.
 	 * <p>
 	 * The default settings follow the latest OASIS and changing anything might violate the OASIS specs.
-	 * 
+	 *
 	 * @param config web service security configuration or {@code null} to use default settings
 	 */
 	public void setWssConfig(WSSConfig config) {
@@ -770,7 +770,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Verifies the trust of a certificate.
-	 * 
+	 *
 	 * @param result
 	 */
 	protected void verifyCertificateTrust(WSHandlerResult result) throws WSSecurityException {
@@ -793,7 +793,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Verifies the timestamp.
-	 * 
+	 *
 	 * @param result
 	 */
 	protected void verifyTimestamp(WSHandlerResult result) throws WSSecurityException {

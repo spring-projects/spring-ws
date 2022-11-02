@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * {@link WebServiceMessageCallback} implementation that sets the WS-Addressing {@code Action} header on the message.
  * <p>
  * A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
- * 
+ *
  * <pre>
  * WebServiceTemplate template = new WebServiceTemplate(messageFactory);
  * Result result = new DOMResult();
@@ -151,7 +151,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code Action}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
 	 */
 	public URI getAction() {
@@ -160,7 +160,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code From}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
 	public EndpointReference getFrom() {
@@ -169,7 +169,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code From}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
 	public void setFrom(EndpointReference from) {
@@ -178,7 +178,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code ReplyTo}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
 	public EndpointReference getReplyTo() {
@@ -187,7 +187,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code ReplyTo}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
 	public void setReplyTo(EndpointReference replyTo) {
@@ -196,7 +196,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code FaultTo}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
 	public EndpointReference getFaultTo() {
@@ -205,7 +205,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code FaultTo}.
-	 * 
+	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
 	public void setFaultTo(EndpointReference faultTo) {

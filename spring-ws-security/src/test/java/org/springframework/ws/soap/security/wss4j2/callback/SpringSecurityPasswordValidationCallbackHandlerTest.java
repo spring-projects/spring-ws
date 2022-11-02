@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	public void setUp() {
 		// add clearContext() at the beginning of each method in case {@code SecurityContextHolder} isn't clean
 		SecurityContextHolder.clearContext();
-		
+
 		callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
 		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");

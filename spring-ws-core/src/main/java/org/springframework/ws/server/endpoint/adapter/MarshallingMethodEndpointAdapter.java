@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,17 +31,17 @@ import org.springframework.ws.support.MarshallingUtils;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
- * 
+ *
  * <pre>
  * void handleMyMessage(MyUnmarshalledType request);
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * MyMarshalledType handleMyMessage(MyUnmarshalledType request);
  * </pre>
- * 
+ *
  * I.e. methods that take a single parameter that {@link Unmarshaller#supports(Class) is supported} by the
  * {@link Unmarshaller}, and return either {@code void} or a type {@link Marshaller#supports(Class) supported} by the
  * {@link Marshaller}. The method can have any name, as long as it is mapped by an {@link EndpointMapping}.

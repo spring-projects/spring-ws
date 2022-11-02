@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2011 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.xml.sax.SAXParseException;
 
 /**
  * Subinterface of {@link ErrorHandler} that allows the registered errors to be retrieved.
- * 
+ *
  * @author Arjen Poutsma
  * @since 2.0.1
  */
@@ -29,7 +29,7 @@ public interface ValidationErrorHandler extends ErrorHandler {
 
 	/**
 	 * Returns the errors collected by this error handler.
-	 * 
+	 *
 	 * @return the errors
 	 */
 	SAXParseException[] getErrors();

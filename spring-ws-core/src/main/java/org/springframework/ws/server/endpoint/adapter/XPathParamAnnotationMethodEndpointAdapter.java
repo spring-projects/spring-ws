@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,18 +42,18 @@ import org.w3c.dom.NodeList;
 
 /**
  * Adapter that supports endpoint methods that use XPath expressions. Supports methods with the following signature:
- * 
+ *
  * <pre>
  * void handleMyMessage(@XPathParam("/root/child/text") String param);
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * Source handleMyMessage(@XPathParam("/root/child/text") String param1,
  * 		&#64;XPathParam("/root/child/number") double param2);
  * </pre>
- * 
+ *
  * I.e. methods that return either {@code void} or a {@link Source}, and have parameters annotated with
  * {@link XPathParam} that specify the XPath expression that should be bound to that parameter. The parameter can be of
  * the following types:

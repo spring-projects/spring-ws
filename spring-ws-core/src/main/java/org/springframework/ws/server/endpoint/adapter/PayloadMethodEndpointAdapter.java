@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,17 +28,17 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
- * 
+ *
  * <pre>
  * void handleMyMessage(Source request);
  * </pre>
- * 
+ *
  * or
- * 
+ *
  * <pre>
  * Source handleMyMessage(Source request);
  * </pre>
- * 
+ *
  * I.e. methods that take a single {@link Source} parameter, and return either {@code void} or a {@link Source}. The
  * method can have any name, as long as it is mapped by an {@link org.springframework.ws.server.EndpointMapping}.
  * <p>
