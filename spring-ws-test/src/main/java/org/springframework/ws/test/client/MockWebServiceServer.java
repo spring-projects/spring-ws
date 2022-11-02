@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * Completion features (i.e. ctrl-space) in your IDE to set up the mocks.
  * <p>
  * For example: <blockquote>
- * 
+ *
  * <pre>
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +87,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *	 }
  * }
  * </pre>
- * 
+ *
  * </blockquote>
  *
  * @author Arjen Poutsma

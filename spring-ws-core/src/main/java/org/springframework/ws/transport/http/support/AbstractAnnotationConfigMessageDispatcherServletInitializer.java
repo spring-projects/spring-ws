@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2014 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ public abstract class AbstractAnnotationConfigMessageDispatcherServletInitialize
 	 * Specify {@link org.springframework.context.annotation.Configuration @Configuration} and/or
 	 * {@link org.springframework.stereotype.Component @Component} classes to be provided to the
 	 * {@linkplain #createRootApplicationContext() root application context}.
-	 * 
+	 *
 	 * @return the configuration classes for the root application context, or {@code null} if creation and registration of
 	 *         a root context is not desired
 	 */
@@ -87,7 +87,7 @@ public abstract class AbstractAnnotationConfigMessageDispatcherServletInitialize
 	 * Specify {@link org.springframework.context.annotation.Configuration @Configuration} and/or
 	 * {@link org.springframework.stereotype.Component @Component} classes to be provided to the
 	 * {@linkplain #createServletApplicationContext() dispatcher servlet application context}.
-	 * 
+	 *
 	 * @return the configuration classes for the dispatcher servlet application context (may not be empty or {@code null})
 	 */
 	protected abstract Class<?>[] getServletConfigClasses();

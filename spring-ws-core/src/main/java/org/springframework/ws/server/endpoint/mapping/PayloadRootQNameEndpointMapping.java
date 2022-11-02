@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  * <p>
  * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
  * {@code java.util.Properties} class, like as follows:
- * 
+ *
  * <pre>
  * {http://www.springframework.org/spring-ws/samples/airline/schemas}BookFlight=bookFlightEndpoint
  * {http://www.springframework.org/spring-ws/samples/airline/schemas}GetFlights=getFlightsEndpoint
  * </pre>
- * 
+ *
  * The syntax is QNAME=ENDPOINT_BEAN_NAME. Qualified names are parsed using the syntax described in {@code QNameEditor}.
  *
  * @author Arjen Poutsma

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2012 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 	/**
 	 * Transforms the locations of the given definition document using the given XPath expression.
-	 * 
+	 *
 	 * @param xPathExpression the XPath expression
 	 * @param definitionDocument the definition document
 	 * @param request the request, used to determine the location to transform to

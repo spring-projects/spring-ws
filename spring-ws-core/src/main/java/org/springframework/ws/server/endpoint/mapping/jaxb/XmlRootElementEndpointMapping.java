@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2010 the original author or authors.
+ * Copyright 2005-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.springframework.xml.transform.TransformerHelper;
  * JAXB2 {@link XmlRootElement} annotation to map methods to request payload root elements.
  * <p>
  * Endpoints typically have the following form:
- * 
+ *
  * <pre>
  * &#64;Endpoint
  * public class MyEndpoint{
@@ -44,9 +44,9 @@ import org.springframework.xml.transform.TransformerHelper;
  *	  }
  * }
  * </pre>
- * 
+ *
  * where MyRootElement is annotated with {@code @XmlRootElement}:
- * 
+ *
  * <pre>
  * &#64;XmlRootElement(name = "myRoot", namespace = "http://springframework.org/spring-ws")
  * public class MyRootElement {
