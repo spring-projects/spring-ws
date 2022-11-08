@@ -92,18 +92,19 @@
         <commons-io.version>2.11.0</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <easymock.version>4.3</easymock.version>
+        <eclipse-angus-mail.version>1.0.0</eclipse-angus-mail.version>
         <ehcache.version>2.10.9.2</ehcache.version>
         <greenmail.version>2.0.0-alpha-2</greenmail.version>
         <httpclient.version>4.5.3</httpclient.version>
-        <jakarta-annotation.version>2.0.0</jakarta-annotation.version>
-        <jakarta-jms.version>3.0.0</jakarta-jms.version>
-        <jakarta-mail.version>2.0.1</jakarta-mail.version>
-        <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
-        <jakarta-soap.version>2.0.1</jakarta-soap.version>
-        <jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
+        <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
+        <jakarta-jms.version>3.1.0</jakarta-jms.version>
+        <jakarta-mail-api.version>2.1.0</jakarta-mail-api.version>
+        <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
+        <jakarta-soap.version>3.0.0</jakarta-soap.version>
+        <jakarta-xml-bind.version>4.0.0</jakarta-xml-bind.version>
         <jaxen.version>1.1.6</jaxen.version>
         <jdom2.version>2.0.6.1</jdom2.version>
-        <jetty.version>11.0.7</jetty.version>
+        <jetty.version>11.0.12</jetty.version>
         <junit.version>5.9.1</junit.version>
         <log4j2.version>2.19.0</log4j2.version>
         <mail.version>1.4.7</mail.version>
@@ -113,8 +114,9 @@
         <smack.version>4.3.5</smack.version>
         <spring.version>6.0.0-RC1</spring.version>
         <spring-security.version>6.0.0-RC1</spring-security.version>
+        <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
-        <woodstox.version>4.4.1</woodstox.version>
+        <woodstox.version>6.2.8</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.1</wss4j.version>
         <xmlsec.version>3.0.1</xmlsec.version>
@@ -151,6 +153,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-bom</artifactId>
+                <version>${jetty.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -169,6 +179,10 @@
                 <exclusion>
                     <groupId>jakarta.xml.soap</groupId>
                     <artifactId>jakarta.xml.soap-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -224,8 +238,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.woodstox</groupId>
-            <artifactId>woodstox-core-asl</artifactId>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
             <version>${woodstox.version}</version>
             <scope>test</scope>
         </dependency>
@@ -254,6 +268,19 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jakarta-ee-9</id>
+            <properties>
+                <jakarta-annotation.version>2.0.0</jakarta-annotation.version>
+                <jakarta-jms.version>3.0.0</jakarta-jms.version>
+                <jakarta-mail-api.version>2.0.1</jakarta-mail-api.version>
+                <jakarta-mail-ee9-impl.version>2.0.1</jakarta-mail-ee9-impl.version>
+                <jakarta-mail-ee-10-impl.version>2.1.0</jakarta-mail-ee-10-impl.version>
+                <jakarta-servlet.version>5.0.0</jakarta-servlet.version>
+                <jakarta-soap.version>2.0.1</jakarta-soap.version>
+                <jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
+            </properties>
+        </profile>
         <profile>
             <id>spring-buildsnapshot</id>
             <properties>

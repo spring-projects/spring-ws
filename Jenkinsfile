@@ -58,6 +58,22 @@ pipeline {
 						sh "PROFILE=spring-buildsnapshot,convergence ci/test.sh"
 					}
 				}
+
+				stage("Test: jakarta-ee-9 (jdk17)") {
+					agent {
+						docker {
+							image 'openjdk:17-bullseye'
+							args '-v $HOME/.m2:/root/.m2'
+						}
+					}
+					environment {
+						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
+					}
+					steps {
+					    // Active Jakarta EE 9 profile and disable Jakarta EE 10 (default) profile
+						sh "PROFILE=jakarta-ee-9,-jakarta-ee-10,convergence ci/test.sh"
+					}
+				}
 			}
 		}
 
