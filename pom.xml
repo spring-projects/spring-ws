@@ -112,7 +112,7 @@
         <saaj-impl.version>2.0.1</saaj-impl.version>
         <slf4j.version>2.0.3</slf4j.version>
         <smack.version>4.3.5</smack.version>
-        <spring.version>6.0.0-RC1</spring.version>
+        <spring.version>6.0.0</spring.version>
         <spring-security.version>6.0.0-RC1</spring-security.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
@@ -284,7 +284,7 @@
         <profile>
             <id>spring-buildsnapshot</id>
             <properties>
-                <spring.version>6.0.0-SNAPSHOT</spring.version>
+                <spring.version>6.0.1-SNAPSHOT</spring.version>
                 <spring-security.version>6.0.0-SNAPSHOT</spring-security.version>
             </properties>
         </profile>
