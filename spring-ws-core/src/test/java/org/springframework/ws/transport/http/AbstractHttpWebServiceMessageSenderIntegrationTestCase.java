@@ -16,18 +16,14 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.MimeHeaders;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.*;
 
 import java.io.OutputStream;
 import java.net.URI;
@@ -195,8 +191,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+				.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			connection.receive(messageFactory);
 
 			assertThat(connection.hasFault()).isTrue();
@@ -210,8 +207,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+				.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
 
 			assertThat(response).isNotNull();
@@ -237,8 +235,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 
-		try (WebServiceConnection connection = messageSender.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+		try (WebServiceConnection connection = messageSender.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			WebServiceMessage response = connection.receive(messageFactory);
 
 			assertThat(response).isNull();

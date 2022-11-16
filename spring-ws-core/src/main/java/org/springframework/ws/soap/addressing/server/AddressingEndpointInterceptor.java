@@ -147,7 +147,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		for (WebServiceMessageSender messageSender : messageSenders) {
 			if (messageSender.supports(replyEpr.getAddress())) {
 				supported = true;
-				try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())){
+				try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())) {
 					connection.send(messageContext.getResponse());
 					break;
 				} finally {

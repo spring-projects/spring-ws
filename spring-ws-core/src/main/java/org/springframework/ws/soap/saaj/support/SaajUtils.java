@@ -16,14 +16,7 @@
 
 package org.springframework.ws.soap.saaj.support;
 
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.MimeHeaders;
-import jakarta.xml.soap.Name;
-import jakarta.xml.soap.SOAPBody;
-import jakarta.xml.soap.SOAPElement;
-import jakarta.xml.soap.SOAPEnvelope;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -174,7 +167,7 @@ public abstract class SaajUtils {
 	 */
 	public static SOAPMessage loadMessage(Resource resource, MessageFactory messageFactory)
 			throws SOAPException, IOException {
-		try (InputStream is = resource.getInputStream()){
+		try (InputStream is = resource.getInputStream()) {
 			MimeHeaders mimeHeaders = new MimeHeaders();
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_LENGTH, Long.toString(resource.getFile().length()));
