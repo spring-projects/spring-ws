@@ -16,7 +16,7 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.OutputStream;
 import java.net.URI;
@@ -28,11 +28,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -185,8 +181,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+				.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			connection.receive(messageFactory);
 
 			assertThat(connection.hasFault()).isTrue();
@@ -199,8 +196,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+				.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
 
 			assertThat(response).isNotNull();
@@ -225,8 +223,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyContext.addServlet(new ServletHolder(servlet), "/");
 		jettyServer.start();
 
-		try (WebServiceConnection connection = messageSender.createConnection(connectionUri)){
-			connection.send(new SaajSoapMessage(createRequest()));
+		try (WebServiceConnection connection = messageSender.createConnection(connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
 			WebServiceMessage response = connection.receive(messageFactory);
 
 			assertThat(response).isNull();

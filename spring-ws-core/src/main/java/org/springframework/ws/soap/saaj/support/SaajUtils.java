@@ -21,14 +21,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.soap.Name;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPElement;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.*;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -173,7 +166,7 @@ public abstract class SaajUtils {
 	 */
 	public static SOAPMessage loadMessage(Resource resource, MessageFactory messageFactory)
 			throws SOAPException, IOException {
-		try (InputStream is = resource.getInputStream()){
+		try (InputStream is = resource.getInputStream()) {
 			MimeHeaders mimeHeaders = new MimeHeaders();
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 			mimeHeaders.addHeader(TransportConstants.HEADER_CONTENT_LENGTH, Long.toString(resource.getFile().length()));

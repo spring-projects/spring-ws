@@ -16,7 +16,7 @@
 
 package org.springframework.ws.wsdl.wsdl11;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.InputStream;
 
@@ -37,19 +37,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xmlunit.assertj.XmlAssert;
 
-class Wsdl4jDefinitionTest {
+public class Wsdl4jDefinitionTest {
 
 	private Wsdl4jDefinition definition;
 
 	private Transformer transformer;
 
 	@BeforeEach
-	void setUp() throws Exception {
+	public void setUp() throws Exception {
 
 		WSDLFactory factory = WSDLFactory.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
 
-		try (InputStream is = getClass().getResourceAsStream("complete.wsdl")){
+		try (InputStream is = getClass().getResourceAsStream("complete.wsdl")) {
 			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
 			definition = new Wsdl4jDefinition(wsdl4jDefinition);
 		}
@@ -58,7 +58,7 @@ class Wsdl4jDefinitionTest {
 	}
 
 	@Test
-	void testGetSource() throws Exception {
+	public void testGetSource() throws Exception {
 
 		Source source = definition.getSource();
 

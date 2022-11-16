@@ -20,11 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.*;
 import javax.xml.stream.events.XMLEvent;
 import javax.xml.stream.util.XMLEventConsumer;
 import javax.xml.transform.Result;
@@ -103,7 +99,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 			try {
 				eventReader = getInputFactory().createXMLEventReader(source);
 			} catch (XMLStreamException | UnsupportedOperationException ex) {
-				// ignore
+				eventReader = null;
 			}
 		}
 		if (eventReader == null) {

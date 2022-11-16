@@ -16,23 +16,10 @@
 
 package org.springframework.ws.server.endpoint;
 
-import nu.xom.Attribute;
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.NodeFactory;
-import nu.xom.ParentNode;
-import nu.xom.ParsingException;
-import nu.xom.Serializer;
-import nu.xom.ValidityException;
+import nu.xom.*;
 import nu.xom.converters.DOMConverter;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
+import java.io.*;
 import java.util.Locale;
 
 import javax.xml.stream.XMLEventReader;
@@ -133,7 +120,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 		}
 
 		@Override
-		public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException, ParsingException {
+		public void saxSource(XMLReader reader, InputSource inputSource) throws IOException, SAXException {
 			try {
 				Builder builder = new Builder(reader);
 				Document document;
@@ -146,8 +133,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 							"InputSource in SAXSource contains neither byte stream nor character stream");
 				}
 				element = document.getRootElement();
-			} catch (ValidityException ex) {
-				throw new XomParsingException(ex);
+			} catch (ParsingException e) {
+				throw new XomParsingException(e);
 			}
 		}
 

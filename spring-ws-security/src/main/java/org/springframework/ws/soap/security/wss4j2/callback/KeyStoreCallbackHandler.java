@@ -17,11 +17,7 @@
 package org.springframework.ws.soap.security.wss4j2.callback;
 
 import java.io.IOException;
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
+import java.security.*;
 
 import javax.security.auth.callback.UnsupportedCallbackException;
 

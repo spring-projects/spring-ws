@@ -21,11 +21,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.xml.transform.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
