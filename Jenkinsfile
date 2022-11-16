@@ -38,7 +38,7 @@ pipeline {
 				ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 			}
 			steps {
-				sh "PROFILE=distribute,convergence ci/test.sh"
+				sh "PROFILE=jakarta-ee-10,distribute,convergence ci/test.sh"
 			}
 		}
 
@@ -55,7 +55,7 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-						sh "PROFILE=spring-buildsnapshot,convergence ci/test.sh"
+						sh "PROFILE=jakarta-ee-10,spring-buildsnapshot,convergence ci/test.sh"
 					}
 				}
 
@@ -111,14 +111,14 @@ pipeline {
 					}
 
 					if (RELEASE_TYPE == 'release') {
-						sh "PROFILE=distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
+						sh "PROFILE=jakarta-ee-10,distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
 
 						slackSend(
                                 color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
                                 channel: '#spring-ws',
                                 message: "Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
 					} else {
-						sh "PROFILE=distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
+						sh "PROFILE=jakarta-ee-10,distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
 					}
 				}
 			}
@@ -145,7 +145,7 @@ pipeline {
 
 			steps {
 				script {
-					sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw -s settings.xml -Pdistribute,docs ' +
+					sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw -s settings.xml -Pjakarta-ee-10,distribute,docs ' +
 							'-Dartifactory.server=https://repo.spring.io ' +
 							"-Dartifactory.username=${ARTIFACTORY_USR} " +
 							"-Dartifactory.password=${ARTIFACTORY_PSW} " +
