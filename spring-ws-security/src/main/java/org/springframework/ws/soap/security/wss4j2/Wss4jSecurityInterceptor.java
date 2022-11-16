@@ -281,6 +281,41 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Property to define which parts of the request shall be encrypted, if they exist in the request.
+	 * <p>
+	 * The value of this property is a list of semicolon separated element names that identify the elements to encrypt. An
+	 * encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede each
+	 * element name.
+	 * <p>
+	 * The encryption mode specifier is either {@code {Content}} or {@code {Element}}. Please refer to the W3C XML
+	 * Encryption specification about the differences between Element and Content encryption. The encryption mode defaults
+	 * to {@code Content} if it is omitted. Example of a list:
+	 *
+	 * <pre>
+	 * &lt;property name="securementEncryptionParts"
+	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
+	 *			   {Element}{}UserName" />
+	 * </pre>
+	 *
+	 * The first entry of the list identifies the element {@code CreditCard} in the namespace
+	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the namespace
+	 * identifier, and the encryption modifier are case-sensitive.
+	 * <p>
+	 * The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
+	 * {@code Content} and the namespace is set to the SOAP namespace.
+	 * <p>
+	 * An empty encryption mode defaults to {@code Content}, an empty namespace identifier defaults to the SOAP namespace.
+	 * The second line of the example defines {@code Element} as encryption mode for an {@code UserName} element in the
+	 * SOAP namespace.
+	 * <p>
+	 * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case-sensitive string)
+	 * <p>
+	 */
+	public void setSecurementEncryptionOptionalParts(String securementEncryptionParts) {
+		handler.setOption(WSHandlerConstants.OPTIONAL_ENCRYPTION_PARTS, securementEncryptionParts);
+	}
+
+	/**
 	 * Defines which symmetric encryption algorithm to use. WSS4J supports the following alorithms:
 	 * {@link WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128}, {@link WSConstants#AES_256}, and
 	 * {@link WSConstants#AES_192}. Except for AES 192 all of these algorithms are required by the XML Encryption
