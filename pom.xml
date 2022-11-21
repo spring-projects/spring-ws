@@ -117,7 +117,7 @@
         <spring-security.version>6.0.0</spring-security.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
-        <woodstox.version>6.2.8</woodstox.version>
+        <woodstox.version>6.4.0</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.1</wss4j.version>
         <xmlsec.version>3.0.1</xmlsec.version>
