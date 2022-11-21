@@ -36,7 +36,6 @@ Before you make a release, follow this checklist:
 * Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
 * Is it time to switch from milestone to release candidate? Or from release candidate to release?
-* Have you closed this release's Github issue milestone, run `ChangeLogCreator` and updated `changelog.txt`?
 
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
 But part of the release process requires a local check, which DOES depend upon your environment.
@@ -83,6 +82,14 @@ But part of the release process requires a local check, which DOES depend upon y
 
 The pipeline will build and release the "release-4.0.x" branch on artifactory for milestones and RCs.
 For releases, they are sent to maven central.
+
+Once the release is completed and tags are pushed:
+
+. Close the Github issue milestone.
+. Run the `ChangeLogCreator` report against that milestone.
+. Go to https://github.com/spring-projects/spring-ws/releases.
+. Find that tag and create a new release. Use the output from `ChangeLogCreator` as the content for the release report.
+. Announce on #spring-release.
 
 === Running CI tasks locally
 

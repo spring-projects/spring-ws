@@ -13,7 +13,6 @@
             -->
             <directory>src/dist</directory>
             <includes>
-                <include>changelog.txt</include>
                 <include>license.txt</include>
                 <include>notice.txt</include>
                 <include>readme.txt</include>
