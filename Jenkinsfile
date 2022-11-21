@@ -179,8 +179,8 @@ pipeline {
 		stage('Release documentation') {
 			when {
 				anyOf {
-					branch 'main'
-					branch 'release'
+					branch '3.1.x'
+					branch 'release-3.1.x'
 				}
 			}
 			agent {
