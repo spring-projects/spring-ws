@@ -47,7 +47,7 @@ But part of the release process requires a local check, which DOES depend upon y
 2. With the release tagged, update the release branch to the newly created tag.
 +
 ----
-% git checkout -b release-4.0.x
+% git checkout -b release
 % git reset --hard <tag>
 ----
 +
@@ -61,7 +61,7 @@ But part of the release process requires a local check, which DOES depend upon y
 4. Push the tagged version to the release branch.
 +
 ----
-% git push -f origin release-4.0.x
+% git push -f origin release
 ----
 +
 5. For milestones and release candidates, verify the artifacts on artifactory.
@@ -70,15 +70,15 @@ But part of the release process requires a local check, which DOES depend upon y
 * Close the repository.
 * Release the repository.
 7. Announce on VMware Slack.
-8. Once completed, push the `4.0.x` branch for next version's snapshots.
+8. Once completed, push the `main` branch for next version's snapshots.
 +
 ----
-% git checkout 4.0.x
+% git checkout main
 % git push
 % git push --tags
 ----
 
-The pipeline will build and release the "release-4.0.x" branch on artifactory for milestones and RCs.
+The pipeline will build and release the "release" branch on artifactory for milestones and RCs.
 For releases, they are sent to maven central.
 
 Once the release is completed and tags are pushed:
