@@ -1,9 +1,7 @@
 image:https://spring.io/badges/spring-ws/ga.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
 image:https://spring.io/badges/spring-ws/snapshot.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
 
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain&subject=3.1.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.x&subject=3.0.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F2.x&subject=2.4.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
+image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.1.x&subject=3.1.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
 
 = Spring Web Services
 
@@ -40,7 +38,7 @@ Before you make a release, follow this checklist:
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
 But part of the release process requires a local check, which DOES depend upon your environment.
 
-1. Create a new release (on the main branch).
+1. Create a new release (on the 3.1.x branch).
 +
 ----
 % ci/create-release.sh <release version> <next snapshot version>
@@ -49,7 +47,7 @@ But part of the release process requires a local check, which DOES depend upon y
 2. With the release tagged, update the release branch to the newly created tag.
 +
 ----
-% git checkout -b release
+% git checkout -b release-3.1.x
 % git reset --hard <tag>
 ----
 +
@@ -63,7 +61,7 @@ But part of the release process requires a local check, which DOES depend upon y
 4. Push the tagged version to the release branch.
 +
 ----
-% git push -f origin release
+% git push -f origin release-3.1.x
 ----
 +
 5. For milestones and release candidates, verify the artifacts on artifactory.
@@ -72,10 +70,10 @@ But part of the release process requires a local check, which DOES depend upon y
 * Close the repository.
 * Release the repository.
 7. Announce on VMware Slack.
-8. Once completed, push the `main` branch for next version's snapshots.
+8. Once completed, push the `3.1.x` branch for next version's snapshots.
 +
 ----
-% git checkout main
+% git checkout 3.1.x
 % git push
 % git push --tags
 ----
