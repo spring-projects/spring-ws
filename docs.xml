@@ -7,6 +7,19 @@
 	</formats>
 	<includeBaseDirectory>false</includeBaseDirectory>
 	<fileSets>
+        <fileSet>
+            <!--
+                Adds readme and other textfiles to the root of the distribution archive.
+            -->
+            <directory>src/dist</directory>
+            <includes>
+                <include>changelog.txt</include>
+                <include>license.txt</include>
+                <include>notice.txt</include>
+                <include>readme.txt</include>
+            </includes>
+            <outputDirectory />
+        </fileSet>
 		<fileSet>
 			<!--
 				Adds reference manual (html) to the distribution archive

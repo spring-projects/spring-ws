@@ -36,6 +36,7 @@ Before you make a release, follow this checklist:
 * Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
 * Is it time to switch from milestone to release candidate? Or from release candidate to release?
+* Have you closed this release's Github issue milestone, run `ChangeLogCreator` and updated `changelog.txt`?
 
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
 But part of the release process requires a local check, which DOES depend upon your environment.
