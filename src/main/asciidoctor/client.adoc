@@ -178,7 +178,7 @@ In addition to a message sender, the `WebServiceTemplate` requires a web service
 The `WebServiceTemplate` contains many convenience methods to send and receive web service messages. There are methods that accept and return a `Source` and those that return a `Result`. Additionally, there are methods that marshal and unmarshal objects to XML. The following example sends a simple XML message to a web service:
 
 ====
-[source,xml,subs="verbatim,quotes"]
+[source,java,subs="verbatim,quotes"]
 ----
 import java.io.StringReader;
 import javax.xml.transform.stream.StreamResult;
