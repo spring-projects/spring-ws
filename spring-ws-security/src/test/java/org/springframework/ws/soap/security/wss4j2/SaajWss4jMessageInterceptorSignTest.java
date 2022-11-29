@@ -84,4 +84,45 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 		interceptor.validateMessage(message, messageContext);
 	}
+
+	@Test
+	public void testSignWithoutInclusivePrefixesAndValidate() throws Exception {
+
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		interceptor.setSecurementActions("Signature");
+		interceptor.setEnableSignatureConfirmation(false);
+		interceptor.setSecurementPassword("123456");
+		interceptor.setSecurementUsername("rsaKey");
+		interceptor.setAddInclusivePrefixes(false);
+		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
+		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+
+		interceptor.secureMessage(message, messageContext);
+
+		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
+		Iterator<?> iterator = header.getChildElements(
+				new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
+
+		assertThat(iterator.hasNext()).isTrue();
+
+		SOAPHeaderElement securityHeader = (SOAPHeaderElement) iterator.next();
+		iterator = securityHeader.getChildElements(new QName("http://www.w3.org/2000/09/xmldsig#", "Signature"));
+
+		assertThat(iterator.hasNext()).isTrue();
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		message.writeTo(bos);
+
+		MimeHeaders mimeHeaders = new MimeHeaders();
+		mimeHeaders.addHeader("Content-Type", "text/xml");
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+
+		SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
+		message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
+		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+
+		interceptor.validateMessage(message, messageContext);
+	}
 }
