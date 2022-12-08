@@ -122,7 +122,7 @@
 		<xmlsec.version>2.3.1</xmlsec.version>
 		<xml-schema-core.version>2.2.2</xml-schema-core.version>
 		<xmlunit1.version>1.6</xmlunit1.version>
-		<xmlunit.version>2.7.0</xmlunit.version>
+		<xmlunit.version>2.9.0</xmlunit.version>
 		<xws-security.version>3.0</xws-security.version>
 		<xom.version>1.2.5</xom.version>
 		<spring-asciidoctor-backends.version>0.0.3</spring-asciidoctor-backends.version>

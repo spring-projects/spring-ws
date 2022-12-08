@@ -16,16 +16,33 @@
 
 package org.springframework.ws.test.client;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-import static org.springframework.ws.test.client.RequestMatchers.*;
-import static org.springframework.ws.test.client.ResponseCreators.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.springframework.ws.test.client.RequestMatchers.anything;
+import static org.springframework.ws.test.client.RequestMatchers.connectionTo;
+import static org.springframework.ws.test.client.RequestMatchers.payload;
+import static org.springframework.ws.test.client.RequestMatchers.soapEnvelope;
+import static org.springframework.ws.test.client.RequestMatchers.soapHeader;
+import static org.springframework.ws.test.client.RequestMatchers.validPayload;
+import static org.springframework.ws.test.client.RequestMatchers.xpath;
+import static org.springframework.ws.test.client.ResponseCreators.withClientOrSenderFault;
+import static org.springframework.ws.test.client.ResponseCreators.withPayload;
+import static org.springframework.ws.test.client.ResponseCreators.withSoapEnvelope;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.transform.Source;
@@ -35,6 +52,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapMessage;
@@ -330,6 +348,34 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
+	public void soapEnvelopeMatch() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setClassesToBeBound(EnvelopeMatcherRequest.class, EnvelopeMatcherResponse.class);
+
+		template = new WebServiceTemplate(marshaller);
+		template.setDefaultUri("https://example.com");
+		server = MockWebServiceServer.createServer(template);
+
+		Source expectedSoapRequest = new StringSource(
+				"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<SOAP-ENV:Header/>"
+						+ "<SOAP-ENV:Body>" + "<EnvelopeMatcherRequest>" + "<myData>123456</myData>" + "</EnvelopeMatcherRequest>"
+						+ "</SOAP-ENV:Body>" + "</SOAP-ENV:Envelope>");
+		Source soapResponse = new StringSource(
+				"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<SOAP-ENV:Body>"
+						+ "<EnvelopeMatcherResponse>" + "<myData>654321</myData>" + "</EnvelopeMatcherResponse>"
+						+ "</SOAP-ENV:Body>" + "</SOAP-ENV:Envelope>");
+
+		server.expect(soapEnvelope(expectedSoapRequest)).andRespond(withSoapEnvelope(soapResponse));
+
+		EnvelopeMatcherRequest request = new EnvelopeMatcherRequest();
+		request.setMyData("123456");
+		assertThat(request.getMyData()).isEqualTo("123456");
+		EnvelopeMatcherResponse response = (EnvelopeMatcherResponse) template.marshalSendAndReceive(request);
+
+		assertThat(response.getMyData()).isEqualTo("654321");
+	}
+
+	@Test
 	public void verifyFailure() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
@@ -358,7 +404,35 @@ public class MockWebServiceServerTest {
 		});
 	}
 
-	public static class MyClient extends WebServiceGatewaySupport {
+	static class MyClient extends WebServiceGatewaySupport {
 
+	}
+
+	@XmlRootElement(name = "EnvelopeMatcherRequest")
+	private static class EnvelopeMatcherRequest {
+
+		private String myData;
+
+		public String getMyData() {
+			return myData;
+		}
+
+		public void setMyData(String myData) {
+			this.myData = myData;
+		}
+	}
+
+	@XmlRootElement(name = "EnvelopeMatcherResponse")
+	private static class EnvelopeMatcherResponse {
+
+		private String myData;
+
+		public String getMyData() {
+			return myData;
+		}
+
+		public void setMyData(String myData) {
+			this.myData = myData;
+		}
 	}
 }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,58 +14,57 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.support.matcher;
+package org.springframework.ws.test.support.matcher.xmlunit2;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 import static org.springframework.ws.test.support.AssertionErrors.fail;
-
-import java.io.IOException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 
 /**
- * Matches {@link Source} SOAP envelopes.
+ * Matches {@link Source} payloads.
  *
- * @author Alexander Shutyaev
- * @since 2.1.1
- * @deprecated Migrate to {@link org.springframework.ws.test.support.matcher.xmlunit2.SoapEnvelopeDiffMatcher}.
+ * @author Greg Turnquist
+ * @since 3.1
  */
-public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
+public class PayloadDiffMatcher extends DiffMatcher {
 
 	private final Source expected;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
-	static {
-		XMLUnit.setIgnoreWhitespace(true);
-	}
-
-	public SoapEnvelopeDiffMatcher(Source expected) {
-
+	public PayloadDiffMatcher(Source expected) {
 		Assert.notNull(expected, "'expected' must not be null");
 		this.expected = expected;
 	}
 
 	@Override
-	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
+	protected final Diff createDiff(WebServiceMessage message) {
+		Source payload = message.getPayloadSource();
+		if (payload == null) {
+			fail("Request message does not contain payload");
+		}
+		return createDiff(payload);
+	}
 
-		Document actualDocument = soapMessage.getDocument();
+	protected Diff createDiff(Source payload) {
 		Document expectedDocument = createDocumentFromSource(expected);
-		Diff diff = new Diff(expectedDocument, actualDocument);
-		assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
+		Document actualDocument = createDocumentFromSource(payload);
+		return DiffBuilder.compare(expectedDocument) //
+				.withTest(actualDocument) //
+				.checkForSimilar() //
+				.build();
 	}
 
 	private Document createDocumentFromSource(Source source) {
-
 		try {
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(source, result);
@@ -75,5 +74,4 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 			return null;
 		}
 	}
-
 }
