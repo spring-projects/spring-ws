@@ -16,7 +16,7 @@
 
 package org.springframework.ws.test.server;
 
-import static org.springframework.ws.test.support.AssertionErrors.*;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -30,10 +30,10 @@ import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapVersion;
-import org.springframework.ws.test.support.matcher.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapEnvelopeDiffMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
+import org.springframework.ws.test.support.matcher.xmlunit2.PayloadDiffMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 /**

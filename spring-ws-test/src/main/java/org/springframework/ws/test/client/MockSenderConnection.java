@@ -35,7 +35,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
-	private final List<RequestMatcher> requestMatchers = new LinkedList<RequestMatcher>();
+	private final List<RequestMatcher> requestMatchers = new LinkedList<>();
 
 	private URI uri;
 

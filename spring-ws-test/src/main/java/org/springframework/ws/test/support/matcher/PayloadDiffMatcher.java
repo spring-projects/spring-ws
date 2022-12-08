@@ -16,7 +16,7 @@
 
 package org.springframework.ws.test.support.matcher;
 
-import static org.springframework.ws.test.support.AssertionErrors.*;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -34,6 +34,7 @@ import org.w3c.dom.Document;
  * @author Arjen Poutsma
  * @author Lukas Krecan
  * @since 2.0
+ * @deprecated Migrate to {@link org.springframework.ws.test.support.matcher.xmlunit2.PayloadDiffMatcher}.s
  */
 public class PayloadDiffMatcher extends DiffMatcher {
 
