@@ -22,11 +22,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.Diff;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 
 /**
  * Matches {@link Source} payloads.
@@ -58,7 +59,10 @@ public class PayloadDiffMatcher extends DiffMatcher {
 	protected Diff createDiff(Source payload) {
 		Document expectedDocument = createDocumentFromSource(expected);
 		Document actualDocument = createDocumentFromSource(payload);
-		return new Diff(expectedDocument, actualDocument);
+		return DiffBuilder.compare(expectedDocument)
+				.withTest(actualDocument)
+				.checkForSimilar()
+				.build();
 	}
 
 	private Document createDocumentFromSource(Source source) {

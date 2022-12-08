@@ -35,9 +35,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>xmlunit</groupId>
-			<artifactId>xmlunit</artifactId>
-			<version>${xmlunit1.version}</version>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-core</artifactId>
+			<version>${xmlunit2.version}</version>
 		</dependency>
 
 		<dependency>

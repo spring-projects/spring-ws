@@ -24,12 +24,12 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.Diff;
 
 /**
  * Matches {@link Source} SOAP envelopes.
@@ -43,10 +43,6 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
-	static {
-		XMLUnit.setIgnoreWhitespace(true);
-	}
-
 	public SoapEnvelopeDiffMatcher(Source expected) {
 
 		Assert.notNull(expected, "'expected' must not be null");
@@ -58,8 +54,12 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
-		Diff diff = new Diff(expectedDocument, actualDocument);
-		assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
+		Diff diff = DiffBuilder.compare(expectedDocument)
+				.ignoreWhitespace()
+				.withTest(actualDocument)
+				.checkForSimilar()
+				.build();
+		assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
 	}
 
 	private Document createDocumentFromSource(Source source) {

@@ -21,6 +21,7 @@ import static org.easymock.EasyMock.*;
 import static org.springframework.ws.test.client.RequestMatchers.*;
 import static org.springframework.ws.test.client.ResponseCreators.*;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.soap.MessageFactory;
 
 import java.net.URI;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.SoapMessage;
@@ -46,14 +48,14 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.xmlunit.assertj.XmlAssert;
 
-public class MockWebServiceServerTest {
+class MockWebServiceServerTest {
 
 	private WebServiceTemplate template;
 
 	private MockWebServiceServer server;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		template = new WebServiceTemplate();
 		template.setDefaultUri("http://example.com");
@@ -62,7 +64,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void createServerWebServiceTemplate() {
+	void createServerWebServiceTemplate() {
 
 		WebServiceTemplate template = new WebServiceTemplate();
 
@@ -72,7 +74,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void createServerGatewaySupport() {
+	void createServerGatewaySupport() {
 
 		MyClient client = new MyClient();
 
@@ -82,7 +84,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void createServerApplicationContextWebServiceTemplate() {
+	void createServerApplicationContextWebServiceTemplate() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("webServiceTemplate", WebServiceTemplate.class);
@@ -94,7 +96,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void createServerApplicationContextWebServiceGatewaySupport() {
+	void createServerApplicationContextWebServiceGatewaySupport() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("myClient", MyClient.class);
@@ -105,7 +107,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void createServerApplicationContextEmpty() {
+	void createServerApplicationContextEmpty() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 
@@ -118,7 +120,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void mocks() throws Exception {
+	void mocks() throws Exception {
 
 		URI uri = URI.create("http://example.com");
 
@@ -143,7 +145,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void payloadMatch() {
+	void payloadMatch() {
 
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
@@ -157,7 +159,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void payloadNonMatch() {
+	void payloadNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -172,7 +174,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void soapHeaderMatch() {
+	void soapHeaderMatch() {
 
 		final QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
 
@@ -186,7 +188,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void soapHeaderNonMatch() {
+	void soapHeaderNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -200,7 +202,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void connectionMatch() {
+	void connectionMatch() {
 
 		String uri = "http://example.com";
 		server.expect(connectionTo(uri));
@@ -210,7 +212,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void connectionNonMatch() {
+	void connectionNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -224,7 +226,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void unexpectedConnection() {
+	void unexpectedConnection() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -239,7 +241,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void xsdMatch() throws Exception {
+	void xsdMatch() throws Exception {
 
 		Resource schema = new ByteArrayResource(
 				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
@@ -253,7 +255,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void xsdNonMatch() {
+	void xsdNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -270,7 +272,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void xpathExistsMatch() {
+	void xpathExistsMatch() {
 
 		final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
@@ -281,7 +283,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void xpathExistsNonMatch() {
+	void xpathExistsNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -295,7 +297,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void anythingMatch() {
+	void anythingMatch() {
 
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
@@ -311,7 +313,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void recordWhenReplay() {
+	void recordWhenReplay() {
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 
@@ -331,7 +333,43 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void verifyFailure() {
+	void soapEnvelopeMatch() {
+		final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setClassesToBeBound(EnvelopeMatcherRequest.class, EnvelopeMatcherResponse.class);
+
+		template = new WebServiceTemplate(marshaller);
+		template.setDefaultUri("http://example.com");
+		server = MockWebServiceServer.createServer(template);
+
+		Source expectedSoapRequest = new StringSource("""
+				<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+					 <SOAP-ENV:Header/>
+					 <SOAP-ENV:Body>
+						 <EnvelopeMatcherRequest>
+							 <myData>123456</myData>
+						 </EnvelopeMatcherRequest>
+					 </SOAP-ENV:Body>
+				</SOAP-ENV:Envelope>""");
+		Source soapResponse = new StringSource("""
+				<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+				  <SOAP-ENV:Body>
+				    <EnvelopeMatcherResponse>
+				      <myData>654321</myData>
+				    </EnvelopeMatcherResponse>
+				  </SOAP-ENV:Body>
+				</SOAP-ENV:Envelope>""");
+
+		server.expect(soapEnvelope(expectedSoapRequest)).andRespond(withSoapEnvelope(soapResponse));
+
+		final EnvelopeMatcherRequest r = new EnvelopeMatcherRequest();
+		r.setMyData("123456");
+		final EnvelopeMatcherResponse rs = (EnvelopeMatcherResponse) template.marshalSendAndReceive(r);
+
+		assertThat(rs.getMyData()).isEqualTo("654321");
+	}
+
+	@Test
+	void verifyFailure() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -341,12 +379,12 @@ public class MockWebServiceServerTest {
 	}
 
 	@Test
-	public void verifyOnly() {
+	void verifyOnly() {
 		server.verify();
 	}
 
 	@Test
-	public void fault() {
+	void fault() {
 
 		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> {
 
@@ -359,7 +397,35 @@ public class MockWebServiceServerTest {
 		});
 	}
 
-	public static class MyClient extends WebServiceGatewaySupport {
+	static class MyClient extends WebServiceGatewaySupport {
 
+
+	}
+	@XmlRootElement(name = "EnvelopeMatcherRequest")
+	private static class EnvelopeMatcherRequest {
+
+		private String myData;
+
+		public String getMyData() {
+			return myData;
+		}
+
+		public void setMyData(final String myData) {
+			this.myData = myData;
+		}
+	}
+
+	@XmlRootElement(name = "EnvelopeMatcherResponse")
+	private static class EnvelopeMatcherResponse {
+
+		private String myData;
+
+		public String getMyData() {
+			return myData;
+		}
+
+		public void setMyData(final String myData) {
+			this.myData = myData;
+		}
 	}
 }
