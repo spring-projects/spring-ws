@@ -81,11 +81,9 @@ public class TransformerHelper {
 	 */
 	protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
 		if (transformerFactoryClass != null) {
-			TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance(transformerFactoryClass);
-			return transformerFactory;
+			return TransformerFactoryUtils.newInstance(transformerFactoryClass);
 		} else {
-			TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-			return transformerFactory;
+			return TransformerFactoryUtils.newInstance();
 		}
 	}
 
