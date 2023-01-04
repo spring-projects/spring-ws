@@ -102,6 +102,7 @@
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
         <jakarta-soap.version>3.0.0</jakarta-soap.version>
         <jakarta-xml-bind.version>4.0.0</jakarta-xml-bind.version>
+        <glassfish-xml-bind.version>4.0.1</glassfish-xml-bind.version>
         <jaxen.version>1.1.6</jaxen.version>
         <jdom2.version>2.0.6.1</jdom2.version>
         <jetty.version>11.0.12</jetty.version>
