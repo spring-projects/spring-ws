@@ -73,9 +73,9 @@
             <version>${jakarta-xml-bind.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.bind</groupId>
-            <artifactId>jaxb-impl</artifactId>
-            <version>${jakarta-xml-bind.version}</version>
+             <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${glassfish-jaxb-runtime.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
