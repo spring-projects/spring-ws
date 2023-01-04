@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.springframework.ws</groupId>
+    <artifactId>spring-ws-bom</artifactId>
+    <version>4.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <description>Spring WS - Bill of Materials (BOM)</description>
+    <url>https://spring.io/projects/spring-ws</url>
+
+    <organization>
+        <name>VMware, Inc.</name>
+        <url>https://www.spring.io</url>
+    </organization>
+
+    <scm>
+        <url>https://github.com/spring-projects/spring-ws</url>
+        <connection>scm:git:git://github.com/spring-projects/spring-ws.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:spring-projects/spring-ws.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/spring-projects/spring-ws/issues</url>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <id>gturnquist</id>
+            <name>Greg Turnquist</name>
+            <email>gturnquist(at)vmware.com</email>
+            <organization>VMware, Inc.</organization>
+            <organizationUrl>https://spring.io</organizationUrl>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+            <timezone>-6</timezone>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <comments>
+                Copyright 2005-2022 the original author or authors.
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                https://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+                implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            </comments>
+        </license>
+    </licenses>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-core</artifactId>
+                <version>4.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-security</artifactId>
+                <version>4.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-support</artifactId>
+                <version>4.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-ws-test</artifactId>
+                <version>4.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ws</groupId>
+                <artifactId>spring-xml</artifactId>
+                <version>4.0.1-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.5</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <pomElements>
+                        <dependencyManagement>expand</dependencyManagement>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>snapshot</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jfrog.buildinfo</groupId>
+                        <artifactId>artifactory-maven-plugin</artifactId>
+                        <version>3.2.3</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>build-info</id>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <configuration>
+                                    <buildInfo>
+                                        <buildName>spring-ws</buildName>
+                                        <buildUrl>{{BUILD_URL}}</buildUrl>
+                                    </buildInfo>
+                                    <deployProperties>
+                                        <zip.name>spring-ws</zip.name>
+                                        <zip.displayname>spring-ws</zip.displayname>
+                                        <zip.deployed>false</zip.deployed>
+                                        <zip.type>docs</zip.type>
+                                        <archives>*:*:*:*@zip</archives>
+                                    </deployProperties>
+                                    <publisher>
+                                        <contextUrl>https://repo.spring.io</contextUrl>
+                                        <username>{{ARTIFACTORY_USR}}</username>
+                                        <password>{{ARTIFACTORY_PSW}}</password>
+                                        <repoKey>libs-snapshot-local</repoKey>
+                                        <snapshotRepoKey>libs-snapshot-local</snapshotRepoKey>
+                                    </publisher>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>milestone</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jfrog.buildinfo</groupId>
+                        <artifactId>artifactory-maven-plugin</artifactId>
+                        <version>3.2.3</version>
+                        <inherited>false</inherited>
+                        <executions>
+                            <execution>
+                                <id>build-info</id>
+                                <goals>
+                                    <goal>publish</goal>
+                                </goals>
+                                <configuration>
+                                    <buildInfo>
+                                        <buildName>spring-ws</buildName>
+                                        <buildUrl>{{BUILD_URL}}</buildUrl>
+                                    </buildInfo>
+                                    <deployProperties>
+                                        <zip.name>spring-ws</zip.name>
+                                        <zip.displayname>spring-ws</zip.displayname>
+                                        <zip.deployed>false</zip.deployed>
+                                        <zip.type>docs</zip.type>
+                                        <archives>*:*:*:*@zip</archives>
+                                    </deployProperties>
+                                    <publisher>
+                                        <contextUrl>https://repo.spring.io</contextUrl>
+                                        <username>{{ARTIFACTORY_USR}}</username>
+                                        <password>{{ARTIFACTORY_PSW}}</password>
+                                        <repoKey>libs-milestone-local</repoKey>
+                                        <snapshotRepoKey>libs-milestone-local</snapshotRepoKey>
+                                    </publisher>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>central</id>
+
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+                <maven.kotlin.skip>true</maven.kotlin.skip>
+                <skipTests>true</skipTests>
+            </properties>
+
+            <build>
+                <pluginManagement>
+                    <plugins>
+
+                        <!-- Sign JARs -->
+
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.6</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                    <configuration>
+                                        <gpgArguments>
+                                            <arg>--pinentry-mode</arg>
+                                            <arg>loopback</arg>
+                                        </gpgArguments>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
+
+                        <!-- Deploy to Sonatype OSS Nexus -->
+
+                        <plugin>
+                            <groupId>org.sonatype.plugins</groupId>
+                            <artifactId>nexus-staging-maven-plugin</artifactId>
+                            <version>1.6.13</version>
+                            <extensions>true</extensions>
+                            <configuration>
+                                <serverId>sonatype</serverId>
+                                <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                                <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                                <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
+                                <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+
+                </pluginManagement>
+
+                <plugins>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                    </plugin>
+
+                </plugins>
+
+            </build>
+
+            <distributionManagement>
+                <repository>
+                    <id>sonatype</id>
+                    <url>https://s01.oss.sonatype.org//service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+
+        </profile>
+    </profiles>
+
+</project>

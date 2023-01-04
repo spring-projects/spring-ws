@@ -38,39 +38,41 @@ Before you make a release, follow this checklist:
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
 But part of the release process requires a local check, which DOES depend upon your environment.
 
-1. Create a new release (on the main branch).
+. Update `spring-ws-bom/pom.xml` to contain the planned release version. (`mvn versions:set` will NOT alter these settings.)
++
+. Create a new release (on the main branch).
 +
 ----
 % ci/create-release.sh <release version> <next snapshot version>
 ----
 +
-2. With the release tagged, update the release branch to the newly created tag.
+. With the release tagged, update the release branch to the newly created tag.
 +
 ----
 % git checkout -b release
 % git reset --hard <tag>
 ----
 +
-3. Verify this builds locally and passes all tests.
+. Verify this builds locally and passes all tests.
 +
 ----
 % ./mvnw clean package
 % ./mvnw -Pspring-buildsnapshot clean package
 ----
 +
-4. Push the tagged version to the release branch.
+. Push the tagged version to the release branch.
 +
 ----
 % git push -f origin release
 ----
 +
-5. For milestones and release candidates, verify the artifacts on artifactory.
-6. For releases, login to maven central.
+. For milestones and release candidates, verify the artifacts on artifactory.
+. For releases, login to maven central.
 * Verify the release.
 * Close the repository.
 * Release the repository.
-7. Announce on VMware Slack.
-8. Once completed, push the `main` branch for next version's snapshots.
+. Announce on VMware Slack.
+. Once completed, push the `main` branch for next version's snapshots.
 +
 ----
 % git checkout main
