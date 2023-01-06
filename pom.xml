@@ -97,7 +97,7 @@
         <ehcache.version>2.10.9.2</ehcache.version>
         <greenmail.version>2.0.0-alpha-2</greenmail.version>
         <httpclient.version>4.5.3</httpclient.version>
-        <okhttp.version>4.9.1</okhttp.version>
+        <okhttp.version>4.10.0</okhttp.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jakarta-jms.version>3.1.0</jakarta-jms.version>
         <jakarta-mail-api.version>2.1.0</jakarta-mail-api.version>
