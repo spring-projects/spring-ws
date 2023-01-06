@@ -47,7 +47,6 @@ public class OkHttpConnection extends AbstractHttpSenderConnection {
 	private ByteArrayOutputStream requestBuffer;
 
 	private Response response;
-	private InputStream responseBuffer;
 
 	public OkHttpConnection(OkHttpClient okHttpClient, URI uri) {
 		Assert.notNull(okHttpClient, "okHttpClient must not be null");
@@ -85,13 +84,7 @@ public class OkHttpConnection extends AbstractHttpSenderConnection {
 				.post(RequestBody.create(requestBuffer.toByteArray()));
 
 		requestBuffer = null;
-
 		response = okHttpClient.newCall(requestBuilder.build()).execute();
-
-		ResponseBody responseBody = response.body();
-		if (responseBody != null) {
-			this.responseBuffer = responseBody.byteStream();
-		}
 	}
 
 	@Override
@@ -116,11 +109,12 @@ public class OkHttpConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() {
-		if (responseBuffer == null) {
-			throw new IllegalStateException("Response has no response body, cannot create input stream");
+		ResponseBody responseBody = response.body();
+		if (responseBody != null) {
+			return responseBody.byteStream();
 		}
 
-		return responseBuffer;
+		throw new IllegalStateException("Response has no response body, cannot create input stream");
 	}
 
 	@Override
@@ -135,8 +129,8 @@ public class OkHttpConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public void onClose() throws IOException {
-		if (responseBuffer != null) {
-			responseBuffer.close();
+		if (response != null) {
+			response.close();
 		}
 	}
 }
