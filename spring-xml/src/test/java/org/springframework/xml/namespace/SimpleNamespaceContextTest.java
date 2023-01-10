@@ -27,34 +27,33 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class SimpleNamespaceContextTest {
+class SimpleNamespaceContextTest {
 
 	private SimpleNamespaceContext context;
 
 	@BeforeEach
-	public void setUp() throws Exception {
-
+	void setUp() {
 		context = new SimpleNamespaceContext();
 		context.bindNamespaceUri("prefix", "namespaceURI");
 	}
 
 	@Test
-	public void testGetNamespaceURI() {
+	void testGetNamespaceURI() {
 
-		assertThat(context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo("");
+		assertThat(context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEmpty();
 
 		String defaultNamespaceUri = "defaultNamespace";
 		context.bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceUri);
 
 		assertThat(context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo(defaultNamespaceUri);
 		assertThat(context.getNamespaceURI("prefix")).isEqualTo("namespaceURI");
-		assertThat(context.getNamespaceURI("unbound")).isEqualTo("");
+		assertThat(context.getNamespaceURI("unbound")).isEmpty();
 		assertThat(context.getNamespaceURI(XMLConstants.XML_NS_PREFIX)).isEqualTo(XMLConstants.XML_NS_URI);
 		assertThat(context.getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE)).isEqualTo(XMLConstants.XMLNS_ATTRIBUTE_NS_URI);
 	}
 
 	@Test
-	public void testGetPrefix() {
+	void testGetPrefix() {
 
 		context.bindDefaultNamespaceUri("defaultNamespaceURI");
 
@@ -66,7 +65,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testGetPrefixes() {
+	void testGetPrefixes() {
 
 		context.bindDefaultNamespaceUri("defaultNamespaceURI");
 
@@ -78,22 +77,18 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void unmodifiableGetPrefixes() {
+	void unmodifiableGetPrefixes() {
+		String namespaceUri = "namespaceUri";
+		context.bindNamespaceUri("prefix1", namespaceUri);
+		context.bindNamespaceUri("prefix2", namespaceUri);
 
-		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> {
-
-			String namespaceUri = "namespaceUri";
-			context.bindNamespaceUri("prefix1", namespaceUri);
-			context.bindNamespaceUri("prefix2", namespaceUri);
-
-			Iterator<String> prefixes = context.getPrefixes(namespaceUri);
-			prefixes.next();
-			prefixes.remove();
-		});
+		Iterator<String> prefixes = context.getPrefixes(namespaceUri);
+		prefixes.next();
+		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(prefixes::remove);
 	}
 
 	@Test
-	public void testMultiplePrefixes() {
+	void testMultiplePrefixes() {
 
 		context.bindNamespaceUri("prefix1", "namespace");
 		context.bindNamespaceUri("prefix2", "namespace");
@@ -130,7 +125,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testGetBoundPrefixes() {
+	void testGetBoundPrefixes() {
 
 		Iterator<String> iterator = context.getBoundPrefixes();
 
@@ -144,7 +139,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testSetBindings() {
+	void testSetBindings() {
 
 		context.setBindings(Collections.singletonMap("prefix", "namespace"));
 
@@ -152,7 +147,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testRemoveBinding() {
+	void testRemoveBinding() {
 
 		context.clear();
 
@@ -175,7 +170,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testHasBinding() {
+	void testHasBinding() {
 
 		context.clear();
 
@@ -190,7 +185,7 @@ public class SimpleNamespaceContextTest {
 	}
 
 	@Test
-	public void testDefaultNamespaceMultiplePrefixes() {
+	void testDefaultNamespaceMultiplePrefixes() {
 
 		String defaultNamespace = "http://springframework.org/spring-ws";
 

@@ -38,9 +38,9 @@ import org.springframework.util.Assert;
  */
 public class SimpleNamespaceContext implements NamespaceContext {
 
-	private Map<String, String> prefixToNamespaceUri = new LinkedHashMap<String, String>();
+	private final Map<String, String> prefixToNamespaceUri = new LinkedHashMap<>();
 
-	private Map<String, Set<String>> namespaceUriToPrefixes = new LinkedHashMap<String, Set<String>>();
+	private final Map<String, Set<String>> namespaceUriToPrefixes = new LinkedHashMap<>();
 
 	@Override
 	public String getNamespaceURI(String prefix) {
@@ -122,7 +122,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	 * @return the declared prefixes
 	 */
 	public Iterator<String> getBoundPrefixes() {
-		Set<String> prefixes = new HashSet<String>(prefixToNamespaceUri.keySet());
+		Set<String> prefixes = new HashSet<>(prefixToNamespaceUri.keySet());
 		prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
 		prefixes = Collections.unmodifiableSet(prefixes);
 		return prefixes.iterator();
@@ -133,14 +133,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
 			return Collections.singleton(XMLConstants.XML_NS_PREFIX);
 		} else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
 			return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
-		} else {
-			Set<String> set = namespaceUriToPrefixes.get(namespaceUri);
-			if (set == null) {
-				set = new LinkedHashSet<String>();
-				namespaceUriToPrefixes.put(namespaceUri, set);
-			}
-			return set;
 		}
+		return namespaceUriToPrefixes.computeIfAbsent(namespaceUri, k -> new LinkedHashSet<>());
 	}
 
 	/**
