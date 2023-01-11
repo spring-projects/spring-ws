@@ -16,13 +16,15 @@
 
 package org.springframework.ws.soap.security.xwss;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.xml.soap.SOAPMessage;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnJre;
+import org.junit.jupiter.api.condition.JRE;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
@@ -100,6 +102,7 @@ public class XwssMessageInterceptorSignTest extends AbstractXwssMessageIntercept
 	}
 
 	@Test
+	@EnabledOnJre(JRE.JAVA_8) // Newer JDKs no longer support the RSA-SHA1 signature this test case exerts
 	public void testValidateCertificate() throws Exception {
 
 		interceptor.setPolicyConfiguration(new ClassPathResource("requireSignature-config.xml", getClass()));
