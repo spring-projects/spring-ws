@@ -368,7 +368,7 @@
 					<plugin>
 						<groupId>org.jfrog.buildinfo</groupId>
 						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
+						<version>3.2.3</version>
 						<inherited>false</inherited>
 						<executions>
 							<execution>
@@ -410,7 +410,7 @@
 					<plugin>
 						<groupId>org.jfrog.buildinfo</groupId>
 						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
+						<version>3.2.3</version>
 						<inherited>false</inherited>
 						<executions>
 							<execution>
@@ -681,7 +681,7 @@
 					<plugin>
 						<groupId>org.jfrog.buildinfo</groupId>
 						<artifactId>artifactory-maven-plugin</artifactId>
-						<version>2.6.1</version>
+						<version>3.2.3</version>
 						<executions>
 							<execution>
 								<id>deploy-docs</id>
