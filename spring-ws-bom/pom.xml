@@ -103,10 +103,7 @@
                 <artifactId>flatten-maven-plugin</artifactId>
                 <version>1.2.5</version>
                 <configuration>
-                    <updatePomFile>true</updatePomFile>
-                    <pomElements>
-                        <dependencyManagement>expand</dependencyManagement>
-                    </pomElements>
+                    <flattenMode>bom</flattenMode>
                 </configuration>
                 <executions>
                     <execution>
