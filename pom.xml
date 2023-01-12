@@ -249,13 +249,13 @@
 		<profile>
 			<id>spring-security-5.6</id>
 			<properties>
-				<spring-security.version>5.6.9</spring-security.version>
+				<spring-security.version>5.6.10</spring-security.version>
 			</properties>
 		</profile>
 		<profile>
 			<id>spring-security-5.7</id>
 			<properties>
-				<spring-security.version>5.7.5</spring-security.version>
+				<spring-security.version>5.7.6</spring-security.version>
 			</properties>
 		</profile>
 
