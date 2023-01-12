@@ -9,8 +9,9 @@
     <version>4.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <description>Spring WS - Bill of Materials (BOM)</description>
+    <name>Spring Web Services - BOM</name>
     <url>https://spring.io/projects/spring-ws</url>
+    <description>Spring WS - Bill of Materials (BOM)</description>
 
     <organization>
         <name>VMware, Inc.</name>
