@@ -6,7 +6,7 @@
 
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws-bom</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Spring Web Services - BOM</name>
@@ -71,27 +71,27 @@
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-core</artifactId>
-                <version>4.0.1</version>
+                <version>4.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-security</artifactId>
-                <version>4.0.1</version>
+                <version>4.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-support</artifactId>
-                <version>4.0.1</version>
+                <version>4.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-ws-test</artifactId>
-                <version>4.0.1</version>
+                <version>4.0.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.ws</groupId>
                 <artifactId>spring-xml</artifactId>
-                <version>4.0.1</version>
+                <version>4.0.2-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
