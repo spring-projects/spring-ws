@@ -38,8 +38,6 @@ Before you make a release, follow this checklist:
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
 But part of the release process requires a local check, which DOES depend upon your environment.
 
-. Update `spring-ws-bom/pom.xml` to contain the planned release version. (`mvn versions:set` will NOT alter these settings.)
-+
 . Create a new release (on the main branch).
 +
 ----
