@@ -16,8 +16,8 @@
 		<developer>
 			<id>apoutsma</id>
 			<name>Arjen Poutsma</name>
-			<email>apoutsma@pivotal.io</email>
-			<organization>Pivotal Software, Inc.</organization>
+			<email>apoutsma(at)vmware.com</email>
+			<organization>VMware, Inc.</organization>
 			<roles>
 				<role>Project Creator</role>
 			</roles>
@@ -26,7 +26,6 @@
 			<id>tareqa</id>
 			<name>Tareq Abed Rabbo</name>
 			<email>tareq.abedrabbo@gmail.com</email>
-			<organization>Pivotal Software, Inc.</organization>
 			<roles>
 				<role>Developer</role>
 			</roles>
@@ -34,8 +33,8 @@
 		<developer>
 			<id>gturnquist</id>
 			<name>Greg Turnquist</name>
-			<email>gturnquist@pivotal.io</email>
-			<organization>Pivotal Software, Inc.</organization>
+			<email>gturnquist(at)vmware.com</email>
+			<organization>VMware, Inc.</organization>
 			<roles>
 				<role>Project Lead</role>
 			</roles>
@@ -43,7 +42,7 @@
 	</developers>
 
 	<organization>
-		<name>Pivotal Software</name>
+		<name>VMware, Inc.</name>
 		<url>https://spring.io</url>
 	</organization>
 
