@@ -50,8 +50,8 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	public void addMessages(Definition definition) throws WSDLException {
 		Types types = definition.getTypes();
 		Assert.notNull(types, "No types element present in definition");
-		for (Iterator<?> iterator = types.getExtensibilityElements().iterator(); iterator.hasNext();) {
-			ExtensibilityElement extensibilityElement = (ExtensibilityElement) iterator.next();
+		for (Object element : types.getExtensibilityElements()) {
+			ExtensibilityElement extensibilityElement = (ExtensibilityElement) element;
 			if (extensibilityElement instanceof Schema) {
 				Schema schema = (Schema) extensibilityElement;
 				if (schema.getElement() != null) {

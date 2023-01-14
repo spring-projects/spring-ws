@@ -311,8 +311,8 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	 */
 	@Override
 	protected void populatePort(Definition definition, Port port) throws WSDLException {
-		for (Iterator<?> iterator = port.getBinding().getExtensibilityElements().iterator(); iterator.hasNext();) {
-			if (iterator.next() instanceof SOAPBinding) {
+		for (Object extensibilityElement : port.getBinding().getExtensibilityElements()) {
+			if (extensibilityElement instanceof SOAPBinding) {
 				// this is a SOAP 1.1 binding, create a SOAP Address for it
 				super.populatePort(definition, port);
 				SOAPAddress soapAddress = (SOAPAddress) createSoapExtension(definition, Port.class, "address");

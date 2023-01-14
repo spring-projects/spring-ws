@@ -97,8 +97,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 */
 	@Override
 	public void addBindings(Definition definition) throws WSDLException {
-		for (Iterator<?> iterator = definition.getPortTypes().values().iterator(); iterator.hasNext();) {
-			PortType portType = (PortType) iterator.next();
+		for (Object portValue : definition.getPortTypes().values()) {
+			PortType portType = (PortType) portValue;
 			Binding binding = definition.createBinding();
 			binding.setPortType(portType);
 			populateBinding(definition, binding);
@@ -136,8 +136,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	private void createBindingOperations(Definition definition, Binding binding) throws WSDLException {
 		PortType portType = binding.getPortType();
-		for (Iterator<?> operationIterator = portType.getOperations().iterator(); operationIterator.hasNext();) {
-			Operation operation = (Operation) operationIterator.next();
+		for (Object operationValue : portType.getOperations()) {
+			Operation operation = (Operation) operationValue;
 			BindingOperation bindingOperation = definition.createBindingOperation();
 			bindingOperation.setOperation(operation);
 			populateBindingOperation(definition, bindingOperation);
@@ -152,8 +152,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 				createBindingOutput(definition, operation, bindingOperation);
 				createBindingInput(definition, operation, bindingOperation);
 			}
-			for (Iterator<?> faultIterator = operation.getFaults().values().iterator(); faultIterator.hasNext();) {
-				Fault fault = (Fault) faultIterator.next();
+			for (Object faultValue : operation.getFaults().values()) {
+				Fault fault = (Fault) faultValue;
 				BindingFault bindingFault = definition.createBindingFault();
 				populateBindingFault(definition, bindingFault, fault);
 				if (StringUtils.hasText(bindingFault.getName())) {
@@ -281,11 +281,11 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	private void createPorts(Definition definition, Service service) throws WSDLException {
-		for (Iterator<?> iterator = definition.getBindings().values().iterator(); iterator.hasNext();) {
-			Binding binding = (Binding) iterator.next();
+		for (Object bindingValue : definition.getBindings().values()) {
+			Binding binding = (Binding) bindingValue;
 			Port port = null;
-			for (Iterator<?> iterator1 = service.getPorts().values().iterator(); iterator1.hasNext();) {
-				Port existingPort = (Port) iterator1.next();
+			for (Object portValue : service.getPorts().values()) {
+				Port existingPort = (Port) portValue;
 				if (binding.equals(existingPort.getBinding())) {
 					port = existingPort;
 				}
