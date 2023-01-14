@@ -77,10 +77,10 @@ public abstract class SoapUtils {
 		if (StringUtils.hasText(action)) {
 			Matcher matcher = ACTION_PATTERN.matcher(contentType);
 			if (matcher.find() && matcher.groupCount() == 1) {
-				StringBuffer buffer = new StringBuffer();
-				matcher.appendReplacement(buffer, "action=" + action);
-				matcher.appendTail(buffer);
-				return buffer.toString();
+				StringBuilder builder = new StringBuilder();
+				matcher.appendReplacement(builder, "action=" + action);
+				matcher.appendTail(builder);
+				return builder.toString();
 			} else {
 				return contentType + "; action=" + action;
 			}
