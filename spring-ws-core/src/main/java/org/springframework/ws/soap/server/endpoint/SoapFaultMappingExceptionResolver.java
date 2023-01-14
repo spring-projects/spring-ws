@@ -86,7 +86,7 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 
 	@SuppressWarnings("unchecked")
 	private int getDepth(String exceptionMapping, Class<? extends Exception> exceptionClass, int depth) {
-		if (exceptionClass.getName().indexOf(exceptionMapping) != -1) {
+		if (exceptionClass.getName().contains(exceptionMapping)) {
 			return depth;
 		}
 		if (exceptionClass.equals(Throwable.class)) {
