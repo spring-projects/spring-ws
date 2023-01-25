@@ -50,7 +50,7 @@ class TextMessageOutputStream extends FilterOutputStream {
 		super.flush();
 		try {
 			ByteArrayOutputStream baos = (ByteArrayOutputStream) out;
-			String text = new String(baos.toByteArray(), encoding);
+			String text = baos.toString(encoding);
 			message.setText(text);
 		} catch (JMSException ex) {
 			throw new JmsTransportException(ex);
