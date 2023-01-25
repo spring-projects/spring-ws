@@ -16,7 +16,6 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.wsdl.Definition;
@@ -68,7 +67,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 */
 	@Override
 	public void addPortTypes(Definition definition) throws WSDLException {
+
 		Assert.notNull(getPortTypeName(), "'portTypeName' is required");
+
 		PortType portType = definition.createPortType();
 		populatePortType(definition, portType);
 		createOperations(definition, portType);
@@ -86,6 +87,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 * @see #setPortTypeName(String)
 	 */
 	protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
+
 		QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating port type [" + portTypeName + "]");
@@ -94,7 +96,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	}
 
 	private void createOperations(Definition definition, PortType portType) throws WSDLException {
-		MultiValueMap<String, Message> operations = new LinkedMultiValueMap<String, Message>();
+
+		MultiValueMap<String, Message> operations = new LinkedMultiValueMap<>();
+
 		for (Object messageValue : definition.getMessages().values()) {
 			Message message = (Message) messageValue;
 			String operationName = getOperationName(message);
@@ -102,10 +106,13 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 				operations.add(operationName, message);
 			}
 		}
+
 		if (operations.isEmpty() && logger.isWarnEnabled()) {
 			logger.warn("No operations were created, make sure the WSDL contains messages");
 		}
+
 		for (String operationName : operations.keySet()) {
+
 			Operation operation = definition.createOperation();
 			operation.setName(operationName);
 			List<Message> messages = operations.get(operationName);
@@ -218,6 +225,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 * @return the operation type for the operation
 	 */
 	protected OperationType getOperationType(Operation operation) {
+
 		if (operation.getInput() != null && operation.getOutput() != null) {
 			return OperationType.REQUEST_RESPONSE;
 		} else if (operation.getInput() != null && operation.getOutput() == null) {

@@ -16,20 +16,9 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.Iterator;
 import java.util.Properties;
 
-import javax.wsdl.Binding;
-import javax.wsdl.BindingFault;
-import javax.wsdl.BindingInput;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Definition;
-import javax.wsdl.Fault;
-import javax.wsdl.Input;
-import javax.wsdl.Output;
-import javax.wsdl.Port;
-import javax.wsdl.WSDLException;
+import javax.wsdl.*;
 import javax.wsdl.extensions.ExtensibilityElement;
 import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
@@ -93,6 +82,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 * @param soapActions the soap
 	 */
 	public void setSoapActions(Properties soapActions) {
+
 		Assert.notNull(soapActions, "'soapActions' must not be null");
 		this.soapActions = soapActions;
 	}
@@ -112,6 +102,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 * @param transportUri the binding transport value
 	 */
 	public void setTransportUri(String transportUri) {
+
 		Assert.notNull(transportUri, "'transportUri' must not be null");
 		this.transportUri = transportUri;
 	}
@@ -141,6 +132,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 */
 	@Override
 	protected void populateBinding(Definition definition, Binding binding) throws WSDLException {
+
 		definition.addNamespace(SOAP_12_NAMESPACE_PREFIX, SOAP_12_NAMESPACE_URI);
 		super.populateBinding(definition, binding);
 		SOAP12Binding soapBinding = (SOAP12Binding) createSoapExtension(definition, Binding.class, "binding");
@@ -162,6 +154,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 * @see #DEFAULT_TRANSPORT_URI
 	 */
 	protected void populateSoapBinding(SOAP12Binding soapBinding, Binding binding) throws WSDLException {
+
 		soapBinding.setStyle("document");
 		soapBinding.setTransportURI(getTransportUri());
 	}
@@ -182,6 +175,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	@Override
 	protected void populateBindingFault(Definition definition, BindingFault bindingFault, Fault fault)
 			throws WSDLException {
+
 		super.populateBindingFault(definition, bindingFault, fault);
 		SOAP12Fault soapFault = (SOAP12Fault) createSoapExtension(definition, BindingFault.class, "fault");
 		populateSoapFault(bindingFault, soapFault);
@@ -200,6 +194,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 * @see javax.wsdl.extensions.soap.SOAPFault#setUse(String)
 	 */
 	protected void populateSoapFault(BindingFault bindingFault, SOAP12Fault soapFault) throws WSDLException {
+
 		soapFault.setName(bindingFault.getName());
 		soapFault.setUse("literal");
 	}
@@ -220,6 +215,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	@Override
 	protected void populateBindingInput(Definition definition, BindingInput bindingInput, Input input)
 			throws WSDLException {
+
 		super.populateBindingInput(definition, bindingInput, input);
 		SOAP12Body soapBody = (SOAP12Body) createSoapExtension(definition, BindingInput.class, "body");
 		populateSoapBody(soapBody);
@@ -255,6 +251,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	@Override
 	protected void populateBindingOperation(Definition definition, BindingOperation bindingOperation)
 			throws WSDLException {
+
 		super.populateBindingOperation(definition, bindingOperation);
 		SOAP12Operation soapOperation = (SOAP12Operation) createSoapExtension(definition, BindingOperation.class,
 				"operation");
@@ -276,6 +273,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 */
 	protected void populateSoapOperation(SOAP12Operation soapOperation, BindingOperation bindingOperation)
 			throws WSDLException {
+
 		String bindingOperationName = bindingOperation.getName();
 		String soapAction = getSoapActions().getProperty(bindingOperationName, "");
 		soapOperation.setSoapActionURI(soapAction);
@@ -297,6 +295,7 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	@Override
 	protected void populateBindingOutput(Definition definition, BindingOutput bindingOutput, Output output)
 			throws WSDLException {
+
 		super.populateBindingOutput(definition, bindingOutput, output);
 		SOAP12Body soapBody = (SOAP12Body) createSoapExtension(definition, BindingOutput.class, "body");
 		populateSoapBody(soapBody);
@@ -316,7 +315,9 @@ public class Soap12Provider extends DefaultConcretePartProvider {
 	 */
 	@Override
 	protected void populatePort(Definition definition, Port port) throws WSDLException {
+
 		for (Object extensibilityElement : port.getBinding().getExtensibilityElements()) {
+
 			if (extensibilityElement instanceof SOAP12Binding) {
 				// this is a SOAP 1.2 binding, create a SOAP Address for it
 				super.populatePort(definition, port);

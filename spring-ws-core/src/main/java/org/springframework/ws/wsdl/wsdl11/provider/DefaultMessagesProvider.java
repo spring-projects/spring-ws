@@ -16,8 +16,6 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.Iterator;
-
 import javax.wsdl.Definition;
 import javax.wsdl.Message;
 import javax.wsdl.Part;
@@ -48,6 +46,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
 	@Override
 	public void addMessages(Definition definition) throws WSDLException {
+
 		Types types = definition.getTypes();
 		Assert.notNull(types, "No types element present in definition");
 		for (Object element : types.getExtensibilityElements()) {
@@ -59,20 +58,27 @@ public class DefaultMessagesProvider implements MessagesProvider {
 				}
 			}
 		}
+
 		if (definition.getMessages().isEmpty() && logger.isWarnEnabled()) {
 			logger.warn("No messages were created, make sure the referenced schema(s) contain elements");
 		}
 	}
 
 	private void createMessages(Definition definition, Element schemaElement) throws WSDLException {
+
 		String schemaTargetNamespace = schemaElement.getAttribute("targetNamespace");
 		Assert.hasText(schemaTargetNamespace, "No targetNamespace defined on schema");
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking for elements in schema with target namespace [" + schemaTargetNamespace + "]");
 		}
+
 		NodeList children = schemaElement.getChildNodes();
+
 		for (int i = 0; i < children.getLength(); i++) {
+
 			Node child = children.item(i);
+
 			if (child.getNodeType() == Node.ELEMENT_NODE) {
 				Element childElement = (Element) child;
 				if (isMessageElement(childElement)) {
@@ -109,6 +115,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	 * @return {@code true} if to be included as message; {@code false} otherwise
 	 */
 	protected boolean isMessageElement(Element element) {
+
 		return "element".equals(element.getLocalName())
 				&& "http://www.w3.org/2001/XMLSchema".equals(element.getNamespaceURI());
 	}
@@ -124,6 +131,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	 * @throws WSDLException in case of errors
 	 */
 	protected void populateMessage(Definition definition, Message message, QName elementName) throws WSDLException {
+
 		QName messageName = new QName(definition.getTargetNamespace(), elementName.getLocalPart());
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating message [" + messageName + "]");
@@ -142,8 +150,8 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	 * @see Part#setElementName(javax.xml.namespace.QName)
 	 */
 	protected void populatePart(Definition definition, Part part, QName elementName) throws WSDLException {
+
 		part.setElementName(elementName);
 		part.setName(elementName.getLocalPart());
 	}
-
 }

@@ -16,23 +16,7 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
-import java.util.Iterator;
-
-import javax.wsdl.Binding;
-import javax.wsdl.BindingFault;
-import javax.wsdl.BindingInput;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Definition;
-import javax.wsdl.Fault;
-import javax.wsdl.Input;
-import javax.wsdl.Operation;
-import javax.wsdl.OperationType;
-import javax.wsdl.Output;
-import javax.wsdl.Port;
-import javax.wsdl.PortType;
-import javax.wsdl.Service;
-import javax.wsdl.WSDLException;
+import javax.wsdl.*;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
@@ -65,6 +49,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	/** Sets the service name. */
 	public void setServiceName(String serviceName) {
+
 		Assert.hasText(serviceName, "'serviceName' must not be null");
 		this.serviceName = serviceName;
 	}
@@ -76,6 +61,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	/** Sets the suffix to append to the port type name to obtain the binding name. */
 	public void setBindingSuffix(String bindingSuffix) {
+
 		Assert.notNull(bindingSuffix, "'bindingSuffix' must not be null");
 		this.bindingSuffix = bindingSuffix;
 	}
@@ -97,17 +83,21 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 */
 	@Override
 	public void addBindings(Definition definition) throws WSDLException {
+
 		for (Object portValue : definition.getPortTypes().values()) {
+
 			PortType portType = (PortType) portValue;
 			Binding binding = definition.createBinding();
 			binding.setPortType(portType);
 			populateBinding(definition, binding);
 			createBindingOperations(definition, binding);
 			binding.setUndefined(false);
+
 			if (binding.getQName() != null) {
 				definition.addBinding(binding);
 			}
 		}
+
 		if (definition.getBindings().isEmpty() && logger.isWarnEnabled()) {
 			logger.warn("No bindings were created, make sure the WSDL contains port types");
 		}
@@ -124,8 +114,11 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 * @param binding the WSDL4J {@code Binding}
 	 */
 	protected void populateBinding(Definition definition, Binding binding) throws WSDLException {
+
 		QName portTypeName = binding.getPortType().getQName();
+
 		if (portTypeName != null) {
+
 			QName bindingName = new QName(portTypeName.getNamespaceURI(), portTypeName.getLocalPart() + getBindingSuffix());
 			if (logger.isDebugEnabled()) {
 				logger.debug("Creating binding [" + bindingName + "]");
@@ -135,12 +128,16 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	private void createBindingOperations(Definition definition, Binding binding) throws WSDLException {
+
 		PortType portType = binding.getPortType();
+
 		for (Object operationValue : portType.getOperations()) {
+
 			Operation operation = (Operation) operationValue;
 			BindingOperation bindingOperation = definition.createBindingOperation();
 			bindingOperation.setOperation(operation);
 			populateBindingOperation(definition, bindingOperation);
+
 			if (OperationType.REQUEST_RESPONSE.equals(operation.getStyle())) {
 				createBindingInput(definition, operation, bindingOperation);
 				createBindingOutput(definition, operation, bindingOperation);
@@ -152,6 +149,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 				createBindingOutput(definition, operation, bindingOperation);
 				createBindingInput(definition, operation, bindingOperation);
 			}
+
 			for (Object faultValue : operation.getFaults().values()) {
 				Fault fault = (Fault) faultValue;
 				BindingFault bindingFault = definition.createBindingFault();
@@ -160,6 +158,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 					bindingOperation.addBindingFault(bindingFault);
 				}
 			}
+
 			binding.addBindingOperation(bindingOperation);
 		}
 	}
@@ -181,6 +180,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	private void createBindingInput(Definition definition, Operation operation, BindingOperation bindingOperation)
 			throws WSDLException {
+
 		BindingInput bindingInput = definition.createBindingInput();
 		populateBindingInput(definition, bindingInput, operation.getInput());
 		bindingOperation.setBindingInput(bindingInput);
@@ -188,6 +188,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	private void createBindingOutput(Definition definition, Operation operation, BindingOperation bindingOperation)
 			throws WSDLException {
+
 		BindingOutput bindingOutput = definition.createBindingOutput();
 		populateBindingOutput(definition, bindingOutput, operation.getOutput());
 		bindingOperation.setBindingOutput(bindingOutput);
@@ -247,15 +248,19 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 */
 	@Override
 	public void addServices(Definition definition) throws WSDLException {
+
 		Assert.notNull(getServiceName(), "'serviceName' is required");
+
 		Service service;
 		if (definition.getServices().isEmpty()) {
 			service = definition.createService();
 		} else {
 			service = (Service) definition.getServices().values().iterator().next();
 		}
+
 		populateService(definition, service);
 		createPorts(definition, service);
+
 		if (service.getQName() != null) {
 			definition.addService(service);
 		}
@@ -271,6 +276,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 * @throws WSDLException in case of errors
 	 */
 	protected void populateService(Definition definition, Service service) throws WSDLException {
+
 		if (StringUtils.hasText(definition.getTargetNamespace()) && StringUtils.hasText(getServiceName())) {
 			QName serviceName = new QName(definition.getTargetNamespace(), getServiceName());
 			if (logger.isDebugEnabled()) {
@@ -281,6 +287,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	private void createPorts(Definition definition, Service service) throws WSDLException {
+
 		for (Object bindingValue : definition.getBindings().values()) {
 			Binding binding = (Binding) bindingValue;
 			Port port = null;
@@ -302,6 +309,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 				service.addPort(port);
 			}
 		}
+
 		if (service.getPorts().isEmpty() && logger.isWarnEnabled()) {
 			logger.warn("No ports were created, make sure the WSDL contains bindings");
 		}
@@ -318,8 +326,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	 * @throws WSDLException in case of errors
 	 */
 	protected void populatePort(Definition definition, Port port) throws WSDLException {
+
 		String portName = port.getBinding().getQName().getLocalPart();
 		port.setName(portName);
 	}
-
 }
