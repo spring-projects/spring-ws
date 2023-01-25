@@ -171,7 +171,7 @@ public class JmsMessageSenderIntegrationTest {
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			messageFactory.createMessage().writeTo(bos);
-			final String text = new String(bos.toByteArray(), StandardCharsets.UTF_8);
+			final String text = bos.toString(StandardCharsets.UTF_8);
 
 			jmsTemplate.send(request.getJMSReplyTo(), session -> {
 

@@ -48,7 +48,7 @@ class MessageOutputStream extends FilterOutputStream {
 	public void flush() throws IOException {
 		super.flush();
 		ByteArrayOutputStream bos = (ByteArrayOutputStream) out;
-		String text = new String(bos.toByteArray(), encoding);
+		String text = bos.toString(encoding);
 		message.setBody(text);
 	}
 }
