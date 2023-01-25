@@ -27,6 +27,7 @@ import org.springframework.ws.transport.TransportConstants;
  * Contains various utility methods for handling SOAP messages.
  *
  * @author Arjen Poutsma
+ * @author Greg Turnquist
  * @since 1.5.5
  */
 public abstract class SoapUtils {
@@ -37,6 +38,7 @@ public abstract class SoapUtils {
 
 	/** Escapes the given SOAP action to be surrounded by quotes. */
 	public static String escapeAction(String soapAction) {
+
 		if (!StringUtils.hasLength(soapAction)) {
 			soapAction = "\"\"";
 		}
@@ -56,6 +58,7 @@ public abstract class SoapUtils {
 	 * @return the action
 	 */
 	public static String extractActionFromContentType(String contentType) {
+
 		if (contentType != null) {
 			Matcher matcher = ACTION_PATTERN.matcher(contentType);
 			if (matcher.find() && matcher.groupCount() == 1) {
@@ -73,7 +76,9 @@ public abstract class SoapUtils {
 	 * @return the new content type
 	 */
 	public static String setActionInContentType(String contentType, String action) {
+
 		Assert.hasLength(contentType, "'contentType' must not be empty");
+
 		if (StringUtils.hasText(action)) {
 			Matcher matcher = ACTION_PATTERN.matcher(contentType);
 			if (matcher.find() && matcher.groupCount() == 1) {
@@ -88,5 +93,4 @@ public abstract class SoapUtils {
 			return contentType;
 		}
 	}
-
 }
