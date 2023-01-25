@@ -136,6 +136,7 @@ import org.w3c.dom.Element;
  * @author Arjen Poutsma
  * @author Greg Turnquist
  * @author Jamin Hitchcock
+ * @author Rob Leland
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  * @since 2.3.0
  */
@@ -406,6 +407,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/** Sets the time to live on the outgoing message */
 	public void setSecurementTimeToLive(int securementTimeToLive) {
+
 		if (securementTimeToLive <= 0) {
 			throw new IllegalArgumentException("timeToLive must be positive");
 		}
@@ -430,6 +432,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/** Sets the server-side time to live */
 	public void setValidationTimeToLive(int validationTimeToLive) {
+
 		if (validationTimeToLive <= 0) {
 			throw new IllegalArgumentException("timeToLive must be positive");
 		}
@@ -438,6 +441,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/** Sets the validation actions to be executed by the interceptor. */
 	public void setValidationActions(String actions) {
+
 		this.validationActions = actions;
 		try {
 			validationActionsVector = WSSecurityUtil.decodeAction(actions);
@@ -451,7 +455,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets the {@link org.apache.ws.security.WSPasswordCallback} handler to use when validating messages.
+	 * Sets the {@link CallbackHandler} to use when validating messages.
 	 *
 	 * @see #setValidationCallbackHandlers(CallbackHandler[])
 	 */
@@ -460,7 +464,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets the {@link org.apache.ws.security.WSPasswordCallback} handlers to use when validating messages.
+	 * Sets the {@link CallbackHandler}s to use when validating messages.
 	 *
 	 * @see #setValidationCallbackHandler(CallbackHandler)
 	 */
@@ -480,6 +484,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
 	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
+
 		handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
 		this.enableSignatureConfirmation = enableSignatureConfirmation;
 	}
@@ -523,6 +528,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @param config web service security configuration or {@code null} to use default settings
 	 */
 	public void setWssConfig(WSSConfig config) {
+
 		securityEngine.setWssConfig(config);
 		wssConfig = config;
 	}
@@ -538,15 +544,17 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
 	 */
 	public void setBspCompliant(boolean bspCompliant) {
+
 		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
 		this.bspCompliant = bspCompliant;
 	}
 
 	/**
-	 * Sets whether to add an InclusiveNamespaces PrefixList as a CanonicalizationMethod child
-	 * when generating Signatures using WSConstants.C14N_EXCL_OMIT_COMMENTS. Default is {@code true}.
+	 * Sets whether to add an InclusiveNamespaces PrefixList as a CanonicalizationMethod child when generating Signatures
+	 * using WSConstants.C14N_EXCL_OMIT_COMMENTS. Default is {@code true}.
 	 */
 	public void setAddInclusivePrefixes(boolean addInclusivePrefixes) {
+
 		this.handler.setOption(WSHandlerConstants.ADD_INCLUSIVE_PREFIXES, addInclusivePrefixes);
 		this.addInclusivePrefixes = addInclusivePrefixes;
 	}
@@ -563,6 +571,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * is 60 seconds.
 	 */
 	public void setFutureTimeToLive(int futureTimeToLive) {
+
 		if (futureTimeToLive <= 0) {
 			throw new IllegalArgumentException("futureTimeToLive must be positive");
 		}
@@ -579,6 +588,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+
 		Assert.isTrue(validationActions != null || securementActions != null,
 				"validationActions or securementActions are required");
 		if (validationActions != null) {
@@ -592,7 +602,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		}
 		// securement actions are not to be validated at start up as they could
 		// be configured dynamically via the message context
-
 	}
 
 	@Override
@@ -631,6 +640,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @return the request data
 	 */
 	protected RequestData initializeRequestData(MessageContext messageContext) {
+
 		RequestData requestData = new RequestData();
 		requestData.setMsgContext(messageContext);
 
@@ -667,6 +677,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @return the request data
 	 */
 	protected RequestData initializeValidationRequestData(MessageContext messageContext) {
+
 		RequestData requestData = new RequestData();
 		requestData.setMsgContext(messageContext);
 
@@ -696,6 +707,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@Override
 	protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 			throws WsSecurityValidationException {
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
 		}
@@ -756,6 +768,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
 			throws Wss4jSecurityValidationException {
+
 		if (!handler.checkReceiverResultsAnyOrder(results, validationActions)) {
 			throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
 		}
@@ -767,6 +780,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
+
 		List<WSHandlerResult> handlerResults;
 		if ((handlerResults = (List<WSHandlerResult>) messageContext
 				.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
@@ -785,6 +799,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @param result
 	 */
 	protected void verifyCertificateTrust(WSHandlerResult result) throws WSSecurityException {
+
 		List<WSSecurityEngineResult> results = result.getActionResults().get(WSConstants.SIGN);
 
 		if (!CollectionUtils.isEmpty(results)) {
@@ -808,6 +823,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @param result
 	 */
 	protected void verifyTimestamp(WSHandlerResult result) throws WSSecurityException {
+
 		List<WSSecurityEngineResult> results = result.getActionResults().get(WSConstants.TS);
 
 		if (!CollectionUtils.isEmpty(results)) {
@@ -830,6 +846,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	private void processPrincipal(WSHandlerResult result) {
+
 		List<WSSecurityEngineResult> results = result.getActionResults().get(WSConstants.UT);
 
 		if (!CollectionUtils.isEmpty(results)) {
@@ -851,6 +868,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	@Override
 	protected void cleanUp() {
+
 		if (validationCallbackHandler != null) {
 			try {
 				CleanupCallback cleanupCallback = new CleanupCallback();

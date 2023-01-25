@@ -97,7 +97,8 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
 		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
-		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		MessageContext messageContext = new DefaultMessageContext(message,
+				new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
 		interceptor.secureMessage(message, messageContext);
 

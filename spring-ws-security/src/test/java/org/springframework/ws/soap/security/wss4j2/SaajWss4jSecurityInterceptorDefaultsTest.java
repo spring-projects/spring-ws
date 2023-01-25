@@ -16,6 +16,17 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
+
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMResult;
+
 import org.apache.wss4j.dom.handler.RequestData;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -27,57 +38,58 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.dom.DOMResult;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
-
 public class SaajWss4jSecurityInterceptorDefaultsTest extends Wss4jTestCase {
 
-    private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
+	private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 
-    @Test
-    public void testThatTheDefaultValueForAddInclusivePrefixesMatchesWss4JDefaultValue() {
-        Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
-        RequestData requestData = new RequestData();
-        Boolean springDefault = (Boolean) ReflectionTestUtils.getField(subject, Wss4jSecurityInterceptor.class, "addInclusivePrefixes");
-        assertEquals("Spring-ws default for addInclusivePrefixes matches Wss4j default", requestData.isAddInclusivePrefixes(), springDefault);
-    }
+	@Test
+	public void testThatTheDefaultValueForAddInclusivePrefixesMatchesWss4JDefaultValue() {
 
-    @Test
-    public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingDefaults() throws TransformerException, SOAPException {
-        Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
+		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
+		RequestData requestData = new RequestData();
+		Boolean springDefault = (Boolean) ReflectionTestUtils.getField(subject, Wss4jSecurityInterceptor.class,
+				"addInclusivePrefixes");
+		assertEquals("Spring-ws default for addInclusivePrefixes matches Wss4j default",
+				requestData.isAddInclusivePrefixes(), springDefault);
+	}
 
-        Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
+	@Test
+	public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingDefaults()
+			throws TransformerException, SOAPException {
 
-        SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
-        transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-        SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
-        MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
 
-        RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData", messageContext);
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 
-        assertTrue(validationData.isAddInclusivePrefixes());
-    }
+		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
+		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		MessageContext messageContext = new DefaultMessageContext(message,
+				new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
-    @Test
-    public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingNotUsingInclusivePrefixes() throws TransformerException, SOAPException {
-        Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
-        subject.setAddInclusivePrefixes(false);
-        Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
+				messageContext);
 
-        SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
-        transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-        SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
-        MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		assertTrue(validationData.isAddInclusivePrefixes());
+	}
 
-        RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData", messageContext);
+	@Test
+	public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingNotUsingInclusivePrefixes()
+			throws TransformerException, SOAPException {
 
-        assertFalse(validationData.isAddInclusivePrefixes());
-    }
+		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
+		subject.setAddInclusivePrefixes(false);
+		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
+
+		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
+		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		MessageContext messageContext = new DefaultMessageContext(message,
+				new SaajSoapMessageFactory(saajSoap11MessageFactory));
+
+		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
+				messageContext);
+
+		assertFalse(validationData.isAddInclusivePrefixes());
+	}
 }
