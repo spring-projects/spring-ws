@@ -115,29 +115,27 @@ public class DefaultStrategiesHelper {
 			throws BeanInitializationException {
 		String key = strategyInterface.getName();
 		try {
-			List<T> result;
 			String value = defaultStrategies.getProperty(key);
-			if (value != null) {
-				String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
-				result = new ArrayList<T>(classNames.length);
-				ClassLoader classLoader = null;
-				if (applicationContext != null) {
-					classLoader = applicationContext.getClassLoader();
-				}
-				if (classLoader == null) {
-					classLoader = DefaultStrategiesHelper.class.getClassLoader();
-				}
-				for (String className : classNames) {
-					Class<T> clazz = (Class<T>) ClassUtils.forName(className, classLoader);
-					Assert.isTrue(strategyInterface.isAssignableFrom(clazz),
-							clazz.getName() + " is not a " + strategyInterface.getName());
-					T strategy = instantiateBean(clazz, applicationContext);
-					result.add(strategy);
-				}
-			} else {
-				result = Collections.emptyList();
+			if (value == null) {
+				return Collections.emptyList();
 			}
-			Collections.sort(result, new OrderComparator());
+			String[] classNames = StringUtils.commaDelimitedListToStringArray(value);
+			List<T>  result = new ArrayList<>(classNames.length);
+			ClassLoader classLoader = null;
+			if (applicationContext != null) {
+				classLoader = applicationContext.getClassLoader();
+			}
+			if (classLoader == null) {
+				classLoader = DefaultStrategiesHelper.class.getClassLoader();
+			}
+			for (String className : classNames) {
+				Class<T> clazz = (Class<T>) ClassUtils.forName(className, classLoader);
+				Assert.isTrue(strategyInterface.isAssignableFrom(clazz),
+						clazz.getName() + " is not a " + strategyInterface.getName());
+				T strategy = instantiateBean(clazz, applicationContext);
+				result.add(strategy);
+			}
+			result.sort(new OrderComparator());
 			return result;
 		} catch (ClassNotFoundException ex) {
 			throw new BeanInitializationException("Could not find default strategy class for interface [" + key + "]", ex);

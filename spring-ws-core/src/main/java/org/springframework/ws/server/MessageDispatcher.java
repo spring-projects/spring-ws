@@ -403,8 +403,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			Map<String, EndpointAdapter> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
 					EndpointAdapter.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointAdapters = new ArrayList<EndpointAdapter>(matchingBeans.values());
-				Collections.sort(endpointAdapters, new OrderComparator());
+				endpointAdapters = new ArrayList<>(matchingBeans.values());
+				endpointAdapters.sort(new OrderComparator());
 			} else {
 				endpointAdapters = defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class, applicationContext);
 				if (logger.isDebugEnabled()) {
@@ -425,8 +425,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			Map<String, EndpointExceptionResolver> matchingBeans = BeanFactoryUtils
 					.beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointExceptionResolvers = new ArrayList<EndpointExceptionResolver>(matchingBeans.values());
-				Collections.sort(endpointExceptionResolvers, new OrderComparator());
+				endpointExceptionResolvers = new ArrayList<>(matchingBeans.values());
+				endpointExceptionResolvers.sort(new OrderComparator());
 			} else {
 				endpointExceptionResolvers = defaultStrategiesHelper.getDefaultStrategies(EndpointExceptionResolver.class,
 						applicationContext);
@@ -448,8 +448,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			Map<String, EndpointMapping> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext,
 					EndpointMapping.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointMappings = new ArrayList<EndpointMapping>(matchingBeans.values());
-				Collections.sort(endpointMappings, new OrderComparator());
+				endpointMappings = new ArrayList<>(matchingBeans.values());
+				endpointMappings.sort(new OrderComparator());
 			} else {
 				endpointMappings = defaultStrategiesHelper.getDefaultStrategies(EndpointMapping.class, applicationContext);
 				if (logger.isDebugEnabled()) {
