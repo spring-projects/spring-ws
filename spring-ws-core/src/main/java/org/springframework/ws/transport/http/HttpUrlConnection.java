@@ -132,7 +132,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 		List<String> headerValues = headersListMappedByLowerCaseName.get(name.toLowerCase());
 
 		if (headerValues == null) {
-			return Collections.<String> emptyList().iterator();
+			return Collections.emptyIterator();
 		} else {
 			return headerValues.iterator();
 		}
