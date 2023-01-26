@@ -156,7 +156,7 @@ public final class MethodEndpoint {
 		if (this == o) {
 			return true;
 		}
-		if (o != null && o instanceof MethodEndpoint) {
+		if (o instanceof MethodEndpoint) {
 			MethodEndpoint other = (MethodEndpoint) o;
 			return this.bean.equals(other.bean) && this.method.equals(other.method);
 		}

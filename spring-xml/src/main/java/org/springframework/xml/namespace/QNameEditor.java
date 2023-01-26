@@ -62,7 +62,7 @@ public class QNameEditor extends PropertyEditorSupport {
 	@Override
 	public String getAsText() {
 		Object value = getValue();
-		if (value == null || !(value instanceof QName)) {
+		if (!(value instanceof QName)) {
 			return "";
 		} else {
 			QName qName = (QName) value;

@@ -90,7 +90,7 @@ public final class EndpointReference implements Serializable {
 		if (this == o) {
 			return true;
 		}
-		if (o != null && o instanceof EndpointReference) {
+		if (o instanceof EndpointReference) {
 			EndpointReference other = (EndpointReference) o;
 			return address.equals(other.address);
 		}
