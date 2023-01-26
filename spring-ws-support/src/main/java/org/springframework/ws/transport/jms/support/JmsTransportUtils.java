@@ -154,7 +154,7 @@ public abstract class JmsTransportUtils {
 		if (value != null) {
 			return Collections.singletonList(value).iterator();
 		} else {
-			return Collections.<String> emptyList().iterator();
+			return Collections.emptyIterator();
 		}
 	}
 

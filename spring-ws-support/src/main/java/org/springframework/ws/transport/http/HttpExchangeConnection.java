@@ -109,7 +109,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	@Override
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		List<String> headers = httpExchange.getRequestHeaders().get(name);
-		return headers != null ? headers.iterator() : Collections.<String> emptyList().iterator();
+		return headers != null ? headers.iterator() : Collections.emptyIterator();
 	}
 
 	@Override
