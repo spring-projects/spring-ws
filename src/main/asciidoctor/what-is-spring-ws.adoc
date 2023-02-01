@@ -63,7 +63,7 @@ Spring-WS consists of a number of modules, which are described in the remainder 
 
 The following figure shows and the dependencies between the Spring-WS modules. Arrows indicate dependencies (that is, Spring-WS Core depends on Spring-XML and the OXM module found in Spring 3 and higher).
 
-image::spring-deps.png[align="center"]
+image::images/spring-deps.png[align="center"]
 
 == Supported standards
 

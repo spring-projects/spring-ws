@@ -17,7 +17,7 @@ The server-side of Spring-WS is designed around a central class that dispatches 
 
 The following sequence diagram shows the processing and dispatching flow of the `MessageDispatcher`:
 
-image::sequence.png[align="center"]
+image::images/sequence.png[align="center"]
 
 When a `MessageDispatcher` is set up for use and a request comes in for that specific dispatcher, the `MessageDispatcher` starts processing the request. The following process describes how `MessageDispatcher` handles a request:
 
