@@ -127,8 +127,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 		Element payloadElement = getRootElement(messageContext.getRequest().getPayloadSource());
 		Object[] args = getMethodArguments(payloadElement, methodEndpoint.getMethod());
 		Object result = methodEndpoint.invoke(args);
-		if (result instanceof Source) {
-			Source responseSource = (Source) result;
+		if (result instanceof Source responseSource) {
 			WebServiceMessage response = messageContext.getResponse();
 			transform(responseSource, response.getPayloadResult());
 		}

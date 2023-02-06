@@ -852,8 +852,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		if (!CollectionUtils.isEmpty(results)) {
 			WSSecurityEngineResult actionResult = results.get(0);
 			Principal principal = (Principal) actionResult.get(WSSecurityEngineResult.TAG_PRINCIPAL);
-			if (principal instanceof WSUsernameTokenPrincipalImpl) {
-				WSUsernameTokenPrincipalImpl usernameTokenPrincipal = (WSUsernameTokenPrincipalImpl) principal;
+			if (principal instanceof WSUsernameTokenPrincipalImpl usernameTokenPrincipal) {
 				UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
 				try {
 					validationCallbackHandler.handle(new Callback[] { callback });

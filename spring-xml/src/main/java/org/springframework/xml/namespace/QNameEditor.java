@@ -62,10 +62,7 @@ public class QNameEditor extends PropertyEditorSupport {
 	@Override
 	public String getAsText() {
 		Object value = getValue();
-		if (!(value instanceof QName)) {
-			return "";
-		} else {
-			QName qName = (QName) value;
+		if (value instanceof QName qName) {
 			String prefix = qName.getPrefix();
 			if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
 				return "{" + qName.getNamespaceURI() + "}" + prefix + ":" + qName.getLocalPart();
@@ -74,6 +71,8 @@ public class QNameEditor extends PropertyEditorSupport {
 			} else {
 				return qName.getLocalPart();
 			}
+		} else {
+			return "";
 		}
 	}
 }
