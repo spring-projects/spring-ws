@@ -19,6 +19,7 @@ package org.springframework.ws.pox.dom;
 import static org.xmlunit.assertj.XmlAssert.*;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -83,6 +84,6 @@ public class DomPoxMessageTest {
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		message.writeTo(os);
 
-		assertThat(os.toString("UTF-8")).and(content).ignoreWhitespace().areIdentical();
+		assertThat(os.toString(StandardCharsets.UTF_8)).and(content).ignoreWhitespace().areIdentical();
 	}
 }

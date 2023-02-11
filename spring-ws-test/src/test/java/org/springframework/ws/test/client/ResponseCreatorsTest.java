@@ -19,6 +19,7 @@ package org.springframework.ws.test.client;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
@@ -67,7 +68,7 @@ public class ResponseCreatorsTest {
 	public void withPayloadResource() throws Exception {
 
 		String payload = "<payload xmlns='http://springframework.org'/>";
-		ResponseCreator responseCreator = ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes("UTF-8")));
+		ResponseCreator responseCreator = ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes(StandardCharsets.UTF_8)));
 
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
@@ -101,7 +102,7 @@ public class ResponseCreatorsTest {
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators
-				.withSoapEnvelope(new ByteArrayResource(envelope.getBytes("UTF-8")));
+				.withSoapEnvelope(new ByteArrayResource(envelope.getBytes(StandardCharsets.UTF_8)));
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
 		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response)).and(envelope).ignoreWhitespace().areSimilar();

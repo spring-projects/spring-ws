@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -71,7 +72,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 	private String getExpectedString() throws IOException {
 
 		StringWriter expectedWriter = new StringWriter();
-		FileCopyUtils.copy(new InputStreamReader(payload.getInputStream(), "UTF-8"), expectedWriter);
+		FileCopyUtils.copy(new InputStreamReader(payload.getInputStream(), StandardCharsets.UTF_8), expectedWriter);
 		return expectedWriter.toString();
 	}
 
@@ -124,7 +125,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 	@Test
 	public void testReaderPayload() throws Exception {
 
-		Reader reader = new InputStreamReader(payload.getInputStream(), "UTF-8");
+		Reader reader = new InputStreamReader(payload.getInputStream(), StandardCharsets.UTF_8);
 		StreamSource streamSource = new StreamSource(reader, payload.getURL().toString());
 		transformer.transform(streamSource, webServiceMessage.getPayloadResult());
 		StringWriter resultWriter = new StringWriter();
@@ -158,7 +159,7 @@ public abstract class AbstractWebServiceMessageTestCase {
 		ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
 		FileCopyUtils.copy(payload.getInputStream(), expectedStream);
 
-		assertThat(resultStream.toString("UTF-8")).and(expectedStream.toString("UTF-8")).ignoreWhitespace().areIdentical();
+		assertThat(resultStream.toString(StandardCharsets.UTF_8)).and(expectedStream.toString(StandardCharsets.UTF_8)).ignoreWhitespace().areIdentical();
 
 		validateMessage();
 	}

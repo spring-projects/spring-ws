@@ -24,6 +24,7 @@ import jakarta.xml.soap.SOAPMessage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTe
 		SoapMessage soapMessage = (SoapMessage) messageFactory.createWebServiceMessage();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		soapMessage.writeTo(os);
-		String result = os.toString("UTF-8");
+		String result = os.toString(StandardCharsets.UTF_8);
 
 		assertThat(result).startsWith("<?xml version=\"1.0\"");
 	}

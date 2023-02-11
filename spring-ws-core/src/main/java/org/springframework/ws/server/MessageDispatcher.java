@@ -18,6 +18,7 @@ package org.springframework.ws.server;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -189,7 +190,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	private String getMessageContent(WebServiceMessage message) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		message.writeTo(bos);
-		return bos.toString("UTF-8");
+		return bos.toString(StandardCharsets.UTF_8);
 	}
 
 	/**

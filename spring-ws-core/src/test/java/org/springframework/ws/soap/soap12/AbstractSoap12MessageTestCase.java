@@ -20,6 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -67,7 +68,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 		String soapAction = "http://springframework.org/spring-ws/Action";
 		soapMessage.setSoapAction(soapAction);
 		soapMessage.writeTo(tos);
-		String result = bos.toString("UTF-8");
+		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
 				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://www.w3.org/2003/05/soap-envelope'>" + getHeader()
@@ -89,7 +90,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 	@Override
 	public void testWriteToTransportResponseAttachment() throws Exception {
 
-		InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes("UTF-8"));
+		InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes(StandardCharsets.UTF_8));
 		soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MockTransportOutputStream tos = new MockTransportOutputStream(bos);
@@ -141,7 +142,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		soapMessage.writeTo(bos);
 
-		String result = bos.toString("UTF-8");
+		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
 				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://www.w3.org/2003/05/soap-envelope'>" + getHeader()
@@ -170,7 +171,7 @@ public abstract class AbstractSoap12MessageTestCase extends AbstractSoapMessageT
 		bos = new ByteArrayOutputStream();
 		soapMessage.writeTo(bos);
 
-		String result = bos.toString("UTF-8");
+		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
 				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://www.w3.org/2003/05/soap-envelope'>" + getHeader()
