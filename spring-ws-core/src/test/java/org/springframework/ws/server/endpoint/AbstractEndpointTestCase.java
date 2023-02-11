@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -90,7 +91,7 @@ public abstract class AbstractEndpointTestCase {
 	@Test
 	public void testStreamSourceInputStream() throws Exception {
 
-		InputStream is = new ByteArrayInputStream(REQUEST.getBytes("UTF-8"));
+		InputStream is = new ByteArrayInputStream(REQUEST.getBytes(StandardCharsets.UTF_8));
 		testSource(new StreamSource(is));
 	}
 

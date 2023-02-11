@@ -289,7 +289,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 				assertThat(httpServletRequest.getHeader(REQUEST_HEADER_NAME)).isEqualTo(REQUEST_HEADER_VALUE);
 
 				String receivedRequest = new String(FileCopyUtils.copyToByteArray(httpServletRequest.getInputStream()),
-						"UTF-8");
+						StandardCharsets.UTF_8);
 
 				XmlAssert.assertThat(receivedRequest).and(SOAP_REQUEST).ignoreWhitespace().areIdentical();
 

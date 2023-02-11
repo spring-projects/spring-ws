@@ -19,6 +19,7 @@ package org.springframework.ws.client.core;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.xml.transform.*;
@@ -619,7 +620,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 		if (sentMessageTracingLogger.isTraceEnabled()) {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			request.writeTo(os);
-			sentMessageTracingLogger.trace("Sent request [" + os.toString("UTF-8") + "]");
+			sentMessageTracingLogger.trace("Sent request [" + os.toString(StandardCharsets.UTF_8) + "]");
 		} else if (sentMessageTracingLogger.isDebugEnabled()) {
 			sentMessageTracingLogger.debug("Sent request [" + request + "]");
 		}
@@ -672,8 +673,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 				messageContext.getRequest().writeTo(requestStream);
 				ByteArrayOutputStream responseStream = new ByteArrayOutputStream();
 				messageContext.getResponse().writeTo(responseStream);
-				receivedMessageTracingLogger.trace("Received response [" + responseStream.toString("UTF-8") + "] for request ["
-						+ requestStream.toString("UTF-8") + "]");
+				receivedMessageTracingLogger.trace("Received response [" + responseStream.toString(StandardCharsets.UTF_8) + "] for request ["
+						+ requestStream.toString(StandardCharsets.UTF_8) + "]");
 			} else if (receivedMessageTracingLogger.isDebugEnabled()) {
 				receivedMessageTracingLogger.debug("Received response [" + messageContext.getResponse() + "] for request ["
 						+ messageContext.getRequest() + "]");

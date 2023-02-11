@@ -19,6 +19,7 @@ package org.springframework.ws.soap.security.wss4j2;
 import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -140,7 +141,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 		SoapMessage message = loadSoap11Message("customHeader-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		message.writeTo(os);
-		String document = os.toString("UTF-8");
+		String document = os.toString(StandardCharsets.UTF_8);
 
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);
@@ -153,7 +154,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
 		os = new ByteArrayOutputStream();
 		message.writeTo(os);
-		document = os.toString("UTF-8");
+		document = os.toString(StandardCharsets.UTF_8);
 
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);
@@ -162,7 +163,7 @@ public abstract class Wss4jMessageInterceptorHeaderTestCase extends Wss4jTestCas
 
 		os = new ByteArrayOutputStream();
 		message.writeTo(os);
-		document = os.toString("UTF-8");
+		document = os.toString(StandardCharsets.UTF_8);
 
 		assertXpathEvaluatesTo("Header 1 does not exist", "test1", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header1",
 				document);

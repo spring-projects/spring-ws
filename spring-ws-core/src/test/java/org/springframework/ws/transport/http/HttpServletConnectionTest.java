@@ -24,6 +24,7 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -75,7 +76,7 @@ public class HttpServletConnectionTest {
 	@Test
 	public void receive() throws Exception {
 
-		byte[] bytes = SOAP_CONTENT.getBytes("UTF-8");
+		byte[] bytes = SOAP_CONTENT.getBytes(StandardCharsets.UTF_8);
 		httpServletRequest.addHeader("Content-Type", "text/xml");
 		httpServletRequest.addHeader("Content-Length", Integer.toString(bytes.length));
 		httpServletRequest.addHeader(HEADER_NAME, HEADER_VALUE);
