@@ -87,8 +87,16 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 	 * This method is only called when the {@code transformLocations} property is true.
 	 */
 	protected String transformLocation(String location, HttpServletRequest request) {
-		StringBuilder url = new StringBuilder(request.getScheme());
-		url.append("://").append(request.getServerName()).append(':').append(request.getServerPort());
+		String xForwardedProto = request.getHeader("X-Forwarded-Proto");
+		String xForwardedHost = request.getHeader("X-Forwarded-Host");
+		String xForwardedPort = request.getHeader("X-Forwarded-Port");
+
+		String scheme = StringUtils.hasText(xForwardedProto) ? xForwardedProto : request.getScheme();
+		String serverName = StringUtils.hasText(xForwardedHost) ? xForwardedHost : request.getServerName();
+		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort) : request.getServerPort();
+
+		StringBuilder url = new StringBuilder(scheme);
+		url.append("://").append(serverName).append(':').append(serverPort);
 		if (location.startsWith("/")) {
 			// a relative path, prepend the context path
 			url.append(request.getContextPath()).append(location);
