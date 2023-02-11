@@ -94,7 +94,7 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 		String scheme = StringUtils.hasText(xForwardedProto) ? xForwardedProto : request.getScheme();
 		String serverName = StringUtils.hasText(xForwardedHost) ? xForwardedHost : request.getServerName();
-		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.valueOf(xForwardedPort) : request.getServerPort();
+		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort) : request.getServerPort();
 
 		StringBuilder url = new StringBuilder(scheme);
 		url.append("://").append(serverName).append(':').append(serverPort);

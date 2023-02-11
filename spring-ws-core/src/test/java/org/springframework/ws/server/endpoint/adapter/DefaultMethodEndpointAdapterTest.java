@@ -142,7 +142,7 @@ public class DefaultMethodEndpointAdapterTest {
 		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
 		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
 		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class)))
-				.andReturn(new Integer(42));
+				.andReturn(42);
 
 		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
 		returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), eq(value));
