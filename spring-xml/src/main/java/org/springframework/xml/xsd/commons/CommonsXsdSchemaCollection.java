@@ -189,10 +189,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 				if (!processedIncludes.contains(includedSchema)) {
 					inlineIncludes(includedSchema, processedIncludes, processedImports);
 					findImports(includedSchema, processedImports, processedIncludes);
-					List<XmlSchemaObject> includeItems = includedSchema.getItems();
-					for (XmlSchemaObject includedItem : includeItems) {
-						schemaItems.add(includedItem);
-					}
+					schemaItems.addAll(includedSchema.getItems());
 				}
 				// remove the <include/>
 				schemaItems.remove(i);
