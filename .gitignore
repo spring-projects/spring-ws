@@ -23,3 +23,6 @@ _site
 *.versionsBackup
 
 credentials.yml
+
+# Things to ignore that facilitate backports.
+spring-ws-bom
