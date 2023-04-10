@@ -59,7 +59,7 @@ public class Addressing200408 extends AbstractAddressingVersion {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean isToHeaderRequired() {
 		return true;

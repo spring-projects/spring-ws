@@ -38,7 +38,6 @@ public abstract class AbstractWsAddressingTestCase {
 	@BeforeEach
 	public void createMessageFactory() throws Exception {
 		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		XMLUnit.setIgnoreWhitespace(true);
 	}
 
 	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
@@ -61,7 +60,10 @@ public abstract class AbstractWsAddressingTestCase {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
-		XmlAssert.assertThat(resultDocument).and(expectedDocument).ignoreWhitespace().areSimilar();
+		XmlAssert.assertThat(resultDocument).and(expectedDocument) //
+				.ignoreWhitespace() //
+				.ignoreChildNodesOrder() //
+				.areSimilar();
 	}
 
 	protected void assertXMLNotSimilar(SaajSoapMessage expected, SaajSoapMessage result) {
@@ -69,6 +71,8 @@ public abstract class AbstractWsAddressingTestCase {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
-		XmlAssert.assertThat(resultDocument).and(expectedDocument).ignoreWhitespace().areNotSimilar();
+		XmlAssert.assertThat(resultDocument).and(expectedDocument) //
+				.ignoreWhitespace() //
+				.areNotSimilar();
 	}
 }

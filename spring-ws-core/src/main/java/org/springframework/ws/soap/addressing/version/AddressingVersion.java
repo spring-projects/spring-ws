@@ -64,11 +64,11 @@ public interface AddressingVersion {
 	 */
 	boolean hasRequiredProperties(MessageAddressingProperties map);
 
-	
 	/**
-	 * Indicates whether the wsa:To header is REQUIRED or not.
-	 *  
-	 * @return {@code true} if the wsa:To header of the {@link AddressingVersion} is REQUIRED. 
+	 * Indicates whether the {@literal wsa:To} header is {@literal REQUIRED} or not.
+	 * 
+	 * @return {@code true} if the wsa:To header of the {@link AddressingVersion} is REQUIRED.
+	 * @since 4.0
 	 */
 	boolean isToHeaderRequired();
 

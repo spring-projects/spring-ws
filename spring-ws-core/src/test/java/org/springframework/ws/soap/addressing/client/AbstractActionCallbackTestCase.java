@@ -81,6 +81,7 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
+
 		assertXMLNotSimilar(expected, message);
 
 		verify(strategyMock, connectionMock);
@@ -110,13 +111,15 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 
 		verify(strategyMock, connectionMock);
 	}
-	
+
 	@Test
 	public void testNotInitializeTo() throws Exception {
+
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
 		callback = new ActionCallback(action, getVersion());
 		callback.setMessageIdStrategy(strategyMock);
+		callback.setShouldInitializeTo(false);
 		expect(connectionMock.getUri()).andReturn(connectionUri).times(0, 1);
 
 		SaajSoapMessage message = createDeleteMessage();
@@ -128,10 +131,11 @@ public abstract class AbstractActionCallbackTestCase extends AbstractWsAddressin
 		callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/request-without-shouldInitializeTo.xml");
+
 		assertXMLSimilar(expected, message);
+
 		verify(strategyMock, connectionMock);
 	}
-
 
 	private SaajSoapMessage createDeleteMessage() throws SOAPException {
 

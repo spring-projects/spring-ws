@@ -31,7 +31,7 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  *
  * @author Arjen Poutsma
  * @author Leandro Quiroga
- * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing, May 2006</a>
+ * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services Addressing 1.0, May 2006</a>
  * @since 1.5.0
  */
 
@@ -56,7 +56,7 @@ public class Addressing10 extends AbstractAddressingVersion {
 		return true;
 
 	}
-	
+
 	@Override
 	public boolean isToHeaderRequired() {
 		return false;

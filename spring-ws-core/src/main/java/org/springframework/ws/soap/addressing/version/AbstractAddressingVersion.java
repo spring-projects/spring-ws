@@ -84,7 +84,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	private final XPathExpression referenceParametersExpression;
 
 	protected AbstractAddressingVersion() {
-		Map<String, String> namespaces = new HashMap<String, String>();
+		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put(getNamespacePrefix(), getNamespaceUri());
 		toExpression = createNormalizedExpression(getToName(), namespaces);
 		actionExpression = createNormalizedExpression(getActionName(), namespaces);
@@ -182,10 +182,10 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		}
 		List<Node> referenceProperties = referencePropertiesExpression != null
 				? referencePropertiesExpression.evaluateAsNodeList(node)
-				: Collections.<Node> emptyList();
+				: Collections.emptyList();
 		List<Node> referenceParameters = referenceParametersExpression != null
 				? referenceParametersExpression.evaluateAsNodeList(node)
-				: Collections.<Node> emptyList();
+				: Collections.emptyList();
 		return new EndpointReference(address, referenceProperties, referenceParameters);
 	}
 
