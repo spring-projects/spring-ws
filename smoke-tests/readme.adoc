@@ -1,0 +1,24 @@
+= Release Smoke Tests
+
+== Maven Central
+
+To run smoke tests against a Maven Central staging repository:
+
+[source,shell]
+----
+$ mvnw -Pmaven-central -Dspring-ws.version=${projectVersion} -DstagingRepositoryId=${stagingRepositoryId}
+----
+
+* `${projectVersion}`: e.g. `4.0.4`
+* `${stagingRepositoryId}`: e.g. `orgspringframework-2601`
+
+== Artifactory
+
+To run smoke tests against an Artifactory staging repository:
+
+[source,shell]
+----
+$ mvnw -Partifactory -Dspring-ws.version=${projectVersion}
+----
+
+* `${projectVersion}`: e.g. `4.0.4`
