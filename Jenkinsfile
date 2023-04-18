@@ -70,7 +70,7 @@ pipeline {
 						ARTIFACTORY = credentials('02bd1690-b54f-4c9f-819d-a77cb7a9822c')
 					}
 					steps {
-					    // Active Jakarta EE 9 profile and disable Jakarta EE 10 (default) profile
+						// Active Jakarta EE 9 profile and disable Jakarta EE 10 (default) profile
 						sh "PROFILE=jakarta-ee-9,-jakarta-ee-10,convergence ci/test.sh"
 					}
 				}
@@ -91,6 +91,7 @@ pipeline {
 				SONATYPE = credentials('oss-login')
 				KEYRING = credentials('spring-signing-secring.gpg')
 				PASSPHRASE = credentials('spring-gpg-passphrase')
+				STAGING_PROFILE_ID = credentials('spring-data-release-deployment-maven-central-staging-profile-id')
 			}
 
 			steps {
@@ -111,14 +112,37 @@ pipeline {
 					}
 
 					if (RELEASE_TYPE == 'release') {
-						sh "PROFILE=jakarta-ee-10,distribute,central USERNAME=${SONATYPE_USR} PASSWORD=${SONATYPE_PSW} ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION}"
+
+						STAGING_REPOSITORY_ID = sh(
+							script: "ci/rc-open.sh",
+							returnStdout: true
+						).readLines()
+						  .findAll{ line -> line.contains("<repository>") && !line.contains("%s") }
+						  .collect{ s -> s.substring(s.indexOf("<repository>") + "<repository>".length(), s.indexOf("</repository>")) }
+						  .inject(0){ first, second -> second } // find the last entry, a.k.a. the most recent staging repository id
+
+						sh "ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
+						sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
+						sh "ci/smoke-test-against-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
+						sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
 
 						slackSend(
-                                color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
-                                channel: '#spring-ws',
-                                message: "Spring WS ${PROJECT_VERSION} is staged on Sonatype awaiting closure and release.")
+								color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+								channel: '#spring-ws',
+								message: "Spring WS ${PROJECT_VERSION} is released to Maven Central!")
 					} else {
-						sh "PROFILE=jakarta-ee-10,distribute,${RELEASE_TYPE} ci/build-and-deploy-to-artifactory.sh"
+
+						sh "ci/build-and-deploy-to-artifactory.sh ${RELEASE_TYPE}"
+
+						// TODO: Resolve smoke testing against Artifactory
+						// sh "ci/smoke-test-against-artifactory.sh ${PROJECT_VERSION}"
+						
+						if (RELEASE_TYPE == 'milestone') {
+							slackSend(
+									color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+									channel: '#spring-ws',
+									message: "Spring WS ${PROJECT_VERSION} is released to Artifactory!")
+						}
 					}
 				}
 			}
