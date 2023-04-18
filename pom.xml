@@ -121,7 +121,7 @@
         <woodstox.version>6.4.0</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.1</wss4j.version>
-        <xmlsec.version>3.0.1</xmlsec.version>
+        <xmlsec.version>3.0.2</xmlsec.version>
         <xml-schema-core.version>2.2.2</xml-schema-core.version>
         <xmlunit1.version>1.6</xmlunit1.version>
         <xmlunit.version>2.9.0</xmlunit.version>
