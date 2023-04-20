@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.example</groupId>
+    <groupId>org.springframework.ws</groupId>
     <artifactId>smoke-tests</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 

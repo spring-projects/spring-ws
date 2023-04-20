@@ -1,4 +1,4 @@
-package com.example.smoketests;
+package org.springframework.ws.smoketests;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.client.core.WebServiceTemplate;
