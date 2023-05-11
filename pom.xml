@@ -85,7 +85,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <activemq.version>2.19.0</activemq.version>
+        <activemq.version>2.28.0</activemq.version>
         <aspectj.version>1.9.6</aspectj.version>
         <assertj.version>3.9.0</assertj.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
@@ -111,14 +111,14 @@
         <mail.version>1.4.7</mail.version>
         <mockito.version>4.0.0</mockito.version>
         <saaj-impl.version>2.0.1</saaj-impl.version>
-        <slf4j.version>2.0.3</slf4j.version>
+        <slf4j.version>2.0.6</slf4j.version>
         <smack.version>4.3.5</smack.version>
         <spring.version>6.0.8</spring.version>
         <spring-hateos.version>2.0.1</spring-hateos.version>
         <spring-security.version>6.0.3</spring-security.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
-        <woodstox.version>6.4.0</woodstox.version>
+        <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.1</wss4j.version>
         <xmlsec.version>3.0.2</xmlsec.version>
@@ -231,6 +231,14 @@
                     <groupId>javax.xml.bind</groupId>
                     <artifactId>jaxb-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.bytebuddy</groupId>
+                    <artifactId>byte-buddy</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -296,33 +304,32 @@
 
             <build>
                 <plugins>
-                    <!-- TODO: Reenable pending resolution of https://issues.apache.org/jira/browse/ARTEMIS-3549 -->
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-enforcer-plugin</artifactId>-->
-<!--                        <version>3.0.0-M2</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <id>default-cli</id>-->
-<!--                                <goals>-->
-<!--                                    <goal>enforce</goal>-->
-<!--                                </goals>-->
-<!--                                <phase>validate</phase>-->
-<!--                                <configuration>-->
-<!--                                    <rules>-->
-<!--                                        <bannedDependencies>-->
-<!--                                            <excludes>-->
-<!--                                                <exclude>commons-logging:*:*</exclude>-->
-<!--                                            </excludes>-->
-<!--                                            <searchTransitive>true</searchTransitive>-->
-<!--                                        </bannedDependencies>-->
-<!--                                        <dependencyConvergence/>-->
-<!--                                    </rules>-->
-<!--                                    <fail>true</fail>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                    </plugin>-->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>default-cli</id>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <phase>validate</phase>
+                                <configuration>
+                                    <rules>
+                                        <bannedDependencies>
+                                            <excludes>
+                                                <exclude>commons-logging:*:*</exclude>
+                                            </excludes>
+                                            <searchTransitive>true</searchTransitive>
+                                        </bannedDependencies>
+                                        <dependencyConvergence/>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
 
                     <plugin>
                         <groupId>org.basepom.maven</groupId>
