@@ -442,13 +442,6 @@
                                         <buildName>spring-ws</buildName>
                                         <buildUrl>{{BUILD_URL}}</buildUrl>
                                     </buildInfo>
-                                    <deployProperties>
-                                        <zip.name>spring-ws</zip.name>
-                                        <zip.displayname>spring-ws</zip.displayname>
-                                        <zip.deployed>false</zip.deployed>
-                                        <zip.type>docs</zip.type>
-                                        <archives>*:*:*:*@zip</archives>
-                                    </deployProperties>
                                     <publisher>
                                         <contextUrl>https://repo.spring.io</contextUrl>
                                         <username>{{ARTIFACTORY_USR}}</username>
@@ -485,13 +478,6 @@
                                         <buildName>spring-ws</buildName>
                                         <buildUrl>{{BUILD_URL}}</buildUrl>
                                     </buildInfo>
-                                    <deployProperties>
-                                        <zip.name>spring-ws</zip.name>
-                                        <zip.displayname>spring-ws</zip.displayname>
-                                        <zip.deployed>false</zip.deployed>
-                                        <zip.type>docs</zip.type>
-                                        <archives>*:*:*:*@zip</archives>
-                                    </deployProperties>
                                     <publisher>
                                         <contextUrl>https://repo.spring.io</contextUrl>
                                         <username>{{ARTIFACTORY_USR}}</username>
@@ -726,6 +712,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.5.0</version>
                         <executions>
                             <execution>
                                 <id>docs</id>
