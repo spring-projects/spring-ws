@@ -34,45 +34,52 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of the {@link WebServiceConnection} interface that uses a Java
- * {@link HttpClient}.
+ * Implementation of the {@link WebServiceConnection} interface that uses Java's built-in {@link HttpClient}.
  *
  * @author Marten Deinum
  * @see java.net.http.HttpClient
  * @see java.net.http.HttpRequest
- * @since 4.1
+ * @since 4.0
  */
 public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
-	private static final List<String> DISALLOWED_HEADERS =
-			List.of("connection", "content-length", "expect", "host", "upgrade");
+	private static final Log logger = LogFactory.getLog(JdkHttpClientConnection.class);
 
-	private final Log logger = LogFactory.getLog(getClass());
-	private final HttpClient client;
-	private final Builder requestBuilder;
+	private static final List<String> DISALLOWED_HEADERS = List.of("connection", "content-length", "expect", "host",
+			"upgrade");
+
+	private final HttpClient httpClient;
 
 	private final URI uri;
 
-	private HttpResponse<InputStream> response;
+	private final Builder requestBuilder;
+
 	private HttpRequest request;
 
 	private ByteArrayOutputStream requestBuffer;
 
-	public JdkHttpClientConnection(HttpClient client, URI uri, Duration requestTimeout) {
-		this.client = client;
+	private HttpResponse<InputStream> response;
+
+	protected JdkHttpClientConnection(HttpClient httpClient, URI uri, Duration requestTimeout) {
+
+		Assert.notNull(httpClient, "httpClient must not be null");
+		Assert.notNull(uri, "uri must not be null");
+		Assert.notNull(requestTimeout, "requestTimeout must not be null");
+
+		this.httpClient = httpClient;
 		this.uri = uri;
 		this.requestBuilder = HttpRequest.newBuilder(uri).timeout(requestTimeout);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return this.requestBuffer;
+		return requestBuffer;
 	}
 
 	@Override
@@ -87,42 +94,51 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
+
 		if (DISALLOWED_HEADERS.contains(name.toLowerCase())) {
-			logger.info("HttpClient doesn't allow setting the '"+name + "' header, ignoring!");
+			logger.trace("HttpClient doesn't allow setting the '" + name + "' header, ignoring!");
 			return;
 		}
-		this.requestBuilder.header(name, value);
+
+		requestBuilder.header(name, value);
 	}
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return this.uri;
+		return uri;
 	}
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return this.response != null ? this.response.statusCode() : 0;
+		return response != null ? response.statusCode() : 0;
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
+
 		HttpStatus status = HttpStatus.resolve(getResponseCode());
-		return status != null ? status.getReasonPhrase() : "";
+
+		return status != null //
+				? status.getReasonPhrase() //
+				: "";
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		if (this.response != null) {
-			return this.response.headers()
-					.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH)
+
+		if (response != null) {
+
+			return response.headers() //
+					.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH) //
 					.orElse(-1);
 		}
+
 		return 0;
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return this.response.body();
+		return response.body();
 	}
 
 	@Override
@@ -132,13 +148,14 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		byte[] body = this.requestBuffer.toByteArray();
-		this.request = requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
+
+		byte[] body = requestBuffer.toByteArray();
+
+		request = requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
+
 		try {
-			this.response = this.client.send(this.request, BodyHandlers.ofInputStream());
-		}
-		catch (InterruptedException ex)
-		{
+			response = httpClient.send(request, BodyHandlers.ofInputStream());
+		} catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException(ex);
 		}
@@ -146,8 +163,9 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onClose() throws IOException {
-		if (this.response != null) {
-			this.response.body().close();
+
+		if (response != null) {
+			response.body().close();
 		}
 	}
 }

@@ -22,60 +22,71 @@ import java.net.http.HttpClient;
 import java.time.Duration;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses the standard Java {@code HttpClient}
- * facilities to execute POST requests.
+ * {@code WebServiceMessageSender} implementation that uses the standard Java {@code HttpClient} facilities to execute
+ * POST requests.
  * <p>
- * Can be used with a simple default configured {@code HttpClient} or can be constructed with a
- * pre-configured {@code HttpClient}.
+ * Can be used with a simple default configured {@code HttpClient} or can be constructed with a pre-configured
+ * {@code HttpClient}.
  *
  * @author Marten Deinum
  * @see java.net.http.HttpClient
- * @since 4.1
+ * @since 4.0
  */
-public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSender
-		implements InitializingBean {
+public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSender implements InitializingBean {
 
-	private Duration connectionTimeout = Duration.ofSeconds(60);
-	private Duration requestTimeout = Duration.ofSeconds(60);
+	private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(60);
 
-	private HttpClient client;
+	private static final Duration DEFAULT_REQUEST_TIMEOUT = Duration.ofSeconds(60);
+
+	private HttpClient httpClient;
+
+	private Duration connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
+
+	private Duration requestTimeout = DEFAULT_REQUEST_TIMEOUT;
 
 	public JdkHttpClientMessageSender() {}
 
-	public JdkHttpClientMessageSender(HttpClient client) {
-		this.client = client;
+	public JdkHttpClientMessageSender(HttpClient httpClient) {
+
+		Assert.notNull(httpClient, "httpClient must not be null");
+		this.httpClient = httpClient;
 	}
 
-	public void setConnectionTimeout(Duration connectionTimeout) {
+	public void setHttpClient(@Nullable HttpClient httpClient) {
+		this.httpClient = httpClient;
+	}
+
+	public void setConnectionTimeout(@Nullable Duration connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
 	}
 
-	public void setRequestTimeout(Duration requestTimeout) {
+	public void setRequestTimeout(@Nullable Duration requestTimeout) {
 		this.requestTimeout = requestTimeout;
 	}
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 
-		JdkHttpClientConnection connection =
-				new JdkHttpClientConnection(this.client, uri, requestTimeout);
+		JdkHttpClientConnection connection = new JdkHttpClientConnection(httpClient, uri, requestTimeout);
+
 		if (isAcceptGzipEncoding()) {
-			connection.addRequestHeader(
-					HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+			connection.addRequestHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
 					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
+
 		return connection;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (this.client == null) {
-			this.client = HttpClient.newBuilder()
-					.connectTimeout(this.connectionTimeout)
-					.build();
+
+		if (httpClient == null) {
+			httpClient = HttpClient.newBuilder().connectTimeout(connectionTimeout).build();
 		}
 	}
 }
