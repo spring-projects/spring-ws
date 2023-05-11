@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2023-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package org.springframework.ws.transport.http;
 
-public class JdkClientMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<JdkClientMessageSender> {
+public class JdkHttpClientMessageSenderIntegrationTest
+		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<JdkHttpClientMessageSender> {
 
 	@Override
-	protected JdkClientMessageSender createMessageSender() {
-		return new JdkClientMessageSender();
+	protected JdkHttpClientMessageSender createMessageSender() {
+		return new JdkHttpClientMessageSender();
 	}
 }

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023-2023 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ws.transport.http;
 
 import java.io.ByteArrayOutputStream;
@@ -12,19 +28,27 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpRequest.Builder;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.transport.WebServiceConnection;
 
-public class JdkClientConnection extends AbstractHttpSenderConnection {
+/**
+ * Implementation of the {@link WebServiceConnection} interface that uses a Java
+ * {@link HttpClient}.
+ *
+ * @author Marten Deinum
+ * @see java.net.http.HttpClient
+ * @see java.net.http.HttpRequest
+ * @since 4.1
+ */
+public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	private static final List<String> DISALLOWED_HEADERS =
 			List.of("connection", "content-length", "expect", "host", "upgrade");
@@ -40,10 +64,10 @@ public class JdkClientConnection extends AbstractHttpSenderConnection {
 
 	private ByteArrayOutputStream requestBuffer;
 
-	public JdkClientConnection(HttpClient client, URI uri) {
+	public JdkHttpClientConnection(HttpClient client, URI uri, Duration requestTimeout) {
 		this.client = client;
 		this.uri = uri;
-		this.requestBuilder = HttpRequest.newBuilder(uri);
+		this.requestBuilder = HttpRequest.newBuilder(uri).timeout(requestTimeout);
 	}
 
 	@Override
