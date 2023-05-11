@@ -446,7 +446,6 @@
                                         <zip.name>spring-ws</zip.name>
                                         <zip.displayname>spring-ws</zip.displayname>
                                         <zip.deployed>false</zip.deployed>
-                                        <zip.type>docs</zip.type>
                                         <archives>*:*:*:*@zip</archives>
                                     </deployProperties>
                                     <publisher>
@@ -489,7 +488,6 @@
                                         <zip.name>spring-ws</zip.name>
                                         <zip.displayname>spring-ws</zip.displayname>
                                         <zip.deployed>false</zip.deployed>
-                                        <zip.type>docs</zip.type>
                                         <archives>*:*:*:*@zip</archives>
                                     </deployProperties>
                                     <publisher>
