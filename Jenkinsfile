@@ -17,6 +17,21 @@ pipeline {
 	}
 
 	stages {
+		stage('Publish Eclipse Temurin (main) + gpg docker image') {
+			when {
+				changeset "ci/Dockerfile"
+			}
+			agent any
+
+			steps {
+				script {
+					def image = docker.build("${p['docker.java.build.image']}", "ci/")
+					docker.withRegistry('', "${p['dockerhub.credentials']}") {
+						image.push()
+					}
+				}
+			}
+		}
 		stage("Test: baseline (main)") {
 			agent any
 			options { timeout(time: 30, unit: 'MINUTES')}
@@ -85,7 +100,7 @@ pipeline {
 
 			steps {
 				script {
-					docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+					docker.image("${p['docker.java.build.image-proxy']}").inside(p['docker.java.inside.basic']) {
 						PROJECT_VERSION = sh(
 								script: "ci/version.sh",
 								returnStdout: true
