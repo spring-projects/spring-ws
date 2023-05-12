@@ -16,15 +16,19 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.*;
 
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.soap.MessageFactory;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -34,15 +38,12 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.*;
 
 class HttpComponents5MessageSenderIntegrationTest
 		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponents5MessageSender> {
@@ -52,7 +53,7 @@ class HttpComponents5MessageSenderIntegrationTest
 		return new HttpComponents5MessageSender();
 	}
 
-	@Test
+	@Test // GH-1164
 	void testMaxConnections() throws Exception {
 
 		final String url1 = "https://www.example.com";
@@ -103,7 +104,7 @@ class HttpComponents5MessageSenderIntegrationTest
 		assertThat(poolingHttpClientConnectionManager.getMaxPerRoute(route3)).isEqualTo(10);
 	}
 
-	@Test
+	@Test // GH-1164
 	void testContextClose() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
@@ -138,6 +139,7 @@ class HttpComponents5MessageSenderIntegrationTest
 
 			appContext.close();
 		} finally {
+
 			if (connection != null) {
 				try {
 					connection.close();

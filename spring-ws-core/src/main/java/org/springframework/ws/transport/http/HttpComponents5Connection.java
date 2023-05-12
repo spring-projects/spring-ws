@@ -28,20 +28,19 @@ import java.util.Iterator;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.protocol.HttpContext;
-
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient. Exposes a {@link org.apache.hc.client5.http.classic.methods.HttpPost} and
- * {@link org.apache.hc.core5.http.HttpResponse
+ * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient 5. Exposes a {@link HttpPost} and
+ * {@link HttpResponse}.
  *
  * @author Alan Stewart
  * @author Barry Pitman
@@ -63,8 +62,10 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	private ByteArrayOutputStream requestBuffer;
 
 	protected HttpComponents5Connection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
+
 		Assert.notNull(httpClient, "httpClient must not be null");
 		Assert.notNull(httpPost, "httpPost must not be null");
+
 		this.httpClient = httpClient;
 		this.httpPost = httpPost;
 		this.httpContext = httpContext;
@@ -80,8 +81,9 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	public void onClose() throws IOException {
-		//XXX:
+
 		if (httpResponse instanceof ClassicHttpResponse response) {
+
 			if (response.getEntity() != null) {
 				EntityUtils.consume(response.getEntity());
 			}
@@ -117,9 +119,10 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		//XXX
+
 		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray(), null));
 		requestBuffer = null;
+
 		if (httpContext != null) {
 			httpResponse = httpClient.execute(httpPost, httpContext);
 		} else {
@@ -143,8 +146,9 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		//XXX:
+
 		if (httpResponse instanceof ClassicHttpResponse response) {
+
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				return entity.getContentLength();
@@ -155,32 +159,31 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
+
 		if (httpResponse instanceof ClassicHttpResponse response) {
+
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
 				return entity.getContent();
 			}
 		}
+
 		throw new IllegalStateException("Response has no enclosing response entity, cannot create input stream");
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		Header[] headers = httpResponse.getHeaders();
-		String[] names = new String[headers.length];
-		for (int i = 0; i < headers.length; i++) {
-			names[i] = headers[i].getName();
-		}
-		return Arrays.asList(names).iterator();
+
+		return Arrays.stream(httpResponse.getHeaders()) //
+				.map(NameValuePair::getName) //
+				.iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Header[] headers = httpResponse.getHeaders(name);
-		String[] values = new String[headers.length];
-		for (int i = 0; i < headers.length; i++) {
-			values[i] = headers[i].getValue();
-		}
-		return Arrays.asList(values).iterator();
+
+		return Arrays.stream(httpResponse.getHeaders(name)) //
+				.map(NameValuePair::getValue) //
+				.iterator();
 	}
 }

@@ -18,8 +18,8 @@ package org.springframework.ws.transport.http;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.auth.AuthScope;
@@ -31,25 +31,28 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.HttpHost;
-
+import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * {@code FactoryBean} to set up a <a href="http://hc.apache.org/httpcomponents-client">Apache
- * CloseableHttpClient</a>
+ * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents HttpClient 5.
  *
+ * @see http://hc.apache.org/httpcomponents-client
  * @author Lars Uffmann
  * @since 4.0.5
  */
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
-	private static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = (60 * 1000);
 
-	private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
-	private static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (60 * 1000);
+	private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(60);
 
-	private int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
+	private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(60);
+
+	private Duration connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
+
+	private Duration readTimeout = DEFAULT_READ_TIMEOUT;
 
 	private int maxTotalConnections = -1;
+
 	private AuthScope authScope = null;
 
 	private Credentials credentials = null;
@@ -86,24 +89,28 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the timeout until a connection is established. A value of 0 means <em>never</em> timeout.
 	 *
-	 * @param timeout the timeout value in milliseconds
+	 * @param timeout the timeout value
 	 */
-	public void setConnectionTimeout(int timeout) {
-		if (timeout < 0) {
+	public void setConnectionTimeout(Duration timeout) {
+
+		if (timeout.isNegative()) {
 			throw new IllegalArgumentException("timeout must be a non-negative value");
 		}
+
 		this.connectionTimeout = timeout;
 	}
 
 	/**
 	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
 	 *
-	 * @param timeout the timeout value in milliseconds
+	 * @param timeout the timeout value
 	 */
-	public void setReadTimeout(int timeout) {
-		if (timeout < 0) {
+	public void setReadTimeout(Duration timeout) {
+
+		if (timeout.isNegative()) {
 			throw new IllegalArgumentException("timeout must be a non-negative value");
 		}
+
 		this.readTimeout = timeout;
 	}
 
@@ -114,9 +121,11 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * @see PoolingHttpClientConnectionManager...
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
+
 		if (maxTotalConnections <= 0) {
 			throw new IllegalArgumentException("maxTotalConnections must be a positive value");
 		}
+
 		this.maxTotalConnections = maxTotalConnections;
 	}
 
@@ -142,14 +151,14 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	void applyMaxConnectionsPerHost(PoolingHttpClientConnectionManager connectionManager) throws URISyntaxException {
 
 		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
+
 			URI uri = new URI(entry.getKey());
 			HttpHost host = new HttpHost(uri.getScheme(), uri.getHost(), getPort(uri));
 			final HttpRoute route;
 
 			if (uri.getScheme().equals("https")) {
 				route = new HttpRoute(host, null, true);
-			}
-			else {
+			} else {
 				route = new HttpRoute(host);
 			}
 			int max = Integer.parseInt(entry.getValue());
@@ -158,7 +167,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	static int getPort(URI uri) {
+
 		if (uri.getPort() == -1) {
+
 			if ("https".equalsIgnoreCase(uri.getScheme())) {
 				return 443;
 			}
@@ -166,6 +177,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 				return 80;
 			}
 		}
+
 		return uri.getPort();
 	}
 
@@ -176,12 +188,15 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	@Override
 	public CloseableHttpClient getObject() throws Exception {
-		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder.create();
+
+		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder
+				.create();
+
 		if (this.maxTotalConnections != -1) {
 			connectionManagerBuilder.setMaxConnTotal(this.maxTotalConnections);
 		}
 
-		if (null != this.connectionManagerBuilderCustomizer) {
+		if (this.connectionManagerBuilderCustomizer != null) {
 			this.connectionManagerBuilderCustomizer.customize(connectionManagerBuilder);
 		}
 
@@ -189,21 +204,22 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 		applyMaxConnectionsPerHost(connectionManager);
 
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
-				.setConnectTimeout(connectionTimeout, TimeUnit.MILLISECONDS)
-				.setResponseTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
+				.setConnectionRequestTimeout(Timeout.of(connectionTimeout)) //
+				.setResponseTimeout(Timeout.of(readTimeout));
 
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
-				.setDefaultRequestConfig(requestConfigBuilder.build())
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
+				.setDefaultRequestConfig(requestConfigBuilder.build()) //
 				.setConnectionManager(connectionManager);
 
-		if (null != credentials && null != authScope) {
+		if (credentials != null && authScope != null) {
+
 			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
 			basicCredentialsProvider.setCredentials(authScope, credentials);
 			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
 		}
 
-		if (null != this.clientBuilderCustomizer) {
+		if (this.clientBuilderCustomizer != null) {
 			clientBuilderCustomizer.customize(httpClientBuilder);
 		}
 
@@ -223,7 +239,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		this.clientBuilderCustomizer = clientBuilderCustomizer;
 	}
 
-	public void setConnectionManagerBuilderCustomizer(PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
+	public void setConnectionManagerBuilderCustomizer(
+			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
 		this.connectionManagerBuilderCustomizer = connectionManagerBuilderCustomizer;
 	}
 

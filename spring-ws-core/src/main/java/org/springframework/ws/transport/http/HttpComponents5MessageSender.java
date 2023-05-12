@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Map;
 
 import org.apache.hc.client5.http.auth.AuthScope;
@@ -33,7 +34,6 @@ import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
-
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -57,7 +57,9 @@ import org.springframework.ws.transport.WebServiceConnection;
  */
 public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageSender
 		implements InitializingBean, DisposableBean {
+
 	private static final String HTTP_CLIENT_ALREADY_SET = "httpClient already set";
+
 	private HttpClient httpClient;
 
 	private HttpComponents5ClientFactory clientFactory;
@@ -67,22 +69,23 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * {@link PoolingHttpClientConnectionManager}.
 	 */
 	public HttpComponents5MessageSender() {
+
 		this.clientFactory = new HttpComponents5ClientFactory();
-		this.clientFactory.setClientBuilderCustomizer(httpClientBuilder ->
-				httpClientBuilder.addRequestInterceptorFirst(new RemoveSoapHeadersInterceptor()));
+		this.clientFactory.setClientBuilderCustomizer(
+				httpClientBuilder -> httpClientBuilder.addRequestInterceptorFirst(new RemoveSoapHeadersInterceptor()));
 	}
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with the given {@link HttpClient} instance.
+	 * Create a new instance of the {@link HttpComponents5MessageSender} with the given {@link HttpClient} instance.
 	 * <p>
 	 * This constructor does not change the given {@code HttpClient} in any way. As such, it does not set timeouts, nor
-	 * does it
-	 * {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor)
-	 * add} the {@link RemoveSoapHeadersInterceptor}.
+	 * does it {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor) add} the
+	 * {@link RemoveSoapHeadersInterceptor}.
 	 *
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
 	public HttpComponents5MessageSender(HttpClient httpClient) {
+
 		Assert.notNull(httpClient, "httpClient must not be null");
 		this.httpClient = httpClient;
 	}
@@ -91,9 +94,11 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
 	 */
 	public void setAuthScope(AuthScope authScope) {
-		if (null != getHttpClient()) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setAuthScope(authScope);
 	}
 
@@ -101,9 +106,11 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setCredentials(Credentials)
 	 */
 	public void setCredentials(Credentials credentials) {
-		if (null != getHttpClient()) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setCredentials(credentials);
 	}
 
@@ -122,22 +129,26 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	}
 
 	/**
-	 * @see HttpComponents5ClientFactory#setConnectionTimeout(int) 
+	 * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
 	 */
-	public void setConnectionTimeout(int timeout) {
-		if (null != getHttpClient()) {
+	public void setConnectionTimeout(Duration timeout) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setConnectionTimeout(timeout);
 	}
 
 	/**
-	 * @see HttpComponents5ClientFactory#setReadTimeout(int)
+	 * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
 	 */
-	public void setReadTimeout(int timeout) {
-		if (null != getHttpClient()) {
+	public void setReadTimeout(Duration timeout) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setReadTimeout(timeout);
 	}
 
@@ -145,9 +156,11 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
-		if (null != getHttpClient()) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setMaxTotalConnections(maxTotalConnections);
 	}
 
@@ -155,9 +168,11 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
-		if (null != getHttpClient()) {
+
+		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
+
 		this.clientFactory.setMaxConnectionsPerHost(maxConnectionsPerHost);
 	}
 
@@ -168,16 +183,20 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
+
 		HttpPost httpPost = new HttpPost(uri);
+
 		if (isAcceptGzipEncoding()) {
 			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING, HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
+
 		HttpContext httpContext = createContext(uri);
+
 		return new HttpComponents5Connection(getHttpClient(), httpPost, httpContext);
 	}
 
 	/**
-	 * Template method that allows for creation of a {@link HttpContext} for the given uri. Default implementation returns
+	 * Template method that allows for creation of an {@link HttpContext} for the given uri. Default implementation returns
 	 * {@code null}.
 	 *
 	 * @param uri the URI to create the context for
@@ -189,7 +208,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	@Override
 	public void destroy() throws Exception {
-		if (getHttpClient() instanceof CloseableHttpClient client) {
+
+		if (getHttpClient()instanceof CloseableHttpClient client) {
 			client.close();
 		}
 	}
@@ -200,11 +220,15 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * these headers themselves, and HttpClient throws an exception if they have been set.
 	 */
 	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
+
 		@Override
-		public void process(HttpRequest request, EntityDetails entityDetails, HttpContext httpContext) throws HttpException, IOException {
+		public void process(HttpRequest request, EntityDetails entityDetails, HttpContext httpContext)
+				throws HttpException, IOException {
+
 			if (request.containsHeader(HttpHeaders.TRANSFER_ENCODING)) {
 				request.removeHeaders(HttpHeaders.TRANSFER_ENCODING);
 			}
+
 			if (request.containsHeader(HttpHeaders.CONTENT_LENGTH)) {
 				request.removeHeaders(HttpHeaders.CONTENT_LENGTH);
 			}
