@@ -147,12 +147,6 @@
                                         <buildName>spring-ws</buildName>
                                         <buildUrl>{{BUILD_URL}}</buildUrl>
                                     </buildInfo>
-                                    <deployProperties>
-                                        <zip.name>spring-ws</zip.name>
-                                        <zip.displayname>spring-ws</zip.displayname>
-                                        <zip.deployed>false</zip.deployed>
-                                        <archives>*:*:*:*@zip</archives>
-                                    </deployProperties>
                                     <publisher>
                                         <contextUrl>https://repo.spring.io</contextUrl>
                                         <username>{{ARTIFACTORY_USR}}</username>
@@ -189,12 +183,6 @@
                                         <buildName>spring-ws</buildName>
                                         <buildUrl>{{BUILD_URL}}</buildUrl>
                                     </buildInfo>
-                                    <deployProperties>
-                                        <zip.name>spring-ws</zip.name>
-                                        <zip.displayname>spring-ws</zip.displayname>
-                                        <zip.deployed>false</zip.deployed>
-                                        <archives>*:*:*:*@zip</archives>
-                                    </deployProperties>
                                     <publisher>
                                         <contextUrl>https://repo.spring.io</contextUrl>
                                         <username>{{ARTIFACTORY_USR}}</username>
