@@ -90,6 +90,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
 	 */
 	public void setAuthScope(AuthScope authScope) {
+		if (null != getHttpClient()) {
+			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
+		}
 		this.clientFactory.setAuthScope(authScope);
 	}
 
@@ -97,6 +100,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setCredentials(Credentials)
 	 */
 	public void setCredentials(Credentials credentials) {
+		if (null != getHttpClient()) {
+			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
+		}
 		this.clientFactory.setCredentials(credentials);
 	}
 

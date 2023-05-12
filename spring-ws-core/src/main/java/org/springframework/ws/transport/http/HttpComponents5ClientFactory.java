@@ -174,14 +174,14 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 				.setDefaultRequestConfig(requestConfigBuilder.build())
 				.setConnectionManager(connectionManager);
 
-		if (null != this.clientBuilderCustomizer) {
-			clientBuilderCustomizer.customize(httpClientBuilder);
-		}
-
 		if (null != credentials && null != authScope) {
 			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
 			basicCredentialsProvider.setCredentials(authScope, credentials);
 			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
+		}
+
+		if (null != this.clientBuilderCustomizer) {
+			clientBuilderCustomizer.customize(httpClientBuilder);
 		}
 
 		return httpClientBuilder.build();
