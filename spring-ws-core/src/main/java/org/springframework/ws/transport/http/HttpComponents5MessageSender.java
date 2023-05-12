@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,8 +51,9 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Barry Pitman
  * @author Arjen Poutsma
  * @author Greg Turnquist
+ * @author Lars Uffmann
  * @see HttpClient
- * @since 2.1.0
+ * @since 4.0.5
  */
 public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageSender
 		implements InitializingBean, DisposableBean {
