@@ -33,6 +33,7 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuil
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 /**
  * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents HttpClient 5.
@@ -42,6 +43,18 @@ import org.springframework.beans.factory.FactoryBean;
  * @since 4.0.5
  */
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
+
+	/**
+	 * AuthScope to match any Host.
+	 * <p>
+	 * <b>HEADS-UP</b>: ANY has been removed from {@link AuthScope} since httpcomponents version 5.x. It has been
+	 * redefined here to ease migration from httpcomponents 4. The associated functionality might be removed in a future
+	 * version of apache httpcomponents. Consider using a {@link ClientInterceptor} to implement http client agnostic
+	 * preemptive basic auth.
+	 *
+	 * @see AuthScope#AuthScope(String, String, int, String, String)
+	 */
+	public static final AuthScope ANY = new AuthScope(null, null, -1, null, null);
 
 	private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(60);
 
@@ -53,7 +66,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	private int maxTotalConnections = -1;
 
-	private AuthScope authScope = null;
+	private AuthScope authScope = ANY;
 
 	private Credentials credentials = null;
 
@@ -78,7 +91,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
 	 * <p>
-	 * By default, the {@link AuthScope#ANY} is used.
+	 * By default, the {@link #ANY} is used.
 	 *
 	 * @see #setCredentials(Credentials)
 	 */

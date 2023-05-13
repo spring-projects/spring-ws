@@ -34,6 +34,7 @@ import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -178,7 +179,10 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this.httpClient = clientFactory.getObject();
+
+		if (this.clientFactory != null) {
+			this.httpClient = clientFactory.getObject();
+		}
 	}
 
 	@Override
