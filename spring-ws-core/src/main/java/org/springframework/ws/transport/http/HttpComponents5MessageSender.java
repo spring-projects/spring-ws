@@ -180,7 +180,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	@Override
 	public void afterPropertiesSet() throws Exception {
 
-		if (null != this.clientFactory) {
+		if (this.clientFactory != null) {
 			this.httpClient = clientFactory.getObject();
 		}
 	}
