@@ -274,7 +274,11 @@
                     </argLine>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>io.spring.javaformat</groupId>
+                <artifactId>spring-javaformat-maven-plugin</artifactId>
+                <version>0.0.38</version>
+            </plugin>
         </plugins>
     </build>
 
