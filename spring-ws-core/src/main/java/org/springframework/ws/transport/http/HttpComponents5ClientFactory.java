@@ -32,7 +32,6 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.Timeout;
-
 import org.springframework.beans.factory.FactoryBean;
 
 /**
@@ -67,12 +66,10 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	private PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer;
 
 	/**
-	 * Sets the credentials to be used. If not set, no authentication is done. Only used
-	 * when the {@code authScope} property has been set.
+	 * Sets the credentials to be used. If not set, no authentication is done.
 	 *
 	 * @see org.apache.hc.client5.http.auth.UsernamePasswordCredentials
 	 * @see org.apache.hc.client5.http.auth.NTCredentials
-	 * @see #setAuthScope(AuthScope)
 	 */
 	public void setCredentials(Credentials credentials) {
 		this.credentials = credentials;
@@ -81,6 +78,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
 	 * <p>
+	 * By default, the {@link AuthScope#ANY} is used.
 	 *
 	 * @see #setCredentials(Credentials)
 	 */
