@@ -43,6 +43,13 @@ import org.springframework.beans.factory.FactoryBean;
  */
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
 
+	/**
+	 * AuthScope to match any Host.
+	 *
+	 * @see AuthScope#AuthScope(String, String, int, String, String)
+	 */
+	public static final AuthScope ANY = new AuthScope(null, null, -1, null, null);
+
 	private static final Duration DEFAULT_CONNECTION_TIMEOUT = Duration.ofSeconds(60);
 
 	private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(60);
@@ -53,7 +60,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	private int maxTotalConnections = -1;
 
-	private AuthScope authScope = null;
+	private AuthScope authScope = ANY;
 
 	private Credentials credentials = null;
 
@@ -78,7 +85,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
 	 * <p>
-	 * By default, the {@link AuthScope#ANY} is used.
+	 * By default, the {@link #ANY} is used.
 	 *
 	 * @see #setCredentials(Credentials)
 	 */
