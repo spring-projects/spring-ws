@@ -33,6 +33,7 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuil
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 /**
  * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents HttpClient 5.
@@ -45,6 +46,11 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	/**
 	 * AuthScope to match any Host.
+	 * <p>
+	 * <b>HEADS-UP</b>: ANY has been removed from {@link AuthScope} since httpcomponents version 5.x. It has been
+	 * redefined here to ease migration from httpcomponents 4. The associated functionality might be removed in a future
+	 * version of apache httpcomponents. Consider using a {@link ClientInterceptor} to implement http client agnostic
+	 * preemptive basic auth.
 	 *
 	 * @see AuthScope#AuthScope(String, String, int, String, String)
 	 */
