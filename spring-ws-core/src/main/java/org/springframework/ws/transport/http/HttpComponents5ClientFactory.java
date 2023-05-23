@@ -45,11 +45,10 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
 
 	/**
-	 * AuthScope to match any Host.
+	 * {@link AuthScope} to match any Host.
 	 * <p>
-	 * <b>HEADS-UP</b>: ANY has been removed from {@link AuthScope} since httpcomponents version 5.x. It has been
-	 * redefined here to ease migration from httpcomponents 4. The associated functionality might be removed in a future
-	 * version of apache httpcomponents. Consider using a {@link ClientInterceptor} to implement http client agnostic
+	 * <b>NOTE</b>: {@code ANY} was removed from {@link AuthScope} in HttpComponents 5.0. This value object will easy
+	 * migration from HttpComponents 4. Consider using a {@link ClientInterceptor} to implement http client agnostic
 	 * preemptive basic auth.
 	 *
 	 * @see AuthScope#AuthScope(String, String, int, String, String)
@@ -91,7 +90,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
 	 * <p>
-	 * By default, the {@link #ANY} is used.
+	 * By default, {@link #ANY} is used.
 	 *
 	 * @see #setCredentials(Credentials)
 	 */
