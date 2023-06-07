@@ -47,6 +47,22 @@ public class PayloadDiffMatcherTest {
 	}
 
 	@Test
+	public void matchIgnoringWhitespace() {
+
+		String xml = "<response><success>true</success></response>";
+		String xmlWithAdditionalWhitespace = "<response> <success>true</success> </response>";
+		WebServiceMessage message = createMock(WebServiceMessage.class);
+		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
+		replay(message);
+
+		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xmlWithAdditionalWhitespace));
+		matcher.match(message);
+
+		verify(message);
+	}
+
+
+	@Test
 	public void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {

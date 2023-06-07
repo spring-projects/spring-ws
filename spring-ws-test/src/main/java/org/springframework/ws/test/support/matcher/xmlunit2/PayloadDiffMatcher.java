@@ -60,6 +60,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 		Document actualDocument = createDocumentFromSource(payload);
 		return DiffBuilder.compare(expectedDocument) //
 				.withTest(actualDocument) //
+				.ignoreWhitespace() //
 				.checkForSimilar() //
 				.build();
 	}
