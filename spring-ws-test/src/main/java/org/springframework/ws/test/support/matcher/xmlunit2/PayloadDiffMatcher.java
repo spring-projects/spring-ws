@@ -16,7 +16,7 @@
 
 package org.springframework.ws.test.support.matcher.xmlunit2;
 
-import static org.springframework.ws.test.support.AssertionErrors.fail;
+import static org.springframework.ws.test.support.AssertionErrors.*;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -33,6 +33,7 @@ import org.xmlunit.diff.Diff;
  * Matches {@link Source} payloads.
  *
  * @author Greg Turnquist
+ * @author Mikołaj Fejzer
  * @since 4.0
  */
 public class PayloadDiffMatcher extends DiffMatcher {
@@ -42,22 +43,28 @@ public class PayloadDiffMatcher extends DiffMatcher {
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
 	public PayloadDiffMatcher(Source expected) {
+
 		Assert.notNull(expected, "'expected' must not be null");
 		this.expected = expected;
 	}
 
 	@Override
 	protected final Diff createDiff(WebServiceMessage message) {
+
 		Source payload = message.getPayloadSource();
+
 		if (payload == null) {
 			fail("Request message does not contain payload");
 		}
+
 		return createDiff(payload);
 	}
 
 	protected Diff createDiff(Source payload) {
+
 		Document expectedDocument = createDocumentFromSource(expected);
 		Document actualDocument = createDocumentFromSource(payload);
+
 		return DiffBuilder.compare(expectedDocument) //
 				.withTest(actualDocument) //
 				.ignoreWhitespace() //
@@ -66,11 +73,14 @@ public class PayloadDiffMatcher extends DiffMatcher {
 	}
 
 	private Document createDocumentFromSource(Source source) {
+
 		try {
+
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(source, result);
 			return (Document) result.getNode();
 		} catch (TransformerException ex) {
+
 			fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}

@@ -16,17 +16,13 @@
 
 package org.springframework.ws.test.support.matcher.xmlunit2;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.assertj.core.api.Assertions.*;
+import static org.easymock.EasyMock.*;
 
 import jakarta.xml.soap.MessageFactory;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.transform.StringSource;
 
@@ -35,12 +31,13 @@ public class PayloadDiffMatcherTest {
 	@Test
 	public void match() {
 
-		String xml = "<element xmlns='http://example.com'/>";
+		var xml = "<element xmlns='http://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
+
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
 		replay(message);
 
-		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xml));
+		var matcher = new PayloadDiffMatcher(new StringSource(xml));
 		matcher.match(message);
 
 		verify(message);
@@ -49,31 +46,32 @@ public class PayloadDiffMatcherTest {
 	@Test
 	public void matchIgnoringWhitespace() {
 
-		String xml = "<response><success>true</success></response>";
-		String xmlWithAdditionalWhitespace = "<response> <success>true</success> </response>";
+		var xml = "<response><success>true</success></response>";
+		var xmlWithAdditionalWhitespace = "<response> <success>true</success> </response>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
+
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
 		replay(message);
 
-		PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(xmlWithAdditionalWhitespace));
+		var matcher = new PayloadDiffMatcher(new StringSource(xmlWithAdditionalWhitespace));
 		matcher.match(message);
 
 		verify(message);
 	}
-
 
 	@Test
 	public void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			String actual = "<element1 xmlns='http://example.com'/>";
+			var actual = "<element1 xmlns='http://example.com'/>";
 			WebServiceMessage message = createMock(WebServiceMessage.class);
+
 			expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
 			replay(message);
 
-			String expected = "<element2 xmlns='http://example.com'/>";
-			PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource(expected));
+			var expected = "<element2 xmlns='http://example.com'/>";
+			var matcher = new PayloadDiffMatcher(new StringSource(expected));
 			matcher.match(message);
 		});
 	}
@@ -83,12 +81,11 @@ public class PayloadDiffMatcherTest {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			PayloadDiffMatcher matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
-			MessageFactory messageFactory = MessageFactory.newInstance();
-			SoapMessage soapMessage = new SaajSoapMessage(messageFactory.createMessage());
+			var matcher = new PayloadDiffMatcher(new StringSource("<message/>"));
+			var messageFactory = MessageFactory.newInstance();
+			var soapMessage = new SaajSoapMessage(messageFactory.createMessage());
 
 			matcher.createDiff(soapMessage);
 		});
 	}
-
 }
