@@ -16,11 +16,8 @@
 
 package org.springframework.ws.test.support.matcher.xmlunit2;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.assertj.core.api.Assertions.*;
+import static org.easymock.EasyMock.*;
 
 import javax.xml.soap.MessageFactory;
 
@@ -37,6 +34,7 @@ public class PayloadDiffMatcherTest {
 
 		String xml = "<element xmlns='http://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
+
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
 		replay(message);
 
@@ -52,6 +50,7 @@ public class PayloadDiffMatcherTest {
 		String xml = "<response><success>true</success></response>";
 		String xmlWithAdditionalWhitespace = "<response> <success>true</success> </response>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
+
 		expect(message.getPayloadSource()).andReturn(new StringSource(xml)).times(2);
 		replay(message);
 
@@ -61,7 +60,6 @@ public class PayloadDiffMatcherTest {
 		verify(message);
 	}
 
-
 	@Test
 	public void nonMatch() {
 
@@ -69,6 +67,7 @@ public class PayloadDiffMatcherTest {
 
 			String actual = "<element1 xmlns='http://example.com'/>";
 			WebServiceMessage message = createMock(WebServiceMessage.class);
+
 			expect(message.getPayloadSource()).andReturn(new StringSource(actual)).times(2);
 			replay(message);
 
