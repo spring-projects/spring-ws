@@ -10,22 +10,17 @@
 			<password>${env.SONATYPE_PSW}</password>
 		</server>
 		<server>
-			<id>spring-plugins-release</id>
+			<id>spring-snapshot</id>
 			<username>${env.ARTIFACTORY_USR}</username>
 			<password>${env.ARTIFACTORY_PSW}</password>
 		</server>
 		<server>
-			<id>spring-libs-snapshot</id>
+			<id>spring-milestone</id>
 			<username>${env.ARTIFACTORY_USR}</username>
 			<password>${env.ARTIFACTORY_PSW}</password>
 		</server>
 		<server>
-			<id>spring-libs-milestone</id>
-			<username>${env.ARTIFACTORY_USR}</username>
-			<password>${env.ARTIFACTORY_PSW}</password>
-		</server>
-		<server>
-			<id>spring-libs-release</id>
+			<id>spring-release</id>
 			<username>${env.ARTIFACTORY_USR}</username>
 			<password>${env.ARTIFACTORY_PSW}</password>
 		</server>

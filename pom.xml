@@ -807,7 +807,7 @@
             <url>https://repo.spring.io/milestone</url>
         </pluginRepository>
         <pluginRepository>
-            <id>spring-libs-release</id>
+            <id>spring-release</id>
             <url>https://repo.spring.io/release</url>
         </pluginRepository>
     </pluginRepositories>
