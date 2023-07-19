@@ -16,21 +16,14 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.*;
-
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.soap.MessageFactory;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.hc.client5.http.HttpRoute;
+import org.apache.hc.client5.http.classic.ExecChainHandler;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.HttpHost;
 import org.eclipse.jetty.server.Connector;
@@ -45,12 +38,33 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 
+import java.io.IOException;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.getPort;
+
 class HttpComponents5MessageSenderIntegrationTest
 		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponents5MessageSender> {
 
+	private static CloseableHttpClient createHttpClientWithAssertion() {
+		ExecChainHandler handler = (request, scope, chain) -> {
+			assertThat(request.getEntity().getContentType())
+					.describedAs("Exec interceptors are supposed to receive content type. Verify that HttpEntity class is instantiated correctly")
+					.isNotBlank();
+			return chain.proceed(request, scope);
+		};
+		return HttpClientBuilder.create()
+				.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor())
+				.addExecInterceptorFirst("logbook-alike exec interceptor", handler)
+				.build();
+	}
+
 	@Override
 	protected HttpComponents5MessageSender createMessageSender() {
-		return new HttpComponents5MessageSender();
+		return new HttpComponents5MessageSender(createHttpClientWithAssertion());
 	}
 
 	@Test // GH-1164
