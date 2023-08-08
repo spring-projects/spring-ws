@@ -50,7 +50,7 @@ pipeline {
 		stage("Test other configurations") {
 			when {
 				beforeAgent(true)
-				branch(pattern: "main|(\\d\\.\\d\\.x)", comparator: "REGEXP")
+				branch(pattern: "issue/spring-next-gen|main|(\\d\\.\\d\\.x)", comparator: "REGEXP")
 			}
 
 			parallel {
@@ -64,6 +64,36 @@ pipeline {
 						script {
 							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
 								sh "PROFILE=jakarta-ee-10,spring-buildsnapshot,convergence ci/test.sh"
+							}
+						}
+					}
+				}
+
+				stage("Test: spring-next-gen (main)") {
+					agent any
+					options { timeout(time: 30, unit: 'MINUTES')}
+					environment {
+						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
+					}
+					steps {
+						script {
+							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								sh "PROFILE=jakarta-ee-10,spring-next-gen,convergence ci/test.sh"
+							}
+						}
+					}
+				}
+
+				stage("Test: spring-next-gen-snapshot (main)") {
+					agent any
+					options { timeout(time: 30, unit: 'MINUTES')}
+					environment {
+						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
+					}
+					steps {
+						script {
+							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								sh "PROFILE=jakarta-ee-10,spring-next-gen-snapshot,convergence ci/test.sh"
 							}
 						}
 					}
