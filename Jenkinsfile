@@ -50,7 +50,7 @@ pipeline {
 		stage("Test other configurations") {
 			when {
 				beforeAgent(true)
-				branch(pattern: "issue/spring-next-gen|main|(\\d\\.\\d\\.x)", comparator: "REGEXP")
+				branch(pattern: "main|(\\d\\.\\d\\.x)", comparator: "REGEXP")
 			}
 
 			parallel {
