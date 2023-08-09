@@ -114,9 +114,24 @@
         <saaj-impl.version>2.0.1</saaj-impl.version>
         <slf4j.version>2.0.6</slf4j.version>
         <smack.version>4.3.5</smack.version>
+
+        <!-- Spring Framework/Spring Security baseline -->
         <spring.version>6.0.11</spring.version>
-        <spring-hateos.version>2.0.1</spring-hateos.version>
         <spring-security.version>6.0.5</spring-security.version>
+
+        <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
+        <spring-snapshot.version>6.0.12-SNAPSHOT</spring-snapshot.version>
+        <spring-security-snapshot.version>6.0.6-SNAPSHOT</spring-security-snapshot.version>
+
+        <!-- Spring Framework/Spring Security Next Gen -->
+        <spring-next-gen.version>6.1.0-M3</spring-next-gen.version>
+        <spring-security-next-gen.version>6.2.0-M1</spring-security-next-gen.version>
+
+        <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
+        <spring-next-gen-snapshot.version>6.1.0-SNAPSHOT</spring-next-gen-snapshot.version>
+        <spring-security-next-gen-snapshot.version>6.2.0-SNAPSHOT</spring-security-next-gen-snapshot.version>
+
+        <spring-hateos.version>2.0.1</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
@@ -295,22 +310,22 @@
         <profile>
             <id>spring-buildsnapshot</id>
             <properties>
-                <spring.version>6.0.12-SNAPSHOT</spring.version>
-                <spring-security.version>6.0.6-SNAPSHOT</spring-security.version>
+                <spring.version>${spring-snapshot.version}</spring.version>
+                <spring-security.version>${spring-security-snapshot.version}</spring-security.version>
             </properties>
         </profile>
         <profile>
             <id>spring-next-gen</id>
             <properties>
-                <spring.version>6.1.0-M3</spring.version>
-                <spring-security.version>6.2.0-M1</spring-security.version>
+                <spring.version>${spring-next-gen.version}</spring.version>
+                <spring-security.version>${spring-security-next-gen.version}</spring-security.version>
             </properties>
         </profile>
         <profile>
             <id>spring-next-gen-snapshot</id>
             <properties>
-                <spring.version>6.1.0-SNAPSHOT</spring.version>
-                <spring-security.version>6.2.0-SNAPSHOT</spring-security.version>
+                <spring.version>${spring-next-gen-snapshot.version}</spring.version>
+                <spring-security.version>${spring-security-next-gen-snapshot.version}</spring-security.version>
             </properties>
         </profile>
 
