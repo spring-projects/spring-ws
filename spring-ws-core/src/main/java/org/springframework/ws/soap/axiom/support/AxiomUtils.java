@@ -46,6 +46,9 @@ import org.w3c.dom.Element;
 @SuppressWarnings("Since15")
 public final class AxiomUtils {
 
+	private static final boolean AXIOM14_PRESENT =
+			ClassUtils.isPresent("org.apache.axiom.om.ds.StringOMDataSource", null);
+
 	private AxiomUtils() {
 		throw new RuntimeException("Utility class not meant to be instantiated.");
 	}
@@ -54,7 +57,7 @@ public final class AxiomUtils {
 	 * Detect if Axiom 1.4 is on the classpath.
 	 */
 	public static boolean AXIOM14_IS_PRESENT() {
-		return ClassUtils.isPresent("org.apache.axiom.om.ds.StringOMDataSource", null);
+		return AXIOM14_PRESENT;
 	}
 
 	/**
