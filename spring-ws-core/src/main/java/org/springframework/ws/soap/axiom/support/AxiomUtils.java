@@ -25,7 +25,11 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 
-import org.apache.axiom.om.*;
+import org.apache.axiom.om.OMContainer;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -39,6 +43,8 @@ import org.w3c.dom.Element;
  *
  * @author Arjen Poutsma
  * @author Tareq Abed Rabbo
+ * @author Artyom Gabeev
+ * @author Greg Turnquist
  * @see org.apache.axiom.om.OMNamespace
  * @see javax.xml.namespace.QName
  * @since 1.0.0
@@ -46,8 +52,8 @@ import org.w3c.dom.Element;
 @SuppressWarnings("Since15")
 public final class AxiomUtils {
 
-	private static final boolean AXIOM14_PRESENT =
-			ClassUtils.isPresent("org.apache.axiom.om.ds.StringOMDataSource", null);
+	private static final boolean AXIOM14_IS_PRESENT = ClassUtils.isPresent("org.apache.axiom.om.ds.StringOMDataSource",
+			null);
 
 	private AxiomUtils() {
 		throw new RuntimeException("Utility class not meant to be instantiated.");
@@ -57,7 +63,7 @@ public final class AxiomUtils {
 	 * Detect if Axiom 1.4 is on the classpath.
 	 */
 	public static boolean AXIOM14_IS_PRESENT() {
-		return AXIOM14_PRESENT;
+		return AXIOM14_IS_PRESENT;
 	}
 
 	/**
@@ -71,7 +77,9 @@ public final class AxiomUtils {
 	 * @throws IllegalArgumentException if {@code qName} is not fully qualified
 	 */
 	public static OMNamespace toNamespace(QName qName, OMElement resolveElement) throws OMException {
+
 		String prefix = qName.getPrefix();
+
 		if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
 			return resolveElement.declareNamespace(qName.getNamespaceURI(), prefix);
 		} else if (StringUtils.hasLength(qName.getNamespaceURI())) {
@@ -99,14 +107,14 @@ public final class AxiomUtils {
 	 * @return the locale
 	 */
 	public static Locale toLocale(String language) {
-		language = language.replace('-', '_');
-		return StringUtils.parseLocaleString(language);
+		return StringUtils.parseLocaleString(language.replace('-', '_'));
 	}
 
 	/**
 	 * Removes the contents (i.e. children) of the container.
 	 */
 	public static void removeContents(OMContainer container) {
+
 		for (Iterator<?> iterator = container.getChildren(); iterator.hasNext();) {
 			iterator.next();
 			iterator.remove();
@@ -121,10 +129,12 @@ public final class AxiomUtils {
 	 * @throws IllegalArgumentException in case of errors
 	 */
 	public static Document toDocument(SOAPEnvelope envelope) {
+
 		try {
 			if (envelope instanceof Element) {
 				return ((Element) envelope).getOwnerDocument();
 			} else {
+
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				envelope.build();
 				envelope.serialize(bos);
@@ -132,6 +142,7 @@ public final class AxiomUtils {
 				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 				documentBuilderFactory.setNamespaceAware(true);
+
 				return documentBuilderFactory.newDocumentBuilder().parse(bis);
 			}
 		} catch (Exception ex) {
