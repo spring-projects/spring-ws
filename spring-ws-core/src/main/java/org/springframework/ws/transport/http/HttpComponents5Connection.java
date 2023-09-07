@@ -27,7 +27,12 @@ import java.util.Iterator;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.core5.http.*;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.protocol.HttpContext;
@@ -116,8 +121,10 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		var contentType = ContentType.parse(httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue());
-		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray(), contentType));
+
+		String contentType = httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
+		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray(), ContentType.parse(contentType)));
+
 		requestBuffer = null;
 
 		if (httpContext != null) {
