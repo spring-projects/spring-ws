@@ -291,6 +291,26 @@
             </plugin>
 
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.gradle</groupId>
+                    <artifactId>gradle-enterprise-maven-extension</artifactId>
+                    <configuration>
+                        <gradleEnterprise>
+                            <normalization>
+                                <runtimeClassPath>
+                                    <ignoredFiles>
+                                        <ignoredFile>builddef.lst</ignoredFile>
+                                    </ignoredFiles>
+                                </runtimeClassPath>
+                            </normalization>
+                        </gradleEnterprise>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
@@ -812,14 +832,13 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </repository>
         <repository>
             <id>spring-milestone</id>
             <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
-            <id>spring-release</id>
-            <url>https://repo.spring.io/release</url>
         </repository>
     </repositories>
 
@@ -830,6 +849,9 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
         </pluginRepository>
         <pluginRepository>
             <id>spring-milestone</id>
