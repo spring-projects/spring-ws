@@ -35,7 +35,7 @@ pipeline {
 		stage("Test other configurations") {
 			when {
 				beforeAgent(true)
-				branch(pattern: "issue/backport|main|(\\d\\.\\d\\.x)", comparator: "REGEXP") // TODO: Drop backport
+				branch(pattern: "main|(\\d\\.\\d\\.x)", comparator: "REGEXP")
 			}
 
 			parallel {
