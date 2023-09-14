@@ -26,3 +26,5 @@ credentials.yml
 
 # Things to ignore that facilitate backports.
 spring-ws-bom
+.flattened-pom.xml
+.mvn/.gradle-enterprise
