@@ -116,7 +116,7 @@
         <smack.version>4.3.5</smack.version>
 
         <!-- Spring Framework/Spring Security baseline -->
-        <spring.version>6.0.12</spring.version>
+        <spring.version>6.0.12</spring.version> <!-- TODO: Ensure smoke-tests matches -->
         <spring-security.version>6.0.5</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
@@ -131,7 +131,7 @@
         <spring-next-gen-snapshot.version>6.1.0-SNAPSHOT</spring-next-gen-snapshot.version>
         <spring-security-next-gen-snapshot.version>6.2.0-SNAPSHOT</spring-security-next-gen-snapshot.version>
 
-        <spring-hateos.version>2.0.1</spring-hateos.version>
+        <spring-hateos.version>2.0.6</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.0.1</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
