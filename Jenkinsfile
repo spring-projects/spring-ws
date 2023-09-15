@@ -73,6 +73,23 @@ pipeline {
 					}
 				}
 
+				stage("Test: wss4j-next (main)") {
+					agent any
+					options { timeout(time: 30, unit: 'MINUTES')}
+					environment {
+						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
+						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
+						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+					}
+					steps {
+						script {
+							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								sh "PROFILE=jakarta-ee-10,wss4j-next,convergence ci/test.sh"
+							}
+						}
+					}
+				}
+
 				stage("Test: spring-next-gen (main)") {
 					agent any
 					options { timeout(time: 30, unit: 'MINUTES')}

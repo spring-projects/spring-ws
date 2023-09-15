@@ -348,6 +348,12 @@
                 <spring-security.version>${spring-security-next-gen-snapshot.version}</spring-security.version>
             </properties>
         </profile>
+        <profile>
+            <id>wss4j-next</id>
+            <properties>
+                <wss4j.version>3.0.0</wss4j.version>
+            </properties>
+        </profile>
 
         <profile>
             <id>convergence</id>
