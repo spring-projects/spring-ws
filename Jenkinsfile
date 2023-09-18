@@ -178,6 +178,8 @@ pipeline {
 								returnStdout: true
 						).trim()
 
+						echo "Releasing Spring WS ${PROJECT_VERSION}..."
+
 						if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
 							RELEASE_TYPE = "milestone"
 						} else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
@@ -187,6 +189,8 @@ pipeline {
 						} else {
 							RELEASE_TYPE = 'snapshot'
 						}
+
+						echo "Release type: ${RELEASE_TYPE}"
 
 						if (RELEASE_TYPE == 'release') {
 
