@@ -37,7 +37,7 @@ pipeline {
 		stage("Test other configurations") {
 			when {
 				beforeAgent(true)
-				branch(pattern: "main|(\\d\\.\\d\\.x)|issue/.+", comparator: "REGEXP")
+				branch(pattern: "main|(\\d\\.\\d\\.x)|release(-.+)?|issue/.+", comparator: "REGEXP")
 			}
 
 			parallel {
