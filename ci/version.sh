@@ -4,6 +4,7 @@ set -euo pipefail
 
 RAW_VERSION=`MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
   org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate \
+  -Dgradle.cache.local.enabled=false -Dgradle.cache.remote.enabled=false \
   -Dexpression=project.version -q -DforceStdout`
 
 # Split things up
