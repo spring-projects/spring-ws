@@ -100,6 +100,7 @@
 		<javax-mail.version>1.6.0</javax-mail.version>
 		<javax-servlet.version>3.1.0</javax-servlet.version>
 		<jaxen.version>1.1.4</jaxen.version>
+		<jaxws-api.version>2.3.1</jaxws-api.version>
 		<jdom2.version>2.0.6</jdom2.version>
 		<jetty.version>6.1.26</jetty.version>
 		<jms.version>2.0.1</jms.version>
@@ -835,7 +836,7 @@
 				<dependency>
 					<groupId>javax.xml.ws</groupId>
 					<artifactId>jaxws-api</artifactId>
-					<version>2.3.1</version>
+					<version>${jaxws-api.version}</version>
 					<exclusions>
 						<exclusion>
 							<groupId>javax.xml.bind</groupId>
