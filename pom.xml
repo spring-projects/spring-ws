@@ -275,7 +275,7 @@
 		<profile>
 			<id>spring-security-5.7</id>
 			<properties>
-				<spring-security.version>5.7.6</spring-security.version>
+				<spring-security.version>5.7.11</spring-security.version>
 			</properties>
 		</profile>
 
