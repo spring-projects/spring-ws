@@ -159,11 +159,14 @@ pipeline {
 
 			steps {
 				script {
+
 					docker.image("${p['docker.java.build.image-proxy']}").inside(p['docker.java.inside.basic']) {
 						PROJECT_VERSION = sh(
 								script: "ci/version.sh",
 								returnStdout: true
 						).trim()
+
+						echo "Releasing Spring WS ${PROJECT_VERSION}..."
 
 						if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
 							RELEASE_TYPE = "milestone"
@@ -174,6 +177,8 @@ pipeline {
 						} else {
 							RELEASE_TYPE = 'snapshot'
 						}
+
+						echo "Release type: ${RELEASE_TYPE}"
 
 						if (RELEASE_TYPE == 'release') {
 
