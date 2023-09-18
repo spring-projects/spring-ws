@@ -600,6 +600,13 @@
                                 <keepStagingRepositoryOnFailure>true</keepStagingRepositoryOnFailure>
                                 <skipStagingRepositoryClose>true</skipStagingRepositoryClose>
                             </configuration>
+                            <dependencies>
+                                <dependency>
+                                    <groupId>com.thoughtworks.xstream</groupId>
+                                    <artifactId>xstream</artifactId>
+                                    <version>1.4.20</version>
+                                </dependency>
+                            </dependencies>
                         </plugin>
                     </plugins>
 
