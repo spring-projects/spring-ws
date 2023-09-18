@@ -117,15 +117,15 @@
 
         <!-- Spring Framework/Spring Security baseline -->
         <spring.version>6.0.12</spring.version> <!-- TODO: Ensure smoke-tests matches -->
-        <spring-security.version>6.0.5</spring-security.version>
+        <spring-security.version>6.0.7</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
         <spring-snapshot.version>6.0.13-SNAPSHOT</spring-snapshot.version>
-        <spring-security-snapshot.version>6.0.6-SNAPSHOT</spring-security-snapshot.version>
+        <spring-security-snapshot.version>6.0.8-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
         <spring-next-gen.version>6.1.0-M5</spring-next-gen.version>
-        <spring-security-next-gen.version>6.2.0-M1</spring-security-next-gen.version>
+        <spring-security-next-gen.version>6.2.0-M3</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
         <spring-next-gen-snapshot.version>6.1.0-SNAPSHOT</spring-next-gen-snapshot.version>
