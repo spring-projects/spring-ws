@@ -172,7 +172,7 @@ pipeline {
 
 			steps {
 				script {
-					docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+					docker.image(p['docker.java.build.image-proxy']).inside(p['docker.java.inside.basic']) {
 						PROJECT_VERSION = sh(
 								script: "ci/version.sh",
 								returnStdout: true
