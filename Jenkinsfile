@@ -255,7 +255,7 @@ pipeline {
 								"-Dartifactory.username=${ARTIFACTORY_USR} " +
 								"-Dartifactory.password=${ARTIFACTORY_PSW} " +
 								"-Dartifactory.distribution-repository=temp-private-local " +
-								'-Dmaven.test.skip=true -Dmaven.deploy.skip=true deploy -B'
+								'-Duser.name=spring-builds+jenkins -Dmaven.test.skip=true -Dmaven.deploy.skip=true deploy -B'
 					}
 				}
 			}
