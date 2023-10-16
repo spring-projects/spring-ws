@@ -16,7 +16,7 @@ export GNUPGHOME
 mkdir $GNUPGHOME
 cp $KEYRING $GNUPGHOME
 
-MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
+MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
     -s settings.xml \
     -Pjakarta-ee-10,distribute,central  \
     -Dmaven.test.skip=true \

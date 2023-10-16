@@ -4,7 +4,7 @@ set -euo pipefail
 
 echo "Opening a remote repository for this release..."
 
-MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
+MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
     -s settings.xml \
     -Pcentral \
     -DstagingProfileId=${STAGING_PROFILE_ID} \

@@ -9,7 +9,7 @@ echo 'Smoke test against Maven Central...'
 
 cd smoke-tests
 
-MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
+MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
     -Pmaven-central  \
     -DstagingRepositoryId="${STAGING_REPOSITORY_ID}" \
     -Dspring-ws.version="${PROJECT_VERSION}" \

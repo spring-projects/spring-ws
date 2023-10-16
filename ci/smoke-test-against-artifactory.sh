@@ -8,7 +8,7 @@ echo 'Smoke test against Artifactory...'
 
 cd smoke-tests
 
-MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
+MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
     -Partifactory  \
     -Dspring-ws.version="${PROJECT_VERSION}" \
     clean dependency:purge-local-repository verify -B -U
