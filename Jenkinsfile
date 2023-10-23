@@ -191,14 +191,12 @@ pipeline {
 							  .inject(0){ first, second -> second } // find the last entry, a.k.a. the most recent staging repository id
 
 							sh "ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
-//							sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
+							sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
 // 							sh "ci/smoke-test-against-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
-//							sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
 
-							slackSend(
-									color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
-									channel: '#spring-ws',
-									message: "Spring WS ${PROJECT_VERSION} is released to Maven Central!")
+							writeFile(file: 'staging_repository_id.txt', text: "${STAGING_REPOSITORY_ID}")
+							stash 'staging_repository_id.txt'
+
 						} else {
 
 							sh "ci/build-and-deploy-to-artifactory.sh ${RELEASE_TYPE}"
@@ -212,6 +210,64 @@ pipeline {
 										channel: '#spring-ws',
 										message: "Spring WS ${PROJECT_VERSION} is released to Artifactory!")
 							}
+						}
+					}
+				}
+			}
+		}
+
+		stage('Deploy (part 2)') {
+			agent any
+			options { timeout(time: 20, unit: 'MINUTES') }
+			environment {
+				ARTIFACTORY = credentials("${p['artifactory.credentials']}")
+				SONATYPE = credentials('oss-login')
+				KEYRING = credentials('spring-signing-secring.gpg')
+				PASSPHRASE = credentials('spring-gpg-passphrase')
+				STAGING_PROFILE_ID = credentials('spring-data-release-deployment-maven-central-staging-profile-id')
+				GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
+				GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+			}
+
+			steps {
+				script {
+
+					docker.image("${p['docker.java.legacy.image']}").inside(p['docker.java.inside.basic']) {
+						PROJECT_VERSION = sh(
+								script: "ci/version.sh",
+								returnStdout: true
+						).trim()
+
+						echo "Releasing Spring WS ${PROJECT_VERSION}..."
+
+						if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
+							RELEASE_TYPE = "milestone"
+						} else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
+							RELEASE_TYPE = 'snapshot'
+						} else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
+							RELEASE_TYPE = 'release'
+						} else {
+							RELEASE_TYPE = 'snapshot'
+						}
+
+						echo "Release type: ${RELEASE_TYPE}"
+
+						if (RELEASE_TYPE == 'release') {
+
+							unstash 'staging_repository_id.txt'
+
+							def STAGING_REPOSITORY_ID = readFile(file: 'staging_repository_id.txt')
+
+							sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
+
+							slackSend(
+									color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+									channel: '#spring-ws',
+									message: "Spring WS ${PROJECT_VERSION} is released to Maven Central!")
+						} else {
+
+							echo "Since this is an Artifactory release, there is no 'part 2'."
+
 						}
 					}
 				}
