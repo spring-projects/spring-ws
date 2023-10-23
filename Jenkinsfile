@@ -191,9 +191,9 @@ pipeline {
 							  .inject(0){ first, second -> second } // find the last entry, a.k.a. the most recent staging repository id
 
 							sh "ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
-							sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
+//							sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
 // 							sh "ci/smoke-test-against-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
-							sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
+//							sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
 
 							slackSend(
 									color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
