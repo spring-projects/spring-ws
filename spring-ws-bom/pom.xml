@@ -134,7 +134,7 @@
                     <plugin>
                         <groupId>org.jfrog.buildinfo</groupId>
                         <artifactId>artifactory-maven-plugin</artifactId>
-                        <version>3.2.3</version>
+                        <version>3.6.2</version>
                         <inherited>false</inherited>
                         <executions>
                             <execution>
@@ -170,7 +170,7 @@
                     <plugin>
                         <groupId>org.jfrog.buildinfo</groupId>
                         <artifactId>artifactory-maven-plugin</artifactId>
-                        <version>3.2.3</version>
+                        <version>3.6.2</version>
                         <inherited>false</inherited>
                         <executions>
                             <execution>
