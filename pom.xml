@@ -270,7 +270,7 @@
 		<profile>
 			<id>spring-security-5.6</id>
 			<properties>
-				<spring-security.version>5.6.10</spring-security.version>
+				<spring-security.version>5.6.12</spring-security.version>
 			</properties>
 		</profile>
 		<profile>
