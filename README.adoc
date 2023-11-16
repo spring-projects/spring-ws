@@ -64,7 +64,7 @@ But part of the release process requires a local check, which DOES depend upon y
 % git push -f origin release-3.1.x
 ----
 +
-. Once completed, push the `3.1.x` branch for next version's snapshots.
+5. Once completed, push the `3.1.x` branch for next version's snapshots.
 +
 ----
 % git checkout 3.1.x
