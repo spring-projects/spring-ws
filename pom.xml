@@ -125,7 +125,7 @@
 
         <!-- Spring Framework/Spring Security Next Gen -->
         <spring-next-gen.version>6.1.0</spring-next-gen.version>
-        <spring-security-next-gen.version>6.2.0-M3</spring-security-next-gen.version>
+        <spring-security-next-gen.version>6.2.0</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
         <spring-next-gen-snapshot.version>6.1.0-SNAPSHOT</spring-next-gen-snapshot.version>
