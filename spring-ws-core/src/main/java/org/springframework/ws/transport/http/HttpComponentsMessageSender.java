@@ -158,12 +158,12 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 			throw new IllegalArgumentException("maxTotalConnections must be a positive value");
 		}
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
+		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager poolingClientConnectionManager)) {
 			throw new IllegalArgumentException(
 					"maxTotalConnections is not supported on " + connectionManager.getClass().getName() + ". Use "
 							+ org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() + " instead");
 		}
-		((org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager).setMaxTotal(maxTotalConnections);
+		poolingClientConnectionManager.setMaxTotal(maxTotalConnections);
 	}
 
 	/**
@@ -183,14 +183,13 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
+		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager)) {
 			throw new IllegalArgumentException(
 					"maxConnectionsPerHost is not supported on " + connectionManager.getClass().getName() + ". Use "
 							+ org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() + " instead");
 		}
-		org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager = (org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager;
 
-		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
+        for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
 			URI uri = new URI(entry.getKey());
 			HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 			final HttpRoute route;
@@ -220,9 +219,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
-			((org.apache.http.impl.client.DefaultHttpClient) getHttpClient()).getCredentialsProvider()
-					.setCredentials(authScope, credentials);
+		if (credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient defaultHttpClient) {
+			defaultHttpClient.getCredentialsProvider().setCredentials(authScope, credentials);
 		}
 	}
 

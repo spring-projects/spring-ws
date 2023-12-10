@@ -184,8 +184,8 @@ public abstract class SaajUtils {
 	public static SOAPEnvelope getEnvelope(SOAPElement element) {
 		Assert.notNull(element, "Element should not be null");
 		do {
-			if (element instanceof SOAPEnvelope) {
-				return (SOAPEnvelope) element;
+			if (element instanceof SOAPEnvelope soapEnvelope) {
+				return soapEnvelope;
 			}
 			element = element.getParentElement();
 		} while (element != null);
@@ -198,8 +198,8 @@ public abstract class SaajUtils {
 	public static SOAPElement getFirstBodyElement(SOAPBody body) {
 		for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext();) {
 			Object child = iterator.next();
-			if (child instanceof SOAPElement) {
-				return (SOAPElement) child;
+			if (child instanceof SOAPElement soapChild) {
+				return soapChild;
 			}
 		}
 		return null;

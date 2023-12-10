@@ -44,8 +44,8 @@ class LastModifiedHelper {
 	 * @return the last modified date, as a long
 	 */
 	static long getLastModified(Source source) {
-		if (source instanceof DOMSource) {
-			Document document = TraxUtils.getDocument((DOMSource) source);
+		if (source instanceof DOMSource domSource) {
+			Document document = TraxUtils.getDocument(domSource);
 			return document != null ? getLastModified(document.getDocumentURI()) : -1;
 		} else {
 			return getLastModified(source.getSystemId());

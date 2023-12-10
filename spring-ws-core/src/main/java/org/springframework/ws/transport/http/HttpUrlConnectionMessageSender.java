@@ -68,11 +68,10 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		URL url = uri.toURL();
 		URLConnection connection = url.openConnection();
-		if (!(connection instanceof HttpURLConnection)) {
+		if (!(connection instanceof HttpURLConnection httpURLConnection)) {
 			throw new HttpTransportException("URI [" + uri + "] is not an HTTP URL");
 		} else {
-			HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
-			prepareConnection(httpURLConnection);
+            prepareConnection(httpURLConnection);
 			return new HttpUrlConnection(httpURLConnection);
 		}
 	}

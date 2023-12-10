@@ -123,9 +123,8 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		if (endpoint == null) {
 			return null;
 		}
-		if (endpoint instanceof String) {
-			String endpointName = (String) endpoint;
-			endpoint = resolveStringEndpoint(endpointName);
+		if (endpoint instanceof String endpointName) {
+            endpoint = resolveStringEndpoint(endpointName);
 			if (endpoint == null) {
 				return null;
 			}

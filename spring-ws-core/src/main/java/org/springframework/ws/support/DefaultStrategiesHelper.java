@@ -145,38 +145,35 @@ public class DefaultStrategiesHelper {
 	/** Instantiates the given bean, simulating the standard bean life cycle. */
 	private <T> T instantiateBean(Class<T> clazz, ApplicationContext applicationContext) {
 		T strategy = BeanUtils.instantiateClass(clazz);
-		if (strategy instanceof BeanNameAware) {
-			BeanNameAware beanNameAware = (BeanNameAware) strategy;
-			beanNameAware.setBeanName(clazz.getName());
+		if (strategy instanceof BeanNameAware beanNameAware) {
+            beanNameAware.setBeanName(clazz.getName());
 		}
 		if (applicationContext != null) {
-			if (strategy instanceof BeanClassLoaderAware) {
-				((BeanClassLoaderAware) strategy).setBeanClassLoader(applicationContext.getClassLoader());
+			if (strategy instanceof BeanClassLoaderAware beanClassLoaderAware) {
+				beanClassLoaderAware.setBeanClassLoader(applicationContext.getClassLoader());
 			}
-			if (strategy instanceof BeanFactoryAware) {
-				((BeanFactoryAware) strategy).setBeanFactory(applicationContext);
+			if (strategy instanceof BeanFactoryAware beanFactoryAware) {
+				beanFactoryAware.setBeanFactory(applicationContext);
 			}
-			if (strategy instanceof ResourceLoaderAware) {
-				((ResourceLoaderAware) strategy).setResourceLoader(applicationContext);
+			if (strategy instanceof ResourceLoaderAware resourceLoaderAware) {
+				resourceLoaderAware.setResourceLoader(applicationContext);
 			}
-			if (strategy instanceof ApplicationEventPublisherAware) {
-				((ApplicationEventPublisherAware) strategy).setApplicationEventPublisher(applicationContext);
+			if (strategy instanceof ApplicationEventPublisherAware applicationEventPublisherAware) {
+				applicationEventPublisherAware.setApplicationEventPublisher(applicationContext);
 			}
-			if (strategy instanceof MessageSourceAware) {
-				((MessageSourceAware) strategy).setMessageSource(applicationContext);
+			if (strategy instanceof MessageSourceAware messageSourceAware) {
+				messageSourceAware.setMessageSource(applicationContext);
 			}
-			if (strategy instanceof ApplicationContextAware) {
-				ApplicationContextAware applicationContextAware = (ApplicationContextAware) strategy;
-				applicationContextAware.setApplicationContext(applicationContext);
+			if (strategy instanceof ApplicationContextAware applicationContextAware) {
+                applicationContextAware.setApplicationContext(applicationContext);
 			}
-			if (applicationContext instanceof WebApplicationContext && strategy instanceof ServletContextAware) {
-				ServletContext servletContext = ((WebApplicationContext) applicationContext).getServletContext();
-				((ServletContextAware) strategy).setServletContext(servletContext);
+			if (applicationContext instanceof WebApplicationContext webApplicationContext
+					&& strategy instanceof ServletContextAware servletContextAware) {
+                servletContextAware.setServletContext(webApplicationContext.getServletContext());
 			}
 		}
-		if (strategy instanceof InitializingBean) {
-			InitializingBean initializingBean = (InitializingBean) strategy;
-			try {
+		if (strategy instanceof InitializingBean initializingBean) {
+            try {
 				initializingBean.afterPropertiesSet();
 			} catch (Throwable ex) {
 				throw new BeanCreationException("Invocation of init method failed", ex);

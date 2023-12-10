@@ -85,13 +85,13 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 	 */
 	public MarshallingMethodEndpointAdapter(Marshaller marshaller) {
 		Assert.notNull(marshaller, "marshaller must not be null");
-		if (!(marshaller instanceof Unmarshaller)) {
+		if (!(marshaller instanceof Unmarshaller unmarshallerInstance)) {
 			throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller "
 					+ "interface. Please set an Unmarshaller explicitly by using the "
 					+ "MarshallingMethodEndpointAdapter(Marshaller, Unmarshaller) constructor.");
 		} else {
 			this.setMarshaller(marshaller);
-			this.setUnmarshaller((Unmarshaller) marshaller);
+			this.setUnmarshaller(unmarshallerInstance);
 		}
 	}
 

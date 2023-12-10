@@ -49,7 +49,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 	public final Attachment addAttachment(String contentId, InputStreamSource inputStreamSource, String contentType) {
 		Assert.hasLength(contentId, "contentId must not be empty");
 		Assert.notNull(inputStreamSource, "InputStreamSource must not be null");
-		if (inputStreamSource instanceof Resource && ((Resource) inputStreamSource).isOpen()) {
+		if (inputStreamSource instanceof Resource resource && resource.isOpen()) {
 			throw new IllegalArgumentException("Passed-in Resource contains an open stream: invalid argument. "
 					+ "MIME requires an InputStreamSource that creates a fresh stream for every call.");
 		}
@@ -91,9 +91,8 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public String getName() {
-			if (inputStreamSource instanceof Resource) {
-				Resource resource = (Resource) inputStreamSource;
-				return resource.getFilename();
+			if (inputStreamSource instanceof Resource resource) {
+                return resource.getFilename();
 			} else {
 				throw new UnsupportedOperationException("DataSource name not available");
 			}

@@ -60,9 +60,8 @@ public class SoapEnvelopeLoggingInterceptor extends AbstractLoggingInterceptor i
 
 	@Override
 	protected Source getSource(WebServiceMessage message) {
-		if (message instanceof SoapMessage) {
-			SoapMessage soapMessage = (SoapMessage) message;
-			return soapMessage.getEnvelope().getSource();
+		if (message instanceof SoapMessage soapMessage) {
+            return soapMessage.getEnvelope().getSource();
 		} else {
 			return null;
 		}

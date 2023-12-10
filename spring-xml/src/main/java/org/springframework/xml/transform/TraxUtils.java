@@ -61,8 +61,8 @@ public abstract class TraxUtils {
 	 */
 	public static Document getDocument(DOMSource source) {
 		Node node = source.getNode();
-		if (node instanceof Document) {
-			return (Document) node;
+		if (node instanceof Document document) {
+			return document;
 		} else if (node != null) {
 			return node.getOwnerDocument();
 		} else {
@@ -78,8 +78,8 @@ public abstract class TraxUtils {
 	 * @param callback the callback to invoke for each kind of source
 	 */
 	public static void doWithSource(Source source, SourceCallback callback) throws Exception {
-		if (source instanceof DOMSource) {
-			callback.domSource(((DOMSource) source).getNode());
+		if (source instanceof DOMSource domSource) {
+			callback.domSource(domSource.getNode());
 			return;
 		} else if (StaxUtils.isStaxSource(source)) {
 			XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(source);
@@ -93,13 +93,11 @@ public abstract class TraxUtils {
 					return;
 				}
 			}
-		} else if (source instanceof SAXSource) {
-			SAXSource saxSource = (SAXSource) source;
-			callback.saxSource(saxSource.getXMLReader(), saxSource.getInputSource());
+		} else if (source instanceof SAXSource saxSource) {
+            callback.saxSource(saxSource.getXMLReader(), saxSource.getInputSource());
 			return;
-		} else if (source instanceof StreamSource) {
-			StreamSource streamSource = (StreamSource) source;
-			if (streamSource.getInputStream() != null) {
+		} else if (source instanceof StreamSource streamSource) {
+            if (streamSource.getInputStream() != null) {
 				callback.streamSource(streamSource.getInputStream());
 				return;
 			} else if (streamSource.getReader() != null) {
@@ -124,8 +122,8 @@ public abstract class TraxUtils {
 	 * @param callback the callback to invoke for each kind of result
 	 */
 	public static void doWithResult(Result result, ResultCallback callback) throws Exception {
-		if (result instanceof DOMResult) {
-			callback.domResult(((DOMResult) result).getNode());
+		if (result instanceof DOMResult domResult) {
+			callback.domResult(domResult.getNode());
 			return;
 		} else if (StaxUtils.isStaxResult(result)) {
 			XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(result);
@@ -139,13 +137,11 @@ public abstract class TraxUtils {
 					return;
 				}
 			}
-		} else if (result instanceof SAXResult) {
-			SAXResult saxSource = (SAXResult) result;
-			callback.saxResult(saxSource.getHandler(), saxSource.getLexicalHandler());
+		} else if (result instanceof SAXResult saxSource) {
+            callback.saxResult(saxSource.getHandler(), saxSource.getLexicalHandler());
 			return;
-		} else if (result instanceof StreamResult) {
-			StreamResult streamSource = (StreamResult) result;
-			if (streamSource.getOutputStream() != null) {
+		} else if (result instanceof StreamResult streamSource) {
+            if (streamSource.getOutputStream() != null) {
 				callback.streamResult(streamSource.getOutputStream());
 				return;
 			} else if (streamSource.getWriter() != null) {

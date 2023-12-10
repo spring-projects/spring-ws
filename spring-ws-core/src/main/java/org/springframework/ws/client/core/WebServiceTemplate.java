@@ -161,13 +161,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 */
 	public WebServiceTemplate(Marshaller marshaller) {
 		Assert.notNull(marshaller, "marshaller must not be null");
-		if (!(marshaller instanceof Unmarshaller)) {
+		if (!(marshaller instanceof Unmarshaller unmarshallerInstance)) {
 			throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller "
 					+ "interface. Please set an Unmarshaller explicitly by using the "
 					+ "WebServiceTemplate(Marshaller, Unmarshaller) constructor.");
 		} else {
 			this.setMarshaller(marshaller);
-			this.setUnmarshaller((Unmarshaller) marshaller);
+			this.setUnmarshaller(unmarshallerInstance);
 		}
 		initDefaultStrategies();
 	}
@@ -641,9 +641,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
 		if (checkConnectionForError && connection.hasError()) {
 			// could be a fault
-			if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
-				FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-				return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
+			if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
+                return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
 			} else {
 				return true;
 			}
@@ -699,17 +698,15 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @throws IOException in case of I/O errors
 	 */
 	protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
-		if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
+		if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
 			// check whether the connection has a fault (i.e. status code 500 in HTTP)
-			FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-			if (!faultConnection.hasFault()) {
+            if (!faultConnection.hasFault()) {
 				return false;
 			}
 		}
-		if (response instanceof FaultAwareWebServiceMessage) {
+		if (response instanceof FaultAwareWebServiceMessage faultMessage) {
 			// either the connection has a fault, or checkConnectionForFault is false: let's verify the fault
-			FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
-			return faultMessage.hasFault();
+            return faultMessage.hasFault();
 		}
 		return false;
 	}

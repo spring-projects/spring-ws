@@ -106,8 +106,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 
 		messageSender = createMessageSender();
 
-		if (messageSender instanceof InitializingBean) {
-			((InitializingBean) messageSender).afterPropertiesSet();
+		if (messageSender instanceof InitializingBean initializingBean) {
+			initializingBean.afterPropertiesSet();
 		}
 
 		saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);

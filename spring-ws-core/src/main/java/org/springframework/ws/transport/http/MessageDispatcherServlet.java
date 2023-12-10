@@ -431,8 +431,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 			messageReceiver = context.getBean(getMessageReceiverBeanName(), WebServiceMessageReceiver.class);
 		} catch (NoSuchBeanDefinitionException ex) {
 			messageReceiver = defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageReceiver.class, context);
-			if (messageReceiver instanceof BeanNameAware) {
-				((BeanNameAware) messageReceiver).setBeanName(getServletName());
+			if (messageReceiver instanceof BeanNameAware beanNameAware) {
+				beanNameAware.setBeanName(getServletName());
 			}
 			if (logger.isDebugEnabled()) {
 				logger.debug("No MessageDispatcher found in servlet '" + getServletName() + "': using default");

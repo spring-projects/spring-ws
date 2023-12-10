@@ -109,8 +109,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	public URI getUri() throws URISyntaxException {
 		try {
 			Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
-			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
-				return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
+			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress internetAddress) {
+				return MailTransportUtils.toUri(internetAddress, requestMessage.getSubject());
 			} else {
 				throw new URISyntaxException("", "Could not determine To header");
 			}

@@ -106,13 +106,11 @@ public abstract class AbstractSoapMessageTestCase extends AbstractMimeMessageTes
 	@Test
 	public void testSetStreamingPayload() throws Exception {
 
-		if (!(soapMessage instanceof StreamingWebServiceMessage)) {
+		if (!(soapMessage instanceof StreamingWebServiceMessage streamingMessage)) {
 			return;
 		}
 
-		StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
-
-		final QName name = new QName("http://springframework.org", "root", "");
+        final QName name = new QName("http://springframework.org", "root", "");
 
 		streamingMessage.setStreamingPayload(new StreamingPayload() {
 			public QName getName() {

@@ -102,13 +102,11 @@ public class MockStrategiesHelper {
 						"No " + ClassUtils.getShortName(type) + " found, using default " + ClassUtils.getShortName(defaultType));
 			}
 			T defaultStrategy = BeanUtils.instantiateClass(defaultType);
-			if (defaultStrategy instanceof ApplicationContextAware) {
-				ApplicationContextAware applicationContextAware = (ApplicationContextAware) defaultStrategy;
-				applicationContextAware.setApplicationContext(applicationContext);
+			if (defaultStrategy instanceof ApplicationContextAware applicationContextAware) {
+                applicationContextAware.setApplicationContext(applicationContext);
 			}
-			if (defaultStrategy instanceof InitializingBean) {
-				InitializingBean initializingBean = (InitializingBean) defaultStrategy;
-				try {
+			if (defaultStrategy instanceof InitializingBean initializingBean) {
+                try {
 					initializingBean.afterPropertiesSet();
 				} catch (Exception ex) {
 					throw new BeanCreationException("Invocation of init method failed", ex);

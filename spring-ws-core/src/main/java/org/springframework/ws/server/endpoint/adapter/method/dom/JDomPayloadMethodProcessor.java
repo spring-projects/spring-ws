@@ -45,8 +45,8 @@ public class JDomPayloadMethodProcessor extends AbstractPayloadSourceMethodProce
 
 	@Override
 	protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
-		if (requestPayload instanceof DOMSource) {
-			Node node = ((DOMSource) requestPayload).getNode();
+		if (requestPayload instanceof DOMSource domSource) {
+			Node node = domSource.getNode();
 			DOMBuilder domBuilder = new DOMBuilder();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return domBuilder.build((org.w3c.dom.Element) node);

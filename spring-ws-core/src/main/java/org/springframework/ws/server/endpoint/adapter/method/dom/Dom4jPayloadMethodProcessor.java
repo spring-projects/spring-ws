@@ -46,8 +46,8 @@ public class Dom4jPayloadMethodProcessor extends AbstractPayloadSourceMethodProc
 	@Override
 	protected Element resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload)
 			throws TransformerException {
-		if (requestPayload instanceof DOMSource) {
-			org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
+		if (requestPayload instanceof DOMSource domSource) {
+			org.w3c.dom.Node node = domSource.getNode();
 			if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
 				DOMReader domReader = new DOMReader();
 				Document document = domReader.read((org.w3c.dom.Document) node);

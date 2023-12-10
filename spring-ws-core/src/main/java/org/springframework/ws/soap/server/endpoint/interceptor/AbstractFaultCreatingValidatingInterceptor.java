@@ -153,9 +153,8 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 		for (SAXParseException error : errors) {
 			logger.warn("XML validation error on request: " + error.getMessage());
 		}
-		if (messageContext.getResponse() instanceof SoapMessage) {
-			SoapMessage response = (SoapMessage) messageContext.getResponse();
-			SoapBody body = response.getSoapBody();
+		if (messageContext.getResponse() instanceof SoapMessage response) {
+            SoapBody body = response.getSoapBody();
 			SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultStringOrReasonLocale());
 			if (getAddValidationErrorDetail()) {
 				SoapFaultDetail detail = fault.addFaultDetail();

@@ -184,8 +184,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		List<XmlSchemaObject> schemaItems = schema.getItems();
 		for (int i = 0; i < schemaItems.size(); i++) {
 			XmlSchemaObject schemaObject = schemaItems.get(i);
-			if (schemaObject instanceof XmlSchemaInclude) {
-				XmlSchema includedSchema = ((XmlSchemaInclude) schemaObject).getSchema();
+			if (schemaObject instanceof XmlSchemaInclude xmlSchemaInclude) {
+				XmlSchema includedSchema = xmlSchemaInclude.getSchema();
 				if (!processedIncludes.contains(includedSchema)) {
 					inlineIncludes(includedSchema, processedIncludes, processedImports);
 					findImports(includedSchema, processedImports, processedIncludes);
@@ -202,9 +202,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		processedImports.add(schema);
 		List<XmlSchemaExternal> externals = schema.getExternals();
 		for (XmlSchemaExternal external : externals) {
-			if (external instanceof XmlSchemaImport) {
-				XmlSchemaImport schemaImport = (XmlSchemaImport) external;
-				XmlSchema importedSchema = schemaImport.getSchema();
+			if (external instanceof XmlSchemaImport schemaImport) {
+                XmlSchema importedSchema = schemaImport.getSchema();
 				if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace()) && importedSchema != null
 						&& !processedImports.contains(importedSchema)) {
 					inlineIncludes(importedSchema, processedIncludes, processedImports);

@@ -130,9 +130,8 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		Assert.notNull(endpoint, "Endpoint object must not be null");
 		Object resolvedEndpoint = endpoint;
 
-		if (endpoint instanceof String) {
-			String endpointName = (String) endpoint;
-			if (getApplicationContext().isSingleton(endpointName)) {
+		if (endpoint instanceof String endpointName) {
+            if (getApplicationContext().isSingleton(endpointName)) {
 				resolvedEndpoint = getApplicationContext().getBean(endpointName);
 			}
 		}
