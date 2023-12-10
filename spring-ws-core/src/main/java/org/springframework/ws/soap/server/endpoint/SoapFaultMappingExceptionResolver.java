@@ -58,11 +58,11 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 		if (!CollectionUtils.isEmpty(exceptionMappings)) {
 			String definitionText = null;
 			int deepest = Integer.MAX_VALUE;
-			for (String exceptionMapping : exceptionMappings.keySet()) {
-				int depth = getDepth(exceptionMapping, ex);
+			for (Map.Entry<String, String> exceptionMapping : exceptionMappings.entrySet()) {
+				int depth = getDepth(exceptionMapping.getKey(), ex);
 				if (depth >= 0 && depth < deepest) {
 					deepest = depth;
-					definitionText = exceptionMappings.get(exceptionMapping);
+					definitionText = exceptionMapping.getValue();
 				}
 			}
 			if (definitionText != null) {
