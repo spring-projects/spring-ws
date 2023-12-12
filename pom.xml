@@ -136,13 +136,14 @@
         <stax.version>2.0.1</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
-        <wss4j.version>2.4.1</wss4j.version>
+        <wss4j.version>2.4.3</wss4j.version>
         <wss4j-next.version>3.0.0</wss4j-next.version>
         <xmlsec.version>3.0.3</xmlsec.version>
         <xml-schema-core.version>2.2.2</xml-schema-core.version>
         <xmlunit1.version>1.6</xmlunit1.version>
         <xmlunit.version>2.9.0</xmlunit.version>
         <xom.version>1.3.7</xom.version>
+        <bouncycastle.version>1.77</bouncycastle.version>
         <spring-asciidoctor-backends.version>0.0.3</spring-asciidoctor-backends.version>
     </properties>
 
@@ -178,6 +179,12 @@
                 <version>${jetty.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- Addressing CVE-2018-10237, CVE-2023-2976, CVE-2020-8908 -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>32.1.3-jre</version>
             </dependency>
 
         </dependencies>
