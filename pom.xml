@@ -16,8 +16,8 @@
         <developer>
             <id>apoutsma</id>
             <name>Arjen Poutsma</name>
-            <email>apoutsma(at)vmware.com</email>
-            <organization>VMware, Inc.</organization>
+            <email>arjen.poutsma(at)broadcom.com</email>
+            <organization>VMware by Broadcom</organization>
             <roles>
                 <role>Project Creator</role>
             </roles>
@@ -33,8 +33,15 @@
         <developer>
             <id>gturnquist</id>
             <name>Greg Turnquist</name>
-            <email>gturnquist(at)vmware.com</email>
-            <organization>VMware, Inc.</organization>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>corneil</id>
+            <name>Corneil du Plessis</name>
+            <email>corneil.du-plessis(at)broadcom.com</email>
+            <organization>VMware by Broadcom</organization>
             <roles>
                 <role>Project Lead</role>
             </roles>
@@ -42,7 +49,7 @@
     </developers>
 
     <organization>
-        <name>VMware, Inc.</name>
+        <name>VMware by Broadcom</name>
         <url>https://spring.io</url>
     </organization>
 
