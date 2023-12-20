@@ -52,7 +52,7 @@ public class SchemaFactoryUtils {
 
 		try {
 			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA,
-					ResourceUtils.URL_PROTOCOL_FILE + "," + "jar:file" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
+					ResourceUtils.URL_PROTOCOL_FILE + "," + "jar:file" + "," + "jar:nested" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
 		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
