@@ -123,11 +123,11 @@
         <smack.version>4.3.5</smack.version>
 
         <!-- Spring Framework/Spring Security baseline -->
-        <spring.version>6.0.15</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
+        <spring.version>6.0.16</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
         <spring-security.version>6.0.8</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
-        <spring-snapshot.version>6.0.16-SNAPSHOT</spring-snapshot.version>
+        <spring-snapshot.version>6.0.17-SNAPSHOT</spring-snapshot.version>
         <spring-security-snapshot.version>6.0.9-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
