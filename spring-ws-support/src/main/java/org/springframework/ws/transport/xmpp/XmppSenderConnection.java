@@ -153,8 +153,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		StanzaCollector collector = connection.createStanzaCollector(packetFilter);
 		try {
 			Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
-			if (packet instanceof Message) {
-				responseMessage = (Message) packet;
+			if (packet instanceof Message message) {
+				responseMessage = message;
 			} else if (packet != null) {
 				throw new IllegalArgumentException(
 						"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");

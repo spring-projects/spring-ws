@@ -96,7 +96,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	 */
 	@Override
 	public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
-		Object mappedEndpoint = endpoint instanceof MethodEndpoint ? ((MethodEndpoint) endpoint).getBean() : endpoint;
+		Object mappedEndpoint = endpoint instanceof MethodEndpoint methodEndpoint ? methodEndpoint.getBean() : endpoint;
 		if (mappedEndpoints != null && !mappedEndpoints.contains(mappedEndpoint)) {
 			return false;
 		}

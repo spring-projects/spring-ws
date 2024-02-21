@@ -83,8 +83,8 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 */
 	public void setMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
-			if (entry.getKey() instanceof String) {
-				temporaryEndpointMap.put((String) entry.getKey(), entry.getValue());
+			if (entry.getKey() instanceof String key) {
+				temporaryEndpointMap.put(key, entry.getValue());
 			}
 		}
 	}
@@ -139,9 +139,8 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
 					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
 		}
-		if (!lazyInitEndpoints && endpoint instanceof String) {
-			String endpointName = (String) endpoint;
-			endpoint = resolveStringEndpoint(endpointName);
+		if (!lazyInitEndpoints && endpoint instanceof String endpointName) {
+            endpoint = resolveStringEndpoint(endpointName);
 		}
 		if (endpoint == null) {
 			throw new ApplicationContextException("Could not find endpoint for key [" + key + "]");

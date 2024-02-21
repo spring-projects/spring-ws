@@ -141,8 +141,8 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
-			Node node = ((DOMSource) source).getNode();
+		if (!alwaysTransform && source instanceof DOMSource domSource) {
+			Node node = domSource.getNode();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return (Element) node;
 			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {

@@ -144,9 +144,8 @@ public abstract class ResponseMatchers {
 	public static ResponseMatcher noFault() {
 		return new ResponseMatcher() {
 			public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-				if (response instanceof FaultAwareWebServiceMessage) {
-					FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
-					if (faultMessage.hasFault()) {
+				if (response instanceof FaultAwareWebServiceMessage faultMessage) {
+                    if (faultMessage.hasFault()) {
 						fail("Response has a SOAP Fault: \"" + faultMessage.getFaultReason() + "\"");
 					}
 				}

@@ -32,8 +32,8 @@ public class SimpleFaultMessageResolver implements FaultMessageResolver {
 	/** Throws a new {@code WebServiceFaultException}. */
 	@Override
 	public void resolveFault(WebServiceMessage message) {
-		if (message instanceof FaultAwareWebServiceMessage) {
-			throw new WebServiceFaultException((FaultAwareWebServiceMessage) message);
+		if (message instanceof FaultAwareWebServiceMessage faultAwareWebServiceMessage) {
+			throw new WebServiceFaultException(faultAwareWebServiceMessage);
 		} else {
 			throw new WebServiceFaultException("Message has unknown fault: " + message);
 		}
