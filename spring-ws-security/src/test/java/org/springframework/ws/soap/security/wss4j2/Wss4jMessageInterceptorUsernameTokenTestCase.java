@@ -88,7 +88,23 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 		interceptor.secureMessage(message, messageContext);
 
-		assertAddUsernameTokenPlainText(message);
+		assertAddUsernameTokenPlainText(message, "Bert", "Ernie");
+	}
+
+	@Test
+	public void testAddUsernameTokenPlainTextContextCredentialsOverride() throws Exception {
+		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, false);
+		interceptor.setSecurementUsername("Bert");
+		interceptor.setSecurementPassword("Ernie");
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+
+		MessageContext messageContext = getSoap11MessageContext(message);
+		messageContext.setProperty(Wss4jSecurityInterceptor.SECUREMENT_USER_PROPERTY_NAME, "Bibo");
+		messageContext.setProperty(Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME, "Elmo");
+
+		interceptor.secureMessage(message, messageContext);
+
+		assertAddUsernameTokenPlainText(message, "Bibo","Elmo");
 	}
 
 	@Test
@@ -114,7 +130,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 				getDocument(message));
 	}
 
-	protected void assertAddUsernameTokenPlainText(SoapMessage message) {
+	protected void assertAddUsernameTokenPlainText(SoapMessage message, String expectedUsername, String expectedPassword) {
 
 		Object result = getMessage(message);
 
@@ -122,9 +138,9 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTestCase extends Wss4j
 
 		Document doc = getDocument(message);
 
-		assertXpathEvaluatesTo("Invalid Username", "Bert",
+		assertXpathEvaluatesTo("Invalid Username", expectedUsername,
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Username/text()", doc);
-		assertXpathEvaluatesTo("Invalid Password", "Ernie",
+		assertXpathEvaluatesTo("Invalid Password", expectedPassword,
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:UsernameToken/wsse:Password[@Type='http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText']/text()",
 				doc);
 	}
