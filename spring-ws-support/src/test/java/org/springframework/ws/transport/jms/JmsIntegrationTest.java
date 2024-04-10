@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.springframework.ws.transport.jms;
 
 import static org.xmlunit.assertj.XmlAssert.*;
-
 import org.apache.activemq.artemis.core.config.Configuration;
 import org.apache.activemq.artemis.core.config.impl.ConfigurationImpl;
 import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
@@ -31,52 +29,48 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-applicationContext.xml")
 public class JmsIntegrationTest {
 
-	@Autowired private WebServiceTemplate webServiceTemplate;
+    @Autowired
+    private WebServiceTemplate webServiceTemplate;
 
-	private EmbeddedActiveMQ server;
+    private static EmbeddedActiveMQ server;
 
-	@BeforeEach
-	void setUp() throws Exception {
+    @BeforeAll
+    static void setUp() throws Exception {
+        Configuration config = new ConfigurationImpl();
+        config.addAcceptorConfiguration("vm", "vm://0");
+        config.addAcceptorConfiguration("tcp", "tcp://127.0.0.1:61616");
+        config.setSecurityEnabled(false);
+        server = new EmbeddedActiveMQ();
+        server.setConfiguration(config);
+        server.start();
+    }
 
-		Configuration config = new ConfigurationImpl();
-		config.addAcceptorConfiguration("vm", "vm://0");
-		config.addAcceptorConfiguration("tcp", "tcp://127.0.0.1:61616");
-		config.setSecurityEnabled(false);
-		server = new EmbeddedActiveMQ();
-		server.setConfiguration(config);
-		server.start();
-	}
+    @AfterAll
+    static void tearDown() throws Exception {
+        server.stop();
+    }
 
-	@AfterEach
-	void tearDown() throws Exception {
-		server.stop();
-	}
+    @Test
+    public void testTemporaryQueue() {
+        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+        StringResult result = new StringResult();
+        webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+        assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
+    }
 
-	@Test
-	public void testTemporaryQueue() {
-
-		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-		StringResult result = new StringResult();
-
-		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-
-		assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
-	}
-
-	@Test
-	public void testPermanentQueue() {
-
-		String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
-		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
-		StringResult result = new StringResult();
-
-		webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
-
-		assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
-	}
+    @Test
+    public void testPermanentQueue() {
+        String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
+        String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
+        StringResult result = new StringResult();
+        webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
+        assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
+    }
 }
