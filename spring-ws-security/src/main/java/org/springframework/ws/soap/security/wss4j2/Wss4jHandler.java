@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import static org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME;
+
 import java.util.List;
 import java.util.Properties;
 
@@ -26,6 +28,7 @@ import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.w3c.dom.Document;
 
@@ -33,6 +36,7 @@ import org.w3c.dom.Document;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
+ * @author Lars Uffmann
  * @since 2.3.0
  */
 class Wss4jHandler extends WSHandler {
@@ -90,6 +94,10 @@ class Wss4jHandler extends WSHandler {
 
 	@Override
 	public String getPassword(Object msgContext) {
+		String contextPassword = (String)getProperty(msgContext, SECUREMENT_PASSWORD_PROPERTY_NAME);
+		if (StringUtils.hasLength(contextPassword)) {
+			return contextPassword;
+		}
 		return securementPassword;
 	}
 

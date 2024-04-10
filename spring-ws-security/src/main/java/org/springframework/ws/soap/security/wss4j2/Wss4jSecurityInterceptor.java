@@ -137,12 +137,15 @@ import org.w3c.dom.Element;
  * @author Greg Turnquist
  * @author Jamin Hitchcock
  * @author Rob Leland
+ * @author Lars Uffmann
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  * @since 2.3.0
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
+	
+	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
 	private String securementActions;
 
