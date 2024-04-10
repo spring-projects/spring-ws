@@ -18,4 +18,4 @@
 #
 # NOTE: Switching branches will NOT trigger a change. Only switching folder will do it. Use `sdk env` to apply when simply switching branches.
 
-java=17.0.5-tem
+java=17.0.10-librca
