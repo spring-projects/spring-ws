@@ -137,6 +137,7 @@ import org.w3c.dom.Element;
  * @author Greg Turnquist
  * @author Jamin Hitchcock
  * @author Rob Leland
+ * @author Lars Uffmann
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  * @since 2.3.0
  */

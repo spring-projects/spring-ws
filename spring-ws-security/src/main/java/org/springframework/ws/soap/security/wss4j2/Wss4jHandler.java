@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
+ * @author Lars Uffmann
  * @since 2.3.0
  */
 class Wss4jHandler extends WSHandler {
