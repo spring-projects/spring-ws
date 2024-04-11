@@ -99,14 +99,15 @@
         <commons-io.version>2.11.0</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <easymock.version>4.3</easymock.version>
-        <eclipse-angus-mail.version>1.0.0</eclipse-angus-mail.version>
+        <eclipse-angus-mail.version>1.1.0</eclipse-angus-mail.version>
         <ehcache.version>2.10.9.2</ehcache.version>
         <greenmail.version>2.0.0-alpha-2</greenmail.version>
         <httpclient.version>4.5.3</httpclient.version>
         <httpclient5.version>5.2.1</httpclient5.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jakarta-jms.version>3.1.0</jakarta-jms.version>
-        <jakarta-mail-api.version>2.1.0</jakarta-mail-api.version>
+        <jakarta-mail-api.version>2.1.3</jakarta-mail-api.version>
+        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
         <jakarta-soap.version>3.0.1</jakarta-soap.version>
         <jakarta-xml-bind.version>4.0.2</jakarta-xml-bind.version>
@@ -140,7 +141,7 @@
 
         <spring-hateos.version>2.1.4</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
-        <stax.version>2.0.1</stax.version>
+        <stax.version>2.1.0</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.3</wss4j.version>
@@ -217,6 +218,14 @@
                     <groupId>com.sun.activation</groupId>
                     <artifactId>jakarta.activation</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.angus</groupId>
+                    <artifactId>angus-activation</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -224,6 +233,12 @@
             <groupId>org.jvnet.staxex</groupId>
             <artifactId>stax-ex</artifactId>
             <version>${stax.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -341,6 +356,8 @@
                 <jakarta-soap.version>2.0.1</jakarta-soap.version>
                 <jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
                 <saaj-impl.version>2.0.1</saaj-impl.version>
+                <stax.version>2.0.1</stax.version>
+                <eclipse-angus-mail.version>1.1.0</eclipse-angus-mail.version>
             </properties>
         </profile>
         <profile>

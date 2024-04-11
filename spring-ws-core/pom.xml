@@ -53,6 +53,12 @@
             <groupId>jakarta.xml.soap</groupId>
             <artifactId>jakarta.xml.soap-api</artifactId>
             <version>${jakarta-soap.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jakarta.activation</groupId>
+                    <artifactId>jakarta.activation-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -81,6 +87,10 @@
                 <exclusion>
                     <groupId>jakarta.xml.bind</groupId>
                     <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.angus</groupId>
+                    <artifactId>angus-activation</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -284,10 +294,21 @@
             </activation>
             <dependencies>
                 <dependency>
+                    <groupId>jakarta.mail</groupId>
+                    <artifactId>jakarta.mail-api</artifactId>
+                    <version>${jakarta-mail-api.version}</version>
+                </dependency>
+                <dependency>
                     <groupId>org.eclipse.angus</groupId>
                     <artifactId>angus-mail</artifactId>
                     <version>${eclipse-angus-mail.version}</version>
                     <scope>test</scope>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>jakarta.mail</groupId>
+                            <artifactId>jakarta.mail-api</artifactId>
+                        </exclusion>
+                    </exclusions>
                 </dependency>
             </dependencies>
         </profile>
