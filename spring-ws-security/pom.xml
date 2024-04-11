@@ -109,6 +109,10 @@
                     <artifactId>jaxb-runtime</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>jakarta.mail</groupId>
+                    <artifactId>jakarta.mail-api</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.apache.geronimo.javamail</groupId>
                     <artifactId>geronimo-javamail_1.4_mail</artifactId>
                 </exclusion>
