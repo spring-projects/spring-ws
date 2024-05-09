@@ -92,22 +92,22 @@
         <maven.compiler.target>17</maven.compiler.target>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <activemq.version>2.28.0</activemq.version>
-        <aspectj.version>1.9.6</aspectj.version>
-        <assertj.version>3.9.0</assertj.version>
+        <activemq.version>2.33.0</activemq.version>
+        <aspectj.version>1.9.22</aspectj.version>
+        <assertj.version>3.25.3</assertj.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-io.version>2.16.1</commons-io.version>
         <dom4j.version>1.6.1</dom4j.version>
         <easymock.version>4.3</easymock.version>
         <eclipse-angus-mail.version>1.1.0</eclipse-angus-mail.version>
         <ehcache.version>2.10.9.2</ehcache.version>
-        <greenmail.version>2.0.0-alpha-2</greenmail.version>
-        <httpclient.version>4.5.3</httpclient.version>
-        <httpclient5.version>5.2.1</httpclient5.version>
+        <greenmail.version>2.0.1</greenmail.version>
+        <httpclient.version>4.5.14</httpclient.version>
+        <httpclient5.version>5.2.3</httpclient5.version>
         <jakarta-annotation.version>2.1.1</jakarta-annotation.version>
         <jakarta-jms.version>3.1.0</jakarta-jms.version>
         <jakarta-mail-api.version>2.1.3</jakarta-mail-api.version>
-        <jakarta.activation-api.version>2.1.2</jakarta.activation-api.version>
+        <jakarta.activation-api.version>2.1.3</jakarta.activation-api.version>
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
         <jakarta-soap.version>3.0.1</jakarta-soap.version>
         <jakarta-xml-bind.version>4.0.2</jakarta-xml-bind.version>
@@ -115,41 +115,41 @@
         <jaxen.version>1.1.6</jaxen.version>
         <jdom2.version>2.0.6.1</jdom2.version>
         <jetty.version>11.0.12</jetty.version>
-        <junit.version>5.9.1</junit.version>
+        <junit.version>5.9.3</junit.version>
         <log4j2.version>2.19.0</log4j2.version>
         <mail.version>1.4.7</mail.version>
-        <mockito.version>4.0.0</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
         <saaj-impl.version>3.0.3</saaj-impl.version>
         <slf4j.version>2.0.6</slf4j.version>
         <smack.version>4.3.5</smack.version>
 
         <!-- Spring Framework/Spring Security baseline -->
         <spring.version>6.0.18</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
-        <spring-security.version>6.0.8</spring-security.version>
+        <spring-security.version>6.1.9</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
         <spring-snapshot.version>6.0.19-SNAPSHOT</spring-snapshot.version>
-        <spring-security-snapshot.version>6.0.9-SNAPSHOT</spring-security-snapshot.version>
+        <spring-security-snapshot.version>6.1.10-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
-        <spring-next-gen.version>6.1.5</spring-next-gen.version>
-        <spring-security-next-gen.version>6.2.3</spring-security-next-gen.version>
+        <spring-next-gen.version>6.1.6</spring-next-gen.version>
+        <spring-security-next-gen.version>6.2.4</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
-        <spring-next-gen-snapshot.version>6.1.6-SNAPSHOT</spring-next-gen-snapshot.version>
-        <spring-security-next-gen-snapshot.version>6.2.4-SNAPSHOT</spring-security-next-gen-snapshot.version>
+        <spring-next-gen-snapshot.version>6.1.7-SNAPSHOT</spring-next-gen-snapshot.version>
+        <spring-security-next-gen-snapshot.version>6.2.5-SNAPSHOT</spring-security-next-gen-snapshot.version>
 
-        <spring-hateos.version>2.1.4</spring-hateos.version>
+        <spring-hateos.version>2.1.5</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.1.0</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>2.4.3</wss4j.version>
         <wss4j-next.version>3.0.0</wss4j-next.version>
-        <xmlsec.version>3.0.3</xmlsec.version>
-        <xml-schema-core.version>2.2.2</xml-schema-core.version>
+        <xmlsec.version>3.0.4</xmlsec.version>
+        <xml-schema-core.version>2.3.1</xml-schema-core.version>
         <xmlunit1.version>1.6</xmlunit1.version>
-        <xmlunit.version>2.9.0</xmlunit.version>
+        <xmlunit.version>2.10.0</xmlunit.version>
         <xom.version>1.3.7</xom.version>
         <bouncycastle.version>1.77</bouncycastle.version>
         <spring-asciidoctor-backends.version>0.0.3</spring-asciidoctor-backends.version>
@@ -326,9 +326,9 @@
             <plugins>
                 <plugin>
                     <groupId>com.gradle</groupId>
-                    <artifactId>gradle-enterprise-maven-extension</artifactId>
+                    <artifactId>develocity-maven-extension</artifactId>
                     <configuration>
-                        <gradleEnterprise>
+                        <develocity>
                             <normalization>
                                 <runtimeClassPath>
                                     <ignoredFiles>
@@ -336,7 +336,7 @@
                                     </ignoredFiles>
                                 </runtimeClassPath>
                             </normalization>
-                        </gradleEnterprise>
+                        </develocity>
                     </configuration>
                 </plugin>
             </plugins>
