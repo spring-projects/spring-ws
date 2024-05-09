@@ -16,16 +16,18 @@
 
 package org.springframework.xml.namespace;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Collections;
 import java.util.Iterator;
 
 import javax.xml.XMLConstants;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class SimpleNamespaceContextTest {
 
@@ -71,7 +73,7 @@ class SimpleNamespaceContextTest {
 
 		assertPrefixes("defaultNamespaceURI", XMLConstants.DEFAULT_NS_PREFIX);
 		assertPrefixes("namespaceURI", "prefix");
-		assertThat(context.getPrefixes("unbound")).isEmpty();
+		assertThat(context.getPrefixes("unbound").hasNext()).isFalse();
 		assertPrefixes(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
 		assertPrefixes(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
 	}
@@ -108,7 +110,7 @@ class SimpleNamespaceContextTest {
 
 		assertThat(result)
 				.has(new Condition<>(value -> value.equals("prefix1") || value.equals("prefix2"), "verify prefix"));
-		assertThat(iterator).isEmpty();
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	private void assertPrefixes(String namespaceUri, String prefix) {
@@ -121,7 +123,7 @@ class SimpleNamespaceContextTest {
 		String result = iterator.next();
 
 		assertThat(result).isEqualTo(prefix);
-		assertThat(iterator).isEmpty();
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Test
@@ -135,7 +137,7 @@ class SimpleNamespaceContextTest {
 		String result = iterator.next();
 
 		assertThat(result).isEqualTo("prefix");
-		assertThat(iterator).isEmpty();
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Test
@@ -158,15 +160,15 @@ class SimpleNamespaceContextTest {
 		context.bindNamespaceUri(prefix1, namespaceUri);
 		context.bindNamespaceUri(prefix2, namespaceUri);
 
-		assertThat(context.getPrefixes(namespaceUri)).containsExactly(prefix1, prefix2);
+		assertThat(IteratorUtils.toList(context.getPrefixes(namespaceUri))).containsExactly(prefix1, prefix2);
 
 		context.removeBinding(prefix1);
 
-		assertThat(context.getPrefixes(namespaceUri)).containsExactly(prefix2);
+		assertThat(IteratorUtils.toList(context.getPrefixes(namespaceUri))).containsExactly(prefix2);
 
 		context.removeBinding(prefix2);
 
-		assertThat(context.getPrefixes(namespaceUri)).isEmpty();
+		assertThat(context.getPrefixes(namespaceUri).hasNext()).isFalse();
 	}
 
 	@Test
@@ -210,7 +212,7 @@ class SimpleNamespaceContextTest {
 
 		assertThat(result).has(new Condition<>(
 				value -> value.equals(XMLConstants.DEFAULT_NS_PREFIX) || value.equals("prefix"), "Verify prefix"));
-		assertThat(iterator).isEmpty();
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 }
