@@ -97,7 +97,7 @@
         <assertj.version>3.25.3</assertj.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <commons-io.version>2.16.1</commons-io.version>
-        <dom4j.version>1.6.1</dom4j.version>
+        <dom4j.version>2.1.4</dom4j.version>
         <easymock.version>4.3</easymock.version>
         <eclipse-angus-mail.version>1.1.0</eclipse-angus-mail.version>
         <ehcache.version>2.10.9.2</ehcache.version>
