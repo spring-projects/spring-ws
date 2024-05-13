@@ -1244,7 +1244,7 @@ The `ResponseMatchers` class provides the following response matchers:
 | Description
 
 | `payload()`
-| Expects a given response payload.
+| Expects a given response payload. May include https://github.com/xmlunit/user-guide/wiki/Placeholders[XMLUnit Placeholders].
 
 | `validPayload()`
 | Expects the response payload to validate against given XSD schemas.
@@ -1254,6 +1254,9 @@ The `ResponseMatchers` class provides the following response matchers:
 
 | `soapHeader()`
 | Expects a given SOAP header to exist in the response message.
+
+| `soapEnvelope()`
+| Expects a given SOAP payload. May include https://github.com/xmlunit/user-guide/wiki/Placeholders[XMLUnit Placeholders].
 
 | `noFault()`
 | Expects that the response message does not contain a SOAP Fault.

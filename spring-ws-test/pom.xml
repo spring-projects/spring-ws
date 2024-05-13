@@ -52,6 +52,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.xmlunit</groupId>
+			<artifactId>xmlunit-placeholders</artifactId>
+			<version>${xmlunit.version}</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<scope>test</scope>

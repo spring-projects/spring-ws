@@ -44,6 +44,21 @@ public class PayloadDiffMatcherTest {
 	}
 
 	@Test
+	public void matchWithXmlIgnore() {
+
+		var xml = "<element xmlns='http://example.com'>%s</element>";
+		WebServiceMessage message = createMock(WebServiceMessage.class);
+
+		expect(message.getPayloadSource()).andReturn(new StringSource(xml.formatted("1234"))).times(2);
+		replay(message);
+
+		var matcher = new PayloadDiffMatcher(new StringSource(xml.formatted("${xmlunit.ignore}")));
+		matcher.match(message);
+
+		verify(message);
+	}
+
+	@Test
 	public void matchIgnoringWhitespace() {
 
 		var xml = "<response><success>true</success></response>";
