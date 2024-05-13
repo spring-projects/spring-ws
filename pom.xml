@@ -97,7 +97,7 @@
         <assertj.version>3.25.3</assertj.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
         <commons-io.version>2.16.1</commons-io.version>
-        <dom4j.version>1.6.1</dom4j.version>
+        <dom4j.version>2.1.4</dom4j.version>
         <easymock.version>4.3</easymock.version>
         <eclipse-angus-mail.version>1.1.0</eclipse-angus-mail.version>
         <ehcache.version>2.10.9.2</ehcache.version>
@@ -302,6 +302,29 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.gradle</groupId>
+                    <artifactId>develocity-maven-extension</artifactId>
+                    <configuration>
+                        <develocity>
+                            <normalization>
+                                <runtimeClassPath>
+                                    <ignoredFiles>
+                                        <ignoredFile>builddef.lst</ignoredFile>
+                                    </ignoredFiles>
+                                </runtimeClassPath>
+                            </normalization>
+                        </develocity>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -322,25 +345,7 @@
 
         </plugins>
 
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.gradle</groupId>
-                    <artifactId>develocity-maven-extension</artifactId>
-                    <configuration>
-                        <develocity>
-                            <normalization>
-                                <runtimeClassPath>
-                                    <ignoredFiles>
-                                        <ignoredFile>builddef.lst</ignoredFile>
-                                    </ignoredFiles>
-                                </runtimeClassPath>
-                            </normalization>
-                        </develocity>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
     </build>
 
     <profiles>
