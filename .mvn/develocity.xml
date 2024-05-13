@@ -19,7 +19,7 @@
 		<remote>
 			<server>
 				<credentials>
-					<username>spring-builds+jenkins</username>
+					<username>${env.GRADLE_ENTERPRISE_CACHE_USERNAME}</username>
 					<password>${env.GRADLE_ENTERPRISE_CACHE_PASSWORD}</password>
 				</credentials>
 			</server>
