@@ -1,9 +1,7 @@
-image:https://spring.io/badges/spring-ws/ga.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
-image:https://spring.io/badges/spring-ws/snapshot.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
+image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
 
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain&subject=main[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.1.x&subject=3.1.x[link=https://jenkins.spring.io/view/SpringWebServices/job/spring-ws/]
-image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=Spring Web Services"]
+image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain)[link='https://jenkins.spring.io/job/spring-ws/job/main/']
+image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.1.x)[link='https://jenkins.spring.io/job/spring-ws/job/3.1.x/']
 
 = Spring Web Services
 
