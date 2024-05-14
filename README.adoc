@@ -1,9 +1,10 @@
-image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", link="https://spring.io/projects/spring-ws#learn"]
-
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain)[link='https://jenkins.spring.io/job/spring-ws/job/main/']
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F3.1.x)[link='https://jenkins.spring.io/job/spring-ws/job/3.1.x/']
+image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=50%, link="https://spring.io/projects/spring-ws#learn"]
 
 = Spring Web Services
+
+image:https://jenkins.spring.io/job/spring-ws/job/main/badge/icon[link='https://jenkins.spring.io/job/spring-ws/job/main/']
+image:https://jenkins.spring.io/job/spring-ws/job/3.1.x/badge/icon[link='https://jenkins.spring.io/job/spring-ws/job/3.1.x/']
+
 
 Spring Web Services is a product of the Spring community focused on creating
 document-driven Web services. Spring Web Services aims to facilitate
