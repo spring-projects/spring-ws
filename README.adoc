@@ -39,12 +39,14 @@ But part of the release process requires a local check, which DOES depend upon y
 
 . Create a new release (on the main branch).
 +
+[source,shell]
 ----
 % ci/create-release.sh <release version> <next snapshot version>
 ----
 +
 . With the release tagged, update the release branch to the newly created tag.
 +
+[source,shell]
 ----
 % git checkout release
 % git reset --hard <tag>
@@ -52,6 +54,7 @@ But part of the release process requires a local check, which DOES depend upon y
 +
 . Verify this builds locally and passes all tests.
 +
+[source,shell]
 ----
 % ./mvnw clean package
 % ./mvnw -Pspring-buildsnapshot clean package
@@ -61,12 +64,14 @@ But part of the release process requires a local check, which DOES depend upon y
 +
 . Push the tagged version to the release branch.
 +
+[source,shell]
 ----
 % git push -f origin release
 ----
 +
 . Once completed, push the `main` branch for next version's snapshots.
 +
+[source,shell]
 ----
 % git checkout main
 % git push
