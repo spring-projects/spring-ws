@@ -1,5 +1,5 @@
 = Spring Web Services Reference Documentation
-Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant
+Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant, Corneil du Plessis
 :doctype: book
 :revnumber: {version}
 :revdate: {localdate}
