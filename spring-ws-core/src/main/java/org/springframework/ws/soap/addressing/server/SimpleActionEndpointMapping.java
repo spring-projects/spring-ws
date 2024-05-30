@@ -77,10 +77,10 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	public void setActionMap(Map<?, Object> actionMap) throws URISyntaxException {
 		for (Map.Entry<?, Object> entry : actionMap.entrySet()) {
 			URI action;
-			if (entry.getKey() instanceof String) {
-				action = new URI((String) entry.getKey());
-			} else if (entry.getKey() instanceof URI) {
-				action = (URI) entry.getKey();
+			if (entry.getKey() instanceof String key) {
+				action = new URI(key);
+			} else if (entry.getKey() instanceof URI uri) {
+				action = uri;
 			} else {
 				throw new IllegalArgumentException("Invalid key [" + entry.getKey() + "]; expected String or URI");
 			}
@@ -120,8 +120,8 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 				URI action = entry.getKey();
 				Object endpoint = entry.getValue();
 				// Remove whitespace from endpoint bean name.
-				if (endpoint instanceof String) {
-					endpoint = ((String) endpoint).trim();
+				if (endpoint instanceof String endpointString) {
+					endpoint = endpointString.trim();
 				}
 				registerEndpoint(action, endpoint);
 			}

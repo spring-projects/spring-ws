@@ -57,9 +57,8 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 		List<Node> locationNodes = xPathExpression.evaluateAsNodeList(definitionDocument);
 		for (Node locationNode : locationNodes) {
-			if (locationNode instanceof Attr) {
-				Attr location = (Attr) locationNode;
-				if (StringUtils.hasLength(location.getValue())) {
+			if (locationNode instanceof Attr location) {
+                if (StringUtils.hasLength(location.getValue())) {
 					String newLocation = transformLocation(location.getValue(), request);
 					if (logger.isDebugEnabled()) {
 						logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");

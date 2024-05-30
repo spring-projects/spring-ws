@@ -55,8 +55,8 @@ public class SaajContentHandler implements ContentHandler {
 	 */
 	public SaajContentHandler(SOAPElement element) {
 		Assert.notNull(element, "element must not be null");
-		if (element instanceof SOAPEnvelope) {
-			envelope = (SOAPEnvelope) element;
+		if (element instanceof SOAPEnvelope soapEnvelope) {
+			envelope = soapEnvelope;
 		} else {
 			envelope = SaajUtils.getEnvelope(element);
 		}

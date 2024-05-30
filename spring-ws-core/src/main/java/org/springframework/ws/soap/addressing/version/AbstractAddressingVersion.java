@@ -155,9 +155,8 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
 	private Element getSoapHeaderElement(SoapMessage message) {
 		Source source = message.getSoapHeader().getSource();
-		if (source instanceof DOMSource) {
-			DOMSource domSource = (DOMSource) source;
-			if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
+		if (source instanceof DOMSource domSource) {
+            if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
 				return (Element) domSource.getNode();
 			}
 		}
@@ -289,12 +288,10 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	private SoapFault addAddressingFault(SoapMessage message, QName subcode, String reason) {
-		if (message.getSoapBody() instanceof Soap11Body) {
-			Soap11Body soapBody = (Soap11Body) message.getSoapBody();
-			return soapBody.addFault(subcode, reason, Locale.ENGLISH);
-		} else if (message.getSoapBody() instanceof Soap12Body) {
-			Soap12Body soapBody = (Soap12Body) message.getSoapBody();
-			Soap12Fault soapFault = soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
+		if (message.getSoapBody() instanceof Soap11Body soapBody) {
+            return soapBody.addFault(subcode, reason, Locale.ENGLISH);
+		} else if (message.getSoapBody() instanceof Soap12Body soapBody) {
+            Soap12Fault soapFault = soapBody.addClientOrSenderFault(reason, Locale.ENGLISH);
 			soapFault.addFaultSubcode(subcode);
 			return soapFault;
 		}
