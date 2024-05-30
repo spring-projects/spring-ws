@@ -32,6 +32,8 @@ import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.DifferenceEvaluators;
+import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 
 /**
  * Matches {@link Source} SOAP envelopes.
@@ -56,7 +58,12 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
-		Diff diff = DiffBuilder.compare(expectedDocument).ignoreWhitespace().withTest(actualDocument).checkForSimilar()
+		Diff diff = DiffBuilder.compare(expectedDocument)
+				.ignoreWhitespace()
+				.withTest(actualDocument)
+				.withDifferenceEvaluator(
+						DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
+				.checkForSimilar()
 				.build();
 		assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
 	}

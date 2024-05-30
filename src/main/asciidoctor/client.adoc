@@ -457,7 +457,7 @@ The `RequestMatchers` class provides the following request matchers:
 | Expects any sort of request.
 
 | `payload()`
-| Expects a given request payload.
+| Expects a given request payload. May include https://github.com/xmlunit/user-guide/wiki/Placeholders[XMLUnit Placeholders]
 
 | `validPayload()`
 | Expects the request payload to validate against given XSD schemas.
@@ -467,6 +467,9 @@ The `RequestMatchers` class provides the following request matchers:
 
 | `soapHeader()`
 | Expects a given SOAP header to exist in the request message.
+
+| `soapEnvelope()`
+| Expects a given SOAP payload. May include https://github.com/xmlunit/user-guide/wiki/Placeholders[XMLUnit Placeholders]
 
 | `connectionTo()`
 | Expects a connection to the given URL.

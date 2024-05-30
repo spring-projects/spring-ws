@@ -22,6 +22,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,8 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
+
+import java.io.IOException;
 
 public class SoapEnvelopeDiffMatcherTest {
 
@@ -75,5 +78,27 @@ public class SoapEnvelopeDiffMatcherTest {
 			SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
 			matcher.match(message);
 		});
+	}
+
+	@Test
+	public void matchWithXmlIgnore() throws TransformerException, IOException {
+        String xml = """
+                <?xml version='1.0'?>
+                <soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>
+                <soap:Header><header xmlns='http://example.com'/></soap:Header>
+                <soap:Body><payload xmlns='http://example.com'>%s</payload></soap:Body>
+                </soap:Envelope>""";
+
+		String actual = String.format(xml, "1");
+		DOMResult result = new DOMResult();
+		TransformerHelper transformerHelper = new TransformerHelper();
+		transformerHelper.transform(new StringSource(actual), result);
+		SoapMessage message = createMock(SoapMessage.class);
+		expect(message.getDocument()).andReturn((Document) result.getNode()).once();
+		replay(message);
+
+		String expected = String.format(xml, "${xmlunit.ignore}");
+		SoapEnvelopeDiffMatcher matcher = new SoapEnvelopeDiffMatcher(new StringSource(expected));
+		matcher.match(message);
 	}
 }
