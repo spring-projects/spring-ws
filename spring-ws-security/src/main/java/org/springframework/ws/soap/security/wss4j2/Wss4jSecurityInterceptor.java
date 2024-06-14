@@ -20,8 +20,11 @@ import java.io.IOException;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -58,6 +61,9 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the
@@ -138,6 +144,7 @@ import org.w3c.dom.Element;
  * @author Jamin Hitchcock
  * @author Rob Leland
  * @author Lars Uffmann
+ * @author Andreas Winter
  * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  * @since 2.3.0
  */
@@ -194,6 +201,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
 
+	private List<Pattern> signatureSubjectDnPatterns = emptyList();
+
 	/**
 	 * Create a {@link WSSecurityEngine} by default.
 	 */
@@ -223,6 +232,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setSecurementActor(String securementActor) {
 		handler.setOption(WSHandlerConstants.ACTOR, securementActor);
+	}
+
+	/**
+	 * Defines whether to use a single certificate or a whole certificate chain when constructing
+	 * a BinarySecurityToken used for direct reference in signature.
+	 * The default is "true", meaning that only a single certificate is used.
+	 */
+	public void setSecurementSignatureSingleCertificate(boolean useSingleCertificate) {
+		handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
 	}
 
 	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
@@ -485,6 +503,19 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.validationSignatureCrypto = signatureCrypto;
 	}
 
+	/**
+	 * Certificate constraints which will be applied to the subject DN of the certificate used for
+	 * signature validation, after trust verification of the certificate chain associated with the
+	 * certificate.
+	 *
+	 * @param patterns A list of regex patterns which will be applied to the subject DN.
+	 *
+	 * @see <a href="https://ws.apache.org/wss4j/config.html">WSS4J configuration: SIG_SUBJECT_CERT_CONSTRAINTS</a>
+	 */
+	public void setValidationSubjectDnConstraints(List<Pattern> patterns) {
+		signatureSubjectDnPatterns = patterns;
+	}
+
 	/** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
 	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
 
@@ -670,6 +701,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
+		requestData.setSubjectCertConstraints(signatureSubjectDnPatterns);
 		return requestData;
 	}
 
@@ -709,6 +741,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		requestData.setAddInclusivePrefixes(addInclusivePrefixes);
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
+
+		requestData.setSubjectCertConstraints(signatureSubjectDnPatterns);
 
 		return requestData;
 	}
