@@ -1,3 +1,4 @@
+:doctype: book
 image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=50%, link="https://spring.io/projects/spring-ws#learn"]
 
 = Spring Web Services
@@ -31,7 +32,7 @@ Before you make a release, follow this checklist:
 
 * Are you using the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
 * Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
-* Are you setup with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
+* Are you set up with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
 * Is it time to switch from milestone to release candidate? Or from release candidate to release?
 
 NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
@@ -83,7 +84,7 @@ For releases, they are sent to maven central.
 
 Once the release is completed and tags are pushed:
 
-. Close the Github issue milestone.
+. Close the GitHub issue milestone.
 . Run the `ChangeLogCreator` report against that milestone.
 . Go to https://github.com/spring-projects/spring-ws/releases.
 . Find that tag and create a new release. Use the output from `ChangeLogCreator` as the content for the release report.
@@ -143,7 +144,7 @@ See the current https://docs.spring.io/spring-ws/docs/current/api/[Javadoc] and 
 
 === Issue Tracking
 
-Spring Web Services uses https://github.com/spring-projects/spring-ws/issues[Github] for issue tracking purposes.
+Spring Web Services uses https://github.com/spring-projects/spring-ws/issues[GitHub] for issue tracking purposes.
 
 === License
 
