@@ -97,7 +97,11 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort) : request.getServerPort();
 
 		StringBuilder url = new StringBuilder(scheme);
-		url.append("://").append(serverName).append(':').append(serverPort);
+		url.append("://").append(serverName);
+		boolean serverHasColonAfterAt = serverName.indexOf("@") < serverName.indexOf(":");
+		if(!serverHasColonAfterAt) {
+			url.append(':').append(serverPort);
+		}
 		if (location.startsWith("/")) {
 			// a relative path, prepend the context path
 			url.append(request.getContextPath()).append(location);
