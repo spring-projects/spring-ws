@@ -25,11 +25,13 @@ pipeline {
 
 			steps {
 				script {
-					def image = docker.build("${p['docker.java.build.image']}", "ci/")
-					docker.withRegistry('', "${p['dockerhub.credentials']}") {
-						image.push()
-					}
-				}
+				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+					    def image = docker.build("${p['docker.java.build.image']}", "ci/")
+					    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+						    image.push()
+					    }
+				    }
+                }
 			}
 		}
 		stage("Test: baseline (main)") {
@@ -159,7 +161,6 @@ pipeline {
 
 			steps {
 				script {
-
 					docker.image("${p['docker.java.build.image-proxy']}").inside(p['docker.java.inside.basic']) {
 						PROJECT_VERSION = sh(
 								script: "ci/version.sh",
