@@ -27,9 +27,7 @@ pipeline {
 				script {
 				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
 					    def image = docker.build("${p['docker.java.build.image']}", "ci/")
-					    docker.withRegistry('', "${p['dockerhub.credentials']}") {
-						    image.push()
-					    }
+                        image.push()
 				    }
                 }
 			}
@@ -44,9 +42,11 @@ pipeline {
 			}
 			steps {
 				script {
-					docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
-						sh "PROFILE=jakarta-ee-10,distribute,convergence ci/test.sh"
-					}
+				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+					    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+						    sh "PROFILE=jakarta-ee-10,distribute,convergence ci/test.sh"
+					    }
+                    }
 				}
 			}
 		}
@@ -68,9 +68,11 @@ pipeline {
 					}
 					steps {
 						script {
-							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
-								sh "PROFILE=jakarta-ee-10,spring-buildsnapshot,convergence ci/test.sh"
-							}
+						    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+							    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								    sh "PROFILE=jakarta-ee-10,spring-buildsnapshot,convergence ci/test.sh"
+							    }
+                            }
 						}
 					}
 				}
@@ -85,9 +87,11 @@ pipeline {
 					}
 					steps {
 						script {
-							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
-								sh "PROFILE=jakarta-ee-10,wss4j-next,convergence ci/test.sh"
-							}
+						    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+							    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								    sh "PROFILE=jakarta-ee-10,wss4j-next,convergence ci/test.sh"
+							    }
+                            }
 						}
 					}
 				}
@@ -102,9 +106,11 @@ pipeline {
 					}
 					steps {
 						script {
-							docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
-								sh "PROFILE=jakarta-ee-10,spring-next-gen,convergence ci/test.sh"
-							}
+						    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+							    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+								    sh "PROFILE=jakarta-ee-10,spring-next-gen,convergence ci/test.sh"
+							    }
+                            }
 						}
 					}
 				}
@@ -161,57 +167,59 @@ pipeline {
 
 			steps {
 				script {
-					docker.image("${p['docker.java.build.image-proxy']}").inside(p['docker.java.inside.basic']) {
-						PROJECT_VERSION = sh(
-								script: "ci/version.sh",
-								returnStdout: true
-						).trim()
+				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+					    docker.image("${p['docker.java.build.image-proxy']}").inside(p['docker.java.inside.basic']) {
+                            PROJECT_VERSION = sh(
+                                    script: "ci/version.sh",
+                                    returnStdout: true
+                            ).trim()
 
-						echo "Releasing Spring WS ${PROJECT_VERSION}..."
+                            echo "Releasing Spring WS ${PROJECT_VERSION}..."
 
-						if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
-							RELEASE_TYPE = "milestone"
-						} else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
-							RELEASE_TYPE = 'snapshot'
-						} else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
-							RELEASE_TYPE = 'release'
-						} else {
-							RELEASE_TYPE = 'snapshot'
-						}
+                            if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
+                                RELEASE_TYPE = "milestone"
+                            } else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
+                                RELEASE_TYPE = 'snapshot'
+                            } else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
+                                RELEASE_TYPE = 'release'
+                            } else {
+                                RELEASE_TYPE = 'snapshot'
+                            }
 
-						echo "Release type: ${RELEASE_TYPE}"
+                            echo "Release type: ${RELEASE_TYPE}"
 
-						if (RELEASE_TYPE == 'release') {
+                            if (RELEASE_TYPE == 'release') {
 
-							STAGING_REPOSITORY_ID = sh(
-								script: "ci/rc-open.sh",
-								returnStdout: true
-							).readLines()
-							  .findAll{ line -> line.contains("<repository>") && !line.contains("%s") }
-							  .collect{ s -> s.substring(s.indexOf("<repository>") + "<repository>".length(), s.indexOf("</repository>")) }
-							  .inject(0){ first, second -> second } // find the last entry, a.k.a. the most recent staging repository id
+                                STAGING_REPOSITORY_ID = sh(
+                                    script: "ci/rc-open.sh",
+                                    returnStdout: true
+                                ).readLines()
+                                  .findAll{ line -> line.contains("<repository>") && !line.contains("%s") }
+                                  .collect{ s -> s.substring(s.indexOf("<repository>") + "<repository>".length(), s.indexOf("</repository>")) }
+                                  .inject(0){ first, second -> second } // find the last entry, a.k.a. the most recent staging repository id
 
-							sh "ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
-							sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
-// 							sh "ci/smoke-test-against-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
+                                sh "ci/build-and-deploy-to-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
+                                sh "ci/rc-close.sh ${STAGING_REPOSITORY_ID}"
+    // 							sh "ci/smoke-test-against-maven-central.sh ${PROJECT_VERSION} ${STAGING_REPOSITORY_ID}"
 
-							writeFile(file: 'staging_repository_id.txt', text: "${STAGING_REPOSITORY_ID}")
-							stash 'staging_repository_id.txt'
+                                writeFile(file: 'staging_repository_id.txt', text: "${STAGING_REPOSITORY_ID}")
+                                stash 'staging_repository_id.txt'
 
-						} else {
+                            } else {
 
-							sh "ci/build-and-deploy-to-artifactory.sh ${RELEASE_TYPE}"
+                                sh "ci/build-and-deploy-to-artifactory.sh ${RELEASE_TYPE}"
 
-							// TODO: Resolve smoke testing against Artifactory
-							// sh "ci/smoke-test-against-artifactory.sh ${PROJECT_VERSION}"
+                                // TODO: Resolve smoke testing against Artifactory
+                                // sh "ci/smoke-test-against-artifactory.sh ${PROJECT_VERSION}"
 
-							if (RELEASE_TYPE == 'milestone') {
-								slackSend(
-										color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
-										channel: '#spring-ws',
-										message: "Spring WS ${PROJECT_VERSION} is released to Artifactory!")
-							}
-						}
+                                if (RELEASE_TYPE == 'milestone') {
+                                    slackSend(
+                                            color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+                                            channel: '#spring-ws',
+                                            message: "Spring WS ${PROJECT_VERSION} is released to Artifactory!")
+                                }
+                            }
+                        }
 					}
 				}
 			}
@@ -232,45 +240,46 @@ pipeline {
 
 			steps {
 				script {
+                    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+                        docker.image("${p['docker.java.legacy.image']}").inside(p['docker.java.inside.basic']) {
+                            PROJECT_VERSION = sh(
+                                    script: "ci/version.sh",
+                                    returnStdout: true
+                            ).trim()
 
-					docker.image("${p['docker.java.legacy.image']}").inside(p['docker.java.inside.basic']) {
-						PROJECT_VERSION = sh(
-								script: "ci/version.sh",
-								returnStdout: true
-						).trim()
+                            echo "Releasing Spring WS ${PROJECT_VERSION}..."
 
-						echo "Releasing Spring WS ${PROJECT_VERSION}..."
+                            if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
+                                RELEASE_TYPE = "milestone"
+                            } else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
+                                RELEASE_TYPE = 'snapshot'
+                            } else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
+                                RELEASE_TYPE = 'release'
+                            } else {
+                                RELEASE_TYPE = 'snapshot'
+                            }
 
-						if (PROJECT_VERSION.matches(/.*-RC[0-9]+$/) || PROJECT_VERSION.matches(/.*-M[0-9]+$/)) {
-							RELEASE_TYPE = "milestone"
-						} else if (PROJECT_VERSION.endsWith('SNAPSHOT')) {
-							RELEASE_TYPE = 'snapshot'
-						} else if (PROJECT_VERSION.matches(/.*\.[0-9]+$/)) {
-							RELEASE_TYPE = 'release'
-						} else {
-							RELEASE_TYPE = 'snapshot'
-						}
+                            echo "Release type: ${RELEASE_TYPE}"
 
-						echo "Release type: ${RELEASE_TYPE}"
+                            if (RELEASE_TYPE == 'release') {
 
-						if (RELEASE_TYPE == 'release') {
+                                unstash 'staging_repository_id.txt'
 
-							unstash 'staging_repository_id.txt'
+                                def STAGING_REPOSITORY_ID = readFile(file: 'staging_repository_id.txt')
 
-							def STAGING_REPOSITORY_ID = readFile(file: 'staging_repository_id.txt')
+                                sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
 
-							sh "ci/rc-release.sh ${STAGING_REPOSITORY_ID}"
+                                slackSend(
+                                        color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
+                                        channel: '#spring-ws',
+                                        message: "Spring WS ${PROJECT_VERSION} is released to Maven Central!")
+                            } else {
 
-							slackSend(
-									color: (currentBuild.currentResult == 'SUCCESS') ? 'good' : 'danger',
-									channel: '#spring-ws',
-									message: "Spring WS ${PROJECT_VERSION} is released to Maven Central!")
-						} else {
+                                echo "Since this is an Artifactory release, there is no 'part 2'."
 
-							echo "Since this is an Artifactory release, there is no 'part 2'."
-
-						}
-					}
+                            }
+                        }
+                    }
 				}
 			}
 		}
@@ -291,17 +300,19 @@ pipeline {
 
 			steps {
 				script {
-					docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
-						sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ' +
-								'GRADLE_ENTERPRISE_CACHE_USERNAME=${GRADLE_ENTERPRISE_CACHE_USR} ' +
-								'GRADLE_ENTERPRISE_CACHE_PASSWORD=${GRADLE_ENTERPRISE_CACHE_PSW} ' +
-								'./mvnw -s settings.xml -Pjakarta-ee-10,distribute,docs ' +
-								'-Dartifactory.server=https://repo.spring.io ' +
-								"-Dartifactory.username=${ARTIFACTORY_USR} " +
-								"-Dartifactory.password=${ARTIFACTORY_PSW} " +
-								"-Dartifactory.distribution-repository=temp-private-local " +
-								'-Duser.name=spring-builds+jenkins -Dmaven.test.skip=true -Dmaven.deploy.skip=true deploy -B'
-					}
+				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
+					    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+                            sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ' +
+                                    'GRADLE_ENTERPRISE_CACHE_USERNAME=${GRADLE_ENTERPRISE_CACHE_USR} ' +
+                                    'GRADLE_ENTERPRISE_CACHE_PASSWORD=${GRADLE_ENTERPRISE_CACHE_PSW} ' +
+                                    './mvnw -s settings.xml -Pjakarta-ee-10,distribute,docs ' +
+                                    '-Dartifactory.server=https://repo.spring.io ' +
+                                    "-Dartifactory.username=${ARTIFACTORY_USR} " +
+                                    "-Dartifactory.password=${ARTIFACTORY_PSW} " +
+                                    "-Dartifactory.distribution-repository=temp-private-local " +
+                                    '-Duser.name=spring-builds+jenkins -Dmaven.test.skip=true -Dmaven.deploy.skip=true deploy -B'
+                        }
+                    }
 				}
 			}
 		}
