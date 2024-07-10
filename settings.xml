@@ -24,6 +24,11 @@
 			<username>${env.ARTIFACTORY_USR}</username>
 			<password>${env.ARTIFACTORY_PSW}</password>
 		</server>
+		<server>
+			<id>ge.spring.io</id>
+			<username>${env.GRADLE_ENTERPRISE_CACHE_USERNAME}</username>
+			<password>${env.GRADLE_ENTERPRISE_CACHE_PASSWORD}</password>
+		</server>
 	</servers>
 
 </settings>
