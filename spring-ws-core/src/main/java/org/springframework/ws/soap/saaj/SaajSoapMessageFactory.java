@@ -16,12 +16,6 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.MimeHeaders;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +24,15 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -43,7 +44,6 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
-import org.xml.sax.SAXParseException;
 
 /**
  * SAAJ-specific implementation of the {@link org.springframework.ws.WebServiceMessageFactory WebServiceMessageFactory}.
@@ -55,6 +55,7 @@ import org.xml.sax.SAXParseException;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
+ * @author Corneil du Plessis
  * @see org.springframework.ws.soap.saaj.SaajSoapMessage
  * @since 1.0.0
  */
@@ -222,16 +223,25 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 			TransportInputStream transportInputStream = (TransportInputStream) inputStream;
 			for (Iterator<String> headerNames = transportInputStream.getHeaderNames(); headerNames.hasNext();) {
 				String headerName = headerNames.next();
-				for (Iterator<String> headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext();) {
+				for (Iterator<String> headerValues = transportInputStream.getHeaders(headerName); headerValues.hasNext(); ) {
 					String headerValue = headerValues.next();
-					StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
-					while (tokenizer.hasMoreTokens()) {
-						mimeHeaders.addHeader(headerName, tokenizer.nextToken().trim());
+					if (isMimeHeader(headerName)) {
+						StringTokenizer tokenizer = new StringTokenizer(headerValue, ",");
+						while (tokenizer.hasMoreTokens()) {
+							mimeHeaders.addHeader(headerName, tokenizer.nextToken().trim());
+						}
+					} else {
+						mimeHeaders.addHeader(headerName, headerValue);
 					}
 				}
 			}
 		}
 		return mimeHeaders;
+	}
+
+	private boolean isMimeHeader(String headerName) {
+		String lowerHeaderName = headerName.toLowerCase();
+		return lowerHeaderName.startsWith("content-") || lowerHeaderName.startsWith("mime-");
 	}
 
 	/**
