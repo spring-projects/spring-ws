@@ -24,5 +24,4 @@ _site
 
 credentials.yml
 .flattened-pom.xml
-.mvn/.gradle-enterprise
 .mvn/.develocity
