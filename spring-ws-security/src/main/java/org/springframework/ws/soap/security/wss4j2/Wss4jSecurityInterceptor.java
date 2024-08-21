@@ -500,7 +500,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Enables the {@code useSingleCertificate} attribute on WS-Security headers on outgoing messages. Default is
 	 * {@code true}.
 	 */
-	public void set(boolean useSingleCertificate) {
+	public void setUseSingleCertificate(boolean useSingleCertificate) {
 		handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
 	}
 
