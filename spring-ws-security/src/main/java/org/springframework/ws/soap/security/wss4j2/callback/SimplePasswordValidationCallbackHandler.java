@@ -45,8 +45,8 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 	/** Sets the users to validate against. Property names are usernames, property values are passwords. */
 	public void setUsers(Properties users) {
 		for (Map.Entry<Object, Object> entry : users.entrySet()) {
-			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-				this.users.put((String) entry.getKey(), (String) entry.getValue());
+			if (entry.getKey() instanceof String key && entry.getValue() instanceof String value) {
+				this.users.put(key, value);
 			}
 		}
 	}
