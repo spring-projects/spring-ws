@@ -23,6 +23,8 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 
+import java.util.Optional;
+
 /**
  * Thrown by {@code SoapFaultMessageResolver} when the response message has a fault.
  *
@@ -56,13 +58,17 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	}
 
 	/**
-	 * Returns the fault string or reason. For SOAP 1.1, this returns the fault string. For SOAP 1.2, this returns the
-	 * fault reason for the default locale.
+	 * Returns the fault string or reason from the SOAP fault.
+	 * For SOAP 1.1, this method returns the fault string. For SOAP 1.2, it returns the fault reason for the default locale.
 	 * <p>
-	 * Note that this message returns the same as {@link #getMessage()}.
+	 * Note that this method returns the same value as {@link #getMessage()}.
+	 * <p>
+	 * The returned value is wrapped in an {@link Optional}. If the SOAP fault is not present, an empty {@link Optional} is returned.
+	 *
+	 * @return an {@link Optional} containing the fault string or reason if present, or an empty {@link Optional} if the SOAP fault is not present.
 	 */
-	public String getFaultStringOrReason() {
-		return soapFault != null ? soapFault.getFaultStringOrReason() : null;
+	public Optional<String> getFaultStringOrReason() {
+		return Optional.ofNullable(this.soapFault)
+				.map(SoapFault::getFaultStringOrReason);
 	}
-
 }
