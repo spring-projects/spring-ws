@@ -142,8 +142,9 @@ import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincip
  * @author Jamin Hitchcock
  * @author Rob Leland
  * @author Lars Uffmann
+ * @author Andreas Winter
  * @since 2.3.0
- * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
+ * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0+</a>
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 

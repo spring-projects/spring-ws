@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains {@code CallbackHandler} implementations for WSS4J 2.0.
+ * Contains {@code CallbackHandler} implementations for WSS4J 2.0+.
  */
 package org.springframework.ws.soap.security.wss4j2.callback;
