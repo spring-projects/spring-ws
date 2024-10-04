@@ -5,7 +5,7 @@
 
     <groupId>org.springframework.ws</groupId>
     <artifactId>spring-ws</artifactId>
-    <version>4.0.12-SNAPSHOT</version>
+    <version>4.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Spring Web Services</name>
@@ -124,28 +124,28 @@
         <smack.version>4.3.5</smack.version>
 
         <!-- Spring Framework/Spring Security baseline -->
-        <spring.version>6.0.20</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
-        <spring-security.version>6.1.9</spring-security.version>
+        <spring.version>6.1.13</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
+        <spring-security.version>6.3.3</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
-        <spring-snapshot.version>6.0.21-SNAPSHOT</spring-snapshot.version>
-        <spring-security-snapshot.version>6.1.10-SNAPSHOT</spring-security-snapshot.version>
+        <spring-snapshot.version>6.2.0-SNAPSHOT</spring-snapshot.version>
+        <spring-security-snapshot.version>6.4.0-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
-        <spring-next-gen.version>6.1.6</spring-next-gen.version>
-        <spring-security-next-gen.version>6.2.4</spring-security-next-gen.version>
+        <spring-next-gen.version>6.1.13</spring-next-gen.version>
+        <spring-security-next-gen.version>6.3.3</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
-        <spring-next-gen-snapshot.version>6.1.7-SNAPSHOT</spring-next-gen-snapshot.version>
-        <spring-security-next-gen-snapshot.version>6.2.5-SNAPSHOT</spring-security-next-gen-snapshot.version>
+        <spring-next-gen-snapshot.version>6.2.0-SNAPSHOT</spring-next-gen-snapshot.version>
+        <spring-security-next-gen-snapshot.version>6.4.0-SNAPSHOT</spring-security-next-gen-snapshot.version>
 
-        <spring-hateos.version>2.1.5</spring-hateos.version>
+        <spring-hateos.version>2.3.3</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
         <stax.version>2.1.0</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <wss4j.version>3.0.3</wss4j.version>
-        <wss4j-next.version>3.0.0</wss4j-next.version>
+        <wss4j-next.version>3.0.3</wss4j-next.version>
         <xmlsec.version>3.0.4</xmlsec.version>
         <xml-schema-core.version>2.3.1</xml-schema-core.version>
         <xmlunit1.version>1.6</xmlunit1.version>
