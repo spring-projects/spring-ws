@@ -124,20 +124,20 @@
         <smack.version>4.3.5</smack.version>
 
         <!-- Spring Framework/Spring Security baseline -->
-        <spring.version>6.0.20</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
+        <spring.version>6.0.23</spring.version> <!-- TODO: Ensure smoke-tests matches, also check spring-next-gen -->
         <spring-security.version>6.1.9</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
-        <spring-snapshot.version>6.0.21-SNAPSHOT</spring-snapshot.version>
+        <spring-snapshot.version>6.0.24-SNAPSHOT</spring-snapshot.version>
         <spring-security-snapshot.version>6.1.10-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
-        <spring-next-gen.version>6.1.6</spring-next-gen.version>
-        <spring-security-next-gen.version>6.2.4</spring-security-next-gen.version>
+        <spring-next-gen.version>6.1.13</spring-next-gen.version>
+        <spring-security-next-gen.version>6.2.6</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
-        <spring-next-gen-snapshot.version>6.1.7-SNAPSHOT</spring-next-gen-snapshot.version>
-        <spring-security-next-gen-snapshot.version>6.2.5-SNAPSHOT</spring-security-next-gen-snapshot.version>
+        <spring-next-gen-snapshot.version>6.1.14-SNAPSHOT</spring-next-gen-snapshot.version>
+        <spring-security-next-gen-snapshot.version>6.2.7-SNAPSHOT</spring-security-next-gen-snapshot.version>
 
         <spring-hateos.version>2.1.5</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
