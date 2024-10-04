@@ -144,8 +144,8 @@
         <stax.version>2.1.0</stax.version>
         <woodstox.version>6.5.1</woodstox.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
-        <wss4j.version>2.4.3</wss4j.version>
-        <wss4j-next.version>3.0.0</wss4j-next.version>
+        <wss4j.version>3.0.3</wss4j.version>
+        <wss4j-next.version>3.0.3</wss4j-next.version>
         <xmlsec.version>3.0.4</xmlsec.version>
         <xml-schema-core.version>2.3.1</xml-schema-core.version>
         <xmlunit1.version>1.6</xmlunit1.version>
