@@ -211,13 +211,12 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		if (this.connectionManagerBuilderCustomizer != null) {
 			this.connectionManagerBuilderCustomizer.customize(connectionManagerBuilder);
 		}
-
 		this.connectionManager = connectionManagerBuilder.build();
 
 		applyMaxConnectionsPerHost(connectionManager);
 
 		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
-				.setConnectionRequestTimeout(Timeout.of(connectionTimeout)) //
+				.setConnectTimeout(Timeout.of(connectionTimeout)) //
 				.setResponseTimeout(Timeout.of(readTimeout));
 
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
