@@ -200,6 +200,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public CloseableHttpClient getObject() throws Exception {
 
 		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder
@@ -218,7 +219,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		applyMaxConnectionsPerHost(this.connectionManager);
 
 		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
-			.setConnectionRequestTimeout(Timeout.of(this.connectionTimeout)) //
+			.setConnectTimeout(Timeout.of(this.connectionTimeout)) //
 			.setResponseTimeout(Timeout.of(this.readTimeout));
 
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
