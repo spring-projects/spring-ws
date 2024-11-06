@@ -91,9 +91,8 @@ public final class MethodEndpoint {
 
 	/** Returns the object bean for this method endpoint. */
 	public Object getBean() {
-		if (beanFactory != null && bean instanceof String) {
-			String beanName = (String) bean;
-			return beanFactory.getBean(beanName);
+		if (beanFactory != null && bean instanceof String beanName) {
+            return beanFactory.getBean(beanName);
 		} else {
 			return bean;
 		}
@@ -140,14 +139,14 @@ public final class MethodEndpoint {
 
 	private void handleInvocationTargetException(InvocationTargetException ex) throws Exception {
 		Throwable targetException = ex.getTargetException();
-		if (targetException instanceof RuntimeException) {
-			throw (RuntimeException) targetException;
+		if (targetException instanceof RuntimeException runtimeException) {
+			throw runtimeException;
 		}
-		if (targetException instanceof Error) {
-			throw (Error) targetException;
+		if (targetException instanceof Error error) {
+			throw error;
 		}
-		if (targetException instanceof Exception) {
-			throw (Exception) targetException;
+		if (targetException instanceof Exception exception) {
+			throw exception;
 		}
 
 	}

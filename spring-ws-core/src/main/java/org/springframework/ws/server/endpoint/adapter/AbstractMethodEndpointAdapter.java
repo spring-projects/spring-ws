@@ -38,7 +38,7 @@ public abstract class AbstractMethodEndpointAdapter extends TransformerObjectSup
 	 */
 	@Override
 	public final boolean supports(Object endpoint) {
-		return endpoint instanceof MethodEndpoint && supportsInternal((MethodEndpoint) endpoint);
+		return endpoint instanceof MethodEndpoint methodEndpoint && supportsInternal(methodEndpoint);
 	}
 
 	/**

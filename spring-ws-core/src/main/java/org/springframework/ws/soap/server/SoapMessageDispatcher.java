@@ -84,9 +84,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 		if (messageContext.getRequest() instanceof SoapMessage) {
 			String[] actorsOrRoles = null;
 			boolean isUltimateReceiver = true;
-			if (mappedEndpoint instanceof SoapEndpointInvocationChain) {
-				SoapEndpointInvocationChain soapChain = (SoapEndpointInvocationChain) mappedEndpoint;
-				actorsOrRoles = soapChain.getActorsOrRoles();
+			if (mappedEndpoint instanceof SoapEndpointInvocationChain soapChain) {
+                actorsOrRoles = soapChain.getActorsOrRoles();
 				isUltimateReceiver = soapChain.isUltimateReceiver();
 			}
 			return handleHeaders(mappedEndpoint, messageContext, actorsOrRoles, isUltimateReceiver);
@@ -102,8 +101,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 			return true;
 		}
 		Iterator<SoapHeaderElement> headerIterator;
-		if (soapHeader instanceof Soap11Header) {
-			headerIterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles);
+		if (soapHeader instanceof Soap11Header soap11Header) {
+			headerIterator = soap11Header.examineHeaderElementsToProcess(actorsOrRoles);
 		} else {
 			headerIterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles, isUltimateReceiver);
 		}
@@ -141,8 +140,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 			return false;
 		}
 		for (EndpointInterceptor interceptor : interceptors) {
-			if (interceptor instanceof SoapEndpointInterceptor
-					&& ((SoapEndpointInterceptor) interceptor).understands(headerElement)) {
+			if (interceptor instanceof SoapEndpointInterceptor soapEndpointInterceptor
+					&& soapEndpointInterceptor.understands(headerElement)) {
 				return true;
 			}
 		}
@@ -161,9 +160,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 			fault.setFaultActorOrRole(actorsOrRoles[0]);
 		}
 		SoapHeader header = soapResponse.getSoapHeader();
-		if (header instanceof Soap12Header) {
-			Soap12Header soap12Header = (Soap12Header) header;
-			for (QName headerName : notUnderstoodHeaderNames) {
+		if (header instanceof Soap12Header soap12Header) {
+            for (QName headerName : notUnderstoodHeaderNames) {
 				soap12Header.addNotUnderstoodHeaderElement(headerName);
 			}
 		}
