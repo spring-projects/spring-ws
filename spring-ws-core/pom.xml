@@ -244,6 +244,12 @@
             <artifactId>spring-webflux</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-observation-test</artifactId>
+            <version>1.13.3</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
