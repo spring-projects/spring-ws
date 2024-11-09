@@ -61,6 +61,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-observation</artifactId>
+            <version>${micrometer-observation.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
@@ -247,7 +252,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-observation-test</artifactId>
-            <version>1.13.3</version>
+            <version>${micrometer-observation.version}</version>
             <scope>test</scope>
         </dependency>
 
