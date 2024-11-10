@@ -64,6 +64,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
+ * Verifies observation for a WebServiceTemplate
  * @author Johan Kindgren
  */
 public class WebServiceTemplateObservationIntegrationTest {
