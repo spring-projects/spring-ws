@@ -156,8 +156,7 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("exception", "none")
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
-                        .hasLowCardinalityKeyValue("localname", "root")
-                        .hasContextualNameEqualTo("WebServiceTemplate localhost")
+                        .hasLowCardinalityKeyValue("localpart", "root")
         );
     }
 
@@ -266,8 +265,7 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("exception", "WebServiceTransportException")
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
-                        .hasLowCardinalityKeyValue("localname", "root")
-                        .hasContextualNameEqualTo("WebServiceTemplate localhost")
+                        .hasLowCardinalityKeyValue("localpart", "root")
         );
 
     }

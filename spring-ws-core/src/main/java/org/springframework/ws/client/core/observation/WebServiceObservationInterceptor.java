@@ -15,8 +15,10 @@
  */
 package org.springframework.ws.client.core.observation;
 
+import io.micrometer.common.KeyValue;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
@@ -24,6 +26,7 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptorAdapte
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
+import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
@@ -38,6 +41,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
@@ -50,6 +54,7 @@ import java.net.URISyntaxException;
 public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
 
+    public static final String OBSERVATION_KEY = "observation";
     private ObservationRegistry observationRegistry;
 
     private static final WebServiceTemplateConvention DEFAULT_CONVENTION = new DefaultWebServiceTemplateConvention();
@@ -86,7 +91,7 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
                 () -> new WebServiceTemplateObservationContext(connection),
                 observationRegistry);
 
-        messageContext.setProperty("observation", observation);
+        messageContext.setProperty(OBSERVATION_KEY, observation);
 
         return true;
     }
@@ -94,11 +99,10 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
     @Override
     public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
 
-        Observation observation = (Observation) messageContext.getProperty("observation");
-        WebServiceTemplateObservationContext context = (WebServiceTemplateObservationContext) observation.getContext();
+        Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
+        Assert.notNull(observation, "Expected observation in messageContext");
 
-        context.setHost(getHostFromConnection());
-        context.setError(ex);
+        WebServiceTemplateObservationContext context = (WebServiceTemplateObservationContext) observation.getContext();
 
         WebServiceMessage request = messageContext.getRequest();
         WebServiceMessage response = messageContext.getResponse();
@@ -108,10 +112,12 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             Source source = soapMessage.getSoapBody().getPayloadSource();
             QName root = getRootElement(source);
             if (root != null) {
-                context.setLocalname(root.getLocalPart());
+                context.setLocalPart(root.getLocalPart());
                 context.setNamespace(root.getNamespaceURI());
             }
-            context.setSoapAction((soapMessage).getSoapAction());
+            if (soapMessage.getSoapAction() != null && !soapMessage.getSoapAction().equals(TransportConstants.EMPTY_SOAP_ACTION)) {
+                context.setSoapAction(soapMessage.getSoapAction());
+            }
         }
 
         if (response instanceof FaultAwareWebServiceMessage faultAwareResponse) {
@@ -122,6 +128,31 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             }
         }
 
+        URI uri = getUriFromConnection();
+        if (uri != null) {
+            context.setHost(uri.getHost());
+
+            StringBuilder contextualName = new StringBuilder("WebService ");
+            contextualName.append(uri.getHost());
+            if (uri.getPort() != -1) {
+                contextualName.append(":").append(uri.getPort());
+            }
+            contextualName.append(uri.getPath());
+
+            if (!context.getSoapAction().equals(KeyValue.NONE_VALUE)) {
+                contextualName.append(" Action=").append(context.getSoapAction());
+            }
+            if (!context.getNamespace().equals(WebServiceTemplateObservationContext.UNKNOWN)) {
+                contextualName
+                    .append(" QName=").append(context.getNamespace())
+                    .append(":").append(context.getLocalPart());
+            }
+
+            context.setContextualName(contextualName.toString());
+        }
+
+        context.setError(ex);
+
         observation.stop();
     }
 
@@ -129,13 +160,13 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
         this.customConvention = customConvention;
     }
 
-    String getHostFromConnection() {
+    URI getUriFromConnection()  {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         WebServiceConnection connection = transportContext.getConnection();
         try {
-            return connection.getUri().getHost();
+            return connection.getUri();
         } catch (URISyntaxException e) {
-            return WebServiceTemplateObservationContext.UNKNOWN;
+            return null;
         }
     }
 

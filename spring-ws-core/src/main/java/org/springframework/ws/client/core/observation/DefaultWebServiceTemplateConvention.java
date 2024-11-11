@@ -17,7 +17,7 @@ package org.springframework.ws.client.core.observation;
 
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
-import io.micrometer.observation.Observation;
+import org.springframework.ws.client.core.observation.WebServiceTemplateObservationDocumentation.LowCardinalityKeyNames;
 
 /**
  * ObservationConvention that describes how a WebServiceTemplate is observed.
@@ -25,8 +25,9 @@ import io.micrometer.observation.Observation;
  */
 public class DefaultWebServiceTemplateConvention implements WebServiceTemplateConvention {
 
-    private static final KeyValue EXCEPTION_NONE = KeyValue.of(WebServiceTemplateObservationDocumentation.LowCardinalityKeyNames.EXCEPTION, KeyValue.NONE_VALUE);
-    private String name = "webservice.client";
+    private static final KeyValue EXCEPTION_NONE = KeyValue.of(LowCardinalityKeyNames.EXCEPTION,
+            KeyValue.NONE_VALUE);
+    private static final String NAME = "webservice.client";
 
 
     @Override
@@ -41,68 +42,51 @@ public class DefaultWebServiceTemplateConvention implements WebServiceTemplateCo
     }
 
     private KeyValue localname(WebServiceTemplateObservationContext context) {
-        return WebServiceTemplateObservationDocumentation
-                .LowCardinalityKeyNames
-                .LOCALNAME
-                .withValue(context.getLocalname());
+        return LowCardinalityKeyNames
+                .LOCALPART
+                .withValue(context.getLocalPart());
     }
 
     private KeyValue namespace(WebServiceTemplateObservationContext context) {
-        return WebServiceTemplateObservationDocumentation
-                .LowCardinalityKeyNames
+        return LowCardinalityKeyNames
                 .NAMESPACE
                 .withValue(context.getNamespace());
     }
     private KeyValue host(WebServiceTemplateObservationContext context) {
-        return WebServiceTemplateObservationDocumentation
-                .LowCardinalityKeyNames
+        return LowCardinalityKeyNames
                 .HOST
                 .withValue(context.getHost());
     }
 
 
     private KeyValue outcome(WebServiceTemplateObservationContext context) {
-        return WebServiceTemplateObservationDocumentation
-                .LowCardinalityKeyNames
+        return LowCardinalityKeyNames
                 .OUTCOME
                 .withValue(context.getOutcome());
     }
 
     private KeyValue soapAction(WebServiceTemplateObservationContext context) {
-        return WebServiceTemplateObservationDocumentation
-                .LowCardinalityKeyNames
+        return LowCardinalityKeyNames
                 .SOAPACTION
                 .withValue(context.getSoapAction());
     }
 
     private KeyValue exception(WebServiceTemplateObservationContext context) {
         if (context.getError() != null) {
-            return WebServiceTemplateObservationDocumentation
-                    .LowCardinalityKeyNames
+            return LowCardinalityKeyNames
                     .EXCEPTION
                     .withValue(context.getError().getClass().getSimpleName());
-        } else {
-            return EXCEPTION_NONE;
         }
-    }
-
-    @Override
-    public KeyValues getHighCardinalityKeyValues(WebServiceTemplateObservationContext context) {
-        return KeyValues.empty();
+        return EXCEPTION_NONE;
     }
 
     @Override
     public String getName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getContextualName(WebServiceTemplateObservationContext context) {
-        return "WebServiceTemplate " + context.getHost();
-    }
-
-    @Override
-    public boolean supportsContext(Observation.Context context) {
-        return context instanceof WebServiceTemplateObservationContext;
+        return context.getContextualName();
     }
 }

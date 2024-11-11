@@ -28,10 +28,9 @@ import java.util.Iterator;
  */
 public class WebServiceEndpointContext extends RequestReplyReceiverContext<HeadersAwareReceiverWebServiceConnection, TransportInputStream> {
 
-
     public static final String UNKNOWN = "unknown";
     private String outcome = UNKNOWN;
-    private String localname = UNKNOWN;
+    private String localPart = UNKNOWN;
     private String namespace = UNKNOWN;
     private String soapAction = UNKNOWN;
 
@@ -59,12 +58,12 @@ public class WebServiceEndpointContext extends RequestReplyReceiverContext<Heade
         this.outcome = outcome;
     }
 
-    public String getLocalname() {
-        return localname;
+    public String getLocalPart() {
+        return localPart;
     }
 
-    public void setLocalname(String localname) {
-        this.localname = localname;
+    public void setLocalPart(String localPart) {
+        this.localPart = localPart;
     }
 
     public String getNamespace() {

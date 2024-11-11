@@ -15,6 +15,7 @@
  */
 package org.springframework.ws.client.core.observation;
 
+import io.micrometer.common.KeyValue;
 import io.micrometer.observation.transport.RequestReplySenderContext;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
 import org.springframework.ws.transport.TransportInputStream;
@@ -24,15 +25,15 @@ import java.io.IOException;
  * ObservationContext used to instrument a WebServiceTemplate operation.
  * @author Johan Kindgren
  */
-class WebServiceTemplateObservationContext extends RequestReplySenderContext<HeadersAwareSenderWebServiceConnection, TransportInputStream> {
+public class WebServiceTemplateObservationContext extends RequestReplySenderContext<HeadersAwareSenderWebServiceConnection, TransportInputStream> {
 
 
     public static final String UNKNOWN = "unknown";
     private String outcome = UNKNOWN;
-    private String localname = UNKNOWN;
+    private String localPart = UNKNOWN;
     private String namespace = UNKNOWN;
     private String host = UNKNOWN;
-    private String soapAction = UNKNOWN;
+    private String soapAction = KeyValue.NONE_VALUE;
 
     public WebServiceTemplateObservationContext(HeadersAwareSenderWebServiceConnection connection) {
         super((carrier, key, value) -> {
@@ -56,12 +57,12 @@ class WebServiceTemplateObservationContext extends RequestReplySenderContext<Hea
         this.outcome = outcome;
     }
 
-    public String getLocalname() {
-        return localname;
+    public String getLocalPart() {
+        return localPart;
     }
 
-    public void setLocalname(String localname) {
-        this.localname = localname;
+    public void setLocalPart(String localPart) {
+        this.localPart = localPart;
     }
 
     public String getNamespace() {

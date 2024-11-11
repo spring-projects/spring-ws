@@ -121,7 +121,7 @@ public class ObservationInterceptorIntegrationTest {
                         .hasLowCardinalityKeyValue("outcome", "success")
                         .hasLowCardinalityKeyValue("exception", "none")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
-                        .hasLowCardinalityKeyValue("localname", "request")
+                        .hasLowCardinalityKeyValue("localpart", "request")
                         .hasLowCardinalityKeyValue("soapaction", "none")
                         .hasContextualNameEqualTo("WebServiceEndpoint http://springframework.org/spring-ws:request")
                         .hasNameEqualTo("webservice.server")

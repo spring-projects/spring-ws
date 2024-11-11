@@ -26,25 +26,25 @@ import io.micrometer.observation.Observation;
 public class DefaultWebServiceEndpointConvention implements WebServiceEndpointConvention {
 
     private static final KeyValue EXCEPTION_NONE = KeyValue.of(EndpointObservationDocumentation.LowCardinalityKeyNames.EXCEPTION, KeyValue.NONE_VALUE);
-    private String name = "webservice.server";
+    private static final String NAME = "webservice.server";
 
 
     @Override
     public KeyValues getLowCardinalityKeyValues(WebServiceEndpointContext context) {
         return KeyValues.of(
                 exception(context),
-                localname(context),
+                localPart(context),
                 namespace(context),
                 outcome(context),
                 soapAction(context));
 
     }
 
-    private KeyValue localname(WebServiceEndpointContext context) {
+    private KeyValue localPart(WebServiceEndpointContext context) {
         return EndpointObservationDocumentation
                 .LowCardinalityKeyNames
-                .LOCALNAME
-                .withValue(context.getLocalname());
+                .LOCALPART
+                .withValue(context.getLocalPart());
     }
 
     private KeyValue namespace(WebServiceEndpointContext context) {
@@ -81,18 +81,13 @@ public class DefaultWebServiceEndpointConvention implements WebServiceEndpointCo
     }
 
     @Override
-    public KeyValues getHighCardinalityKeyValues(WebServiceEndpointContext context) {
-        return KeyValues.empty();
-    }
-
-    @Override
     public String getName() {
-        return name;
+        return NAME;
     }
 
     @Override
     public String getContextualName(WebServiceEndpointContext context) {
-        return "WebServiceEndpoint " + context.getNamespace() + ':' + context.getLocalname();
+        return context.getContextualName();
     }
 
     @Override
