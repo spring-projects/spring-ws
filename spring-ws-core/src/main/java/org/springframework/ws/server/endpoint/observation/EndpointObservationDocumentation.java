@@ -27,7 +27,15 @@ import io.micrometer.observation.docs.ObservationDocumentation;
  * @author Johan Kindgren
  */
 public enum EndpointObservationDocumentation implements ObservationDocumentation {
-
+    /**
+     * An enumeration for ObservationDocumentation related to WebService Endpoint.
+     *
+     * The {@code WEB_SERVICE_ENDPOINT} provides default conventions and low cardinality key names for
+     * observing a WebService endpoint.
+     *
+     * This implementation returns the {@link DefaultWebServiceEndpointConvention} class as the default convention,
+     * and an array of {@link LowCardinalityKeyNames} for low cardinality key names.
+     */
     WEB_SERVICE_ENDPOINT {
         @Override
         public Class<? extends ObservationConvention<? extends Observation.Context>> getDefaultConvention() {
@@ -41,6 +49,9 @@ public enum EndpointObservationDocumentation implements ObservationDocumentation
 
     };
 
+    /**
+     * Enum representing low cardinality key names for observing a WebService endpoint.
+     */
     enum LowCardinalityKeyNames implements KeyName {
 
         /**

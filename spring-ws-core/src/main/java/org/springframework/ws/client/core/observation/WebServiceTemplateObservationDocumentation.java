@@ -27,7 +27,11 @@ import io.micrometer.observation.docs.ObservationDocumentation;
  * @author Johan Kindgren
  */
 public enum WebServiceTemplateObservationDocumentation implements ObservationDocumentation {
-
+    /**
+     * This enum constant defines observation documentation for the WebServiceTemplate.
+     * It provides the default observation convention and low cardinality key names
+     * relevant to WebService operations.
+     */
     WEB_SERVICE_TEMPLATE {
 
         @Override
@@ -42,6 +46,9 @@ public enum WebServiceTemplateObservationDocumentation implements ObservationDoc
 
     };
 
+    /**
+     * Enum representing low cardinality key names for observing a WebServiceTemplate.
+     */
     enum LowCardinalityKeyNames implements KeyName {
 
         /**
