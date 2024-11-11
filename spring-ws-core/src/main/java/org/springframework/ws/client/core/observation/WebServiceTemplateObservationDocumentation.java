@@ -40,10 +40,6 @@ public enum WebServiceTemplateObservationDocumentation implements ObservationDoc
             return LowCardinalityKeyNames.values();
         }
 
-        @Override
-        public KeyName[] getHighCardinalityKeyNames() {
-            return super.getHighCardinalityKeyNames();
-        }
     };
 
     enum LowCardinalityKeyNames implements KeyName {
@@ -68,7 +64,9 @@ public enum WebServiceTemplateObservationDocumentation implements ObservationDoc
                 return "outcome";
             }
         },
-
+        /**
+         * Namespace of the WebService payload.
+         */
         NAMESPACE {
             @Override
             public String asString() {
@@ -76,19 +74,27 @@ public enum WebServiceTemplateObservationDocumentation implements ObservationDoc
             }
         },
 
-        LOCALNAME {
+        /**
+         * Localpart of the WebService payload.
+         */
+        LOCALPART {
             @Override
             public String asString() {
-                return "localname";
+                return "localpart";
             }
         },
+        /**
+         * Host for the WebService call.
+         */
         HOST {
             @Override
             public String asString() {
                 return "host";
             }
         },
-
+        /**
+         * Value from the SoapAction header.
+         */
         SOAPACTION {
             @Override
             public String asString() {
