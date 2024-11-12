@@ -15,7 +15,6 @@
  */
 package org.springframework.ws.client.core.observation;
 
-import io.micrometer.common.KeyValue;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.util.Assert;
@@ -132,23 +131,9 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
         if (uri != null) {
             context.setHost(uri.getHost());
 
-            StringBuilder contextualName = new StringBuilder("WebService ");
-            contextualName.append(uri.getHost());
-            if (uri.getPort() != -1) {
-                contextualName.append(":").append(uri.getPort());
-            }
-            contextualName.append(uri.getPath());
-
-            if (!context.getSoapAction().equals(KeyValue.NONE_VALUE)) {
-                contextualName.append(" Action=").append(context.getSoapAction());
-            }
-            if (!context.getNamespace().equals(WebServiceTemplateObservationContext.UNKNOWN)) {
-                contextualName
-                    .append(" QName=").append(context.getNamespace())
-                    .append(":").append(context.getLocalPart());
-            }
-
-            context.setContextualName(contextualName.toString());
+            context.setContextualName("POST " + uri.getPath());
+        } else {
+            context.setContextualName("POST");
         }
 
         context.setError(ex);

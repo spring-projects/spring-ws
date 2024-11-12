@@ -21,20 +21,13 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.*;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
-import org.springframework.ws.transport.context.TransportContext;
-import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.transport.support.FreePortScanner;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import java.io.IOException;
 
 import static io.micrometer.observation.tck.TestObservationRegistryAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -103,15 +96,7 @@ public class ObservationInterceptorIntegrationTest {
 
         MyEndpoint.MyRequest request = new MyEndpoint.MyRequest();
         request.setName("John");
-        MyEndpoint.MyResponse response = (MyEndpoint.MyResponse) webServiceTemplate.marshalSendAndReceive(baseUrl, request, new WebServiceMessageCallback() {
-            @Override
-            public void doWithMessage(WebServiceMessage message) throws IOException, TransformerException {
-                TransportContext transportContext = TransportContextHolder.getTransportContext();
-                HeadersAwareSenderWebServiceConnection connection =
-                        (HeadersAwareSenderWebServiceConnection) transportContext.getConnection();
-                connection.addRequestHeader("traceparent", "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01");
-            }
-        });
+        MyEndpoint.MyResponse response = (MyEndpoint.MyResponse) webServiceTemplate.marshalSendAndReceive(baseUrl, request);
 
         // Assertions based on expected behavior of ObservationInterceptor
         assertNotNull(response);
@@ -123,7 +108,7 @@ public class ObservationInterceptorIntegrationTest {
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
                         .hasLowCardinalityKeyValue("localpart", "request")
                         .hasLowCardinalityKeyValue("soapaction", "none")
-                        .hasContextualNameEqualTo("WebServiceEndpoint http://springframework.org/spring-ws:request")
+                        .hasContextualNameEqualTo("POST /ws")
                         .hasNameEqualTo("webservice.server")
         );
     }

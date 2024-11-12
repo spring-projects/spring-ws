@@ -157,6 +157,7 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
                         .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasContextualNameEqualTo("POST /soap/echo")
         );
     }
 
@@ -266,6 +267,7 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
                         .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasContextualNameEqualTo("POST /errors/notfound")
         );
 
     }

@@ -26,6 +26,7 @@ import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAda
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.TransportConstants;
+import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.w3c.dom.Node;
@@ -39,6 +40,9 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * Interceptor implementation that creates an observation for a WebService Endpoint.
  * @author Johan Kindgren
@@ -46,6 +50,7 @@ import javax.xml.transform.stream.StreamSource;
 public class ObservationInterceptor extends EndpointInterceptorAdapter {
 
     public static final String OBSERVATION_KEY = "observation";
+    public static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
     private ObservationRegistry observationRegistry;
 
     private static final WebServiceEndpointConvention DEFAULT_CONVENTION = new DefaultWebServiceEndpointConvention();
@@ -124,12 +129,24 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
                 context.setOutcome("fault");
             }
         }
-        StringBuilder contextualName = new StringBuilder("WebServiceEndpoint ")
-                .append(context.getNamespace()).append(":")
-                .append(context.getLocalPart());
-        context.setContextualName(contextualName.toString());
+        URI requestUri = getUriFromConnection();
+        if (requestUri != null) {
+            context.setContextualName("POST " + requestUri.getPath());
+        } else {
+            context.setContextualName("POST");
+        }
 
         observation.stop();
+    }
+
+    URI getUriFromConnection()  {
+        TransportContext transportContext = TransportContextHolder.getTransportContext();
+        WebServiceConnection connection = transportContext.getConnection();
+        try {
+            return connection.getUri();
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 
     QName getRootElement(Source source) {
@@ -143,7 +160,7 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
                 saxParser.parse(((StreamSource) source).getInputStream(), handler);
                 return handler.getRootElementName();
             } catch (Exception e) {
-                return new QName("unknown", "unknow");
+                return UNKNOWN_Q_NAME;
             }
         }
         if (source instanceof SAXSource) {
@@ -152,10 +169,10 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
                 saxParser.parse(((SAXSource) source).getInputSource(), handler);
                 return handler.getRootElementName();
             } catch (Exception e) {
-                return new QName("unknown", "unknow");
+                return UNKNOWN_Q_NAME;
             }
         }
-        return new QName("unknown", "unknow");
+        return UNKNOWN_Q_NAME;
     }
 
     public void setCustomConvention(WebServiceEndpointConvention customConvention) {
