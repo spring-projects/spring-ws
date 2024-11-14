@@ -38,7 +38,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.core.AbstractSoap12WebServiceTemplateIntegrationTestCase;
@@ -54,7 +53,10 @@ import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.xmlunit.assertj.XmlAssert;
 
-import javax.xml.transform.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -136,7 +138,7 @@ public class WebServiceTemplateObservationIntegrationTest {
         template = new WebServiceTemplate(new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL)));
         template.setMessageSender(new HttpComponentsMessageSender());
         template.setInterceptors(new ClientInterceptor[]{
-                new WebServiceObservationInterceptor(observationRegistry)
+                new WebServiceObservationInterceptor(observationRegistry, null)
         });
     }
 
@@ -157,7 +159,8 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
                         .hasLowCardinalityKeyValue("localpart", "root")
-                        .hasContextualNameEqualTo("POST /soap/echo")
+                        .hasHighCardinalityKeyValue("path", "/soap/echo")
+                        .hasContextualNameEqualTo("POST")
         );
     }
 
@@ -167,58 +170,19 @@ public class WebServiceTemplateObservationIntegrationTest {
         boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse", new StringSource(messagePayload),
                 new StringResult());
         assertThat(b).isFalse();
+
+        TestObservationRegistryAssert.assertThat(observationRegistry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "success")
+                        .hasLowCardinalityKeyValue("exception", "none")
+                        .hasLowCardinalityKeyValue("host", "localhost")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasHighCardinalityKeyValue("path", "/soap/noResponse")
+                        .hasContextualNameEqualTo("POST")
+        );
     }
 
-    @Test
-    public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
-
-        final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
-        final Object requestObject = new Object();
-
-        Marshaller marshaller = new Marshaller() {
-
-            @Override
-            public void marshal(Object graph, Result result) throws XmlMappingException {
-
-                assertThat(requestObject).isEqualTo(graph);
-                try {
-                    transformer.transform(new StringSource(messagePayload), result);
-                } catch (TransformerException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public boolean supports(Class<?> clazz) {
-
-                assertThat(clazz).isEqualTo(Object.class);
-                return true;
-            }
-        };
-
-        final Object responseObject = new Object();
-
-        Unmarshaller unmarshaller = new Unmarshaller() {
-
-            @Override
-            public Object unmarshal(Source source) throws XmlMappingException {
-                return responseObject;
-            }
-
-            @Override
-            public boolean supports(Class<?> clazz) {
-
-                assertThat(clazz).isEqualTo(Object.class);
-                return true;
-            }
-        };
-
-        template.setMarshaller(marshaller);
-        template.setUnmarshaller(unmarshaller);
-        Object result = template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
-
-        assertThat(result).isEqualTo(responseObject);
-    }
 
     @Test
     public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
@@ -251,6 +215,17 @@ public class WebServiceTemplateObservationIntegrationTest {
         Object result = template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
 
         assertThat(result).isNull();
+
+        TestObservationRegistryAssert.assertThat(observationRegistry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "success")
+                        .hasLowCardinalityKeyValue("exception", "none")
+                        .hasLowCardinalityKeyValue("host", "localhost")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasHighCardinalityKeyValue("path", "/soap/noResponse")
+                        .hasContextualNameEqualTo("POST")
+        );
     }
 
     @Test
@@ -267,7 +242,8 @@ public class WebServiceTemplateObservationIntegrationTest {
                         .hasLowCardinalityKeyValue("host", "localhost")
                         .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
                         .hasLowCardinalityKeyValue("localpart", "root")
-                        .hasContextualNameEqualTo("POST /errors/notfound")
+                        .hasHighCardinalityKeyValue("path", "/errors/notfound")
+                        .hasContextualNameEqualTo("POST")
         );
 
     }
@@ -279,6 +255,17 @@ public class WebServiceTemplateObservationIntegrationTest {
 
         assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
                 .sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload), result));
+
+        TestObservationRegistryAssert.assertThat(observationRegistry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "fault")
+                        .hasLowCardinalityKeyValue("exception", "SoapFaultClientException")
+                        .hasLowCardinalityKeyValue("host", "localhost")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasHighCardinalityKeyValue("path", "/soap/receiverFault")
+                        .hasContextualNameEqualTo("POST")
+        );
     }
 
     @Test
@@ -288,6 +275,17 @@ public class WebServiceTemplateObservationIntegrationTest {
 
         assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
                 .sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload), result));
+
+        TestObservationRegistryAssert.assertThat(observationRegistry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "fault")
+                        .hasLowCardinalityKeyValue("exception", "SoapFaultClientException")
+                        .hasLowCardinalityKeyValue("host", "localhost")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasHighCardinalityKeyValue("path", "/soap/senderFault")
+                        .hasContextualNameEqualTo("POST")
+        );
     }
 
     @Test
@@ -300,6 +298,17 @@ public class WebServiceTemplateObservationIntegrationTest {
             soapMessage.addAttachment("attachment-1",
                     new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
         }, new StringResult());
+
+        TestObservationRegistryAssert.assertThat(observationRegistry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "success")
+                        .hasLowCardinalityKeyValue("exception", "none")
+                        .hasLowCardinalityKeyValue("host", "localhost")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "root")
+                        .hasHighCardinalityKeyValue("path", "/soap/attachment")
+                        .hasContextualNameEqualTo("POST")
+        );
     }
 
     /**

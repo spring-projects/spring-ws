@@ -29,6 +29,13 @@ public class DefaultWebServiceTemplateConvention implements WebServiceTemplateCo
             KeyValue.NONE_VALUE);
     private static final String NAME = "webservice.client";
 
+    @Override
+    public KeyValues getHighCardinalityKeyValues(WebServiceTemplateObservationContext context) {
+        if (context.getPath() != null) {
+            return KeyValues.of(path(context));
+        }
+        return KeyValues.empty();
+    }
 
     @Override
     public KeyValues getLowCardinalityKeyValues(WebServiceTemplateObservationContext context) {
@@ -39,6 +46,13 @@ public class DefaultWebServiceTemplateConvention implements WebServiceTemplateCo
                 namespace(context),
                 outcome(context),
                 soapAction(context));
+    }
+
+    private KeyValue path(WebServiceTemplateObservationContext context) {
+
+        return WebServiceTemplateObservationDocumentation.HighCardinalityKeyNames
+                .PATH
+                .withValue(context.getPath());
     }
 
     private KeyValue localname(WebServiceTemplateObservationContext context) {

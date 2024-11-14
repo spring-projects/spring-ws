@@ -26,7 +26,7 @@ import io.micrometer.observation.docs.ObservationDocumentation;
  *
  * @author Johan Kindgren
  */
-public enum WebServiceTemplateObservationDocumentation implements ObservationDocumentation {
+enum WebServiceTemplateObservationDocumentation implements ObservationDocumentation {
     /**
      * This enum constant defines observation documentation for the WebServiceTemplate.
      * It provides the default observation convention and low cardinality key names
@@ -44,7 +44,29 @@ public enum WebServiceTemplateObservationDocumentation implements ObservationDoc
             return LowCardinalityKeyNames.values();
         }
 
+        @Override
+        public KeyName[] getHighCardinalityKeyNames() {
+            return HighCardinalityKeyNames.values();
+        }
     };
+
+    enum HighCardinalityKeyNames implements KeyName {
+        /**
+         * Path for the client request.
+         * Optional value.
+         */
+        PATH {
+            @Override
+            public String asString() {
+                return "path";
+            }
+
+            @Override
+            public boolean isRequired() {
+                return false;
+            }
+        }
+    }
 
     /**
      * Enum representing low cardinality key names for observing a WebServiceTemplate.

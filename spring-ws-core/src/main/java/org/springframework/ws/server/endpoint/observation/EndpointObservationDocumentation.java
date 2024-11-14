@@ -26,7 +26,7 @@ import io.micrometer.observation.docs.ObservationDocumentation;
  *
  * @author Johan Kindgren
  */
-public enum EndpointObservationDocumentation implements ObservationDocumentation {
+enum EndpointObservationDocumentation implements ObservationDocumentation {
     /**
      * An enumeration for ObservationDocumentation related to WebService Endpoint.
      *
@@ -47,7 +47,29 @@ public enum EndpointObservationDocumentation implements ObservationDocumentation
             return LowCardinalityKeyNames.values();
         }
 
+        @Override
+        public KeyName[] getHighCardinalityKeyNames() {
+            return HighCardinalityKeyNames.values();
+        }
     };
+
+    enum HighCardinalityKeyNames implements KeyName {
+
+        /**
+         * Possible
+         */
+        PATH_INFO {
+            @Override
+            public String asString() {
+                return "pathinfo";
+            }
+
+            @Override
+            public boolean isRequired() {
+                return false;
+            }
+        }
+    }
 
     /**
      * Enum representing low cardinality key names for observing a WebService endpoint.
@@ -100,6 +122,15 @@ public enum EndpointObservationDocumentation implements ObservationDocumentation
             @Override
             public String asString() {
                 return "soapaction";
+            }
+        },
+        /**
+         * Path for the current request.
+         */
+        PATH {
+            @Override
+            public String asString() {
+                return "path";
             }
         }
     }

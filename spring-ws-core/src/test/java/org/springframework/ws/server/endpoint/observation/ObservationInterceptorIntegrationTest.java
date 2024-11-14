@@ -67,8 +67,6 @@ public class ObservationInterceptorIntegrationTest {
         MessageDispatcherServlet dispatcherServlet = new MessageDispatcherServlet(applicationContext);
         dispatcherServlet.setTransformWsdlLocations(true);
 
-
-
         ServletHolder servletHolder = new ServletHolder(dispatcherServlet);
         context.addServlet(servletHolder, "/ws/*");
 
@@ -77,13 +75,13 @@ public class ObservationInterceptorIntegrationTest {
     }
 
     @AfterAll
-    public static void stopServer() throws Exception {
+    static void tearDown() throws Exception {
+        applicationContext.close();
         server.stop();
     }
 
     @BeforeEach
     void setUp() throws TransformerConfigurationException {
-
 
         webServiceTemplate = applicationContext.getBean(WebServiceTemplate.class);
         registry = applicationContext.getBean(TestObservationRegistry.class);
@@ -113,8 +111,27 @@ public class ObservationInterceptorIntegrationTest {
         );
     }
 
-    @AfterEach
-    void tearDown() {
-        applicationContext.close();
+    @Test
+    void testPathWithVariable() {
+
+        MyEndpoint.MyRequest request = new MyEndpoint.MyRequest();
+        request.setName("John");
+        MyEndpoint.MyResponse response = (MyEndpoint.MyResponse) webServiceTemplate.marshalSendAndReceive(baseUrl + "/1234", request);
+
+        // Assertions based on expected behavior of ObservationInterceptor
+        assertNotNull(response);
+
+        assertThat(registry).hasAnObservation(observationContextAssert ->
+                observationContextAssert
+                        .hasLowCardinalityKeyValue("outcome", "success")
+                        .hasLowCardinalityKeyValue("exception", "none")
+                        .hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+                        .hasLowCardinalityKeyValue("localpart", "request")
+                        .hasLowCardinalityKeyValue("soapaction", "none")
+                        .hasLowCardinalityKeyValue("path", "/ws/{pathInfo}")
+                        .hasContextualNameEqualTo("POST /ws/{pathInfo}")
+                        .hasHighCardinalityKeyValue("pathinfo", "/1234")
+                        .hasNameEqualTo("webservice.server")
+        );
     }
 }

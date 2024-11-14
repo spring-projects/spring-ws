@@ -17,6 +17,7 @@ package org.springframework.ws.server.endpoint.observation;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -29,6 +30,7 @@ import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.http.HttpServletConnection;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -49,26 +51,24 @@ import java.net.URISyntaxException;
  */
 public class ObservationInterceptor extends EndpointInterceptorAdapter {
 
-    public static final String OBSERVATION_KEY = "observation";
-    public static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
-    private ObservationRegistry observationRegistry;
-
+    private static final String OBSERVATION_KEY = "observation";
+    private static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
     private static final WebServiceEndpointConvention DEFAULT_CONVENTION = new DefaultWebServiceEndpointConvention();
 
-    private SAXParserFactory parserFactory;
-    private SAXParser saxParser;
+    private final ObservationRegistry observationRegistry;
+    private final WebServiceEndpointConvention customConvention;
+    private final SAXParserFactory parserFactory;
+    private final SAXParser saxParser;
 
-    private WebServiceEndpointConvention customConvention;
 
-    public ObservationInterceptor(ObservationRegistry observationRegistry) {
+    public ObservationInterceptor(ObservationRegistry observationRegistry, WebServiceEndpointConvention customConvention) {
         this.observationRegistry = observationRegistry;
+        this.customConvention = customConvention;
 
         parserFactory = SAXParserFactory.newNSInstance();
         try {
             saxParser = parserFactory.newSAXParser();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException(e);
         }
     }
@@ -80,6 +80,16 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         HeadersAwareReceiverWebServiceConnection connection =
                 (HeadersAwareReceiverWebServiceConnection) transportContext.getConnection();
 
+        if (connection instanceof HttpServletConnection) {
+            HttpServletConnection servletConnection = (HttpServletConnection) connection;
+            String servletPath = servletConnection.getHttpServletRequest().getServletPath();
+            String pathInfo = servletConnection.getHttpServletRequest().getPathInfo();
+
+
+            if (servletPath != null) {
+
+            }
+        }
 
         Observation observation = EndpointObservationDocumentation.WEB_SERVICE_ENDPOINT.start(
                 customConvention,
@@ -93,7 +103,7 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
         Assert.notNull(observation, "Expected observation in messageContext");
@@ -129,9 +139,24 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
                 context.setOutcome("fault");
             }
         }
-        URI requestUri = getUriFromConnection();
-        if (requestUri != null) {
-            context.setContextualName("POST " + requestUri.getPath());
+
+        TransportContext transportContext = TransportContextHolder.getTransportContext();
+        HeadersAwareReceiverWebServiceConnection connection =
+                (HeadersAwareReceiverWebServiceConnection) transportContext.getConnection();
+
+        if (connection instanceof HttpServletConnection) {
+            HttpServletConnection servletConnection = (HttpServletConnection) connection;
+            HttpServletRequest servletRequest = servletConnection.getHttpServletRequest();
+            String servletPath = servletRequest.getServletPath();
+            String pathInfo = servletRequest.getPathInfo();
+
+            if (pathInfo != null) {
+                context.setContextualName("POST " + servletPath + "/{pathInfo}");
+                context.setPath(servletPath + "/{pathInfo}");
+                context.setPathInfo(pathInfo);
+            } else {
+                context.setContextualName("POST " + servletPath);
+            }
         } else {
             context.setContextualName("POST");
         }
@@ -173,9 +198,5 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
             }
         }
         return UNKNOWN_Q_NAME;
-    }
-
-    public void setCustomConvention(WebServiceEndpointConvention customConvention) {
-        this.customConvention = customConvention;
     }
 }

@@ -48,10 +48,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Bean
     public ObservationRegistry observationRegistry() {
-        TestObservationRegistry registry = TestObservationRegistry.create();
-
-        registry.observationConfig();
-        return registry;
+        return TestObservationRegistry.create();
     }
 
     @Bean
@@ -64,9 +61,8 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Bean
     public EndpointInterceptor observationInterceptor() {
-        return new ObservationInterceptor(observationRegistry); // Replace with your actual interceptor
+        return new ObservationInterceptor(observationRegistry, null); // Replace with your actual interceptor
     }
-
 
     @Override
     public void addInterceptors(List<EndpointInterceptor> interceptors) {

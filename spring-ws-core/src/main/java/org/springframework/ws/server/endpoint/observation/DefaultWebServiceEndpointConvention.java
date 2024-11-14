@@ -36,8 +36,16 @@ public class DefaultWebServiceEndpointConvention implements WebServiceEndpointCo
                 localPart(context),
                 namespace(context),
                 outcome(context),
+                path(context),
                 soapAction(context));
+    }
 
+    @Override
+    public KeyValues getHighCardinalityKeyValues(WebServiceEndpointContext context) {
+        if (context.getPathInfo() != null) {
+            return KeyValues.of(pathInfo(context));
+        }
+        return KeyValues.empty();
     }
 
     private KeyValue localPart(WebServiceEndpointContext context) {
@@ -78,6 +86,23 @@ public class DefaultWebServiceEndpointConvention implements WebServiceEndpointCo
         } else {
             return EXCEPTION_NONE;
         }
+    }
+
+    private KeyValue path(WebServiceEndpointContext context) {
+        return EndpointObservationDocumentation
+                .LowCardinalityKeyNames
+                .PATH
+                .withValue(context.getPath());
+    }
+
+    private KeyValue pathInfo(WebServiceEndpointContext context) {
+        if (context.getPathInfo() != null) {
+            return EndpointObservationDocumentation
+                    .HighCardinalityKeyNames
+                    .PATH_INFO
+                    .withValue(context.getPathInfo());
+        }
+        return null;
     }
 
     @Override

@@ -53,24 +53,24 @@ import java.net.URISyntaxException;
 public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
 
-    public static final String OBSERVATION_KEY = "observation";
-    private ObservationRegistry observationRegistry;
-
+    private static final String OBSERVATION_KEY = "observation";
     private static final WebServiceTemplateConvention DEFAULT_CONVENTION = new DefaultWebServiceTemplateConvention();
 
-    private SAXParserFactory parserFactory;
-    private SAXParser saxParser;
+    private final ObservationRegistry observationRegistry;
+    private final SAXParserFactory parserFactory;
+    private final SAXParser saxParser;
 
-    private WebServiceTemplateConvention customConvention;
+    private final WebServiceTemplateConvention customConvention;
 
-    public WebServiceObservationInterceptor(ObservationRegistry observationRegistry) {
+    public WebServiceObservationInterceptor(
+            ObservationRegistry observationRegistry,
+            WebServiceTemplateConvention customConvention) {
         this.observationRegistry = observationRegistry;
+        this.customConvention = customConvention;
         parserFactory = SAXParserFactory.newNSInstance();
         try {
             saxParser = parserFactory.newSAXParser();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        } catch (SAXException e) {
+        } catch (ParserConfigurationException | SAXException e) {
             throw new RuntimeException(e);
         }
     }
@@ -96,7 +96,7 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+    public void afterCompletion(MessageContext messageContext, Exception ex) {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
         Assert.notNull(observation, "Expected observation in messageContext");
@@ -130,19 +130,14 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
         URI uri = getUriFromConnection();
         if (uri != null) {
             context.setHost(uri.getHost());
-
-            context.setContextualName("POST " + uri.getPath());
-        } else {
-            context.setContextualName("POST");
+            context.setPath(uri.getPath());
         }
+
+        context.setContextualName("POST");
 
         context.setError(ex);
 
         observation.stop();
-    }
-
-    public void setCustomConvention(WebServiceTemplateConvention customConvention) {
-        this.customConvention = customConvention;
     }
 
     URI getUriFromConnection()  {

@@ -16,6 +16,7 @@
 package org.springframework.ws.client.core.observation;
 
 import io.micrometer.common.KeyValue;
+import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.transport.RequestReplySenderContext;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
 import org.springframework.ws.transport.TransportInputStream;
@@ -27,6 +28,7 @@ import java.io.IOException;
  */
 public class WebServiceTemplateObservationContext extends RequestReplySenderContext<HeadersAwareSenderWebServiceConnection, TransportInputStream> {
 
+    private static final WarnThenDebugLogger logger = new WarnThenDebugLogger(WebServiceTemplateObservationContext.class);
 
     public static final String UNKNOWN = "unknown";
     private String outcome = UNKNOWN;
@@ -34,6 +36,7 @@ public class WebServiceTemplateObservationContext extends RequestReplySenderCont
     private String namespace = UNKNOWN;
     private String host = UNKNOWN;
     private String soapAction = KeyValue.NONE_VALUE;
+    private String path = null;
 
     public WebServiceTemplateObservationContext(HeadersAwareSenderWebServiceConnection connection) {
         super((carrier, key, value) -> {
@@ -42,7 +45,7 @@ public class WebServiceTemplateObservationContext extends RequestReplySenderCont
                 try {
                     carrier.addRequestHeader(key, value);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    logger.log("Could not add key to carrier", e);
                 }
             }
         });
@@ -73,7 +76,6 @@ public class WebServiceTemplateObservationContext extends RequestReplySenderCont
         this.namespace = namespace;
     }
 
-
     public String getHost() {
         return host;
     }
@@ -82,12 +84,19 @@ public class WebServiceTemplateObservationContext extends RequestReplySenderCont
         this.host = host;
     }
 
-
     public String getSoapAction() {
         return soapAction;
     }
 
     public void setSoapAction(String soapAction) {
         this.soapAction = soapAction;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

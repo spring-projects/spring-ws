@@ -15,6 +15,7 @@
  */
 package org.springframework.ws.server.endpoint.observation;
 
+import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.transport.RequestReplyReceiverContext;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.TransportInputStream;
@@ -28,11 +29,15 @@ import java.util.Iterator;
  */
 public class WebServiceEndpointContext extends RequestReplyReceiverContext<HeadersAwareReceiverWebServiceConnection, TransportInputStream> {
 
-    public static final String UNKNOWN = "unknown";
+    private static final WarnThenDebugLogger logger = new WarnThenDebugLogger(WebServiceEndpointContext.class);
+    private static final String UNKNOWN = "unknown";
+
     private String outcome = UNKNOWN;
     private String localPart = UNKNOWN;
     private String namespace = UNKNOWN;
     private String soapAction = UNKNOWN;
+    private String path = UNKNOWN;
+    private String pathInfo = null;
 
     public WebServiceEndpointContext(HeadersAwareReceiverWebServiceConnection connection) {
         super((carrier, key) -> {
@@ -40,12 +45,11 @@ public class WebServiceEndpointContext extends RequestReplyReceiverContext<Heade
                 Iterator<String> headers = carrier.getRequestHeaders(key);
                 if (headers.hasNext()) {
                     return headers.next();
-                } else {
-                    return null;
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                logger.log("Could not read key from carrier", e);
             }
+            return null;
         });
         setCarrier(connection);
     }
@@ -80,5 +84,21 @@ public class WebServiceEndpointContext extends RequestReplyReceiverContext<Heade
 
     public void setSoapAction(String soapAction) {
         this.soapAction = soapAction;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+
+    public String getPathInfo() {
+        return pathInfo;
     }
 }
