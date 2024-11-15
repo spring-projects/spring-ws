@@ -29,7 +29,7 @@ import java.util.Iterator;
  */
 public class WebServiceEndpointContext extends RequestReplyReceiverContext<HeadersAwareReceiverWebServiceConnection, TransportInputStream> {
 
-    private static final WarnThenDebugLogger logger = new WarnThenDebugLogger(WebServiceEndpointContext.class);
+    private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(WebServiceEndpointContext.class);
     private static final String UNKNOWN = "unknown";
 
     private String outcome = UNKNOWN;
@@ -47,7 +47,7 @@ public class WebServiceEndpointContext extends RequestReplyReceiverContext<Heade
                     return headers.next();
                 }
             } catch (IOException e) {
-                logger.log("Could not read key from carrier", e);
+                WARN_THEN_DEBUG_LOGGER.log("Could not read key from carrier", e);
             }
             return null;
         });

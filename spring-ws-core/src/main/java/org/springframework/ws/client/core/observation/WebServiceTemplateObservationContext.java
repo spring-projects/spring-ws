@@ -28,7 +28,7 @@ import java.io.IOException;
  */
 public class WebServiceTemplateObservationContext extends RequestReplySenderContext<HeadersAwareSenderWebServiceConnection, TransportInputStream> {
 
-    private static final WarnThenDebugLogger logger = new WarnThenDebugLogger(WebServiceTemplateObservationContext.class);
+    private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(WebServiceTemplateObservationContext.class);
 
     public static final String UNKNOWN = "unknown";
     private String outcome = UNKNOWN;
@@ -45,7 +45,7 @@ public class WebServiceTemplateObservationContext extends RequestReplySenderCont
                 try {
                     carrier.addRequestHeader(key, value);
                 } catch (IOException e) {
-                    logger.log("Could not add key to carrier", e);
+                    WARN_THEN_DEBUG_LOGGER.log("Could not add key to carrier", e);
                 }
             }
         });

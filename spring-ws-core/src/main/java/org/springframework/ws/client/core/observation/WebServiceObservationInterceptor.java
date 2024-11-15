@@ -15,9 +15,9 @@
  */
 package org.springframework.ws.client.core.observation;
 
+import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
-import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
@@ -52,7 +52,7 @@ import java.net.URISyntaxException;
  */
 public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
-
+    private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(WebServiceObservationInterceptor.class);
     private static final String OBSERVATION_KEY = "observation";
     private static final WebServiceTemplateConvention DEFAULT_CONVENTION = new DefaultWebServiceTemplateConvention();
 
@@ -99,7 +99,10 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
     public void afterCompletion(MessageContext messageContext, Exception ex) {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
-        Assert.notNull(observation, "Expected observation in messageContext");
+        if (observation == null) {
+            WARN_THEN_DEBUG_LOGGER.log("Expected observation in messageContext, cancelling observation.");
+            return;
+        }
 
         WebServiceTemplateObservationContext context = (WebServiceTemplateObservationContext) observation.getContext();
 

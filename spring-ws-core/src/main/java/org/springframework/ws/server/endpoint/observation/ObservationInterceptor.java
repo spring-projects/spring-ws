@@ -15,6 +15,7 @@
  */
 package org.springframework.ws.server.endpoint.observation;
 
+import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,6 +52,7 @@ import java.net.URISyntaxException;
  */
 public class ObservationInterceptor extends EndpointInterceptorAdapter {
 
+    private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(ObservationInterceptor.class);
     private static final String OBSERVATION_KEY = "observation";
     private static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
     private static final WebServiceEndpointConvention DEFAULT_CONVENTION = new DefaultWebServiceEndpointConvention();
@@ -106,6 +108,10 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
     public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
+        if (observation == null) {
+            WARN_THEN_DEBUG_LOGGER.log("Expected observation in messageContext, cancelling observation.");
+            return;
+        }
         Assert.notNull(observation, "Expected observation in messageContext");
 
         WebServiceEndpointContext context = (WebServiceEndpointContext) observation.getContext();
