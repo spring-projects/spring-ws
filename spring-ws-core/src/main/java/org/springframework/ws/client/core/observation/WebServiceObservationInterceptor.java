@@ -18,6 +18,10 @@ package org.springframework.ws.client.core.observation;
 import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
@@ -63,7 +67,9 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
     private final WebServiceTemplateConvention customConvention;
 
     public WebServiceObservationInterceptor(
+            @NonNull
             ObservationRegistry observationRegistry,
+            @Nullable
             WebServiceTemplateConvention customConvention) {
         this.observationRegistry = observationRegistry;
         this.customConvention = customConvention;

@@ -19,7 +19,10 @@ import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.util.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.observation.RootElementSAXHandler;
@@ -62,8 +65,11 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
     private final SAXParserFactory parserFactory;
     private final SAXParser saxParser;
 
-
-    public ObservationInterceptor(ObservationRegistry observationRegistry, WebServiceEndpointConvention customConvention) {
+    public ObservationInterceptor(
+            @NonNull
+            ObservationRegistry observationRegistry,
+            @Nullable
+            WebServiceEndpointConvention customConvention) {
         this.observationRegistry = observationRegistry;
         this.customConvention = customConvention;
 
