@@ -100,7 +100,7 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
         if (observation == null) {
-            WARN_THEN_DEBUG_LOGGER.log("Expected observation in messageContext, cancelling observation.");
+            WARN_THEN_DEBUG_LOGGER.log("Missing expected Observation in messageContext; the request will not be observed.");
             return;
         }
 

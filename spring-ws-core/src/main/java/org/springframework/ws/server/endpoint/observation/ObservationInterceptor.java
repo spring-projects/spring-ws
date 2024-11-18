@@ -109,10 +109,9 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
         if (observation == null) {
-            WARN_THEN_DEBUG_LOGGER.log("Expected observation in messageContext, cancelling observation.");
+            WARN_THEN_DEBUG_LOGGER.log("Missing expected Observation in messageContext; the request will not be observed.");
             return;
         }
-        Assert.notNull(observation, "Expected observation in messageContext");
 
         WebServiceEndpointContext context = (WebServiceEndpointContext) observation.getContext();
 
