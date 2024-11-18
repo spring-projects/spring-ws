@@ -44,6 +44,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -56,12 +57,14 @@ import java.net.URISyntaxException;
  */
 public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
+    private final Log logger = LogFactory.getLog(getClass());
+
     private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(WebServiceObservationInterceptor.class);
     private static final String OBSERVATION_KEY = "observation";
     private static final WebServiceTemplateConvention DEFAULT_CONVENTION = new DefaultWebServiceTemplateConvention();
+    private static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
 
     private final ObservationRegistry observationRegistry;
-    private final SAXParserFactory parserFactory;
     private final SAXParser saxParser;
 
     private final WebServiceTemplateConvention customConvention;
@@ -71,14 +74,18 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             ObservationRegistry observationRegistry,
             @Nullable
             WebServiceTemplateConvention customConvention) {
+
         this.observationRegistry = observationRegistry;
         this.customConvention = customConvention;
-        parserFactory = SAXParserFactory.newNSInstance();
+
+        SAXParserFactory parserFactory = SAXParserFactory.newNSInstance();
+        SAXParser parser = null;
         try {
-            saxParser = parserFactory.newSAXParser();
+            parser = parserFactory.newSAXParser();
         } catch (ParserConfigurationException | SAXException e) {
-            throw new RuntimeException(e);
+            logger.warn("Could not create SAX parser, observation keys for Root element can be reported as 'unknown'.", e);
         }
+        saxParser = parser;
     }
 
 
@@ -88,7 +95,6 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         HeadersAwareSenderWebServiceConnection connection =
                 (HeadersAwareSenderWebServiceConnection) transportContext.getConnection();
-
 
         Observation observation = WebServiceTemplateObservationDocumentation.WEB_SERVICE_TEMPLATE.start(
                 customConvention,
@@ -128,10 +134,15 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             }
         }
 
+        if (ex == null) {
+            context.setOutcome("success");
+        } else {
+            context.setError(ex);
+            context.setOutcome("fault");
+        }
+
         if (response instanceof FaultAwareWebServiceMessage faultAwareResponse) {
-            if (!faultAwareResponse.hasFault() && ex == null) {
-                context.setOutcome("success");
-            } else {
+            if (faultAwareResponse.hasFault()) {
                 context.setOutcome("fault");
             }
         }
@@ -144,12 +155,10 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
         context.setContextualName("POST");
 
-        context.setError(ex);
-
         observation.stop();
     }
 
-    URI getUriFromConnection()  {
+    URI getUriFromConnection() {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         WebServiceConnection connection = transportContext.getConnection();
         try {
@@ -165,24 +174,34 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             return new QName(root.getNamespaceURI(), root.getLocalName());
         }
         if (source instanceof StreamSource) {
+            if (saxParser == null) {
+                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
+                return UNKNOWN_Q_NAME;
+            }
             RootElementSAXHandler handler = new RootElementSAXHandler();
             try {
                 saxParser.parse(((StreamSource) source).getInputStream(), handler);
                 return handler.getRootElementName();
-            } catch (Exception e) {
-                return new QName("unknown", "unknow");
+            } catch (SAXException | IOException e) {
+                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
+                return UNKNOWN_Q_NAME;
             }
         }
         if (source instanceof SAXSource) {
+            if (saxParser == null) {
+                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
+                return UNKNOWN_Q_NAME;
+            }
             RootElementSAXHandler handler = new RootElementSAXHandler();
             try {
                 saxParser.parse(((SAXSource) source).getInputSource(), handler);
                 return handler.getRootElementName();
-            } catch (Exception e) {
-                return new QName("unknown", "unknow");
+            } catch (SAXException | IOException e) {
+                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
+                return UNKNOWN_Q_NAME;
             }
         }
-        return new QName("unknown", "unknow");
+        return UNKNOWN_Q_NAME;
     }
 
 }

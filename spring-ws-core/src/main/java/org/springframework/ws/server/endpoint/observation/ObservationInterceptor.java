@@ -31,7 +31,6 @@ import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAda
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.TransportConstants;
-import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpServletConnection;
@@ -46,14 +45,15 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.IOException;
 
 /**
  * Interceptor implementation that creates an observation for a WebService Endpoint.
  * @author Johan Kindgren
  */
 public class ObservationInterceptor extends EndpointInterceptorAdapter {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
     private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(ObservationInterceptor.class);
     private static final String OBSERVATION_KEY = "observation";
@@ -62,7 +62,6 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
 
     private final ObservationRegistry observationRegistry;
     private final WebServiceEndpointConvention customConvention;
-    private final SAXParserFactory parserFactory;
     private final SAXParser saxParser;
 
     public ObservationInterceptor(
@@ -73,12 +72,14 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         this.observationRegistry = observationRegistry;
         this.customConvention = customConvention;
 
-        parserFactory = SAXParserFactory.newNSInstance();
+        SAXParserFactory parserFactory = SAXParserFactory.newNSInstance();
+        SAXParser parser = null;
         try {
-            saxParser = parserFactory.newSAXParser();
+            parser = parserFactory.newSAXParser();
         } catch (ParserConfigurationException | SAXException e) {
-            throw new RuntimeException(e);
+            logger.warn("Could not create SAX parser, observation keys for Root element can be reported as 'unknown'.", e);
         }
+        saxParser = parser;
     }
 
     @Override
@@ -87,17 +88,6 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         TransportContext transportContext = TransportContextHolder.getTransportContext();
         HeadersAwareReceiverWebServiceConnection connection =
                 (HeadersAwareReceiverWebServiceConnection) transportContext.getConnection();
-
-        if (connection instanceof HttpServletConnection) {
-            HttpServletConnection servletConnection = (HttpServletConnection) connection;
-            String servletPath = servletConnection.getHttpServletRequest().getServletPath();
-            String pathInfo = servletConnection.getHttpServletRequest().getPathInfo();
-
-
-            if (servletPath != null) {
-
-            }
-        }
 
         Observation observation = EndpointObservationDocumentation.WEB_SERVICE_ENDPOINT.start(
                 customConvention,
@@ -111,7 +101,7 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
     }
 
     @Override
-    public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+    public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 
         Observation observation = (Observation) messageContext.getProperty(OBSERVATION_KEY);
         if (observation == null) {
@@ -120,8 +110,6 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         }
 
         WebServiceEndpointContext context = (WebServiceEndpointContext) observation.getContext();
-
-        context.setError(ex);
 
         WebServiceMessage request = messageContext.getRequest();
         WebServiceMessage response = messageContext.getResponse();
@@ -140,13 +128,17 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
             } else {
                 context.setSoapAction("none");
             }
-
         }
 
-        if (response instanceof FaultAwareWebServiceMessage) {
-            if (!((FaultAwareWebServiceMessage) response).hasFault() && ex == null) {
-                context.setOutcome("success");
-            } else {
+        if (ex == null) {
+            context.setOutcome("success");
+        } else {
+            context.setError(ex);
+            context.setOutcome("fault");
+        }
+
+        if (response instanceof FaultAwareWebServiceMessage faultAwareResponse) {
+            if (faultAwareResponse.hasFault()) {
                 context.setOutcome("fault");
             }
         }
@@ -155,8 +147,7 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         HeadersAwareReceiverWebServiceConnection connection =
                 (HeadersAwareReceiverWebServiceConnection) transportContext.getConnection();
 
-        if (connection instanceof HttpServletConnection) {
-            HttpServletConnection servletConnection = (HttpServletConnection) connection;
+        if (connection instanceof HttpServletConnection servletConnection) {
             HttpServletRequest servletRequest = servletConnection.getHttpServletRequest();
             String servletPath = servletRequest.getServletPath();
             String pathInfo = servletRequest.getPathInfo();
@@ -175,36 +166,36 @@ public class ObservationInterceptor extends EndpointInterceptorAdapter {
         observation.stop();
     }
 
-    URI getUriFromConnection()  {
-        TransportContext transportContext = TransportContextHolder.getTransportContext();
-        WebServiceConnection connection = transportContext.getConnection();
-        try {
-            return connection.getUri();
-        } catch (URISyntaxException e) {
-            return null;
-        }
-    }
-
     QName getRootElement(Source source) {
         if (source instanceof DOMSource) {
             Node root = ((DOMSource) source).getNode();
             return new QName(root.getNamespaceURI(), root.getLocalName());
         }
         if (source instanceof StreamSource) {
+            if (saxParser == null) {
+                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
+                return UNKNOWN_Q_NAME;
+            }
             RootElementSAXHandler handler = new RootElementSAXHandler();
             try {
                 saxParser.parse(((StreamSource) source).getInputStream(), handler);
                 return handler.getRootElementName();
-            } catch (Exception e) {
+            } catch (SAXException | IOException e) {
+                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
                 return UNKNOWN_Q_NAME;
             }
         }
         if (source instanceof SAXSource) {
+            if (saxParser == null) {
+                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
+                return UNKNOWN_Q_NAME;
+            }
             RootElementSAXHandler handler = new RootElementSAXHandler();
             try {
                 saxParser.parse(((SAXSource) source).getInputSource(), handler);
                 return handler.getRootElementName();
-            } catch (Exception e) {
+            } catch (SAXException | IOException e) {
+                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
                 return UNKNOWN_Q_NAME;
             }
         }
