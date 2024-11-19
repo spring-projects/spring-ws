@@ -25,6 +25,7 @@ import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.ws.support.ObservationHelper;
 
 import java.util.List;
 
@@ -61,7 +62,11 @@ public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Bean
     public EndpointInterceptor observationInterceptor() {
-        return new ObservationInterceptor(observationRegistry, null); // Replace with your actual interceptor
+        return new ObservationInterceptor(observationRegistry, observationHelper(),null); // Replace with your actual interceptor
+    }
+    @Bean
+    public ObservationHelper observationHelper() {
+        return new ObservationHelper();
     }
 
     @Override

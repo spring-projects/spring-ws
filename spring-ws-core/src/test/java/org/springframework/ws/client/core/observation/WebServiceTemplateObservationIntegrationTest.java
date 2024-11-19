@@ -46,6 +46,7 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.support.ObservationHelper;
 import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
@@ -72,6 +73,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public class WebServiceTemplateObservationIntegrationTest {
 
     private TestObservationRegistry observationRegistry;
+    private ObservationHelper observationHelper;
 
     private static Server jettyServer;
 
@@ -134,11 +136,12 @@ public class WebServiceTemplateObservationIntegrationTest {
     @BeforeEach
     public void createWebServiceTemplate() throws Exception {
         observationRegistry = TestObservationRegistry.create();
+        observationHelper = new ObservationHelper();
 
         template = new WebServiceTemplate(new SaajSoapMessageFactory(MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL)));
         template.setMessageSender(new HttpComponentsMessageSender());
         template.setInterceptors(new ClientInterceptor[]{
-                new WebServiceObservationInterceptor(observationRegistry, null)
+                new WebServiceObservationInterceptor(observationRegistry, observationHelper, null)
         });
     }
 

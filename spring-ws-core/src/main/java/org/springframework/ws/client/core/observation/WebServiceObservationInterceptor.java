@@ -18,8 +18,6 @@ package org.springframework.ws.client.core.observation;
 import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -28,23 +26,15 @@ import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptorAdapter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.support.ObservationHelper;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import javax.xml.namespace.QName;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -57,35 +47,26 @@ import java.net.URISyntaxException;
  */
 public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
 
-    private final Log logger = LogFactory.getLog(getClass());
-
     private static final WarnThenDebugLogger WARN_THEN_DEBUG_LOGGER = new WarnThenDebugLogger(WebServiceObservationInterceptor.class);
     private static final String OBSERVATION_KEY = "observation";
     private static final WebServiceTemplateConvention DEFAULT_CONVENTION = new DefaultWebServiceTemplateConvention();
-    private static final QName UNKNOWN_Q_NAME = new QName("unknown", "unknow");
 
     private final ObservationRegistry observationRegistry;
-    private final SAXParser saxParser;
 
     private final WebServiceTemplateConvention customConvention;
+    private final ObservationHelper observationHelper;
 
     public WebServiceObservationInterceptor(
             @NonNull
             ObservationRegistry observationRegistry,
+            @NonNull
+            ObservationHelper observationHelper,
             @Nullable
             WebServiceTemplateConvention customConvention) {
 
         this.observationRegistry = observationRegistry;
+        this.observationHelper = observationHelper;
         this.customConvention = customConvention;
-
-        SAXParserFactory parserFactory = SAXParserFactory.newNSInstance();
-        SAXParser parser = null;
-        try {
-            parser = parserFactory.newSAXParser();
-        } catch (ParserConfigurationException | SAXException e) {
-            logger.warn("Could not create SAX parser, observation keys for Root element can be reported as 'unknown'.", e);
-        }
-        saxParser = parser;
     }
 
 
@@ -124,7 +105,7 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
         if (request instanceof SoapMessage soapMessage) {
 
             Source source = soapMessage.getSoapBody().getPayloadSource();
-            QName root = getRootElement(source);
+            QName root = observationHelper.getRootElement(source);
             if (root != null) {
                 context.setLocalPart(root.getLocalPart());
                 context.setNamespace(root.getNamespaceURI());
@@ -167,42 +148,5 @@ public class WebServiceObservationInterceptor extends ClientInterceptorAdapter {
             return null;
         }
     }
-
-    QName getRootElement(Source source) {
-        if (source instanceof DOMSource) {
-            Node root = ((DOMSource) source).getNode();
-            return new QName(root.getNamespaceURI(), root.getLocalName());
-        }
-        if (source instanceof StreamSource) {
-            if (saxParser == null) {
-                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
-                return UNKNOWN_Q_NAME;
-            }
-            RootElementSAXHandler handler = new RootElementSAXHandler();
-            try {
-                saxParser.parse(((StreamSource) source).getInputStream(), handler);
-                return handler.getRootElementName();
-            } catch (SAXException | IOException e) {
-                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
-                return UNKNOWN_Q_NAME;
-            }
-        }
-        if (source instanceof SAXSource) {
-            if (saxParser == null) {
-                WARN_THEN_DEBUG_LOGGER.log("SaxParser not available, reporting Root element as 'unknown'");
-                return UNKNOWN_Q_NAME;
-            }
-            RootElementSAXHandler handler = new RootElementSAXHandler();
-            try {
-                saxParser.parse(((SAXSource) source).getInputSource(), handler);
-                return handler.getRootElementName();
-            } catch (SAXException | IOException e) {
-                WARN_THEN_DEBUG_LOGGER.log("Exception while handling request, reporting Root element as 'unknown'", e);
-                return UNKNOWN_Q_NAME;
-            }
-        }
-        return UNKNOWN_Q_NAME;
-    }
-
 }
 
