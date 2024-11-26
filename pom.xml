@@ -128,16 +128,16 @@
         <spring-security.version>6.3.3</spring-security.version>
 
         <!-- Spring Framework/Spring Security baseline-SNAPSHOT -->
-        <spring-snapshot.version>6.2.0-SNAPSHOT</spring-snapshot.version>
-        <spring-security-snapshot.version>6.4.0-SNAPSHOT</spring-security-snapshot.version>
+        <spring-snapshot.version>6.1.14-SNAPSHOT</spring-snapshot.version>
+        <spring-security-snapshot.version>6.3.4-SNAPSHOT</spring-security-snapshot.version>
 
         <!-- Spring Framework/Spring Security Next Gen -->
-        <spring-next-gen.version>6.1.13</spring-next-gen.version>
-        <spring-security-next-gen.version>6.3.3</spring-security-next-gen.version>
+        <spring-next-gen.version>6.2.0</spring-next-gen.version>
+        <spring-security-next-gen.version>6.4.1</spring-security-next-gen.version>
 
         <!-- Spring Framework/Spring Security Next Gen-SNAPSHOT -->
-        <spring-next-gen-snapshot.version>6.2.0-SNAPSHOT</spring-next-gen-snapshot.version>
-        <spring-security-next-gen-snapshot.version>6.4.0-SNAPSHOT</spring-security-next-gen-snapshot.version>
+        <spring-next-gen-snapshot.version>6.2.1-SNAPSHOT</spring-next-gen-snapshot.version>
+        <spring-security-next-gen-snapshot.version>6.4.2-SNAPSHOT</spring-security-next-gen-snapshot.version>
 
         <spring-hateos.version>2.3.3</spring-hateos.version>
         <sun-mail.version>2.0.1</sun-mail.version>
@@ -337,6 +337,19 @@
 
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>com.gradle</groupId>
                     <artifactId>develocity-maven-extension</artifactId>
