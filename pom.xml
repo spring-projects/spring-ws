@@ -154,6 +154,7 @@
         <bouncycastle.version>1.78</bouncycastle.version>
         <byte-buddy.version>1.14.13</byte-buddy.version>
         <spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
+        <micrometer-observation.version>1.13.5</micrometer-observation.version>
     </properties>
 
     <dependencyManagement>
