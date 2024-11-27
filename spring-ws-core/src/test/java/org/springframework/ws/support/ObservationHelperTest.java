@@ -1,7 +1,6 @@
 package org.springframework.ws.support;
 
 import org.dom4j.Namespace;
-import org.dom4j.dom.DOMDocument;
 import org.dom4j.dom.DOMElement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,13 +39,12 @@ class ObservationHelperTest {
     @Test
     void getRootElementDomSource() {
 
-        DOMDocument document = new DOMDocument(
-                new DOMElement(
-                        new org.dom4j.QName("root",
-                                new Namespace(null, "http://springframework.org/spring-ws"))));
-        document.getRootElement().addElement("child");
+        DOMElement payloadElement =  new DOMElement(
+                new org.dom4j.QName("root",
+                        new Namespace(null, "http://springframework.org/spring-ws")));
+        payloadElement.addElement("child");
 
-        QName name = helper.getRootElement(Input.from(document).build());
+        QName name = helper.getRootElement(Input.from(payloadElement).build());
         assertThat(name.getLocalPart()).isEqualTo("root");
         assertThat(name.getNamespaceURI()).isEqualTo("http://springframework.org/spring-ws");
     }

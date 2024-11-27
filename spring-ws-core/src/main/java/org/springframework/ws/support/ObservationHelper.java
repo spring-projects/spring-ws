@@ -19,7 +19,6 @@ import io.micrometer.common.util.internal.logging.WarnThenDebugLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ws.server.endpoint.observation.ObservationInterceptor;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -67,13 +66,9 @@ public class ObservationHelper {
      */
     public QName getRootElement(Source source) {
         if (source instanceof DOMSource) {
-            Node document = ((DOMSource) source).getNode();
-            if (document.getNodeType() == Node.DOCUMENT_NODE) {
-                Document doc = (Document) document;
-                Node root = doc.getDocumentElement();
-                if (root != null) {
-                    return new QName(root.getNamespaceURI(), root.getLocalName());
-                }
+            Node payload = ((DOMSource) source).getNode();
+            if (payload.getNodeType() == Node.ELEMENT_NODE) {
+                return new QName(payload.getNamespaceURI(), payload.getLocalName());
             }
             return UNKNOWN_Q_NAME;
         }
