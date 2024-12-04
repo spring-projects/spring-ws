@@ -86,8 +86,8 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 		if (Void.TYPE.equals(method.getReturnType())) {
 			return true;
 		} else {
-			if (getMarshaller() instanceof GenericMarshaller) {
-				return ((GenericMarshaller) getMarshaller()).supports(method.getGenericReturnType());
+			if (getMarshaller() instanceof GenericMarshaller genericMarshaller) {
+				return genericMarshaller.supports(method.getGenericReturnType());
 			} else {
 				return getMarshaller().supports(method.getReturnType());
 			}
@@ -97,9 +97,8 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 	private boolean supportsParameters(Method method) {
 		if (method.getParameterTypes().length != 1) {
 			return false;
-		} else if (getUnmarshaller() instanceof GenericUnmarshaller) {
-			GenericUnmarshaller genericUnmarshaller = (GenericUnmarshaller) getUnmarshaller();
-			return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
+		} else if (getUnmarshaller() instanceof GenericUnmarshaller genericUnmarshaller) {
+            return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
 		} else {
 			return getUnmarshaller().supports(method.getParameterTypes()[0]);
 		}

@@ -144,8 +144,8 @@ public abstract class Wss4jTestCase {
 
 	protected Object getMessage(SoapMessage soapMessage) {
 
-		if (soapMessage instanceof SaajSoapMessage) {
-			return ((SaajSoapMessage) soapMessage).getSaajMessage();
+		if (soapMessage instanceof SaajSoapMessage saajSoapMessage) {
+			return saajSoapMessage.getSaajMessage();
 		}
 
 		throw new IllegalArgumentException("Illegal message: " + soapMessage);
@@ -153,8 +153,8 @@ public abstract class Wss4jTestCase {
 
 	protected void setMessage(SoapMessage soapMessage, Object message) {
 
-		if (soapMessage instanceof SaajSoapMessage) {
-			((SaajSoapMessage) soapMessage).setSaajMessage((SOAPMessage) message);
+		if (soapMessage instanceof SaajSoapMessage saajSoapMessage) {
+			saajSoapMessage.setSaajMessage((SOAPMessage) message);
 			return;
 		}
 

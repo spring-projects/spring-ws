@@ -53,8 +53,8 @@ public class DomContentHandler implements ContentHandler {
 	public DomContentHandler(Node node) {
 		Assert.notNull(node, "node must not be null");
 		this.node = node;
-		if (node instanceof Document) {
-			document = (Document) node;
+		if (node instanceof Document documentNode) {
+			document = documentNode;
 		} else {
 			document = node.getOwnerDocument();
 		}

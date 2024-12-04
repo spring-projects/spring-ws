@@ -47,8 +47,8 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 	 */
 	public void setExceptionMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
-			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-				exceptionMappings.put((String) entry.getKey(), (String) entry.getValue());
+			if (entry.getKey() instanceof String key && entry.getValue() instanceof String value) {
+				exceptionMappings.put(key, value);
 			}
 		}
 	}
