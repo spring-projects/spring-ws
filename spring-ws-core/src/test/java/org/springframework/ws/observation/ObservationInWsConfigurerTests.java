@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * This test is executed by using observation Maven profile and explicitly excluding the default profile.
  * This test relies on dependencies that cause problems with other tests in Spring WS Core.
+ * @author Corneil du Plessis
  */
 @Profile("observation")
 @SpringBootTest(classes = ObservationInWsConfigurerTests.WsTracingApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

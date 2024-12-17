@@ -52,6 +52,7 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * incoming message.
  *
  * @author Arjen Poutsma
+ * @author Corneil du Plessis (with thanks to Chris Bono)
  * @see Action
  * @see Address
  * @since 1.5.0
