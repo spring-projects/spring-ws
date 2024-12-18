@@ -5,6 +5,7 @@ image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services"
 
 image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain)[link='https://jenkins.spring.io/job/spring-ws/job/main/']
 
+image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2F4.0.x)[link='https://jenkins.spring.io/job/spring-ws/job/4.0.x/']
 
 Spring Web Services is a product of the Spring community focused on creating
 document-driven Web services. Spring Web Services aims to facilitate
