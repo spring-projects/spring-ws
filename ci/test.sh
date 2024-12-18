@@ -9,3 +9,4 @@ MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" \
 MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" \
   ./mvnw -s settings.xml \
   -P-default,${PROFILE},observation clean dependency:list test -Dsort -B -U
+

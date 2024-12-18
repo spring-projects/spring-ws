@@ -21,9 +21,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.springframework.aop.support.AopUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -54,11 +52,12 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * incoming message.
  *
  * @author Arjen Poutsma
+ * @author Corneil du Plessis (with thanks to Chris Bono)
  * @see Action
  * @see Address
  * @since 1.5.0
  */
-public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping implements BeanPostProcessor {
+public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping implements SmartInitializingSingleton {
 
 	/** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
 	protected Class<? extends Annotation> getEndpointAnnotationType() {
@@ -133,16 +132,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		}
 	}
 
-	@Override
-	public final Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		return bean;
-	}
-
-	@Override
-	public final Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-		if (AopUtils.getTargetClass(bean).getAnnotation(getEndpointAnnotationType()) != null) {
-			registerMethods(bean);
-		}
-		return bean;
+	public void afterSingletonsInstantiated() {
+		this.getApplicationContext().getBeansWithAnnotation(this.getEndpointAnnotationType())
+				.values().forEach(this::registerMethods);
 	}
 }
