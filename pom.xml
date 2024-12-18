@@ -109,7 +109,7 @@
         <jakarta-mail-api.version>2.1.3</jakarta-mail-api.version>
         <jakarta.activation-api.version>2.1.3</jakarta.activation-api.version>
         <jakarta-servlet.version>6.0.0</jakarta-servlet.version>
-        <jakarta-soap.version>3.0.1</jakarta-soap.version>
+        <jakarta-soap.version>3.0.2</jakarta-soap.version>
         <jakarta-xml-bind.version>4.0.2</jakarta-xml-bind.version>
         <glassfish-xml-bind.version>4.0.5</glassfish-xml-bind.version>
         <jaxen.version>1.1.6</jaxen.version>
@@ -181,7 +181,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>jakarta.xml.soap</groupId>
+                <artifactId>jakarta.xml.soap-api</artifactId>
+                <version>${jakarta-soap.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-bom</artifactId>
