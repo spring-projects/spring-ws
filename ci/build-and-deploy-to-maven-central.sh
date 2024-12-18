@@ -18,7 +18,7 @@ cp $KEYRING $GNUPGHOME
 
 MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
     -s settings.xml \
-    -Pjakarta-ee-10,distribute,central  \
+    -Pjakarta-ee-10,distribute,central,default  \
     -Dmaven.test.skip=true \
     -Dgpg.passphrase=${PASSPHRASE} \
     -Dgpg.secretKeyring=${GNUPGHOME}/secring.gpg \
