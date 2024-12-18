@@ -1,5 +1,5 @@
 :doctype: book
-image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=50%, link="https://spring.io/projects/spring-ws#learn"]
+image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=20%, link="https://spring.io/projects/spring-ws#learn"]
 
 = Spring Web Services
 
