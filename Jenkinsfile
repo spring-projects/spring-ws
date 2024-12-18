@@ -37,8 +37,7 @@ pipeline {
 			options { timeout(time: 30, unit: 'MINUTES')}
 			environment {
 				ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-				GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-				GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+				DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 			}
 			steps {
 				script {
@@ -63,8 +62,7 @@ pipeline {
 					options { timeout(time: 30, unit: 'MINUTES')}
 					environment {
 						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+						DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 					}
 					steps {
 						script {
@@ -82,8 +80,7 @@ pipeline {
 					options { timeout(time: 30, unit: 'MINUTES')}
 					environment {
 						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+						DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 					}
 					steps {
 						script {
@@ -101,8 +98,7 @@ pipeline {
 					options { timeout(time: 30, unit: 'MINUTES')}
 					environment {
 						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+						DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 					}
 					steps {
 						script {
@@ -120,8 +116,7 @@ pipeline {
 					options { timeout(time: 30, unit: 'MINUTES')}
 					environment {
 						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+						DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 					}
 					steps {
 						script {
@@ -137,8 +132,7 @@ pipeline {
 					options { timeout(time: 30, unit: 'MINUTES')}
 					environment {
 						ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-						GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-						GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+						DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 					}
 					steps {
 						script {
@@ -161,8 +155,7 @@ pipeline {
 				KEYRING = credentials('spring-signing-secring.gpg')
 				PASSPHRASE = credentials('spring-gpg-passphrase')
 				STAGING_PROFILE_ID = credentials('spring-data-release-deployment-maven-central-staging-profile-id')
-				GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-				GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+				DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 			}
 
 			steps {
@@ -234,8 +227,7 @@ pipeline {
 				KEYRING = credentials('spring-signing-secring.gpg')
 				PASSPHRASE = credentials('spring-gpg-passphrase')
 				STAGING_PROFILE_ID = credentials('spring-data-release-deployment-maven-central-staging-profile-id')
-				GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-				GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+				DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 			}
 
 			steps {
@@ -294,8 +286,7 @@ pipeline {
 
 			environment {
 				ARTIFACTORY = credentials("${p['artifactory.credentials']}")
-				GRADLE_ENTERPRISE_CACHE = credentials("${p['gradle-enterprise-cache.credentials']}")
-				GRADLE_ENTERPRISE_ACCESS_KEY = credentials("${p['gradle-enterprise.access-key']}")
+				DEVELOCITY_ACCESS_KEY = credentials("${p['develocity.access-key']}")
 			}
 
 			steps {
@@ -303,9 +294,7 @@ pipeline {
 				    docker.withRegistry('', "${p['dockerhub.credentials']}") {
 					    docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
                             sh 'MAVEN_OPTS="-Duser.name=jenkins -Duser.home=/tmp/jenkins-home" ' +
-                                    'GRADLE_ENTERPRISE_CACHE_USERNAME=${GRADLE_ENTERPRISE_CACHE_USR} ' +
-                                    'GRADLE_ENTERPRISE_CACHE_PASSWORD=${GRADLE_ENTERPRISE_CACHE_PSW} ' +
-                                    './mvnw -s settings.xml -Pjakarta-ee-10,distribute,docs ' +
+                                    './mvnw -s settings.xml -Pjakarta-ee-10,distribute,docs,default ' +
                                     '-Dartifactory.server=https://repo.spring.io ' +
                                     "-Dartifactory.username=${ARTIFACTORY_USR} " +
                                     "-Dartifactory.password=${ARTIFACTORY_PSW} " +
