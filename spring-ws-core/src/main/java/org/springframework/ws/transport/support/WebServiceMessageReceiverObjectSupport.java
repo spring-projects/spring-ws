@@ -88,10 +88,9 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			receiver.receive(messageContext);
 			if (messageContext.hasResponse()) {
 				WebServiceMessage response = messageContext.getResponse();
-				if (response instanceof FaultAwareWebServiceMessage && connection instanceof FaultAwareWebServiceConnection) {
-					FaultAwareWebServiceMessage faultResponse = (FaultAwareWebServiceMessage) response;
-					FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
-					faultConnection.setFaultCode(faultResponse.getFaultCode());
+				if (response instanceof FaultAwareWebServiceMessage faultResponse
+						&& connection instanceof FaultAwareWebServiceConnection faultConnection) {
+                    faultConnection.setFaultCode(faultResponse.getFaultCode());
 				}
 				connection.send(messageContext.getResponse());
 			}
@@ -116,8 +115,8 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 	 */
 	protected void handleNoEndpointFoundException(NoEndpointFoundException ex, WebServiceConnection connection,
 			WebServiceMessageReceiver receiver) throws Exception {
-		if (connection instanceof EndpointAwareWebServiceConnection) {
-			((EndpointAwareWebServiceConnection) connection).endpointNotFound();
+		if (connection instanceof EndpointAwareWebServiceConnection endpointAwareWebServiceConnection) {
+			endpointAwareWebServiceConnection.endpointNotFound();
 		}
 	}
 

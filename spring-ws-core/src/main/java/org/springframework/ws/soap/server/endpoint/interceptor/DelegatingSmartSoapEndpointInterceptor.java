@@ -44,8 +44,8 @@ public class DelegatingSmartSoapEndpointInterceptor extends DelegatingSmartEndpo
 	@Override
 	public boolean understands(SoapHeaderElement header) {
 		EndpointInterceptor delegate = getDelegate();
-		if (delegate instanceof SoapEndpointInterceptor) {
-			return ((SoapEndpointInterceptor) delegate).understands(header);
+		if (delegate instanceof SoapEndpointInterceptor soapEndpointInterceptor) {
+			return soapEndpointInterceptor.understands(header);
 		} else {
 			return false;
 		}

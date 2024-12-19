@@ -310,8 +310,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		}
 		SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
 		SoapFault fault;
-		if (response instanceof Soap11Body) {
-			fault = ((Soap11Body) response).addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
+		if (response instanceof Soap11Body soap11Body) {
+			fault = soap11Body.addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
 		} else {
 			fault = response.addClientOrSenderFault(ex.getFaultString(), Locale.ENGLISH);
 		}

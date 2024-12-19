@@ -56,9 +56,9 @@ public abstract class MarshallingUtils {
 		Source payload = message.getPayloadSource();
 		if (payload == null) {
 			return null;
-		} else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
-			MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
-			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
+		} else if (unmarshaller instanceof MimeUnmarshaller mimeUnmarshaller
+				&& message instanceof MimeMessage mimeMessage) {
+            MimeMessageContainer container = new MimeMessageContainer(mimeMessage);
 			return mimeUnmarshaller.unmarshal(payload, container);
 		} else {
 			return unmarshaller.unmarshal(payload);
@@ -74,9 +74,8 @@ public abstract class MarshallingUtils {
 	 * @throws IOException in case of I/O errors
 	 */
 	public static void marshal(Marshaller marshaller, Object graph, WebServiceMessage message) throws IOException {
-		if (marshaller instanceof MimeMarshaller && message instanceof MimeMessage) {
-			MimeMarshaller mimeMarshaller = (MimeMarshaller) marshaller;
-			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
+		if (marshaller instanceof MimeMarshaller mimeMarshaller && message instanceof MimeMessage mimeMessage) {
+            MimeMessageContainer container = new MimeMessageContainer(mimeMessage);
 			mimeMarshaller.marshal(graph, message.getPayloadResult(), container);
 		} else {
 			marshaller.marshal(graph, message.getPayloadResult());

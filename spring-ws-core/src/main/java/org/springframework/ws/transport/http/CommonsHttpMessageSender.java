@@ -219,8 +219,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	@Override
 	public void destroy() throws Exception {
 		HttpConnectionManager connectionManager = getHttpClient().getHttpConnectionManager();
-		if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
-			((MultiThreadedHttpConnectionManager) connectionManager).shutdown();
+		if (connectionManager instanceof MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager) {
+			multiThreadedHttpConnectionManager.shutdown();
 		}
 	}
 
