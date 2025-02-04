@@ -7,7 +7,7 @@ This chapter explains how to add WS-Security aspects to your Web services. We fo
 
 * *Digital signatures*: The digital signature of a message is a piece of information based on both the document and the signer's private key. It is created through the use of a hash function and a private signing function (encrypting with the signer's private key).
 
-* *Encryption and Decryption*: Encryption is the process of transforming data into a form that is impossible to read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it is not intended. Decryption is the reverse of encryption. It is the process of transforming encrypted data back into an readable form.
+* *Encryption and Decryption*: Encryption is the process of transforming data into a form that is impossible to read without the appropriate key. It is mainly used to keep information hidden from anyone for whom it is not intended. Decryption is the reverse of encryption. It is the process of transforming encrypted data back into a readable form.
 
 These three areas are implemented by using the `XwsSecurityInterceptor` or `Wss4jSecurityInterceptor`, which we describe in <<security-xws-security-interceptor>> and <<security-wss4j-security-interceptor>>, respectively
 
