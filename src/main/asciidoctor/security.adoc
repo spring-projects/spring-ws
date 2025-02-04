@@ -302,7 +302,7 @@ The `SpringDigestPasswordValidationCallbackHandler` requires a Spring Security `
 [[security-certificate-authentication]]
 ==== Certificate Authentication
 
-A more secure way of authentication uses X509 certificates. In this scenario, the SOAP message contains a`BinarySecurityToken`, which contains a Base 64-encoded version of a X509 certificate. The certificate is used by the recipient to authenticate. The certificate stored in the message is also used to sign the message (see <<security-verifying-signatures>>).
+A more secure way of authentication uses X509 certificates. In this scenario, the SOAP message contains a `BinarySecurityToken`, which contains a Base 64-encoded version of a X509 certificate. The certificate is used by the recipient to authenticate. The certificate stored in the message is also used to sign the message (see <<security-verifying-signatures>>).
 
 To make sure that all incoming SOAP messages carry a`BinarySecurityToken`, the security policy file should contain a `RequireSignature` element. This element can further carry other elements, which are covered in <<security-verifying-signatures>>. You can find a reference of possible child elements http://java.sun.com/webservices/docs/1.6/tutorial/doc/XWS-SecurityIntro4.html#wp565769[here]. The following listing shows how to define a `RequireSignature` element:
 
