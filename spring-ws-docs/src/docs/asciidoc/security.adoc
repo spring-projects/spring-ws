@@ -11,7 +11,7 @@ It is created through the use of a hash function and a private signing function 
 * *Encryption and Decryption*: Encryption is the process of transforming data into a form that is impossible to read without the appropriate key.
 It is mainly used to keep information hidden from anyone for whom it is not intended.
 Decryption is the reverse of encryption.
-It is the process of transforming encrypted data back into an readable form.
+It is the process of transforming encrypted data back into a readable form.
 
 These three areas are implemented by using the `XwsSecurityInterceptor` or `Wss4jSecurityInterceptor`, which we describe in <<security-xws-security-interceptor>> and <<security-wss4j-security-interceptor>>, respectively.
 
@@ -384,7 +384,7 @@ The following example shows how to do so:
 ==== Certificate Authentication
 
 A more secure way of authentication uses X509 certificates.
-In this scenario, the SOAP message contains a`BinarySecurityToken`, which contains a Base 64-encoded version of a X509 certificate.
+In this scenario, the SOAP message contains a `BinarySecurityToken`, which contains a Base 64-encoded version of a X509 certificate.
 The certificate is used by the recipient to authenticate.
 The certificate stored in the message is also used to sign the message (see <<security-verifying-signatures>>).
 
