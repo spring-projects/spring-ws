@@ -3,20 +3,16 @@
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.springframework.ws</groupId>
 		<artifactId>spring-ws</artifactId>
 		<version>4.0.12-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>spring-ws-support</artifactId>
 	<packaging>jar</packaging>
-
 	<description>Spring WS Support</description>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
 			<artifactId>spring-xml</artifactId>
@@ -126,32 +122,32 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>test</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.icegreen</groupId>
 			<artifactId>greenmail</artifactId>
 			<version>${greenmail.version}</version>
 			<scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.mail</groupId>
-                    <artifactId>jakarta.mail</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>jakarta.activation</groupId>
-                    <artifactId>jakarta.activation-api</artifactId>
-                </exclusion>
-            </exclusions>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>jakarta.mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jakarta.activation</groupId>
+					<artifactId>jakarta.activation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.icegreen</groupId>
@@ -170,7 +166,6 @@
 	<profiles>
 		<profile>
 			<id>docs</id>
-
 			<build>
 				<plugins>
 					<plugin>
@@ -191,31 +186,29 @@
 					</plugin>
 				</plugins>
 			</build>
-
 		</profile>
 
-        <profile>
-            <id>jakarta-ee-9</id>
-            <dependencies>
-                <!--// Mail-->
-                <dependency>
-                    <groupId>com.sun.mail</groupId>
-                    <artifactId>jakarta.mail</artifactId>
-                    <version>${sun-mail.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
+		<profile>
+			<id>jakarta-ee-9</id>
+			<dependencies>
+				<dependency>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>jakarta.mail</artifactId>
+					<version>${sun-mail.version}</version>
+				</dependency>
+			</dependencies>
+		</profile>
 
-        <profile>
-            <id>jakarta-ee-10</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.eclipse.angus</groupId>
-                    <artifactId>angus-mail</artifactId>
-                    <version>${eclipse-angus-mail.version}</version>
+		<profile>
+			<id>jakarta-ee-10</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>org.eclipse.angus</groupId>
+					<artifactId>angus-mail</artifactId>
+					<version>${eclipse-angus-mail.version}</version>
 					<exclusions>
 						<exclusion>
 							<groupId>jakarta.activation</groupId>
@@ -226,10 +219,9 @@
 							<artifactId>jakarta.mail-api</artifactId>
 						</exclusion>
 					</exclusions>
-                </dependency>
-            </dependencies>
-        </profile>
-
-    </profiles>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
 
 </project>
