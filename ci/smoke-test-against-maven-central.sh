@@ -10,7 +10,7 @@ echo 'Smoke test against Maven Central...'
 cd smoke-tests
 
 MAVEN_OPTS="-Duser.name=spring-builds+jenkins -Duser.home=/tmp/jenkins-home" ./mvnw \
-    -Pmaven-central,default  \
+    -Pmaven-central  \
     -DstagingRepositoryId="${STAGING_REPOSITORY_ID}" \
     -Dspring-ws.version="${PROJECT_VERSION}" \
     clean dependency:purge-local-repository verify -B -U
