@@ -9,10 +9,13 @@
 		<version>4.0.12-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-xml</artifactId>
-	<packaging>jar</packaging>
 	<description>Spring XML</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.sun.xml.messaging.saaj</groupId>
+			<artifactId>saaj-impl</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
@@ -25,25 +28,18 @@
 		<dependency>
 			<groupId>org.apache.ws.xmlschema</groupId>
 			<artifactId>xmlschema-core</artifactId>
-			<version>${xml-schema-core.version}</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>jaxen</groupId>
 			<artifactId>jaxen</artifactId>
-			<version>${jaxen.version}</version>
 			<optional>true</optional>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
-			<version>4.4</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.messaging.saaj</groupId>
-			<artifactId>saaj-impl</artifactId>
-			<version>${saaj-impl.version}</version>
 		</dependency>
 	</dependencies>
 

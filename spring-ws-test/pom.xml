@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.ws</groupId>
@@ -9,20 +9,16 @@
 		<version>4.0.12-SNAPSHOT</version>
 	</parent>
 	<artifactId>spring-ws-test</artifactId>
-	<packaging>jar</packaging>
 	<description>Spring WS Test</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-xml</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>spring-ws-core</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.ws</groupId>
-			<artifactId>spring-ws-core</artifactId>
-			<version>${project.parent.version}</version>
+			<artifactId>spring-xml</artifactId>
 		</dependency>
 
 		<dependency>
@@ -31,26 +27,15 @@
 		</dependency>
 		<dependency>
 			<groupId>org.xmlunit</groupId>
-			<artifactId>xmlunit-legacy</artifactId>
-			<version>${xmlunit.version}</version>
+			<artifactId>xmlunit-core</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.xmlunit</groupId>
-			<artifactId>xmlunit-core</artifactId>
-			<version>${xmlunit.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>jakarta.xml.bind</groupId>
-					<artifactId>jakarta.xml.bind-api</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>xmlunit-legacy</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.xmlunit</groupId>
 			<artifactId>xmlunit-placeholders</artifactId>
-			<version>${xmlunit.version}</version>
 		</dependency>
 
 		<dependency>
