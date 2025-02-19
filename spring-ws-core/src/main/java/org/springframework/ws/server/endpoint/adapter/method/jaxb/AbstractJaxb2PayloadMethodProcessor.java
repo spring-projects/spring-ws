@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,14 +15,6 @@
  */
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
-
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.JAXBIntrospector;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.UnmarshallerHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,6 +37,19 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBIntrospector;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.UnmarshallerHandler;
+import org.w3c.dom.Node;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.ext.LexicalHandler;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -53,19 +58,18 @@ import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMeth
 import org.springframework.ws.stream.StreamingPayload;
 import org.springframework.ws.stream.StreamingWebServiceMessage;
 import org.springframework.xml.transform.TraxUtils;
-import org.w3c.dom.Node;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-import org.xml.sax.ext.LexicalHandler;
 
 /**
- * Abstract base class for {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
- * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
- * MethodReturnValueHandler} implementations that use JAXB2. Creates {@link JAXBContext} object lazily, and offers
- * {@linkplain #marshalToResponsePayload(org.springframework.ws.context.MessageContext, Class, Object) marshalling} and
- * {@linkplain #unmarshalFromRequestPayload(org.springframework.ws.context.MessageContext, Class) unmarshalling}
- * methods.
+ * Abstract base class for
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * MethodReturnValueHandler} implementations that use JAXB2. Creates {@link JAXBContext}
+ * object lazily, and offers
+ * {@linkplain #marshalToResponsePayload(org.springframework.ws.context.MessageContext, Class, Object)
+ * marshalling} and
+ * {@linkplain #unmarshalFromRequestPayload(org.springframework.ws.context.MessageContext, Class)
+ * unmarshalling} methods.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -86,8 +90,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 			Object returnValue) throws Exception;
 
 	/**
-	 * Marshals the given {@code jaxbElement} to the response payload of the given message context.
-	 *
+	 * Marshals the given {@code jaxbElement} to the response payload of the given message
+	 * context.
 	 * @param messageContext the message context to marshal to
 	 * @param clazz the clazz to create a marshaller for
 	 * @param jaxbElement the object to be marshalled
@@ -107,12 +111,14 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 			StreamingPayload payload = new JaxbStreamingPayload(clazz, jaxbElement);
 			streamingResponse.setStreamingPayload(payload);
-		} else {
+		}
+		else {
 			Result responsePayload = response.getPayloadResult();
 			try {
 				Jaxb2ResultCallback callback = new Jaxb2ResultCallback(clazz, jaxbElement);
 				TraxUtils.doWithResult(responsePayload, callback);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				throw convertToJaxbException(ex);
 			}
 		}
@@ -120,7 +126,6 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	/**
 	 * Unmarshals the request payload of the given message context.
-	 *
 	 * @param messageContext the message context to unmarshal from
 	 * @param clazz the class to unmarshal
 	 * @return the unmarshalled object, or {@code null} if the request has no payload
@@ -139,14 +144,14 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw convertToJaxbException(ex);
 		}
 	}
 
 	/**
 	 * Unmarshals the request payload of the given message context as {@link JAXBElement}.
-	 *
 	 * @param messageContext the message context to unmarshal from
 	 * @param clazz the class to unmarshal
 	 * @return the unmarshalled element, or {@code null} if the request has no payload
@@ -165,7 +170,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw convertToJaxbException(ex);
 		}
 	}
@@ -178,16 +184,16 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	private JAXBException convertToJaxbException(Exception ex) {
 		if (ex instanceof JAXBException) {
 			return (JAXBException) ex;
-		} else {
+		}
+		else {
 			return new JAXBException(ex);
 		}
 	}
 
 	/**
-	 * Creates a new {@link Marshaller} to be used for marshalling objects to XML. Defaults to
-	 * {@link jakarta.xml.bind.JAXBContext#createMarshaller()}, but can be overridden in subclasses for further
-	 * customization.
-	 *
+	 * Creates a new {@link Marshaller} to be used for marshalling objects to XML.
+	 * Defaults to {@link jakarta.xml.bind.JAXBContext#createMarshaller()}, but can be
+	 * overridden in subclasses for further customization.
 	 * @param jaxbContext the JAXB context to create a marshaller for
 	 * @return the marshaller
 	 * @throws JAXBException in case of JAXB errors
@@ -201,10 +207,9 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	}
 
 	/**
-	 * Creates a new {@link Unmarshaller} to be used for unmarshalling XML to objects. Defaults to
-	 * {@link jakarta.xml.bind.JAXBContext#createUnmarshaller()}, but can be overridden in subclasses for further
-	 * customization.
-	 *
+	 * Creates a new {@link Unmarshaller} to be used for unmarshalling XML to objects.
+	 * Defaults to {@link jakarta.xml.bind.JAXBContext#createUnmarshaller()}, but can be
+	 * overridden in subclasses for further customization.
 	 * @param jaxbContext the JAXB context to create a unmarshaller for
 	 * @return the unmarshaller
 	 * @throws JAXBException in case of JAXB errors
@@ -248,16 +253,20 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void saxSource(XMLReader reader, InputSource inputSource) throws Exception {
 			if (inputSource.getByteStream() == null && inputSource.getCharacterStream() == null
 					&& inputSource.getSystemId() == null) {
-				// The InputSource neither has a stream nor a system ID set; this means that
-				// we are dealing with a custom SAXSource that is not backed by a SAX parser
+				// The InputSource neither has a stream nor a system ID set; this means
+				// that
+				// we are dealing with a custom SAXSource that is not backed by a SAX
+				// parser
 				// but that generates a sequence of SAX events in some other way.
-				// In this case, we need to use a ContentHandler to feed the SAX events into
+				// In this case, we need to use a ContentHandler to feed the SAX events
+				// into
 				// the unmarshaller.
 				UnmarshallerHandler handler = unmarshaller.getUnmarshallerHandler();
 				reader.setContentHandler(handler);
 				reader.parse(inputSource);
 				result = handler.getResult();
-			} else {
+			}
+			else {
 				// If a stream or system ID is set, we assume that the SAXSource is backed
 				// by a SAX parser and we only pass the InputSource to the unmarshaller.
 				// This effectively ignores the SAX parser and lets the unmarshaller take
@@ -290,6 +299,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void source(String systemId) throws Exception {
 			result = unmarshaller.unmarshal(new URL(systemId));
 		}
+
 	}
 
 	private class JaxbElementSourceCallback<T> implements TraxUtils.SourceCallback {
@@ -339,6 +349,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void source(String systemId) throws Exception {
 			result = unmarshaller.unmarshal(new StreamSource(systemId), declaredType);
 		}
+
 	}
 
 	private class Jaxb2ResultCallback implements TraxUtils.ResultCallback {
@@ -386,6 +397,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void result(String systemId) throws Exception {
 			marshaller.marshal(jaxbElement, new StreamResult(systemId));
 		}
+
 	}
 
 	private class JaxbStreamingPayload implements StreamingPayload {
@@ -414,10 +426,12 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
 			try {
 				marshaller.marshal(jaxbElement, streamWriter);
-			} catch (JAXBException ex) {
+			}
+			catch (JAXBException ex) {
 				throw new XMLStreamException("Could not marshal [" + jaxbElement + "]: " + ex.getMessage(), ex);
 			}
 		}
+
 	}
 
 }

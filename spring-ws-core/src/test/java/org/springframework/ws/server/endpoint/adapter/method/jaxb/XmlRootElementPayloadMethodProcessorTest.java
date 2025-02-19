@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,25 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
-
 import java.io.OutputStream;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -40,12 +44,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.xml.sax.AbstractXmlReader;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.AttributesImpl;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class XmlRootElementPayloadMethodProcessorTest {
 
@@ -164,7 +164,8 @@ public class XmlRootElementPayloadMethodProcessorTest {
 			}
 		};
 
-		// Create a message context with that request. Note that the message factory doesn't matter here:
+		// Create a message context with that request. Note that the message factory
+		// doesn't matter here:
 		// it is required but not used.
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
@@ -191,7 +192,9 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 
 		XmlAssert.assertThat(response.getPayloadAsString())
-				.and("<root xmlns='http://springframework.org'><string>Foo</string></root>").ignoreWhitespace().areIdentical();
+			.and("<root xmlns='http://springframework.org'><string>Foo</string></root>")
+			.ignoreWhitespace()
+			.areIdentical();
 	}
 
 	@Test
@@ -210,7 +213,8 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		return rootElement;
 	}
 
-	public void type(@RequestPayload MyType type) {}
+	public void type(@RequestPayload MyType type) {
+	}
 
 	@XmlRootElement(name = "root", namespace = "http://springframework.org")
 	public static class MyRootElement {
@@ -225,6 +229,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		public void setString(String string) {
 			this.string = string;
 		}
+
 	}
 
 	@XmlType(name = "root", namespace = "http://springframework.org")
@@ -240,6 +245,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		public void setString(String string) {
 			this.string = string;
 		}
+
 	}
 
 }

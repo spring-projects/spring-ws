@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,17 +15,6 @@
  */
 
 package org.springframework.ws.transport.mail;
-
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.mail.Address;
-import jakarta.mail.Header;
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.URLName;
-import jakarta.mail.internet.InternetAddress;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +29,17 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.mail.Address;
+import jakarta.mail.Header;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.URLName;
+import jakarta.mail.internet.InternetAddress;
+
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -49,8 +49,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for server-side Mail access. Exposes a {@link Message}
- * request and response message.
+ * Implementation of {@link WebServiceConnection} that is used for server-side Mail
+ * access. Exposes a {@link Message} request and response message.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -111,16 +111,18 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
 			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
 				return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
-			} else {
+			}
+			else {
 				throw new URISyntaxException("", "Could not determine To header");
 			}
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}
 	/*
-		 * Errors
-		 */
+	 * Errors
+	 */
 
 	@Override
 	public String getErrorMessage() throws IOException {
@@ -133,8 +135,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	/*
-	* Receiving
-	*/
+	 * Receiving
+	 */
 
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
@@ -146,7 +148,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 				headers.add(header.getName());
 			}
 			return headers.iterator();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new IOException(ex.getMessage());
 		}
 	}
@@ -156,7 +159,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 		try {
 			String[] headers = requestMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -165,7 +169,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	protected InputStream getRequestInputStream() throws IOException {
 		try {
 			return requestMessage.getInputStream();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -177,7 +182,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
 				responseContentType = value;
 			}
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -198,7 +204,8 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 			responseMessage.setFrom(from);
 
 			responseBuffer = new ByteArrayOutputStream();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -207,15 +214,17 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		Transport transport = null;
 		try {
-			responseMessage
-					.setDataHandler(new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
+			responseMessage.setDataHandler(
+					new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
 			transport = session.getTransport(transportUri);
 			transport.connect();
 			responseMessage.saveChanges();
 			transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
-		} finally {
+		}
+		finally {
 			MailTransportUtils.closeService(transport);
 		}
 	}
@@ -250,5 +259,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 		public OutputStream getOutputStream() throws IOException {
 			throw new UnsupportedOperationException();
 		}
+
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.xml.soap.SOAPBody;
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPFault;
-
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
+
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapVersion;
@@ -30,7 +30,8 @@ import org.springframework.ws.soap.soap12.Soap12Body;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
- * SAAJ-specific implementation of the {@code Soap12Body} interface. Wraps a {@link jakarta.xml.soap.SOAPBody}.
+ * SAAJ-specific implementation of the {@code Soap12Body} interface. Wraps a
+ * {@link jakarta.xml.soap.SOAPBody}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -88,12 +89,14 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
 			SOAPFault result;
 			if (faultStringLocale == null) {
 				result = body.addFault(faultCode, faultString);
-			} else {
+			}
+			else {
 				result = body.addFault(faultCode, faultString, faultStringLocale);
 			}
 			SOAPFault saajFault = result;
 			return new SaajSoap12Fault(saajFault);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.ConversionServiceFactory;
@@ -33,18 +38,17 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.ws.server.endpoint.support.NamespaceUtils;
 import org.springframework.xml.transform.TransformerHelper;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
- * Implementation of {@link MethodArgumentResolver} that supports the {@link XPathParam @XPathParam} annotation.
+ * Implementation of {@link MethodArgumentResolver} that supports the
+ * {@link XPathParam @XPathParam} annotation.
  * <p>
- * This resolver supports parameters annotated with {@link XPathParam @XPathParam} that specifies the XPath expression
- * that should be bound to that parameter. The parameter can either a "natively supported" XPath type ({@link Boolean
- * boolean}, {@link Double double}, {@link String}, {@link Node}, or {@link NodeList}), or a type that is
- * {@linkplain ConversionService#canConvert(Class, Class) supported} by the {@link ConversionService}.
+ * This resolver supports parameters annotated with {@link XPathParam @XPathParam} that
+ * specifies the XPath expression that should be bound to that parameter. The parameter
+ * can either a "natively supported" XPath type ({@link Boolean boolean}, {@link Double
+ * double}, {@link String}, {@link Node}, or {@link NodeList}), or a type that is
+ * {@linkplain ConversionService#canConvert(Class, Class) supported} by the
+ * {@link ConversionService}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -60,7 +64,9 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	/**
 	 * Sets the conversion service to use.
 	 * <p>
-	 * Defaults to the {@linkplain ConversionServiceFactory#createDefaultConversionService() default conversion service}.
+	 * Defaults to the
+	 * {@linkplain ConversionServiceFactory#createDefaultConversionService() default
+	 * conversion service}.
 	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;
@@ -76,11 +82,13 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 			return false;
 		}
 		Class<?> parameterType = parameter.getParameterType();
-		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType) || Double.class.equals(parameterType)
-				|| Double.TYPE.equals(parameterType) || Node.class.isAssignableFrom(parameterType)
-				|| NodeList.class.isAssignableFrom(parameterType) || String.class.isAssignableFrom(parameterType)) {
+		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType)
+				|| Double.class.equals(parameterType) || Double.TYPE.equals(parameterType)
+				|| Node.class.isAssignableFrom(parameterType) || NodeList.class.isAssignableFrom(parameterType)
+				|| String.class.isAssignableFrom(parameterType)) {
 			return true;
-		} else {
+		}
+		else {
 			return conversionService.canConvert(String.class, parameterType);
 		}
 	}
@@ -108,15 +116,20 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	private QName getReturnType(Class<?> parameterType) {
 		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType)) {
 			return XPathConstants.BOOLEAN;
-		} else if (Double.class.equals(parameterType) || Double.TYPE.equals(parameterType)) {
+		}
+		else if (Double.class.equals(parameterType) || Double.TYPE.equals(parameterType)) {
 			return XPathConstants.NUMBER;
-		} else if (Node.class.equals(parameterType)) {
+		}
+		else if (Node.class.equals(parameterType)) {
 			return XPathConstants.NODE;
-		} else if (NodeList.class.equals(parameterType)) {
+		}
+		else if (NodeList.class.equals(parameterType)) {
 			return XPathConstants.NODESET;
-		} else if (String.class.equals(parameterType)) {
+		}
+		else if (String.class.equals(parameterType)) {
 			return XPathConstants.STRING;
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -135,11 +148,11 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	}
 
 	/**
-	 * Create a {@code XPathFactory} that this resolver will use to create {@link XPath} objects.
+	 * Create a {@code XPathFactory} that this resolver will use to create {@link XPath}
+	 * objects.
 	 * <p>
-	 * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached, so
-	 * this method will only be called once.
-	 *
+	 * Can be overridden in subclasses, adding further initialization of the factory. The
+	 * resulting factory is cached, so this method will only be called once.
 	 * @return the created factory
 	 */
 	protected XPathFactory createXPathFactory() {

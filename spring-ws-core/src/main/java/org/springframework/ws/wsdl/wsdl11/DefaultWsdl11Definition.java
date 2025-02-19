@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,9 +31,10 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
 
 /**
- * Convenient implementation of {@link Wsdl11Definition} that creates a SOAP 1.1 or 1.2 binding based on naming
- * conventions in one or more inlined XSD schemas. Delegates to {@link InliningXsdSchemaTypesProvider},
- * {@link DefaultMessagesProvider}, {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
+ * Convenient implementation of {@link Wsdl11Definition} that creates a SOAP 1.1 or 1.2
+ * binding based on naming conventions in one or more inlined XSD schemas. Delegates to
+ * {@link InliningXsdSchemaTypesProvider}, {@link DefaultMessagesProvider},
+ * {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
  * equivalent to using a {@link ProviderBasedWsdl4jDefinition} with all these providers.
  * <p>
  * Example configuration:
@@ -86,16 +87,16 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	}
 
 	/**
-	 * Sets the single XSD schema to inline. Either this property, or {@link #setSchemaCollection(XsdSchemaCollection)
-	 * schemaCollection} must be set.
+	 * Sets the single XSD schema to inline. Either this property, or
+	 * {@link #setSchemaCollection(XsdSchemaCollection) schemaCollection} must be set.
 	 */
 	public void setSchema(XsdSchema schema) {
 		typesProvider.setSchema(schema);
 	}
 
 	/**
-	 * Sets the XSD schema collection to inline. Either this property, or {@link #setSchema(XsdSchema) schema} must be
-	 * set.
+	 * Sets the XSD schema collection to inline. Either this property, or
+	 * {@link #setSchema(XsdSchema) schema} must be set.
 	 */
 	public void setSchemaCollection(XsdSchemaCollection schemaCollection) {
 		typesProvider.setSchemaCollection(schemaCollection);
@@ -143,16 +144,19 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	}
 
 	/**
-	 * Sets the SOAP Actions for this binding. Keys are {@link javax.wsdl.BindingOperation#getName() binding operation
-	 * names}; values are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
-	 *
+	 * Sets the SOAP Actions for this binding. Keys are
+	 * {@link javax.wsdl.BindingOperation#getName() binding operation names}; values are
+	 * {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action
+	 * URIs}.
 	 * @param soapActions the soap
 	 */
 	public void setSoapActions(Properties soapActions) {
 		soapProvider.setSoapActions(soapActions);
 	}
 
-	/** Sets the value used for the binding transport attribute value. Defaults to HTTP. */
+	/**
+	 * Sets the value used for the binding transport attribute value. Defaults to HTTP.
+	 */
 	public void setTransportUri(String transportUri) {
 		soapProvider.setTransportUri(transportUri);
 	}
@@ -189,4 +193,5 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	public Source getSource() {
 		return delegate.getSource();
 	}
+
 }

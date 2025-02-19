@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,11 +16,11 @@
 
 package org.springframework.ws.support;
 
-import jakarta.activation.DataHandler;
-
 import java.io.IOException;
 
 import javax.xml.transform.Source;
+
+import jakarta.activation.DataHandler;
 
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -39,14 +39,16 @@ import org.springframework.ws.mime.MimeMessage;
  */
 public abstract class MarshallingUtils {
 
-	private MarshallingUtils() {}
+	private MarshallingUtils() {
+	}
 
 	/**
-	 * Unmarshals the payload of the given message using the provided {@link Unmarshaller}.
+	 * Unmarshals the payload of the given message using the provided
+	 * {@link Unmarshaller}.
 	 * <p>
-	 * If the request message has no payload (i.e. {@link WebServiceMessage#getPayloadSource()} returns {@code null}),
-	 * this method will return {@code null}.
-	 *
+	 * If the request message has no payload (i.e.
+	 * {@link WebServiceMessage#getPayloadSource()} returns {@code null}), this method
+	 * will return {@code null}.
 	 * @param unmarshaller the unmarshaller
 	 * @param message the message of which the payload is to be unmarshalled
 	 * @return the unmarshalled object
@@ -56,18 +58,20 @@ public abstract class MarshallingUtils {
 		Source payload = message.getPayloadSource();
 		if (payload == null) {
 			return null;
-		} else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
+		}
+		else if (unmarshaller instanceof MimeUnmarshaller && message instanceof MimeMessage) {
 			MimeUnmarshaller mimeUnmarshaller = (MimeUnmarshaller) unmarshaller;
 			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
 			return mimeUnmarshaller.unmarshal(payload, container);
-		} else {
+		}
+		else {
 			return unmarshaller.unmarshal(payload);
 		}
 	}
 
 	/**
-	 * Marshals the given object to the payload of the given message using the provided {@link Marshaller}.
-	 *
+	 * Marshals the given object to the payload of the given message using the provided
+	 * {@link Marshaller}.
 	 * @param marshaller the marshaller
 	 * @param graph the root of the object graph to marshal
 	 * @param message the message of which the payload is to be unmarshalled
@@ -78,7 +82,8 @@ public abstract class MarshallingUtils {
 			MimeMarshaller mimeMarshaller = (MimeMarshaller) marshaller;
 			MimeMessageContainer container = new MimeMessageContainer((MimeMessage) message);
 			mimeMarshaller.marshal(graph, message.getPayloadResult(), container);
-		} else {
+		}
+		else {
 			marshaller.marshal(graph, message.getPayloadResult());
 		}
 	}
@@ -111,6 +116,7 @@ public abstract class MarshallingUtils {
 			Attachment attachment = mimeMessage.getAttachment(contentId);
 			return attachment != null ? attachment.getDataHandler() : null;
 		}
+
 	}
 
 }

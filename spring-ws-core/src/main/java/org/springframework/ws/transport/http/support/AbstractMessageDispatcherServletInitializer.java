@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,16 +26,19 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 /**
- * Base class for {@link org.springframework.web.WebApplicationInitializer WebApplicationInitializer} implementations
- * that register a {@link MessageDispatcherServlet} in the servlet context.
+ * Base class for {@link org.springframework.web.WebApplicationInitializer
+ * WebApplicationInitializer} implementations that register a
+ * {@link MessageDispatcherServlet} in the servlet context.
  * <p>
- * Concrete implementations are required to implement {@link #createServletApplicationContext()}, which gets invoked
- * from {@link #registerMessageDispatcherServlet(ServletContext)}. Further customization can be achieved by overriding
- * {@link #customizeRegistration(ServletRegistration.Dynamic)}.
+ * Concrete implementations are required to implement
+ * {@link #createServletApplicationContext()}, which gets invoked from
+ * {@link #registerMessageDispatcherServlet(ServletContext)}. Further customization can be
+ * achieved by overriding {@link #customizeRegistration(ServletRegistration.Dynamic)}.
  * <p>
- * Because this class extends from {@link AbstractContextLoaderInitializer}, concrete implementations are also required
- * to implement {@link #createRootApplicationContext()} to set up a parent "<strong>root</strong>" application context.
- * If a root context is not desired, implementations can simply return {@code null} in the
+ * Because this class extends from {@link AbstractContextLoaderInitializer}, concrete
+ * implementations are also required to implement {@link #createRootApplicationContext()}
+ * to set up a parent "<strong>root</strong>" application context. If a root context is
+ * not desired, implementations can simply return {@code null} in the
  * {@code createRootApplicationContext()} implementation.
  *
  * @author Arjen Poutsma
@@ -49,7 +52,8 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	public static final String DEFAULT_SERVLET_NAME = "messageDispatcher";
 
 	/**
-	 * The default servlet mappings. Can be customized by overriding {@link #getServletMappings()}.
+	 * The default servlet mappings. Can be customized by overriding
+	 * {@link #getServletMappings()}.
 	 */
 	public static final String[] DEFAULT_SERVLET_MAPPINGS = new String[] { "/services", "*.wsdl" };
 
@@ -63,12 +67,13 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	/**
 	 * Register a {@link MessageDispatcherServlet} against the given servlet context.
 	 * <p>
-	 * This method will create a {@code MessageDispatcherServlet} with the name returned by {@link #getServletName()},
-	 * initializing it with the application context returned from {@link #createServletApplicationContext()}, and mapping
-	 * it to the patterns returned from {@link #getServletMappings()}.
+	 * This method will create a {@code MessageDispatcherServlet} with the name returned
+	 * by {@link #getServletName()}, initializing it with the application context returned
+	 * from {@link #createServletApplicationContext()}, and mapping it to the patterns
+	 * returned from {@link #getServletMappings()}.
 	 * <p>
-	 * Further customization can be achieved by overriding {@link #customizeRegistration(ServletRegistration.Dynamic)}.
-	 *
+	 * Further customization can be achieved by overriding
+	 * {@link #customizeRegistration(ServletRegistration.Dynamic)}.
 	 * @param servletContext the context to register the servlet against
 	 */
 	protected void registerMessageDispatcherServlet(ServletContext servletContext) {
@@ -95,9 +100,8 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	}
 
 	/**
-	 * Return the name under which the {@link MessageDispatcherServlet} will be registered. Defaults to
-	 * {@link #DEFAULT_SERVLET_NAME}.
-	 *
+	 * Return the name under which the {@link MessageDispatcherServlet} will be
+	 * registered. Defaults to {@link #DEFAULT_SERVLET_NAME}.
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected String getServletName() {
@@ -105,20 +109,20 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	}
 
 	/**
-	 * Create a servlet application context to be provided to the {@code MessageDispatcherServlet}.
+	 * Create a servlet application context to be provided to the
+	 * {@code MessageDispatcherServlet}.
 	 * <p>
 	 * The returned context is delegated to Spring's
-	 * {@link MessageDispatcherServlet#MessageDispatcherServlet(WebApplicationContext)}. As such, it typically contains
-	 * endpoints, interceptors and other web service-related beans.
-	 *
+	 * {@link MessageDispatcherServlet#MessageDispatcherServlet(WebApplicationContext)}.
+	 * As such, it typically contains endpoints, interceptors and other web
+	 * service-related beans.
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected abstract WebApplicationContext createServletApplicationContext();
 
 	/**
-	 * Specify the servlet mapping(s) for the {@code MessageDispatcherServlet}. Defaults to
-	 * {@link #DEFAULT_SERVLET_MAPPINGS}.
-	 *
+	 * Specify the servlet mapping(s) for the {@code MessageDispatcherServlet}. Defaults
+	 * to {@link #DEFAULT_SERVLET_MAPPINGS}.
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
 	protected String[] getServletMappings() {
@@ -126,16 +130,16 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	}
 
 	/**
-	 * Indicates whether relative address locations in the WSDL are to be transformed using the request URI of the
-	 * incoming HTTP request. Defaults to {@code false}.
+	 * Indicates whether relative address locations in the WSDL are to be transformed
+	 * using the request URI of the incoming HTTP request. Defaults to {@code false}.
 	 */
 	public boolean isTransformWsdlLocations() {
 		return false;
 	}
 
 	/**
-	 * Indicates whether relative address locations in the XSD are to be transformed using the request URI of the incoming
-	 * HTTP request. Defaults to {@code false}.
+	 * Indicates whether relative address locations in the XSD are to be transformed using
+	 * the request URI of the incoming HTTP request. Defaults to {@code false}.
 	 */
 	protected boolean isTransformSchemaLocations() {
 		return false;
@@ -144,10 +148,11 @@ public abstract class AbstractMessageDispatcherServletInitializer extends Abstra
 	/**
 	 * Optionally perform further registration customization once
 	 * {@link #registerMessageDispatcherServlet(ServletContext)} has completed.
-	 *
-	 * @param registration the {@code MessageDispatcherServlet} registration to be customized
+	 * @param registration the {@code MessageDispatcherServlet} registration to be
+	 * customized
 	 * @see #registerMessageDispatcherServlet(ServletContext)
 	 */
-	protected void customizeRegistration(ServletRegistration.Dynamic registration) {}
+	protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+	}
 
 }

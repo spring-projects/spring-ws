@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,20 +15,19 @@
  */
 package org.springframework.ws.support;
 
-import net.minidev.json.JSONArray;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
+
+import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
 
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Links;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.jayway.jsonpath.JsonPath;
 
 /**
  * Little helper to build a changelog from the tickets of a particular milestone.
@@ -39,23 +38,27 @@ import com.jayway.jsonpath.JsonPath;
 class ChangelogCreator {
 
 	private static final int MILESTONE_ID = 91;
+
 	private static final String URI_TEMPLATE = "https://api.github.com/repos/spring-projects/spring-ws/issues?milestone={id}&state=closed";
 
 	public static void main(String... args) {
 
 		/*
-		 * If you run into github rate limiting issues, you can always use a Github Personal Token by adding
-		 * {@code .header(HttpHeaders.AUTHORIZATION, "token your-github-token")} to the webClient call.
+		 * If you run into github rate limiting issues, you can always use a Github
+		 * Personal Token by adding {@code .header(HttpHeaders.AUTHORIZATION,
+		 * "token your-github-token")} to the webClient call.
 		 */
 
 		WebClient webClient = WebClient.create();
 
 		try {
 			HttpEntity<String> response = webClient //
-					.get().uri(URI_TEMPLATE, MILESTONE_ID) //
-					// .header(HttpHeaders.AUTHORIZATION, "token <plugin in a personal token and uncomment>") //
-					.exchangeToMono(clientResponse -> clientResponse.toEntity(String.class)) //
-					.block(Duration.ofSeconds(10));
+				.get()
+				.uri(URI_TEMPLATE, MILESTONE_ID) //
+				// .header(HttpHeaders.AUTHORIZATION, "token <plugin in a personal token
+				// and uncomment>") //
+				.exchangeToMono(clientResponse -> clientResponse.toEntity(String.class)) //
+				.block(Duration.ofSeconds(10));
 
 			boolean keepChecking = true;
 			boolean printHeader = true;
@@ -71,15 +74,18 @@ class ChangelogCreator {
 				if (links.getLink(IanaLinkRelations.NEXT).isPresent()) {
 
 					response = webClient //
-							.get().uri(links.getRequiredLink(IanaLinkRelations.NEXT).expand().getHref()) //
-							.exchangeToMono(clientResponse -> clientResponse.toEntity(String.class)) //
-							.block(Duration.ofSeconds(10));
+						.get()
+						.uri(links.getRequiredLink(IanaLinkRelations.NEXT).expand().getHref()) //
+						.exchangeToMono(clientResponse -> clientResponse.toEntity(String.class)) //
+						.block(Duration.ofSeconds(10));
 
-				} else {
+				}
+				else {
 					keepChecking = false;
 				}
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			System.out.println("Couldn't retrieve MILESTONE " + MILESTONE_ID);
 		}
 	}
@@ -93,8 +99,8 @@ class ChangelogCreator {
 		Iterator<Object> ids = ((JSONArray) idPath.read(content)).iterator();
 
 		if (header) {
-			System.out.println(
-					"Changes in version " + JsonPath.read(content, "$[0].milestone.title") + " (" + LocalDate.now() + ")");
+			System.out.println("Changes in version " + JsonPath.read(content, "$[0].milestone.title") + " ("
+					+ LocalDate.now() + ")");
 			System.out.println("----------------------------------------");
 		}
 
@@ -104,4 +110,5 @@ class ChangelogCreator {
 			System.out.println(format.endsWith(".") ? format : format.concat("."));
 		}
 	}
+
 }

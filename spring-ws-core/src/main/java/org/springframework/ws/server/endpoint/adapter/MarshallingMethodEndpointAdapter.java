@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,8 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.support.MarshallingUtils;
 
 /**
- * Adapter that supports endpoint methods that use marshalling. Supports methods with the following signature:
+ * Adapter that supports endpoint methods that use marshalling. Supports methods with the
+ * following signature:
  *
  * <pre>
  * void handleMyMessage(MyUnmarshalledType request);
@@ -42,19 +43,22 @@ import org.springframework.ws.support.MarshallingUtils;
  * MyMarshalledType handleMyMessage(MyUnmarshalledType request);
  * </pre>
  *
- * I.e. methods that take a single parameter that {@link Unmarshaller#supports(Class) is supported} by the
- * {@link Unmarshaller}, and return either {@code void} or a type {@link Marshaller#supports(Class) supported} by the
- * {@link Marshaller}. The method can have any name, as long as it is mapped by an {@link EndpointMapping}.
+ * I.e. methods that take a single parameter that {@link Unmarshaller#supports(Class) is
+ * supported} by the {@link Unmarshaller}, and return either {@code void} or a type
+ * {@link Marshaller#supports(Class) supported} by the {@link Marshaller}. The method can
+ * have any name, as long as it is mapped by an {@link EndpointMapping}.
  * <p>
- * This endpoint needs a {@code Marshaller} and {@code Unmarshaller}, both of which can be set using properties.
+ * This endpoint needs a {@code Marshaller} and {@code Unmarshaller}, both of which can be
+ * set using properties.
  *
  * @author Arjen Poutsma
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
  * @since 1.0.0
- * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and
- *             {@link org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
- *             MarshallingPayloadMethodProcessor}.
+ * @deprecated as of Spring Web Services 2.0, in favor of
+ * {@link DefaultMethodEndpointAdapter} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
+ * MarshallingPayloadMethodProcessor}.
  */
 @Deprecated
 public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdapter implements InitializingBean {
@@ -64,24 +68,25 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 	private Unmarshaller unmarshaller;
 
 	/**
-	 * Creates a new {@code MarshallingMethodEndpointAdapter}. The {@link Marshaller} and {@link Unmarshaller} must be
-	 * injected using properties.
-	 *
+	 * Creates a new {@code MarshallingMethodEndpointAdapter}. The {@link Marshaller} and
+	 * {@link Unmarshaller} must be injected using properties.
 	 * @see #setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	public MarshallingMethodEndpointAdapter() {}
+	public MarshallingMethodEndpointAdapter() {
+	}
 
 	/**
-	 * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller. If the given {@link Marshaller}
-	 * also implements the {@link Unmarshaller} interface, it is used for both marshalling and unmarshalling. Otherwise,
-	 * an exception is thrown.
+	 * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller.
+	 * If the given {@link Marshaller} also implements the {@link Unmarshaller} interface,
+	 * it is used for both marshalling and unmarshalling. Otherwise, an exception is
+	 * thrown.
 	 * <p>
-	 * Note that all {@link Marshaller} implementations in Spring also implement the {@link Unmarshaller} interface, so
-	 * that you can safely use this constructor.
-	 *
+	 * Note that all {@link Marshaller} implementations in Spring also implement the
+	 * {@link Unmarshaller} interface, so that you can safely use this constructor.
 	 * @param marshaller object used as marshaller and unmarshaller
-	 * @throws IllegalArgumentException when {@code marshaller} does not implement the {@link Unmarshaller} interface
+	 * @throws IllegalArgumentException when {@code marshaller} does not implement the
+	 * {@link Unmarshaller} interface
 	 */
 	public MarshallingMethodEndpointAdapter(Marshaller marshaller) {
 		Assert.notNull(marshaller, "marshaller must not be null");
@@ -89,15 +94,16 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 			throw new IllegalArgumentException("Marshaller [" + marshaller + "] does not implement the Unmarshaller "
 					+ "interface. Please set an Unmarshaller explicitly by using the "
 					+ "MarshallingMethodEndpointAdapter(Marshaller, Unmarshaller) constructor.");
-		} else {
+		}
+		else {
 			this.setMarshaller(marshaller);
 			this.setUnmarshaller((Unmarshaller) marshaller);
 		}
 	}
 
 	/**
-	 * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller and unmarshaller.
-	 *
+	 * Creates a new {@code MarshallingMethodEndpointAdapter} with the given marshaller
+	 * and unmarshaller.
 	 * @param marshaller the marshaller to use
 	 * @param unmarshaller the unmarshaller to use
 	 */
@@ -161,8 +167,8 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 	}
 
 	/**
-	 * Supports a method with a single, unmarshallable parameter, and that return {@code void} or a marshallable type.
-	 *
+	 * Supports a method with a single, unmarshallable parameter, and that return
+	 * {@code void} or a marshallable type.
 	 * @see Marshaller#supports(Class)
 	 * @see Unmarshaller#supports(Class)
 	 */
@@ -179,8 +185,10 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 	private boolean supportsParameters(Method method) {
 		if (method.getParameterTypes().length != 1) {
 			return false;
-		} else {
+		}
+		else {
 			return getUnmarshaller().supports(method.getParameterTypes()[0]);
 		}
 	}
+
 }

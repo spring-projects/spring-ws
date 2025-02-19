@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,6 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.Detail;
-import jakarta.xml.soap.DetailEntry;
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.SOAPFault;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -31,8 +23,14 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import jakarta.xml.soap.Detail;
+import jakarta.xml.soap.DetailEntry;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -44,6 +42,9 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
@@ -91,7 +92,8 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 		SOAPFault fault = response.getSOAPBody().getFault();
 
-		assertThat(fault.getFaultCodeAsQName()).isEqualTo(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"));
+		assertThat(fault.getFaultCodeAsQName())
+			.isEqualTo(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Client"));
 		assertThat(fault.getFaultString()).isEqualTo(endpoint.getFaultStringOrReason());
 
 		Detail detail = fault.getDetail();
@@ -105,14 +107,14 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		DetailEntry detailEntry = (DetailEntry) iterator.next();
 
 		assertThat(detailEntry.getElementQName())
-				.isEqualTo(new QName("http://springframework.org/spring-ws", "ValidationError"));
+			.isEqualTo(new QName("http://springframework.org/spring-ws", "ValidationError"));
 		assertThat(detailEntry.getTextContent()).isEqualTo("Name is required");
 		assertThat(iterator.hasNext()).isTrue();
 
 		detailEntry = (DetailEntry) iterator.next();
 
 		assertThat(detailEntry.getElementQName())
-				.isEqualTo(new QName("http://springframework.org/spring-ws", "ValidationError"));
+			.isEqualTo(new QName("http://springframework.org/spring-ws", "ValidationError"));
 		assertThat(detailEntry.getTextContent()).isEqualTo("Age Cannot be negative");
 		assertThat(iterator.hasNext()).isFalse();
 	}
@@ -156,10 +158,12 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 			if (p.getAge() < 0) {
 				e.rejectValue("age", "age.negativevalue");
-			} else if (p.getAge() > 110) {
+			}
+			else if (p.getAge() > 110) {
 				e.rejectValue("age", "too.darn.old");
 			}
 		}
+
 	}
 
 	private static class Person {
@@ -193,6 +197,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		public String toString() {
 			return "Person{" + name + "," + age + "}";
 		}
+
 	}
 
 	private static class PersonMarshaller implements Unmarshaller, Marshaller {
@@ -214,7 +219,9 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		@Override
-		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {}
+		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+		}
+
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Represents a bean method that will be invoked as part of an incoming Web service message.
+ * Represents a bean method that will be invoked as part of an incoming Web service
+ * message.
  * <p>
  * Consists of a {@link Method}, and a bean {@link Object}.
  *
@@ -42,7 +43,6 @@ public final class MethodEndpoint {
 
 	/**
 	 * Constructs a new method endpoint with the given bean and method.
-	 *
 	 * @param bean the object bean
 	 * @param method the method
 	 */
@@ -56,7 +56,6 @@ public final class MethodEndpoint {
 
 	/**
 	 * Constructs a new method endpoint with the given bean, method name and parameters.
-	 *
 	 * @param bean the object bean
 	 * @param methodName the method name
 	 * @param parameterTypes the method parameter types
@@ -71,9 +70,8 @@ public final class MethodEndpoint {
 	}
 
 	/**
-	 * Constructs a new method endpoint with the given bean name and method. The bean name will be lazily initialized when
-	 * {@link #invoke(Object...)} is called.
-	 *
+	 * Constructs a new method endpoint with the given bean name and method. The bean name
+	 * will be lazily initialized when {@link #invoke(Object...)} is called.
 	 * @param beanName the bean name
 	 * @param beanFactory the bean factory to use for bean initialization
 	 * @param method the method
@@ -94,7 +92,8 @@ public final class MethodEndpoint {
 		if (beanFactory != null && bean instanceof String) {
 			String beanName = (String) bean;
 			return beanFactory.getBean(beanName);
-		} else {
+		}
+		else {
 			return bean;
 		}
 	}
@@ -121,7 +120,6 @@ public final class MethodEndpoint {
 
 	/**
 	 * Invokes this method endpoint with the given arguments.
-	 *
 	 * @param args the arguments
 	 * @return the invocation result
 	 * @throws Exception when the method invocation results in an exception
@@ -131,7 +129,8 @@ public final class MethodEndpoint {
 		ReflectionUtils.makeAccessible(method);
 		try {
 			return method.invoke(endpoint, args);
-		} catch (InvocationTargetException ex) {
+		}
+		catch (InvocationTargetException ex) {
 			handleInvocationTargetException(ex);
 			throw new IllegalStateException("Unexpected exception thrown by method - "
 					+ ex.getTargetException().getClass().getName() + ": " + ex.getTargetException().getMessage());

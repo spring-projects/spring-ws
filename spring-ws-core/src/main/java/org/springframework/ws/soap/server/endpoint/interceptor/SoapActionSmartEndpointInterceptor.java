@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,8 +23,8 @@ import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.SmartEndpointInterceptor} interface that only intercepts
- * requests that have a specified soap action.
+ * Implementation of the {@link org.springframework.ws.server.SmartEndpointInterceptor}
+ * interface that only intercepts requests that have a specified soap action.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -48,8 +48,10 @@ public class SoapActionSmartEndpointInterceptor extends DelegatingSmartSoapEndpo
 				soapAction = soapAction.substring(1, soapAction.length() - 1);
 			}
 			return this.soapAction.equals(soapAction);
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,8 @@ import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
+import jakarta.jms.Topic;
+
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
@@ -35,14 +37,16 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires a JMS
- * {@link ConnectionFactory} to operate.
+ * {@link WebServiceMessageSender} implementation that uses JMS {@link Message}s. Requires
+ * a JMS {@link ConnectionFactory} to operate.
  * <p>
  * This message sender supports URI's of the following format: <blockquote>
  * <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
- * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and <tt><b>&amp;</b></tt> stand for
- * themselves. The <i>destination</i> represents the name of the {@link Queue} or {@link Topic} that will be resolved by
- * the {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i> include: <blockquote>
+ * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and
+ * <tt><b>&amp;</b></tt> stand for themselves. The <i>destination</i> represents the name
+ * of the {@link Queue} or {@link Topic} that will be resolved by the
+ * {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i>
+ * include: <blockquote>
  * <table>
  * <tr>
  * <th><i>param-name</i></th>
@@ -50,34 +54,40 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * </tr>
  * <tr>
  * <td><tt>deliveryMode</tt></td>
- * <td>Indicates whether the request message is persistent or not. This may be <tt>PERSISTENT</tt> or
- * <tt>NON_PERSISTENT</tt>. See {@link jakarta.jms.MessageProducer#setDeliveryMode(int)}</td>
+ * <td>Indicates whether the request message is persistent or not. This may be
+ * <tt>PERSISTENT</tt> or <tt>NON_PERSISTENT</tt>. See
+ * {@link jakarta.jms.MessageProducer#setDeliveryMode(int)}</td>
  * </tr>
  * <tr>
  * <td><tt>messageType</tt></td>
- * <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or <tt>TEXT_MESSAGE</tt></td>
+ * <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or
+ * <tt>TEXT_MESSAGE</tt></td>
  * </tr>
  * <tr>
  * <td><tt>priority</tt></td>
- * <td>The JMS priority (0-9) associated with the request message. See {@link jakarta.jms.MessageProducer#setPriority(int)}</td>
+ * <td>The JMS priority (0-9) associated with the request message. See
+ * {@link jakarta.jms.MessageProducer#setPriority(int)}</td>
  * </tr>
  * <tr>
  * <td><tt>replyToName</tt></td>
- * <td>The name of the destination to which the response message must be sent, that will be resolved by the
- * {@link #getDestinationResolver() destination resolver}.</td>
+ * <td>The name of the destination to which the response message must be sent, that will
+ * be resolved by the {@link #getDestinationResolver() destination resolver}.</td>
  * </tr>
  * <tr>
  * <td><tt>timeToLive</tt></td>
- * <td>The lifetime, in milliseconds, of the request message. See {@link jakarta.jms.MessageProducer#setTimeToLive(long)}</td>
+ * <td>The lifetime, in milliseconds, of the request message. See
+ * {@link jakarta.jms.MessageProducer#setTimeToLive(long)}</td>
  * </tr>
  * </table>
  * </blockquote>
  * <p>
- * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue() temporary queue} is used.
+ * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue()
+ * temporary queue} is used.
  * <p>
- * This class uses {@link jakarta.jms.BytesMessage} messages by default, but can be configured to send {@link jakarta.jms.TextMessage} messages
- * instead. <b>Note</b> that {@code BytesMessages} are preferred, since {@code TextMessages} do not support attachments
- * and character encodings reliably.
+ * This class uses {@link jakarta.jms.BytesMessage} messages by default, but can be
+ * configured to send {@link jakarta.jms.TextMessage} messages instead. <b>Note</b> that
+ * {@code BytesMessages} are preferred, since {@code TextMessages} do not support
+ * attachments and character encodings reliably.
  * <p>
  * Some examples of JMS URIs are: <blockquote> <tt>jms:SomeQueue</tt><br>
  * <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
@@ -85,15 +95,22 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
  *
  * @author Arjen Poutsma
- * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for Java(tm) Message Service 1.0</a>
+ * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for
+ * Java(tm) Message Service 1.0</a>
  * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
-	/** Default timeout for receive operations: -1 indicates a blocking receive without timeout. */
+	/**
+	 * Default timeout for receive operations: -1 indicates a blocking receive without
+	 * timeout.
+	 */
 	public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
-	/** Default encoding used to read fromn and write to {@link jakarta.jms.TextMessage} messages. */
+	/**
+	 * Default encoding used to read fromn and write to {@link jakarta.jms.TextMessage}
+	 * messages.
+	 */
 	public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";
 
 	private long receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
@@ -105,17 +122,16 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	/**
 	 * Create a new {@code JmsMessageSender}
 	 * <p>
-	 * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This constructor can be used to prepare
-	 * a JmsTemplate via a BeanFactory, typically setting the ConnectionFactory via
-	 * {@link #setConnectionFactory(ConnectionFactory)}.
-	 *
+	 * <b>Note</b>: The ConnectionFactory has to be set before using the instance. This
+	 * constructor can be used to prepare a JmsTemplate via a BeanFactory, typically
+	 * setting the ConnectionFactory via {@link #setConnectionFactory(ConnectionFactory)}.
 	 * @see #setConnectionFactory(ConnectionFactory)
 	 */
-	public JmsMessageSender() {}
+	public JmsMessageSender() {
+	}
 
 	/**
 	 * Create a new {@code JmsMessageSender}, given a ConnectionFactory.
-	 *
 	 * @param connectionFactory the ConnectionFactory to obtain Connections from
 	 */
 	public JmsMessageSender(ConnectionFactory connectionFactory) {
@@ -123,22 +139,25 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	}
 
 	/**
-	 * Set the timeout to use for receive calls. The default is -1, which means no timeout.
-	 *
+	 * Set the timeout to use for receive calls. The default is -1, which means no
+	 * timeout.
 	 * @see jakarta.jms.MessageConsumer#receive(long)
 	 */
 	public void setReceiveTimeout(long receiveTimeout) {
 		this.receiveTimeout = receiveTimeout;
 	}
 
-	/** Sets the encoding used to read from {@link jakarta.jms.TextMessage} messages. Defaults to {@code UTF-8}. */
+	/**
+	 * Sets the encoding used to read from {@link jakarta.jms.TextMessage} messages.
+	 * Defaults to {@code UTF-8}.
+	 */
 	public void setTextMessageEncoding(String textMessageEncoding) {
 		this.textMessageEncoding = textMessageEncoding;
 	}
 
 	/**
-	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages after the XML contents has been
-	 * set.
+	 * Sets the optional {@link MessagePostProcessor} to further modify outgoing messages
+	 * after the XML contents has been set.
 	 */
 	public void setPostProcessor(MessagePostProcessor postProcessor) {
 		this.postProcessor = postProcessor;
@@ -153,8 +172,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 			jmsSession = createSession(jmsConnection);
 			Destination requestDestination = resolveRequestDestination(jmsSession, uri);
 			Message requestMessage = createRequestMessage(jmsSession, uri);
-			JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection, jmsSession,
-					requestDestination, requestMessage);
+			JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection,
+					jmsSession, requestDestination, requestMessage);
 			wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
 			wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
 			wsConnection.setReceiveTimeout(receiveTimeout);
@@ -164,7 +183,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 			wsConnection.setSessionTransacted(isSessionTransacted());
 			wsConnection.setPostProcessor(postProcessor);
 			return wsConnection;
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			JmsUtils.closeSession(jmsSession);
 			ConnectionFactoryUtils.releaseConnection(jmsConnection, getConnectionFactory(), true);
 			throw new JmsTransportException(ex);
@@ -189,9 +209,11 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 		int messageType = JmsTransportUtils.getMessageType(uri);
 		if (messageType == JmsTransportConstants.BYTES_MESSAGE_TYPE) {
 			return session.createBytesMessage();
-		} else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
+		}
+		else if (messageType == JmsTransportConstants.TEXT_MESSAGE_TYPE) {
 			return session.createTextMessage();
-		} else {
+		}
+		else {
 			throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
 		}
 

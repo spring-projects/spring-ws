@@ -15,7 +15,8 @@
  */
 
 /**
- * Provides a testing framework for client-side Web service testing. This package contains the
- * {@link org.springframework.ws.test.client.MockWebServiceServer}, and various related test interfaces.
+ * Provides a testing framework for client-side Web service testing. This package contains
+ * the {@link org.springframework.ws.test.client.MockWebServiceServer}, and various
+ * related test interfaces.
  */
 package org.springframework.ws.test.client;

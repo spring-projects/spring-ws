@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,18 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.lang.reflect.Method;
 import java.util.Collections;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPMessage;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,13 +47,17 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
 public class PayloadRootAnnotationMethodEndpointMappingTest {
 
-	@Autowired private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired
+	private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-	@Autowired private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	@Test
 	public void registrationSingle() throws NoSuchMethodException {
@@ -122,8 +124,8 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 
 		MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
 		messageDispatcher.setApplicationContext(applicationContext);
-		messageDispatcher.setEndpointMappings(Collections.<EndpointMapping> singletonList(mapping));
-		messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter> singletonList(adapter));
+		messageDispatcher.setEndpointMappings(Collections.<EndpointMapping>singletonList(mapping));
+		messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter>singletonList(adapter));
 
 		messageDispatcher.receive(messageContext);
 
@@ -156,7 +158,8 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 		@PayloadRoots({ //
 				@PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
 				@PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws") })
-		public void doItMultiple() {}
+		public void doItMultiple() {
+		}
 
 		@PayloadRoot(localPart = "Request3", namespace = "http://springframework.org/spring-ws")
 		@PayloadRoot(localPart = "Request4", namespace = "http://springframework.org/spring-ws")
@@ -174,4 +177,5 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 		}
 
 	}
+
 }

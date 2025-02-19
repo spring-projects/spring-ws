@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.xml.xpath;
-
-import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,15 +34,19 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.transform.ResourceSource;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.ResourceSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class AbstractXPathTemplateTestCase {
 
@@ -58,7 +60,8 @@ public abstract class AbstractXPathTemplateTestCase {
 	public final void setUp() throws Exception {
 		template = createTemplate();
 		namespaces = new ResourceSource(new ClassPathResource("namespaces.xml", AbstractXPathTemplateTestCase.class));
-		nonamespaces = new ResourceSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class));
+		nonamespaces = new ResourceSource(
+				new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class));
 	}
 
 	protected abstract XPathOperations createTemplate() throws Exception;
@@ -153,8 +156,8 @@ public abstract class AbstractXPathTemplateTestCase {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document document = documentBuilder.parse(
-				SaxUtils.createInputSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class)));
+		Document document = documentBuilder.parse(SaxUtils
+			.createInputSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTestCase.class)));
 
 		String result = template.evaluateAsString("/root/child/text", new DOMSource(document));
 
@@ -231,4 +234,5 @@ public abstract class AbstractXPathTemplateTestCase {
 		assertThat(results).isNotNull();
 		assertThat(results).containsExactly("text", "number", "boolean");
 	}
+
 }

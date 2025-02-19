@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.soap.soap11;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -26,6 +24,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamSource;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
@@ -37,9 +39,8 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportOutputStream;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageTestCase {
 
@@ -68,10 +69,11 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
-				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
-						+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS()
-						+ ":Body></" + getNS() + ":Envelope>")
-				.ignoreWhitespace().areIdentical();
+			.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
+					+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></"
+					+ getNS() + ":Body></" + getNS() + ":Envelope>")
+			.ignoreWhitespace()
+			.areIdentical();
 
 		String contentType = tos.getHeaders().get("Content-Type");
 
@@ -144,10 +146,11 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
-				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
-						+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS()
-						+ ":Body></" + getNS() + ":Envelope>")
-				.ignoreWhitespace().areIdentical();
+			.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
+					+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></"
+					+ getNS() + ":Body></" + getNS() + ":Envelope>")
+			.ignoreWhitespace()
+			.areIdentical();
 	}
 
 	@Override
@@ -173,10 +176,11 @@ public abstract class AbstractSoap11MessageTestCase extends AbstractSoapMessageT
 		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
-				.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
-						+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></" + getNS()
-						+ ":Body></" + getNS() + ":Envelope>")
-				.ignoreWhitespace().areIdentical();
+			.and("<" + getNS() + ":Envelope xmlns:" + getNS() + "='http://schemas.xmlsoap.org/soap/envelope/'>"
+					+ getHeader() + "<" + getNS() + ":Body><payload xmlns='http://www.springframework.org' /></"
+					+ getNS() + ":Body></" + getNS() + ":Envelope>")
+			.ignoreWhitespace()
+			.areIdentical();
 	}
 
 }

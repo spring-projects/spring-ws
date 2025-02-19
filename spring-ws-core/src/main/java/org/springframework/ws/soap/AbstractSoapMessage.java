@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,8 @@ import javax.xml.transform.Source;
 import org.springframework.ws.mime.AbstractMimeMessage;
 
 /**
- * Abstract implementation of the {@link SoapMessage} interface. Contains convenient default implementations.
+ * Abstract implementation of the {@link SoapMessage} interface. Contains convenient
+ * default implementations.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -67,7 +68,8 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 	public final QName getFaultCode() {
 		if (hasFault()) {
 			return getSoapBody().getFault().getFaultCode();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -77,7 +79,8 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 	public final String getFaultReason() {
 		if (hasFault()) {
 			return getSoapBody().getFault().getFaultStringOrReason();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -88,13 +91,16 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 			String envelopeNamespace = getEnvelope().getName().getNamespaceURI();
 			if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
 				version = SoapVersion.SOAP_11;
-			} else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
+			}
+			else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
 				version = SoapVersion.SOAP_12;
-			} else {
+			}
+			else {
 				throw new IllegalStateException(
 						"Unknown Envelope namespace uri '" + envelopeNamespace + "'. " + "Cannot deduce SoapVersion.");
 			}
 		}
 		return version;
 	}
+
 }

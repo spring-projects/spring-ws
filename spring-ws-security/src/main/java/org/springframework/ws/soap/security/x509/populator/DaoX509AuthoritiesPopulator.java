@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,7 +34,8 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
 
 /**
- * Populates the X509 authorities via an {@link org.springframework.security.core.userdetails.UserDetailsService}.
+ * Populates the X509 authorities via an
+ * {@link org.springframework.security.core.userdetails.UserDetailsService}.
  * <p>
  * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
  * </p>
@@ -44,14 +45,19 @@ import org.springframework.ws.soap.security.x509.X509AuthoritiesPopulator;
  */
 public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, InitializingBean, MessageSourceAware {
 
-	// ~ Instance fields ================================================================================================
+	// ~ Instance fields
+	// ================================================================================================
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+
 	private Pattern subjectDNPattern;
+
 	private String subjectDNRegex = "CN=(.*?),";
+
 	private UserDetailsService userDetailsService;
 
-	// ~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -94,16 +100,17 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 	}
 
 	/**
-	 * Sets the regular expression which will by used to extract the user name from the certificate's Subject DN.
+	 * Sets the regular expression which will by used to extract the user name from the
+	 * certificate's Subject DN.
 	 * <p>
-	 * It should contain a single group; for example the default expression "CN=(.?)," matches the common name field. So
-	 * "CN=Jimi Hendrix, OU=..." will give a user name of "Jimi Hendrix".
+	 * It should contain a single group; for example the default expression "CN=(.?),"
+	 * matches the common name field. So "CN=Jimi Hendrix, OU=..." will give a user name
+	 * of "Jimi Hendrix".
 	 * </p>
 	 * <p>
-	 * The matches are case insensitive. So "emailAddress=(.?)," will match "EMAILADDRESS=jimi@hendrix.org, CN=..." giving
-	 * a user name "jimi@hendrix.org"
+	 * The matches are case insensitive. So "emailAddress=(.?)," will match
+	 * "EMAILADDRESS=jimi@hendrix.org, CN=..." giving a user name "jimi@hendrix.org"
 	 * </p>
-	 *
 	 * @param subjectDNRegex the regular expression to find in the subject
 	 */
 	public void setSubjectDNRegex(String subjectDNRegex) {
@@ -113,4 +120,5 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
+
 }

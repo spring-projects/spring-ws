@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.test.server;
 
-import static org.springframework.ws.test.support.AssertionErrors.*;
-
 import java.io.IOException;
 
 import javax.xml.namespace.QName;
@@ -27,6 +25,9 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+
+import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
+import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
  * Abstract Implementation of {@link ResponseMatcher} that checks for a SOAP fault.
@@ -53,7 +54,8 @@ abstract class SoapFaultResponseMatcher implements ResponseMatcher {
 		QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
 		assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
 		if (expectedFaultStringOrReason != null) {
-			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason, soapFault.getFaultStringOrReason());
+			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
+					soapFault.getFaultStringOrReason());
 		}
 	}
 

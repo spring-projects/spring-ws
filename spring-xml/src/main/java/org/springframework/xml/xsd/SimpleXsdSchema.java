@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,6 +25,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -32,15 +36,12 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 /**
  * The default {@link XsdSchema} implementation.
  * <p>
- * Allows a XSD to be set by the {@link #setXsd(Resource)}, or directly in the {@link #SimpleXsdSchema(Resource)
- * constructor}.
+ * Allows a XSD to be set by the {@link #setXsd(Resource)}, or directly in the
+ * {@link #SimpleXsdSchema(Resource) constructor}.
  *
  * @author Mark LaFond
  * @author Arjen Poutsma
@@ -68,13 +69,15 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	 * <p>
 	 * A subsequent call to the {@link #setXsd(Resource)} method is required.
 	 */
-	public SimpleXsdSchema() {}
+	public SimpleXsdSchema() {
+	}
 
 	/**
-	 * Create a new instance of the {@link SimpleXsdSchema} class with the specified resource.
-	 *
+	 * Create a new instance of the {@link SimpleXsdSchema} class with the specified
+	 * resource.
 	 * @param xsdResource the XSD resource; must not be {@code null}
-	 * @throws IllegalArgumentException if the supplied {@code xsdResource} is {@code null}
+	 * @throws IllegalArgumentException if the supplied {@code xsdResource} is
+	 * {@code null}
 	 */
 	public SimpleXsdSchema(Resource xsdResource) {
 		Assert.notNull(xsdResource, "xsdResource must not be null");
@@ -82,8 +85,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	}
 
 	/**
-	 * Set the XSD resource to be exposed by calls to this instances' {@link #getSource()} method.
-	 *
+	 * Set the XSD resource to be exposed by calls to this instances' {@link #getSource()}
+	 * method.
 	 * @param xsdResource the XSD resource
 	 */
 	public void setXsd(Resource xsdResource) {
@@ -108,7 +111,8 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	public XmlValidator createValidator() {
 		try {
 			return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new XsdSchemaException(ex.getMessage(), ex);
 		}
 	}

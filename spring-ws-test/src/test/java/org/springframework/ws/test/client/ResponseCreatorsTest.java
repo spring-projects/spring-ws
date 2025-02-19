@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.ws.test.client;
-
-import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +27,8 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
@@ -38,7 +38,8 @@ import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerHelper;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResponseCreatorsTest {
 
@@ -68,7 +69,8 @@ public class ResponseCreatorsTest {
 	public void withPayloadResource() throws Exception {
 
 		String payload = "<payload xmlns='http://springframework.org'/>";
-		ResponseCreator responseCreator = ResponseCreators.withPayload(new ByteArrayResource(payload.getBytes(StandardCharsets.UTF_8)));
+		ResponseCreator responseCreator = ResponseCreators
+			.withPayload(new ByteArrayResource(payload.getBytes(StandardCharsets.UTF_8)));
 
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
@@ -88,7 +90,10 @@ public class ResponseCreatorsTest {
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new StringSource(envelope));
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response)).and(envelope).ignoreWhitespace().areSimilar();
+		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response))
+			.and(envelope)
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -102,10 +107,13 @@ public class ResponseCreatorsTest {
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators
-				.withSoapEnvelope(new ByteArrayResource(envelope.getBytes(StandardCharsets.UTF_8)));
+			.withSoapEnvelope(new ByteArrayResource(envelope.getBytes(StandardCharsets.UTF_8)));
 		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
 
-		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response)).and(envelope).ignoreWhitespace().areSimilar();
+		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response))
+			.and(envelope)
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -116,7 +124,8 @@ public class ResponseCreatorsTest {
 
 		try {
 			responseCreator.createResponse(null, null, null);
-		} catch (IOException actual) {
+		}
+		catch (IOException actual) {
 			assertThat(actual).isSameAs(expected);
 		}
 	}
@@ -129,7 +138,8 @@ public class ResponseCreatorsTest {
 
 		try {
 			responseCreator.createResponse(null, null, null);
-		} catch (RuntimeException actual) {
+		}
+		catch (RuntimeException actual) {
 			assertThat(actual).isSameAs(expected);
 		}
 	}
@@ -197,4 +207,5 @@ public class ResponseCreatorsTest {
 		transformerHelper.transform(source, result);
 		return result.toString();
 	}
+
 }

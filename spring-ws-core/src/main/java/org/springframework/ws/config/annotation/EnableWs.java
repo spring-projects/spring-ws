@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,8 +26,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * Add this annotation to an {@link Configuration @Configuration} class to have the Spring Web Services configuration
- * defined in {@link WsConfigurationSupport} imported. For instance:
+ * Add this annotation to an {@link Configuration @Configuration} class to have the Spring
+ * Web Services configuration defined in {@link WsConfigurationSupport} imported. For
+ * instance:
  *
  * <pre class="code">
  * &#064;Configuration
@@ -38,8 +39,9 @@ import org.springframework.context.annotation.Import;
  * }
  * </pre>
  * <p>
- * Customize the imported configuration by implementing the {@link WsConfigurer} interface or more likely by extending
- * the {@link WsConfigurerAdapter} base class and overriding individual methods:
+ * Customize the imported configuration by implementing the {@link WsConfigurer} interface
+ * or more likely by extending the {@link WsConfigurerAdapter} base class and overriding
+ * individual methods:
  *
  * <pre class="code">
  * &#064;Configuration
@@ -61,9 +63,9 @@ import org.springframework.context.annotation.Import;
  * }
  * </pre>
  * <p>
- * If the customization options of {@link WsConfigurer} do not expose something you need to configure, consider removing
- * the {@code @EnableWs} annotation and extending directly from {@link WsConfigurationSupport} overriding selected
- * {@code @Bean} methods:
+ * If the customization options of {@link WsConfigurer} do not expose something you need
+ * to configure, consider removing the {@code @EnableWs} annotation and extending directly
+ * from {@link WsConfigurationSupport} overriding selected {@code @Bean} methods:
  *
  * <pre class="code">
  * &#064;Configuration

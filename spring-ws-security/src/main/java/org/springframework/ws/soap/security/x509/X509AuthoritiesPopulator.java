@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,11 +22,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Populates the {@code UserDetails} associated with the X.509 certificate presented by a client.
+ * Populates the {@code UserDetails} associated with the X.509 certificate presented by a
+ * client.
  * <p>
- * Although the certificate will already have been validated by the web container, implementations may choose to perform
- * additional application-specific checks on the certificate content here. If an implementation chooses to reject the
- * certificate, it should throw a {@link org.springframework.security.authentication.BadCredentialsException}.
+ * Although the certificate will already have been validated by the web container,
+ * implementations may choose to perform additional application-specific checks on the
+ * certificate content here. If an implementation chooses to reject the certificate, it
+ * should throw a
+ * {@link org.springframework.security.authentication.BadCredentialsException}.
  * </p>
  * <p>
  * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
@@ -35,18 +38,22 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author Luke Taylor
  */
 public interface X509AuthoritiesPopulator {
-	// ~ Methods ========================================================================================================
+
+	// ~ Methods
+	// ========================================================================================================
 
 	/**
 	 * Obtains the granted authorities for the specified user.
 	 * <p>
-	 * May throw any {@code AuthenticationException} or return {@code null} if the authorities are unavailable.
+	 * May throw any {@code AuthenticationException} or return {@code null} if the
+	 * authorities are unavailable.
 	 * </p>
-	 *
 	 * @param userCertificate the X.509 certificate supplied
-	 * @return the details of the indicated user (at minimum the granted authorities and the username)
-	 * @throws AuthenticationException if the user details are not available or the certificate isn't valid for the
-	 *           application's purpose.
+	 * @return the details of the indicated user (at minimum the granted authorities and
+	 * the username)
+	 * @throws AuthenticationException if the user details are not available or the
+	 * certificate isn't valid for the application's purpose.
 	 */
 	UserDetails getUserDetails(X509Certificate userCertificate) throws AuthenticationException;
+
 }

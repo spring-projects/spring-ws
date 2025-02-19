@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,8 @@ import javax.xml.namespace.QName;
 import org.springframework.util.StringUtils;
 
 /**
- * PropertyEditor for {@code javax.xml.namespace.QName}, to populate a property of type QName from a String value.
+ * PropertyEditor for {@code javax.xml.namespace.QName}, to populate a property of type
+ * QName from a String value.
  * <p>
  * Expects the syntax
  *
@@ -43,8 +44,8 @@ import org.springframework.util.StringUtils;
  * {namespace}prefix:localPart
  * </pre>
  *
- * This resembles the {@code toString()} representation of {@code QName} itself, but allows for prefixes to be specified
- * as well.
+ * This resembles the {@code toString()} representation of {@code QName} itself, but
+ * allows for prefixes to be specified as well.
  *
  * @author Arjen Poutsma
  * @see javax.xml.namespace.QName
@@ -66,13 +67,17 @@ public class QNameEditor extends PropertyEditorSupport {
 			String prefix = qName.getPrefix();
 			if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(prefix)) {
 				return "{" + qName.getNamespaceURI() + "}" + prefix + ":" + qName.getLocalPart();
-			} else if (StringUtils.hasLength(qName.getNamespaceURI())) {
+			}
+			else if (StringUtils.hasLength(qName.getNamespaceURI())) {
 				return "{" + qName.getNamespaceURI() + "}" + qName.getLocalPart();
-			} else {
+			}
+			else {
 				return qName.getLocalPart();
 			}
-		} else {
+		}
+		else {
 			return "";
 		}
 	}
+
 }

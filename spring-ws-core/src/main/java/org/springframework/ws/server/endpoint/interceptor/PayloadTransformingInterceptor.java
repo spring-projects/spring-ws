@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,6 +29,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -37,16 +40,16 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 /**
- * Interceptor that transforms the payload of {@code WebServiceMessage}s using XSLT stylesheet. Allows for seperate
- * stylesheets for request and response. This interceptor is especially useful when supporting with multiple version of
- * a Web service: you can transform the older message format to the new format.
+ * Interceptor that transforms the payload of {@code WebServiceMessage}s using XSLT
+ * stylesheet. Allows for seperate stylesheets for request and response. This interceptor
+ * is especially useful when supporting with multiple version of a Web service: you can
+ * transform the older message format to the new format.
  * <p>
- * The stylesheets to use can be set using the {@code requestXslt} and {@code responseXslt} properties. Both of these
- * are optional: if not set, the message is simply not transformed. Setting one of the two is required, though.
+ * The stylesheets to use can be set using the {@code requestXslt} and
+ * {@code responseXslt} properties. Both of these are optional: if not set, the message is
+ * simply not transformed. Setting one of the two is required, though.
  *
  * @author Arjen Poutsma
  * @see #setRequestXslt(org.springframework.core.io.Resource)
@@ -77,9 +80,8 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 	}
 
 	/**
-	 * Transforms the request message in the given message context using a provided stylesheet. Transformation only occurs
-	 * if the {@code requestXslt} has been set.
-	 *
+	 * Transforms the request message in the given message context using a provided
+	 * stylesheet. Transformation only occurs if the {@code requestXslt} has been set.
 	 * @param messageContext the message context
 	 * @return always returns {@code true}
 	 * @see #setRequestXslt(org.springframework.core.io.Resource)
@@ -96,9 +98,8 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 	}
 
 	/**
-	 * Transforms the response message in the given message context using a stylesheet. Transformation only occurs if the
-	 * {@code responseXslt} has been set.
-	 *
+	 * Transforms the response message in the given message context using a stylesheet.
+	 * Transformation only occurs if the {@code responseXslt} has been set.
 	 * @param messageContext the message context
 	 * @return always returns {@code true}
 	 * @see #setResponseXslt(org.springframework.core.io.Resource)
@@ -129,7 +130,8 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
 	/** Does nothing by default. */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {}
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -156,4 +158,5 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 			responseTemplates = transformerFactory.newTemplates(responseSource);
 		}
 	}
+
 }

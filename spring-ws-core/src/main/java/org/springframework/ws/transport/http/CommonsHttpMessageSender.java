@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,6 +32,7 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.PostMethod;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -39,11 +40,12 @@ import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * {@code WebServiceMessageSender} implementation that uses
- * <a href="http://jakarta.apache.org/commons/httpclient">Jakarta Commons HttpClient</a> to execute POST requests.
+ * <a href="http://jakarta.apache.org/commons/httpclient">Jakarta Commons HttpClient</a>
+ * to execute POST requests.
  * <p>
- * Allows to use a preconfigured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
- * Authentication can also be set by injecting a {@link Credentials} instance (such as the
- * {@link UsernamePasswordCredentials}).
+ * Allows to use a preconfigured HttpClient instance, potentially with authentication,
+ * HTTP connection pooling, etc. Authentication can also be set by injecting a
+ * {@link Credentials} instance (such as the {@link UsernamePasswordCredentials}).
  *
  * @author Arjen Poutsma
  * @see HttpUrlConnectionMessageSender
@@ -67,8 +69,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	private AuthScope authScope;
 
 	/**
-	 * Create a new instance of the {@code CommonsHttpMessageSender} with a default {@link HttpClient} that uses a default
-	 * {@link MultiThreadedHttpConnectionManager}.
+	 * Create a new instance of the {@code CommonsHttpMessageSender} with a default
+	 * {@link HttpClient} that uses a default {@link MultiThreadedHttpConnectionManager}.
 	 */
 	public CommonsHttpMessageSender() {
 		httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
@@ -77,8 +79,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	}
 
 	/**
-	 * Create a new instance of the {@code CommonsHttpMessageSender} with the given {@link HttpClient} instance.
-	 *
+	 * Create a new instance of the {@code CommonsHttpMessageSender} with the given
+	 * {@link HttpClient} instance.
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
 	public CommonsHttpMessageSender(HttpClient httpClient) {
@@ -103,7 +105,6 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 
 	/**
 	 * Sets the credentials to be used. If not set, no authentication is done.
-	 *
 	 * @see UsernamePasswordCredentials
 	 * @see NTCredentials
 	 */
@@ -112,8 +113,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	}
 
 	/**
-	 * Sets the timeout until a connection is etablished. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Sets the timeout until a connection is etablished. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value in milliseconds
 	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setConnectionTimeout(int)
 	 */
@@ -125,8 +126,8 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	}
 
 	/**
-	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value in milliseconds
 	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setSoTimeout(int)
 	 */
@@ -139,7 +140,6 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 
 	/**
 	 * Sets the maximum number of connections allowed for the underlying HttpClient.
-	 *
 	 * @param maxTotalConnections the maximum number of connections allowed
 	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxTotalConnections(int)
 	 */
@@ -151,8 +151,9 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	}
 
 	/**
-	 * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
-	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
+	 * Sets the maximum number of connections per host for the underlying HttpClient. The
+	 * maximum number of connections per host can be set in a form accepted by the
+	 * {@code java.util.Properties} class, like as follows:
 	 *
 	 * <pre>
 	 * https://www.example.com=1
@@ -161,35 +162,41 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	 * *=5
 	 * </pre>
 	 *
-	 * The host can be specified as hostname, or as URI (with scheme and port). The special host name {@code *} can be
-	 * used to specify {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
-	 *
-	 * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
+	 * The host can be specified as hostname, or as URI (with scheme and port). The
+	 * special host name {@code *} can be used to specify
+	 * {@link org.apache.commons.httpclient.HostConfiguration#ANY_HOST_CONFIGURATION}.
+	 * @param maxConnectionsPerHost a properties object specifying the maximum number of
+	 * connection
 	 * @see org.apache.commons.httpclient.params.HttpConnectionManagerParams#setMaxConnectionsPerHost(org.apache.commons.httpclient.HostConfiguration,
-	 *      int)
+	 * int)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URIException {
 		for (String host : maxConnectionsPerHost.keySet()) {
 			HostConfiguration hostConfiguration = new HostConfiguration();
 			if ("*".equals(host)) {
 				hostConfiguration = HostConfiguration.ANY_HOST_CONFIGURATION;
-			} else if (host.startsWith("http://")) {
+			}
+			else if (host.startsWith("http://")) {
 				HttpURL httpURL = new HttpURL(host);
 				hostConfiguration.setHost(httpURL);
-			} else if (host.startsWith("https://")) {
+			}
+			else if (host.startsWith("https://")) {
 				HttpsURL httpsURL = new HttpsURL(host);
 				hostConfiguration.setHost(httpsURL);
-			} else {
+			}
+			else {
 				hostConfiguration.setHost(host);
 			}
 			int maxHostConnections = Integer.parseInt(maxConnectionsPerHost.get(host));
-			getHttpClient().getHttpConnectionManager().getParams().setMaxConnectionsPerHost(hostConfiguration,
-					maxHostConnections);
+			getHttpClient().getHttpConnectionManager()
+				.getParams()
+				.setMaxConnectionsPerHost(hostConfiguration, maxHostConnections);
 		}
 	}
 
 	/**
-	 * Returns the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 * Returns the authentication scope to be used. Only used when the {@code credentials}
+	 * property has been set.
 	 * <p>
 	 * By default, the {@link AuthScope#ANY} is returned.
 	 */
@@ -198,10 +205,10 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	}
 
 	/**
-	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 * Sets the authentication scope to be used. Only used when the {@code credentials}
+	 * property has been set.
 	 * <p>
 	 * By default, the {@link AuthScope#ANY} is used.
-	 *
 	 * @see #setCredentials(Credentials)
 	 */
 	public void setAuthScope(AuthScope authScope) {

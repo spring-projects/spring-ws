@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,38 +25,44 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.w3c.dom.Document;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-import org.w3c.dom.Document;
 
 /**
- * Adapter to use the {@code WsdlDefinition} interface with the generic {@code DispatcherServlet}.
+ * Adapter to use the {@code WsdlDefinition} interface with the generic
+ * {@code DispatcherServlet}.
  * <p>
- * Reads the source from the mapped {@code WsdlDefinition} implementation, and writes that as the result to the
- * {@code HttpServletResponse}.
+ * Reads the source from the mapped {@code WsdlDefinition} implementation, and writes that
+ * as the result to the {@code HttpServletResponse}.
  * <p>
- * If the property {@code transformLocations} is set to {@code true}, this adapter will change {@code location}
- * attributes in the WSDL definition to reflect the URL of the incoming request. If the location field in the original
- * WSDL is an absolute path, the scheme, hostname, and port will be changed. If the location is a relative path, the
- * scheme, hostname, port, and context path will be prepended. This behavior can be customized by overriding the
- * {@code transformLocation()} method.
+ * If the property {@code transformLocations} is set to {@code true}, this adapter will
+ * change {@code location} attributes in the WSDL definition to reflect the URL of the
+ * incoming request. If the location field in the original WSDL is an absolute path, the
+ * scheme, hostname, and port will be changed. If the location is a relative path, the
+ * scheme, hostname, port, and context path will be prepended. This behavior can be
+ * customized by overriding the {@code transformLocation()} method.
  * <p>
  * For instance, if the location attribute defined in the WSDL is
- * {@code http://localhost:8080/context/services/myService}, and the request URI for the WSDL is
- * {@code http://example.com/context/myService.wsdl}, the location will be changed to
- * {@code http://example.com/context/services/myService}.
+ * {@code http://localhost:8080/context/services/myService}, and the request URI for the
+ * WSDL is {@code http://example.com/context/myService.wsdl}, the location will be changed
+ * to {@code http://example.com/context/services/myService}.
  * <p>
- * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the WSDL is
- * {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
- * {@code http://example.com:8080/context/services/myService}.
+ * If the location attribute defined in the WSDL is {@code /services/myService}, and the
+ * request URI for the WSDL is {@code http://example.com:8080/context/myService.wsdl}, the
+ * location will be changed to {@code http://example.com:8080/context/services/myService}.
  * <p>
- * When {@code transformLocations} is enabled, all {@code location} attributes found in the WSDL definition are changed
- * by default. This behavior can be customized by changing the {@code locationExpression} property, which is an XPath
- * expression that matches the attributes to change.
+ * When {@code transformLocations} is enabled, all {@code location} attributes found in
+ * the WSDL definition are changed by default. This behavior can be customized by changing
+ * the {@code locationExpression} property, which is an XPath expression that matches the
+ * attributes to change.
  *
  * @author Arjen Poutsma
  * @see WsdlDefinition
@@ -71,10 +74,16 @@ import org.w3c.dom.Document;
 public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSupport
 		implements HandlerAdapter, InitializingBean {
 
-	/** Default XPath expression used for extracting all {@code location} attributes from the WSDL definition. */
+	/**
+	 * Default XPath expression used for extracting all {@code location} attributes from
+	 * the WSDL definition.
+	 */
 	public static final String DEFAULT_LOCATION_EXPRESSION = "//@location";
 
-	/** Default XPath expression used for extracting all {@code schemaLocation} attributes from the WSDL definition. */
+	/**
+	 * Default XPath expression used for extracting all {@code schemaLocation} attributes
+	 * from the WSDL definition.
+	 */
 	public static final String DEFAULT_SCHEMA_LOCATION_EXPRESSION = "//@schemaLocation";
 
 	private static final String CONTENT_TYPE = "text/xml";
@@ -94,7 +103,8 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	private boolean transformSchemaLocations = false;
 
 	/**
-	 * Sets the XPath expression used for extracting the {@code location} attributes from the WSDL 1.1 definition.
+	 * Sets the XPath expression used for extracting the {@code location} attributes from
+	 * the WSDL 1.1 definition.
 	 * <p>
 	 * Defaults to {@code DEFAULT_LOCATION_EXPRESSION}.
 	 */
@@ -103,7 +113,8 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	}
 
 	/**
-	 * Sets the XPath expression used for extracting the {@code schemaLocation} attributes from the WSDL 1.1 definition.
+	 * Sets the XPath expression used for extracting the {@code schemaLocation} attributes
+	 * from the WSDL 1.1 definition.
 	 * <p>
 	 * Defaults to {@code DEFAULT_SCHEMA_LOCATION_EXPRESSION}.
 	 */
@@ -112,16 +123,17 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	}
 
 	/**
-	 * Sets whether relative address locations in the WSDL are to be transformed using the request URI of the incoming
-	 * {@code HttpServletRequest}. Defaults to {@code false}.
+	 * Sets whether relative address locations in the WSDL are to be transformed using the
+	 * request URI of the incoming {@code HttpServletRequest}. Defaults to {@code false}.
 	 */
 	public void setTransformLocations(boolean transformLocations) {
 		this.transformLocations = transformLocations;
 	}
 
 	/**
-	 * Sets whether relative address schema locations in the WSDL are to be transformed using the request URI of the
-	 * incoming {@code HttpServletRequest}. Defaults to {@code false}.
+	 * Sets whether relative address schema locations in the WSDL are to be transformed
+	 * using the request URI of the incoming {@code HttpServletRequest}. Defaults to
+	 * {@code false}.
 	 */
 	public void setTransformSchemaLocations(boolean transformSchemaLocations) {
 		this.transformSchemaLocations = transformSchemaLocations;
@@ -158,7 +170,8 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 			response.setContentType(CONTENT_TYPE);
 			StreamResult responseResult = new StreamResult(response.getOutputStream());
 			transformer.transform(definitionSource, responseResult);
-		} else {
+		}
+		else {
 			response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 		}
 		return null;
@@ -171,18 +184,19 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		locationXPathExpression = XPathExpressionFactory.createXPathExpression(locationExpression, expressionNamespaces);
+		locationXPathExpression = XPathExpressionFactory.createXPathExpression(locationExpression,
+				expressionNamespaces);
 		schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(schemaLocationExpression,
 				expressionNamespaces);
 	}
 
 	/**
-	 * Transforms all {@code location} attributes to reflect the server name given {@code HttpServletRequest}. Determines
-	 * the suitable attributes by evaluating the defined XPath expression, and delegates to {@code transformLocation} to
-	 * do the transformation for all attributes that match.
+	 * Transforms all {@code location} attributes to reflect the server name given
+	 * {@code HttpServletRequest}. Determines the suitable attributes by evaluating the
+	 * defined XPath expression, and delegates to {@code transformLocation} to do the
+	 * transformation for all attributes that match.
 	 * <p>
 	 * This method is only called when the {@code transformLocations} property is true.
-	 *
 	 * @see #setLocationExpression(String)
 	 * @see #setTransformLocations(boolean)
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
@@ -192,12 +206,13 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	}
 
 	/**
-	 * Transforms all {@code schemaLocation} attributes to reflect the server name given {@code HttpServletRequest}.
-	 * Determines the suitable attributes by evaluating the defined XPath expression, and delegates to
-	 * {@code transformLocation} to do the transformation for all attributes that match.
+	 * Transforms all {@code schemaLocation} attributes to reflect the server name given
+	 * {@code HttpServletRequest}. Determines the suitable attributes by evaluating the
+	 * defined XPath expression, and delegates to {@code transformLocation} to do the
+	 * transformation for all attributes that match.
 	 * <p>
-	 * This method is only called when the {@code transformSchemaLocations} property is true.
-	 *
+	 * This method is only called when the {@code transformSchemaLocations} property is
+	 * true.
 	 * @see #setSchemaLocationExpression(String)
 	 * @see #setTransformSchemaLocations(boolean)
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)

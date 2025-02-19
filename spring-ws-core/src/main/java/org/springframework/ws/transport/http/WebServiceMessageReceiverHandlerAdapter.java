@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,12 +29,14 @@ import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectS
 /**
  * Adapter to use the {@link WebServiceMessageReceiver} interface with the generic
  * {@link org.springframework.web.servlet.DispatcherServlet}. Requires a
- * {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the incoming
- * {@code HttpServletRequest} into a {@code WebServiceMessage}, and passes that context to the mapped
- * {@code WebServiceMessageReceiver}. If a response is created, that is sent via the {@code HttpServletResponse}.
+ * {@link org.springframework.ws.WebServiceMessageFactory} which is used to convert the
+ * incoming {@code HttpServletRequest} into a {@code WebServiceMessage}, and passes that
+ * context to the mapped {@code WebServiceMessageReceiver}. If a response is created, that
+ * is sent via the {@code HttpServletResponse}.
  * <p>
- * Note that the {@code MessageDispatcher} implements the {@code WebServiceMessageReceiver} interface, enabling this
- * adapter to function as a gateway to further message handling logic.
+ * Note that the {@code MessageDispatcher} implements the
+ * {@code WebServiceMessageReceiver} interface, enabling this adapter to function as a
+ * gateway to further message handling logic.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
@@ -58,10 +60,12 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 			WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);
 			try {
 				handleConnection(connection, (WebServiceMessageReceiver) handler);
-			} catch (InvalidXmlException ex) {
+			}
+			catch (InvalidXmlException ex) {
 				handleInvalidXmlException(httpServletRequest, httpServletResponse, handler, ex);
 			}
-		} else {
+		}
+		else {
 			handleNonPostMethod(httpServletRequest, httpServletResponse, handler);
 		}
 		return null;
@@ -73,11 +77,11 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 	}
 
 	/**
-	 * Template method that is invoked when the request method is not {@code POST}. Called from
-	 * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
+	 * Template method that is invoked when the request method is not {@code POST}. Called
+	 * from {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
 	 * <p>
-	 * Default implementation set the response status to 405: Method Not Allowed. Can be overridden in subclasses.
-	 *
+	 * Default implementation set the response status to 405: Method Not Allowed. Can be
+	 * overridden in subclasses.
 	 * @param httpServletRequest current HTTP request
 	 * @param httpServletResponse current HTTP response
 	 * @param handler current handler
@@ -88,11 +92,12 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 	}
 
 	/**
-	 * Template method that is invoked when parsing the request results in a {@link InvalidXmlException}. Called from
+	 * Template method that is invoked when parsing the request results in a
+	 * {@link InvalidXmlException}. Called from
 	 * {@link #handle(HttpServletRequest, HttpServletResponse, Object)}.
 	 * <p>
-	 * Default implementation set the response status to 400: Bad Request. Can be overridden in subclasses.
-	 *
+	 * Default implementation set the response status to 400: Bad Request. Can be
+	 * overridden in subclasses.
 	 * @param httpServletRequest current HTTP request
 	 * @param httpServletResponse current HTTP response
 	 * @param handler current handler

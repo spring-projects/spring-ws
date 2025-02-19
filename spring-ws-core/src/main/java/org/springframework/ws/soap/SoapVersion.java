@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,8 @@ package org.springframework.ws.soap;
 import javax.xml.namespace.QName;
 
 /**
- * Interface that defines a specific version of the SOAP specification. Contains properties for elements that make up a
- * soap envelope.
+ * Interface that defines a specific version of the SOAP specification. Contains
+ * properties for elements that make up a soap envelope.
  *
  * @author Arjen Poutsma
  * @see #SOAP_11
@@ -31,8 +31,8 @@ public interface SoapVersion {
 
 	/**
 	 * Represents version 1.1 of the SOAP specification.
-	 *
-	 * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/">SOAP 1.1 specification</a>
+	 * @see <a href="http://www.w3.org/TR/2000/NOTE-SOAP-20000508/">SOAP 1.1
+	 * specification</a>
 	 */
 	SoapVersion SOAP_11 = new SoapVersion() {
 
@@ -129,7 +129,6 @@ public interface SoapVersion {
 
 	/**
 	 * Represents version 1.2 of the SOAP specification.
-	 *
 	 * @see <a href="http://www.w3.org/TR/soap12-part0/">SOAP 1.2 specification</a>
 	 */
 	SoapVersion SOAP_12 = new SoapVersion() {
@@ -252,12 +251,15 @@ public interface SoapVersion {
 	QName getMustUnderstandAttributeName();
 
 	/**
-	 * Returns the URI indicating that a header element is intended for the next SOAP application that processes the
-	 * message.
+	 * Returns the URI indicating that a header element is intended for the next SOAP
+	 * application that processes the message.
 	 */
 	String getNextActorOrRoleUri();
 
-	/** Returns the URI indicating that a header element should never be directly processed. */
+	/**
+	 * Returns the URI indicating that a header element should never be directly
+	 * processed.
+	 */
 	String getNoneActorOrRoleUri();
 
 	/** Returns the qualified name of the {@code MustUnderstand} SOAP Fault value. */
@@ -276,8 +278,9 @@ public interface SoapVersion {
 	QName getClientOrSenderFaultName();
 
 	/**
-	 * Returns the URI indicating that a header element should only be processed by nodes acting as the ultimate receiver
-	 * of a message.
+	 * Returns the URI indicating that a header element should only be processed by nodes
+	 * acting as the ultimate receiver of a message.
 	 */
 	String getUltimateReceiverRoleUri();
+
 }

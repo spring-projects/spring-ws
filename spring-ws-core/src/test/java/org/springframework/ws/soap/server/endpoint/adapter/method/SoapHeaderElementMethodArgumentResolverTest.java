@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,22 @@
 
 package org.springframework.ws.soap.server.endpoint.adapter.method;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.List;
 
 import javax.xml.namespace.QName;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 /**
  * @author Tareq Abedrabbo
@@ -66,10 +68,12 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 		}
 		soapHeaderWithEmptyValue = new MethodParameter(
 				getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
-		soapHeaderElementParameter = new MethodParameter(getClass().getMethod("soapHeaderElement", SoapHeaderElement.class),
+		soapHeaderElementParameter = new MethodParameter(
+				getClass().getMethod("soapHeaderElement", SoapHeaderElement.class), 0);
+		soapHeaderElementListParameter = new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class),
 				0);
-		soapHeaderElementListParameter = new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class), 0);
-		soapHeaderMismatch = new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
+		soapHeaderMismatch = new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class),
+				0);
 		soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class), 0);
 	}
 
@@ -84,7 +88,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	public void failOnEmptyValue() {
 
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue));
+			.isThrownBy(() -> resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue));
 	}
 
 	@Test
@@ -138,16 +142,21 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 		assertThat((List<?>) result).isEmpty();
 	}
 
-	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {}
+	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
+	}
 
-	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {}
+	public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element) {
+	}
 
 	public void soapHeaderElementList(
-			@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {}
+			@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement> elements) {
+	}
 
-	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {}
+	public void soapHeaderMismatch(@SoapHeader("{http://springframework.org/ws}xxx") SoapHeaderElement element) {
+	}
 
 	public void soapHeaderMismatchList(
-			@SoapHeader("{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {}
+			@SoapHeader("{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
+	}
 
 }

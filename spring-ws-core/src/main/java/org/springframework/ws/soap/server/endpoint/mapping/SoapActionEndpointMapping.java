@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,14 +27,15 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 
 /**
- * Implementation of the {@code EndpointMapping} interface to map from {@code SOAPAction} headers to endpoint beans.
- * Supports both mapping to bean instances and mapping to bean names: the latter is required for prototype handlers.
+ * Implementation of the {@code EndpointMapping} interface to map from {@code SOAPAction}
+ * headers to endpoint beans. Supports both mapping to bean instances and mapping to bean
+ * names: the latter is required for prototype handlers.
  * <p>
- * The {@code endpointMap} property is suitable for populating the endpoint map with bean references, e.g. via the map
- * element in XML bean definitions.
+ * The {@code endpointMap} property is suitable for populating the endpoint map with bean
+ * references, e.g. via the map element in XML bean definitions.
  * <p>
- * Mappings to bean names can be set via the {@code mappings} property, in a form accepted by the
- * {@code java.util.Properties} class, like as follows:
+ * Mappings to bean names can be set via the {@code mappings} property, in a form accepted
+ * by the {@code java.util.Properties} class, like as follows:
  *
  * <pre>
  * http://www.springframework.org/spring-ws/samples/airline/BookFlight=bookFlightEndpoint
@@ -43,8 +44,9 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  *
  * The syntax is SOAP_ACTION=ENDPOINT_BEAN_NAME.
  * <p>
- * This endpoint mapping does not read from the request message, and therefore is more suitable for message factories
- * which directly read from the transport request (such as the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory} with the
+ * This endpoint mapping does not read from the request message, and therefore is more
+ * suitable for message factories which directly read from the transport request (such as
+ * the {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory} with the
  * {@code payloadCaching} disabled).
  *
  * @author Arjen Poutsma
@@ -74,9 +76,8 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	}
 
 	/**
-	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
-	 * actors/roles.
-	 *
+	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and
+	 * the set interceptors, and actors/roles.
 	 * @param endpoint the endpoint
 	 * @param interceptors the endpoint interceptors
 	 * @return the created invocation chain
@@ -84,8 +85,8 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	 * @see #setActorsOrRoles(String[])
 	 */
 	@Override
-	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext, Object endpoint,
-			EndpointInterceptor[] interceptors) {
+	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
+			Object endpoint, EndpointInterceptor[] interceptors) {
 		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
 	}
 
@@ -97,10 +98,12 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
 					&& soapAction.charAt(soapAction.length() - 1) == '"') {
 				return soapAction.substring(1, soapAction.length() - 1);
-			} else {
+			}
+			else {
 				return soapAction;
 			}
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -109,4 +112,5 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	protected boolean validateLookupKey(String key) {
 		return StringUtils.hasLength(key);
 	}
+
 }

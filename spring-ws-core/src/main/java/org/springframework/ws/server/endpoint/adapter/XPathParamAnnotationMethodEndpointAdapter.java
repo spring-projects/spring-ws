@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,19 +29,21 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.xml.namespace.SimpleNamespaceContext;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
- * Adapter that supports endpoint methods that use XPath expressions. Supports methods with the following signature:
+ * Adapter that supports endpoint methods that use XPath expressions. Supports methods
+ * with the following signature:
  *
  * <pre>
  * void handleMyMessage(@XPathParam("/root/child/text") String param);
@@ -54,9 +56,9 @@ import org.w3c.dom.NodeList;
  * 		&#64;XPathParam("/root/child/number") double param2);
  * </pre>
  *
- * I.e. methods that return either {@code void} or a {@link Source}, and have parameters annotated with
- * {@link XPathParam} that specify the XPath expression that should be bound to that parameter. The parameter can be of
- * the following types:
+ * I.e. methods that return either {@code void} or a {@link Source}, and have parameters
+ * annotated with {@link XPathParam} that specify the XPath expression that should be
+ * bound to that parameter. The parameter can be of the following types:
  * <ul>
  * <li>{@code boolean}, or {@link Boolean}</li>
  * <li>{@code double}, or {@link Double}</li>
@@ -67,9 +69,10 @@ import org.w3c.dom.NodeList;
  *
  * @author Arjen Poutsma
  * @since 1.0.0
- * @deprecated as of Spring Web Services 2.0, in favor of {@link DefaultMethodEndpointAdapter} and
- *             {@link org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
- *             XPathParamMethodArgumentResolver}.
+ * @deprecated as of Spring Web Services 2.0, in favor of
+ * {@link DefaultMethodEndpointAdapter} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
+ * XPathParamMethodArgumentResolver}.
  */
 @Deprecated
 public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEndpointAdapter
@@ -89,7 +92,10 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 		xpathFactory = XPathFactory.newInstance();
 	}
 
-	/** Supports methods with @XPathParam parameters, and return either {@code Source} or nothing. */
+	/**
+	 * Supports methods with @XPathParam parameters, and return either {@code Source} or
+	 * nothing.
+	 */
 	@Override
 	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {
 		Method method = methodEndpoint.getMethod();
@@ -142,15 +148,21 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 			QName conversionType;
 			if (Boolean.class.isAssignableFrom(parameterTypes[i]) || Boolean.TYPE.isAssignableFrom(parameterTypes[i])) {
 				conversionType = XPathConstants.BOOLEAN;
-			} else if (Double.class.isAssignableFrom(parameterTypes[i]) || Double.TYPE.isAssignableFrom(parameterTypes[i])) {
+			}
+			else if (Double.class.isAssignableFrom(parameterTypes[i])
+					|| Double.TYPE.isAssignableFrom(parameterTypes[i])) {
 				conversionType = XPathConstants.NUMBER;
-			} else if (Node.class.isAssignableFrom(parameterTypes[i])) {
+			}
+			else if (Node.class.isAssignableFrom(parameterTypes[i])) {
 				conversionType = XPathConstants.NODE;
-			} else if (NodeList.class.isAssignableFrom(parameterTypes[i])) {
+			}
+			else if (NodeList.class.isAssignableFrom(parameterTypes[i])) {
 				conversionType = XPathConstants.NODESET;
-			} else if (String.class.isAssignableFrom(parameterTypes[i])) {
+			}
+			else if (String.class.isAssignableFrom(parameterTypes[i])) {
 				conversionType = XPathConstants.STRING;
-			} else {
+			}
+			else {
 				throw new IllegalArgumentException("Invalid parameter type [" + parameterTypes[i] + "]. "
 						+ "Supported are: Boolean, Double, Node, NodeList, and String.");
 			}
@@ -171,7 +183,6 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 
 	/**
 	 * Returns the root element of the given source.
-	 *
 	 * @param source the source to get the root element from
 	 * @return the root element
 	 */

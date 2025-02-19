@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,10 +24,11 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of XPath expressions into
- * endpoint beans.
+ * Spring {@link FactoryBean} for {@link XPathExpression} object. Facilitates injection of
+ * XPath expressions into endpoint beans.
  * <p>
- * Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3, and Jaxen XPaths.
+ * Uses {@link XPathExpressionFactory} underneath, so support is provided for JAXP 1.3,
+ * and Jaxen XPaths.
  *
  * @author Arjen Poutsma
  * @see #setExpression(String)
@@ -46,7 +47,10 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 		expressionString = expression;
 	}
 
-	/** Sets the namespaces for the expressions. The given properties binds string prefixes to string namespaces. */
+	/**
+	 * Sets the namespaces for the expressions. The given properties binds string prefixes
+	 * to string namespaces.
+	 */
 	public void setNamespaces(Map<String, String> namespaces) {
 		this.namespaces = namespaces;
 	}
@@ -56,7 +60,8 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 		Assert.notNull(expressionString, "expression is required");
 		if (CollectionUtils.isEmpty(namespaces)) {
 			expression = XPathExpressionFactory.createXPathExpression(expressionString);
-		} else {
+		}
+		else {
 			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
 		}
 	}
@@ -75,4 +80,5 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 	public boolean isSingleton() {
 		return true;
 	}
+
 }

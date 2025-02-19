@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,11 @@
 
 package org.springframework.ws.transport.support;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import javax.xml.namespace.QName;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
@@ -30,6 +28,12 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WebServiceMessageReceiverObjectSupportTest {
 
@@ -71,8 +75,8 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 		receiverSupport.handleConnection(connectionMock, receiver);
 
-        verify(connectionMock).receive(messageFactory);
-    }
+		verify(connectionMock).receive(messageFactory);
+	}
 
 	@Test
 	public void handleConnectionFaultResponse() throws Exception {
@@ -103,7 +107,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 	@Test
 	public void handleConnectionNoResponse() throws Exception {
 
-        when(connectionMock.receive(messageFactory)).thenReturn(request);
+		when(connectionMock.receive(messageFactory)).thenReturn(request);
 		connectionMock.close();
 
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
@@ -121,4 +125,5 @@ public class WebServiceMessageReceiverObjectSupportTest {
 	private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {
 
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import static org.assertj.core.api.Assertions.*;
-
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -27,11 +25,16 @@ import javax.xml.stream.events.XMLEvent;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
-/** @author Arjen Poutsma */
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * @author Arjen Poutsma
+ */
 @SuppressWarnings("Since15")
 public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
 
@@ -170,9 +173,13 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 		assertThat(startElement.getName().getLocalPart()).isEqualTo(LOCAL_NAME);
 	}
 
-	public void invalid(XMLStreamReader streamReader) {}
+	public void invalid(XMLStreamReader streamReader) {
+	}
 
-	public void streamReader(@RequestPayload XMLStreamReader streamReader) {}
+	public void streamReader(@RequestPayload XMLStreamReader streamReader) {
+	}
 
-	public void eventReader(@RequestPayload XMLEventReader streamReader) {}
+	public void eventReader(@RequestPayload XMLEventReader streamReader) {
+	}
+
 }

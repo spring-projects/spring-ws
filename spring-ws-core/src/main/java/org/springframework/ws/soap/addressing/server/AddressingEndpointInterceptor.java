@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -34,8 +35,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
 /**
- * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers. Stateful, and instantiated by
- * the {@link AbstractAddressingEndpointMapping}.
+ * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers.
+ * Stateful, and instantiated by the {@link AbstractAddressingEndpointMapping}.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -96,7 +97,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
 		MessageAddressingProperties requestMap = version
-				.getMessageAddressingProperties((SoapMessage) messageContext.getRequest());
+			.getMessageAddressingProperties((SoapMessage) messageContext.getRequest());
 		EndpointReference replyEpr = !isFault ? requestMap.getReplyTo() : requestMap.getFaultTo();
 		if (handleNoneAddress(messageContext, replyEpr)) {
 			return false;
@@ -108,7 +109,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		version.addAddressingHeaders(reply, replyMap);
 		if (handleAnonymousAddress(messageContext, replyEpr)) {
 			return true;
-		} else {
+		}
+		else {
 			sendOutOfBand(messageContext, replyEpr);
 			return false;
 		}
@@ -117,8 +119,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	private boolean handleNoneAddress(MessageContext messageContext, EndpointReference replyEpr) {
 		if (replyEpr == null || version.hasNoneAddress(replyEpr)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr + "] reply address; reply ["
-						+ messageContext.getResponse() + "] discarded");
+				logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
+						+ "] reply address; reply [" + messageContext.getResponse() + "] discarded");
 			}
 			messageContext.clearResponse();
 			return true;
@@ -150,7 +152,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 				try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())) {
 					connection.send(messageContext.getResponse());
 					break;
-				} finally {
+				}
+				finally {
 					messageContext.clearResponse();
 				}
 			}
@@ -170,10 +173,12 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {}
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	}
 
 	@Override
 	public boolean understands(SoapHeaderElement header) {
 		return version.understands(header);
 	}
+
 }

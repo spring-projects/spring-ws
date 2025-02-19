@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,13 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -34,7 +32,19 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver;
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
 
-/** @author Arjen Poutsma */
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.isNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+/**
+ * @author Arjen Poutsma
+ */
 public class DefaultMethodEndpointAdapterTest {
 
 	private DefaultMethodEndpointAdapter adapter;
@@ -141,8 +151,7 @@ public class DefaultMethodEndpointAdapterTest {
 		// arg 1
 		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
 		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class)))
-				.andReturn(42);
+		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(42);
 
 		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
 		returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), eq(value));
@@ -195,7 +204,8 @@ public class DefaultMethodEndpointAdapterTest {
 		try {
 			adapter.invoke(messageContext, exceptionEndpoint);
 			fail("IOException expected");
-		} catch (IOException expected) {
+		}
+		catch (IOException expected) {
 			// expected
 		}
 
@@ -226,4 +236,5 @@ public class DefaultMethodEndpointAdapterTest {
 		supportedArgument = s;
 		throw new IOException(s);
 	}
+
 }

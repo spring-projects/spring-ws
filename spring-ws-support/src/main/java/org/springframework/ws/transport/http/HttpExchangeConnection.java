@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.ws.transport.http;
-
-import jakarta.xml.soap.SOAPConstants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,6 +28,9 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import com.sun.net.httpserver.HttpExchange;
+import jakarta.xml.soap.SOAPConstants;
+
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -38,10 +39,9 @@ import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
-import com.sun.net.httpserver.HttpExchange;
-
 /**
- * Implementation of {@link WebServiceConnection} that is based on the Java 6 HttpServer {@link HttpExchange}.
+ * Implementation of {@link WebServiceConnection} that is based on the Java 6 HttpServer
+ * {@link HttpExchange}.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -131,7 +131,8 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 		if (chunkedEncoding) {
 			httpExchange.sendResponseHeaders(responseStatusCode, 0);
 			return httpExchange.getResponseBody();
-		} else {
+		}
+		else {
 			if (responseBuffer == null) {
 				responseBuffer = new ByteArrayOutputStream();
 			}
@@ -173,7 +174,8 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	public void setFault(boolean fault) throws IOException {
 		if (fault) {
 			responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
-		} else {
+		}
+		else {
 			responseStatusCode = HttpTransportConstants.STATUS_OK;
 		}
 	}
@@ -183,11 +185,14 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
 				responseStatusCode = HttpTransportConstants.STATUS_BAD_REQUEST;
-			} else {
+			}
+			else {
 				responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
 			}
-		} else {
+		}
+		else {
 			responseStatusCode = HttpTransportConstants.STATUS_OK;
 		}
 	}
+
 }

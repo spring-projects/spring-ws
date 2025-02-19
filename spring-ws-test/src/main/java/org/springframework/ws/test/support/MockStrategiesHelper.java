@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -42,8 +43,8 @@ public class MockStrategiesHelper {
 	private final ApplicationContext applicationContext;
 
 	/**
-	 * Creates a new instance of the {@code MockStrategiesHelper} with the given application context.
-	 *
+	 * Creates a new instance of the {@code MockStrategiesHelper} with the given
+	 * application context.
 	 * @param applicationContext the application context
 	 */
 	public MockStrategiesHelper(ApplicationContext applicationContext) {
@@ -60,7 +61,6 @@ public class MockStrategiesHelper {
 
 	/**
 	 * Returns a single strategy found in the given application context.
-	 *
 	 * @param type the type of bean to be found in the application context
 	 * @return the bean, or {@code null} if no bean of the given type can be found
 	 * @throws BeanInitializationException if there is more than 1 beans of the given type
@@ -70,25 +70,28 @@ public class MockStrategiesHelper {
 		Map<String, T> map = applicationContext.getBeansOfType(type);
 		if (map.isEmpty()) {
 			return null;
-		} else if (map.size() == 1) {
+		}
+		else if (map.size() == 1) {
 			Map.Entry<String, T> entry = map.entrySet().iterator().next();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Using " + ClassUtils.getShortName(type) + " [" + entry.getKey() + "]");
 			}
 			return entry.getValue();
-		} else {
+		}
+		else {
 			throw new BeanInitializationException(
 					"Could not find exactly 1 " + ClassUtils.getShortName(type) + " in application context");
 		}
 	}
 
 	/**
-	 * Returns a single strategy found in the given application context, or instantiates a default strategy if no
-	 * applicable strategy was found.
-	 *
+	 * Returns a single strategy found in the given application context, or instantiates a
+	 * default strategy if no applicable strategy was found.
 	 * @param type the type of bean to be found in the application context
-	 * @param defaultType the type to instantiate and return when no bean of the specified type could be found
-	 * @return the bean found in the application context, or the default type if no bean of the given type can be found
+	 * @param defaultType the type to instantiate and return when no bean of the specified
+	 * type could be found
+	 * @return the bean found in the application context, or the default type if no bean
+	 * of the given type can be found
 	 * @throws BeanInitializationException if there is more than 1 beans of the given type
 	 */
 	public <T, D extends T> T getStrategy(Class<T> type, Class<D> defaultType) {
@@ -96,10 +99,11 @@ public class MockStrategiesHelper {
 		T t = getStrategy(type);
 		if (t != null) {
 			return t;
-		} else {
+		}
+		else {
 			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"No " + ClassUtils.getShortName(type) + " found, using default " + ClassUtils.getShortName(defaultType));
+				logger.debug("No " + ClassUtils.getShortName(type) + " found, using default "
+						+ ClassUtils.getShortName(defaultType));
 			}
 			T defaultStrategy = BeanUtils.instantiateClass(defaultType);
 			if (defaultStrategy instanceof ApplicationContextAware) {
@@ -110,7 +114,8 @@ public class MockStrategiesHelper {
 				InitializingBean initializingBean = (InitializingBean) defaultStrategy;
 				try {
 					initializingBean.afterPropertiesSet();
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					throw new BeanCreationException("Invocation of init method failed", ex);
 				}
 			}

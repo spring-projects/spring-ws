@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,16 +22,18 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.xml.JaxpVersion;
 
 /**
- * Factory for {@link XmlValidator} objects, being aware of JAXP 1.3 {@link Validator}s, and JAXP 1.0 parsing
- * capabilities. Mainly for internal use within the framework.
+ * Factory for {@link XmlValidator} objects, being aware of JAXP 1.3 {@link Validator}s,
+ * and JAXP 1.0 parsing capabilities. Mainly for internal use within the framework.
  * <p>
- * The goal of this class is to avoid runtime dependencies on JAXP 1.3 by using the best validation implementation that
- * is available. Prefers JAXP 1.3 {@link XmlValidator} implementations to a custom, SAX-based implementation.
+ * The goal of this class is to avoid runtime dependencies on JAXP 1.3 by using the best
+ * validation implementation that is available. Prefers JAXP 1.3 {@link XmlValidator}
+ * implementations to a custom, SAX-based implementation.
  *
  * @author Arjen Poutsma
  * @see XmlValidator
@@ -48,9 +50,8 @@ public abstract class XmlValidatorFactory {
 	public static final String SCHEMA_RELAX_NG = "http://relaxng.org/ns/structure/1.0";
 
 	/**
-	 * Create a {@link XmlValidator} with the given schema resource and schema language type. The schema language must be
-	 * one of the {@code SCHEMA_XXX} constants.
-	 *
+	 * Create a {@link XmlValidator} with the given schema resource and schema language
+	 * type. The schema language must be one of the {@code SCHEMA_XXX} constants.
 	 * @param schemaResource a resource that locates the schema to validate against
 	 * @param schemaLanguage the language of the schema
 	 * @return a validator
@@ -66,10 +67,10 @@ public abstract class XmlValidatorFactory {
 	}
 
 	/**
-	 * Create a {@link XmlValidator} with the given schema resources and schema language type. The schema language must be
-	 * one of the {@code SCHEMA_XXX} constants.
-	 *
-	 * @param schemaResources an array of resource that locate the schemas to validate against
+	 * Create a {@link XmlValidator} with the given schema resources and schema language
+	 * type. The schema language must be one of the {@code SCHEMA_XXX} constants.
+	 * @param schemaResources an array of resource that locate the schemas to validate
+	 * against
 	 * @param schemaLanguage the language of the schemas
 	 * @return a validator
 	 * @throws IOException if the schema resource cannot be read
@@ -91,10 +92,12 @@ public abstract class XmlValidatorFactory {
 		if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_15) {
 			logger.trace("Creating JAXP 1.5 XmlValidator");
 			return Jaxp15ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-		} else if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
+		}
+		else if (JaxpVersion.getJaxpVersion() >= JaxpVersion.JAXP_13) {
 			logger.trace("Creating JAXP 1.3 XmlValidator");
 			return Jaxp13ValidatorFactory.createValidator(schemaResources, schemaLanguage);
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Could not locate JAXP 1.3.");
 		}
 	}

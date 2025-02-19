@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,8 +33,8 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
- * Implementation of the {@link EndpointMapping} interface that uses the {@link PayloadRoot} annotation to map methods
- * to request payload root elements.
+ * Implementation of the {@link EndpointMapping} interface that uses the
+ * {@link PayloadRoot} annotation to map methods to request payload root elements.
  * <p>
  * Endpoints typically have the following form:
  *
@@ -62,7 +62,6 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 
 	/**
 	 * Override the default {@link TransformerFactory}.
-	 *
 	 * @param transformerFactory
 	 */
 	public static void setTransformerFactory(TransformerFactory transformerFactory) {
@@ -83,7 +82,8 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 			for (PayloadRoot payloadRoot : payloadRoots.value()) {
 				result.add(getQNameFromAnnotation(payloadRoot));
 			}
-		} else {
+		}
+		else {
 			PayloadRoot payloadRoot = AnnotationUtils.findAnnotation(method, PayloadRoot.class);
 			if (payloadRoot != null) {
 				result.add(getQNameFromAnnotation(payloadRoot));
@@ -96,7 +96,8 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 	private QName getQNameFromAnnotation(PayloadRoot payloadRoot) {
 		if (StringUtils.hasLength(payloadRoot.localPart()) && StringUtils.hasLength(payloadRoot.namespace())) {
 			return new QName(payloadRoot.namespace(), payloadRoot.localPart());
-		} else {
+		}
+		else {
 			return new QName(payloadRoot.localPart());
 		}
 	}

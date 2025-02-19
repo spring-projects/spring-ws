@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,14 +26,16 @@ import java.util.Iterator;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 
 /**
- * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is used for server-side XMPP
- * access. Exposes a {@link Message} request and response message.
+ * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is
+ * used for server-side XMPP access. Exposes a {@link Message} request and response
+ * message.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
@@ -76,8 +78,8 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	/*
-	* URI
-	*/
+	 * URI
+	 */
 
 	@Override
 	public URI getUri() throws URISyntaxException {
@@ -85,8 +87,8 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	/*
-	* Errors
-	*/
+	 * Errors
+	 */
 
 	@Override
 	public boolean hasError() {
@@ -142,8 +144,10 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		try {
 			connection.sendStanza(responseMessage);
-		} catch (SmackException.NotConnectedException | InterruptedException e) {
+		}
+		catch (SmackException.NotConnectedException | InterruptedException e) {
 			throw new IOException(e);
 		}
 	}
+
 }

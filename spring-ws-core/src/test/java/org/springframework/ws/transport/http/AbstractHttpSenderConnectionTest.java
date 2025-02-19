@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Collections;
@@ -28,8 +25,14 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Andreas Veithen
@@ -37,10 +40,10 @@ import org.springframework.ws.WebServiceMessageFactory;
 public class AbstractHttpSenderConnectionTest {
 
 	/**
-	 * Tests that {@link AbstractHttpSenderConnection} doesn't consume the response stream before passing it to the
-	 * message factory. This is a regression test for SWS-707.
-	 *
-	 * @param chunking Specifies whether the test should simulate a response with chunking enabled.
+	 * Tests that {@link AbstractHttpSenderConnection} doesn't consume the response stream
+	 * before passing it to the message factory. This is a regression test for SWS-707.
+	 * @param chunking Specifies whether the test should simulate a response with chunking
+	 * enabled.
 	 * @throws Exception
 	 */
 	private void testSupportsStreaming(boolean chunking) throws Exception {
@@ -78,4 +81,5 @@ public class AbstractHttpSenderConnectionTest {
 	public void testSupportsStreamingWithChunkingDisabled() throws Exception {
 		testSupportsStreaming(false);
 	}
+
 }

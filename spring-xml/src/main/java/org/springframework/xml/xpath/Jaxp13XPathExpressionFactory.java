@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,10 +26,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.springframework.xml.namespace.SimpleNamespaceContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.xml.namespace.SimpleNamespaceContext;
 
 /**
  * JAXP 1.3-specific factory creating {@link XPathExpression} objects.
@@ -45,7 +46,6 @@ abstract class Jaxp13XPathExpressionFactory {
 
 	/**
 	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression.
-	 *
 	 * @param expression the XPath expression
 	 * @return the compiled {@code XPathExpression}
 	 * @throws XPathParseException when the given expression cannot be parsed
@@ -55,15 +55,16 @@ abstract class Jaxp13XPathExpressionFactory {
 			XPath xpath = createXPath();
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
 			return new Jaxp13XPathExpression(xpathExpression, expression);
-		} catch (XPathExpressionException ex) {
+		}
+		catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
 					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
 		}
 	}
 
 	/**
-	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression and namespaces.
-	 *
+	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression and
+	 * namespaces.
 	 * @param expression the XPath expression
 	 * @param namespaces the namespaces
 	 * @return the compiled {@code XPathExpression}
@@ -77,7 +78,8 @@ abstract class Jaxp13XPathExpressionFactory {
 			xpath.setNamespaceContext(namespaceContext);
 			javax.xml.xpath.XPathExpression xpathExpression = xpath.compile(expression);
 			return new Jaxp13XPathExpression(xpathExpression, expression);
-		} catch (XPathExpressionException ex) {
+		}
+		catch (XPathExpressionException ex) {
 			throw new org.springframework.xml.xpath.XPathParseException(
 					"Could not compile [" + expression + "] to a XPathExpression: " + ex.getMessage(), ex);
 		}
@@ -91,6 +93,7 @@ abstract class Jaxp13XPathExpressionFactory {
 	private static class Jaxp13XPathExpression implements XPathExpression {
 
 		private final javax.xml.xpath.XPathExpression xpathExpression;
+
 		private final String expression;
 
 		private Jaxp13XPathExpression(javax.xml.xpath.XPathExpression xpathExpression, String expression) {
@@ -120,7 +123,8 @@ abstract class Jaxp13XPathExpressionFactory {
 				synchronized (xpathExpression) {
 					return xpathExpression.evaluate(node, returnType);
 				}
-			} catch (XPathExpressionException ex) {
+			}
+			catch (XPathExpressionException ex) {
 				throw new XPathException("Could not evaluate XPath expression:" + ex.getMessage(), ex);
 			}
 		}
@@ -154,10 +158,12 @@ abstract class Jaxp13XPathExpressionFactory {
 			if (result != null) {
 				try {
 					return nodeMapper.mapNode(result, 0);
-				} catch (DOMException ex) {
+				}
+				catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
-			} else {
+			}
+			else {
 				return null;
 			}
 		}
@@ -169,12 +175,14 @@ abstract class Jaxp13XPathExpressionFactory {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				try {
 					results.add(nodeMapper.mapNode(nodes.item(i), i));
-				} catch (DOMException ex) {
+				}
+				catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
 			}
 			return results;
 		}
+
 	}
 
 }

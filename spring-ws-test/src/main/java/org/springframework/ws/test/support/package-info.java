@@ -15,7 +15,8 @@
  */
 
 /**
- * Support classes for the testing framework, used by the classes in the {@link org.springframework.ws.test.client} and
+ * Support classes for the testing framework, used by the classes in the
+ * {@link org.springframework.ws.test.client} and
  * {@link org.springframework.ws.test.server} packages.
  */
 package org.springframework.ws.test.support;

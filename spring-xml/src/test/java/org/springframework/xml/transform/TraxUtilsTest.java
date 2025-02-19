@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,9 +15,6 @@
  */
 
 package org.springframework.xml.transform;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -47,9 +44,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.util.xml.StaxUtils;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.springframework.xml.XMLInputFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.ContentHandler;
@@ -59,6 +53,16 @@ import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.util.xml.StaxUtils;
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.XMLInputFactoryUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class TraxUtilsTest {
 
@@ -307,7 +311,8 @@ public class TraxUtilsTest {
 
 		Source source = new Source() {
 
-			public void setSystemId(String systemId) {}
+			public void setSystemId(String systemId) {
+			}
 
 			public String getSystemId() {
 				return null;
@@ -321,7 +326,8 @@ public class TraxUtilsTest {
 	public void testDoWithInvalidResult() throws Exception {
 		Result result = new Result() {
 
-			public void setSystemId(String systemId) {}
+			public void setSystemId(String systemId) {
+			}
 
 			public String getSystemId() {
 				return null;
@@ -330,4 +336,5 @@ public class TraxUtilsTest {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> TraxUtils.doWithResult(result, null));
 	}
+
 }

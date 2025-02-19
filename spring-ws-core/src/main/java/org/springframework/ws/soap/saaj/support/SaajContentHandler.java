@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,24 +16,24 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import jakarta.xml.soap.Name;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 /**
- * SAX {@code ContentHandler} that transforms callback calls to the creation of SAAJ {@code Node}s and
- * {@code SOAPElement}s.
+ * SAX {@code ContentHandler} that transforms callback calls to the creation of SAAJ
+ * {@code Node}s and {@code SOAPElement}s.
  *
  * @author Arjen Poutsma
  * @see jakarta.xml.soap.Node
@@ -49,15 +49,16 @@ public class SaajContentHandler implements ContentHandler {
 	private Map<String, String> namespaces = new LinkedHashMap<String, String>();
 
 	/**
-	 * Constructs a new instance of the {@code SaajContentHandler} that creates children of the given {@code SOAPElement}.
-	 *
+	 * Constructs a new instance of the {@code SaajContentHandler} that creates children
+	 * of the given {@code SOAPElement}.
 	 * @param element the element to write to
 	 */
 	public SaajContentHandler(SOAPElement element) {
 		Assert.notNull(element, "element must not be null");
 		if (element instanceof SOAPEnvelope) {
 			envelope = (SOAPEnvelope) element;
-		} else {
+		}
+		else {
 			envelope = SaajUtils.getEnvelope(element);
 		}
 		this.element = element;
@@ -68,7 +69,8 @@ public class SaajContentHandler implements ContentHandler {
 		try {
 			String text = new String(ch, start, length);
 			element.addTextNode(text);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SAXException(ex);
 		}
 	}
@@ -94,7 +96,8 @@ public class SaajContentHandler implements ContentHandler {
 				}
 			}
 			element = child;
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SAXException(ex);
 		}
 	}
@@ -103,13 +106,15 @@ public class SaajContentHandler implements ContentHandler {
 		String result = element.getNamespaceURI(prefix);
 		if (namespaceUri.equals(result)) {
 			return true;
-		} else {
+		}
+		else {
 			try {
 				SOAPElement parent = element.getParentElement();
 				if (parent != null) {
 					return findParentNamespaceDeclaration(parent, prefix, namespaceUri);
 				}
-			} catch (UnsupportedOperationException ex) {
+			}
+			catch (UnsupportedOperationException ex) {
 				// ignore
 			}
 			return false;
@@ -134,29 +139,37 @@ public class SaajContentHandler implements ContentHandler {
 	}
 
 	@Override
-	public void setDocumentLocator(Locator locator) {}
+	public void setDocumentLocator(Locator locator) {
+	}
 
 	@Override
-	public void startDocument() throws SAXException {}
+	public void startDocument() throws SAXException {
+	}
 
 	@Override
-	public void endDocument() throws SAXException {}
+	public void endDocument() throws SAXException {
+	}
 
 	@Override
-	public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {}
+	public void ignorableWhitespace(char ch[], int start, int length) throws SAXException {
+	}
 
 	@Override
-	public void processingInstruction(String target, String data) throws SAXException {}
+	public void processingInstruction(String target, String data) throws SAXException {
+	}
 
 	@Override
-	public void skippedEntity(String name) throws SAXException {}
+	public void skippedEntity(String name) throws SAXException {
+	}
 
 	private String getPrefix(String qName) {
 		int idx = qName.indexOf(':');
 		if (idx != -1) {
 			return qName.substring(0, idx);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
+
 }

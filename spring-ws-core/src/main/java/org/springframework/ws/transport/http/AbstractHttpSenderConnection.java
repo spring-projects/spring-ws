@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,7 +30,8 @@ import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Abstract base class for {@link WebServiceConnection} implementations that send request over HTTP.
+ * Abstract base class for {@link WebServiceConnection} implementations that send request
+ * over HTTP.
  *
  * @author Arjen Poutsma
  * @author Andreas Veithen
@@ -45,7 +46,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	private Boolean hasResponse;
 
 	/**
-	 * The raw response input stream to use instead of calling {@link #getRawResponseInputStream()}.
+	 * The raw response input stream to use instead of calling
+	 * {@link #getRawResponseInputStream()}.
 	 */
 	private PushbackInputStream rawResponseInputStream;
 
@@ -86,11 +88,13 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 			int b = rawResponseInputStream.read();
 			if (b == -1) {
 				hasResponse = Boolean.FALSE;
-			} else {
+			}
+			else {
 				hasResponse = Boolean.TRUE;
 				rawResponseInputStream.unread(b);
 			}
-		} else {
+		}
+		else {
 			hasResponse = contentLength > 0;
 		}
 		return hasResponse;
@@ -134,7 +138,8 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	@Override
 	public final boolean hasFault() throws IOException {
 		// SOAP 1.1 specifies a 500 status code for faults
-		// SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other faults
+		// SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other
+		// faults
 		switch (getResponseCode()) {
 			case HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR:
 				return isSoap11Response() || isSoap12Response();
@@ -167,8 +172,11 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 
 	@Override
 	@Deprecated
-	public final void setFault(boolean fault) {}
+	public final void setFault(boolean fault) {
+	}
 
 	@Override
-	public final void setFaultCode(QName faultCode) throws IOException {}
+	public final void setFaultCode(QName faultCode) throws IOException {
+	}
+
 }

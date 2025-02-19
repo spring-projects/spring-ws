@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,8 +35,9 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Abstract base class for endpoints that handle the message payload with streaming StAX. Allows subclasses to read the
- * request with a {@code XMLStreamReader}, and to create a response using a {@code XMLStreamWriter}.
+ * Abstract base class for endpoints that handle the message payload with streaming StAX.
+ * Allows subclasses to read the request with a {@code XMLStreamReader}, and to create a
+ * response using a {@code XMLStreamWriter}.
  *
  * @author Arjen Poutsma
  * @see #invokeInternal(javax.xml.stream.XMLStreamReader,javax.xml.stream.XMLStreamWriter)
@@ -69,7 +70,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 				if (eventReader != null) {
 					try {
 						streamReader = StaxUtils.createEventStreamReader(eventReader);
-					} catch (XMLStreamException ex) {
+					}
+					catch (XMLStreamException ex) {
 						streamReader = null;
 					}
 				}
@@ -79,7 +81,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 		if (streamReader == null) {
 			try {
 				streamReader = getInputFactory().createXMLStreamReader(source);
-			} catch (XMLStreamException | UnsupportedOperationException ex) {
+			}
+			catch (XMLStreamException | UnsupportedOperationException ex) {
 				// ignore
 			}
 		}
@@ -101,7 +104,8 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 		if (streamWriter == null) {
 			try {
 				streamWriter = getOutputFactory().createXMLStreamWriter(result);
-			} catch (XMLStreamException ex) {
+			}
+			catch (XMLStreamException ex) {
 				// ignore
 			}
 		}
@@ -109,17 +113,18 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a {@code XMLStreamReader}, and a
-	 * {@code XMLStreamWriter} to write the response payload to.
-	 *
+	 * Template method. Subclasses must implement this. Offers the request payload as a
+	 * {@code XMLStreamReader}, and a {@code XMLStreamWriter} to write the response
+	 * payload to.
 	 * @param streamReader the reader to read the payload from
 	 * @param streamWriter the writer to write the payload to
 	 */
 	protected abstract void invokeInternal(XMLStreamReader streamReader, XMLStreamWriter streamWriter) throws Exception;
 
 	/**
-	 * Implementation of the {@code XMLStreamWriter} interface that creates a response {@code WebServiceMessage} as soon
-	 * as any method is called, thus lazily creating the response.
+	 * Implementation of the {@code XMLStreamWriter} interface that creates a response
+	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the
+	 * response.
 	 */
 	private class ResponseCreatingStreamWriter implements XMLStreamWriter {
 
@@ -150,12 +155,14 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 				streamWriter.close();
 				if (os != null) {
 					streamWriter.flush();
-					// if we used an output stream cache, we have to transform it to the response again
+					// if we used an output stream cache, we have to transform it to the
+					// response again
 					try {
 						ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 						transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
 						os = null;
-					} catch (TransformerException ex) {
+					}
+					catch (TransformerException ex) {
 						throw new XMLStreamException(ex);
 					}
 				}
@@ -344,11 +351,14 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 				WebServiceMessage response = messageContext.getResponse();
 				streamWriter = getStreamWriter(response.getPayloadResult());
 				if (streamWriter == null) {
-					// as a final resort, use a stream, and transform that at endDocument()
+					// as a final resort, use a stream, and transform that at
+					// endDocument()
 					os = new ByteArrayOutputStream();
 					streamWriter = getOutputFactory().createXMLStreamWriter(os);
 				}
 			}
 		}
+
 	}
+
 }

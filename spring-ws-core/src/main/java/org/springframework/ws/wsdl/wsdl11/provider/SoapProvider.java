@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,15 +22,18 @@ import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 
 /**
- * Implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces that supports SOAP 1.1 and
- * SOAP 1.2. Delegates to {@link Soap11Provider} and {@link Soap12Provider}.
+ * Implementation of the {@link BindingsProvider} and {@link ServicesProvider} interfaces
+ * that supports SOAP 1.1 and SOAP 1.2. Delegates to {@link Soap11Provider} and
+ * {@link Soap12Provider}.
  * <p>
- * By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the SOAP Actions defined in the
- * resulting WSDL can be set. Additionally, the transport uri can be changed from the default HTTP transport by using
- * the {@link #setTransportUri(String) transportUri} property.
+ * By setting the {@link #setSoapActions(java.util.Properties) soapActions} property, the
+ * SOAP Actions defined in the resulting WSDL can be set. Additionally, the transport uri
+ * can be changed from the default HTTP transport by using the
+ * {@link #setTransportUri(String) transportUri} property.
  * <p>
- * The {@link #setCreateSoap11Binding(boolean) createSoap11} and {@link #setCreateSoap12Binding(boolean) createSoap12}
- * properties indicate whether a SOAP 1.1 or SOAP 1.2 binding should be created. These properties default to
+ * The {@link #setCreateSoap11Binding(boolean) createSoap11} and
+ * {@link #setCreateSoap12Binding(boolean) createSoap12} properties indicate whether a
+ * SOAP 1.1 or SOAP 1.2 binding should be created. These properties default to
  * {@code true} and {@code false} respectively.
  *
  * @author Arjen Poutsma
@@ -65,9 +68,10 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 	}
 
 	/**
-	 * Sets the SOAP Actions for this binding. Keys are {@link javax.wsdl.BindingOperation#getName() binding operation
-	 * names}; values are {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action URIs}.
-	 *
+	 * Sets the SOAP Actions for this binding. Keys are
+	 * {@link javax.wsdl.BindingOperation#getName() binding operation names}; values are
+	 * {@link javax.wsdl.extensions.soap.SOAPOperation#getSoapActionURI() SOAP Action
+	 * URIs}.
 	 * @param soapActions the soap
 	 */
 	public void setSoapActions(Properties soapActions) {
@@ -75,7 +79,9 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 		soap12BindingProvider.setSoapActions(soapActions);
 	}
 
-	/** Sets the value used for the binding transport attribute value. Defaults to HTTP. */
+	/**
+	 * Sets the value used for the binding transport attribute value. Defaults to HTTP.
+	 */
 	public void setTransportUri(String transportUri) {
 		soap11BindingProvider.setTransportUri(transportUri);
 		soap12BindingProvider.setTransportUri(transportUri);
@@ -112,4 +118,5 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 			soap12BindingProvider.addServices(definition);
 		}
 	}
+
 }

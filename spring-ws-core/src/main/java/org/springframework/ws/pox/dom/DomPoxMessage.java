@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,14 +27,15 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.pox.PoxMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
 import org.springframework.xml.namespace.QNameUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Implementation of the {@code PoxMessage} interface that is based on a DOM Document.
@@ -53,7 +54,6 @@ public class DomPoxMessage implements PoxMessage {
 
 	/**
 	 * Constructs a new instance of the {@code DomPoxMessage} with the given document.
-	 *
 	 * @param document the document to base the message on
 	 */
 	public DomPoxMessage(Document document, Transformer transformer, String contentType) {
@@ -110,8 +110,10 @@ public class DomPoxMessage implements PoxMessage {
 				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 			}
 			transformer.transform(getPayloadSource(), new StreamResult(outputStream));
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);
 		}
 	}
+
 }

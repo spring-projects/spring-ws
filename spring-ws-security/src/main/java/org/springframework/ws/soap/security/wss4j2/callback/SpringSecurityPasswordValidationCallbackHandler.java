@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,6 +22,7 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,10 +37,12 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
- * Callback handler that validates a plain text or digest password using an Spring Security {@code UserDetailsService}.
+ * Callback handler that validates a plain text or digest password using an Spring
+ * Security {@code UserDetailsService}.
  * <p>
- * An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from. The digest of the password
- * contained in this details object is then compared with the digest in the message.
+ * An Spring Security {@link UserDetailsService} is used to load {@link UserDetails} from.
+ * The digest of the password contained in this details object is then compared with the
+ * digest in the message.
  *
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
@@ -70,7 +73,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	/**
 	 * Invoked when the callback has a {@link WSPasswordCallback#USERNAME_TOKEN} usage.
 	 * <p>
-	 * This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
+	 * This method is invoked when WSS4J needs the password to fill in or to verify a
+	 * UsernameToken.
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -107,7 +111,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		if (user == null) {
 			try {
 				user = userDetailsService.loadUserByUsername(username);
-			} catch (UsernameNotFoundException notFound) {
+			}
+			catch (UsernameNotFoundException notFound) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Username '" + username + "' not found");
 				}
@@ -117,4 +122,5 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		}
 		return user;
 	}
+
 }

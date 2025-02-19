@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,10 +27,11 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.Assert;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import org.springframework.util.Assert;
 
 /**
  * Default implementation of the {@link MessagesProvider}.
@@ -97,7 +98,6 @@ public class DefaultMessagesProvider implements MessagesProvider {
 
 	/**
 	 * Returns the name attribute of the given element.
-	 *
 	 * @param element the element whose name to return
 	 * @return the name of the element
 	 */
@@ -106,11 +106,11 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	}
 
 	/**
-	 * Indicates whether the given element should be includes as {@link Message} in the definition.
+	 * Indicates whether the given element should be includes as {@link Message} in the
+	 * definition.
 	 * <p>
-	 * Default implementation checks whether the element has the XML Schema namespace, and if it has the local name
-	 * "element".
-	 *
+	 * Default implementation checks whether the element has the XML Schema namespace, and
+	 * if it has the local name "element".
 	 * @param element the element elligable for being a message
 	 * @return {@code true} if to be included as message; {@code false} otherwise
 	 */
@@ -124,7 +124,6 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	 * Called after the {@link Message} has been created.
 	 * <p>
 	 * Default implementation sets the name of the message to the element name.
-	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param message the WSDL4J {@code Message}
 	 * @param elementName the element name
@@ -143,7 +142,6 @@ public class DefaultMessagesProvider implements MessagesProvider {
 	 * Called after the {@link Part} has been created.
 	 * <p>
 	 * Default implementation sets the element name of the part.
-	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param part the WSDL4J {@code Part}
 	 * @param elementName the elementName @throws WSDLException in case of errors
@@ -154,4 +152,5 @@ public class DefaultMessagesProvider implements MessagesProvider {
 		part.setElementName(elementName);
 		part.setName(elementName.getLocalPart());
 	}
+
 }

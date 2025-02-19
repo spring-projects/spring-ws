@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,22 @@
 
 package org.springframework.ws.mime;
 
-import jakarta.activation.DataHandler;
-import jakarta.activation.DataSource;
-import jakarta.activation.FileDataSource;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import jakarta.activation.DataHandler;
+import jakarta.activation.DataSource;
+import jakarta.activation.FileDataSource;
 
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 /**
- * Abstract implementation of the {@link MimeMessage} interface. Contains convenient default implementations.
+ * Abstract implementation of the {@link MimeMessage} interface. Contains convenient
+ * default implementations.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -58,7 +59,8 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 	}
 
 	/**
-	 * Activation framework {@code DataSource} that wraps a Spring {@code InputStreamSource}.
+	 * Activation framework {@code DataSource} that wraps a Spring
+	 * {@code InputStreamSource}.
 	 *
 	 * @author Arjen Poutsma
 	 * @since 1.0.0
@@ -94,7 +96,8 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 			if (inputStreamSource instanceof Resource) {
 				Resource resource = (Resource) inputStreamSource;
 				return resource.getFilename();
-			} else {
+			}
+			else {
 				throw new UnsupportedOperationException("DataSource name not available");
 			}
 		}

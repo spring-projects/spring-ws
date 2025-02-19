@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.ws.soap.security.wss4j2;
-
-import static org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME;
 
 import java.util.List;
 import java.util.Properties;
@@ -28,9 +26,12 @@ import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
+import org.w3c.dom.Document;
+
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
-import org.w3c.dom.Document;
+
+import static org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME;
 
 /**
  * @author Tareq Abed Rabbo
@@ -94,7 +95,7 @@ class Wss4jHandler extends WSHandler {
 
 	@Override
 	public String getPassword(Object msgContext) {
-		String contextPassword = (String)getProperty(msgContext, SECUREMENT_PASSWORD_PROPERTY_NAME);
+		String contextPassword = (String) getProperty(msgContext, SECUREMENT_PASSWORD_PROPERTY_NAME);
 		if (StringUtils.hasLength(contextPassword)) {
 			return contextPassword;
 		}
@@ -125,4 +126,5 @@ class Wss4jHandler extends WSHandler {
 	public void setProperty(Object msgContext, String key, Object value) {
 		((MessageContext) msgContext).setProperty(key, value);
 	}
+
 }

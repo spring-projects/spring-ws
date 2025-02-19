@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,8 @@ import org.springframework.xml.XMLInputFactoryUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for endpoints use StAX. Provides an {@code XMLInputFactory} and an {@code XMLOutputFactory}.
+ * Abstract base class for endpoints use StAX. Provides an {@code XMLInputFactory} and an
+ * {@code XMLOutputFactory}.
  *
  * @author Arjen Poutsma
  * @see XMLInputFactory
@@ -56,10 +57,10 @@ public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSuppo
 	}
 
 	/**
-	 * Create a {@code XMLInputFactory} that this endpoint will use to create {@code XMLStreamReader}s or
-	 * {@code XMLEventReader}. Can be overridden in subclasses, adding further initialization of the factory. The
-	 * resulting {@code XMLInputFactory} is cached, so this method will only be called once.
-	 *
+	 * Create a {@code XMLInputFactory} that this endpoint will use to create
+	 * {@code XMLStreamReader}s or {@code XMLEventReader}. Can be overridden in
+	 * subclasses, adding further initialization of the factory. The resulting
+	 * {@code XMLInputFactory} is cached, so this method will only be called once.
 	 * @return the created {@code XMLInputFactory}
 	 */
 	protected XMLInputFactory createXmlInputFactory() {
@@ -67,13 +68,14 @@ public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSuppo
 	}
 
 	/**
-	 * Create a {@code XMLOutputFactory} that this endpoint will use to create {@code XMLStreamWriters}s or
-	 * {@code XMLEventWriters}. Can be overridden in subclasses, adding further initialization of the factory. The
-	 * resulting {@code XMLOutputFactory} is cached, so this method will only be called once.
-	 *
+	 * Create a {@code XMLOutputFactory} that this endpoint will use to create
+	 * {@code XMLStreamWriters}s or {@code XMLEventWriters}. Can be overridden in
+	 * subclasses, adding further initialization of the factory. The resulting
+	 * {@code XMLOutputFactory} is cached, so this method will only be called once.
 	 * @return the created {@code XMLOutputFactory}
 	 */
 	protected XMLOutputFactory createXmlOutputFactory() {
 		return XMLOutputFactory.newInstance();
 	}
+
 }

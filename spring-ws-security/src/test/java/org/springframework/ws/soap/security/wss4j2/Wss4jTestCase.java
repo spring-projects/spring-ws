@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.MimeHeaders;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.transform.dom.DOMSource;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.WebServiceMessage;
@@ -42,8 +42,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.xpath.Jaxp13XPathTemplate;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class Wss4jTestCase {
 
@@ -89,7 +89,8 @@ public abstract class Wss4jTestCase {
 		assertThat(actualValue).isEqualTo(expectedValue);
 	}
 
-	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression, String document) {
+	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
+			String document) {
 
 		String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
 
@@ -125,7 +126,8 @@ public abstract class Wss4jTestCase {
 		assertThat(resource.exists()).isTrue();
 
 		try (InputStream is = resource.getInputStream()) {
-			return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is), saajSoap11MessageFactory);
+			return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is),
+					saajSoap11MessageFactory);
 		}
 	}
 
@@ -138,7 +140,8 @@ public abstract class Wss4jTestCase {
 		assertThat(resource.exists()).isTrue();
 
 		try (InputStream is = resource.getInputStream()) {
-			return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is), saajSoap12MessageFactory);
+			return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is),
+					saajSoap12MessageFactory);
 		}
 	}
 
@@ -161,7 +164,8 @@ public abstract class Wss4jTestCase {
 		throw new IllegalArgumentException("Illegal message: " + message);
 	}
 
-	protected void onSetup() throws Exception {}
+	protected void onSetup() throws Exception {
+	}
 
 	protected SoapMessage loadSoap11Message(String fileName) throws Exception {
 
@@ -195,7 +199,8 @@ public abstract class Wss4jTestCase {
 		SoapMessageFactory messageFactory;
 		if (saajTest) {
 			messageFactory = new SaajSoapMessageFactory(saajSoap12MessageFactory);
-		} else
+		}
+		else
 			throw new IllegalArgumentException();
 		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 		return messageFactory;
@@ -230,4 +235,5 @@ public abstract class Wss4jTestCase {
 			}
 		};
 	}
+
 }

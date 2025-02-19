@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,8 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerHelper;
 
 /**
- * Subclass of {@link AssertionError} that also contains a {@link Source} for more context.
+ * Subclass of {@link AssertionError} that also contains a {@link Source} for more
+ * context.
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
@@ -42,7 +43,8 @@ public class SourceAssertionError extends AssertionError {
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
 	/**
-	 * Creates a new instance of the {@code SourceAssertionError} class with the given parameters.
+	 * Creates a new instance of the {@code SourceAssertionError} class with the given
+	 * parameters.
 	 */
 	public SourceAssertionError(String detailMessage, String sourceLabel, Source source) {
 		super(detailMessage);
@@ -52,7 +54,6 @@ public class SourceAssertionError extends AssertionError {
 
 	/**
 	 * Returns the source context of this error.
-	 *
 	 * @return the source
 	 */
 	public Source getSource() {
@@ -82,7 +83,8 @@ public class SourceAssertionError extends AssertionError {
 				Transformer transformer = createNonIndentingTransformer();
 				transformer.transform(source, result);
 				return result.toString();
-			} catch (TransformerException ex) {
+			}
+			catch (TransformerException ex) {
 				// Ignore
 			}
 		}

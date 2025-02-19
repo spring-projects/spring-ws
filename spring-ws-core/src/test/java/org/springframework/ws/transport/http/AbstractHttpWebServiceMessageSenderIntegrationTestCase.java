@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,15 +15,6 @@
  */
 
 package org.springframework.ws.transport.http;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.soap.*;
 
 import java.io.OutputStream;
 import java.net.URI;
@@ -35,6 +26,16 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -43,6 +44,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -55,7 +58,8 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T extends AbstractHttpWebServiceMessageSender> {
 
@@ -191,7 +195,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)) {
+			.createConnection(connectionUri)) {
 			SOAPMessage request = createRequest();
 			connection.send(new SaajSoapMessage(request));
 			connection.receive(messageFactory);
@@ -207,7 +211,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 		jettyServer.start();
 
 		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-				.createConnection(connectionUri)) {
+			.createConnection(connectionUri)) {
 			SOAPMessage request = createRequest();
 			connection.send(new SaajSoapMessage(request));
 			SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
@@ -316,16 +320,19 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTestCase<T e
 
 					if (gzip) {
 						os = new GZIPOutputStream(httpServletResponse.getOutputStream());
-					} else {
+					}
+					else {
 						os = httpServletResponse.getOutputStream();
 					}
 
 					FileCopyUtils.copy(SOAP_RESPONSE.getBytes(StandardCharsets.UTF_8), os);
 				}
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				throw new ServletException(ex);
 			}
 		}
+
 	}
 
 }

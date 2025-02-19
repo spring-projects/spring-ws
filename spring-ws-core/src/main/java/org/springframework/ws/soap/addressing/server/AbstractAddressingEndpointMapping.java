@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -52,24 +52,30 @@ import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
- * Abstract base class for {@link EndpointMapping} implementations that handle WS-Addressing. Besides the normal
- * {@link SoapEndpointMapping} properties, this mapping has a
- * {@link #setVersions(org.springframework.ws.soap.addressing.version.AddressingVersion[]) versions} property, which
- * defines the WS-Addressing specifications supported. By default, these are
+ * Abstract base class for {@link EndpointMapping} implementations that handle
+ * WS-Addressing. Besides the normal {@link SoapEndpointMapping} properties, this mapping
+ * has a
+ * {@link #setVersions(org.springframework.ws.soap.addressing.version.AddressingVersion[])
+ * versions} property, which defines the WS-Addressing specifications supported. By
+ * default, these are
  * {@link org.springframework.ws.soap.addressing.version.Addressing200408} and
  * {@link org.springframework.ws.soap.addressing.version.Addressing10}.
  * <p>
- * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines the strategy to use for
- * creating reply {@code MessageIDs}. By default, this is the {@link UuidMessageIdStrategy}.
+ * The {@link #setMessageIdStrategy(MessageIdStrategy) messageIdStrategy} property defines
+ * the strategy to use for creating reply {@code MessageIDs}. By default, this is the
+ * {@link UuidMessageIdStrategy}.
  * <p>
- * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to send out-of-band reply messages.
- * If a request messages defines a non-anonymous reply address, these senders will be used to send the message.
+ * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to
+ * send out-of-band reply messages. If a request messages defines a non-anonymous reply
+ * address, these senders will be used to send the message.
  * <p>
- * This mapping (and all subclasses) uses an implicit WS-Addressing {@link EndpointInterceptor}, which is added in every
- * {@link EndpointInvocationChain} produced. As such, this mapping does not have the standard {@code interceptors}
- * property, but rather a {@link #setPreInterceptors(EndpointInterceptor[]) preInterceptors} and
- * {@link #setPostInterceptors(EndpointInterceptor[]) postInterceptors} property, which are added before and after the
- * implicit WS-Addressing interceptor, respectively.
+ * This mapping (and all subclasses) uses an implicit WS-Addressing
+ * {@link EndpointInterceptor}, which is added in every {@link EndpointInvocationChain}
+ * produced. As such, this mapping does not have the standard {@code interceptors}
+ * property, but rather a {@link #setPreInterceptors(EndpointInterceptor[])
+ * preInterceptors} and {@link #setPostInterceptors(EndpointInterceptor[])
+ * postInterceptors} property, which are added before and after the implicit WS-Addressing
+ * interceptor, respectively.
  *
  * @author Arjen Poutsma
  * @author Nate Stoddard
@@ -106,8 +112,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	/**
 	 * Initializes the default implementation for this mapping's strategies: the
 	 * {@link org.springframework.ws.soap.addressing.version.Addressing200408} and
-	 * {@link org.springframework.ws.soap.addressing.version.Addressing10} versions of the specification, and the
-	 * {@link UuidMessageIdStrategy}.
+	 * {@link org.springframework.ws.soap.addressing.version.Addressing10} versions of the
+	 * specification, and the {@link UuidMessageIdStrategy}.
 	 */
 	protected void initDefaultStrategies() {
 		this.versions = new AddressingVersion[] { new Addressing200408(), new Addressing10() };
@@ -149,7 +155,6 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * Specify the order value for this mapping.
 	 * <p>
 	 * Default value is {@link Integer#MAX_VALUE}, meaning that it's non-ordered.
-	 *
 	 * @see org.springframework.core.Ordered#getOrder()
 	 */
 	public final void setOrder(int order) {
@@ -157,8 +162,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Set additional interceptors to be applied before the implicit WS-Addressing interceptor, e.g.
-	 * {@code XwsSecurityInterceptor}.
+	 * Set additional interceptors to be applied before the implicit WS-Addressing
+	 * interceptor, e.g. {@code XwsSecurityInterceptor}.
 	 */
 	public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
 		Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
@@ -166,8 +171,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Set additional interceptors to be applied after the implicit WS-Addressing interceptor, e.g.
-	 * {@code PayloadLoggingInterceptor}.
+	 * Set additional interceptors to be applied after the implicit WS-Addressing
+	 * interceptor, e.g. {@code PayloadLoggingInterceptor}.
 	 */
 	public final void setPostInterceptors(EndpointInterceptor[] postInterceptors) {
 		Assert.notNull(postInterceptors, "'postInterceptors' must not be null");
@@ -192,9 +197,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Sets a single message senders, which is used to send out-of-band reply messages. If a request messages defines a
-	 * non-anonymous reply address, this senders will be used to send the message.
-	 *
+	 * Sets a single message senders, which is used to send out-of-band reply messages. If
+	 * a request messages defines a non-anonymous reply address, this senders will be used
+	 * to send the message.
 	 * @param messageSender the message sender
 	 */
 	public final void setMessageSender(WebServiceMessageSender messageSender) {
@@ -203,9 +208,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Sets the message senders, which are used to send out-of-band reply messages. If a request messages defines a
-	 * non-anonymous reply address, these senders will be used to send the message.
-	 *
+	 * Sets the message senders, which are used to send out-of-band reply messages. If a
+	 * request messages defines a non-anonymous reply address, these senders will be used
+	 * to send the message.
 	 * @param messageSenders the message senders
 	 */
 	public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
@@ -215,7 +220,6 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	/**
 	 * Returns the message senders, which are used to send out-of-band reply messages.
-	 *
 	 * @return the message sender
 	 */
 	public final WebServiceMessageSender[] getMessageSenders() {
@@ -225,9 +229,10 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	/**
 	 * Sets the WS-Addressing versions to be supported by this mapping.
 	 * <p>
-	 * By default, this array is set to support {@link org.springframework.ws.soap.addressing.version.Addressing200408 the
-	 * August 2004} and the {@link org.springframework.ws.soap.addressing.version.Addressing10 May 2006} versions of the
-	 * specification.
+	 * By default, this array is set to support
+	 * {@link org.springframework.ws.soap.addressing.version.Addressing200408 the August
+	 * 2004} and the {@link org.springframework.ws.soap.addressing.version.Addressing10
+	 * May 2006} versions of the specification.
 	 */
 	public final void setVersions(AddressingVersion[] versions) {
 		this.versions = versions;
@@ -240,10 +245,10 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		}
 		if (getApplicationContext() != null) {
 			Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
-					.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
+				.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
 			if (!smartInterceptors.isEmpty()) {
 				this.smartInterceptors = smartInterceptors.values()
-						.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+					.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
 			}
 		}
 	}
@@ -286,8 +291,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
 		interceptors.addAll(Arrays.asList(preInterceptors));
 
-		AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version, messageIdStrategy,
-				messageSenders, responseAction, faultAction);
+		AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version,
+				messageIdStrategy, messageSenders, responseAction, faultAction);
 		interceptors.add(addressingInterceptor);
 		interceptors.addAll(Arrays.asList(postInterceptors));
 
@@ -299,8 +304,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 			}
 		}
 
-		return new SoapEndpointInvocationChain(endpoint, interceptors.toArray(new EndpointInterceptor[interceptors.size()]),
-				actorsOrRoles, isUltimateReceiver);
+		return new SoapEndpointInvocationChain(endpoint,
+				interceptors.toArray(new EndpointInterceptor[interceptors.size()]), actorsOrRoles, isUltimateReceiver);
 	}
 
 	private boolean supports(AddressingVersion version, SoapMessage request) {
@@ -317,8 +322,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Returns the message senders for the given endpoint. Default implementation returns {@link #getMessageSenders()}
-	 *
+	 * Returns the message senders for the given endpoint. Default implementation returns
+	 * {@link #getMessageSenders()}
 	 * @param endpoint the endpoint
 	 * @return the message senders for the given endpoint
 	 */
@@ -327,9 +332,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Returns the message ID strategy for the given endpoint. Default implementation returns
-	 * {@link #getMessageIdStrategy()}
-	 *
+	 * Returns the message ID strategy for the given endpoint. Default implementation
+	 * returns {@link #getMessageIdStrategy()}
 	 * @param endpoint the endpoint
 	 * @return the message ID strategy for the given endpoint
 	 */
@@ -338,18 +342,17 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Lookup an endpoint for the given {@link MessageAddressingProperties}, returning {@code null} if no specific one is
-	 * found. This template method is called by {@link #getEndpoint(MessageContext)}.
-	 *
+	 * Lookup an endpoint for the given {@link MessageAddressingProperties}, returning
+	 * {@code null} if no specific one is found. This template method is called by
+	 * {@link #getEndpoint(MessageContext)}.
 	 * @param map the message addressing properties
 	 * @return the endpoint, or {@code null}
 	 */
 	protected abstract Object getEndpointInternal(MessageAddressingProperties map);
 
 	/**
-	 * Provides the WS-Addressing Action for response messages, given the endpoint, and request Message Addressing
-	 * Properties.
-	 *
+	 * Provides the WS-Addressing Action for response messages, given the endpoint, and
+	 * request Message Addressing Properties.
 	 * @param endpoint the mapped endpoint
 	 * @param requestMap the MAP for the request
 	 * @return the response Action
@@ -357,9 +360,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	protected abstract URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap);
 
 	/**
-	 * Provides the WS-Addressing Action for response fault messages, given the endpoint, and request Message Addressing
-	 * Properties.
-	 *
+	 * Provides the WS-Addressing Action for response fault messages, given the endpoint,
+	 * and request Message Addressing Properties.
 	 * @param endpoint the mapped endpoint
 	 * @param requestMap the MAP for the request
 	 * @return the response Action

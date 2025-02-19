@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,4 +29,5 @@ public class Jaxp13XPathExpressionFactoryTest extends AbstractXPathExpressionFac
 	protected XPathExpression createXPathExpression(String expression, Map<String, String> namespaces) {
 		return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
 	}
+
 }

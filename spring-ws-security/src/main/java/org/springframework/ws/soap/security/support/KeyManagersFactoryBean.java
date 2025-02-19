@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -49,8 +49,8 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 	private char[] password;
 
 	/**
-	 * Sets the password to use for integrity checking. If this property is not set, then integrity checking is not
-	 * performed.
+	 * Sets the password to use for integrity checking. If this property is not set, then
+	 * integrity checking is not performed.
 	 */
 	public void setPassword(String password) {
 		if (password != null) {
@@ -59,15 +59,16 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 	}
 
 	/**
-	 * Sets the provider of the key manager to use. If this is not set, the default is used.
+	 * Sets the provider of the key manager to use. If this is not set, the default is
+	 * used.
 	 */
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
 
 	/**
-	 * Sets the algorithm of the {@code KeyManager} to use. If this is not set, the default is used.
-	 *
+	 * Sets the algorithm of the {@code KeyManager} to use. If this is not set, the
+	 * default is used.
 	 * @see KeyManagerFactory#getDefaultAlgorithm()
 	 */
 	public void setAlgorithm(String algorithm) {
@@ -76,7 +77,6 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 
 	/**
 	 * Sets the source of key material.
-	 *
 	 * @see KeyManagerFactory#init(KeyStore, char[])
 	 */
 	public void setKeyStore(KeyStore keyStore) {
@@ -100,14 +100,15 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		String algorithm = StringUtils.hasLength(this.algorithm) ? this.algorithm : KeyManagerFactory.getDefaultAlgorithm();
+		String algorithm = StringUtils.hasLength(this.algorithm) ? this.algorithm
+				: KeyManagerFactory.getDefaultAlgorithm();
 
 		KeyManagerFactory keyManagerFactory = StringUtils.hasLength(this.provider)
-				? KeyManagerFactory.getInstance(algorithm, this.provider)
-				: KeyManagerFactory.getInstance(algorithm);
+				? KeyManagerFactory.getInstance(algorithm, this.provider) : KeyManagerFactory.getInstance(algorithm);
 
 		keyManagerFactory.init(keyStore, password);
 
 		this.keyManagers = keyManagerFactory.getKeyManagers();
 	}
+
 }

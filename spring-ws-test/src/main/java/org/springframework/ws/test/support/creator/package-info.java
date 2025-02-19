@@ -15,7 +15,8 @@
  */
 
 /**
- * Provides the generic {@link org.springframework.ws.test.support.creator.WebServiceMessageCreator
+ * Provides the generic
+ * {@link org.springframework.ws.test.support.creator.WebServiceMessageCreator
  * WebServiceMessageCreator} interface, and implementations.
  */
 package org.springframework.ws.test.support.creator;

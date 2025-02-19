@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,10 +20,12 @@ import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Generic utility methods for working with Web service transports. Mainly for internal use within the framework.
+ * Generic utility methods for working with Web service transports. Mainly for internal
+ * use within the framework.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -33,18 +35,19 @@ public abstract class TransportUtils {
 	private static final Log logger = LogFactory.getLog(TransportUtils.class);
 
 	/**
-	 * Close the given {@link WebServiceConnection} and ignore any thrown exception. This is useful for typical
-	 * {@code finally} blocks.
-	 *
+	 * Close the given {@link WebServiceConnection} and ignore any thrown exception. This
+	 * is useful for typical {@code finally} blocks.
 	 * @param connection the web service connection to close (may be {@code null})
 	 */
 	public static void closeConnection(WebServiceConnection connection) {
 		if (connection != null) {
 			try {
 				connection.close();
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				logger.debug("Could not close WebServiceConnection", ex);
-			} catch (Throwable ex) {
+			}
+			catch (Throwable ex) {
 				logger.debug("Unexpected exception on closing WebServiceConnection", ex);
 			}
 		}

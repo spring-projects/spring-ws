@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,13 +38,13 @@ import org.springframework.xml.transform.ResourceSource;
  */
 public abstract class RequestCreators {
 
-	private RequestCreators() {}
+	private RequestCreators() {
+	}
 
 	// Payload
 
 	/**
 	 * Create a request with the given {@link Source} XML as payload.
-	 *
 	 * @param payload the request payload
 	 * @return the request creator
 	 */
@@ -55,7 +55,6 @@ public abstract class RequestCreators {
 
 	/**
 	 * Create a request with the given {@link Resource} XML as payload.
-	 *
 	 * @param payload the request payload
 	 * @return the request creator
 	 */
@@ -68,7 +67,6 @@ public abstract class RequestCreators {
 
 	/**
 	 * Create a request with the given {@link Source} XML as SOAP envelope.
-	 *
 	 * @param soapEnvelope the request SOAP envelope
 	 * @return the request creator
 	 * @since 2.1.1
@@ -80,7 +78,6 @@ public abstract class RequestCreators {
 
 	/**
 	 * Create a request with the given {@link Resource} XML as SOAP envelope.
-	 *
 	 * @param soapEnvelope the request SOAP envelope
 	 * @return the request creator
 	 * @since 2.1.1
@@ -105,6 +102,7 @@ public abstract class RequestCreators {
 		public WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
 			return adaptee.createMessage(messageFactory);
 		}
+
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.soap.SOAPConstants;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,6 +24,10 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.SOAPConstants;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
@@ -53,7 +53,8 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	private boolean statusCodeSet = false;
 
 	/**
-	 * Constructs a new servlet connection with the given {@code HttpServletRequest} and {@code HttpServletResponse}.
+	 * Constructs a new servlet connection with the given {@code HttpServletRequest} and
+	 * {@code HttpServletResponse}.
 	 */
 	protected HttpServletConnection(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		this.httpServletRequest = httpServletRequest;
@@ -97,13 +98,13 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	@Override
 	public URI getUri() throws URISyntaxException {
 		return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
-				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(), httpServletRequest.getQueryString(),
-				null);
+				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
+				httpServletRequest.getQueryString(), null);
 	}
 
 	/*
-	* Receiving request
-	*/
+	 * Receiving request
+	 */
 
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
@@ -121,8 +122,8 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	}
 
 	/*
-	* Sending response
-	*/
+	 * Sending response
+	 */
 
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
@@ -160,7 +161,8 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	public void setFault(boolean fault) throws IOException {
 		if (fault) {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
-		} else {
+		}
+		else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
 		statusCodeSet = true;
@@ -171,12 +173,15 @@ public class HttpServletConnection extends AbstractReceiverConnection
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
 				getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_BAD_REQUEST);
-			} else {
+			}
+			else {
 				getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
 			}
-		} else {
+		}
+		else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
 		statusCodeSet = true;
 	}
+
 }

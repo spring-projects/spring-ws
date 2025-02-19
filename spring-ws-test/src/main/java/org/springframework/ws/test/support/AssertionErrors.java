@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,11 +27,11 @@ import javax.xml.transform.Source;
  */
 public abstract class AssertionErrors {
 
-	private AssertionErrors() {}
+	private AssertionErrors() {
+	}
 
 	/**
 	 * Fails a test with the given message.
-	 *
 	 * @param message the message
 	 */
 	public static void fail(String message) {
@@ -40,21 +40,21 @@ public abstract class AssertionErrors {
 
 	/**
 	 * Fails a test with the given message and source.
-	 *
 	 * @param message the message
 	 * @param source the source
 	 */
 	public static void fail(String message, String sourceLabel, Source source) {
 		if (source != null) {
 			throw new SourceAssertionError(message, sourceLabel, source);
-		} else {
+		}
+		else {
 			fail(message);
 		}
 	}
 
 	/**
-	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError} with the given message.
-	 *
+	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError}
+	 * with the given message.
 	 * @param message the message
 	 * @param condition the condition to test for
 	 */
@@ -63,9 +63,8 @@ public abstract class AssertionErrors {
 	}
 
 	/**
-	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError} with the given message and
-	 * source.
-	 *
+	 * Asserts that a condition is {@code true}. If not, throws an {@link AssertionError}
+	 * with the given message and source.
 	 * @param message the message
 	 * @param condition the condition to test for
 	 */
@@ -76,8 +75,8 @@ public abstract class AssertionErrors {
 	}
 
 	/**
-	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown with the given message.
-	 *
+	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown
+	 * with the given message.
 	 * @param message the message
 	 * @param expected the expected value
 	 * @param actual the actual value
@@ -87,8 +86,8 @@ public abstract class AssertionErrors {
 	}
 
 	/**
-	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown with the given message.
-	 *
+	 * Asserts that two objects are equal. If not, an {@link AssertionError} is thrown
+	 * with the given message.
 	 * @param message the message
 	 * @param expected the expected value
 	 * @param actual the actual value

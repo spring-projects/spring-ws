@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -46,15 +46,16 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 	private String provider;
 
 	/**
-	 * Sets the provider of the trust manager to use. If this is not set, the default is used.
+	 * Sets the provider of the trust manager to use. If this is not set, the default is
+	 * used.
 	 */
 	public void setProvider(String provider) {
 		this.provider = provider;
 	}
 
 	/**
-	 * Sets the algorithm of the {@code TrustManager} to use. If this is not set, the default is used.
-	 *
+	 * Sets the algorithm of the {@code TrustManager} to use. If this is not set, the
+	 * default is used.
 	 * @see TrustManagerFactory#getDefaultAlgorithm()
 	 */
 	public void setAlgorithm(String algorithm) {
@@ -63,7 +64,6 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 
 	/**
 	 * Sets the source of certificate authorities and related trust material.
-	 *
 	 * @see TrustManagerFactory#init(KeyStore)
 	 */
 	public void setKeyStore(KeyStore keyStore) {
@@ -98,4 +98,5 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 
 		this.trustManagers = trustManagerFactory.getTrustManagers();
 	}
+
 }

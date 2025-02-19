@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,15 +24,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
- * Implementation of the {@link WebServiceMessageFactory} interface that creates a {@link DomPoxMessage}.
+ * Implementation of the {@link WebServiceMessageFactory} interface that creates a
+ * {@link DomPoxMessage}.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.pox.dom.DomPoxMessage
@@ -56,7 +58,6 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 
 	/**
 	 * Provide your own {@link DocumentBuilderFactory}.
-	 *
 	 * @param documentBuilderFactory
 	 */
 	public DomPoxMessageFactory(DocumentBuilderFactory documentBuilderFactory) {
@@ -73,7 +74,10 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 		this.contentType = contentType;
 	}
 
-	/** Set whether or not the XML parser should be XML namespace aware. Default is {@code true}. */
+	/**
+	 * Set whether or not the XML parser should be XML namespace aware. Default is
+	 * {@code true}.
+	 */
 	public void setNamespaceAware(boolean namespaceAware) {
 		documentBuilderFactory.setNamespaceAware(namespaceAware);
 	}
@@ -84,7 +88,8 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	}
 
 	/**
-	 * Set if the XML parser should expand entity reference nodes. Default is {@code false}.
+	 * Set if the XML parser should expand entity reference nodes. Default is
+	 * {@code false}.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityRef) {
 		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
@@ -96,9 +101,11 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.newDocument();
 			return new DomPoxMessage(request, createTransformer(), contentType);
-		} catch (ParserConfigurationException ex) {
+		}
+		catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);
-		} catch (TransformerConfigurationException ex) {
+		}
+		catch (TransformerConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create transformer", ex);
 		}
 	}
@@ -109,12 +116,16 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.parse(inputStream);
 			return new DomPoxMessage(request, createTransformer(), contentType);
-		} catch (ParserConfigurationException ex) {
+		}
+		catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);
-		} catch (SAXException ex) {
+		}
+		catch (SAXException ex) {
 			throw new DomPoxMessageException("Could not parse request message", ex);
-		} catch (TransformerConfigurationException ex) {
+		}
+		catch (TransformerConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create transformer", ex);
 		}
 	}
+
 }

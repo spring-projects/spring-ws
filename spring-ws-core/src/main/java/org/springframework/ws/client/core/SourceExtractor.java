@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,15 +22,17 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 /**
- * Callback interface for extracting a result object from a {@link javax.xml.transform.Source} instance.
+ * Callback interface for extracting a result object from a
+ * {@link javax.xml.transform.Source} instance.
  * <p>
- * Used for output object creation in {@link WebServiceTemplate}. Alternatively, output sources can also be returned to
- * client code as-is. In case of a source as execution result, you will almost always want to implement a
- * {@code SourceExtractor}, to be able to read the message content in a managed fashion, with the connection still open
- * while reading the message.
+ * Used for output object creation in {@link WebServiceTemplate}. Alternatively, output
+ * sources can also be returned to client code as-is. In case of a source as execution
+ * result, you will almost always want to implement a {@code SourceExtractor}, to be able
+ * to read the message content in a managed fashion, with the connection still open while
+ * reading the message.
  * <p>
- * Implementations of this interface perform the actual work of extracting results, but don't need to worry about
- * exception handling, or resource handling.
+ * Implementations of this interface perform the actual work of extracting results, but
+ * don't need to worry about exception handling, or resource handling.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.client.core.WebServiceTemplate
@@ -39,11 +41,11 @@ import javax.xml.transform.TransformerException;
 public interface SourceExtractor<T> {
 
 	/**
-	 * Process the data in the given {@code Source}, creating a corresponding result object.
-	 *
+	 * Process the data in the given {@code Source}, creating a corresponding result
+	 * object.
 	 * @param source the message payload to extract data from
-	 * @return an arbitrary result object, or {@code null} if none (the extractor will typically be stateful in the latter
-	 *         case)
+	 * @return an arbitrary result object, or {@code null} if none (the extractor will
+	 * typically be stateful in the latter case)
 	 * @throws IOException in case of I/O errors
 	 */
 	T extractData(Source source) throws IOException, TransformerException;

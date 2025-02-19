@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,8 @@ import javax.xml.transform.Source;
 /**
  * Defines the basic contract for Web Services interested in just the message payload.
  * <p>
- * The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of the requesting message.
+ * The main entrypoint is {@link #invoke(Source)}, which gets invoked with the contents of
+ * the requesting message.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -29,11 +30,13 @@ import javax.xml.transform.Source;
 public interface PayloadEndpoint {
 
 	/**
-	 * Invokes the endpoint with the given request payload, and possibly returns a response.
-	 *
+	 * Invokes the endpoint with the given request payload, and possibly returns a
+	 * response.
 	 * @param request the payload of the request message, may be {@code null}
-	 * @return the payload of the response message, may be {@code null} to indicate no response
+	 * @return the payload of the response message, may be {@code null} to indicate no
+	 * response
 	 * @throws Exception if an exception occurs
 	 */
 	Source invoke(Source request) throws Exception;
+
 }

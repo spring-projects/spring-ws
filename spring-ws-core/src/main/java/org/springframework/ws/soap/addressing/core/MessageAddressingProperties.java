@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,12 +24,15 @@ import java.util.List;
 import org.w3c.dom.Node;
 
 /**
- * Represents a set of Message Addressing Properties, as defined in the WS-Addressing specification.
+ * Represents a set of Message Addressing Properties, as defined in the WS-Addressing
+ * specification.
  * <p>
- * In earlier versions of the spec, these properties were called Message Information Headers.
+ * In earlier versions of the spec, these properties were called Message Information
+ * Headers.
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing Properties</a>
+ * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing
+ * Properties</a>
  * @since 1.5.0
  */
 public final class MessageAddressingProperties implements Serializable {
@@ -56,7 +59,6 @@ public final class MessageAddressingProperties implements Serializable {
 
 	/**
 	 * Constructs a new {@link MessageAddressingProperties} with the given parameters.
-	 *
 	 * @param to the value of the destination property
 	 * @param from the value of the source endpoint property
 	 * @param replyTo the value of the reply endpoint property
@@ -78,8 +80,8 @@ public final class MessageAddressingProperties implements Serializable {
 	}
 
 	/**
-	 * Constructs a new {@link MessageAddressingProperties} that forms a reply to the given EPR.
-	 *
+	 * Constructs a new {@link MessageAddressingProperties} that forms a reply to the
+	 * given EPR.
 	 * @param epr the endpoint reference to create a reply for
 	 * @param action the value of the action property
 	 * @param messageId the value of the message id property
@@ -143,16 +145,17 @@ public final class MessageAddressingProperties implements Serializable {
 	}
 
 	/**
-	 * Creates a {@link MessageAddressingProperties} that can be used for creating a reply to the given
-	 * {@link EndpointReference}. The {@link #getTo() destination} property will be populated with the
-	 * {@link EndpointReference#getAddress() address} of the given EPR, and the {@link #getRelatesTo() relationship}
-	 * property will be set to the {@link #getMessageId() message id} property of this instance. the action is specified,
-	 * the
-	 *
+	 * Creates a {@link MessageAddressingProperties} that can be used for creating a reply
+	 * to the given {@link EndpointReference}. The {@link #getTo() destination} property
+	 * will be populated with the {@link EndpointReference#getAddress() address} of the
+	 * given EPR, and the {@link #getRelatesTo() relationship} property will be set to the
+	 * {@link #getMessageId() message id} property of this instance. the action is
+	 * specified, the
 	 * @param epr the endpoint reference to create a reply to
 	 * @param action the action
 	 */
 	public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
 		return new MessageAddressingProperties(epr, action, messageId, this.messageId);
 	}
+
 }

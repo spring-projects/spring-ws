@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,13 +33,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient. Exposes a {@link HttpPost} and
- * {@link HttpResponse}.
+ * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient.
+ * Exposes a {@link HttpPost} and {@link HttpResponse}.
  *
  * @author Alan Stewart
  * @author Barry Pitman
@@ -83,16 +84,16 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	/*
-	  * URI
-	  */
+	 * URI
+	 */
 	@Override
 	public URI getUri() throws URISyntaxException {
 		return new URI(httpPost.getURI().toString());
 	}
 
 	/*
-	  * Sending request
-	  */
+	 * Sending request
+	 */
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
@@ -115,7 +116,8 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 		requestBuffer = null;
 		if (httpContext != null) {
 			httpResponse = httpClient.execute(httpPost, httpContext);
-		} else {
+		}
+		else {
 			httpResponse = httpClient.execute(httpPost);
 		}
 	}
@@ -171,4 +173,5 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 		}
 		return Arrays.asList(values).iterator();
 	}
+
 }

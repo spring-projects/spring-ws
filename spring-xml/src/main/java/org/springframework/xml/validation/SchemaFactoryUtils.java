@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,9 +20,10 @@ import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.ResourceUtils;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
+
+import org.springframework.util.ResourceUtils;
 
 /**
  * @author Greg Turnquist
@@ -33,8 +34,8 @@ public class SchemaFactoryUtils {
 	private static final Log log = LogFactory.getLog(SchemaFactoryUtils.class);
 
 	/**
-	 * Build a {@link SchemaFactory} and set properties to prevent external entities from accessing.
-	 *
+	 * Build a {@link SchemaFactory} and set properties to prevent external entities from
+	 * accessing.
 	 * @see SchemaFactory#newInstance(String)
 	 */
 	public static SchemaFactory newInstance(String schemaLanguage) {
@@ -42,7 +43,8 @@ public class SchemaFactoryUtils {
 
 		try {
 			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+		}
+		catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
 						+ schemaFactory.getClass().getCanonicalName());
@@ -51,9 +53,10 @@ public class SchemaFactoryUtils {
 		}
 
 		try {
-			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA,
-					ResourceUtils.URL_PROTOCOL_FILE + "," + "jar:file" + "," + "nested" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
-		} catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ResourceUtils.URL_PROTOCOL_FILE + ","
+					+ "jar:file" + "," + "nested" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
+		}
+		catch (SAXNotRecognizedException | SAXNotSupportedException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
 						+ schemaFactory.getClass().getCanonicalName());
@@ -62,4 +65,5 @@ public class SchemaFactoryUtils {
 
 		return schemaFactory;
 	}
+
 }

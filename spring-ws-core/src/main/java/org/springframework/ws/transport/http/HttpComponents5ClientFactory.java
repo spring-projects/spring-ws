@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,11 +32,13 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.util.Timeout;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 
 /**
- * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents HttpClient 5.
+ * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents
+ * HttpClient 5.
  *
  * @see http://hc.apache.org/httpcomponents-client
  * @author Lars Uffmann
@@ -47,10 +49,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * {@link AuthScope} to match any Host.
 	 * <p>
-	 * <b>NOTE</b>: {@code ANY} was removed from {@link AuthScope} in HttpComponents 5.0. This value object will easy
-	 * migration from HttpComponents 4. Consider using a {@link ClientInterceptor} to implement http client agnostic
-	 * preemptive basic auth.
-	 *
+	 * <b>NOTE</b>: {@code ANY} was removed from {@link AuthScope} in HttpComponents 5.0.
+	 * This value object will easy migration from HttpComponents 4. Consider using a
+	 * {@link ClientInterceptor} to implement http client agnostic preemptive basic auth.
 	 * @see AuthScope#AuthScope(String, String, int, String, String)
 	 */
 	public static final AuthScope ANY = new AuthScope(null, null, -1, null, null);
@@ -79,7 +80,6 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	/**
 	 * Sets the credentials to be used. If not set, no authentication is done.
-	 *
 	 * @see org.apache.hc.client5.http.auth.UsernamePasswordCredentials
 	 * @see org.apache.hc.client5.http.auth.NTCredentials
 	 */
@@ -88,10 +88,10 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	/**
-	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 * Sets the authentication scope to be used. Only used when the {@code credentials}
+	 * property has been set.
 	 * <p>
 	 * By default, {@link #ANY} is used.
-	 *
 	 * @see #setCredentials(Credentials)
 	 */
 	public void setAuthScope(AuthScope authScope) {
@@ -99,8 +99,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	/**
-	 * Sets the timeout until a connection is established. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Sets the timeout until a connection is established. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value
 	 */
 	public void setConnectionTimeout(Duration timeout) {
@@ -113,8 +113,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	/**
-	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value
 	 */
 	public void setReadTimeout(Duration timeout) {
@@ -128,7 +128,6 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	/**
 	 * Sets the maximum number of connections allowed for the underlying HttpClient.
-	 *
 	 * @param maxTotalConnections the maximum number of connections allowed
 	 * @see PoolingHttpClientConnectionManager...
 	 */
@@ -142,8 +141,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	/**
-	 * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
-	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
+	 * Sets the maximum number of connections per host for the underlying HttpClient. The
+	 * maximum number of connections per host can be set in a form accepted by the
+	 * {@code java.util.Properties} class, like as follows:
 	 *
 	 * <pre>
 	 * https://www.example.com=1
@@ -152,8 +152,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * </pre>
 	 * <p>
 	 * The host can be specified as a URI (with scheme and port).
-	 *
-	 * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
+	 * @param maxConnectionsPerHost a properties object specifying the maximum number of
+	 * connection
 	 * @see PoolingHttpClientConnectionManager...
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
@@ -170,7 +170,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 			if (uri.getScheme().equals("https")) {
 				route = new HttpRoute(host, null, true);
-			} else {
+			}
+			else {
 				route = new HttpRoute(host);
 			}
 			int max = Integer.parseInt(entry.getValue());
@@ -202,7 +203,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	public CloseableHttpClient getObject() throws Exception {
 
 		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder
-				.create();
+			.create();
 
 		if (this.maxTotalConnections != -1) {
 			connectionManagerBuilder.setMaxConnTotal(this.maxTotalConnections);
@@ -217,12 +218,12 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		applyMaxConnectionsPerHost(connectionManager);
 
 		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
-				.setConnectionRequestTimeout(Timeout.of(connectionTimeout)) //
-				.setResponseTimeout(Timeout.of(readTimeout));
+			.setConnectionRequestTimeout(Timeout.of(connectionTimeout)) //
+			.setResponseTimeout(Timeout.of(readTimeout));
 
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
-				.setDefaultRequestConfig(requestConfigBuilder.build()) //
-				.setConnectionManager(connectionManager);
+			.setDefaultRequestConfig(requestConfigBuilder.build()) //
+			.setConnectionManager(connectionManager);
 
 		if (credentials != null && authScope != null) {
 
@@ -258,11 +259,16 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	@FunctionalInterface
 	public interface HttpClientBuilderCustomizer {
+
 		void customize(HttpClientBuilder httpClientBuilder);
+
 	}
 
 	@FunctionalInterface
 	public interface PoolingHttpClientConnectionManagerBuilderCustomizer {
+
 		void customize(PoolingHttpClientConnectionManagerBuilder poolingHttpClientConnectionManagerBuilder);
+
 	}
+
 }

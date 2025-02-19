@@ -1,11 +1,11 @@
 /*
- * Copyright 2023-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,13 +34,15 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of the {@link WebServiceConnection} interface that uses Java's built-in {@link HttpClient}.
+ * Implementation of the {@link WebServiceConnection} interface that uses Java's built-in
+ * {@link HttpClient}.
  *
  * @author Marten Deinum
  * @see java.net.http.HttpClient
@@ -129,8 +131,8 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 		if (response != null) {
 
 			return response.headers() //
-					.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH) //
-					.orElse(-1);
+				.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH) //
+				.orElse(-1);
 		}
 
 		return 0;
@@ -155,7 +157,8 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 		try {
 			response = httpClient.send(request, BodyHandlers.ofInputStream());
-		} catch (InterruptedException ex) {
+		}
+		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
 			throw new IllegalStateException(ex);
 		}
@@ -168,4 +171,5 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 			response.body().close();
 		}
 	}
+
 }

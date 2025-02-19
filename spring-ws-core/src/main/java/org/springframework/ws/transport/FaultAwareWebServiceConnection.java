@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,9 +23,10 @@ import javax.xml.namespace.QName;
 import org.springframework.ws.soap.SoapFault;
 
 /**
- * Sub-interface of {@link WebServiceConnection} that is aware of any Fault messages received. Fault messages (such as
- * {@link SoapFault} SOAP Faults) often require different processing rules. Typically, fault detection is done by
- * inspecting connection error codes, etc.
+ * Sub-interface of {@link WebServiceConnection} that is aware of any Fault messages
+ * received. Fault messages (such as {@link SoapFault} SOAP Faults) often require
+ * different processing rules. Typically, fault detection is done by inspecting connection
+ * error codes, etc.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -36,7 +37,6 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 	 * Indicates whether this connection received a fault.
 	 * <p>
 	 * Typically implemented by looking at an HTTP status code.
-	 *
 	 * @return {@code true} if this connection received a fault; {@code false} otherwise.
 	 * @throws IOException in case of I/O errors
 	 */
@@ -46,7 +46,6 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 	 * Sets whether this connection will send a fault.
 	 * <p>
 	 * Typically implemented by setting an HTTP status code.
-	 *
 	 * @param fault {@code true} if this will send a fault; {@code false} otherwise.
 	 * @throws IOException in case of I/O errors
 	 * @deprecated In favor of {@link #setFaultCode(QName)}
@@ -58,9 +57,10 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 	 * Sets a specific fault code.
 	 * <p>
 	 * Typically implemented by setting an HTTP status code.
-	 *
-	 * @param faultCode the fault code to be set on the connection, or {@code null} for no fault.
+	 * @param faultCode the fault code to be set on the connection, or {@code null} for no
+	 * fault.
 	 * @throws IOException in case of I/O errors
 	 */
 	void setFaultCode(QName faultCode) throws IOException;
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,18 +16,20 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
-import jakarta.xml.bind.JAXBElement;
-import jakarta.xml.bind.JAXBException;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
 /**
- * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
- * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * Implementation of
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
  * MethodReturnValueHandler} that supports {@link JAXBElement} objects.
  *
  * @author Arjen Poutsma
@@ -43,7 +45,8 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 	}
 
 	@Override
-	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
+	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
+			throws JAXBException {
 		ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
 		Class<?> clazz = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 		return unmarshalElementFromRequestPayload(messageContext, clazz);
@@ -61,4 +64,5 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 		JAXBElement<?> element = (JAXBElement<?>) returnValue;
 		marshalToResponsePayload(messageContext, element.getDeclaredType(), element);
 	}
+
 }

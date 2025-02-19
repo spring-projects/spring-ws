@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,12 +24,13 @@ import java.util.Properties;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 /**
- * Simple callback handler that validates passwords against a in-memory {@code Properties} object. Password validation
- * is done on a case-sensitive basis.
+ * Simple callback handler that validates passwords against a in-memory {@code Properties}
+ * object. Password validation is done on a case-sensitive basis.
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
@@ -42,7 +43,10 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 
 	private Map<String, String> users = new HashMap<String, String>();
 
-	/** Sets the users to validate against. Property names are usernames, property values are passwords. */
+	/**
+	 * Sets the users to validate against. Property names are usernames, property values
+	 * are passwords.
+	 */
 	public void setUsers(Properties users) {
 		for (Map.Entry<Object, Object> entry : users.entrySet()) {
 			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
@@ -66,4 +70,5 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 		String passwd = users.get(username);
 		callback.setPassword(passwd);
 	}
+
 }

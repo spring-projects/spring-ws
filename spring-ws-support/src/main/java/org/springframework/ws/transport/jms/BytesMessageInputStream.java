@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,12 @@
 
 package org.springframework.ws.transport.jms;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import jakarta.jms.BytesMessage;
 import jakarta.jms.JMSException;
 import jakarta.jms.MessageEOFException;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import org.springframework.util.Assert;
 
@@ -44,7 +44,8 @@ class BytesMessageInputStream extends InputStream {
 	public int read(byte b[]) throws IOException {
 		try {
 			return message.readBytes(b);
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}
@@ -54,10 +55,12 @@ class BytesMessageInputStream extends InputStream {
 		if (off == 0) {
 			try {
 				return message.readBytes(b, len);
-			} catch (JMSException ex) {
+			}
+			catch (JMSException ex) {
 				throw new JmsTransportException(ex);
 			}
-		} else {
+		}
+		else {
 			return super.read(b, off, len);
 		}
 	}
@@ -66,10 +69,13 @@ class BytesMessageInputStream extends InputStream {
 	public int read() throws IOException {
 		try {
 			return message.readByte();
-		} catch (MessageEOFException ex) {
+		}
+		catch (MessageEOFException ex) {
 			return -1;
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
 		}
 	}
+
 }

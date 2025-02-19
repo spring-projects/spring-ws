@@ -40,6 +40,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
+		<spring-javaformat.version>0.0.43</spring-javaformat.version>
 
 		<activemq.version>2.33.0</activemq.version>
 		<aspectj.version>1.9.22</aspectj.version>
@@ -117,6 +118,21 @@
 	</modules>
 
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-maven-plugin</artifactId>
+				<version>${spring-javaformat.version}</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>

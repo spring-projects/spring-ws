@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,19 +16,20 @@
 
 package org.springframework.ws.soap.soap11;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTestCase {
 
@@ -51,8 +52,9 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		transformer.transform(soapHeader.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
-				.and("<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />").ignoreWhitespace()
-				.areSimilar();
+			.and("<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />")
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -68,7 +70,7 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
 		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
-				.examineHeaderElementsToProcess(new String[] { "role1" });
+			.examineHeaderElementsToProcess(new String[] { "role1" });
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -94,7 +96,8 @@ public abstract class AbstractSoap11HeaderTestCase extends AbstractSoapHeaderTes
 		qName = new QName(NAMESPACE, "localName3", PREFIX);
 		headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
-		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(new String[0]);
+		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
+			.examineHeaderElementsToProcess(new String[0]);
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();

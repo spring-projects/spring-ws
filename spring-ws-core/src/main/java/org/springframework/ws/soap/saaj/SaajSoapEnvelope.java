@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,8 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapVersion;
 
 /**
- * SAAJ-specific implementation of the {@code SoapEnvelope} interface. Wraps a {@link jakarta.xml.soap.SOAPEnvelope}.
+ * SAAJ-specific implementation of the {@code SoapEnvelope} interface. Wraps a
+ * {@link jakarta.xml.soap.SOAPEnvelope}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -53,12 +54,16 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 				if (saajBody == null) {
 					throw new SaajSoapBodyException("SAAJ SOAP message has no body");
 				}
-				if (saajBody.getElementQName().getNamespaceURI().equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
+				if (saajBody.getElementQName()
+					.getNamespaceURI()
+					.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
 					body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaultString);
-				} else {
+				}
+				else {
 					body = new SaajSoap12Body(saajBody);
 				}
-			} catch (SOAPException ex) {
+			}
+			catch (SOAPException ex) {
 				throw new SaajSoapBodyException(ex);
 			}
 		}
@@ -71,15 +76,20 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 			try {
 				SOAPHeader saajHeader = getSaajEnvelope().getHeader();
 				if (saajHeader != null) {
-					if (saajHeader.getElementQName().getNamespaceURI().equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
+					if (saajHeader.getElementQName()
+						.getNamespaceURI()
+						.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
 						header = new SaajSoap11Header(saajHeader);
-					} else {
+					}
+					else {
 						header = new SaajSoap12Header(saajHeader);
 					}
-				} else {
+				}
+				else {
 					header = null;
 				}
-			} catch (SOAPException ex) {
+			}
+			catch (SOAPException ex) {
 				throw new SaajSoapHeaderException(ex);
 			}
 		}

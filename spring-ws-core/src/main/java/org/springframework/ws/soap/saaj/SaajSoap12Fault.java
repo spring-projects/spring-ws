@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.xml.soap.SOAPException;
-import jakarta.xml.soap.SOAPFault;
-
 import java.util.Iterator;
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
+
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
 
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
@@ -45,7 +45,8 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultActorOrRole(String faultRole) {
 		try {
 			getSaajFault().setFaultRole(faultRole);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -60,7 +61,8 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void addFaultSubcode(QName subcode) {
 		try {
 			getSaajFault().appendFaultSubcode(subcode);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -74,7 +76,8 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultNode(String uri) {
 		try {
 			getSaajFault().setFaultNode(uri);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 
@@ -84,7 +87,8 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public void setFaultReasonText(Locale locale, String text) {
 		try {
 			getSaajFault().addFaultReasonText(text, locale);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 
@@ -94,7 +98,8 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public String getFaultReasonText(Locale locale) {
 		try {
 			return getSaajFault().getFaultReasonText(locale);
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapFaultException(ex);
 		}
 	}
@@ -103,4 +108,5 @@ class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 	public String getFaultStringOrReason() {
 		return getSaajFault().getFaultString();
 	}
+
 }

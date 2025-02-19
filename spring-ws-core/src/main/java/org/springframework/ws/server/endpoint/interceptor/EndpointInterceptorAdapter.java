@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,13 +18,14 @@ package org.springframework.ws.server.endpoint.interceptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.EndpointInterceptor;
 import org.w3c.dom.Element;
 
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointInterceptor;
+
 /**
- * Default implementation of the {@code EndpointInterceptor} interface, for simplified implementation of
- * pre-only/post-only interceptors.
+ * Default implementation of the {@code EndpointInterceptor} interface, for simplified
+ * implementation of pre-only/post-only interceptors.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -41,7 +42,6 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
 
 	/**
 	 * Returns {@code true}.
-	 *
 	 * @return {@code true}
 	 */
 	@Override
@@ -51,7 +51,6 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
 
 	/**
 	 * Returns {@code true}.
-	 *
 	 * @return {@code true}
 	 */
 	@Override
@@ -61,7 +60,6 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
 
 	/**
 	 * Returns {@code true}.
-	 *
 	 * @return {@code true}
 	 */
 	@Override
@@ -73,5 +71,7 @@ public class EndpointInterceptorAdapter implements EndpointInterceptor {
 	 * Does nothing by default.
 	 */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {}
+	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+	}
+
 }

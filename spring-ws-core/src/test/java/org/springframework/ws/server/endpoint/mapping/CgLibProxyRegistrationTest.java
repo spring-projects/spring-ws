@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.ws.server.endpoint.mapping;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.lang.reflect.Method;
 
 import javax.xml.namespace.QName;
@@ -25,6 +23,7 @@ import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,18 +33,23 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("cglib-proxy-registration.xml")
 public class CgLibProxyRegistrationTest {
 
-	@Autowired private PayloadRootAnnotationMethodEndpointMapping mapping;
+	@Autowired
+	private PayloadRootAnnotationMethodEndpointMapping mapping;
 
-	@Autowired private ApplicationContext applicationContext;
+	@Autowired
+	private ApplicationContext applicationContext;
 
 	@Test
 	public void registration() throws NoSuchMethodException {
 
-		MethodEndpoint cglibProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
+		MethodEndpoint cglibProxy = mapping
+			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
 
 		assertThat(cglibProxy).isNotNull();
 
@@ -60,7 +64,8 @@ public class CgLibProxyRegistrationTest {
 
 		@PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
 		@Log
-		public void doIt(@RequestPayload Source payload) {}
+		public void doIt(@RequestPayload Source payload) {
+		}
 
 	}
 

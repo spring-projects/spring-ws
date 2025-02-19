@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPHeader;
-import jakarta.xml.soap.SOAPHeaderElement;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPHeaderElement;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -30,7 +30,8 @@ import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.soap11.Soap11Header;
 
 /**
- * SAAJ-specific implementation of the {@code Soap11Header} interface. Wraps a {@link jakarta.xml.soap.SOAPHeader}.
+ * SAAJ-specific implementation of the {@code Soap11Header} interface. Wraps a
+ * {@link jakarta.xml.soap.SOAPHeader}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -72,4 +73,5 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
 		}
 		return false;
 	}
+
 }

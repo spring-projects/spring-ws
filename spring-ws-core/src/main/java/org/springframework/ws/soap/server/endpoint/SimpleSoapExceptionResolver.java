@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,8 +27,9 @@ import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Simple, SOAP-specific {@link org.springframework.ws.server.EndpointExceptionResolver EndpointExceptionResolver}
- * implementation that stores the exception's message as the fault string.
+ * Simple, SOAP-specific {@link org.springframework.ws.server.EndpointExceptionResolver
+ * EndpointExceptionResolver} implementation that stores the exception's message as the
+ * fault string.
  * <p>
  * The fault code is always set to a Server (in SOAP 1.1) or Receiver (SOAP 1.2).
  *
@@ -71,13 +72,16 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 	}
 
 	/**
-	 * Empty template method to allow subclasses an opportunity to customize the given {@link SoapFault}. Called from
+	 * Empty template method to allow subclasses an opportunity to customize the given
+	 * {@link SoapFault}. Called from
 	 * {@link #resolveExceptionInternal(MessageContext,Object,Exception)}.
-	 *
 	 * @param messageContext current message context
-	 * @param endpoint the executed endpoint, or {@code null} if none chosen at the time of the exception
+	 * @param endpoint the executed endpoint, or {@code null} if none chosen at the time
+	 * of the exception
 	 * @param ex the exception that got thrown during endpoint execution
 	 * @param fault the SOAP fault to be customized.
 	 */
-	protected void customizeFault(MessageContext messageContext, Object endpoint, Exception ex, SoapFault fault) {}
+	protected void customizeFault(MessageContext messageContext, Object endpoint, Exception ex, SoapFault fault) {
+	}
+
 }

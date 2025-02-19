@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,18 +34,20 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
- * HttpClient</a> to execute POST requests.
+ * {@code WebServiceMessageSender} implementation that uses
+ * <a href="http://hc.apache.org/httpcomponents-client">Apache HttpClient</a> to execute
+ * POST requests.
  * <p>
- * Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
- * Authentication can also be set by injecting a {@link Credentials} instance (such as the
- * {@link UsernamePasswordCredentials}).
+ * Allows to use a pre-configured HttpClient instance, potentially with authentication,
+ * HTTP connection pooling, etc. Authentication can also be set by injecting a
+ * {@link Credentials} instance (such as the {@link UsernamePasswordCredentials}).
  *
  * @author Alan Stewart
  * @author Barry Pitman
@@ -69,7 +71,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	private AuthScope authScope = AuthScope.ANY;
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a default
+	 * Create a new instance of the {@code HttpClientMessageSender} with a default
+	 * {@link HttpClient} that uses a default
 	 * {@link org.apache.http.impl.conn.PoolingClientConnectionManager}.
 	 */
 	public HttpComponentsMessageSender() {
@@ -83,13 +86,13 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with the given {@link HttpClient} instance.
+	 * Create a new instance of the {@code HttpClientMessageSender} with the given
+	 * {@link HttpClient} instance.
 	 * <p>
-	 * This constructor does not change the given {@code HttpClient} in any way. As such, it does not set timeouts, nor
-	 * does it
+	 * This constructor does not change the given {@code HttpClient} in any way. As such,
+	 * it does not set timeouts, nor does it
 	 * {@linkplain org.apache.http.impl.client.DefaultHttpClient#addRequestInterceptor(org.apache.http.HttpRequestInterceptor)
 	 * add} the {@link RemoveSoapHeadersInterceptor}.
-	 *
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
 	public HttpComponentsMessageSender(HttpClient httpClient) {
@@ -99,7 +102,6 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	/**
 	 * Sets the credentials to be used. If not set, no authentication is done.
-	 *
 	 * @see UsernamePasswordCredentials
 	 * @see org.apache.http.auth.NTCredentials
 	 */
@@ -122,10 +124,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Sets the timeout until a connection is established. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Sets the timeout until a connection is established. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value in milliseconds
-	 * @see org.apache.http.params.HttpConnectionParams#setConnectionTimeout(org.apache.http.params.HttpParams, int)
+	 * @see org.apache.http.params.HttpConnectionParams#setConnectionTimeout(org.apache.http.params.HttpParams,
+	 * int)
 	 */
 	public void setConnectionTimeout(int timeout) {
 		if (timeout < 0) {
@@ -135,10 +138,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means <em>never</em> timeout.
-	 *
+	 * Set the socket read timeout for the underlying HttpClient. A value of 0 means
+	 * <em>never</em> timeout.
 	 * @param timeout the timeout value in milliseconds
-	 * @see org.apache.http.params.HttpConnectionParams#setSoTimeout(org.apache.http.params.HttpParams, int)
+	 * @see org.apache.http.params.HttpConnectionParams#setSoTimeout(org.apache.http.params.HttpParams,
+	 * int)
 	 */
 	public void setReadTimeout(int timeout) {
 		if (timeout < 0) {
@@ -149,7 +153,6 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	/**
 	 * Sets the maximum number of connections allowed for the underlying HttpClient.
-	 *
 	 * @param maxTotalConnections the maximum number of connections allowed
 	 * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxTotal(int)
 	 */
@@ -167,8 +170,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Sets the maximum number of connections per host for the underlying HttpClient. The maximum number of connections
-	 * per host can be set in a form accepted by the {@code java.util.Properties} class, like as follows:
+	 * Sets the maximum number of connections per host for the underlying HttpClient. The
+	 * maximum number of connections per host can be set in a form accepted by the
+	 * {@code java.util.Properties} class, like as follows:
 	 *
 	 * <pre>
 	 * https://www.example.com=1
@@ -177,9 +181,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 * </pre>
 	 * <p>
 	 * The host can be specified as a URI (with scheme and port).
-	 *
-	 * @param maxConnectionsPerHost a properties object specifying the maximum number of connection
-	 * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxPerRoute(HttpRoute, int)
+	 * @param maxConnectionsPerHost a properties object specifying the maximum number of
+	 * connection
+	 * @see org.apache.http.impl.conn.PoolingClientConnectionManager#setMaxPerRoute(HttpRoute,
+	 * int)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
@@ -197,7 +202,8 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 			if (uri.getScheme().equals("https")) {
 				route = new HttpRoute(host, null, true);
-			} else {
+			}
+			else {
 				route = new HttpRoute(host);
 			}
 
@@ -208,10 +214,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * Sets the authentication scope to be used. Only used when the {@code credentials} property has been set.
+	 * Sets the authentication scope to be used. Only used when the {@code credentials}
+	 * property has been set.
 	 * <p>
 	 * By default, the {@link AuthScope#ANY} is used.
-	 *
 	 * @see #setCredentials(Credentials)
 	 */
 	public void setAuthScope(AuthScope authScope) {
@@ -222,7 +228,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	public void afterPropertiesSet() throws Exception {
 		if (credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
 			((org.apache.http.impl.client.DefaultHttpClient) getHttpClient()).getCredentialsProvider()
-					.setCredentials(authScope, credentials);
+				.setCredentials(authScope, credentials);
 		}
 	}
 
@@ -230,16 +236,16 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		HttpPost httpPost = new HttpPost(uri);
 		if (isAcceptGzipEncoding()) {
-			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING, HttpTransportConstants.CONTENT_ENCODING_GZIP);
+			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
 		HttpContext httpContext = createContext(uri);
 		return new HttpComponentsConnection(getHttpClient(), httpPost, httpContext);
 	}
 
 	/**
-	 * Template method that allows for creation of a {@link HttpContext} for the given uri. Default implementation returns
-	 * {@code null}.
-	 *
+	 * Template method that allows for creation of a {@link HttpContext} for the given
+	 * uri. Default implementation returns {@code null}.
 	 * @param uri the URI to create the context for
 	 * @return the context, or {@code null}
 	 */
@@ -253,9 +259,10 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	}
 
 	/**
-	 * HttpClient {@link org.apache.http.HttpRequestInterceptor} implementation that removes {@code Content-Length} and
-	 * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set
-	 * these headers themselves, and HttpClient throws an exception if they have been set.
+	 * HttpClient {@link org.apache.http.HttpRequestInterceptor} implementation that
+	 * removes {@code Content-Length} and {@code Transfer-Encoding} headers from the
+	 * request. Necessary, because some SAAJ and other SOAP implementations set these
+	 * headers themselves, and HttpClient throws an exception if they have been set.
 	 */
 	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
@@ -270,5 +277,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 				}
 			}
 		}
+
 	}
+
 }

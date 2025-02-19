@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2023 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,11 +41,13 @@ import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses <a href="http://hc.apache.org/httpcomponents-client">Apache
- * HttpClient</a> to execute POST requests.
+ * {@code WebServiceMessageSender} implementation that uses
+ * <a href="http://hc.apache.org/httpcomponents-client">Apache HttpClient</a> to execute
+ * POST requests.
  * <p>
- * Allows to use a pre-configured HttpClient instance, potentially with authentication, HTTP connection pooling, etc.
- * Authentication can also be set by injecting a {@link Credentials} instance (such as the
+ * Allows to use a pre-configured HttpClient instance, potentially with authentication,
+ * HTTP connection pooling, etc. Authentication can also be set by injecting a
+ * {@link Credentials} instance (such as the
  * {@link org.apache.hc.client5.http.auth.UsernamePasswordCredentials}).
  *
  * @author Alan Stewart
@@ -66,8 +68,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	private HttpComponents5ClientFactory clientFactory;
 
 	/**
-	 * Create a new instance of the {@code HttpClientMessageSender} with a default {@link HttpClient} that uses a default
-	 * {@link PoolingHttpClientConnectionManager}.
+	 * Create a new instance of the {@code HttpClientMessageSender} with a default
+	 * {@link HttpClient} that uses a default {@link PoolingHttpClientConnectionManager}.
 	 */
 	public HttpComponents5MessageSender() {
 
@@ -77,12 +79,13 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	}
 
 	/**
-	 * Create a new instance of the {@link HttpComponents5MessageSender} with the given {@link HttpClient} instance.
+	 * Create a new instance of the {@link HttpComponents5MessageSender} with the given
+	 * {@link HttpClient} instance.
 	 * <p>
-	 * This constructor does not change the given {@code HttpClient} in any way. As such, it does not set timeouts, nor
-	 * does it {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor) add} the
-	 * {@link RemoveSoapHeadersInterceptor}.
-	 *
+	 * This constructor does not change the given {@code HttpClient} in any way. As such,
+	 * it does not set timeouts, nor does it
+	 * {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor)
+	 * add} the {@link RemoveSoapHeadersInterceptor}.
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
 	public HttpComponents5MessageSender(HttpClient httpClient) {
@@ -91,8 +94,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.httpClient = httpClient;
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
+	/*
+	 * * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
 	 */
 	public void setAuthScope(AuthScope authScope) {
 
@@ -103,8 +106,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.clientFactory.setAuthScope(authScope);
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setCredentials(Credentials)
+	/*
+	 * * @see HttpComponents5ClientFactory#setCredentials(Credentials)
 	 */
 	public void setCredentials(Credentials credentials) {
 
@@ -129,8 +132,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.httpClient = httpClient;
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
+	/*
+	 * * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
 	 */
 	public void setConnectionTimeout(Duration timeout) {
 
@@ -141,8 +144,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.clientFactory.setConnectionTimeout(timeout);
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
+	/*
+	 * * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
 	 */
 	public void setReadTimeout(Duration timeout) {
 
@@ -153,8 +156,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.clientFactory.setReadTimeout(timeout);
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
+	/*
+	 * * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
 
@@ -165,8 +168,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		this.clientFactory.setMaxTotalConnections(maxTotalConnections);
 	}
 
-	/**
-	 * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
+	/*
+	 * * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
 
@@ -191,7 +194,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 		HttpPost httpPost = new HttpPost(uri);
 
 		if (isAcceptGzipEncoding()) {
-			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING, HttpTransportConstants.CONTENT_ENCODING_GZIP);
+			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
+					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
 
 		HttpContext httpContext = createContext(uri);
@@ -200,9 +204,8 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	}
 
 	/**
-	 * Template method that allows for creation of an {@link HttpContext} for the given uri. Default implementation returns
-	 * {@code null}.
-	 *
+	 * Template method that allows for creation of an {@link HttpContext} for the given
+	 * uri. Default implementation returns {@code null}.
 	 * @param uri the URI to create the context for
 	 * @return the context, or {@code null}
 	 */
@@ -213,15 +216,16 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	@Override
 	public void destroy() throws Exception {
 
-		if (getHttpClient()instanceof CloseableHttpClient client) {
+		if (getHttpClient() instanceof CloseableHttpClient client) {
 			client.close();
 		}
 	}
 
 	/**
-	 * HttpClient {@link HttpRequestInterceptor} implementation that removes {@code Content-Length} and
-	 * {@code Transfer-Encoding} headers from the request. Necessary, because some SAAJ and other SOAP implementations set
-	 * these headers themselves, and HttpClient throws an exception if they have been set.
+	 * HttpClient {@link HttpRequestInterceptor} implementation that removes
+	 * {@code Content-Length} and {@code Transfer-Encoding} headers from the request.
+	 * Necessary, because some SAAJ and other SOAP implementations set these headers
+	 * themselves, and HttpClient throws an exception if they have been set.
 	 */
 	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
@@ -237,5 +241,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 				request.removeHeaders(HttpHeaders.CONTENT_LENGTH);
 			}
 		}
+
 	}
+
 }

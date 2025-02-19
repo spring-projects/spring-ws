@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.xml.validation;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +23,13 @@ import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 public class XmlValidatorFactoryTest {
 
@@ -43,15 +45,15 @@ public class XmlValidatorFactoryTest {
 	@Test
 	public void testNonExistentResource() {
 
-		assertThatIllegalArgumentException().isThrownBy(
-				() -> XmlValidatorFactory.createValidator(new NonExistentResource(), XmlValidatorFactory.SCHEMA_W3C_XML));
+		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
+			.createValidator(new NonExistentResource(), XmlValidatorFactory.SCHEMA_W3C_XML));
 	}
 
 	@Test
 	public void testInvalidSchemaLanguage() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
-				.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class), "bla"));
+			.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class), "bla"));
 	}
 
 	private static class NonExistentResource extends AbstractResource {
@@ -105,5 +107,7 @@ public class XmlValidatorFactoryTest {
 		public boolean isReadable() {
 			return false;
 		}
+
 	}
+
 }

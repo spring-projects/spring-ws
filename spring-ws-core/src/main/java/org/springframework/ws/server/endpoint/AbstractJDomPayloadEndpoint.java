@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,15 +25,17 @@ import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
 import org.jdom2.transform.JDOMResult;
 import org.jdom2.transform.JDOMSource;
-import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.Node;
+
+import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
  * Abstract base class for endpoints that handle the message payload as JDOM elements.
  * <p>
- * Offers the message payload as a JDOM {@link Element}, and allows subclasses to create a response by returning an
- * {@code Element}. <pAn {@code AbstractJDomPayloadEndpoint} can accept only <i>one</i> payload element. Multiple
- * payload elements are not in accordance with WS-I.
+ * Offers the message payload as a JDOM {@link Element}, and allows subclasses to create a
+ * response by returning an {@code Element}. <pAn {@code AbstractJDomPayloadEndpoint} can
+ * accept only <i>one</i> payload element. Multiple payload elements are not in accordance
+ * with WS-I.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -45,7 +47,8 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 	private boolean alwaysTransform = false;
 
 	/**
-	 * Set if the request {@link Source} should always be transformed into a new {@link JDOMResult}.
+	 * Set if the request {@link Source} should always be transformed into a new
+	 * {@link JDOMResult}.
 	 * <p>
 	 * Default is {@code false}, which is faster.
 	 */
@@ -63,11 +66,11 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 	/**
 	 * Returns the payload element of the given source.
 	 * <p>
-	 * Default implementation checks whether the source is a {@link DOMSource}, and uses a {@link DOMBuilder} to create a
-	 * JDOM {@link Element}. In all other cases, or when {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is
-	 * {@code true}, the source is transformed into a {@link JDOMResult}, which is more expensive. If the passed source is
-	 * {@code null}, {@code null} is returned.
-	 *
+	 * Default implementation checks whether the source is a {@link DOMSource}, and uses a
+	 * {@link DOMBuilder} to create a JDOM {@link Element}. In all other cases, or when
+	 * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the
+	 * source is transformed into a {@link JDOMResult}, which is more expensive. If the
+	 * passed source is {@code null}, {@code null} is returned.
 	 * @param source the source to return the root element of; can be {@code null}
 	 * @return the document element
 	 * @throws TransformerException in case of errors
@@ -81,7 +84,8 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 			DOMBuilder domBuilder = new DOMBuilder();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return domBuilder.build((org.w3c.dom.Element) node);
-			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = domBuilder.build((org.w3c.dom.Document) node);
 				return document.getRootElement();
 			}
@@ -93,11 +97,11 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a JDOM {@code Element}, and allows
-	 * subclasses to return a response {@code Element}.
-	 *
+	 * Template method. Subclasses must implement this. Offers the request payload as a
+	 * JDOM {@code Element}, and allows subclasses to return a response {@code Element}.
 	 * @param requestElement the contents of the SOAP message as JDOM element
 	 * @return the response element. Can be {@code null} to specify no response.
 	 */
 	protected abstract Element invokeInternal(Element requestElement) throws Exception;
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,14 +34,16 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 
 /**
- * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is used for client-side XMPP
- * access. Exposes a {@link Message} request and response message.
+ * Implementation of {@link org.springframework.ws.transport.WebServiceConnection} that is
+ * used for client-side XMPP access. Exposes a {@link Message} request and response
+ * message.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
@@ -67,7 +69,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		this.connection = connection;
 		try {
 			this.requestMessage = new Message(JidCreate.from(to), Message.Type.chat);
-		} catch (XmppStringprepException e) {
+		}
+		catch (XmppStringprepException e) {
 			throw new RuntimeException(e);
 		}
 		this.requestMessage.setThread(thread);
@@ -96,8 +99,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	}
 
 	/*
-	* URI
-	*/
+	 * URI
+	 */
 
 	@Override
 	public URI getUri() throws URISyntaxException {
@@ -137,7 +140,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		requestMessage.setFrom(connection.getUser());
 		try {
 			connection.sendStanza(requestMessage);
-		} catch (SmackException.NotConnectedException | InterruptedException e) {
+		}
+		catch (SmackException.NotConnectedException | InterruptedException e) {
 			throw new IOException(e);
 		}
 	}
@@ -155,11 +159,13 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 			Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
 			if (packet instanceof Message) {
 				responseMessage = (Message) packet;
-			} else if (packet != null) {
+			}
+			else if (packet != null) {
 				throw new IllegalArgumentException(
 						"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
 			}
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 			throw new IOException(e);
 		}
 	}

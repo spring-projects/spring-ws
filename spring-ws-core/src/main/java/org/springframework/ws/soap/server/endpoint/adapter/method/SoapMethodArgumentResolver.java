@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,8 +26,8 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Implementation of {@link MethodArgumentResolver} that supports {@link SoapMessage}, {@link SoapBody},
- * {@link SoapEnvelope}, and {@link SoapHeader}.
+ * Implementation of {@link MethodArgumentResolver} that supports {@link SoapMessage},
+ * {@link SoapBody}, {@link SoapEnvelope}, and {@link SoapHeader}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -50,14 +50,18 @@ public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 
 		if (SoapMessage.class.equals(parameterType)) {
 			return request;
-		} else if (SoapBody.class.equals(parameterType)) {
+		}
+		else if (SoapBody.class.equals(parameterType)) {
 			return request.getSoapBody();
-		} else if (SoapEnvelope.class.equals(parameterType)) {
+		}
+		else if (SoapEnvelope.class.equals(parameterType)) {
 			return request.getEnvelope();
-		} else if (SoapHeader.class.equals(parameterType)) {
+		}
+		else if (SoapHeader.class.equals(parameterType)) {
 			return request.getSoapHeader();
 		}
 		// should not happen
 		throw new UnsupportedOperationException();
 	}
+
 }

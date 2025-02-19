@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,8 +31,9 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the
- * {@link Action @Action} annotation to map methods to a WS-Addressing {@code Action} header.
+ * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface
+ * that uses the {@link Action @Action} annotation to map methods to a WS-Addressing
+ * {@code Action} header.
  * <p>
  * Endpoints typically have the following form:
  *
@@ -47,9 +48,10 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * }
  * </pre>
  * <p>
- * If set, the {@link Address @Address} annotation on the endpoint class should be equal to the
- * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} property of the
- * incoming message.
+ * If set, the {@link Address @Address} annotation on the endpoint class should be equal
+ * to the
+ * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
+ * destination} property of the incoming message.
  *
  * @author Arjen Poutsma
  * @author Corneil du Plessis (with thanks to Chris Bono)
@@ -57,7 +59,8 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  * @see Address
  * @since 1.5.0
  */
-public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping implements SmartInitializingSingleton {
+public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping
+		implements SmartInitializingSingleton {
 
 	/** Returns the 'endpoint' annotation type. Default is {@link Endpoint}. */
 	protected Class<? extends Annotation> getEndpointAnnotationType() {
@@ -65,8 +68,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	}
 
 	/**
-	 * Returns the action value for the specified method. Default implementation looks for the {@link Action} annotation
-	 * value.
+	 * Returns the action value for the specified method. Default implementation looks for
+	 * the {@link Action} annotation value.
 	 */
 	@Override
 	protected URI getActionForMethod(Method method) {
@@ -74,19 +77,21 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		if (action != null && StringUtils.hasText(action.value())) {
 			try {
 				return new URI(action.value());
-			} catch (URISyntaxException e) {
-				throw new IllegalArgumentException("Invalid Action annotation [" + action.value() + "] on [" + method + "]");
+			}
+			catch (URISyntaxException e) {
+				throw new IllegalArgumentException(
+						"Invalid Action annotation [" + action.value() + "] on [" + method + "]");
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the address property of the given {@link MethodEndpoint}, by looking for the {@link Address} annotation.
-	 * The value of this property should match the
-	 * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo() destination} of incoming
-	 * messages. Returns {@code null} if the anotation is not present, thus ignoring the destination property.
-	 *
+	 * Returns the address property of the given {@link MethodEndpoint}, by looking for
+	 * the {@link Address} annotation. The value of this property should match the
+	 * {@link org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getTo()
+	 * destination} of incoming messages. Returns {@code null} if the anotation is not
+	 * present, thus ignoring the destination property.
 	 * @param endpoint the method endpoint to return the address for
 	 * @return the endpoint address; or {@code null} to ignore the destination property
 	 */
@@ -97,7 +102,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
 		if (address != null && StringUtils.hasText(address.value())) {
 			return getActionUri(address.value(), methodEndpoint);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -108,7 +114,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
 		if (action != null && StringUtils.hasText(action.output())) {
 			return getActionUri(action.output(), methodEndpoint);
-		} else {
+		}
+		else {
 			return super.getResponseAction(endpoint, map);
 		}
 	}
@@ -119,7 +126,8 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
 		if (action != null && StringUtils.hasText(action.fault())) {
 			return getActionUri(action.fault(), methodEndpoint);
-		} else {
+		}
+		else {
 			return super.getResponseAction(endpoint, map);
 		}
 	}
@@ -127,13 +135,18 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	private URI getActionUri(String action, MethodEndpoint methodEndpoint) {
 		try {
 			return new URI(action);
-		} catch (URISyntaxException e) {
-			throw new IllegalArgumentException("Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
+		}
+		catch (URISyntaxException e) {
+			throw new IllegalArgumentException(
+					"Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
 		}
 	}
 
 	public void afterSingletonsInstantiated() {
-		this.getApplicationContext().getBeansWithAnnotation(this.getEndpointAnnotationType())
-				.values().forEach(this::registerMethods);
+		this.getApplicationContext()
+			.getBeansWithAnnotation(this.getEndpointAnnotationType())
+			.values()
+			.forEach(this::registerMethods);
 	}
+
 }

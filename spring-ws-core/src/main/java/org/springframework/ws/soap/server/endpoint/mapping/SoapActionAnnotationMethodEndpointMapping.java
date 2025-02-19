@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,8 +34,9 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface that uses the
- * {@link SoapAction} annotation to map methods to the request SOAPAction header.
+ * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface
+ * that uses the {@link SoapAction} annotation to map methods to the request SOAPAction
+ * header.
  * <p>
  * Endpoints typically have the following form:
  *
@@ -77,9 +78,8 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	}
 
 	/**
-	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and the set interceptors, and
-	 * actors/roles.
-	 *
+	 * Creates a new {@code SoapEndpointInvocationChain} based on the given endpoint, and
+	 * the set interceptors, and actors/roles.
 	 * @param endpoint the endpoint
 	 * @param interceptors the endpoint interceptors
 	 * @return the created invocation chain
@@ -87,8 +87,8 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	 * @see #setActorsOrRoles(String[])
 	 */
 	@Override
-	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext, Object endpoint,
-			EndpointInterceptor[] interceptors) {
+	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
+			Object endpoint, EndpointInterceptor[] interceptors) {
 		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
 	}
 
@@ -100,10 +100,12 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
 					&& soapAction.charAt(soapAction.length() - 1) == '"') {
 				return soapAction.substring(1, soapAction.length() - 1);
-			} else {
+			}
+			else {
 				return soapAction;
 			}
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -123,7 +125,8 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 			for (SoapAction soapAction : soapActions.value()) {
 				result.add(soapAction.value());
 			}
-		} else {
+		}
+		else {
 			SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
 			if (soapAction != null) {
 				result.add(soapAction.value());
@@ -131,4 +134,5 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 		}
 		return result;
 	}
+
 }

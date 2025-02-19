@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,13 @@
 
 package org.springframework.ws.soap.soap11;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.soap.AbstractSoapBodyTestCase;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -30,7 +30,8 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCase {
 
@@ -50,8 +51,10 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		StringResult result = new StringResult();
 		transformer.transform(soapBody.getSource(), result);
 
-		XmlAssert.assertThat(result.toString()).and("<Body xmlns='http://schemas.xmlsoap.org/soap/envelope/' />")
-				.ignoreWhitespace().areSimilar();
+		XmlAssert.assertThat(result.toString())
+			.and("<Body xmlns='http://schemas.xmlsoap.org/soap/envelope/' />")
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -60,7 +63,7 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		SoapFault fault = soapBody.addMustUnderstandFault("SOAP Must Understand Error", null);
 
 		assertThat(fault.getFaultCode())
-				.isEqualTo(new QName("http://schemas.xmlsoap.org/soap/envelope/", "MustUnderstand"));
+			.isEqualTo(new QName("http://schemas.xmlsoap.org/soap/envelope/", "MustUnderstand"));
 		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>" + "<faultcode>"
 				+ soapBody.getName().getPrefix() + ":MustUnderstand</faultcode>"
 				+ "<faultstring>SOAP Must Understand Error</faultstring></SOAP-ENV:Fault>");
@@ -108,8 +111,8 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 		assertThat(fault.getFaultActorOrRole()).isEqualTo(actor);
 		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' "
 				+ "xmlns:spring='http://www.springframework.org'>" + "<faultcode>spring:fault</faultcode>"
-				+ "<faultstring xml:lang='en'>" + faultString + "</faultstring>" + "<faultactor>" + actor + "</faultactor>"
-				+ "</SOAP-ENV:Fault>");
+				+ "<faultstring xml:lang='en'>" + faultString + "</faultstring>" + "<faultactor>" + actor
+				+ "</faultactor>" + "</SOAP-ENV:Fault>");
 	}
 
 	@Test
@@ -149,7 +152,8 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 
 		assertPayloadEqual(
 				"<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' xmlns:spring='http://www.springframework.org'>"
-						+ "<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>" + "<detail>"
+						+ "<faultcode>spring:fault</faultcode>" + "<faultstring>" + faultString + "</faultstring>"
+						+ "<detail>"
 						+ "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>"
 						+ "<spring:detailEntry xmlns:spring='http://www.springframework.org'><detailContents xmlns='namespace'/></spring:detailEntry>"
 						+ "</detail>" + "</SOAP-ENV:Fault>");
@@ -159,14 +163,16 @@ public abstract class AbstractSoap11BodyTestCase extends AbstractSoapBodyTestCas
 	@Test
 	public void testAddFaultWithDetailResult() throws Exception {
 
-		SoapFault fault = ((Soap11Body) soapBody).addFault(new QName("namespace", "localPart", "prefix"), "Fault", null);
+		SoapFault fault = ((Soap11Body) soapBody).addFault(new QName("namespace", "localPart", "prefix"), "Fault",
+				null);
 		SoapFaultDetail detail = fault.addFaultDetail();
 		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
 		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
 
 		assertPayloadEqual("<SOAP-ENV:Fault xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>"
-				+ "<faultcode xmlns:prefix='namespace'>prefix:localPart</faultcode>" + "<faultstring>Fault</faultstring>"
-				+ "<detail>" + "<detailContents xmlns='namespace'/>" + "<detailContents xmlns='namespace'/>"
-				+ "</detail></SOAP-ENV:Fault>");
+				+ "<faultcode xmlns:prefix='namespace'>prefix:localPart</faultcode>"
+				+ "<faultstring>Fault</faultstring>" + "<detail>" + "<detailContents xmlns='namespace'/>"
+				+ "<detailContents xmlns='namespace'/>" + "</detail></SOAP-ENV:Fault>");
 	}
+
 }

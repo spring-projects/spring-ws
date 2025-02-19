@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,22 @@
 
 package org.springframework.ws.soap.security.x509.cache;
 
+import java.security.cert.X509Certificate;
+
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
-
-import java.security.cert.X509Certificate;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
 
 /**
- * Caches {@code User} objects using a Spring IoC defined <a href="http://ehcache.sourceforge.net">EHCACHE</a>.
+ * Caches {@code User} objects using a Spring IoC defined
+ * <a href="http://ehcache.sourceforge.net">EHCACHE</a>.
  * <p>
  * Migrated from Spring Security 2 since it has been removed in Spring Security 3.
  * </p>
@@ -38,20 +39,24 @@ import org.springframework.util.Assert;
  * @author Luke Taylor
  * @author Ben Alex
  * @author Greg Turnquist
- * @deprecated Migrate to {@link SpringBasedX509UserCache} and inject a platform neutral Spring-based
- *             {@link org.springframework.cache.Cache}.
+ * @deprecated Migrate to {@link SpringBasedX509UserCache} and inject a platform neutral
+ * Spring-based {@link org.springframework.cache.Cache}.
  */
 @Deprecated
 public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBean {
-	// ~ Static fields/initializers =====================================================================================
+
+	// ~ Static fields/initializers
+	// =====================================================================================
 
 	private static final Log logger = LogFactory.getLog(EhCacheBasedX509UserCache.class);
 
-	// ~ Instance fields ================================================================================================
+	// ~ Instance fields
+	// ================================================================================================
 
 	private Ehcache cache;
 
-	// ~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -64,7 +69,8 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 
 		try {
 			element = cache.get(userCert);
-		} catch (CacheException cacheException) {
+		}
+		catch (CacheException cacheException) {
 			throw new DataRetrievalFailureException("Cache failure: " + cacheException.getMessage());
 		}
 
@@ -80,7 +86,8 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 
 		if (element == null) {
 			return null;
-		} else {
+		}
+		else {
 			return (UserDetails) element.getObjectValue();
 		}
 	}
@@ -108,4 +115,5 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 	public void setCache(Ehcache cache) {
 		this.cache = cache;
 	}
+
 }

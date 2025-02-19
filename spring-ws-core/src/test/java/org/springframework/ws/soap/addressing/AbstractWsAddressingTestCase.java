@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.addressing;
 
-import static org.assertj.core.api.Assertions.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPException;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.w3c.dom.Document;
 import org.xmlunit.assertj.XmlAssert;
+
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractWsAddressingTestCase {
 
@@ -50,7 +50,8 @@ public abstract class AbstractWsAddressingTestCase {
 
 		try {
 			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-		} finally {
+		}
+		finally {
 			is.close();
 		}
 	}
@@ -60,10 +61,11 @@ public abstract class AbstractWsAddressingTestCase {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
-		XmlAssert.assertThat(resultDocument).and(expectedDocument) //
-				.ignoreWhitespace() //
-				.ignoreChildNodesOrder() //
-				.areSimilar();
+		XmlAssert.assertThat(resultDocument)
+			.and(expectedDocument) //
+			.ignoreWhitespace() //
+			.ignoreChildNodesOrder() //
+			.areSimilar();
 	}
 
 	protected void assertXMLNotSimilar(SaajSoapMessage expected, SaajSoapMessage result) {
@@ -71,8 +73,10 @@ public abstract class AbstractWsAddressingTestCase {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
-		XmlAssert.assertThat(resultDocument).and(expectedDocument) //
-				.ignoreWhitespace() //
-				.areNotSimilar();
+		XmlAssert.assertThat(resultDocument)
+			.and(expectedDocument) //
+			.ignoreWhitespace() //
+			.areNotSimilar();
 	}
+
 }

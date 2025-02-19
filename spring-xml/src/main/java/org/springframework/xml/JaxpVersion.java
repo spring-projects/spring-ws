@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,11 +19,11 @@ package org.springframework.xml;
 import org.springframework.util.ClassUtils;
 
 /**
- * Helper class used to find the current version of JAXP. We cannot depend on the Java version, since JAXP can be
- * upgraded independently of the Java version.
+ * Helper class used to find the current version of JAXP. We cannot depend on the Java
+ * version, since JAXP can be upgraded independently of the Java version.
  * <p>
- * Only distinguishes between JAXP 1.0, 1.1, 1.3, 1.4, and 1.5, since JAXP 1.2 was a maintenance release with no new
- * classes.
+ * Only distinguishes between JAXP 1.0, 1.1, 1.3, 1.4, and 1.5, since JAXP 1.2 was a
+ * maintenance release with no new classes.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -68,11 +68,13 @@ public abstract class JaxpVersion {
 		try {
 			ClassUtils.forName(JAXP_15_CLASS_NAME, classLoader);
 			jaxpVersion = JAXP_15;
-		} catch (ClassNotFoundException ex) {
+		}
+		catch (ClassNotFoundException ex) {
 			try {
 				ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
 				jaxpVersion = JAXP_14;
-			} catch (ClassNotFoundException e) {
+			}
+			catch (ClassNotFoundException e) {
 				// leave 1.3 as default (it's either 1.3 or unknown)
 				jaxpVersion = JAXP_13;
 			}
@@ -80,8 +82,8 @@ public abstract class JaxpVersion {
 	}
 
 	/**
-	 * Gets the JAXP version. This means we can do things like if {@code (getJaxpVersion() < JAXP_13)}.
-	 *
+	 * Gets the JAXP version. This means we can do things like if
+	 * {@code (getJaxpVersion() < JAXP_13)}.
 	 * @return a code comparable to the JAXP_XX codes in this class
 	 * @see #JAXP_10
 	 * @see #JAXP_11
@@ -94,8 +96,8 @@ public abstract class JaxpVersion {
 	}
 
 	/**
-	 * Convenience method to determine if the current JAXP version is at least 1.4 (packaged with JDK 1.6).
-	 *
+	 * Convenience method to determine if the current JAXP version is at least 1.4
+	 * (packaged with JDK 1.6).
 	 * @return {@code true} if the current JAXP version is at least JAXP 1.4
 	 * @see #getJaxpVersion()
 	 * @see #JAXP_14

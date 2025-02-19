@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,9 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.xmlunit.assertj.XmlAssert.*;
+import java.io.File;
+
+import javax.xml.namespace.QName;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConnection;
@@ -24,11 +26,6 @@ import jakarta.xml.soap.SOAPConnectionFactory;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.io.File;
-
-import javax.xml.namespace.QName;
-
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -37,8 +34,11 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.transport.support.EchoPayloadEndpoint;
 import org.springframework.ws.transport.support.FreePortScanner;
+
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 /**
  * @author Arjen Poutsma
@@ -67,7 +67,7 @@ public class MessageDispatcherServletIntegrationTest {
 		jettyContext.setContextPath("/");
 
 		String resourceBase = new File(MessageDispatcherServletIntegrationTest.class.getResource("WEB-INF").toURI())
-				.getParent();
+			.getParent();
 
 		jettyContext.setResourceBase(resourceBase);
 
@@ -99,7 +99,7 @@ public class MessageDispatcherServletIntegrationTest {
 
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPElement element = request.getSOAPBody()
-				.addChildElement(new QName(EchoPayloadEndpoint.NAMESPACE, EchoPayloadEndpoint.LOCAL_PART));
+			.addChildElement(new QName(EchoPayloadEndpoint.NAMESPACE, EchoPayloadEndpoint.LOCAL_PART));
 		element.setTextContent("Hello World");
 
 		SOAPConnection connection = connectionFactory.createConnection();
@@ -108,4 +108,5 @@ public class MessageDispatcherServletIntegrationTest {
 
 		assertThat(response.getSOAPPart()).and(request.getSOAPPart()).ignoreWhitespace().areIdentical();
 	}
+
 }

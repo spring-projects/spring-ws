@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,12 +27,15 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
- * Server-side component for receiving XMPP (Jabber) messages. Requires a {@linkplain #setConnection(XMPPConnection)
- * connection} to be set, in addition to the {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
- * messageFactory} and {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
+ * Server-side component for receiving XMPP (Jabber) messages. Requires a
+ * {@linkplain #setConnection(XMPPConnection) connection} to be set, in addition to the
+ * {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+ * messageFactory} and
+ * {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  * messageReceiver} required by the base class.
  *
  * @author Gildas Cuisinier
@@ -43,7 +46,10 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
  */
 public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
-	/** Default encoding used to read from and write to {@link org.jivesoftware.smack.packet.Message} messages. */
+	/**
+	 * Default encoding used to read from and write to
+	 * {@link org.jivesoftware.smack.packet.Message} messages.
+	 */
 	public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
 
 	private XMPPTCPConnection connection;
@@ -52,7 +58,8 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
 	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
-	public XmppMessageReceiver() {}
+	public XmppMessageReceiver() {
+	}
 
 	/** Sets the {@code XMPPConnection} to use. Setting this property is required. */
 	public void setConnection(XMPPTCPConnection connection) {
@@ -64,7 +71,8 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		if (!connection.isConnected()) {
 			try {
 				connection.connect();
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				throw new IOException(e);
 			}
 		}
@@ -110,11 +118,13 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 					XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
 					wsConnection.setMessageEncoding(messageEncoding);
 					handleConnection(wsConnection);
-				} catch (Exception ex) {
+				}
+				catch (Exception ex) {
 					logger.error(ex);
 				}
 			}
 		}
+
 	}
 
 }

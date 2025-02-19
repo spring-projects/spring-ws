@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,20 @@
 
 package org.springframework.ws.transport.mail.support;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import jakarta.mail.Folder;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Service;
 import jakarta.mail.URLName;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.mail.MailTransportConstants;
 
@@ -47,7 +47,8 @@ public abstract class MailTransportUtils {
 
 	private static final Log logger = LogFactory.getLog(MailTransportUtils.class);
 
-	private MailTransportUtils() {}
+	private MailTransportUtils() {
+	}
 
 	public static InternetAddress getTo(URI uri) {
 		Matcher matcher = TO_PATTERN.matcher(uri.getSchemeSpecificPart());
@@ -57,7 +58,8 @@ public abstract class MailTransportUtils {
 				if (group != null) {
 					try {
 						return new InternetAddress(group);
-					} catch (AddressException e) {
+					}
+					catch (AddressException e) {
 						// try next group
 					}
 				}
@@ -75,9 +77,8 @@ public abstract class MailTransportUtils {
 	}
 
 	/**
-	 * Close the given JavaMail Service and ignore any thrown exception. This is useful for typical {@code finally} blocks
-	 * in manual JavaMail code.
-	 *
+	 * Close the given JavaMail Service and ignore any thrown exception. This is useful
+	 * for typical {@code finally} blocks in manual JavaMail code.
 	 * @param service the JavaMail Service to close (may be {@code null})
 	 * @see jakarta.mail.Transport
 	 * @see jakarta.mail.Store
@@ -86,16 +87,16 @@ public abstract class MailTransportUtils {
 		if (service != null) {
 			try {
 				service.close();
-			} catch (MessagingException ex) {
+			}
+			catch (MessagingException ex) {
 				logger.debug("Could not close JavaMail Service", ex);
 			}
 		}
 	}
 
 	/**
-	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally} blocks
-	 * in manual JavaMail code.
-	 *
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for
+	 * typical {@code finally} blocks in manual JavaMail code.
 	 * @param folder the JavaMail Folder to close (may be {@code null})
 	 */
 
@@ -104,9 +105,8 @@ public abstract class MailTransportUtils {
 	}
 
 	/**
-	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for typical {@code finally} blocks
-	 * in manual JavaMail code.
-	 *
+	 * Close the given JavaMail Folder and ignore any thrown exception. This is useful for
+	 * typical {@code finally} blocks in manual JavaMail code.
 	 * @param folder the JavaMail Folder to close (may be {@code null})
 	 * @param expunge whether all deleted messages should be expunged from the folder
 	 */
@@ -114,13 +114,17 @@ public abstract class MailTransportUtils {
 		if (folder != null && folder.isOpen()) {
 			try {
 				folder.close(expunge);
-			} catch (MessagingException ex) {
+			}
+			catch (MessagingException ex) {
 				logger.debug("Could not close JavaMail Folder", ex);
 			}
 		}
 	}
 
-	/** Returns a string representation of the given {@link URLName}, where the password has been protected. */
+	/**
+	 * Returns a string representation of the given {@link URLName}, where the password
+	 * has been protected.
+	 */
 	public static String toPasswordProtectedString(URLName name) {
 		String protocol = name.getProtocol();
 		String username = name.getUsername();
@@ -164,7 +168,6 @@ public abstract class MailTransportUtils {
 
 	/**
 	 * Converts the given internet address into a {@code mailto} URI.
-	 *
 	 * @param to the To: address
 	 * @param subject the subject, may be {@code null}
 	 * @return a mailto URI
@@ -172,7 +175,8 @@ public abstract class MailTransportUtils {
 	public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
 		if (StringUtils.hasLength(subject)) {
 			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
-		} else {
+		}
+		else {
 			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress(), null);
 		}
 	}

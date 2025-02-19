@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,22 +16,22 @@
 
 package org.springframework.ws.transport.http;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.soap.MessageFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
 import org.apache.commons.httpclient.URIException;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -86,19 +86,22 @@ public class CommonsHttpMessageSenderIntegrationTest
 			appContext.registerSingleton("messageSender", CommonsHttpMessageSender.class);
 			appContext.refresh();
 
-			CommonsHttpMessageSender messageSender = appContext.getBean("messageSender", CommonsHttpMessageSender.class);
+			CommonsHttpMessageSender messageSender = appContext.getBean("messageSender",
+					CommonsHttpMessageSender.class);
 			connection = messageSender.createConnection(new URI("http://localhost:" + port));
 
 			appContext.close();
 
 			connection.send(new SaajSoapMessage(messageFactory.createMessage()));
 			connection.receive(new SaajSoapMessageFactory(messageFactory));
-		} finally {
+		}
+		finally {
 
 			if (connection != null) {
 				try {
 					connection.close();
-				} catch (IOException ex) {
+				}
+				catch (IOException ex) {
 					// ignore
 				}
 			}
@@ -118,5 +121,7 @@ public class CommonsHttpMessageSenderIntegrationTest
 			response.setContentType("text/xml");
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
 		}
+
 	}
+
 }

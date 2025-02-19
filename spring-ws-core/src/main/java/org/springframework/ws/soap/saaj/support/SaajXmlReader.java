@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,12 @@
 
 package org.springframework.ws.soap.saaj.support;
 
+import java.util.Iterator;
+
 import jakarta.xml.soap.Name;
 import jakarta.xml.soap.Node;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.Text;
-
-import java.util.Iterator;
-
-import org.springframework.util.StringUtils;
-import org.springframework.xml.sax.AbstractXmlReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -32,9 +29,13 @@ import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.helpers.AttributesImpl;
 
+import org.springframework.util.StringUtils;
+import org.springframework.xml.sax.AbstractXmlReader;
+
 /**
- * SAX {@code XMLReader} that reads from a SAAJ {@code Node}. Consumes {@code XMLEvents} from an {@code XMLEventReader},
- * and calls the corresponding methods on the SAX callback interfaces.
+ * SAX {@code XMLReader} that reads from a SAAJ {@code Node}. Consumes {@code XMLEvents}
+ * from an {@code XMLEventReader}, and calls the corresponding methods on the SAX callback
+ * interfaces.
  *
  * @author Arjen Poutsma
  * @see jakarta.xml.soap.Node
@@ -54,8 +55,8 @@ public class SaajXmlReader extends AbstractXmlReader {
 	private boolean namespacePrefixesFeature = false;
 
 	/**
-	 * Constructs a new instance of the {@code SaajXmlReader} that reads from the given {@code Node}.
-	 *
+	 * Constructs a new instance of the {@code SaajXmlReader} that reads from the given
+	 * {@code Node}.
 	 * @param startNode the SAAJ {@code Node} to read from
 	 */
 	public SaajXmlReader(Node startNode) {
@@ -66,9 +67,11 @@ public class SaajXmlReader extends AbstractXmlReader {
 	public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 		if (NAMESPACES_FEATURE_NAME.equals(name)) {
 			return namespacesFeature;
-		} else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+		}
+		else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
 			return namespacePrefixesFeature;
-		} else {
+		}
+		else {
 			return super.getFeature(name);
 		}
 	}
@@ -77,9 +80,11 @@ public class SaajXmlReader extends AbstractXmlReader {
 	public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		if (NAMESPACES_FEATURE_NAME.equals(name)) {
 			this.namespacesFeature = value;
-		} else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
+		}
+		else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
 			this.namespacePrefixesFeature = value;
-		} else {
+		}
+		else {
 			super.setFeature(name, value);
 		}
 	}
@@ -88,9 +93,9 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * Parses the StAX XML reader passed at construction-time.
 	 * <p>
 	 * <strong>Note</strong> that the given {@code InputSource} is not read, but ignored.
-	 *
 	 * @param ignored is ignored
-	 * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a {@code XMLStreamException}
+	 * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a
+	 * {@code XMLStreamException}
 	 */
 	@Override
 	public final void parse(InputSource ignored) throws SAXException {
@@ -101,9 +106,9 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * Parses the StAX XML reader passed at construction-time.
 	 * <p>
 	 * <strong>Note</strong> that the given system identifier is not read, but ignored.
-	 *
 	 * @param ignored is ignored
-	 * @throws SAXException A SAX exception, possibly wrapping a {@code XMLStreamException}
+	 * @throws SAXException A SAX exception, possibly wrapping a
+	 * {@code XMLStreamException}
 	 */
 	@Override
 	public final void parse(String ignored) throws SAXException {
@@ -123,7 +128,8 @@ public class SaajXmlReader extends AbstractXmlReader {
 	private void handleNode(Node node) throws SAXException {
 		if (node instanceof SOAPElement) {
 			handleElement((SOAPElement) node);
-		} else if (node instanceof Text) {
+		}
+		else if (node instanceof Text) {
 			Text text = (Text) node;
 			handleText(text);
 		}
@@ -140,7 +146,8 @@ public class SaajXmlReader extends AbstractXmlReader {
 				}
 				getContentHandler().startElement(elementName.getURI(), elementName.getLocalName(),
 						elementName.getQualifiedName(), getAttributes(element));
-			} else {
+			}
+			else {
 				getContentHandler().startElement("", "", elementName.getQualifiedName(), getAttributes(element));
 			}
 		}
@@ -156,7 +163,8 @@ public class SaajXmlReader extends AbstractXmlReader {
 					String prefix = (String) iterator.next();
 					getContentHandler().endPrefixMapping(prefix);
 				}
-			} else {
+			}
+			else {
 				getContentHandler().endElement("", "", elementName.getQualifiedName());
 			}
 		}
@@ -189,7 +197,8 @@ public class SaajXmlReader extends AbstractXmlReader {
 				String qName;
 				if (StringUtils.hasLength(prefix)) {
 					qName = "xmlns:" + prefix;
-				} else {
+				}
+				else {
 					qName = "xmlns";
 				}
 				attributes.addAttribute("", "", qName, "CDATA", namespaceUri);

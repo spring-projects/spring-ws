@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,11 +30,12 @@ import org.springframework.ws.wsdl.wsdl11.provider.ServicesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
 
 /**
- * Implementation of the {@link Wsdl11Definition} that uses a provider-based mechanism to populate a WSDL4J
- * {@link Definition}.
+ * Implementation of the {@link Wsdl11Definition} that uses a provider-based mechanism to
+ * populate a WSDL4J {@link Definition}.
  * <p>
- * All providers are optional, indicating that a particular part of the WSDL will not be created. Providers can be set
- * via various properties. The providers are {@link #afterPropertiesSet() invoked} in the following order:
+ * All providers are optional, indicating that a particular part of the WSDL will not be
+ * created. Providers can be set via various properties. The providers are
+ * {@link #afterPropertiesSet() invoked} in the following order:
  * <ol>
  * <li>{@link ImportsProvider}</li>
  * <li>{@link TypesProvider}</li>
@@ -44,7 +45,8 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
  * <li>{@link ServicesProvider}</li>
  * </ol>
  * <p>
- * This definition requires the target namespace to be set via {@link #setTargetNamespace(String)}
+ * This definition requires the target namespace to be set via
+ * {@link #setTargetNamespace(String)}
  *
  * @author Arjen Poutsma
  * @see #setImportsProvider(ImportsProvider)
@@ -78,7 +80,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Returns the {@link ImportsProvider} for this definition.
 	 * <p>
 	 * Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
-	 *
 	 * @return the import provider; or {@code null}
 	 */
 	public ImportsProvider getImportsProvider() {
@@ -89,7 +90,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Sets the {@link ImportsProvider} for this definition.
 	 * <p>
 	 * Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
-	 *
 	 * @param importsProvider the import provider
 	 */
 	public void setImportsProvider(ImportsProvider importsProvider) {
@@ -100,7 +100,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Returns the {@link TypesProvider} for this definition.
 	 * <p>
 	 * Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
-	 *
 	 * @return the types provider; or {@code null}
 	 */
 	public TypesProvider getTypesProvider() {
@@ -111,7 +110,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Sets the {@link TypesProvider} for this definition.
 	 * <p>
 	 * Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
-	 *
 	 * @param typesProvider the types provider; or {@code null}
 	 */
 	public void setTypesProvider(TypesProvider typesProvider) {
@@ -121,8 +119,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Returns the {@link MessagesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be
+	 * created
 	 * @return the messages provider; or {@code null}
 	 */
 	public MessagesProvider getMessagesProvider() {
@@ -132,8 +130,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Sets the {@link MessagesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;message&gt;} will be
+	 * created
 	 * @param messagesProvider the messages provider; or {@code null}
 	 */
 	public void setMessagesProvider(MessagesProvider messagesProvider) {
@@ -143,8 +141,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Returns the {@link PortTypesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be
+	 * created
 	 * @return the port types provider; or {@code null}
 	 */
 	public PortTypesProvider getPortTypesProvider() {
@@ -154,8 +152,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Sets the {@link PortTypesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;portType&gt;} will be
+	 * created
 	 * @param portTypesProvider the port types provider; or {@code null}
 	 */
 	public void setPortTypesProvider(PortTypesProvider portTypesProvider) {
@@ -165,8 +163,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Returns the {@link BindingsProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be
+	 * created
 	 * @return the binding provider; or {@code null}
 	 */
 	public BindingsProvider getBindingsProvider() {
@@ -176,8 +174,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Sets the {@link BindingsProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;binding&gt;} will be
+	 * created
 	 * @param bindingsProvider the bindings provider; or {@code null}
 	 */
 	public void setBindingsProvider(BindingsProvider bindingsProvider) {
@@ -187,8 +185,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Returns the {@link ServicesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be
+	 * created
 	 * @return the services provider; or {@code null}
 	 */
 	public ServicesProvider getServicesProvider() {
@@ -198,8 +196,8 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/**
 	 * Sets the {@link ServicesProvider} for this definition.
 	 * <p>
-	 * Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be created
-	 *
+	 * Defaults to {@code null}, indicating that no {@code &lt;service&gt;} will be
+	 * created
 	 * @param servicesProvider the services provider; or {@code null}
 	 */
 	public void setServicesProvider(ServicesProvider servicesProvider) {
@@ -208,7 +206,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
 	/**
 	 * Returns the target namespace for the WSDL definition.
-	 *
 	 * @return the target namespace
 	 * @see javax.wsdl.Definition#getTargetNamespace()
 	 */
@@ -218,7 +215,6 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
 	/**
 	 * Sets the target namespace used for this definition. Required.
-	 *
 	 * @param targetNamespace the target namespace
 	 * @see javax.wsdl.Definition#setTargetNamespace(String)
 	 */
@@ -253,4 +249,5 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 		}
 		setDefinition(definition);
 	}
+
 }

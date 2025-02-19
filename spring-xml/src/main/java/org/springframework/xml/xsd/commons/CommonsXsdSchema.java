@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
+import org.w3c.dom.Document;
+
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.Resource;
@@ -39,10 +41,10 @@ import org.springframework.util.Assert;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
-import org.w3c.dom.Document;
 
 /**
- * Implementation of the {@link XsdSchema} interface that uses Apache WS-Commons XML Schema.
+ * Implementation of the {@link XsdSchema} interface that uses Apache WS-Commons XML
+ * Schema.
  *
  * @author Arjen Poutsma
  * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
@@ -55,8 +57,8 @@ public class CommonsXsdSchema implements XsdSchema {
 	private final XmlSchemaCollection collection;
 
 	/**
-	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified {@link XmlSchema} reference.
-	 *
+	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified
+	 * {@link XmlSchema} reference.
 	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
 	 */
@@ -65,11 +67,11 @@ public class CommonsXsdSchema implements XsdSchema {
 	}
 
 	/**
-	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified {@link XmlSchema} and
-	 * {@link XmlSchemaCollection} reference.
-	 *
+	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified
+	 * {@link XmlSchema} and {@link XmlSchemaCollection} reference.
 	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
-	 * @param collection the Commons {@code XmlSchemaCollection} object; can be {@code null}
+	 * @param collection the Commons {@code XmlSchemaCollection} object; can be
+	 * {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
 	 */
 	protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
@@ -90,7 +92,8 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	@Override
 	public Source getSource() {
-		// try to use the package-friendly XmlSchemaSerializer first, fall back to slower stream-based version
+		// try to use the package-friendly XmlSchemaSerializer first, fall back to slower
+		// stream-based version
 		try {
 			XmlSchemaSerializer serializer = BeanUtils.instantiateClass(XmlSchemaSerializer.class);
 			if (collection != null) {
@@ -98,13 +101,15 @@ public class CommonsXsdSchema implements XsdSchema {
 			}
 			Document[] serializedSchemas = serializer.serializeSchema(schema, false);
 			return new DOMSource(serializedSchemas[0]);
-		} catch (BeanInstantiationException | XmlSchemaSerializer.XmlSchemaSerializerException ex) {
+		}
+		catch (BeanInstantiationException | XmlSchemaSerializer.XmlSchemaSerializerException ex) {
 			// ignore
 		}
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
 			schema.write(bos);
-		} catch (UnsupportedEncodingException ex) {
+		}
+		catch (UnsupportedEncodingException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
 		}
 		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
@@ -116,7 +121,8 @@ public class CommonsXsdSchema implements XsdSchema {
 		try {
 			Resource resource = new UrlResource(schema.getSourceURI());
 			return XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
 		}
 	}

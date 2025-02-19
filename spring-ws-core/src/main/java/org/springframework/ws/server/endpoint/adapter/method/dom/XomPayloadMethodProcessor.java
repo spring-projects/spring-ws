@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,12 +15,6 @@
  */
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
-
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.ParsingException;
-import nu.xom.converters.DOMConverter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,14 +26,22 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.ParsingException;
+import nu.xom.converters.DOMConverter;
+import org.w3c.dom.DOMImplementation;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.w3c.dom.DOMImplementation;
 
 /**
- * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
- * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * Implementation of
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
  * MethodReturnValueHandler} that supports XOM {@linkplain Element elements}.
  *
  * @author Arjen Poutsma
@@ -61,7 +63,8 @@ public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 			org.w3c.dom.Node node = ((DOMSource) requestPayload).getNode();
 			if (node.getNodeType() == org.w3c.dom.Node.ELEMENT_NODE) {
 				return DOMConverter.convert((org.w3c.dom.Element) node);
-			} else if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
+			}
+			else if (node.getNodeType() == org.w3c.dom.Node.DOCUMENT_NODE) {
 				Document document = DOMConverter.convert((org.w3c.dom.Document) node);
 				return document.getRootElement();
 			}
@@ -97,11 +100,11 @@ public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 	}
 
 	/**
-	 * Create a {@code DocumentBuilderFactory} that this resolver will use to create response payloads.
+	 * Create a {@code DocumentBuilderFactory} that this resolver will use to create
+	 * response payloads.
 	 * <p>
-	 * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached, so
-	 * this method will only be called once.
-	 *
+	 * Can be overridden in subclasses, adding further initialization of the factory. The
+	 * resulting factory is cached, so this method will only be called once.
 	 * @return the created factory
 	 */
 	protected DocumentBuilderFactory createDocumentBuilderFactory() {

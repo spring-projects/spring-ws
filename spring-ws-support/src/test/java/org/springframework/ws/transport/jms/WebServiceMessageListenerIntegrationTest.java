@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +16,13 @@
 
 package org.springframework.ws.transport.jms;
 
-import static org.assertj.core.api.Assertions.*;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.annotation.Resource;
 import jakarta.jms.BytesMessage;
 import jakarta.jms.Queue;
 import jakarta.jms.TextMessage;
 import jakarta.jms.Topic;
-
-import java.nio.charset.StandardCharsets;
-
 import org.apache.activemq.artemis.core.config.Configuration;
 import org.apache.activemq.artemis.core.config.impl.ConfigurationImpl;
 import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
@@ -33,10 +30,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-receiver-applicationContext.xml")
@@ -46,13 +46,17 @@ public class WebServiceMessageListenerIntegrationTest {
 			+ "<SOAP-ENV:Body>\n" + "<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>\n"
 			+ "<symbol>DIS</symbol>\n" + "</m:GetLastTradePrice>\n" + "</SOAP-ENV:Body></SOAP-ENV:Envelope>";
 
-	@Autowired private JmsTemplate jmsTemplate;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 
-	@Resource private Queue responseQueue;
+	@Resource
+	private Queue responseQueue;
 
-	@Resource private Queue requestQueue;
+	@Resource
+	private Queue requestQueue;
 
-	@Autowired private Topic requestTopic;
+	@Autowired
+	private Topic requestTopic;
 
 	private EmbeddedActiveMQ server;
 
@@ -119,4 +123,5 @@ public class WebServiceMessageListenerIntegrationTest {
 
 		Thread.sleep(100);
 	}
+
 }

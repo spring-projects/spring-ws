@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,10 +34,11 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 import org.springframework.xml.namespace.QNameUtils;
 
 /**
- * Implementation of {@link MethodArgumentResolver} that supports resolving {@link SoapHeaderElement} parameters. Target
- * method parameters must be annotated with {@link SoapHeader} to indicate the SOAP header to resolve. This resolver
- * supports simple {@link SoapHeaderElement} parameters and {@link List} parameters for elements that appear multiple
- * times in the same SOAP header.
+ * Implementation of {@link MethodArgumentResolver} that supports resolving
+ * {@link SoapHeaderElement} parameters. Target method parameters must be annotated with
+ * {@link SoapHeader} to indicate the SOAP header to resolve. This resolver supports
+ * simple {@link SoapHeaderElement} parameters and {@link List} parameters for elements
+ * that appear multiple times in the same SOAP header.
  * </p>
  * The following snippet shows an example of supported declarations.
  *
@@ -46,8 +47,7 @@ import org.springframework.xml.namespace.QNameUtils;
  * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
  *
  * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
- * </code>
- * </pre>
+ * </code> </pre>
  *
  * @author Tareq Abedrabbo
  * @author Arjen Poutsma
@@ -92,8 +92,8 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 
 		String paramValue = parameter.getParameterAnnotation(SoapHeader.class).value();
 
-		Assert.isTrue(QNameUtils.validateQName(paramValue),
-				"Invalid header qualified name [" + paramValue + "]. " + "QName must be of the form '{namespace}localPart'.");
+		Assert.isTrue(QNameUtils.validateQName(paramValue), "Invalid header qualified name [" + paramValue + "]. "
+				+ "QName must be of the form '{namespace}localPart'.");
 
 		QName qname = QName.valueOf(paramValue);
 
@@ -101,7 +101,8 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 
 		if (SoapHeaderElement.class.equals(parameterType)) {
 			return extractSoapHeader(qname, soapHeader);
-		} else if (List.class.equals(parameterType)) {
+		}
+		else if (List.class.equals(parameterType)) {
 			return extractSoapHeaderList(qname, soapHeader);
 		}
 		// should not happen
@@ -131,4 +132,5 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 		}
 		return result;
 	}
+
 }

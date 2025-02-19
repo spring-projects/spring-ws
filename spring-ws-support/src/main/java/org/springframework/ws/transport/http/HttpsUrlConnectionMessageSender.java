@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,7 +23,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -31,7 +36,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Extension of {@link HttpUrlConnectionMessageSender} that adds support for (self-signed) HTTPS certificates.
+ * Extension of {@link HttpUrlConnectionMessageSender} that adds support for (self-signed)
+ * HTTPS certificates.
  *
  * @author Alex Marshall
  * @author Arjen Poutsma
@@ -58,7 +64,6 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Sets the SSL protocol to use. Default is {@code ssl}.
-	 *
 	 * @see SSLContext#getInstance(String, String)
 	 */
 	public void setSslProtocol(String sslProtocol) {
@@ -68,7 +73,6 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Sets the SSL provider to use. Default is empty, to use the default provider.
-	 *
 	 * @see SSLContext#getInstance(String, String)
 	 */
 	public void setSslProvider(String sslProvider) {
@@ -78,8 +82,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 	/**
 	 * Specifies the key managers to use for this message sender.
 	 * <p>
-	 * Setting either this property or {@link #setTrustManagers(TrustManager[]) trustManagers} is required.
-	 *
+	 * Setting either this property or {@link #setTrustManagers(TrustManager[])
+	 * trustManagers} is required.
 	 * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
 	 */
 	public void setKeyManagers(KeyManager[] keyManagers) {
@@ -89,8 +93,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 	/**
 	 * Specifies the trust managers to use for this message sender.
 	 * <p>
-	 * Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers} is required.
-	 *
+	 * Setting either this property or {@link #setKeyManagers(KeyManager[]) keyManagers}
+	 * is required.
 	 * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
 	 */
 	public void setTrustManagers(TrustManager[] trustManagers) {
@@ -99,7 +103,6 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Specifies the host name verifier to use for this message sender.
-	 *
 	 * @see HttpsURLConnection#setHostnameVerifier(HostnameVerifier)
 	 */
 	public void setHostnameVerifier(HostnameVerifier hostnameVerifier) {
@@ -108,7 +111,6 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Specifies the secure random to use for this message sender.
-	 *
 	 * @see SSLContext#init(KeyManager[], TrustManager[], SecureRandom)
 	 */
 	public void setSecureRandom(SecureRandom rnd) {
@@ -117,7 +119,6 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	/**
 	 * Specifies the SSLSocketFactory to use for this message sender.
-	 *
 	 * @see HttpsURLConnection#setSSLSocketFactory(SSLSocketFactory sf)
 	 */
 	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory) {
@@ -149,8 +150,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 			return this.sslSocketFactory;
 		}
 		try {
-			SSLContext sslContext = StringUtils.hasLength(sslProvider) ? SSLContext.getInstance(sslProtocol, sslProvider)
-					: SSLContext.getInstance(sslProtocol);
+			SSLContext sslContext = StringUtils.hasLength(sslProvider)
+					? SSLContext.getInstance(sslProtocol, sslProvider) : SSLContext.getInstance(sslProtocol);
 			sslContext.init(keyManagers, trustManagers, rnd);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Initialized SSL Context with key managers ["
@@ -158,9 +159,11 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 						+ StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd + "]");
 			}
 			return sslContext.getSocketFactory();
-		} catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
+		}
+		catch (NoSuchAlgorithmException | NoSuchProviderException ex) {
 			throw new HttpsTransportException("Could not create SSLContext: " + ex.getMessage(), ex);
-		} catch (KeyManagementException ex) {
+		}
+		catch (KeyManagementException ex) {
 			throw new HttpsTransportException("Could not initialize SSLContext: " + ex.getMessage(), ex);
 		}
 

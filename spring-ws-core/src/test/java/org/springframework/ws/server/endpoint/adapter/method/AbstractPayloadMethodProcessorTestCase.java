@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +16,17 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import static org.assertj.core.api.Assertions.*;
-
 import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.StringResult;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMethodArgumentResolverTestCase {
 
@@ -56,7 +57,8 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 			assertThat(processor.supportsParameter(supportedParameter)).isTrue();
 		}
 
-		MethodParameter unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
+		MethodParameter unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class),
+				0);
 
 		assertThat(processor.supportsParameter(unsupportedParameter)).isFalse();
 	}
@@ -68,7 +70,8 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 			assertThat(processor.supportsReturnType(supportedReturnType)).isTrue();
 		}
 
-		MethodParameter unsupportedReturnType = new MethodParameter(getClass().getMethod("unsupported", String.class), -1);
+		MethodParameter unsupportedReturnType = new MethodParameter(getClass().getMethod("unsupported", String.class),
+				-1);
 
 		assertThat(processor.supportsReturnType(unsupportedReturnType)).isFalse();
 	}
@@ -104,7 +107,8 @@ public abstract class AbstractPayloadMethodProcessorTestCase extends AbstractMet
 		}
 	}
 
-	protected void testArgument(Object argument, MethodParameter parameter) {}
+	protected void testArgument(Object argument, MethodParameter parameter) {
+	}
 
 	@Test
 	public void saajReturnValue() throws Exception {

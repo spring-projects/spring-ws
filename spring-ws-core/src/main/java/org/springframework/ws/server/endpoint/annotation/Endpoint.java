@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,8 +29,9 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
 /**
  * Indicates that an annotated class is an "Endpoint" (e.g. a web service endpoint).
  * <p>
- * This annotation serves as a specialization of {@link Component @Component}, allowing for implementation classes to be
- * autodetected through classpath scanning. Instances of this class are typically picked up by an
+ * This annotation serves as a specialization of {@link Component @Component}, allowing
+ * for implementation classes to be autodetected through classpath scanning. Instances of
+ * this class are typically picked up by an
  * {@link AbstractAnnotationMethodEndpointMapping} implementation, such as
  * {@link SoapActionAnnotationMethodEndpointMapping}.
  *
@@ -45,9 +46,8 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
 public @interface Endpoint {
 
 	/**
-	 * The value may indicate a suggestion for a logical component name, to be turned into a Spring bean in case of an
-	 * autodetected component.
-	 *
+	 * The value may indicate a suggestion for a logical component name, to be turned into
+	 * a Spring bean in case of an autodetected component.
 	 * @return the suggested component name, if any
 	 */
 	String value() default "";

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,19 +16,20 @@
 
 package org.springframework.ws.soap.soap12;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.soap.AbstractSoapHeaderTestCase;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.xml.transform.StringResult;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTestCase {
 
@@ -48,8 +49,10 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		StringResult result = new StringResult();
 		transformer.transform(soapHeader.getSource(), result);
 
-		XmlAssert.assertThat(result.toString()).and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' />")
-				.ignoreWhitespace().areSimilar();
+		XmlAssert.assertThat(result.toString())
+			.and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' />")
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -62,10 +65,11 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		transformer.transform(soapHeader.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
-				.and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >"
-						+ "<NotUnderstood qname='spring-ws:NotUnderstood' xmlns:spring-ws='http://www.springframework.org' />"
-						+ "</Header>")
-				.ignoreWhitespace().areSimilar();
+			.and("<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >"
+					+ "<NotUnderstood qname='spring-ws:NotUnderstood' xmlns:spring-ws='http://www.springframework.org' />"
+					+ "</Header>")
+			.ignoreWhitespace()
+			.areSimilar();
 	}
 
 	@Test
@@ -81,13 +85,13 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		assertThat(header.getName()).isEqualTo(new QName("http://www.w3.org/2003/05/soap-envelope", "Upgrade"));
 		// XMLUnit can't test this:
 		/*
-				assertXMLEqual("Invalid contents of header", "<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >" +
-						"<Upgrade>" +
-						"<SupportedEnvelope xmlns:ns0='http://schemas.xmlsoap.org/soap/envelope/' qname='ns0:Envelope'/>" +
-						"<SupportedEnvelope xmlns:ns1='http://www.w3.org/2003/05/soap-envelope' qname='ns1:Envelope'/>" +
-						"</Upgrade>" +
-						"</Header>", result.toString());
-		*/
+		 * assertXMLEqual("Invalid contents of header",
+		 * "<Header xmlns='http://www.w3.org/2003/05/soap-envelope' >" + "<Upgrade>" +
+		 * "<SupportedEnvelope xmlns:ns0='http://schemas.xmlsoap.org/soap/envelope/' qname='ns0:Envelope'/>"
+		 * +
+		 * "<SupportedEnvelope xmlns:ns1='http://www.w3.org/2003/05/soap-envelope' qname='ns1:Envelope'/>"
+		 * + "</Upgrade>" + "</Header>", result.toString());
+		 */
 	}
 
 	@Test
@@ -103,7 +107,7 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_12.getNextActorOrRoleUri());
 		Iterator<SoapHeaderElement> iterator = ((Soap12Header) soapHeader)
-				.examineHeaderElementsToProcess(new String[] { "role1" }, false);
+			.examineHeaderElementsToProcess(new String[] { "role1" }, false);
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -151,7 +155,7 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_12.getUltimateReceiverRoleUri());
 		Iterator<SoapHeaderElement> iterator = ((Soap12Header) soapHeader)
-				.examineHeaderElementsToProcess(new String[] { "role" }, true);
+			.examineHeaderElementsToProcess(new String[] { "role" }, true);
 
 		assertThat(iterator).isNotNull();
 
@@ -168,4 +172,5 @@ public abstract class AbstractSoap12HeaderTestCase extends AbstractSoapHeaderTes
 		assertThat(name).is(new Condition<>(value -> new QName(NAMESPACE, "localName1", PREFIX).equals(value)
 				|| new QName(NAMESPACE, "localName3", PREFIX).equals(value), ""));
 	}
+
 }

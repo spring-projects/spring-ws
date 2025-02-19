@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,8 +22,9 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.Resource;
 import org.xml.sax.InputSource;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Convenient utility methods for dealing with SAX.
@@ -36,9 +37,8 @@ public abstract class SaxUtils {
 	private static final Log logger = LogFactory.getLog(SaxUtils.class);
 
 	/**
-	 * Creates a SAX {@code InputSource} from the given resource. Sets the system identifier to the resource's
-	 * {@code URL}, if available.
-	 *
+	 * Creates a SAX {@code InputSource} from the given resource. Sets the system
+	 * identifier to the resource's {@code URL}, if available.
 	 * @param resource the resource
 	 * @return the input source created from the resource
 	 * @throws IOException if an I/O exception occurs
@@ -51,11 +51,15 @@ public abstract class SaxUtils {
 		return inputSource;
 	}
 
-	/** Retrieves the URL from the given resource as System ID. Returns {@code null} if it cannot be opened. */
+	/**
+	 * Retrieves the URL from the given resource as System ID. Returns {@code null} if it
+	 * cannot be opened.
+	 */
 	public static String getSystemId(Resource resource) {
 		try {
 			return new URI(resource.getURL().toExternalForm()).toString();
-		} catch (IOException | URISyntaxException ex) {
+		}
+		catch (IOException | URISyntaxException ex) {
 			logger.debug("Could not get System ID from [" + resource + "], ex");
 			return null;
 		}

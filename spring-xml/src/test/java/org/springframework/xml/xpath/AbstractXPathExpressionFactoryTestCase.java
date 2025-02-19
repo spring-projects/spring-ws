@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.xml.xpath;
-
-import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,11 +27,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class AbstractXPathExpressionFactoryTestCase {
 
@@ -57,14 +59,16 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 
 		try {
 			noNamespacesDocument = documentBuilder.parse(inputStream);
-		} finally {
+		}
+		finally {
 			inputStream.close();
 		}
 		inputStream = getClass().getResourceAsStream("namespaces.xml");
 
 		try {
 			namespacesDocument = documentBuilder.parse(inputStream);
-		} finally {
+		}
+		finally {
 			inputStream.close();
 		}
 	}
@@ -135,7 +139,8 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 	@Test
 	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
 
-		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()", namespaces);
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()",
+				namespaces);
 		double result = expression.evaluateAsNumber(namespacesDocument);
 
 		assertThat(result).isEqualTo(42.0D);
@@ -229,7 +234,8 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 	@Test
 	public void testEvaluateAsStringNamespaces() {
 
-		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()", namespaces);
+		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()",
+				namespaces);
 		String result = expression.evaluateAsString(namespacesDocument);
 
 		assertThat(result).isEqualTo("text");
@@ -280,4 +286,5 @@ public abstract class AbstractXPathExpressionFactoryTestCase {
 	protected abstract XPathExpression createXPathExpression(String expression);
 
 	protected abstract XPathExpression createXPathExpression(String expression, Map<String, String> namespaces);
+
 }

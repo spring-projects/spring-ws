@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,6 +17,8 @@
 package org.springframework.ws.config;
 
 import java.util.List;
+
+import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -31,7 +33,6 @@ import org.springframework.util.xml.DomUtils;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
-import org.w3c.dom.Element;
 
 /**
  * Parser for the {@code &lt;sws:dynamic-wsdl/&gt;} element.
@@ -75,10 +76,11 @@ class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
 			collectionDef.getPropertyValues().addPropertyValue("xsds", xsds);
 			String collectionName = parserContext.getReaderContext().registerWithGeneratedName(collectionDef);
 			wsdlBuilder.addPropertyReference("schemaCollection", collectionName);
-		} else {
+		}
+		else {
 			if (schemas.size() > 1) {
-				throw new IllegalArgumentException(
-						"Multiple <xsd/> elements requires Commons XMLSchema." + "Please put Commons XMLSchema on the classpath.");
+				throw new IllegalArgumentException("Multiple <xsd/> elements requires Commons XMLSchema."
+						+ "Please put Commons XMLSchema on the classpath.");
 			}
 			RootBeanDefinition schemaDef = createBeanDefinition(SimpleXsdSchema.class, source);
 			Element schema = schemas.iterator().next();

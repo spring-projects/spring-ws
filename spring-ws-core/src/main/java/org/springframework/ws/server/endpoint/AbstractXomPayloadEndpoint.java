@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,10 +16,12 @@
 
 package org.springframework.ws.server.endpoint;
 
-import nu.xom.*;
-import nu.xom.converters.DOMConverter;
-
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.util.Locale;
 
 import javax.xml.stream.XMLEventReader;
@@ -29,21 +31,32 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.NestedRuntimeException;
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.transform.TraxUtils;
+import nu.xom.Attribute;
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.NodeFactory;
+import nu.xom.ParentNode;
+import nu.xom.ParsingException;
+import nu.xom.Serializer;
+import nu.xom.converters.DOMConverter;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import org.springframework.core.NestedRuntimeException;
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.transform.TraxUtils;
+
 /**
- * Abstract base class for endpoints that handle the message payload as XOM elements. Offers the message payload as a
- * XOM {@code Element}, and allows subclasses to create a response by returning an {@code Element}.
+ * Abstract base class for endpoints that handle the message payload as XOM elements.
+ * Offers the message payload as a XOM {@code Element}, and allows subclasses to create a
+ * response by returning an {@code Element}.
  * <p>
- * An {@code AbstractXomPayloadEndpoint} only accept one payload element. Multiple payload elements are not in
- * accordance with WS-I.
+ * An {@code AbstractXomPayloadEndpoint} only accept one payload element. Multiple payload
+ * elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
  * @see Element
@@ -61,7 +74,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			XomSourceCallback sourceCallback = new XomSourceCallback();
 			try {
 				TraxUtils.doWithSource(request, sourceCallback);
-			} catch (XomParsingException ex) {
+			}
+			catch (XomParsingException ex) {
 				throw (ParsingException) ex.getCause();
 			}
 			requestElement = sourceCallback.element;
@@ -85,8 +99,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	/**
 	 * Creates a {@link Serializer} to be used for writing the response to.
 	 * <p>
-	 * Default implementation uses the UTF-8 encoding and does not set any options, but this may be changed in subclasses.
-	 *
+	 * Default implementation uses the UTF-8 encoding and does not set any options, but
+	 * this may be changed in subclasses.
 	 * @param outputStream the output stream to serialize to
 	 * @return the serializer
 	 */
@@ -95,9 +109,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a XOM {@code Element}, and allows
-	 * subclasses to return a response {@code Element}.
-	 *
+	 * Template method. Subclasses must implement this. Offers the request payload as a
+	 * XOM {@code Element}, and allows subclasses to return a response {@code Element}.
 	 * @param requestElement the contents of the SOAP message as XOM element
 	 * @return the response element. Can be {@code null} to specify no response.
 	 */
@@ -111,10 +124,12 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 		public void domSource(Node node) {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				element = DOMConverter.convert((org.w3c.dom.Element) node);
-			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = DOMConverter.convert((org.w3c.dom.Document) node);
 				element = document.getRootElement();
-			} else {
+			}
+			else {
 				throw new IllegalArgumentException("DOMSource contains neither Document nor Element");
 			}
 		}
@@ -126,14 +141,17 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				Document document;
 				if (inputSource.getByteStream() != null) {
 					document = builder.build(inputSource.getByteStream());
-				} else if (inputSource.getCharacterStream() != null) {
+				}
+				else if (inputSource.getCharacterStream() != null) {
 					document = builder.build(inputSource.getCharacterStream());
-				} else {
+				}
+				else {
 					throw new IllegalArgumentException(
 							"InputSource in SAXSource contains neither byte stream nor character stream");
 				}
 				element = document.getRootElement();
-			} catch (ParsingException e) {
+			}
+			catch (ParsingException e) {
 				throw new XomParsingException(e);
 			}
 		}
@@ -155,7 +173,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				Builder builder = new Builder();
 				Document document = builder.build(inputStream);
 				element = document.getRootElement();
-			} catch (ParsingException ex) {
+			}
+			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
 			}
 		}
@@ -166,7 +185,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				Builder builder = new Builder();
 				Document document = builder.build(reader);
 				element = document.getRootElement();
-			} catch (ParsingException ex) {
+			}
+			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
 			}
 		}
@@ -177,10 +197,12 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				Builder builder = new Builder();
 				Document document = builder.build(systemId);
 				element = document.getRootElement();
-			} catch (ParsingException ex) {
+			}
+			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
 			}
 		}
+
 	}
 
 	@SuppressWarnings("serial")
@@ -189,6 +211,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 		private XomParsingException(ParsingException ex) {
 			super(ex.getMessage(), ex);
 		}
+
 	}
 
 	private static class StaxStreamConverter {
@@ -219,7 +242,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 						if (element == null) {
 							element = nodeFactory.makeRootElement(name, streamReader.getNamespaceURI());
 							document.setRootElement(element);
-						} else {
+						}
+						else {
 							element = nodeFactory.startMakingElement(name, streamReader.getNamespaceURI());
 							parent.appendChild(element);
 						}
@@ -275,28 +299,39 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			type = type.toUpperCase(Locale.ENGLISH);
 			if ("CDATA".equals(type)) {
 				return Attribute.Type.CDATA;
-			} else if ("ENTITIES".equals(type)) {
+			}
+			else if ("ENTITIES".equals(type)) {
 				return Attribute.Type.ENTITIES;
-			} else if ("ENTITY".equals(type)) {
+			}
+			else if ("ENTITY".equals(type)) {
 				return Attribute.Type.ENTITY;
-			} else if ("ENUMERATION".equals(type)) {
+			}
+			else if ("ENUMERATION".equals(type)) {
 				return Attribute.Type.ENUMERATION;
-			} else if ("ID".equals(type)) {
+			}
+			else if ("ID".equals(type)) {
 				return Attribute.Type.ID;
-			} else if ("IDREF".equals(type)) {
+			}
+			else if ("IDREF".equals(type)) {
 				return Attribute.Type.IDREF;
-			} else if ("IDREFS".equals(type)) {
+			}
+			else if ("IDREFS".equals(type)) {
 				return Attribute.Type.IDREFS;
-			} else if ("NMTOKEN".equals(type)) {
+			}
+			else if ("NMTOKEN".equals(type)) {
 				return Attribute.Type.NMTOKEN;
-			} else if ("NMTOKENS".equals(type)) {
+			}
+			else if ("NMTOKENS".equals(type)) {
 				return Attribute.Type.NMTOKENS;
-			} else if ("NOTATION".equals(type)) {
+			}
+			else if ("NOTATION".equals(type)) {
 				return Attribute.Type.NOTATION;
-			} else {
+			}
+			else {
 				return Attribute.Type.UNDECLARED;
 			}
 		}
 
 	}
+
 }

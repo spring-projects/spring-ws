@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,19 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.WsSecurityValidationException;
-import org.w3c.dom.Document;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTestCase {
 
@@ -41,8 +43,8 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 		interceptor.secureMessage(message, context);
 		Document document = getDocument(message);
 
-		assertXpathExists("timestamp header not found", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp",
-				document);
+		assertXpathExists("timestamp header not found",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp", document);
 	}
 
 	@Test
@@ -128,4 +130,5 @@ public abstract class Wss4jMessageInterceptorTimestampTestCase extends Wss4jTest
 
 		return message;
 	}
+
 }

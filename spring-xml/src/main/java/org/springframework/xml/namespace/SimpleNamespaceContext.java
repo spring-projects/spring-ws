@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,8 +30,9 @@ import javax.xml.namespace.NamespaceContext;
 import org.springframework.util.Assert;
 
 /**
- * Simple {@code javax.xml.namespace.NamespaceContext} implementation. Follows the standard {@code NamespaceContext}
- * contract, and is loadable via a {@code java.util.Map} or {@code java.util.Properties} object
+ * Simple {@code javax.xml.namespace.NamespaceContext} implementation. Follows the
+ * standard {@code NamespaceContext} contract, and is loadable via a {@code java.util.Map}
+ * or {@code java.util.Properties} object
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -47,9 +48,11 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		Assert.notNull(prefix, "prefix is null");
 		if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
 			return XMLConstants.XML_NS_URI;
-		} else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+		}
+		else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
 			return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-		} else if (prefixToNamespaceUri.containsKey(prefix)) {
+		}
+		else if (prefixToNamespaceUri.containsKey(prefix)) {
 			return prefixToNamespaceUri.get(prefix);
 		}
 		return XMLConstants.NULL_NS_URI;
@@ -69,8 +72,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	}
 
 	/**
-	 * Sets the bindings for this namespace context. The supplied map must consist of string key value pairs.
-	 *
+	 * Sets the bindings for this namespace context. The supplied map must consist of
+	 * string key value pairs.
 	 * @param bindings the bindings
 	 */
 	public void setBindings(Map<String, String> bindings) {
@@ -81,7 +84,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
 	/**
 	 * Binds the given namespace as default namespace.
-	 *
 	 * @param namespaceUri the namespace uri
 	 */
 	public void bindDefaultNamespaceUri(String namespaceUri) {
@@ -90,7 +92,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
 	/**
 	 * Binds the given prefix to the given namespace.
-	 *
 	 * @param prefix the namespace prefix
 	 * @param namespaceUri the namespace uri
 	 */
@@ -98,13 +99,15 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		Assert.notNull(prefix, "No prefix given");
 		Assert.notNull(namespaceUri, "No namespaceUri given");
 		if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-			Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix + "\" bound to namespace \""
-					+ namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
-		} else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+			Assert.isTrue(XMLConstants.XML_NS_URI.equals(namespaceUri), "Prefix \"" + prefix
+					+ "\" bound to namespace \"" + namespaceUri + "\" (should be \"" + XMLConstants.XML_NS_URI + "\")");
+		}
+		else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
 			Assert.isTrue(XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri),
 					"Prefix \"" + prefix + "\" bound to namespace \"" + namespaceUri + "\" (should be \""
 							+ XMLConstants.XMLNS_ATTRIBUTE_NS_URI + "\")");
-		} else {
+		}
+		else {
 			prefixToNamespaceUri.put(prefix, namespaceUri);
 			getPrefixesInternal(namespaceUri).add(prefix);
 		}
@@ -118,7 +121,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
 	/**
 	 * Returns all declared prefixes.
-	 *
 	 * @return the declared prefixes
 	 */
 	public Iterator<String> getBoundPrefixes() {
@@ -131,7 +133,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	private Set<String> getPrefixesInternal(String namespaceUri) {
 		if (XMLConstants.XML_NS_URI.equals(namespaceUri)) {
 			return Collections.singleton(XMLConstants.XML_NS_PREFIX);
-		} else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
+		}
+		else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
 			return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
 		}
 		return namespaceUriToPrefixes.computeIfAbsent(namespaceUri, k -> new LinkedHashSet<>());
@@ -139,7 +142,6 @@ public class SimpleNamespaceContext implements NamespaceContext {
 
 	/**
 	 * Removes the given prefix from this context.
-	 *
 	 * @param prefix the prefix to be removed
 	 */
 	public void removeBinding(String prefix) {
@@ -153,4 +155,5 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	public boolean hasBinding(String prefix) {
 		return prefixToNamespaceUri.containsKey(prefix);
 	}
+
 }

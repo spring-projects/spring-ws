@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,13 +33,16 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.ws.soap.SoapMessage;
 
 /**
- * Extension of the {@link org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint} which
- * validates the request payload with {@link Validator}(s), and creates a SOAP Fault whenever the request message cannot
- * be validated. The desired validators can be set using properties, and <strong>must</strong>
- * {@link Validator#supports(Class) support} the request object.
+ * Extension of the
+ * {@link org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint}
+ * which validates the request payload with {@link Validator}(s), and creates a SOAP Fault
+ * whenever the request message cannot be validated. The desired validators can be set
+ * using properties, and <strong>must</strong> {@link Validator#supports(Class) support}
+ * the request object.
  * <p>
- * The contents of the SOAP Fault can be specified by setting the {@link #setAddValidationErrorDetail(boolean)
- * addValidationErrorDetail}, {@link #setFaultStringOrReason(String) faultStringOrReason}, or
+ * The contents of the SOAP Fault can be specified by setting the
+ * {@link #setAddValidationErrorDetail(boolean) addValidationErrorDetail},
+ * {@link #setFaultStringOrReason(String) faultStringOrReason}, or
  * {@link #setDetailElementName(QName) detailElementName} properties.
  *
  * @author Arjen Poutsma
@@ -47,12 +50,13 @@ import org.springframework.ws.soap.SoapMessage;
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
-public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint extends
-		org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint implements MessageSourceAware {
+public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
+		extends org.springframework.ws.server.endpoint.AbstractValidatingMarshallingPayloadEndpoint
+		implements MessageSourceAware {
 
 	/**
-	 * Default SOAP Fault Detail name used when a global validation error occur on the request.
-	 *
+	 * Default SOAP Fault Detail name used when a global validation error occur on the
+	 * request.
 	 * @see #setDetailElementName(javax.xml.namespace.QName)
 	 */
 	public static final QName DEFAULT_DETAIL_ELEMENT_NAME = new QName("http://springframework.org/spring-ws",
@@ -60,7 +64,6 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 
 	/**
 	 * Default SOAP Fault string used when a validation errors occur on the request.
-	 *
 	 * @see #setFaultStringOrReason(String)
 	 */
 	public static final String DEFAULT_FAULTSTRING_OR_REASON = "Validation error";
@@ -76,10 +79,10 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 	private MessageSource messageSource;
 
 	/**
-	 * Returns whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
-	 * will contain the exact validation errors. It is only added when the underlying message is a {@code SoapMessage}.
-	 * Defaults to {@code true}.
-	 *
+	 * Returns whether a SOAP Fault detail element should be created when a validation
+	 * error occurs. This detail element will contain the exact validation errors. It is
+	 * only added when the underlying message is a {@code SoapMessage}. Defaults to
+	 * {@code true}.
 	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
 	 */
 	public boolean getAddValidationErrorDetail() {
@@ -87,40 +90,44 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 	}
 
 	/**
-	 * Indicates whether a SOAP Fault detail element should be created when a validation error occurs. This detail element
-	 * will contain the exact validation errors. It is only added when the underlying message is a {@code SoapMessage}.
-	 * Defaults to {@code true}.
-	 *
+	 * Indicates whether a SOAP Fault detail element should be created when a validation
+	 * error occurs. This detail element will contain the exact validation errors. It is
+	 * only added when the underlying message is a {@code SoapMessage}. Defaults to
+	 * {@code true}.
 	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
 	 */
 	public void setAddValidationErrorDetail(boolean addValidationErrorDetail) {
 		this.addValidationErrorDetail = addValidationErrorDetail;
 	}
 
-	/** Returns the fault detail element name when validation errors occur on the request. */
+	/**
+	 * Returns the fault detail element name when validation errors occur on the request.
+	 */
 	public QName getDetailElementName() {
 		return detailElementName;
 	}
 
 	/**
-	 * Sets the fault detail element name when validation errors occur on the request. Defaults to
-	 * {@code DEFAULT_DETAIL_ELEMENT_NAME}.
-	 *
+	 * Sets the fault detail element name when validation errors occur on the request.
+	 * Defaults to {@code DEFAULT_DETAIL_ELEMENT_NAME}.
 	 * @see #DEFAULT_DETAIL_ELEMENT_NAME
 	 */
 	public void setDetailElementName(QName detailElementName) {
 		this.detailElementName = detailElementName;
 	}
 
-	/** Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. */
+	/**
+	 * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors
+	 * occur on the request.
+	 */
 	public String getFaultStringOrReason() {
 		return faultStringOrReason;
 	}
 
 	/**
-	 * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors occur on the request. It is only
-	 * added when the underlying message is a {@code SoapMessage}. Defaults to {@code DEFAULT_FAULTSTRING_OR_REASON}.
-	 *
+	 * Sets the SOAP {@code faultstring} or {@code Reason} used when validation errors
+	 * occur on the request. It is only added when the underlying message is a
+	 * {@code SoapMessage}. Defaults to {@code DEFAULT_FAULTSTRING_OR_REASON}.
 	 * @see #DEFAULT_FAULTSTRING_OR_REASON
 	 */
 	public void setFaultStringOrReason(String faultStringOrReason) {
@@ -133,9 +140,8 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 	}
 
 	/**
-	 * Sets the locale for SOAP fault reason and validation messages. It is only added when the underlying message is a
-	 * {@code SoapMessage}. Defaults to English.
-	 *
+	 * Sets the locale for SOAP fault reason and validation messages. It is only added
+	 * when the underlying message is a {@code SoapMessage}. Defaults to English.
 	 * @see java.util.Locale#ENGLISH
 	 */
 	public void setFaultStringOrReasonLocale(Locale faultStringOrReasonLocale) {
@@ -149,12 +155,13 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 
 	/**
 	 * This implementation logs all errors, returns {@code false}, and creates a
-	 * {@link SoapBody#addClientOrSenderFault(String,Locale) client or sender} {@link SoapFault}, adding a
-	 * {@link SoapFaultDetail} with all errors if the {@code addValidationErrorDetail} property is {@code true}.
-	 *
+	 * {@link SoapBody#addClientOrSenderFault(String,Locale) client or sender}
+	 * {@link SoapFault}, adding a {@link SoapFaultDetail} with all errors if the
+	 * {@code addValidationErrorDetail} property is {@code true}.
 	 * @param messageContext the message context
 	 * @param errors the validation errors
-	 * @return {@code true} to continue processing the request, {@code false} (the default) otherwise
+	 * @return {@code true} to continue processing the request, {@code false} (the
+	 * default) otherwise
 	 * @see Errors#getAllErrors()
 	 */
 	@Override
@@ -178,4 +185,5 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint 
 		}
 		return false;
 	}
+
 }

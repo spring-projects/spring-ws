@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,8 +22,8 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.util.ClassUtils;
 
 /**
- * Abstract base class for asynchronous standalone, server-side transport objects. Contains a Spring
- * {@link TaskExecutor}, and various lifecycle callbacks.
+ * Abstract base class for asynchronous standalone, server-side transport objects.
+ * Contains a Spring {@link TaskExecutor}, and various lifecycle callbacks.
  *
  * @author Arjen Poutsma
  */
@@ -38,11 +38,12 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	private String beanName;
 
 	/**
-	 * Set the Spring {@link TaskExecutor} to use for running the listener threads. Default is
-	 * {@link SimpleAsyncTaskExecutor}, starting up a number of new threads.
+	 * Set the Spring {@link TaskExecutor} to use for running the listener threads.
+	 * Default is {@link SimpleAsyncTaskExecutor}, starting up a number of new threads.
 	 * <p>
-	 * Specify an alternative task executor for integration with an existing thread pool, such as the
-	 * {@link org.springframework.scheduling.commonj.WorkManagerTaskExecutor} to integrate with WebSphere or WebLogic.
+	 * Specify an alternative task executor for integration with an existing thread pool,
+	 * such as the {@link org.springframework.scheduling.commonj.WorkManagerTaskExecutor}
+	 * to integrate with WebSphere or WebLogic.
 	 */
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;
@@ -62,11 +63,12 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	}
 
 	/**
-	 * Create a default TaskExecutor. Called if no explicit TaskExecutor has been specified.
+	 * Create a default TaskExecutor. Called if no explicit TaskExecutor has been
+	 * specified.
 	 * <p>
-	 * The default implementation builds a {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the
-	 * specified bean name (or the class name, if no bean name specified) as thread name prefix.
-	 *
+	 * The default implementation builds a
+	 * {@link org.springframework.core.task.SimpleAsyncTaskExecutor} with the specified
+	 * bean name (or the class name, if no bean name specified) as thread name prefix.
 	 * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
 	 */
 	protected TaskExecutor createDefaultTaskExecutor() {
@@ -76,10 +78,10 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 
 	/**
 	 * Executes the given {@link Runnable} via this receiver's {@link TaskExecutor}.
-	 *
 	 * @see #setTaskExecutor(TaskExecutor)
 	 */
 	protected void execute(Runnable runnable) {
 		taskExecutor.execute(runnable);
 	}
+
 }

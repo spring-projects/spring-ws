@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,13 +30,14 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.TransformerHelper;
-import org.springframework.xml.transform.TraxUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
+
+import org.springframework.xml.namespace.QNameUtils;
+import org.springframework.xml.transform.TransformerHelper;
+import org.springframework.xml.transform.TraxUtils;
 
 /**
  * Helper class for determining the root qualified name of a Web Service payload.
@@ -46,13 +47,14 @@ import org.xml.sax.XMLReader;
  */
 public abstract class PayloadRootUtils {
 
-	private PayloadRootUtils() {}
+	private PayloadRootUtils() {
+	}
 
 	/**
 	 * Returns the root qualified name of the given source, transforming it if necessary.
-	 *
 	 * @param source the source to get the root element from
-	 * @param transformerFactory a transformer factory, necessary if the given source is not a {@code DOMSource}
+	 * @param transformerFactory a transformer factory, necessary if the given source is
+	 * not a {@code DOMSource}
 	 * @return the root element, or {@code null} if {@code source} is {@code null}
 	 */
 	public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
@@ -70,16 +72,19 @@ public abstract class PayloadRootUtils {
 			TraxUtils.doWithSource(source, callback);
 			if (callback.result != null) {
 				return callback.result;
-			} else {
+			}
+			else {
 				// we have no other option than to transform
 				DOMResult domResult = new DOMResult();
 				transformerHelper.transform(source, domResult);
 				Document document = (Document) domResult.getNode();
 				return QNameUtils.getQNameForNode(document.getDocumentElement());
 			}
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw ex;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			return null;
 		}
 	}
@@ -92,7 +97,8 @@ public abstract class PayloadRootUtils {
 		public void domSource(Node node) throws Exception {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				result = QNameUtils.getQNameForNode(node);
-			} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			}
+			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = (Document) node;
 				result = QNameUtils.getQNameForNode(document.getDocumentElement());
 			}
@@ -107,7 +113,8 @@ public abstract class PayloadRootUtils {
 			if (event != null) {
 				if (event.isStartElement()) {
 					result = event.asStartElement().getName();
-				} else if (event.isEndElement()) {
+				}
+				else if (event.isEndElement()) {
 					result = event.asEndElement().getName();
 				}
 			}
@@ -118,7 +125,8 @@ public abstract class PayloadRootUtils {
 			if (streamReader.getEventType() == XMLStreamConstants.START_DOCUMENT) {
 				try {
 					streamReader.nextTag();
-				} catch (XMLStreamException ex) {
+				}
+				catch (XMLStreamException ex) {
 					throw new IllegalStateException("Could not read next tag: " + ex.getMessage(), ex);
 				}
 			}
@@ -147,6 +155,7 @@ public abstract class PayloadRootUtils {
 		public void source(String systemId) throws Exception {
 			// Do nothing
 		}
+
 	}
 
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,8 @@
  */
 
 package org.springframework.ws.config;
+
+import org.w3c.dom.Element;
 
 import org.springframework.beans.BeanMetadataElement;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -46,10 +48,10 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionR
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
-import org.w3c.dom.Element;
 
 /**
- * {@link BeanDefinitionParser} that parses the {@code annotation-driven} element to configure a Spring WS application.
+ * {@link BeanDefinitionParser} that parses the {@code annotation-driven} element to
+ * configure a Spring WS application.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -90,8 +92,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	}
 
 	private void registerEndpointMappings(Object source, ParserContext parserContext) {
-		RootBeanDefinition payloadRootMappingDef = createBeanDefinition(PayloadRootAnnotationMethodEndpointMapping.class,
-				source);
+		RootBeanDefinition payloadRootMappingDef = createBeanDefinition(
+				PayloadRootAnnotationMethodEndpointMapping.class, source);
 		payloadRootMappingDef.getPropertyValues().add("order", 0);
 		parserContext.getReaderContext().registerWithGeneratedName(payloadRootMappingDef);
 
@@ -135,18 +137,19 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 			returnValueHandlers.add(dom4jProcessor);
 		}
 		if (jaxb2Present) {
-			RuntimeBeanReference xmlRootElementProcessor = createBeanReference(XmlRootElementPayloadMethodProcessor.class,
-					source, parserContext);
+			RuntimeBeanReference xmlRootElementProcessor = createBeanReference(
+					XmlRootElementPayloadMethodProcessor.class, source, parserContext);
 			argumentResolvers.add(xmlRootElementProcessor);
 			returnValueHandlers.add(xmlRootElementProcessor);
 
-			RuntimeBeanReference jaxbElementProcessor = createBeanReference(JaxbElementPayloadMethodProcessor.class, source,
-					parserContext);
+			RuntimeBeanReference jaxbElementProcessor = createBeanReference(JaxbElementPayloadMethodProcessor.class,
+					source, parserContext);
 			argumentResolvers.add(jaxbElementProcessor);
 			returnValueHandlers.add(jaxbElementProcessor);
 		}
 		if (jdomPresent) {
-			RuntimeBeanReference jdomProcessor = createBeanReference(JDomPayloadMethodProcessor.class, source, parserContext);
+			RuntimeBeanReference jdomProcessor = createBeanReference(JDomPayloadMethodProcessor.class, source,
+					parserContext);
 			argumentResolvers.add(jdomProcessor);
 			returnValueHandlers.add(jdomProcessor);
 		}
@@ -154,7 +157,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 			argumentResolvers.add(createBeanDefinition(StaxPayloadMethodArgumentResolver.class, source));
 		}
 		if (xomPresent) {
-			RuntimeBeanReference xomProcessor = createBeanReference(XomPayloadMethodProcessor.class, source, parserContext);
+			RuntimeBeanReference xomProcessor = createBeanReference(XomPayloadMethodProcessor.class, source,
+					parserContext);
 			argumentResolvers.add(xomProcessor);
 			returnValueHandlers.add(xomProcessor);
 		}
@@ -163,7 +167,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 			RuntimeBeanReference unmarshallerReference;
 			if (element.hasAttribute("unmarshaller")) {
 				unmarshallerReference = new RuntimeBeanReference(element.getAttribute("unmarshaller"));
-			} else {
+			}
+			else {
 				unmarshallerReference = marshallerReference;
 			}
 
@@ -182,7 +187,8 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	}
 
 	private void registerEndpointExceptionResolvers(Object source, ParserContext parserContext) {
-		RootBeanDefinition annotationResolverDef = createBeanDefinition(SoapFaultAnnotationExceptionResolver.class, source);
+		RootBeanDefinition annotationResolverDef = createBeanDefinition(SoapFaultAnnotationExceptionResolver.class,
+				source);
 		annotationResolverDef.getPropertyValues().add("order", 0);
 		parserContext.getReaderContext().registerWithGeneratedName(annotationResolverDef);
 
@@ -204,4 +210,5 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
 		return beanDefinition;
 	}
+
 }

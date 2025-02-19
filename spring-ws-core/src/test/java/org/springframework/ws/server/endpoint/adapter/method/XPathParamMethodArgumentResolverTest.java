@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,13 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -30,8 +31,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.Namespaces;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
 public class XPathParamMethodArgumentResolverTest {
@@ -201,20 +202,25 @@ public class XPathParamMethodArgumentResolverTest {
 		assertThat(result).isEqualTo("text");
 	}
 
-	public void unsupported(String s) {}
+	public void unsupported(String s) {
+	}
 
 	public void supportedTypes( //
 			@XPathParam("/root/child") boolean param1, //
 			@XPathParam("/root/child/number") double param2, //
 			@XPathParam("/root/child") Node param3, //
 			@XPathParam("/root/*") NodeList param4, //
-			@XPathParam("/root/child/text") String param5) {}
+			@XPathParam("/root/child/text") String param5) {
+	}
 
-	public void convertedType(@XPathParam("/root/child/number") int param) {}
+	public void convertedType(@XPathParam("/root/child/number") int param) {
+	}
 
 	@Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
-	public void namespacesMethod(@XPathParam("/tns:root") String s) {}
+	public void namespacesMethod(@XPathParam("/tns:root") String s) {
+	}
 
-	public void namespacesClass(@XPathParam("/tns:root") String s) {}
+	public void namespacesClass(@XPathParam("/tns:root") String s) {
+	}
 
 }

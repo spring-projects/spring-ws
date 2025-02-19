@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,9 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.Lifecycle;
 
 /**
- * Abstract base class for standalone, server-side transport objects. Provides a basic, thread-safe implementation of
- * the {@link Lifecycle} interface, and various template methods to be implemented by concrete sub classes.
+ * Abstract base class for standalone, server-side transport objects. Provides a basic,
+ * thread-safe implementation of the {@link Lifecycle} interface, and various template
+ * methods to be implemented by concrete sub classes.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -37,14 +38,20 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
 	private final Object lifecycleMonitor = new Object();
 
-	/** Return whether this server is currently active, that is, whether it has been set up but not shut down yet. */
+	/**
+	 * Return whether this server is currently active, that is, whether it has been set up
+	 * but not shut down yet.
+	 */
 	public final boolean isActive() {
 		synchronized (lifecycleMonitor) {
 			return active;
 		}
 	}
 
-	/** Return whether this server is currently running, that is, whether it has been started and not stopped yet. */
+	/**
+	 * Return whether this server is currently running, that is, whether it has been
+	 * started and not stopped yet.
+	 */
 	@Override
 	public final boolean isRunning() {
 		synchronized (lifecycleMonitor) {
@@ -61,7 +68,9 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 		this.autoStartup = autoStartup;
 	}
 
-	/** Calls {@link #activate()} when the BeanFactory initializes the receiver instance. */
+	/**
+	 * Calls {@link #activate()} when the BeanFactory initializes the receiver instance.
+	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		activate();
@@ -74,7 +83,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	}
 
 	/**
-	 * Initialize this server. Starts the server if {@link #setAutoStartup(boolean) autoStartup} hasn't been turned off.
+	 * Initialize this server. Starts the server if {@link #setAutoStartup(boolean)
+	 * autoStartup} hasn't been turned off.
 	 */
 	public final void activate() throws Exception {
 		synchronized (lifecycleMonitor) {
@@ -115,7 +125,6 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
 	/**
 	 * Template method invoked when {@link #activate()} is invoked.
-	 *
 	 * @throws Exception in case of errors
 	 */
 	protected abstract void onActivate() throws Exception;
@@ -128,4 +137,5 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 
 	/** Template method invoked when {@link #shutdown()} is invoked. */
 	protected abstract void onShutdown();
+
 }

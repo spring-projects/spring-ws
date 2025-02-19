@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,11 +26,13 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
 
 /**
- * Spring {@link SessionAwareMessageListener} that can be used to handle incoming {@link Message} service requests.
+ * Spring {@link SessionAwareMessageListener} that can be used to handle incoming
+ * {@link Message} service requests.
  * <p>
  * Requires a {@link WebServiceMessageFactory} which is used to convert the incoming JMS
- * {@link jakarta.jms.BytesMessage} into a {@link WebServiceMessage}, and passes that to the
- * {@link WebServiceMessageReceiver} {@link #setMessageReceiver(WebServiceMessageReceiver) registered}.
+ * {@link jakarta.jms.BytesMessage} into a {@link WebServiceMessage}, and passes that to
+ * the {@link WebServiceMessageReceiver}
+ * {@link #setMessageReceiver(WebServiceMessageReceiver) registered}.
  *
  * @author Arjen Poutsma
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
@@ -43,9 +45,11 @@ public class WebServiceMessageListener extends JmsMessageReceiver implements Ses
 	public void onMessage(Message message, Session session) throws JMSException {
 		try {
 			handleMessage(message, session);
-		} catch (JmsTransportException ex) {
+		}
+		catch (JmsTransportException ex) {
 			throw ex.getJmsException();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			JMSException jmsException = new JMSException(ex.getMessage());
 			jmsException.setLinkedException(ex);
 			throw jmsException;

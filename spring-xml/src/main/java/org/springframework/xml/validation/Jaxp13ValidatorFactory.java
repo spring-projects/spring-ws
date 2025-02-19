@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,9 +24,10 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import org.springframework.core.io.Resource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Internal class that uses JAXP 1.0 features to create {@code XmlValidator} instances.
@@ -41,7 +42,8 @@ abstract class Jaxp13ValidatorFactory {
 		try {
 			Schema schema = SchemaLoaderUtils.loadSchema(resources, schemaLanguage);
 			return new Jaxp13Validator(schema);
-		} catch (SAXException ex) {
+		}
+		catch (SAXException ex) {
 			throw new XmlValidationException("Could not create Schema: " + ex.getMessage(), ex);
 		}
 	}
@@ -69,13 +71,17 @@ abstract class Jaxp13ValidatorFactory {
 			try {
 				validator.validate(source);
 				return errorHandler.getErrors();
-			} catch (SAXException ex) {
+			}
+			catch (SAXException ex) {
 				throw new XmlValidationException("Could not validate source: " + ex.getMessage(), ex);
 			}
 		}
+
 	}
 
-	/** {@code ErrorHandler} implementation that stores errors and fatal errors in a list. */
+	/**
+	 * {@code ErrorHandler} implementation that stores errors and fatal errors in a list.
+	 */
 	private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
 		private List<SAXParseException> errors = new ArrayList<SAXParseException>();
@@ -86,7 +92,8 @@ abstract class Jaxp13ValidatorFactory {
 		}
 
 		@Override
-		public void warning(SAXParseException ex) throws SAXException {}
+		public void warning(SAXParseException ex) throws SAXException {
+		}
 
 		@Override
 		public void error(SAXParseException ex) throws SAXException {
@@ -97,5 +104,7 @@ abstract class Jaxp13ValidatorFactory {
 		public void fatalError(SAXParseException ex) throws SAXException {
 			errors.add(ex);
 		}
+
 	}
+
 }

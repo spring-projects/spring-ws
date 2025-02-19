@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,8 +25,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.util.Assert;
 
 /**
- * Convenient subclass of {@code StreamSource} that reads from a {@code StringReader}. The string to be read can be set
- * via the constructor.
+ * Convenient subclass of {@code StreamSource} that reads from a {@code StringReader}. The
+ * string to be read can be set via the constructor.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -36,8 +36,8 @@ public class StringSource extends StreamSource {
 	private final String content;
 
 	/**
-	 * Initializes a new instance of the {@code StringSource} with the given string content.
-	 *
+	 * Initializes a new instance of the {@code StringSource} with the given string
+	 * content.
 	 * @param content the content
 	 */
 	public StringSource(String content) {
@@ -52,7 +52,6 @@ public class StringSource extends StreamSource {
 
 	/**
 	 * Throws {@link UnsupportedOperationException}.
-	 *
 	 * @throws UnsupportedOperationException always
 	 */
 	@Override
@@ -62,7 +61,6 @@ public class StringSource extends StreamSource {
 
 	/**
 	 * Returns {@code null}.
-	 *
 	 * @return {@code null}
 	 */
 	@Override
@@ -72,7 +70,6 @@ public class StringSource extends StreamSource {
 
 	/**
 	 * Throws {@link UnsupportedOperationException}.
-	 *
 	 * @throws UnsupportedOperationException always
 	 */
 	@Override
@@ -84,4 +81,5 @@ public class StringSource extends StreamSource {
 	public String toString() {
 		return content;
 	}
+
 }

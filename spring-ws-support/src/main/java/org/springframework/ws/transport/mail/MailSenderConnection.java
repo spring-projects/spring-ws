@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,20 @@
  */
 
 package org.springframework.ws.transport.mail;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
@@ -31,23 +45,9 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.search.HeaderTerm;
 import jakarta.mail.search.SearchTerm;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractSenderConnection;
@@ -56,8 +56,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for client-side Mail access. Exposes a {@link Message}
- * request and response message.
+ * Implementation of {@link WebServiceConnection} that is used for client-side Mail
+ * access. Exposes a {@link Message} request and response message.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -141,8 +141,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	}
 
 	/*
-	* Sending
-	*/
+	 * Sending
+	 */
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
 		try {
@@ -156,7 +156,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 				requestMessage.setSubject(subject);
 			}
 			requestBuffer = new ByteArrayOutputStream();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -168,7 +169,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
 				requestContentType = value;
 			}
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -182,15 +184,17 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		Transport transport = null;
 		try {
-			requestMessage
-					.setDataHandler(new DataHandler(new ByteArrayDataSource(requestContentType, requestBuffer.toByteArray())));
+			requestMessage.setDataHandler(
+					new DataHandler(new ByteArrayDataSource(requestContentType, requestBuffer.toByteArray())));
 			transport = session.getTransport(transportUri);
 			transport.connect();
 			requestMessage.saveChanges();
 			transport.sendMessage(requestMessage, requestMessage.getAllRecipients());
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
-		} finally {
+		}
+		finally {
 			MailTransportUtils.closeService(transport);
 		}
 	}
@@ -206,7 +210,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 			Assert.hasLength(requestMessageId, "No Message-ID found on request message [" + requestMessage + "]");
 			try {
 				Thread.sleep(receiveTimeout);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e) {
 				// Re-interrupt current thread, to allow other threads to react.
 				Thread.currentThread().interrupt();
 			}
@@ -222,7 +227,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 			if (deleteAfterReceive) {
 				responseMessage.setFlag(Flags.Flag.DELETED, true);
 			}
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -236,7 +242,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		}
 		if (deleteAfterReceive) {
 			folder.open(Folder.READ_WRITE);
-		} else {
+		}
+		else {
 			folder.open(Folder.READ_ONLY);
 		}
 	}
@@ -256,7 +263,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 				headers.add(header.getName());
 			}
 			return headers.iterator();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -266,7 +274,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		try {
 			String[] headers = responseMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 
 		}
@@ -276,7 +285,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	protected InputStream getResponseInputStream() throws IOException {
 		try {
 			return responseMessage.getDataHandler().getInputStream();
-		} catch (MessagingException ex) {
+		}
+		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
 	}
@@ -327,6 +337,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		public String getName() {
 			return "ByteArrayDataSource";
 		}
+
 	}
 
 }

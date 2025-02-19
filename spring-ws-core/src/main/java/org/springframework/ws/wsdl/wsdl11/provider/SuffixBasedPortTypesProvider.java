@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -45,7 +45,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Returns the suffix used to detect request elements in the schema.
-	 *
 	 * @see #DEFAULT_REQUEST_SUFFIX
 	 */
 	public String getRequestSuffix() {
@@ -54,7 +53,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Sets the suffix used to detect request elements in the schema.
-	 *
 	 * @see #DEFAULT_REQUEST_SUFFIX
 	 */
 	public void setRequestSuffix(String requestSuffix) {
@@ -64,7 +62,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Returns the suffix used to detect response elements in the schema.
-	 *
 	 * @see #DEFAULT_RESPONSE_SUFFIX
 	 */
 	public String getResponseSuffix() {
@@ -73,7 +70,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Sets the suffix used to detect response elements in the schema.
-	 *
 	 * @see #DEFAULT_RESPONSE_SUFFIX
 	 */
 	public void setResponseSuffix(String responseSuffix) {
@@ -83,7 +79,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Returns the suffix used to detect fault elements in the schema.
-	 *
 	 * @see #DEFAULT_FAULT_SUFFIX
 	 */
 	public String getFaultSuffix() {
@@ -92,7 +87,6 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 
 	/**
 	 * Sets the suffix used to detect fault elements in the schema.
-	 *
 	 * @see #DEFAULT_FAULT_SUFFIX
 	 */
 	public void setFaultSuffix(String faultSuffix) {
@@ -106,9 +100,11 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 		if (messageName != null) {
 			if (messageName.endsWith(getRequestSuffix())) {
 				return messageName.substring(0, messageName.length() - getRequestSuffix().length());
-			} else if (messageName.endsWith(getResponseSuffix())) {
+			}
+			else if (messageName.endsWith(getResponseSuffix())) {
 				return messageName.substring(0, messageName.length() - getResponseSuffix().length());
-			} else if (messageName.endsWith(getFaultSuffix())) {
+			}
+			else if (messageName.endsWith(getFaultSuffix())) {
 				return messageName.substring(0, messageName.length() - getFaultSuffix().length());
 			}
 		}
@@ -116,10 +112,11 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 	}
 
 	/**
-	 * Indicates whether the given name name should be included as {@link javax.wsdl.Input} message in the definition.
+	 * Indicates whether the given name name should be included as
+	 * {@link javax.wsdl.Input} message in the definition.
 	 * <p>
-	 * This implementation checks whether the message name ends with the {@link #setRequestSuffix(String) requestSuffix}.
-	 *
+	 * This implementation checks whether the message name ends with the
+	 * {@link #setRequestSuffix(String) requestSuffix}.
 	 * @param message the message
 	 * @return {@code true} if to be included as input; {@code false} otherwise
 	 */
@@ -130,11 +127,11 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 	}
 
 	/**
-	 * Indicates whether the given name name should be included as {@link javax.wsdl.Output} message in the definition.
+	 * Indicates whether the given name name should be included as
+	 * {@link javax.wsdl.Output} message in the definition.
 	 * <p>
-	 * This implementation checks whether the message name ends with the {@link #setResponseSuffix(String)
-	 * responseSuffix}.
-	 *
+	 * This implementation checks whether the message name ends with the
+	 * {@link #setResponseSuffix(String) responseSuffix}.
 	 * @param message the message
 	 * @return {@code true} if to be included as output; {@code false} otherwise
 	 */
@@ -145,10 +142,11 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 	}
 
 	/**
-	 * Indicates whether the given name name should be included as {@link javax.wsdl.Fault} message in the definition.
+	 * Indicates whether the given name name should be included as
+	 * {@link javax.wsdl.Fault} message in the definition.
 	 * <p>
-	 * This implementation checks whether the message name ends with the {@link #setFaultSuffix(String) faultSuffix}.
-	 *
+	 * This implementation checks whether the message name ends with the
+	 * {@link #setFaultSuffix(String) faultSuffix}.
 	 * @param message the message
 	 * @return {@code true} if to be included as fault; {@code false} otherwise
 	 */
@@ -161,4 +159,5 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 	private String getMessageName(Message message) {
 		return message.getQName().getLocalPart();
 	}
+
 }

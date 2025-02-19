@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,16 +30,17 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.xml.JaxpVersion;
-import org.springframework.xml.XMLInputFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import org.springframework.core.MethodParameter;
+import org.springframework.xml.JaxpVersion;
+import org.springframework.xml.XMLInputFactoryUtils;
+
 /**
- * Implementation of {@link MethodArgumentResolver} and {@link MethodReturnValueHandler} that supports {@link Source}
- * objects.
+ * Implementation of {@link MethodArgumentResolver} and {@link MethodReturnValueHandler}
+ * that supports {@link Source} objects.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -67,21 +68,26 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 			Node node = domResult.getNode();
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				return new DOMSource(((Document) node).getDocumentElement());
-			} else {
+			}
+			else {
 				return new DOMSource(domResult.getNode());
 			}
-		} else if (SAXSource.class.isAssignableFrom(parameterType)) {
+		}
+		else if (SAXSource.class.isAssignableFrom(parameterType)) {
 			ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
 			InputSource inputSource = new InputSource(bis);
 			return new SAXSource(inputSource);
-		} else if (StreamSource.class.isAssignableFrom(parameterType)) {
+		}
+		else if (StreamSource.class.isAssignableFrom(parameterType)) {
 			ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
 			return new StreamSource(bis);
-		} else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
+		}
+		else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
 			XMLStreamReader streamReader;
 			try {
 				streamReader = inputFactory.createXMLStreamReader(requestPayload);
-			} catch (UnsupportedOperationException | XMLStreamException ignored) {
+			}
+			catch (UnsupportedOperationException | XMLStreamException ignored) {
 				streamReader = null;
 			}
 			if (streamReader == null) {
@@ -110,12 +116,12 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 	}
 
 	/**
-	 * Create a {@code XMLInputFactory} that this resolver will use to create {@link javax.xml.stream.XMLStreamReader} and
+	 * Create a {@code XMLInputFactory} that this resolver will use to create
+	 * {@link javax.xml.stream.XMLStreamReader} and
 	 * {@link javax.xml.stream.XMLEventReader} objects.
 	 * <p>
-	 * Can be overridden in subclasses, adding further initialization of the factory. The resulting factory is cached, so
-	 * this method will only be called once.
-	 *
+	 * Can be overridden in subclasses, adding further initialization of the factory. The
+	 * resulting factory is cached, so this method will only be called once.
 	 * @return the created factory
 	 */
 	protected XMLInputFactory createXmlInputFactory() {
@@ -169,6 +175,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 				}
 			};
 		}
+
 	}
 
 }

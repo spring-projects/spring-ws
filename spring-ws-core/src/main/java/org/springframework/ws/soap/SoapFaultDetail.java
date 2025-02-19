@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,8 +22,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 /**
- * Represents the {@code detail} element in a SOAP fault. A detail contains {@code SoapFaultDetailElement}s, which
- * represent the individual details.
+ * Represents the {@code detail} element in a SOAP fault. A detail contains
+ * {@code SoapFaultDetailElement}s, which represent the individual details.
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetailElement
@@ -32,8 +32,8 @@ import javax.xml.transform.Result;
 public interface SoapFaultDetail extends SoapElement {
 
 	/**
-	 * Adds a new {@code SoapFaultDetailElement} with the specified qualified name to this detail.
-	 *
+	 * Adds a new {@code SoapFaultDetailElement} with the specified qualified name to this
+	 * detail.
 	 * @param name the qualified name of the new detail element
 	 * @return the created {@code SoapFaultDetailElement}
 	 */
@@ -43,14 +43,12 @@ public interface SoapFaultDetail extends SoapElement {
 	 * Returns a {@code Result} that represents the concents of the detail.
 	 * <p>
 	 * The result can be used for marshalling.
-	 *
 	 * @return the {@code Result} of this element
 	 */
 	Result getResult();
 
 	/**
 	 * Gets an iterator over all of the {@code SoapFaultDetailElement}s in this detail.
-	 *
 	 * @return an iterator over all the {@code SoapFaultDetailElement}s
 	 * @see SoapFaultDetailElement
 	 */

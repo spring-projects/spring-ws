@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,8 +23,8 @@ import org.springframework.ws.soap.server.SmartSoapEndpointInterceptor;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 
 /**
- * Implementation of the {@link SmartSoapEndpointInterceptor} interface that delegates to a delegate
- * {@link SoapEndpointInterceptor}.
+ * Implementation of the {@link SmartSoapEndpointInterceptor} interface that delegates to
+ * a delegate {@link SoapEndpointInterceptor}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -33,8 +33,8 @@ public class DelegatingSmartSoapEndpointInterceptor extends DelegatingSmartEndpo
 		implements SmartSoapEndpointInterceptor {
 
 	/**
-	 * Creates a new instance of the {@code DelegatingSmartSoapEndpointInterceptor} with the given delegate.
-	 *
+	 * Creates a new instance of the {@code DelegatingSmartSoapEndpointInterceptor} with
+	 * the given delegate.
 	 * @param delegate the endpoint interceptor to delegate to.
 	 */
 	public DelegatingSmartSoapEndpointInterceptor(EndpointInterceptor delegate) {
@@ -46,8 +46,10 @@ public class DelegatingSmartSoapEndpointInterceptor extends DelegatingSmartEndpo
 		EndpointInterceptor delegate = getDelegate();
 		if (delegate instanceof SoapEndpointInterceptor) {
 			return ((SoapEndpointInterceptor) delegate).understands(header);
-		} else {
+		}
+		else {
 			return false;
 		}
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,14 +15,15 @@
  */
 package org.springframework.ws.client.support.interceptor;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Greg Turnquist
@@ -32,7 +33,8 @@ public class ClientInterceptorAdapterTest {
 	@Test
 	public void handleEmptyInterceptor() {
 
-		ClientInterceptor interceptor = new ClientInterceptorAdapter() {};
+		ClientInterceptor interceptor = new ClientInterceptorAdapter() {
+		};
 
 		assertThat(interceptor.handleRequest(null)).isTrue();
 		assertThat(interceptor.handleResponse(null)).isTrue();
@@ -53,7 +55,8 @@ public class ClientInterceptorAdapterTest {
 
 		List<String> bits = interceptor.getBits();
 
-		assertThat(bits).containsExactly("handled request", "handled response", "handled fault", "handled afterCompletion");
+		assertThat(bits).containsExactly("handled request", "handled response", "handled fault",
+				"handled afterCompletion");
 	}
 
 	static class TestClientInterceptorAdapter extends ClientInterceptorAdapter {
@@ -93,5 +96,7 @@ public class ClientInterceptorAdapterTest {
 		public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
 			bits.add("handled afterCompletion");
 		}
+
 	}
+
 }

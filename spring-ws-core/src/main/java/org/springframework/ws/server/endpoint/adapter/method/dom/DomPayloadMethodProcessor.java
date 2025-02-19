@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,15 +20,18 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.springframework.core.MethodParameter;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
+
 /**
- * Implementation of {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
- * MethodArgumentResolver} and {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
+ * Implementation of
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver
+ * MethodArgumentResolver} and
+ * {@link org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler
  * MethodReturnValueHandler} that supports W3C DOM {@linkplain Element elements}.
  *
  * @author Arjen Poutsma
@@ -47,7 +50,8 @@ public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 	protected Node resolveRequestPayloadArgument(MethodParameter parameter, Source requestPayload) throws Exception {
 		if (requestPayload instanceof DOMSource) {
 			return resolveArgumentDomSource(parameter, (DOMSource) requestPayload);
-		} else {
+		}
+		else {
 			DOMResult domResult = new DOMResult();
 			transform(requestPayload, domResult);
 			DOMSource domSource = new DOMSource(domResult.getNode());
@@ -60,7 +64,8 @@ public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 		Node requestNode = requestSource.getNode();
 		if (parameterType.isAssignableFrom(requestNode.getClass())) {
 			return requestNode;
-		} else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
+		}
+		else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
 			Document document = (Document) requestNode;
 			return document.getDocumentElement();
 		}

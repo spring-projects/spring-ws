@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -37,14 +38,15 @@ import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.soap.soap11.Soap11Body;
 
 /**
- * Interceptor base class for interceptors that handle WS-Security. Can be used on the server side, registered in a
+ * Interceptor base class for interceptors that handle WS-Security. Can be used on the
+ * server side, registered in a
  * {@link org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping#setInterceptors(org.springframework.ws.server.EndpointInterceptor[])
  * endpoint mapping}; or on the client side, on the
- * {@link org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[]) web service
- * template}.
+ * {@link org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[])
+ * web service template}.
  * <p>
- * Subclasses of this base class can be configured to secure incoming and secure outgoing messages. By default, both are
- * on.
+ * Subclasses of this base class can be configured to secure incoming and secure outgoing
+ * messages. By default, both are on.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -69,27 +71,41 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
 	private EndpointExceptionResolver exceptionResolver;
 
-	/** Indicates whether server-side incoming request are to be validated. Defaults to {@code true}. */
+	/**
+	 * Indicates whether server-side incoming request are to be validated. Defaults to
+	 * {@code true}.
+	 */
 	public void setValidateRequest(boolean validateRequest) {
 		this.validateRequest = validateRequest;
 	}
 
-	/** Indicates whether server-side outgoing responses are to be secured. Defaults to {@code true}. */
+	/**
+	 * Indicates whether server-side outgoing responses are to be secured. Defaults to
+	 * {@code true}.
+	 */
 	public void setSecureResponse(boolean secureResponse) {
 		this.secureResponse = secureResponse;
 	}
 
-	/** Indicates whether client-side outgoing requests are to be secured. Defaults to {@code true}. */
+	/**
+	 * Indicates whether client-side outgoing requests are to be secured. Defaults to
+	 * {@code true}.
+	 */
 	public void setSecureRequest(boolean secureRequest) {
 		this.secureRequest = secureRequest;
 	}
 
-	/** Indicates whether client-side incoming responses are to be validated. Defaults to {@code true}. */
+	/**
+	 * Indicates whether client-side incoming responses are to be validated. Defaults to
+	 * {@code true}.
+	 */
 	public void setValidateResponse(boolean validateResponse) {
 		this.validateResponse = validateResponse;
 	}
 
-	/** Provide an {@link EndpointExceptionResolver} for resolving validation exceptions. */
+	/**
+	 * Provide an {@link EndpointExceptionResolver} for resolving validation exceptions.
+	 */
 	public void setExceptionResolver(EndpointExceptionResolver exceptionResolver) {
 		this.exceptionResolver = exceptionResolver;
 	}
@@ -105,9 +121,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
 	/**
 	 * Validates a server-side incoming request. Delegates to
-	 * {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)} if
-	 * the {@link #setValidateRequest(boolean) validateRequest} property is {@code true}.
-	 *
+	 * {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setValidateRequest(boolean) validateRequest} property is
+	 * {@code true}.
 	 * @param messageContext the message context, containing the request to be validated
 	 * @param endpoint chosen endpoint to invoke
 	 * @return {@code true} if the request was valid; {@code false} otherwise.
@@ -118,27 +134,30 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
 		if (validateRequest) {
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-			if (skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())) {
+			if (skipValidationIfNoHeaderPresent
+					&& !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())) {
 				return true;
 			}
 			try {
 				validateMessage((SoapMessage) messageContext.getRequest(), messageContext);
 				return true;
-			} catch (WsSecurityValidationException ex) {
+			}
+			catch (WsSecurityValidationException ex) {
 				return handleValidationException(ex, messageContext);
-			} catch (WsSecurityFaultException ex) {
+			}
+			catch (WsSecurityFaultException ex) {
 				return handleFaultException(ex, messageContext);
 			}
-		} else {
+		}
+		else {
 			return true;
 		}
 	}
 
 	/**
 	 * Secures a server-side outgoing response. Delegates to
-	 * {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)} if
-	 * the {@link #setSecureResponse(boolean) secureResponse} property is {@code true}.
-	 *
+	 * {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setSecureResponse(boolean) secureResponse} property is {@code true}.
 	 * @param messageContext the message context, containing the response to be secured
 	 * @param endpoint chosen endpoint to invoke
 	 * @return {@code true} if the response was secured; {@code false} otherwise.
@@ -154,13 +173,16 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 				Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
 				try {
 					secureMessage((SoapMessage) messageContext.getResponse(), messageContext);
-				} catch (WsSecuritySecurementException ex) {
+				}
+				catch (WsSecuritySecurementException ex) {
 					result = handleSecurementException(ex, messageContext);
-				} catch (WsSecurityFaultException ex) {
+				}
+				catch (WsSecurityFaultException ex) {
 					result = handleFaultException(ex, messageContext);
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (!result) {
 				messageContext.clearResponse();
 			}
@@ -190,9 +212,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
 	/**
 	 * Secures a client-side outgoing request. Delegates to
-	 * {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)} if
-	 * the {@link #setSecureRequest(boolean) secureRequest} property is {@code true}.
-	 *
+	 * {@link #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setSecureRequest(boolean) secureRequest} property is {@code true}.
 	 * @param messageContext the message context, containing the request to be secured
 	 * @return {@code true} if the response was secured; {@code false} otherwise.
 	 * @throws Exception in case of errors
@@ -205,21 +226,24 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 			try {
 				secureMessage((SoapMessage) messageContext.getRequest(), messageContext);
 				return true;
-			} catch (WsSecuritySecurementException ex) {
+			}
+			catch (WsSecuritySecurementException ex) {
 				return handleSecurementException(ex, messageContext);
-			} catch (WsSecurityFaultException ex) {
+			}
+			catch (WsSecurityFaultException ex) {
 				return handleFaultException(ex, messageContext);
 			}
-		} else {
+		}
+		else {
 			return true;
 		}
 	}
 
 	/**
 	 * Validates a client-side incoming response. Delegates to
-	 * {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)} if
-	 * the {@link #setValidateResponse(boolean) validateResponse} property is {@code true}.
-	 *
+	 * {@link #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)}
+	 * if the {@link #setValidateResponse(boolean) validateResponse} property is
+	 * {@code true}.
 	 * @param messageContext the message context, containing the response to be validated
 	 * @return {@code true} if the request was valid; {@code false} otherwise.
 	 * @throws Exception in case of errors
@@ -230,18 +254,22 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		if (validateResponse) {
 			Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-			if (skipValidationIfNoHeaderPresent && !isSecurityHeaderPresent((SoapMessage) messageContext.getResponse())) {
+			if (skipValidationIfNoHeaderPresent
+					&& !isSecurityHeaderPresent((SoapMessage) messageContext.getResponse())) {
 				return true;
 			}
 			try {
 				validateMessage((SoapMessage) messageContext.getResponse(), messageContext);
 				return true;
-			} catch (WsSecurityValidationException ex) {
+			}
+			catch (WsSecurityValidationException ex) {
 				return handleValidationException(ex, messageContext);
-			} catch (WsSecurityFaultException ex) {
+			}
+			catch (WsSecurityFaultException ex) {
 				return handleFaultException(ex, messageContext);
 			}
-		} else {
+		}
+		else {
 			return true;
 		}
 	}
@@ -258,11 +286,12 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	/**
-	 * Handles an securement exception. Default implementation logs the given exception, and returns {@code false}.
-	 *
+	 * Handles an securement exception. Default implementation logs the given exception,
+	 * and returns {@code false}.
 	 * @param ex the validation exception
 	 * @param messageContext the message context
-	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 * @return {@code true} to continue processing the message, {@code false} (the
+	 * default) otherwise
 	 */
 	protected boolean handleSecurementException(WsSecuritySecurementException ex, MessageContext messageContext) {
 		if (logger.isErrorEnabled()) {
@@ -272,13 +301,14 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	/**
-	 * Handles an invalid SOAP message. Default implementation logs the given exception, delegates to the set
-	 * {@link #setExceptionResolver(EndpointExceptionResolver) exceptionResolver} if any, or creates a SOAP 1.1 Client or
-	 * SOAP 1.2 Sender Fault with the exception message as fault string, and returns {@code false}.
-	 *
+	 * Handles an invalid SOAP message. Default implementation logs the given exception,
+	 * delegates to the set {@link #setExceptionResolver(EndpointExceptionResolver)
+	 * exceptionResolver} if any, or creates a SOAP 1.1 Client or SOAP 1.2 Sender Fault
+	 * with the exception message as fault string, and returns {@code false}.
 	 * @param ex the validation exception
 	 * @param messageContext the message context
-	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 * @return {@code true} to continue processing the message, {@code false} (the
+	 * default) otherwise
 	 */
 	protected boolean handleValidationException(WsSecurityValidationException ex, MessageContext messageContext) {
 		if (logger.isWarnEnabled()) {
@@ -286,7 +316,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		}
 		if (exceptionResolver != null) {
 			exceptionResolver.resolveException(messageContext, null, ex);
-		} else {
+		}
+		else {
 			if (logger.isDebugEnabled()) {
 				logger.debug("No exception resolver present, creating basic soap fault");
 			}
@@ -297,12 +328,13 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	/**
-	 * Handles a fault exception.Default implementation logs the given exception, and creates a SOAP Fault with the
-	 * properties of the given exception, and returns {@code false}.
-	 *
+	 * Handles a fault exception.Default implementation logs the given exception, and
+	 * creates a SOAP Fault with the properties of the given exception, and returns
+	 * {@code false}.
 	 * @param ex the validation exception
 	 * @param messageContext the message context
-	 * @return {@code true} to continue processing the message, {@code false} (the default) otherwise
+	 * @return {@code true} to continue processing the message, {@code false} (the
+	 * default) otherwise
 	 */
 	protected boolean handleFaultException(WsSecurityFaultException ex, MessageContext messageContext) {
 		if (logger.isWarnEnabled()) {
@@ -312,7 +344,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		SoapFault fault;
 		if (response instanceof Soap11Body) {
 			fault = ((Soap11Body) response).addFault(ex.getFaultCode(), ex.getFaultString(), Locale.ENGLISH);
-		} else {
+		}
+		else {
 			fault = response.addClientOrSenderFault(ex.getFaultString(), Locale.ENGLISH);
 		}
 		fault.setFaultActorOrRole(ex.getFaultActor());
@@ -320,9 +353,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	/**
-	 * Abstract template method. Subclasses are required to validate the request contained in the given
-	 * {@link SoapMessage}, and replace the original request with the validated version.
-	 *
+	 * Abstract template method. Subclasses are required to validate the request contained
+	 * in the given {@link SoapMessage}, and replace the original request with the
+	 * validated version.
 	 * @param soapMessage the soap message to validate
 	 * @throws WsSecurityValidationException in case of validation errors
 	 */
@@ -330,9 +363,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 			throws WsSecurityValidationException;
 
 	/**
-	 * Abstract template method. Subclasses are required to secure the response contained in the given
-	 * {@link SoapMessage}, and replace the original response with the secured version.
-	 *
+	 * Abstract template method. Subclasses are required to secure the response contained
+	 * in the given {@link SoapMessage}, and replace the original response with the
+	 * secured version.
 	 * @param soapMessage the soap message to secure
 	 * @throws WsSecuritySecurementException in case of securement errors
 	 */
@@ -358,4 +391,5 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		}
 		return false;
 	}
+
 }

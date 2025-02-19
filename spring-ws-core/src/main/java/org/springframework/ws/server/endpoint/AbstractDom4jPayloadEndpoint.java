@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,15 +26,17 @@ import org.dom4j.Element;
 import org.dom4j.io.DOMReader;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
-import org.springframework.xml.transform.TransformerObjectSupport;
 import org.w3c.dom.Node;
 
+import org.springframework.xml.transform.TransformerObjectSupport;
+
 /**
- * Abstract base class for endpoints that handle the message payload as dom4j elements. Offers the message payload as a
- * dom4j {@code Element}, and allows subclasses to create a response by returning an {@code Element}.
+ * Abstract base class for endpoints that handle the message payload as dom4j elements.
+ * Offers the message payload as a dom4j {@code Element}, and allows subclasses to create
+ * a response by returning an {@code Element}.
  * <p>
- * An {@code AbstractDom4JPayloadEndpoint} only accept one payload element. Multiple payload elements are not in
- * accordance with WS-I.
+ * An {@code AbstractDom4JPayloadEndpoint} only accept one payload element. Multiple
+ * payload elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
  * @see org.dom4j.Element
@@ -47,7 +49,8 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 	private boolean alwaysTransform = false;
 
 	/**
-	 * Set if the request {@link Source} should always be transformed into a new {@link DocumentResult}.
+	 * Set if the request {@link Source} should always be transformed into a new
+	 * {@link DocumentResult}.
 	 * <p>
 	 * Default is {@code false}, which is faster.
 	 */
@@ -71,12 +74,13 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 	/**
 	 * Returns the payload element of the given source.
 	 * <p>
-	 * Default implementation checks whether the source is a {@link javax.xml.transform.dom.DOMSource}, and uses a
-	 * {@link org.dom4j.io.DOMReader} to create a JDOM {@link org.dom4j.Element}. In all other cases, or when
-	 * {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is {@code true}, the source is transformed into a
-	 * {@link org.dom4j.io.DocumentResult}, which is more expensive. If the passed source is {@code null}, {@code
+	 * Default implementation checks whether the source is a
+	 * {@link javax.xml.transform.dom.DOMSource}, and uses a
+	 * {@link org.dom4j.io.DOMReader} to create a JDOM {@link org.dom4j.Element}. In all
+	 * other cases, or when {@linkplain #setAlwaysTransform(boolean) alwaysTransform} is
+	 * {@code true}, the source is transformed into a {@link org.dom4j.io.DocumentResult},
+	 * which is more expensive. If the passed source is {@code null}, {@code
 	 * null} is returned.
-	 *
 	 * @param source the source to return the root element of; can be {@code null}
 	 * @return the document element
 	 * @throws javax.xml.transform.TransformerException in case of errors
@@ -100,14 +104,15 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 	}
 
 	/**
-	 * Template method. Subclasses must implement this. Offers the request payload as a dom4j {@code Element}, and allows
-	 * subclasses to return a response {@code Element}.
+	 * Template method. Subclasses must implement this. Offers the request payload as a
+	 * dom4j {@code Element}, and allows subclasses to return a response {@code Element}.
 	 * <p>
-	 * The given dom4j {@code Document} is to be used for constructing a response element, by using {@code addElement}.
-	 *
+	 * The given dom4j {@code Document} is to be used for constructing a response element,
+	 * by using {@code addElement}.
 	 * @param requestElement the contents of the SOAP message as dom4j elements
 	 * @param responseDocument a dom4j document to be used for constructing a response
 	 * @return the response element. Can be {@code null} to specify no response.
 	 */
 	protected abstract Element invokeInternal(Element requestElement, Document responseDocument) throws Exception;
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,14 @@
 
 package org.springframework.ws.transport.jms;
 
-import static org.assertj.core.api.Assertions.*;
+import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.jms.BytesMessage;
 import jakarta.jms.TextMessage;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConstants;
-
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-
 import org.apache.activemq.artemis.core.config.Configuration;
 import org.apache.activemq.artemis.core.config.impl.ConfigurationImpl;
 import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
@@ -34,6 +31,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
@@ -45,13 +43,17 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-sender-applicationContext.xml")
 public class JmsMessageSenderIntegrationTest {
 
-	@Autowired private JmsMessageSender messageSender;
+	@Autowired
+	private JmsMessageSender messageSender;
 
-	@Autowired private JmsTemplate jmsTemplate;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 
 	private MessageFactory messageFactory;
 
@@ -101,7 +103,8 @@ public class JmsMessageSenderIntegrationTest {
 
 				BytesMessage response = session.createBytesMessage();
 				response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
+				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
+						SoapVersion.SOAP_11.getContentType());
 				response.writeBytes(buf);
 				return response;
 			});
@@ -140,7 +143,8 @@ public class JmsMessageSenderIntegrationTest {
 				BytesMessage response = session.createBytesMessage();
 				response.setJMSCorrelationID(request.getJMSMessageID());
 				response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
+				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
+						SoapVersion.SOAP_11.getContentType());
 				response.writeBytes(buf);
 				return response;
 			});
@@ -177,7 +181,8 @@ public class JmsMessageSenderIntegrationTest {
 
 				TextMessage response = session.createTextMessage();
 				response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
-				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
+				response.setStringProperty(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
+						SoapVersion.SOAP_11.getContentType());
 				response.setText(text);
 				return response;
 			});
@@ -236,4 +241,5 @@ public class JmsMessageSenderIntegrationTest {
 			assertThat(request.getBooleanProperty("processed")).isTrue();
 		}
 	}
+
 }

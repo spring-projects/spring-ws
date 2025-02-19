@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -47,9 +47,11 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			return xpath.booleanValueOf(element);
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -60,9 +62,11 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			return (Node) xpath.selectSingleNode(element);
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -74,9 +78,11 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			return xpath.selectNodes(element);
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -87,9 +93,11 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			return xpath.numberValueOf(element).doubleValue();
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -100,9 +108,11 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			return xpath.stringValueOf(element);
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -116,16 +126,20 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			if (node != null) {
 				try {
 					return nodeMapper.mapNode(node, 0);
-				} catch (DOMException ex) {
+				}
+				catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
-			} else {
+			}
+			else {
 				return null;
 			}
 
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -141,14 +155,17 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 				Node node = (Node) nodes.get(i);
 				try {
 					results.add(nodeMapper.mapNode(node, i));
-				} catch (DOMException ex) {
+				}
+				catch (DOMException ex) {
 					throw new XPathException("Mapping resulted in DOMException", ex);
 				}
 			}
 			return results;
-		} catch (JaxenException ex) {
+		}
+		catch (JaxenException ex) {
 			throw new XPathException("Could not evaluate XPath expression [" + expression + "]", ex);
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			throw new XPathException("Could not transform context to DOM Node", ex);
 		}
 	}
@@ -160,4 +177,5 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 		}
 		return xpath;
 	}
+
 }

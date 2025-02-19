@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,12 @@
 
 package org.springframework.ws.config;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.EndpointAdapter;
@@ -49,6 +48,8 @@ import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElem
 import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author Arjen Poutsma
  */
@@ -58,7 +59,8 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml", getClass());
+		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml",
+				getClass());
 	}
 
 	@Test
@@ -89,7 +91,8 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 				SoapHeaderElementMethodArgumentResolver.class, DomPayloadMethodProcessor.class,
 				SourcePayloadMethodProcessor.class, Dom4jPayloadMethodProcessor.class,
 				XmlRootElementPayloadMethodProcessor.class, JaxbElementPayloadMethodProcessor.class,
-				JDomPayloadMethodProcessor.class, StaxPayloadMethodArgumentResolver.class, XomPayloadMethodProcessor.class);
+				JDomPayloadMethodProcessor.class, StaxPayloadMethodArgumentResolver.class,
+				XomPayloadMethodProcessor.class);
 
 		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
 
@@ -103,10 +106,12 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 	@Test
 	public void endpointExceptionResolver() {
 
-		Map<String, EndpointExceptionResolver> result = applicationContext.getBeansOfType(EndpointExceptionResolver.class);
+		Map<String, EndpointExceptionResolver> result = applicationContext
+			.getBeansOfType(EndpointExceptionResolver.class);
 
 		assertThat(result).hasSize(2);
 		assertThat(result.values()).hasAtLeastOneElementOfType(SoapFaultAnnotationExceptionResolver.class);
 		assertThat(result.values()).hasAtLeastOneElementOfType(SimpleSoapExceptionResolver.class);
 	}
+
 }

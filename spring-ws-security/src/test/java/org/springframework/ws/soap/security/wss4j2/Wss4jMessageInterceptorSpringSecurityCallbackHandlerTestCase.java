@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,12 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
 import java.util.Properties;
 
 import org.apache.wss4j.dom.WSConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -32,6 +30,11 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCase extends Wss4jTestCase {
 
@@ -112,7 +115,8 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 
 		if (validating) {
 			interceptor.setValidationActions(actions);
-		} else {
+		}
+		else {
 			interceptor.setSecurementActions(actions);
 		}
 
@@ -122,7 +126,8 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 
 		if (digest) {
 			interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
-		} else {
+		}
+		else {
 			interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		}
 
@@ -132,4 +137,5 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTestCa
 
 		return interceptor;
 	}
+
 }

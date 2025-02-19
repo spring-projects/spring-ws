@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,23 +16,23 @@
 
 package org.springframework.ws.transport.http;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.TransformerObjectSupport;
-import org.springframework.xml.xpath.XPathExpression;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.TransformerObjectSupport;
+import org.springframework.xml.xpath.XPathExpression;
+
 /**
- * Abstract base class for {@link WsdlDefinitionHandlerAdapter} and {@link XsdSchemaHandlerAdapter} that transforms XSD
- * and WSDL location attributes.
+ * Abstract base class for {@link WsdlDefinitionHandlerAdapter} and
+ * {@link XsdSchemaHandlerAdapter} that transforms XSD and WSDL location attributes.
  *
  * @author Arjen Poutsma
  * @since 2.1.2
@@ -43,8 +43,8 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 	private final Log logger = LogFactory.getLog(getClass());
 
 	/**
-	 * Transforms the locations of the given definition document using the given XPath expression.
-	 *
+	 * Transforms the locations of the given definition document using the given XPath
+	 * expression.
 	 * @param xPathExpression the XPath expression
 	 * @param definitionDocument the definition document
 	 * @param request the request, used to determine the location to transform to
@@ -71,18 +71,20 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 	}
 
 	/**
-	 * Transform the given location string to reflect the given request. If the given location is a full url, the scheme,
-	 * server name, and port are changed. If it is a relative url, the scheme, server name, and port are prepended. Can be
-	 * overridden in subclasses to change this behavior.
+	 * Transform the given location string to reflect the given request. If the given
+	 * location is a full url, the scheme, server name, and port are changed. If it is a
+	 * relative url, the scheme, server name, and port are prepended. Can be overridden in
+	 * subclasses to change this behavior.
 	 * <p>
 	 * For instance, if the location attribute defined in the WSDL is
-	 * {@code http://localhost:8080/context/services/myService}, and the request URI for the WSDL is
-	 * {@code http://example.com:80/context/myService.wsdl}, the location will be changed to
-	 * {@code http://example.com:80/context/services/myService}.
+	 * {@code http://localhost:8080/context/services/myService}, and the request URI for
+	 * the WSDL is {@code http://example.com:80/context/myService.wsdl}, the location will
+	 * be changed to {@code http://example.com:80/context/services/myService}.
 	 * <p>
-	 * If the location attribute defined in the WSDL is {@code /services/myService}, and the request URI for the WSDL is
-	 * {@code http://example.com:8080/context/myService.wsdl}, the location will be changed to
-	 * {@code http://example.com:8080/context/services/myService}.
+	 * If the location attribute defined in the WSDL is {@code /services/myService}, and
+	 * the request URI for the WSDL is
+	 * {@code http://example.com:8080/context/myService.wsdl}, the location will be
+	 * changed to {@code http://example.com:8080/context/services/myService}.
 	 * <p>
 	 * This method is only called when the {@code transformLocations} property is true.
 	 */
@@ -94,19 +96,21 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 
 		String scheme = StringUtils.hasText(xForwardedProto) ? xForwardedProto : request.getScheme();
 		String serverName = StringUtils.hasText(xForwardedHost) ? xForwardedHost : request.getServerName();
-		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort) : request.getServerPort();
+		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort)
+				: request.getServerPort();
 
 		StringBuilder url = new StringBuilder(scheme);
 		url.append("://").append(serverName);
 		boolean serverHasColonAfterAt = serverName.indexOf("@") < serverName.indexOf(":");
-		if(!serverHasColonAfterAt) {
+		if (!serverHasColonAfterAt) {
 			url.append(':').append(serverPort);
 		}
 		if (location.startsWith("/")) {
 			// a relative path, prepend the context path
 			url.append(request.getContextPath()).append(location);
 			return url.toString();
-		} else {
+		}
+		else {
 			int idx = location.indexOf("://");
 			if (idx != -1) {
 				// a full url
@@ -121,4 +125,5 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 		// unknown location, return the original
 		return location;
 	}
+
 }

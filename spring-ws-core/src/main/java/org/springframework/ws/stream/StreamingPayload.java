@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * Defines the contract for payloads that can be written directly to a {@link XMLStreamWriter}.
+ * Defines the contract for payloads that can be written directly to a
+ * {@link XMLStreamWriter}.
  *
  * @author Arjen Poutsma
  * @see StreamingWebServiceMessage
@@ -30,16 +31,15 @@ import javax.xml.stream.XMLStreamWriter;
 public interface StreamingPayload {
 
 	/**
-	 * Returns the qualified name of the payload. Only the namespace URI and local part of the returned qualified name are
-	 * significant; they must match the name of the root element produced by {@link #writeTo(XMLStreamWriter)}.
-	 *
+	 * Returns the qualified name of the payload. Only the namespace URI and local part of
+	 * the returned qualified name are significant; they must match the name of the root
+	 * element produced by {@link #writeTo(XMLStreamWriter)}.
 	 * @return the qualified name
 	 */
 	QName getName();
 
 	/**
 	 * Writes this payload to the given {@link XMLStreamWriter}.
-	 *
 	 * @param streamWriter the stream writer to write to
 	 * @throws XMLStreamException in case of errors
 	 */

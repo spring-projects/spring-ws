@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,8 +38,9 @@ import org.springframework.ws.soap.soap11.Soap11Header;
 import org.springframework.ws.soap.soap12.Soap12Header;
 
 /**
- * SOAP-specific subclass of the {@link MessageDispatcher}. Adds functionality for adding actor roles to a endpoint
- * invocation chain, and endpoint interception using {@link SoapEndpointInterceptor} objects.
+ * SOAP-specific subclass of the {@link MessageDispatcher}. Adds functionality for adding
+ * actor roles to a endpoint invocation chain, and endpoint interception using
+ * {@link SoapEndpointInterceptor} objects.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.SoapMessage
@@ -56,26 +57,31 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 	private Locale mustUnderstandFaultStringLocale = Locale.ENGLISH;
 
 	/**
-	 * Sets the message used for {@code MustUnderstand} fault. Default to {@link #DEFAULT_MUST_UNDERSTAND_FAULT_STRING}.
+	 * Sets the message used for {@code MustUnderstand} fault. Default to
+	 * {@link #DEFAULT_MUST_UNDERSTAND_FAULT_STRING}.
 	 */
 	public void setMustUnderstandFaultString(String mustUnderstandFaultString) {
 		this.mustUnderstandFaultString = mustUnderstandFaultString;
 	}
 
-	/** Sets the locale of the message used for {@code MustUnderstand} fault. Default to {@link Locale#ENGLISH}. */
+	/**
+	 * Sets the locale of the message used for {@code MustUnderstand} fault. Default to
+	 * {@link Locale#ENGLISH}.
+	 */
 	public void setMustUnderstandFaultStringLocale(Locale mustUnderstandFaultStringLocale) {
 		this.mustUnderstandFaultStringLocale = mustUnderstandFaultStringLocale;
 	}
 
 	/**
-	 * Process the headers targeted at the actor or role fullfilled by the endpoint. Also processed the
-	 * {@code MustUnderstand} headers in the incoming SOAP request message. Iterates over all SOAP headers which should be
-	 * understood for this role, and determines whether these are supported. Generates a SOAP MustUnderstand fault if a
+	 * Process the headers targeted at the actor or role fullfilled by the endpoint. Also
+	 * processed the {@code MustUnderstand} headers in the incoming SOAP request message.
+	 * Iterates over all SOAP headers which should be understood for this role, and
+	 * determines whether these are supported. Generates a SOAP MustUnderstand fault if a
 	 * header is not understood.
-	 *
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param messageContext the message context
-	 * @return {@code true} if all necessary headers are understood; {@code false} otherwise
+	 * @return {@code true} if all necessary headers are understood; {@code false}
+	 * otherwise
 	 * @see SoapEndpointInvocationChain#getActorsOrRoles()
 	 * @see org.springframework.ws.soap.SoapHeader#examineMustUnderstandHeaderElements(String)
 	 */
@@ -104,8 +110,10 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 		Iterator<SoapHeaderElement> headerIterator;
 		if (soapHeader instanceof Soap11Header) {
 			headerIterator = ((Soap11Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles);
-		} else {
-			headerIterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles, isUltimateReceiver);
+		}
+		else {
+			headerIterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles,
+					isUltimateReceiver);
 		}
 		List<QName> notUnderstoodHeaderNames = new ArrayList<QName>();
 		while (headerIterator.hasNext()) {
@@ -120,7 +128,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 		}
 		if (notUnderstoodHeaderNames.isEmpty()) {
 			return true;
-		} else {
+		}
+		else {
 			SoapMessage response = (SoapMessage) messageContext.getResponse();
 			createMustUnderstandFault(response, notUnderstoodHeaderNames, actorsOrRoles);
 			return false;
@@ -128,11 +137,11 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 	}
 
 	/**
-	 * Handles the request for a single SOAP actor/role. Iterates over all {@code MustUnderstand} headers for a specific
-	 * SOAP 1.1 actor or SOAP 1.2 role, and determines whether these are understood by any of the registered
-	 * {@code SoapEndpointInterceptor}. If they are, returns {@code true}. If they are not, a SOAP fault is created, and
-	 * false is returned.
-	 *
+	 * Handles the request for a single SOAP actor/role. Iterates over all
+	 * {@code MustUnderstand} headers for a specific SOAP 1.1 actor or SOAP 1.2 role, and
+	 * determines whether these are understood by any of the registered
+	 * {@code SoapEndpointInterceptor}. If they are, returns {@code true}. If they are
+	 * not, a SOAP fault is created, and false is returned.
 	 * @see SoapEndpointInterceptor#understands(org.springframework.ws.soap.SoapHeaderElement)
 	 */
 	private boolean headerUnderstood(EndpointInvocationChain mappedEndpoint, SoapHeaderElement headerElement) {
@@ -156,7 +165,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 					+ StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");
 		}
 		SoapBody responseBody = soapResponse.getSoapBody();
-		SoapFault fault = responseBody.addMustUnderstandFault(mustUnderstandFaultString, mustUnderstandFaultStringLocale);
+		SoapFault fault = responseBody.addMustUnderstandFault(mustUnderstandFaultString,
+				mustUnderstandFaultStringLocale);
 		if (!ObjectUtils.isEmpty(actorsOrRoles)) {
 			fault.setFaultActorOrRole(actorsOrRoles[0]);
 		}

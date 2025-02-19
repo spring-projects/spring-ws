@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,8 +23,9 @@ import java.util.Iterator;
 import org.springframework.util.Assert;
 
 /**
- * A {@code TransportInputStream} is an input stream with MIME input headers. It is used to construct
- * {@link org.springframework.ws.WebServiceMessage WebServiceMessages} from a transport.
+ * A {@code TransportInputStream} is an input stream with MIME input headers. It is used
+ * to construct {@link org.springframework.ws.WebServiceMessage WebServiceMessages} from a
+ * transport.
  *
  * @author Arjen Poutsma
  * @see #getHeaderNames()
@@ -35,7 +36,8 @@ public abstract class TransportInputStream extends InputStream {
 
 	private InputStream inputStream;
 
-	protected TransportInputStream() {}
+	protected TransportInputStream() {
+	}
 
 	private InputStream getInputStream() throws IOException {
 		if (inputStream == null) {
@@ -61,7 +63,8 @@ public abstract class TransportInputStream extends InputStream {
 	public synchronized void mark(int readlimit) {
 		try {
 			getInputStream().mark(readlimit);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// ignored
 		}
 	}
@@ -70,7 +73,8 @@ public abstract class TransportInputStream extends InputStream {
 	public boolean markSupported() {
 		try {
 			return getInputStream().markSupported();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			return false;
 		}
 	}
@@ -104,14 +108,15 @@ public abstract class TransportInputStream extends InputStream {
 	protected abstract InputStream createInputStream() throws IOException;
 
 	/**
-	 * Returns an iteration over all the header names this stream contains. Returns an empty {@code Iterator} if there are
-	 * no headers.
+	 * Returns an iteration over all the header names this stream contains. Returns an
+	 * empty {@code Iterator} if there are no headers.
 	 */
 	public abstract Iterator<String> getHeaderNames() throws IOException;
 
 	/**
-	 * Returns an iteration over all the string values of the specified header. Returns an empty {@code Iterator} if there
-	 * are no headers of the specified name.
+	 * Returns an iteration over all the string values of the specified header. Returns an
+	 * empty {@code Iterator} if there are no headers of the specified name.
 	 */
 	public abstract Iterator<String> getHeaders(String name) throws IOException;
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,21 +33,21 @@ import org.springframework.ws.test.support.creator.WebServiceMessageCreator;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
- * Factory methods for {@link ResponseCreator} classes. Typically used to provide input for
- * {@link ResponseActions#andRespond(ResponseCreator)}.
+ * Factory methods for {@link ResponseCreator} classes. Typically used to provide input
+ * for {@link ResponseActions#andRespond(ResponseCreator)}.
  *
  * @author Arjen Poutsma
  * @since 2.0
  */
 public abstract class ResponseCreators {
 
-	private ResponseCreators() {}
+	private ResponseCreators() {
+	}
 
 	// Payload
 
 	/**
 	 * Respond with the given {@link javax.xml.transform.Source} XML as payload response.
-	 *
 	 * @param payload the response payload
 	 * @return the response callback
 	 */
@@ -57,8 +57,8 @@ public abstract class ResponseCreators {
 	}
 
 	/**
-	 * Respond with the given {@link org.springframework.core.io.Resource} XML as payload response.
-	 *
+	 * Respond with the given {@link org.springframework.core.io.Resource} XML as payload
+	 * response.
 	 * @param payload the response payload
 	 * @return the response callback
 	 */
@@ -71,7 +71,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with an error.
-	 *
 	 * @param errorMessage the error message
 	 * @return the response callback
 	 * @see org.springframework.ws.transport.WebServiceConnection#hasError()
@@ -84,7 +83,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with an {@link java.io.IOException}.
-	 *
 	 * @param ioException the exception to be thrown
 	 * @return the response callback
 	 */
@@ -95,7 +93,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with an {@link RuntimeException}.
-	 *
 	 * @param ex the runtime exception to be thrown
 	 * @return the response callback
 	 */
@@ -107,8 +104,8 @@ public abstract class ResponseCreators {
 	// SOAP
 
 	/**
-	 * Respond with the given {@link javax.xml.transform.Source} XML as SOAP envelope response.
-	 *
+	 * Respond with the given {@link javax.xml.transform.Source} XML as SOAP envelope
+	 * response.
 	 * @param soapEnvelope the response SOAP envelope
 	 * @return the response callback
 	 * @since 2.1.1
@@ -119,8 +116,8 @@ public abstract class ResponseCreators {
 	}
 
 	/**
-	 * Respond with the given {@link org.springframework.core.io.Resource} XML as SOAP envelope response.
-	 *
+	 * Respond with the given {@link org.springframework.core.io.Resource} XML as SOAP
+	 * envelope response.
 	 * @param soapEnvelope the response SOAP envelope
 	 * @return the response callback
 	 * @since 2.1.1
@@ -132,7 +129,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with a {@code MustUnderstand} fault.
-	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @see SoapBody#addMustUnderstandFault(String, java.util.Locale)
@@ -149,7 +145,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with a {@code Client} (SOAP 1.1) or {@code Sender} (SOAP 1.2) fault.
-	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
@@ -166,7 +161,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with a {@code Server} (SOAP 1.1) or {@code Receiver} (SOAP 1.2) fault.
-	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @see org.springframework.ws.soap.SoapBody#addServerOrReceiverFault(String, Locale)
@@ -183,7 +177,6 @@ public abstract class ResponseCreators {
 
 	/**
 	 * Respond with a {@code VersionMismatch} fault.
-	 *
 	 * @param faultStringOrReason the SOAP 1.1 fault string or SOAP 1.2 reason text
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @see org.springframework.ws.soap.SoapBody#addVersionMismatchFault(String, Locale)
@@ -210,10 +203,11 @@ public abstract class ResponseCreators {
 		}
 
 		@Override
-		public WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory messageFactory)
-				throws IOException {
+		public WebServiceMessage createResponse(URI uri, WebServiceMessage request,
+				WebServiceMessageFactory messageFactory) throws IOException {
 			return adaptee.createMessage(messageFactory);
 		}
+
 	}
 
 }

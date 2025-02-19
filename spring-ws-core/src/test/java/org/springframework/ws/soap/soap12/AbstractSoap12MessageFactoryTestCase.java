@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,8 +15,6 @@
  */
 
 package org.springframework.ws.soap.soap12;
-
-import static org.assertj.core.api.Assertions.*;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -32,6 +30,8 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.MockTransportInputStream;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapMessageFactoryTestCase {
 
@@ -81,8 +81,8 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 
 		InputStream is = AbstractSoap12MessageFactoryTestCase.class.getResourceAsStream("soap12-attachment.bin");
 		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Content-Type",
-				"multipart/related;" + "type=\"application/soap+xml\";" + "boundary=\"----=_Part_0_11416420.1149699787554\"");
+		headers.put("Content-Type", "multipart/related;" + "type=\"application/soap+xml\";"
+				+ "boundary=\"----=_Part_0_11416420.1149699787554\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
@@ -138,4 +138,5 @@ public abstract class AbstractSoap12MessageFactoryTestCase extends AbstractSoapM
 
 		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
 	}
+
 }

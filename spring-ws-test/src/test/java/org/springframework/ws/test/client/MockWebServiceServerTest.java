@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,33 @@
  */
 
 package org.springframework.ws.test.client;
+
+import java.net.URI;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
+
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.soap.MessageFactory;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.client.SoapFaultClientException;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -36,33 +63,6 @@ import static org.springframework.ws.test.client.RequestMatchers.xpath;
 import static org.springframework.ws.test.client.ResponseCreators.withClientOrSenderFault;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 import static org.springframework.ws.test.client.ResponseCreators.withSoapEnvelope;
-
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.soap.MessageFactory;
-
-import java.net.URI;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.Source;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.client.SoapFaultClientException;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-import org.xmlunit.assertj.XmlAssert;
 
 public class MockWebServiceServerTest {
 
@@ -149,7 +149,7 @@ public class MockWebServiceServerTest {
 		requestMatcher1.match(eq(uri), isA(SaajSoapMessage.class));
 		requestMatcher2.match(eq(uri), isA(SaajSoapMessage.class));
 		expect(responseCreator.createResponse(eq(uri), isA(SaajSoapMessage.class), isA(SaajSoapMessageFactory.class)))
-				.andReturn(response);
+			.andReturn(response);
 
 		replay(requestMatcher1, requestMatcher2, responseCreator);
 
@@ -261,7 +261,7 @@ public class MockWebServiceServerTest {
 
 		Resource schema = new ByteArrayResource(
 				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
-						.getBytes());
+					.getBytes());
 
 		server.expect(validPayload(schema));
 
@@ -277,7 +277,7 @@ public class MockWebServiceServerTest {
 
 			Resource schema = new ByteArrayResource(
 					"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
-							.getBytes());
+						.getBytes());
 
 			server.expect(validPayload(schema));
 
@@ -430,6 +430,7 @@ public class MockWebServiceServerTest {
 		public void setMyData(String myData) {
 			this.myData = myData;
 		}
+
 	}
 
 	@XmlRootElement(name = "EnvelopeMatcherResponse")
@@ -444,5 +445,7 @@ public class MockWebServiceServerTest {
 		public void setMyData(String myData) {
 			this.myData = myData;
 		}
+
 	}
+
 }

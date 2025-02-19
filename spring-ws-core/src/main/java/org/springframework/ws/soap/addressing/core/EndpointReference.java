@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,8 +21,9 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.util.Assert;
 import org.w3c.dom.Node;
+
+import org.springframework.util.Assert;
 
 /**
  * Represents an Endpoint Reference, as defined in the WS-Addressing specification.
@@ -42,9 +43,8 @@ public final class EndpointReference implements Serializable {
 	private final List<Node> referenceParameters;
 
 	/**
-	 * Creates a new instance of the {@link EndpointReference} class with the given address. The reference parameters and
-	 * properties are empty.
-	 *
+	 * Creates a new instance of the {@link EndpointReference} class with the given
+	 * address. The reference parameters and properties are empty.
 	 * @param address the endpoint address
 	 */
 	public EndpointReference(URI address) {
@@ -55,9 +55,8 @@ public final class EndpointReference implements Serializable {
 	}
 
 	/**
-	 * Creates a new instance of the {@link EndpointReference} class with the given address, reference properties, and
-	 * reference parameters.
-	 *
+	 * Creates a new instance of the {@link EndpointReference} class with the given
+	 * address, reference properties, and reference parameters.
 	 * @param address the endpoint address
 	 * @param referenceProperties the reference properties, as a list of {@link Node}
 	 * @param referenceParameters the reference parameters, as a list of {@link Node}
@@ -76,12 +75,18 @@ public final class EndpointReference implements Serializable {
 		return address;
 	}
 
-	/** Returns the reference properties of the endpoint, as a list of {@link Node} objects. */
+	/**
+	 * Returns the reference properties of the endpoint, as a list of {@link Node}
+	 * objects.
+	 */
 	public List<Node> getReferenceProperties() {
 		return referenceProperties;
 	}
 
-	/** Returns the reference parameters of the endpoint, as a list of {@link Node} objects. */
+	/**
+	 * Returns the reference parameters of the endpoint, as a list of {@link Node}
+	 * objects.
+	 */
 	public List<Node> getReferenceParameters() {
 		return referenceParameters;
 	}
@@ -103,4 +108,5 @@ public final class EndpointReference implements Serializable {
 	public String toString() {
 		return address.toString();
 	}
+
 }

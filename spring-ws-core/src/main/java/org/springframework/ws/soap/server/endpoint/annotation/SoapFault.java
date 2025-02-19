@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,7 +26,8 @@ import java.lang.annotation.Target;
 import javax.xml.namespace.QName;
 
 /**
- * Marks an exception class with the fault elements that should be returned whenever this exception is thrown.
+ * Marks an exception class with the fault elements that should be returned whenever this
+ * exception is thrown.
  *
  * @author Arjen Poutsma
  * @see org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver
@@ -42,16 +43,19 @@ public @interface SoapFault {
 	FaultCode faultCode();
 
 	/**
-	 * The custom fault code, to be used if {@link #faultCode()} is set to {@link FaultCode#CUSTOM}.
+	 * The custom fault code, to be used if {@link #faultCode()} is set to
+	 * {@link FaultCode#CUSTOM}.
 	 * <p>
-	 * The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}" + local part, where the
-	 * namespace is optional.
+	 * The format used is that of {@link QName#toString()}, i.e. "{" + Namespace URI + "}"
+	 * + local part, where the namespace is optional.
 	 * <p>
 	 * Note that custom Fault Codes are only supported on SOAP 1.1.
 	 */
 	String customFaultCode() default "";
 
-	/** The fault string or reason text. By default, it is set to the exception message. */
+	/**
+	 * The fault string or reason text. By default, it is set to the exception message.
+	 */
 	String faultStringOrReason() default "";
 
 	/** The fault string locale. By default, it is English. */

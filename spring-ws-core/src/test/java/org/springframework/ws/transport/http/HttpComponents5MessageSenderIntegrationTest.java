@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,19 +16,15 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.*;
-
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.xml.soap.MessageFactory;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
 import org.apache.hc.client5.http.HttpRoute;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
@@ -38,12 +34,16 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.getPort;
 
 class HttpComponents5MessageSenderIntegrationTest
 		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponents5MessageSender> {
@@ -138,12 +138,14 @@ class HttpComponents5MessageSenderIntegrationTest
 			connection.receive(new SaajSoapMessageFactory(messageFactory));
 
 			appContext.close();
-		} finally {
+		}
+		finally {
 
 			if (connection != null) {
 				try {
 					connection.close();
-				} catch (IOException ex) {
+				}
+				catch (IOException ex) {
 					// ignore
 				}
 			}
@@ -164,6 +166,7 @@ class HttpComponents5MessageSenderIntegrationTest
 			FileCopyUtils.copy(request.getInputStream(), response.getOutputStream());
 
 		}
+
 	}
 
 }

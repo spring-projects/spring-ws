@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -36,7 +36,8 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 
 /**
- * {@link WebServiceMessageCallback} implementation that sets the WS-Addressing {@code Action} header on the message.
+ * {@link WebServiceMessageCallback} implementation that sets the WS-Addressing
+ * {@code Action} header on the message.
  * <p>
  * A usage example with {@link org.springframework.ws.client.core.WebServiceTemplate}:
  *
@@ -73,10 +74,10 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Create a new {@code ActionCallback} with the given {@code Action}.
 	 * <p>
 	 * The {@code To} header of the outgoing message will reflect the
-	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI}.
+	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection
+	 * URI}.
 	 * <p>
 	 * The {@link AddressingVersion} is set to {@link Addressing10}.
-	 *
 	 * @param action the value of the action property to set
 	 */
 	public ActionCallback(String action) throws URISyntaxException {
@@ -87,10 +88,10 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Create a new {@code ActionCallback} with the given {@code Action}.
 	 * <p>
 	 * The {@code To} header of the outgoing message will reflect the
-	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI}.
+	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection
+	 * URI}.
 	 * <p>
 	 * The {@link AddressingVersion} is set to {@link Addressing10}.
-	 *
 	 * @param action the value of the action property to set
 	 */
 	public ActionCallback(URI action) {
@@ -101,8 +102,8 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Create a new {@code ActionCallback} with the given version and {@code Action}.
 	 * <p>
 	 * The {@code To} header of the outgoing message will reflect the
-	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI}.
-	 *
+	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection
+	 * URI}.
 	 * @param action the value of the action property to set
 	 * @param version the WS-Addressing version to use
 	 */
@@ -111,8 +112,8 @@ public class ActionCallback implements WebServiceMessageCallback {
 	}
 
 	/**
-	 * Create a new {@code ActionCallback} with the given version, {@code Action}, and optional {@code To}.
-	 *
+	 * Create a new {@code ActionCallback} with the given version, {@code Action}, and
+	 * optional {@code To}.
 	 * @param action the value of the action property
 	 * @param version the WS-Addressing version to use
 	 * @param to the value of the destination property
@@ -154,7 +155,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code Action}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
 	 */
 	public URI getAction() {
@@ -163,7 +163,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code From}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
 	public EndpointReference getFrom() {
@@ -172,7 +171,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code From}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
 	public void setFrom(EndpointReference from) {
@@ -181,7 +179,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code ReplyTo}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
 	public EndpointReference getReplyTo() {
@@ -190,7 +187,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code ReplyTo}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
 	public void setReplyTo(EndpointReference replyTo) {
@@ -199,7 +195,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Returns the {@code FaultTo}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
 	public EndpointReference getFaultTo() {
@@ -208,7 +203,6 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	/**
 	 * Sets the {@code FaultTo}.
-	 *
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
 	public void setFaultTo(EndpointReference faultTo) {
@@ -218,8 +212,9 @@ public class ActionCallback implements WebServiceMessageCallback {
 	/**
 	 * Returns the {@code Destination} for outgoing messages.
 	 * <p>
-	 * Defaults to the {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection URI} if no
-	 * destination was set.
+	 * Defaults to the
+	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection
+	 * URI} if no destination was set.
 	 */
 	protected URI getTo() {
 		if (to == null && (isToHeaderRequired() || shouldInitializeTo)) {
@@ -227,12 +222,14 @@ public class ActionCallback implements WebServiceMessageCallback {
 			if (transportContext != null && transportContext.getConnection() != null) {
 				try {
 					return transportContext.getConnection().getUri();
-				} catch (URISyntaxException ex) {
+				}
+				catch (URISyntaxException ex) {
 					// ignore
 				}
 			}
 			throw new IllegalStateException("Could not obtain connection URI from Transport Context");
-		} else {
+		}
+		else {
 			return to;
 		}
 	}
@@ -254,8 +251,9 @@ public class ActionCallback implements WebServiceMessageCallback {
 		Assert.isInstanceOf(SoapMessage.class, message);
 		SoapMessage soapMessage = (SoapMessage) message;
 		URI messageId = getMessageIdStrategy().newMessageId(soapMessage);
-		MessageAddressingProperties map = new MessageAddressingProperties(getTo(), getFrom(), getReplyTo(), getFaultTo(),
-				getAction(), messageId);
+		MessageAddressingProperties map = new MessageAddressingProperties(getTo(), getFrom(), getReplyTo(),
+				getFaultTo(), getAction(), messageId);
 		version.addAddressingHeaders(soapMessage, map);
 	}
+
 }

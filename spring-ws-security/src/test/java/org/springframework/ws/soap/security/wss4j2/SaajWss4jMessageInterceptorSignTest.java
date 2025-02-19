@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,13 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MimeHeaders;
-import jakarta.xml.soap.SOAPHeader;
-import jakarta.xml.soap.SOAPHeaderElement;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
@@ -31,7 +24,12 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPHeader;
+import jakarta.xml.soap.SOAPHeaderElement;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -39,6 +37,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTestCase {
 
@@ -61,8 +61,8 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		interceptor.secureMessage(message, messageContext);
 
 		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
-		Iterator<?> iterator = header.getChildElements(
-				new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
+		Iterator<?> iterator = header.getChildElements(new QName(
+				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
 
 		assertThat(iterator.hasNext()).isTrue();
 
@@ -103,8 +103,8 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		interceptor.secureMessage(message, messageContext);
 
 		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
-		Iterator<?> iterator = header.getChildElements(
-				new QName("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
+		Iterator<?> iterator = header.getChildElements(new QName(
+				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
 
 		assertThat(iterator.hasNext()).isTrue();
 
@@ -126,4 +126,5 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 
 		interceptor.validateMessage(message, messageContext);
 	}
+
 }

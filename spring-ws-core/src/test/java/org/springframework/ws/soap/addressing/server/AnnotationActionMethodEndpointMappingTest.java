@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,18 +16,16 @@
 
 package org.springframework.ws.soap.addressing.server;
 
-import static org.assertj.core.api.Assertions.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPException;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -40,6 +38,8 @@ import org.springframework.ws.soap.addressing.server.annotation.Action;
 import org.springframework.ws.soap.addressing.server.annotation.Address;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Arjen Poutsma
@@ -96,7 +96,8 @@ public class AnnotationActionMethodEndpointMappingTest {
 		try {
 			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
 			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
-		} finally {
+		}
+		finally {
 			is.close();
 		}
 	}
@@ -109,6 +110,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 		public void doIt() {
 
 		}
+
 	}
 
 	private static class MyInterceptor extends DelegatingSmartEndpointInterceptor {
@@ -116,6 +118,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 		public MyInterceptor() {
 			super(new PayloadLoggingInterceptor());
 		}
+
 	}
 
 	private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
@@ -127,5 +130,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 		public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
 			return false;
 		}
+
 	}
+
 }

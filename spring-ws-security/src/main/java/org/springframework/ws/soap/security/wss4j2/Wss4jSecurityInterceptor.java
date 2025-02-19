@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -44,6 +44,9 @@ import org.apache.wss4j.dom.util.WSSecurityUtil;
 import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.SignatureTrustValidator;
 import org.apache.wss4j.dom.validate.TimestampValidator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -56,16 +59,16 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.callback.CallbackHandlerChain;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincipalCallback;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
- * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports messages created by the
+ * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports
+ * messages created by the
  * {@link org.springframework.ws.soap.axiom.AxiomSoapMessageFactory} and the
  * {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
  * <p>
- * The validation and securement actions executed by this interceptor are configured via {@code validationActions} and
- * {@code securementActions} properties, respectively. Actions should be passed as a space-separated strings.
+ * The validation and securement actions executed by this interceptor are configured via
+ * {@code validationActions} and {@code securementActions} properties, respectively.
+ * Actions should be passed as a space-separated strings.
  * <p>
  * Valid <strong>validation</strong> actions are: <blockquote>
  * <table>
@@ -129,8 +132,8 @@ import org.w3c.dom.Element;
  * </table>
  * </blockquote>
  * <p>
- * The order of the actions that the client performed to secure the messages is significant and is enforced by the
- * interceptor.
+ * The order of the actions that the client performed to secure the messages is
+ * significant and is enforced by the interceptor.
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
@@ -144,7 +147,7 @@ import org.w3c.dom.Element;
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
-	
+
 	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
 	private String securementActions;
@@ -184,6 +187,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	private boolean bspCompliant;
 
 	private boolean addInclusivePrefixes = true;
+
 	private boolean securementUseDerivedKey;
 
 	private CallbackHandler samlCallbackHandler;
@@ -203,7 +207,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Inject a customize {@link WSSecurityEngine}.
-	 *
 	 * @param securityEngine
 	 */
 	public Wss4jSecurityInterceptor(WSSecurityEngine securityEngine) {
@@ -219,7 +222,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * <p>
 	 * If this parameter is omitted, the actor name is not set.
 	 * <p>
-	 * The value of the actor or role has to match the receiver's setting or may contain standard values.
+	 * The value of the actor or role has to match the receiver's setting or may contain
+	 * standard values.
 	 */
 	public void setSecurementActor(String securementActor) {
 		handler.setOption(WSHandlerConstants.ACTOR, securementActor);
@@ -230,10 +234,12 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-	 * {@code IssuerSerial}. For possible encryption key identifier types refer to
-	 * {@link org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For encryption {@code IssuerSerial},
-	 * {@code X509KeyIdentifier}, {@code DirectReference}, {@code Thumbprint}, {@code SKIKeyIdentifier}, and
+	 * Defines which key identifier type to use. The WS-Security specifications recommends
+	 * to use the identifier type {@code IssuerSerial}. For possible encryption key
+	 * identifier types refer to
+	 * {@link org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For
+	 * encryption {@code IssuerSerial}, {@code X509KeyIdentifier},
+	 * {@code DirectReference}, {@code Thumbprint}, {@code SKIKeyIdentifier}, and
 	 * {@code EmbeddedKeyName} are valid only.
 	 */
 	public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
@@ -241,8 +247,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Defines which algorithm to use to encrypt the generated symmetric key. Currently WSS4J supports
-	 * {@link WSConstants#KEYTRANSPORT_RSA15} and {@link WSConstants#KEYTRANSPORT_RSAOEP}.
+	 * Defines which algorithm to use to encrypt the generated symmetric key. Currently
+	 * WSS4J supports {@link WSConstants#KEYTRANSPORT_RSA15} and
+	 * {@link WSConstants#KEYTRANSPORT_RSAOEP}.
 	 */
 	public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
 		handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
@@ -251,13 +258,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * Property to define which parts of the request shall be encrypted.
 	 * <p>
-	 * The value of this property is a list of semicolon separated element names that identify the elements to encrypt. An
-	 * encryption mode specifier and a namespace identification, each inside a pair of curly brackets, may precede each
-	 * element name.
+	 * The value of this property is a list of semicolon separated element names that
+	 * identify the elements to encrypt. An encryption mode specifier and a namespace
+	 * identification, each inside a pair of curly brackets, may precede each element
+	 * name.
 	 * <p>
-	 * The encryption mode specifier is either {@code {Content}} or {@code {Element}}. Please refer to the W3C XML
-	 * Encryption specification about the differences between Element and Content encryption. The encryption mode defaults
-	 * to {@code Content} if it is omitted. Example of a list:
+	 * The encryption mode specifier is either {@code {Content}} or {@code {Element}}.
+	 * Please refer to the W3C XML Encryption specification about the differences between
+	 * Element and Content encryption. The encryption mode defaults to {@code Content} if
+	 * it is omitted. Example of a list:
 	 *
 	 * <pre>
 	 * &lt;property name="securementEncryptionParts"
@@ -265,31 +274,35 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 *			   {Element}{}UserName" />
 	 * </pre>
 	 *
-	 * The first entry of the list identifies the element {@code CreditCard} in the namespace
-	 * {@code http://example.org/paymentv2}, and will encrypt its content. Be aware that the element name, the namespace
-	 * identifier, and the encryption modifier are case sensitive.
+	 * The first entry of the list identifies the element {@code CreditCard} in the
+	 * namespace {@code http://example.org/paymentv2}, and will encrypt its content. Be
+	 * aware that the element name, the namespace identifier, and the encryption modifier
+	 * are case sensitive.
 	 * <p>
-	 * The encryption modifier and the namespace identifier can be omitted. In this case the encryption mode defaults to
-	 * {@code Content} and the namespace is set to the SOAP namespace.
-	 * <p>
-	 * An empty encryption mode defaults to {@code Content}, an empty namespace identifier defaults to the SOAP namespace.
-	 * The second line of the example defines {@code Element} as encryption mode for an {@code UserName} element in the
+	 * The encryption modifier and the namespace identifier can be omitted. In this case
+	 * the encryption mode defaults to {@code Content} and the namespace is set to the
 	 * SOAP namespace.
 	 * <p>
-	 * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
-	 * sensitive string)
+	 * An empty encryption mode defaults to {@code Content}, an empty namespace identifier
+	 * defaults to the SOAP namespace. The second line of the example defines
+	 * {@code Element} as encryption mode for an {@code UserName} element in the SOAP
+	 * namespace.
 	 * <p>
-	 * If no list is specified, the handler encrypts the SOAP Body in {@code Content} mode by default.
+	 * To specify an element without a namespace use the string {@code Null} as the
+	 * namespace name (this is a case sensitive string)
+	 * <p>
+	 * If no list is specified, the handler encrypts the SOAP Body in {@code Content} mode
+	 * by default.
 	 */
 	public void setSecurementEncryptionParts(String securementEncryptionParts) {
 		handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
 	}
 
 	/**
-	 * Defines which symmetric encryption algorithm to use. WSS4J supports the following alorithms:
-	 * {@link WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128}, {@link WSConstants#AES_256}, and
-	 * {@link WSConstants#AES_192}. Except for AES 192 all of these algorithms are required by the XML Encryption
-	 * specification.
+	 * Defines which symmetric encryption algorithm to use. WSS4J supports the following
+	 * alorithms: {@link WSConstants#TRIPLE_DES}, {@link WSConstants#AES_128},
+	 * {@link WSConstants#AES_256}, and {@link WSConstants#AES_192}. Except for AES 192
+	 * all of these algorithms are required by the XML Encryption specification.
 	 */
 	public void setSecurementEncryptionSymAlgorithm(String securementEncryptionSymAlgorithm) {
 		this.handler.setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
@@ -298,19 +311,24 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * The user's name for encryption.
 	 * <p>
-	 * The encryption functions uses the public key of this user's certificate to encrypt the generated symmetric key.
+	 * The encryption functions uses the public key of this user's certificate to encrypt
+	 * the generated symmetric key.
 	 * <p>
 	 * If this parameter is not set, then the encryption function falls back to the
-	 * {@link org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the certificate.
+	 * {@link org.apache.ws.security.handler.WSHandlerConstants#USER} parameter to get the
+	 * certificate.
 	 * <p>
-	 * If <b>only</b> encryption of the SOAP body data is requested, it is recommended to use this parameter to define the
-	 * username. The application can then use the standard user and password functions (see example at
-	 * {@link org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP authentication functions.
+	 * If <b>only</b> encryption of the SOAP body data is requested, it is recommended to
+	 * use this parameter to define the username. The application can then use the
+	 * standard user and password functions (see example at
+	 * {@link org.apache.ws.security.handler.WSHandlerConstants#USER} to enable HTTP
+	 * authentication functions.
 	 * <p>
-	 * Encryption only does not authenticate a user / sender, therefore it does not need a password.
+	 * Encryption only does not authenticate a user / sender, therefore it does not need a
+	 * password.
 	 * <p>
-	 * Placing the username of the encryption certificate in the configuration file is not a security risk, because the
-	 * public key of that certificate is used only.
+	 * Placing the username of the encryption certificate in the configuration file is not
+	 * a security risk, because the public key of that certificate is used only.
 	 */
 	public void setSecurementEncryptionUser(String securementEncryptionUser) {
 		handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
@@ -323,7 +341,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * Specific parameter for UsernameToken action to define the encoding of the passowrd.
 	 * <p>
-	 * The parameter can be set to either {@link WSConstants#PW_DIGEST} or to {@link WSConstants#PW_TEXT}.
+	 * The parameter can be set to either {@link WSConstants#PW_DIGEST} or to
+	 * {@link WSConstants#PW_TEXT}.
 	 * <p>
 	 * The default setting is PW_DIGEST.
 	 */
@@ -333,7 +352,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Defines which signature algorithm to use.
-	 *
 	 * @see WSConstants#RSA
 	 * @see WSConstants#DSA
 	 */
@@ -353,10 +371,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Defines which key identifier type to use. The WS-Security specifications recommends to use the identifier type
-	 * {@code IssuerSerial}. For possible signature key identifier types refer to
-	 * {@link org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For signature {@code IssuerSerial} and
-	 * {@code DirectReference} are valid only.
+	 * Defines which key identifier type to use. The WS-Security specifications recommends
+	 * to use the identifier type {@code IssuerSerial}. For possible signature key
+	 * identifier types refer to
+	 * {@link org.apache.ws.security.handler.WSHandlerConstants#keyIdentifier}. For
+	 * signature {@code IssuerSerial} and {@code DirectReference} are valid only.
 	 */
 	public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
 		handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
@@ -365,27 +384,28 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * Property to define which parts of the request shall be signed.
 	 * <p>
-	 * Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description of the format of the value
-	 * string.
+	 * Refer to {@link #setSecurementEncryptionParts(String)} for a detailed description
+	 * of the format of the value string.
 	 * <p>
 	 * If this property is not specified the handler signs the SOAP Body by default.
 	 * <p>
-	 * The WS Security specifications define several formats to transfer the signature tokens (certificates) or references
-	 * to these tokens. Thus, the plain element name {@code Token} signs the token and takes care of the different
-	 * formats.
+	 * The WS Security specifications define several formats to transfer the signature
+	 * tokens (certificates) or references to these tokens. Thus, the plain element name
+	 * {@code Token} signs the token and takes care of the different formats.
 	 * <p>
-	 * To sign the SOAP body <b>and</b> the signature token the value of this parameter must contain:
+	 * To sign the SOAP body <b>and</b> the signature token the value of this parameter
+	 * must contain:
 	 *
 	 * <pre>
 	 * &lt;property name="securementSignatureParts"
 	 *	 value="{}{http://schemas.xmlsoap.org/soap/envelope/}Body; Token" />
 	 * </pre>
 	 *
-	 * To specify an element without a namespace use the string {@code Null} as the namespace name (this is a case
-	 * sensitive string)
+	 * To specify an element without a namespace use the string {@code Null} as the
+	 * namespace name (this is a case sensitive string)
 	 * <p>
-	 * If there is no other element in the request with a local name of {@code Body} then the SOAP namespace identifier
-	 * can be empty ({@code {}}).
+	 * If there is no other element in the request with a local name of {@code Body} then
+	 * the SOAP namespace identifier can be empty ({@code {}}).
 	 */
 	public void setSecurementSignatureParts(String securementSignatureParts) {
 		handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
@@ -394,16 +414,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * The user's name for signature.
 	 * <p>
-	 * This name is used as the alias name in the keystore to get user's certificate and private key to perform signing.
+	 * This name is used as the alias name in the keystore to get user's certificate and
+	 * private key to perform signing.
 	 * <p>
-	 * If this parameter is not set, then the signature function falls back to the alias specified by
-	 * {@link #setSecurementUsername(String)}.
+	 * If this parameter is not set, then the signature function falls back to the alias
+	 * specified by {@link #setSecurementUsername(String)}.
 	 */
 	public void setSecurementSignatureUser(String securementSignatureUser) {
 		handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
 	}
 
-	/** Sets the username for securement username token or/and the alias of the private key for securement signature */
+	/**
+	 * Sets the username for securement username token or/and the alias of the private key
+	 * for securement signature
+	 */
 	public void setSecurementUsername(String securementUsername) {
 		this.securementUsername = securementUsername;
 	}
@@ -418,7 +442,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is {@code true}.
+	 * Enables the derivation of keys as per the UsernameTokenProfile 1.1 spec. Default is
+	 * {@code true}.
 	 */
 	public void setSecurementUseDerivedKey(boolean securementUseDerivedKey) {
 		this.securementUseDerivedKey = securementUseDerivedKey;
@@ -426,7 +451,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Sets the SAML Callback used for generating SAML tokens.
-	 *
 	 * @param samlCallback
 	 */
 	public void setSecurementSamlCallbackHandler(CallbackHandler samlCallbackHandler) {
@@ -448,7 +472,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.validationActions = actions;
 		try {
 			validationActionsVector = WSSecurityUtil.decodeAction(actions);
-		} catch (WSSecurityException ex) {
+		}
+		catch (WSSecurityException ex) {
 			throw new IllegalArgumentException(ex);
 		}
 	}
@@ -459,7 +484,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Sets the {@link CallbackHandler} to use when validating messages.
-	 *
 	 * @see #setValidationCallbackHandlers(CallbackHandler[])
 	 */
 	public void setValidationCallbackHandler(CallbackHandler callbackHandler) {
@@ -468,7 +492,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Sets the {@link CallbackHandler}s to use when validating messages.
-	 *
 	 * @see #setValidationCallbackHandler(CallbackHandler)
 	 */
 	public void setValidationCallbackHandlers(CallbackHandler[] callbackHandler) {
@@ -485,7 +508,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.validationSignatureCrypto = signatureCrypto;
 	}
 
-	/** Whether to enable signatureConfirmation or not. By default signatureConfirmation is enabled */
+	/**
+	 * Whether to enable signatureConfirmation or not. By default signatureConfirmation is
+	 * enabled
+	 */
 	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
 
 		handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
@@ -497,27 +523,33 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
 	}
 
-	/** Sets whether or not timestamp verification is done with the server-side time to live */
+	/**
+	 * Sets whether or not timestamp verification is done with the server-side time to
+	 * live
+	 */
 	public void setTimestampStrict(boolean timestampStrict) {
 		this.timestampStrict = timestampStrict;
 	}
 
 	/**
-	 * Enables the {@code mustUnderstand} attribute on WS-Security headers on outgoing messages. Default is {@code true}.
+	 * Enables the {@code mustUnderstand} attribute on WS-Security headers on outgoing
+	 * messages. Default is {@code true}.
 	 */
 	public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
 		handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
 	}
 
 	/**
-	 * Sets whether or not a {@code Nonce} element is added to the {@code UsernameToken}s. Default is {@code false}.
+	 * Sets whether or not a {@code Nonce} element is added to the {@code UsernameToken}s.
+	 * Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenNonce(boolean securementUsernameTokenNonce) {
 		handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_NONCE, securementUsernameTokenNonce);
 	}
 
 	/**
-	 * Sets whether or not a {@code Created} element is added to the {@code UsernameToken}s. Default is {@code false}.
+	 * Sets whether or not a {@code Created} element is added to the
+	 * {@code UsernameToken}s. Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenCreated(boolean securementUsernameTokenCreated) {
 		handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_CREATED, securementUsernameTokenCreated);
@@ -526,9 +558,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	/**
 	 * Sets the web service specification settings.
 	 * <p>
-	 * The default settings follow the latest OASIS and changing anything might violate the OASIS specs.
-	 *
-	 * @param config web service security configuration or {@code null} to use default settings
+	 * The default settings follow the latest OASIS and changing anything might violate
+	 * the OASIS specs.
+	 * @param config web service security configuration or {@code null} to use default
+	 * settings
 	 */
 	public void setWssConfig(WSSConfig config) {
 
@@ -553,8 +586,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets whether to add an InclusiveNamespaces PrefixList as a CanonicalizationMethod child when generating Signatures
-	 * using WSConstants.C14N_EXCL_OMIT_COMMENTS. Default is {@code true}.
+	 * Sets whether to add an InclusiveNamespaces PrefixList as a CanonicalizationMethod
+	 * child when generating Signatures using WSConstants.C14N_EXCL_OMIT_COMMENTS. Default
+	 * is {@code true}.
 	 */
 	public void setAddInclusivePrefixes(boolean addInclusivePrefixes) {
 
@@ -570,8 +604,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets the time in seconds in the future within which the Created time of an incoming Timestamp is valid. The default
-	 * is 60 seconds.
+	 * Sets the time in seconds in the future within which the Created time of an incoming
+	 * Timestamp is valid. The default is 60 seconds.
 	 */
 	public void setFutureTimeToLive(int futureTimeToLive) {
 
@@ -614,7 +648,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		List<HandlerAction> securementActionsVector = new ArrayList<HandlerAction>();
 		try {
 			securementActionsVector = WSSecurityUtil.decodeHandlerAction(securementActions, wssConfig);
-		} catch (WSSecurityException ex) {
+		}
+		catch (WSSecurityException ex) {
 			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
 		}
 
@@ -629,7 +664,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		Document envelopeAsDocument = soapMessage.getDocument();
 		try {
 			handler.doSenderAction(envelopeAsDocument, requestData, securementActionsVector, false);
-		} catch (WSSecurityException ex) {
+		}
+		catch (WSSecurityException ex) {
 			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
 		}
 
@@ -638,7 +674,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Creates and initializes a request data for the given message context.
-	 *
 	 * @param messageContext the message context
 	 * @return the request data
 	 */
@@ -651,7 +686,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		String contextUsername = (String) messageContext.getProperty(SECUREMENT_USER_PROPERTY_NAME);
 		if (StringUtils.hasLength(contextUsername)) {
 			requestData.setUsername(contextUsername);
-		} else {
+		}
+		else {
 			requestData.setUsername(securementUsername);
 		}
 
@@ -675,7 +711,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Creates and initializes a request data for the given message context.
-	 *
 	 * @param messageContext the message context
 	 * @return the request data
 	 */
@@ -756,7 +791,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			verifyTimestamp(result);
 
 			processPrincipal(result);
-		} catch (WSSecurityException ex) {
+		}
+		catch (WSSecurityException ex) {
 			throw new Wss4jSecurityValidationException(ex.getMessage(), ex);
 		}
 
@@ -768,9 +804,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Checks whether the received headers match the configured validation actions. Subclasses could override this method
-	 * for custom verification behavior.
-	 *
+	 * Checks whether the received headers match the configured validation actions.
+	 * Subclasses could override this method for custom verification behavior.
 	 * @param results the results of the validation function
 	 * @param validationActions the decoded validation actions
 	 * @throws Wss4jSecurityValidationException if the results are deemed invalid
@@ -784,27 +819,26 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Puts the results of WS-Security headers processing in the message context. Some actions like Signature Confirmation
-	 * require this.
+	 * Puts the results of WS-Security headers processing in the message context. Some
+	 * actions like Signature Confirmation require this.
 	 */
 	@SuppressWarnings("unchecked")
 	private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
 
 		List<WSHandlerResult> handlerResults;
 		if ((handlerResults = (List<WSHandlerResult>) messageContext
-				.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+			.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
 			handlerResults = new ArrayList<WSHandlerResult>();
 			messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 		}
 		WSHandlerResult rResult = new WSHandlerResult(validationActor, results,
-				Collections.<Integer, List<WSSecurityEngineResult>> emptyMap());
+				Collections.<Integer, List<WSSecurityEngineResult>>emptyMap());
 		handlerResults.add(0, rResult);
 		messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 	}
 
 	/**
 	 * Verifies the trust of a certificate.
-	 *
 	 * @param result
 	 */
 	protected void verifyCertificateTrust(WSHandlerResult result) throws WSSecurityException {
@@ -813,7 +847,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		if (!CollectionUtils.isEmpty(results)) {
 			WSSecurityEngineResult actionResult = results.get(0);
-			X509Certificate returnCert = (X509Certificate) actionResult.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
+			X509Certificate returnCert = (X509Certificate) actionResult
+				.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
 			Credential credential = new Credential();
 			credential.setCertificates(new X509Certificate[] { returnCert });
 
@@ -828,7 +863,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Verifies the timestamp.
-	 *
 	 * @param result
 	 */
 	protected void verifyTimestamp(WSHandlerResult result) throws WSSecurityException {
@@ -865,9 +899,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 				UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
 				try {
 					validationCallbackHandler.handle(new Callback[] { callback });
-				} catch (IOException ex) {
+				}
+				catch (IOException ex) {
 					logger.warn("Principal callback resulted in IOException", ex);
-				} catch (UnsupportedCallbackException ex) {
+				}
+				catch (UnsupportedCallbackException ex) {
 					// ignore
 				}
 			}
@@ -881,11 +917,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			try {
 				CleanupCallback cleanupCallback = new CleanupCallback();
 				validationCallbackHandler.handle(new Callback[] { cleanupCallback });
-			} catch (IOException ex) {
+			}
+			catch (IOException ex) {
 				logger.warn("Cleanup callback resulted in IOException", ex);
-			} catch (UnsupportedCallbackException ex) {
+			}
+			catch (UnsupportedCallbackException ex) {
 				// ignore
 			}
 		}
 	}
+
 }

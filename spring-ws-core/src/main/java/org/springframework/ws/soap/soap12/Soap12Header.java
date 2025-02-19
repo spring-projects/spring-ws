@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,27 +34,26 @@ public interface Soap12Header extends SoapHeader {
 
 	/**
 	 * Adds a new NotUnderstood {@code SoapHeaderElement} this header.
-	 *
 	 * @param headerName the qualified name of the header that was not understood
 	 * @return the created {@code SoapHeaderElement}
-	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be created
+	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be
+	 * created
 	 */
 	SoapHeaderElement addNotUnderstoodHeaderElement(QName headerName);
 
 	/**
 	 * Adds a new Upgrade {@code SoapHeaderElement} this header.
-	 *
 	 * @param supportedSoapUris an array of the URIs of SOAP versions supported
 	 * @return the created {@code SoapHeaderElement}
-	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be created
+	 * @throws org.springframework.ws.soap.SoapHeaderException if the header cannot be
+	 * created
 	 */
 	SoapHeaderElement addUpgradeHeaderElement(java.lang.String[] supportedSoapUris);
 
 	/**
-	 * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements} that should be processed for the
-	 * given roles. Headers target to the "next" role will always be included, and those targeted to "none" will never be
-	 * included.
-	 *
+	 * Returns an {@code Iterator} over all the {@link SoapHeaderElement header elements}
+	 * that should be processed for the given roles. Headers target to the "next" role
+	 * will always be included, and those targeted to "none" will never be included.
 	 * @param roles an array of roles to search for
 	 * @param isUltimateReceiver whether to search for headers for the ultimate receiver
 	 * @return an iterator over all the header elements that contain the specified roles

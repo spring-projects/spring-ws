@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -60,8 +61,8 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	}
 
 	/**
-	 * Creates a single {@link PortType}, and calls {@link #populatePortType(Definition, PortType)} with it.
-	 *
+	 * Creates a single {@link PortType}, and calls
+	 * {@link #populatePortType(Definition, PortType)} with it.
 	 * @param definition the WSDL4J {@code Definition}
 	 * @throws WSDLException in case of errors
 	 */
@@ -81,7 +82,6 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 * Called after the {@link PortType} has been created.
 	 * <p>
 	 * Default implementation sets the name of the port type to the defined value.
-	 *
 	 * @param portType the WSDL4J {@code PortType}
 	 * @throws WSDLException in case of errors
 	 * @see #setPortTypeName(String)
@@ -122,12 +122,14 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 					input.setMessage(message);
 					populateInput(definition, input);
 					operation.setInput(input);
-				} else if (isOutputMessage(message)) {
+				}
+				else if (isOutputMessage(message)) {
 					Output output = definition.createOutput();
 					output.setMessage(message);
 					populateOutput(definition, output);
 					operation.setOutput(output);
-				} else if (isFaultMessage(message)) {
+				}
+				else if (isFaultMessage(message)) {
 					Fault fault = definition.createFault();
 					fault.setMessage(message);
 					populateFault(definition, fault);
@@ -137,35 +139,35 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			operation.setStyle(getOperationType(operation));
 			operation.setUndefined(false);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
+				logger
+					.debug("Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
 			}
 			portType.addOperation(operation);
 		}
 	}
 
 	/**
-	 * Template method that returns the name of the operation coupled to the given {@link Message}. Subclasses can return
-	 * {@code null} to indicate that a message should not be coupled to an operation.
-	 *
+	 * Template method that returns the name of the operation coupled to the given
+	 * {@link Message}. Subclasses can return {@code null} to indicate that a message
+	 * should not be coupled to an operation.
 	 * @param message the WSDL4J {@code Message}
 	 * @return the operation name; or {@code null}
 	 */
 	protected abstract String getOperationName(Message message);
 
 	/**
-	 * Indicates whether the given name name should be included as {@link Input} message in the definition.
-	 *
+	 * Indicates whether the given name name should be included as {@link Input} message
+	 * in the definition.
 	 * @param message the message
 	 * @return {@code true} if to be included as input; {@code false} otherwise
 	 */
 	protected abstract boolean isInputMessage(Message message);
 
 	/**
-	 * Called after the {@link javax.wsdl.Input} has been created, but it's added to the operation. Subclasses can
-	 * override this method to define the input name.
+	 * Called after the {@link javax.wsdl.Input} has been created, but it's added to the
+	 * operation. Subclasses can override this method to define the input name.
 	 * <p>
 	 * Default implementation sets the input name to the message name.
-	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param input the WSDL4J {@code Input}
 	 */
@@ -174,19 +176,18 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	}
 
 	/**
-	 * Indicates whether the given name name should be included as {@link Output} message in the definition.
-	 *
+	 * Indicates whether the given name name should be included as {@link Output} message
+	 * in the definition.
 	 * @param message the message
 	 * @return {@code true} if to be included as output; {@code false} otherwise
 	 */
 	protected abstract boolean isOutputMessage(Message message);
 
 	/**
-	 * Called after the {@link javax.wsdl.Output} has been created, but it's added to the operation. Subclasses can
-	 * override this method to define the output name.
+	 * Called after the {@link javax.wsdl.Output} has been created, but it's added to the
+	 * operation. Subclasses can override this method to define the output name.
 	 * <p>
 	 * Default implementation sets the output name to the message name.
-	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param output the WSDL4J {@code Output}
 	 */
@@ -195,19 +196,18 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	}
 
 	/**
-	 * Indicates whether the given name name should be included as {@link Fault} message in the definition.
-	 *
+	 * Indicates whether the given name name should be included as {@link Fault} message
+	 * in the definition.
 	 * @param message the message
 	 * @return {@code true} if to be included as fault; {@code false} otherwise
 	 */
 	protected abstract boolean isFaultMessage(Message message);
 
 	/**
-	 * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the operation. Subclasses can
-	 * override this method to define the fault name.
+	 * Called after the {@link javax.wsdl.Fault} has been created, but it's added to the
+	 * operation. Subclasses can override this method to define the fault name.
 	 * <p>
 	 * Default implementation sets the fault name to the message name.
-	 *
 	 * @param definition the WSDL4J {@code Definition}
 	 * @param fault the WSDL4J {@code Fault}
 	 */
@@ -218,9 +218,9 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	/**
 	 * Returns the {@link OperationType} for the given operation.
 	 * <p>
-	 * Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input and output are set;
-	 * {@link OperationType#ONE_WAY} if only input is set, or {@link OperationType#NOTIFICATION} if only output is set.
-	 *
+	 * Default implementation returns {@link OperationType#REQUEST_RESPONSE} if both input
+	 * and output are set; {@link OperationType#ONE_WAY} if only input is set, or
+	 * {@link OperationType#NOTIFICATION} if only output is set.
 	 * @param operation the WSDL4J {@code Operation}
 	 * @return the operation type for the operation
 	 */
@@ -228,11 +228,14 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
 		if (operation.getInput() != null && operation.getOutput() != null) {
 			return OperationType.REQUEST_RESPONSE;
-		} else if (operation.getInput() != null && operation.getOutput() == null) {
+		}
+		else if (operation.getInput() != null && operation.getOutput() == null) {
 			return OperationType.ONE_WAY;
-		} else if (operation.getInput() == null && operation.getOutput() != null) {
+		}
+		else if (operation.getInput() == null && operation.getOutput() != null) {
 			return OperationType.NOTIFICATION;
-		} else {
+		}
+		else {
 			return null;
 		}
 	}

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,15 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MessageMethodEndpointAdapterTest {
 
@@ -50,15 +51,16 @@ public class MessageMethodEndpointAdapterTest {
 	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
 		assertThat(adapter.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams",
-				new Class[] { MessageContext.class, MessageContext.class }))).isFalse();
+				new Class[] { MessageContext.class, MessageContext.class })))
+			.isFalse();
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
-		assertThat(
-				adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[] { String.class })))
-						.isFalse();
+		assertThat(adapter
+			.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[] { String.class })))
+			.isFalse();
 	}
 
 	@Test
@@ -77,7 +79,10 @@ public class MessageMethodEndpointAdapterTest {
 		supportedInvoked = true;
 	}
 
-	public void unsupportedMultipleParams(MessageContext s1, MessageContext s2) {}
+	public void unsupportedMultipleParams(MessageContext s1, MessageContext s2) {
+	}
 
-	public void unsupportedWrongParam(String request) {}
+	public void unsupportedWrongParam(String request) {
+	}
+
 }

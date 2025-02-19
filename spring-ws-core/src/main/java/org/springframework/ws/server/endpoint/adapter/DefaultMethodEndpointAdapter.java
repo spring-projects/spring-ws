@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -43,8 +43,8 @@ import org.springframework.ws.server.endpoint.adapter.method.jaxb.XmlRootElement
 
 /**
  * Default extension of {@link AbstractMethodEndpointAdapter} with support for pluggable
- * {@linkplain MethodArgumentResolver argument resolvers} and {@linkplain MethodReturnValueHandler return value
- * handlers}.
+ * {@linkplain MethodArgumentResolver argument resolvers} and
+ * {@linkplain MethodReturnValueHandler return value handlers}.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -98,8 +98,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	/**
-	 * Sets the custom handlers for method arguments. Custom handlers are ordered after built-in ones. To override the
-	 * built-in support for return value handling use {@link #setMethodArgumentResolvers(List)}.
+	 * Sets the custom handlers for method arguments. Custom handlers are ordered after
+	 * built-in ones. To override the built-in support for return value handling use
+	 * {@link #setMethodArgumentResolvers(List)}.
 	 */
 	public void setCustomMethodArgumentResolvers(List<MethodArgumentResolver> customMethodArgumentResolvers) {
 		this.customMethodArgumentResolvers = customMethodArgumentResolvers;
@@ -127,8 +128,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	/**
-	 * Sets the handlers for custom return value types. Custom handlers are ordered after built-in ones. To override the
-	 * built-in support for return value handling use {@link #setMethodReturnValueHandlers(List)}.
+	 * Sets the handlers for custom return value types. Custom handlers are ordered after
+	 * built-in ones. To override the built-in support for return value handling use
+	 * {@link #setMethodReturnValueHandlers(List)}.
 	 */
 	public void setCustomMethodReturnValueHandlers(List<MethodReturnValueHandler> customMethodReturnValueHandlers) {
 		this.customMethodReturnValueHandlers = customMethodReturnValueHandlers;
@@ -190,16 +192,17 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	/**
-	 * Certain (SOAP-specific) {@code MethodArgumentResolver}s have to be instantiated by class name, in order to not
-	 * introduce a cyclic dependency.
+	 * Certain (SOAP-specific) {@code MethodArgumentResolver}s have to be instantiated by
+	 * class name, in order to not introduce a cyclic dependency.
 	 */
 	@SuppressWarnings("unchecked")
 	private void addMethodArgumentResolver(String className, List<MethodArgumentResolver> methodArgumentResolvers) {
 		try {
 			Class<MethodArgumentResolver> methodArgumentResolverClass = (Class<MethodArgumentResolver>) ClassUtils
-					.forName(className, getClassLoader());
+				.forName(className, getClassLoader());
 			methodArgumentResolvers.add(BeanUtils.instantiateClass(methodArgumentResolverClass));
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			logger.warn("Could not find \"" + className + "\" on the classpath");
 		}
 	}
@@ -297,15 +300,16 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	/**
 	 * Returns the argument array for the given method endpoint.
 	 * <p>
-	 * This implementation iterates over the set {@linkplain #setMethodArgumentResolvers(List) argument resolvers} to
-	 * resolve each argument.
-	 *
+	 * This implementation iterates over the set
+	 * {@linkplain #setMethodArgumentResolvers(List) argument resolvers} to resolve each
+	 * argument.
 	 * @param messageContext the current message context
 	 * @param methodEndpoint the method endpoint to get arguments for
 	 * @return the arguments
 	 * @throws Exception in case of errors
 	 */
-	protected Object[] getMethodArguments(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
+	protected Object[] getMethodArguments(MessageContext messageContext, MethodEndpoint methodEndpoint)
+			throws Exception {
 		MethodParameter[] parameters = methodEndpoint.getMethodParameters();
 		Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
@@ -322,9 +326,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	/**
 	 * Handle the return value for the given method endpoint.
 	 * <p>
-	 * This implementation iterates over the set {@linkplain #setMethodReturnValueHandlers(java.util.List)} return value
-	 * handlers} to resolve the return value.
-	 *
+	 * This implementation iterates over the set
+	 * {@linkplain #setMethodReturnValueHandlers(java.util.List)} return value handlers}
+	 * to resolve the return value.
 	 * @param messageContext the current message context
 	 * @param returnValue the return value
 	 * @param methodEndpoint the method endpoint to get arguments for
@@ -339,6 +343,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 				return;
 			}
 		}
-		throw new IllegalStateException("Return value [" + returnValue + "] not resolved by any MethodReturnValueHandler");
+		throw new IllegalStateException(
+				"Return value [" + returnValue + "] not resolved by any MethodReturnValueHandler");
 	}
+
 }

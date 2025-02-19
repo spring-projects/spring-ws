@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,28 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.activation.DataHandler;
-import jakarta.xml.soap.*;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
+
+import jakarta.activation.DataHandler;
+import jakarta.xml.soap.AttachmentPart;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPElement;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPMessage;
+import jakarta.xml.soap.SOAPPart;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -37,15 +51,10 @@ import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSOutput;
-import org.w3c.dom.ls.LSSerializer;
 
 /**
- * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the {@link SaajSoapMessageFactory},
- * wraps a {@link SOAPMessage}.
+ * SAAJ-specific implementation of the {@link SoapMessage} interface. Created via the
+ * {@link SaajSoapMessageFactory}, wraps a {@link SOAPMessage}.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -66,7 +75,6 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 	/**
 	 * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
-	 *
 	 * @param soapMessage the SAAJ SOAPMessage
 	 */
 	public SaajSoapMessage(SOAPMessage soapMessage) {
@@ -75,7 +83,6 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 	/**
 	 * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
-	 *
 	 * @param soapMessage the SAAJ SOAPMessage
 	 * @param messageFactory the SAAJ message factory
 	 */
@@ -85,10 +92,9 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 	/**
 	 * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
-	 *
 	 * @param soapMessage the SAAJ SOAPMessage
-	 * @param langAttributeOnSoap11FaultString whether a {@code xml:lang} attribute is allowed on SOAP 1.1
-	 *          {@code <faultstring>} elements
+	 * @param langAttributeOnSoap11FaultString whether a {@code xml:lang} attribute is
+	 * allowed on SOAP 1.1 {@code <faultstring>} elements
 	 */
 	public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString) {
 		this(soapMessage, langAttributeOnSoap11FaultString, null);
@@ -96,10 +102,9 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 	/**
 	 * Create a new {@code SaajSoapMessage} based on the given SAAJ {@code SOAPMessage}.
-	 *
 	 * @param soapMessage the SAAJ SOAPMessage
-	 * @param langAttributeOnSoap11FaultString whether a {@code xml:lang} attribute is allowed on SOAP 1.1
-	 *          {@code <faultstring>} elements
+	 * @param langAttributeOnSoap11FaultString whether a {@code xml:lang} attribute is
+	 * allowed on SOAP 1.1 {@code <faultstring>} elements
 	 * @param messageFactory the message factory
 	 */
 	public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString,
@@ -110,12 +115,16 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		this.messageFactory = messageFactory;
 	}
 
-	/** Return the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
+	/**
+	 * Return the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on.
+	 */
 	public SOAPMessage getSaajMessage() {
 		return saajMessage;
 	}
 
-	/** Sets the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on. */
+	/**
+	 * Sets the SAAJ {@code SOAPMessage} that this {@code SaajSoapMessage} is based on.
+	 */
 	public void setSaajMessage(SOAPMessage soapMessage) {
 		Assert.notNull(soapMessage, "soapMessage must not be null");
 		saajMessage = soapMessage;
@@ -128,7 +137,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			try {
 				SOAPEnvelope saajEnvelope = getSaajMessage().getSOAPPart().getEnvelope();
 				envelope = new SaajSoapEnvelope(saajEnvelope, langAttributeOnSoap11FaultString);
-			} catch (SOAPException ex) {
+			}
+			catch (SOAPException ex) {
 				throw new SaajSoapEnvelopeException(ex);
 			}
 		}
@@ -141,11 +151,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		if (SoapVersion.SOAP_11 == getVersion()) {
 			String[] actions = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
 			return ObjectUtils.isEmpty(actions) ? TransportConstants.EMPTY_SOAP_ACTION : actions[0];
-		} else if (SoapVersion.SOAP_12 == getVersion()) {
+		}
+		else if (SoapVersion.SOAP_12 == getVersion()) {
 			String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
 			return !ObjectUtils.isEmpty(contentTypes) ? SoapUtils.extractActionFromContentType(contentTypes[0])
 					: TransportConstants.EMPTY_SOAP_ACTION;
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Unsupported SOAP version: " + getVersion());
 		}
 	}
@@ -156,11 +168,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		soapAction = SoapUtils.escapeAction(soapAction);
 		if (SoapVersion.SOAP_11 == getVersion()) {
 			mimeHeaders.setHeader(TransportConstants.HEADER_SOAP_ACTION, soapAction);
-		} else if (SoapVersion.SOAP_12 == getVersion()) {
+		}
+		else if (SoapVersion.SOAP_12 == getVersion()) {
 			// force save of Content Type header
 			try {
 				saajMessage.saveChanges();
-			} catch (SOAPException ex) {
+			}
+			catch (SOAPException ex) {
 				throw new SaajSoapMessageException("Could not save message", ex);
 			}
 			String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
@@ -168,7 +182,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			contentType = SoapUtils.setActionInContentType(contentType, soapAction);
 			mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 			mimeHeaders.removeHeader(TransportConstants.HEADER_SOAP_ACTION);
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Unsupported SOAP version: " + getVersion());
 		}
 
@@ -177,7 +192,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	@Override
 	public Document getDocument() {
 		Assert.state(messageFactory != null, "Could find message factory to use");
-		// return saajSoapMessage.getSaajMessage().getSOAPPart(); // does not work, see SWS-345
+		// return saajSoapMessage.getSaajMessage().getSOAPPart(); // does not work, see
+		// SWS-345
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			getSaajMessage().writeTo(bos);
@@ -185,7 +201,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			SOAPMessage saajMessage = messageFactory.createMessage(getSaajMessage().getMimeHeaders(), bis);
 			setSaajMessage(saajMessage);
 			return saajMessage.getSOAPPart();
-		} catch (SOAPException | IOException ex) {
+		}
+		catch (SOAPException | IOException ex) {
 			throw new SaajSoapMessageException("Could not save changes", ex);
 		}
 	}
@@ -210,7 +227,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 				this.saajMessage = messageFactory.createMessage(saajMessage.getMimeHeaders(), bis);
 
-			} catch (SOAPException | IOException ex) {
+			}
+			catch (SOAPException | IOException ex) {
 				throw new SaajSoapMessageException("Could not read input stream", ex);
 			}
 		}
@@ -227,13 +245,17 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			message.saveChanges();
 			if (outputStream instanceof TransportOutputStream) {
 				TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
-				// some SAAJ implementations (Axis 1) do not have a Content-Type header by default
+				// some SAAJ implementations (Axis 1) do not have a Content-Type header by
+				// default
 				MimeHeaders headers = message.getMimeHeaders();
 				if (ObjectUtils.isEmpty(headers.getHeader(TransportConstants.HEADER_CONTENT_TYPE))) {
 					SOAPEnvelope envelope1 = message.getSOAPPart().getEnvelope();
-					if (envelope1.getElementQName().getNamespaceURI().equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
+					if (envelope1.getElementQName()
+						.getNamespaceURI()
+						.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
 						headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_11.getContentType());
-					} else {
+					}
+					else {
 						headers.addHeader(TransportConstants.HEADER_CONTENT_TYPE, SoapVersion.SOAP_12.getContentType());
 					}
 					message.saveChanges();
@@ -246,7 +268,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 			message.writeTo(outputStream);
 
 			outputStream.flush();
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new SaajSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
 		}
 	}
@@ -273,7 +296,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	private void convertMessageToXop() {
 		MimeHeaders mimeHeaders = saajMessage.getMimeHeaders();
 		String[] oldContentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
-		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
+		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0]
+				: getVersion().getContentType();
 		mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE,
 				CONTENT_TYPE_XOP + ";type=" + '"' + oldContentType + '"');
 	}
@@ -281,7 +305,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	private void convertPartToXop() {
 		SOAPPart saajPart = saajMessage.getSOAPPart();
 		String[] oldContentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
-		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0] : getVersion().getContentType();
+		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0]
+				: getVersion().getContentType();
 		saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE,
 				CONTENT_TYPE_XOP + ";type=" + '"' + oldContentType + '"');
 	}
@@ -333,7 +358,8 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 					}
 				}
 			}
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			// ignore
 		}
 		return builder.toString();
@@ -362,6 +388,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		public void remove() {
 			saajIterator.remove();
 		}
+
 	}
 
 }

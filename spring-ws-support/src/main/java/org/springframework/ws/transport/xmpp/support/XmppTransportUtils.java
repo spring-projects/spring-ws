@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.xmpp.XmppTransportConstants;
 
@@ -34,7 +35,8 @@ import org.springframework.ws.transport.xmpp.XmppTransportConstants;
  */
 public abstract class XmppTransportUtils {
 
-	private XmppTransportUtils() {}
+	private XmppTransportUtils() {
+	}
 
 	/**
 	 * Converts the given XMPP destination into a {@code xmpp} URI.
@@ -54,7 +56,8 @@ public abstract class XmppTransportUtils {
 	public static String getErrorMessage(Message message) {
 		if (message == null || !Message.Type.error.equals(message.getType())) {
 			return null;
-		} else {
+		}
+		else {
 			return message.getBody();
 		}
 	}
@@ -73,7 +76,8 @@ public abstract class XmppTransportUtils {
 		String value = JivePropertiesManager.getProperty(message, name).toString();
 		if (value != null) {
 			return Collections.singletonList(value).iterator();
-		} else {
+		}
+		else {
 			return Collections.emptyIterator();
 		}
 	}

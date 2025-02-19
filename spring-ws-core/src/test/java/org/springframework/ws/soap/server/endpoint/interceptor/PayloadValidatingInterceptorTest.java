@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,12 +16,6 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -29,8 +23,14 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -46,8 +46,9 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -109,7 +110,8 @@ public class PayloadValidatingInterceptorTest {
 		Soap11Fault fault = (Soap11Fault) response.getSoapBody().getFault();
 
 		assertThat(fault.getFaultCode()).isEqualTo(SoapVersion.SOAP_11.getClientOrSenderFaultName());
-		assertThat(fault.getFaultStringOrReason()).isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
+		assertThat(fault.getFaultStringOrReason())
+			.isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
 		assertThat(fault.getFaultDetail()).isNotNull();
 	}
 
@@ -134,7 +136,7 @@ public class PayloadValidatingInterceptorTest {
 
 		assertThat(fault.getFaultCode()).isEqualTo(SoapVersion.SOAP_12.getClientOrSenderFaultName());
 		assertThat(fault.getFaultReasonText(Locale.ENGLISH))
-				.isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
+			.isEqualTo(PayloadValidatingInterceptor.DEFAULT_FAULTSTRING_OR_REASON);
 		assertThat(fault.getFaultDetail()).isNotNull();
 	}
 
@@ -218,10 +220,11 @@ public class PayloadValidatingInterceptorTest {
 	@Test
 	public void testNamespacesInType() throws Exception {
 
-		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
+		// Make sure we use Xerces for this testcase: the JAXP implementation used
+		// internally by JDK 1.5 has a bug
 		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
 		String previousSchemaFactory = System
-				.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
+			.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 		System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 				"org.apache.xerces.jaxp.validation.XMLSchemaFactory");
 		try {
@@ -231,13 +234,15 @@ public class PayloadValidatingInterceptorTest {
 			MessageFactory messageFactory = MessageFactory.newInstance();
 			SOAPMessage saajMessage = SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()),
 					messageFactory);
-			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(messageFactory));
+			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage),
+					new SaajSoapMessageFactory(messageFactory));
 
 			boolean result = interceptor.handleRequest(context, null);
 
 			assertThat(result).isTrue();
 			assertThat(context.hasResponse()).isFalse();
-		} finally {
+		}
+		finally {
 			// Reset the property
 			System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 					previousSchemaFactory);
@@ -339,11 +344,14 @@ public class PayloadValidatingInterceptorTest {
 				return new SAXParseException[0];
 			}
 
-			public void warning(SAXParseException exception) throws SAXException {}
+			public void warning(SAXParseException exception) throws SAXException {
+			}
 
-			public void error(SAXParseException exception) throws SAXException {}
+			public void error(SAXParseException exception) throws SAXException {
+			}
 
-			public void fatalError(SAXParseException exception) throws SAXException {}
+			public void fatalError(SAXParseException exception) throws SAXException {
+			}
 		};
 
 		interceptor.setErrorHandler(errorHandler);
@@ -357,4 +365,5 @@ public class PayloadValidatingInterceptorTest {
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isFalse();
 	}
+
 }

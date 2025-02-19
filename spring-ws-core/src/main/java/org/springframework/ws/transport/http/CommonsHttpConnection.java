@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,13 +31,14 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.ByteArrayRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons HttpClient. Exposes a
- * {@link PostMethod}.
+ * Implementation of {@link WebServiceConnection} that is based on Jakarta Commons
+ * HttpClient. Exposes a {@link PostMethod}.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -82,7 +83,8 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	public URI getUri() throws URISyntaxException {
 		try {
 			return new URI(postMethod.getURI().toString());
-		} catch (URIException ex) {
+		}
+		catch (URIException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}
@@ -112,14 +114,17 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 		requestBuffer = null;
 		try {
 			httpClient.executeMethod(postMethod);
-		} catch (IllegalStateException ex) {
+		}
+		catch (IllegalStateException ex) {
 			if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
-				// The application context has been closed, resulting in a connection factory shutdown and an ISE.
+				// The application context has been closed, resulting in a connection
+				// factory shutdown and an ISE.
 				// Let's create a new connection factory for this connection only.
 				connectionManager = new MultiThreadedHttpConnectionManager();
 				httpClient.setHttpConnectionManager(connectionManager);
 				httpClient.executeMethod(postMethod);
-			} else {
+			}
+			else {
 				throw ex;
 			}
 		}

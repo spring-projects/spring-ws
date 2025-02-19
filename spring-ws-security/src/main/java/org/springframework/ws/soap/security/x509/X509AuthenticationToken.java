@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,18 +31,23 @@ import org.springframework.security.core.GrantedAuthority;
  * @author Luke Taylor
  */
 public class X509AuthenticationToken extends AbstractAuthenticationToken {
-	// ~ Instance fields ================================================================================================
+
+	// ~ Instance fields
+	// ================================================================================================
 
 	private static final long serialVersionUID = 1L;
+
 	private Object principal;
+
 	private X509Certificate credentials;
 
-	// ~ Constructors ===================================================================================================
+	// ~ Constructors
+	// ===================================================================================================
 
 	/**
-	 * Used for an authentication request. The {@link org.springframework.security.core.Authentication#isAuthenticated()}
-	 * will return {@code false}.
-	 *
+	 * Used for an authentication request. The
+	 * {@link org.springframework.security.core.Authentication#isAuthenticated()} will
+	 * return {@code false}.
 	 * @param credentials the certificate
 	 */
 	public X509AuthenticationToken(X509Certificate credentials) {
@@ -52,8 +57,8 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 
 	/**
 	 * Used for an authentication response object. The
-	 * {@link org.springframework.security.core.Authentication#isAuthenticated()} will return {@code true}.
-	 *
+	 * {@link org.springframework.security.core.Authentication#isAuthenticated()} will
+	 * return {@code true}.
 	 * @param principal the principal, which is generally a {@code UserDetails}
 	 * @param credentials the certificate
 	 * @param authorities the authorities
@@ -66,7 +71,8 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 		setAuthenticated(true);
 	}
 
-	// ~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
 	@Override
 	public Object getCredentials() {
@@ -77,4 +83,5 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 	public Object getPrincipal() {
 		return principal;
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,17 @@
 
 package org.springframework.ws.client.core;
 
-import static org.assertj.core.api.Assertions.*;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import jakarta.activation.DataHandler;
 import jakarta.mail.util.ByteArrayDataSource;
@@ -31,19 +41,6 @@ import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.StringTokenizer;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Connector;
@@ -55,6 +52,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -68,7 +67,9 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
@@ -137,7 +138,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		logger.info(">>> Test case");
 
 		StringResult result = new StringResult();
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload), result);
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload),
+				result);
 
 		assertThat(b).isTrue();
 		XmlAssert.assertThat(result.toString()).and(messagePayload).ignoreWhitespace().areIdentical();
@@ -146,8 +148,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	@Test
 	public void sendSourceAndReceiveToResultNoResponse() {
 
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse", new StringSource(messagePayload),
-				new StringResult());
+		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
+				new StringSource(messagePayload), new StringResult());
 
 		assertThat(b).isFalse();
 	}
@@ -166,7 +168,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 				assertThat(requestObject).isEqualTo(graph);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				} catch (TransformerException e) {
+				}
+				catch (TransformerException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -217,7 +220,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 				assertThat(requestObject).isEqualTo(graph);
 				try {
 					transformer.transform(new StringSource(messagePayload), result);
-				} catch (TransformerException e) {
+				}
+				catch (TransformerException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -240,8 +244,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 	public void notFound() {
 
 		assertThatExceptionOfType(WebServiceTransportException.class)
-				.isThrownBy(() -> template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-						new StringSource(messagePayload), new StringResult()));
+			.isThrownBy(() -> template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
+					new StringSource(messagePayload), new StringResult()));
 	}
 
 	@Test
@@ -249,8 +253,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 		Result result = new StringResult();
 
-		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(
-				() -> template.sendSourceAndReceiveToResult(baseUrl + "/soap/fault", new StringSource(messagePayload), result));
+		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
+			.sendSourceAndReceiveToResult(baseUrl + "/soap/fault", new StringSource(messagePayload), result));
 	}
 
 	@Test
@@ -261,19 +265,20 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		template.setCheckConnectionForError(false);
 
 		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
-				.sendSourceAndReceiveToResult(baseUrl + "/soap/badRequestFault", new StringSource(messagePayload), result));
+			.sendSourceAndReceiveToResult(baseUrl + "/soap/badRequestFault", new StringSource(messagePayload), result));
 	}
 
 	@Test
 	public void attachment() {
 
-		template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload), message -> {
+		template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload),
+				message -> {
 
-			SoapMessage soapMessage = (SoapMessage) message;
-			final String attachmentContent = "content";
-			soapMessage.addAttachment("attachment-1",
-					new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
-		}, new StringResult());
+					SoapMessage soapMessage = (SoapMessage) message;
+					final String attachmentContent = "content";
+					soapMessage.addAttachment("attachment-1",
+							new DataHandler(new ByteArrayDataSource(attachmentContent, "text/plain")));
+				}, new StringResult());
 	}
 
 	/** Servlet that returns and error message for a given status code. */
@@ -290,6 +295,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 			resp.sendError(sc);
 		}
+
 	}
 
 	/** Abstract SOAP Servlet */
@@ -311,7 +317,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 			try {
 				messageFactory = MessageFactory.newInstance();
-			} catch (SOAPException ex) {
+			}
+			catch (SOAPException ex) {
 				throw new ServletException("Unable to create message factory" + ex.getMessage());
 			}
 		}
@@ -339,10 +346,12 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 
 					putHeaders(reply.getMimeHeaders(), resp);
 					reply.writeTo(resp.getOutputStream());
-				} else if (sc == -1) {
+				}
+				else if (sc == -1) {
 					resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 				}
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				throw new ServletException("SAAJ POST failed " + ex.getMessage(), ex);
 			}
 		}
@@ -378,6 +387,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		}
 
 		protected abstract SOAPMessage onMessage(SOAPMessage message) throws SOAPException;
+
 	}
 
 	@SuppressWarnings("serial")
@@ -387,6 +397,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		protected SOAPMessage onMessage(SOAPMessage message) {
 			return message;
 		}
+
 	}
 
 	@SuppressWarnings("serial")
@@ -396,6 +407,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 		protected SOAPMessage onMessage(SOAPMessage message) {
 			return null;
 		}
+
 	}
 
 	@SuppressWarnings("serial")
@@ -409,6 +421,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 			body.addFault(new QName("http://schemas.xmlsoap.org/soap/envelope/", "Server"), "Server fault");
 			return response;
 		}
+
 	}
 
 	@SuppressWarnings("serial")
@@ -420,6 +433,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTestCase {
 			assertThat(message.countAttachments()).isEqualTo(1);
 			return null;
 		}
+
 	}
 
 }

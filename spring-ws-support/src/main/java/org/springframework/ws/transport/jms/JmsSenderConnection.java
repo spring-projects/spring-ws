@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,24 @@
 
 package org.springframework.ws.transport.jms;
 
-import jakarta.jms.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.IllegalStateException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+
+import jakarta.jms.BytesMessage;
+import jakarta.jms.Connection;
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageConsumer;
+import jakarta.jms.MessageProducer;
+import jakarta.jms.Session;
+import jakarta.jms.TemporaryQueue;
+import jakarta.jms.TextMessage;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
@@ -36,8 +45,8 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
- * Implementation of {@link WebServiceConnection} that is used for client-side JMS access. Exposes a
- * {@link BytesMessage} request and response message.
+ * Implementation of {@link WebServiceConnection} that is used for client-side JMS access.
+ * Exposes a {@link BytesMessage} request and response message.
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
@@ -91,15 +100,16 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	}
 
 	/**
-	 * Returns the request message for this connection. Returns either a {@link BytesMessage} or a {@link TextMessage}.
+	 * Returns the request message for this connection. Returns either a
+	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getRequestMessage() {
 		return requestMessage;
 	}
 
 	/**
-	 * Returns the response message, if any, for this connection. Returns either a {@link BytesMessage} or a
-	 * {@link TextMessage}.
+	 * Returns the response message, if any, for this connection. Returns either a
+	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getResponseMessage() {
 		return responseMessage;
@@ -149,7 +159,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	public URI getUri() throws URISyntaxException {
 		try {
 			return JmsTransportUtils.toUri(requestDestination);
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new URISyntaxException("", ex.getMessage());
 		}
 	}
@@ -176,7 +187,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	public void addRequestHeader(String name, String value) throws IOException {
 		try {
 			JmsTransportUtils.addHeader(requestMessage, name, value);
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException("Could not set property", ex);
 		}
 	}
@@ -185,9 +197,11 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	protected OutputStream getRequestOutputStream() throws IOException {
 		if (requestMessage instanceof BytesMessage) {
 			return new BytesMessageOutputStream((BytesMessage) requestMessage);
-		} else if (requestMessage instanceof TextMessage) {
+		}
+		else if (requestMessage instanceof TextMessage) {
 			return new TextMessageOutputStream((TextMessage) requestMessage, textMessageEncoding);
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
 		}
 
@@ -214,21 +228,26 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 			if (session.getTransacted() && isSessionLocallyTransacted(session)) {
 				JmsUtils.commitIfNecessary(session);
 			}
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
-		} finally {
+		}
+		finally {
 			JmsUtils.closeMessageProducer(messageProducer);
 		}
 	}
 
-	/** @see org.springframework.jms.core.JmsTemplate#isSessionLocallyTransacted(Session) (Session) */
+	/*
+	 * * @see org.springframework.jms.core.JmsTemplate#isSessionLocallyTransacted(Session)
+	 * (Session)
+	 */
 	private boolean isSessionLocallyTransacted(Session session) {
 		return sessionTransacted && !ConnectionFactoryUtils.isSessionTransactional(session, connectionFactory);
 	}
 
 	/*
-	* Receiving
-	*/
+	 * Receiving
+	 */
 
 	@Override
 	protected void onReceiveBeforeRead() throws IOException {
@@ -236,7 +255,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		try {
 			if (temporaryResponseQueueCreated) {
 				messageConsumer = session.createConsumer(responseDestination);
-			} else {
+			}
+			else {
 				String messageId = requestMessage.getJMSMessageID().replaceAll("'", "''");
 				String messageSelector = "JMSCorrelationID = '" + messageId + "'";
 				messageConsumer = session.createConsumer(responseDestination, messageSelector);
@@ -244,18 +264,22 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 			Message message = receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
 			if (message instanceof BytesMessage || message instanceof TextMessage) {
 				responseMessage = message;
-			} else if (message != null) {
+			}
+			else if (message != null) {
 				throw new IllegalArgumentException("Wrong message type: [" + message.getClass() + "]. "
 						+ "Only BytesMessages or TextMessages can be handled.");
 			}
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
-		} finally {
+		}
+		finally {
 			JmsUtils.closeMessageConsumer(messageConsumer);
 			if (temporaryResponseQueueCreated) {
 				try {
 					((TemporaryQueue) responseDestination).delete();
-				} catch (JMSException ex) {
+				}
+				catch (JMSException ex) {
 					// ignore
 				}
 			}
@@ -271,7 +295,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	public Iterator<String> getResponseHeaderNames() throws IOException {
 		try {
 			return JmsTransportUtils.getHeaderNames(responseMessage);
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property names", ex);
 		}
 	}
@@ -280,7 +305,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		try {
 			return JmsTransportUtils.getHeaders(responseMessage, name);
-		} catch (JMSException ex) {
+		}
+		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property value", ex);
 		}
 	}
@@ -289,9 +315,11 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	protected InputStream getResponseInputStream() throws IOException {
 		if (responseMessage instanceof BytesMessage) {
 			return new BytesMessageInputStream((BytesMessage) responseMessage);
-		} else if (responseMessage instanceof TextMessage) {
+		}
+		else if (responseMessage instanceof TextMessage) {
 			return new TextMessageInputStream((TextMessage) responseMessage, textMessageEncoding);
-		} else {
+		}
+		else {
 			throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
 		}
 
@@ -302,4 +330,5 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		JmsUtils.closeSession(session);
 		ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
 	}
+
 }

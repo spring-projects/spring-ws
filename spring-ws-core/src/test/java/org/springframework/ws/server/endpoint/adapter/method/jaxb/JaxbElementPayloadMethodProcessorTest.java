@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,16 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
-import static org.assertj.core.api.Assertions.*;
+import javax.xml.namespace.QName;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
-
-import javax.xml.namespace.QName;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -35,7 +34,8 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JaxbElementPayloadMethodProcessorTest {
 
@@ -98,7 +98,9 @@ public class JaxbElementPayloadMethodProcessorTest {
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 
 		XmlAssert.assertThat(response.getPayloadAsString())
-				.and("<type xmlns='http://springframework.org'><string>Foo</string></type>").ignoreWhitespace().areIdentical();
+			.and("<type xmlns='http://springframework.org'><string>Foo</string></type>")
+			.ignoreWhitespace()
+			.areIdentical();
 	}
 
 	@Test
@@ -107,15 +109,18 @@ public class JaxbElementPayloadMethodProcessorTest {
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		String s = "Foo";
-		JAXBElement<String> element = new JAXBElement<>(new QName("http://springframework.org", "string"), String.class, s);
+		JAXBElement<String> element = new JAXBElement<>(new QName("http://springframework.org", "string"), String.class,
+				s);
 		processor.handleReturnValue(messageContext, stringReturnType, element);
 
 		assertThat(messageContext.hasResponse()).isTrue();
 
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 
-		XmlAssert.assertThat(response.getPayloadAsString()).and("<string xmlns='http://springframework.org'>Foo</string>")
-				.ignoreWhitespace().areIdentical();
+		XmlAssert.assertThat(response.getPayloadAsString())
+			.and("<string xmlns='http://springframework.org'>Foo</string>")
+			.ignoreWhitespace()
+			.areIdentical();
 	}
 
 	@Test
@@ -151,6 +156,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		public void setString(String string) {
 			this.string = string;
 		}
+
 	}
 
 }

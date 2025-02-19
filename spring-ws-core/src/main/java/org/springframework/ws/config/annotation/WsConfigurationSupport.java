@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,30 +40,34 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping;
 
 /**
- * This is the main class providing the configuration behind the Spring Web Services Java config. It is typically
- * imported by adding {@link EnableWs @EnableWs} to an application {@link Configuration @Configuration} class. An
- * alternative, more advanced option is to extend directly from this class and override methods as necessary remembering
- * to add {@link Configuration @Configuration} to the subclass and {@link Bean @Bean} to overridden {@link Bean @Bean}
- * methods. For more details see the Javadoc of {@link EnableWs @EnableWs}.
+ * This is the main class providing the configuration behind the Spring Web Services Java
+ * config. It is typically imported by adding {@link EnableWs @EnableWs} to an application
+ * {@link Configuration @Configuration} class. An alternative, more advanced option is to
+ * extend directly from this class and override methods as necessary remembering to add
+ * {@link Configuration @Configuration} to the subclass and {@link Bean @Bean} to
+ * overridden {@link Bean @Bean} methods. For more details see the Javadoc of
+ * {@link EnableWs @EnableWs}.
  * <p>
  * This class registers the following {@link EndpointMapping}s:
  * <ul>
- * <li>{@link PayloadRootAnnotationMethodEndpointMapping} ordered at 0 for mapping requests to
- * {@link PayloadRoot @PayloadRoot} annotated controller methods.
- * <li>{@link SoapActionAnnotationMethodEndpointMapping} ordered at 1 for mapping requests to
- * {@link SoapAction @SoapAction} annotated controller methods.
- * <li>{@link AnnotationActionEndpointMapping} ordered at 2 for mapping requests to {@link Action @Action} annotated
- * controller methods.
+ * <li>{@link PayloadRootAnnotationMethodEndpointMapping} ordered at 0 for mapping
+ * requests to {@link PayloadRoot @PayloadRoot} annotated controller methods.
+ * <li>{@link SoapActionAnnotationMethodEndpointMapping} ordered at 1 for mapping requests
+ * to {@link SoapAction @SoapAction} annotated controller methods.
+ * <li>{@link AnnotationActionEndpointMapping} ordered at 2 for mapping requests to
+ * {@link Action @Action} annotated controller methods.
  * </ul>
  * <p>
  * Registers one {@link EndpointAdapter}:
  * <ul>
- * <li>{@link DefaultMethodEndpointAdapter} for processing requests with annotated endpoint methods.
+ * <li>{@link DefaultMethodEndpointAdapter} for processing requests with annotated
+ * endpoint methods.
  * </ul>
  * <p>
  * Registers the following {@link EndpointExceptionResolver}s:
  * <ul>
- * <li>{@link SoapFaultAnnotationExceptionResolver} for handling exceptions annotated with {@link SoapFault @SoapFault}.
+ * <li>{@link SoapFaultAnnotationExceptionResolver} for handling exceptions annotated with
+ * {@link SoapFault @SoapFault}.
  * <li>{@link SimpleSoapExceptionResolver} for creating default exceptions.
  * </ul>
  *
@@ -78,8 +82,8 @@ public class WsConfigurationSupport {
 	private List<EndpointInterceptor> interceptors;
 
 	/**
-	 * Returns a {@link PayloadRootAnnotationMethodEndpointMapping} ordered at 0 for mapping requests to annotated
-	 * endpoints.
+	 * Returns a {@link PayloadRootAnnotationMethodEndpointMapping} ordered at 0 for
+	 * mapping requests to annotated endpoints.
 	 */
 	@Bean
 	public PayloadRootAnnotationMethodEndpointMapping payloadRootAnnotationMethodEndpointMapping() {
@@ -90,8 +94,8 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Returns a {@link SoapActionAnnotationMethodEndpointMapping} ordered at 1 for mapping requests to annotated
-	 * endpoints.
+	 * Returns a {@link SoapActionAnnotationMethodEndpointMapping} ordered at 1 for
+	 * mapping requests to annotated endpoints.
 	 */
 	@Bean
 	public SoapActionAnnotationMethodEndpointMapping soapActionAnnotationMethodEndpointMapping() {
@@ -102,7 +106,8 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Returns a {@link AnnotationActionEndpointMapping} ordered at 2 for mapping requests to annotated endpoints.
+	 * Returns a {@link AnnotationActionEndpointMapping} ordered at 2 for mapping requests
+	 * to annotated endpoints.
 	 */
 	@Bean
 	public AnnotationActionEndpointMapping annotationActionEndpointMapping() {
@@ -113,8 +118,9 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Provide access to the shared handler interceptors used to configure {@link EndpointMapping} instances with. This
-	 * method cannot be overridden, use {@link #addInterceptors(List)} instead.
+	 * Provide access to the shared handler interceptors used to configure
+	 * {@link EndpointMapping} instances with. This method cannot be overridden, use
+	 * {@link #addInterceptors(List)} instead.
 	 */
 	protected final EndpointInterceptor[] getInterceptors() {
 		if (interceptors == null) {
@@ -125,14 +131,16 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Template method to add endpoint interceptors. Override this method to add Spring-WS interceptors for pre- and
-	 * post-processing of endpoint invocation.
+	 * Template method to add endpoint interceptors. Override this method to add Spring-WS
+	 * interceptors for pre- and post-processing of endpoint invocation.
 	 */
-	protected void addInterceptors(List<EndpointInterceptor> interceptors) {}
+	protected void addInterceptors(List<EndpointInterceptor> interceptors) {
+	}
 
 	/**
-	 * Returns a {@link DefaultMethodEndpointAdapter} for processing requests through annotated endpoint methods. Consider
-	 * overriding one of these other more fine-grained methods:
+	 * Returns a {@link DefaultMethodEndpointAdapter} for processing requests through
+	 * annotated endpoint methods. Consider overriding one of these other more
+	 * fine-grained methods:
 	 * <ul>
 	 * <li>{@link #addArgumentResolvers(List)} for adding custom argument resolvers.
 	 * <li>{@link #addReturnValueHandlers(List)} for adding custom return value handlers.
@@ -154,21 +162,24 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Add custom {@link MethodArgumentResolver}s to use in addition to the ones registered by default.
-	 *
+	 * Add custom {@link MethodArgumentResolver}s to use in addition to the ones
+	 * registered by default.
 	 * @param argumentResolvers the list of custom converters; initially an empty list.
 	 */
-	protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {}
+	protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
+	}
 
 	/**
-	 * Add custom {@link MethodReturnValueHandler}s in addition to the ones registered by default.
-	 *
+	 * Add custom {@link MethodReturnValueHandler}s in addition to the ones registered by
+	 * default.
 	 * @param returnValueHandlers the list of custom handlers; initially an empty list.
 	 */
-	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {}
+	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
+	}
 
 	/**
-	 * Returns a {@link SoapFaultAnnotationExceptionResolver} ordered at 0 for handling endpoint exceptions.
+	 * Returns a {@link SoapFaultAnnotationExceptionResolver} ordered at 0 for handling
+	 * endpoint exceptions.
 	 */
 	@Bean
 	public SoapFaultAnnotationExceptionResolver soapFaultAnnotationExceptionResolver() {
@@ -179,8 +190,9 @@ public class WsConfigurationSupport {
 	}
 
 	/**
-	 * Returns a {@link SimpleSoapExceptionResolver} ordered at {@linkplain Ordered#LOWEST_PRECEDENCE lowest precedence}
-	 * for handling endpoint exceptions.
+	 * Returns a {@link SimpleSoapExceptionResolver} ordered at
+	 * {@linkplain Ordered#LOWEST_PRECEDENCE lowest precedence} for handling endpoint
+	 * exceptions.
 	 */
 	@Bean
 	public SimpleSoapExceptionResolver simpleSoapExceptionResolver() {

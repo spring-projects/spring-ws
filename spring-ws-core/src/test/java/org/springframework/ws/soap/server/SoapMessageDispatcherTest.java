@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,21 +16,18 @@
 
 package org.springframework.ws.soap.server;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPHeaderElement;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.util.Iterator;
 import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPHeaderElement;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapBody;
@@ -42,6 +39,13 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class SoapMessageDispatcherTest {
 
@@ -62,7 +66,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header"));
 		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
@@ -87,7 +91,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header"));
 		header.setMustUnderstand(true);
 		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
@@ -112,7 +116,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
 		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
@@ -136,7 +140,8 @@ public class SoapMessageDispatcherTest {
 		Soap11Fault fault = (Soap11Fault) responseBody.getFault();
 
 		assertThat(fault.getFaultCode()).isEqualTo(new QName(SOAPConstants.URI_NS_SOAP_1_1_ENVELOPE, "MustUnderstand"));
-		assertThat(fault.getFaultStringOrReason()).isEqualTo(SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING);
+		assertThat(fault.getFaultStringOrReason())
+			.isEqualTo(SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING);
 		assertThat(fault.getFaultStringLocale()).isEqualTo(Locale.ENGLISH);
 
 		verify(interceptorMock);
@@ -148,7 +153,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
 		header.setMustUnderstand(true);
 		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
@@ -174,7 +179,7 @@ public class SoapMessageDispatcherTest {
 
 		assertThat(fault.getFaultCode()).isEqualTo(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "MustUnderstand"));
 		assertThat(fault.getFaultReasonText(Locale.ENGLISH))
-				.isEqualTo(SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING);
+			.isEqualTo(SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING);
 
 		SoapHeader responseHeader = response.getSoapHeader();
 		Iterator<SoapHeaderElement> iterator = responseHeader.examineAllHeaderElements();
@@ -183,7 +188,8 @@ public class SoapMessageDispatcherTest {
 
 		SoapHeaderElement headerElement = iterator.next();
 
-		assertThat(headerElement.getName()).isEqualTo(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "NotUnderstood"));
+		assertThat(headerElement.getName())
+			.isEqualTo(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "NotUnderstood"));
 
 		verify(interceptorMock);
 	}
@@ -194,7 +200,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
 		String headerActor = "http://www/springframework.org/role";
 		header.setActor(headerActor);
 		header.setMustUnderstand(true);
@@ -220,7 +226,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header", "spring-ws"));
 		String headerRole = "http://www/springframework.org/role";
 		header.setRole(headerRole);
 		header.setMustUnderstand(true);
@@ -266,7 +272,7 @@ public class SoapMessageDispatcherTest {
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
 		SOAPHeaderElement header = request.getSOAPHeader()
-				.addHeaderElement(new QName("http://www.springframework.org", "Header"));
+			.addHeaderElement(new QName("http://www.springframework.org", "Header"));
 		header.setActor(SOAPConstants.URI_SOAP_ACTOR_NEXT);
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,8 +37,8 @@ public interface WebServiceMessage {
 	/**
 	 * Returns the contents of the message as a {@link Source}.
 	 * <p>
-	 * Depending on the implementation, this can be retrieved multiple times, or just a single time.
-	 *
+	 * Depending on the implementation, this can be retrieved multiple times, or just a
+	 * single time.
 	 * @return the message contents
 	 */
 	Source getPayloadSource();
@@ -48,8 +48,8 @@ public interface WebServiceMessage {
 	 * <p>
 	 * Calling this method removes the current payload.
 	 * <p>
-	 * Implementations that are read-only will throw an {@link UnsupportedOperationException}.
-	 *
+	 * Implementations that are read-only will throw an
+	 * {@link UnsupportedOperationException}.
 	 * @return the message contents
 	 * @throws UnsupportedOperationException if the message is read-only
 	 */
@@ -58,9 +58,9 @@ public interface WebServiceMessage {
 	/**
 	 * Writes the entire message to the given output stream.
 	 * <p>
-	 * If the given stream is an instance of {@link org.springframework.ws.transport.TransportOutputStream}, the
-	 * corresponding headers will be written as well.
-	 *
+	 * If the given stream is an instance of
+	 * {@link org.springframework.ws.transport.TransportOutputStream}, the corresponding
+	 * headers will be written as well.
 	 * @param outputStream the stream to write to
 	 * @throws IOException if an I/O exception occurs
 	 */

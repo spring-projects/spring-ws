@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,12 +22,13 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
+
 import org.springframework.ws.soap.security.callback.AbstractCallbackHandler;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
 
 /**
- * Abstract base class for {@link javax.security.auth.callback.CallbackHandler} implementations that handle
- * {@link WSPasswordCallback} callbacks.
+ * Abstract base class for {@link javax.security.auth.callback.CallbackHandler}
+ * implementations that handle {@link WSPasswordCallback} callbacks.
  *
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
@@ -36,9 +37,9 @@ import org.springframework.ws.soap.security.callback.CleanupCallback;
 public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallbackHandler {
 
 	/**
-	 * Handles {@link WSPasswordCallback} callbacks. Inspects the callback {@link WSPasswordCallback#getUsage() usage}
-	 * code, and calls the various {@code handle*} template methods.
-	 *
+	 * Handles {@link WSPasswordCallback} callbacks. Inspects the callback
+	 * {@link WSPasswordCallback#getUsage() usage} code, and calls the various
+	 * {@code handle*} template methods.
 	 * @param callback the callback
 	 * @throws IOException in case of I/O errors
 	 * @throws UnsupportedCallbackException when the callback is not supported
@@ -67,13 +68,17 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 					handleSecretKey(passwordCallback);
 					break;
 				default:
-					throw new UnsupportedCallbackException(callback, "Unknown usage [" + passwordCallback.getUsage() + "]");
+					throw new UnsupportedCallbackException(callback,
+							"Unknown usage [" + passwordCallback.getUsage() + "]");
 			}
-		} else if (callback instanceof CleanupCallback) {
+		}
+		else if (callback instanceof CleanupCallback) {
 			handleCleanup((CleanupCallback) callback);
-		} else if (callback instanceof UsernameTokenPrincipalCallback) {
+		}
+		else if (callback instanceof UsernameTokenPrincipalCallback) {
 			handleUsernameTokenPrincipal((UsernameTokenPrincipalCallback) callback);
-		} else {
+		}
+		else {
 			throw new UnsupportedCallbackException(callback);
 		}
 	}
@@ -82,9 +87,10 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	 * Invoked when the callback has a {@link WSPasswordCallback#DECRYPT} usage.
 	 * <p>
 	 * This method is invoked when WSS4J needs a password to get the private key of the
-	 * {@link WSPasswordCallback#getIdentifier() identifier} (username) from the keystore. WSS4J uses this private key to
-	 * decrypt the session (symmetric) key. Because the encryption method uses the public key to encrypt the session key
-	 * it needs no password (a public key is usually not protected by a password).
+	 * {@link WSPasswordCallback#getIdentifier() identifier} (username) from the keystore.
+	 * WSS4J uses this private key to decrypt the session (symmetric) key. Because the
+	 * encryption method uses the public key to encrypt the session key it needs no
+	 * password (a public key is usually not protected by a password).
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -95,7 +101,8 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	/**
 	 * Invoked when the callback has a {@link WSPasswordCallback#USERNAME_TOKEN} usage.
 	 * <p>
-	 * This method is invoked when WSS4J needs the password to fill in or to verify a UsernameToken.
+	 * This method is invoked when WSS4J needs the password to fill in or to verify a
+	 * UsernameToken.
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -107,8 +114,9 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	 * Invoked when the callback has a {@link WSPasswordCallback#SIGNATURE} usage.
 	 * <p>
 	 * This method is invoked when WSS4J needs the password to get the private key of the
-	 * {@link WSPasswordCallback#getIdentifier() identifier} (username) from the keystore. WSS4J uses this private key to
-	 * produce a signature. The signature verfication uses the public key to verfiy the signature.
+	 * {@link WSPasswordCallback#getIdentifier() identifier} (username) from the keystore.
+	 * WSS4J uses this private key to produce a signature. The signature verfication uses
+	 * the public key to verfiy the signature.
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -117,9 +125,11 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	}
 
 	/**
-	 * Invoked when the callback has a {@link WSPasswordCallback#SECURITY_CONTEXT_TOKEN} usage.
+	 * Invoked when the callback has a {@link WSPasswordCallback#SECURITY_CONTEXT_TOKEN}
+	 * usage.
 	 * <p>
-	 * This method is invoked when WSS4J needs the key to to be associated with a SecurityContextToken.
+	 * This method is invoked when WSS4J needs the key to to be associated with a
+	 * SecurityContextToken.
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -156,7 +166,8 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	}
 
 	/**
-	 * Invoked when a {@link UsernameTokenPrincipalCallback} is passed to {@link #handle(Callback[])}.
+	 * Invoked when a {@link UsernameTokenPrincipalCallback} is passed to
+	 * {@link #handle(Callback[])}.
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
@@ -164,4 +175,5 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 			throws IOException, UnsupportedCallbackException {
 		throw new UnsupportedCallbackException(callback);
 	}
+
 }

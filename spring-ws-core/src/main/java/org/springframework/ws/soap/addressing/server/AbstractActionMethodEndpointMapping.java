@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,8 +24,10 @@ import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 /**
- * Abstract base class for WS-Addressing {@code Action}-mapped {@link org.springframework.ws.server.EndpointMapping}
- * implementations that map to {@link MethodEndpoint}s. Provides infrastructure for mapping endpoint methods to actions.
+ * Abstract base class for WS-Addressing {@code Action}-mapped
+ * {@link org.springframework.ws.server.EndpointMapping} implementations that map to
+ * {@link MethodEndpoint}s. Provides infrastructure for mapping endpoint methods to
+ * actions.
  *
  * @author Arjen Poutsma
  * @since 1.5.0
@@ -33,10 +35,11 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 public abstract class AbstractActionMethodEndpointMapping extends AbstractActionEndpointMapping {
 
 	/**
-	 * Helper method that registers the methods of the given bean. This method iterates over the methods of the bean, and
-	 * calls {@link #getActionForMethod(java.lang.reflect.Method)} for each. If this returns a URI, the method is
-	 * registered using {@link #registerEndpoint(java.net.URI, Object)}.
-	 *
+	 * Helper method that registers the methods of the given bean. This method iterates
+	 * over the methods of the bean, and calls
+	 * {@link #getActionForMethod(java.lang.reflect.Method)} for each. If this returns a
+	 * URI, the method is registered using
+	 * {@link #registerEndpoint(java.net.URI, Object)}.
 	 * @see #getActionForMethod (java.lang.reflect.Method)
 	 */
 	protected void registerMethods(Object endpoint) {
@@ -60,7 +63,6 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
 	 * Return the class or interface to use for method reflection.
 	 * <p>
 	 * Default implementation delegates to {@link AopUtils#getTargetClass(Object)}.
-	 *
 	 * @param endpoint the bean instance (might be an AOP proxy)
 	 * @return the bean class to expose
 	 */

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,17 +16,18 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Properties;
 
 import org.apache.wss4j.dom.WSConstants;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTestCase {
 
@@ -101,4 +102,5 @@ public abstract class Wss4jMessageInterceptorSoapActionTestCase extends Wss4jTes
 		assertThat(message.getSoapAction()).isNotNull();
 		assertThat(message.getSoapAction()).isEqualTo(SOAP_ACTION);
 	}
+
 }

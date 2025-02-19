@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,23 +19,34 @@ package org.springframework.ws.soap.server;
 import org.springframework.ws.server.EndpointMapping;
 
 /**
- * SOAP-specific sub-interface of the {@code EndpointMapping}. Adds associated actors (SOAP 1.1) or roles (SOAP 1.2).
- * Used by the {@code SoapMessageDispatcher} to determine the MustUnderstand headers for particular endpoint.
+ * SOAP-specific sub-interface of the {@code EndpointMapping}. Adds associated actors
+ * (SOAP 1.1) or roles (SOAP 1.2). Used by the {@code SoapMessageDispatcher} to determine
+ * the MustUnderstand headers for particular endpoint.
  * <p>
- * The main purpose for this interface is to add consitency between all SOAP-specific {@code EndpointMappings}. The
- * {@code SoapMessageDispatcher} does not require all endpoint mappings to implement this interface.
+ * The main purpose for this interface is to add consitency between all SOAP-specific
+ * {@code EndpointMappings}. The {@code SoapMessageDispatcher} does not require all
+ * endpoint mappings to implement this interface.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
 public interface SoapEndpointMapping extends EndpointMapping {
 
-	/** Sets a single SOAP actor/actorOrRole to apply to all endpoints mapped by the delegate endpoint mapping. */
+	/**
+	 * Sets a single SOAP actor/actorOrRole to apply to all endpoints mapped by the
+	 * delegate endpoint mapping.
+	 */
 	void setActorOrRole(String actorOrRole);
 
-	/** Sets the array of SOAP actors/actorsOrRoles to apply to all endpoints mapped by the delegate endpoint mapping. */
+	/**
+	 * Sets the array of SOAP actors/actorsOrRoles to apply to all endpoints mapped by the
+	 * delegate endpoint mapping.
+	 */
 	void setActorsOrRoles(String[] actorsOrRoles);
 
-	/** Indicates whether this the endpoint fulfills the SOAP 1.2 Ultimate Receiver role. */
+	/**
+	 * Indicates whether this the endpoint fulfills the SOAP 1.2 Ultimate Receiver role.
+	 */
 	void setUltimateReceiver(boolean ultimateReceiver);
+
 }

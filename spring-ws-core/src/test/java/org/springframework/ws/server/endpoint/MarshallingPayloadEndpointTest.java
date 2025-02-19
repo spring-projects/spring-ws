@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,9 +15,6 @@
  */
 
 package org.springframework.ws.server.endpoint;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -32,6 +29,8 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -46,7 +45,15 @@ import org.springframework.ws.mime.MimeMessage;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class MarshallingPayloadEndpointTest {
 
@@ -80,7 +87,8 @@ public class MarshallingPayloadEndpointTest {
 					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
 
 					return 42L;
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 
 					fail(e.getMessage());
 					return null;
@@ -97,7 +105,8 @@ public class MarshallingPayloadEndpointTest {
 
 				try {
 					transformer.transform(new StreamSource(new StringReader("<result/>")), result);
-				} catch (TransformerException e) {
+				}
+				catch (TransformerException e) {
 					fail(e.getMessage());
 				}
 			}
@@ -145,7 +154,8 @@ public class MarshallingPayloadEndpointTest {
 					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
 
 					return (long) 42;
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					fail(e.getMessage());
 					return null;
 				}
@@ -264,6 +274,7 @@ public class MarshallingPayloadEndpointTest {
 		public boolean supports(Class<?> clazz) {
 			return false;
 		}
+
 	}
 
 }

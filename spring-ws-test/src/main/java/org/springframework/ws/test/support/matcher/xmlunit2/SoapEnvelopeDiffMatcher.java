@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *	   http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,24 +16,25 @@
 
 package org.springframework.ws.test.support.matcher.xmlunit2;
 
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
-
 import java.io.IOException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
-import org.springframework.util.Assert;
-import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.test.support.matcher.AbstractSoapMessageMatcher;
-import org.springframework.xml.transform.TransformerHelper;
 import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.DifferenceEvaluators;
 import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
+
+import org.springframework.util.Assert;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.test.support.matcher.AbstractSoapMessageMatcher;
+import org.springframework.xml.transform.TransformerHelper;
+
+import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} SOAP envelopes.
@@ -59,12 +60,12 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
 		Diff diff = DiffBuilder.compare(expectedDocument)
-				.ignoreWhitespace()
-				.withTest(actualDocument)
-				.withDifferenceEvaluator(
-						DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
-				.checkForSimilar()
-				.build();
+			.ignoreWhitespace()
+			.withTest(actualDocument)
+			.withDifferenceEvaluator(
+					DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
+			.checkForSimilar()
+			.build();
 		assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
 	}
 
@@ -74,7 +75,8 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 			DOMResult result = new DOMResult();
 			transformerHelper.transform(source, result);
 			return (Document) result.getNode();
-		} catch (TransformerException ex) {
+		}
+		catch (TransformerException ex) {
 			fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}

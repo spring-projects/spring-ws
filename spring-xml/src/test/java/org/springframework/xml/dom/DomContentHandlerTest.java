@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,8 +16,6 @@
 
 package org.springframework.xml.dom;
 
-import static org.xmlunit.assertj.XmlAssert.*;
-
 import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -25,12 +23,15 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 public class DomContentHandlerTest {
 
@@ -42,7 +43,8 @@ public class DomContentHandlerTest {
 	private static final String XML_2_EXPECTED = "<?xml version='1.0' encoding='UTF-8'?>" + "<root xmlns='namespace'>"
 			+ "<child xmlns='namespace2' />" + "</root>";
 
-	private static final String XML_2_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>" + "<child xmlns='namespace2' />";
+	private static final String XML_2_SNIPPET = "<?xml version='1.0' encoding='UTF-8'?>"
+			+ "<child xmlns='namespace2' />";
 
 	private Document expected;
 
@@ -99,4 +101,5 @@ public class DomContentHandlerTest {
 
 		assertThat(result).and(expected).areSimilar();
 	}
+
 }

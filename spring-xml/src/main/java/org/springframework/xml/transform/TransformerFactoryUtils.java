@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,13 +39,13 @@ public class TransformerFactoryUtils {
 
 	/**
 	 * Build an {@link TransformerFactory} and prevent external entities from accessing.
-	 *
 	 * @see TransformerFactory#newInstance()
 	 */
 	public static TransformerFactory newInstance(Class<? extends TransformerFactory> transformerFactoryClass) {
 		try {
 			return defaultSettings(transformerFactoryClass.newInstance());
-		} catch (InstantiationException | IllegalAccessException e) {
+		}
+		catch (InstantiationException | IllegalAccessException e) {
 			throw new TransformerFactoryConfigurationError(e,
 					"Could not instantiate TransformerFactory [" + transformerFactoryClass + "]");
 		}
@@ -57,16 +57,18 @@ public class TransformerFactoryUtils {
 	private static TransformerFactory defaultSettings(TransformerFactory factory) {
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			if (log.isWarnEnabled()) {
-				log.warn(
-						XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by " + factory.getClass().getCanonicalName());
+				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
+						+ factory.getClass().getCanonicalName());
 			}
 		}
 
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -75,4 +77,5 @@ public class TransformerFactoryUtils {
 
 		return factory;
 	}
+
 }

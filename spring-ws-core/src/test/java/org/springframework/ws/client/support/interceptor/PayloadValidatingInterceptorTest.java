@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,20 +16,18 @@
 
 package org.springframework.ws.client.support.interceptor;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MessageFactory;
-import jakarta.xml.soap.SOAPConstants;
-import jakarta.xml.soap.SOAPMessage;
-
 import java.io.InputStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
 
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.SOAPConstants;
+import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
@@ -42,6 +40,10 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 public class PayloadValidatingInterceptorTest {
 
@@ -90,7 +92,7 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(invalidMessage, soap11Factory);
 
 		assertThatExceptionOfType(WebServiceClientException.class).isThrownBy(() -> interceptor.handleRequest(context))
-				.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on response");
 	}
 
 	@Test
@@ -101,7 +103,7 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		assertThatExceptionOfType(WebServiceClientException.class).isThrownBy(() -> interceptor.handleRequest(context))
-				.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on response");
 	}
 
 	@Test
@@ -144,10 +146,11 @@ public class PayloadValidatingInterceptorTest {
 	@Test
 	public void testNamespacesInType() throws Exception {
 
-		// Make sure we use Xerces for this testcase: the JAXP implementation used internally by JDK 1.5 has a bug
+		// Make sure we use Xerces for this testcase: the JAXP implementation used
+		// internally by JDK 1.5 has a bug
 		// See http://opensource.atlassian.com/projects/spring/browse/SWS-35
 		String previousSchemaFactory = System
-				.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
+			.getProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI, "");
 		System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 				"org.apache.xerces.jaxp.validation.XMLSchemaFactory");
 
@@ -158,13 +161,15 @@ public class PayloadValidatingInterceptorTest {
 			MessageFactory messageFactory = MessageFactory.newInstance();
 			SOAPMessage saajMessage = SaajUtils.loadMessage(new ClassPathResource(VALID_SOAP_MESSAGE, getClass()),
 					messageFactory);
-			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage), new SaajSoapMessageFactory(messageFactory));
+			context = new DefaultMessageContext(new SaajSoapMessage(saajMessage),
+					new SaajSoapMessageFactory(messageFactory));
 
 			boolean result = interceptor.handleRequest(context);
 
 			assertThat(result).isTrue();
 			assertThat(context.hasResponse()).isFalse();
-		} finally {
+		}
+		finally {
 			// Reset the property
 			System.setProperty("javax.xml.validation.SchemaFactory:" + XMLConstants.W3C_XML_SCHEMA_NS_URI,
 					previousSchemaFactory);
@@ -191,7 +196,7 @@ public class PayloadValidatingInterceptorTest {
 		context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
 		assertThatExceptionOfType(WebServiceClientException.class).isThrownBy(() -> interceptor.handleRequest(context))
-				.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on response");
 	}
 
 	@Test
@@ -257,4 +262,5 @@ public class PayloadValidatingInterceptorTest {
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isFalse();
 	}
+
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,6 +20,7 @@ import java.security.cert.X509Certificate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
@@ -44,17 +45,23 @@ import org.springframework.ws.soap.security.x509.cache.X509UserCache;
  * @version $Id: X509AuthenticationProvider.java 3256 2008-08-18 18:20:48Z luke_t $
  */
 public class X509AuthenticationProvider implements AuthenticationProvider, InitializingBean, MessageSourceAware {
-	// ~ Static fields/initializers =====================================================================================
+
+	// ~ Static fields/initializers
+	// =====================================================================================
 
 	private static final Log logger = LogFactory.getLog(X509AuthenticationProvider.class);
 
-	// ~ Instance fields ================================================================================================
+	// ~ Instance fields
+	// ================================================================================================
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+
 	private X509AuthoritiesPopulator x509AuthoritiesPopulator;
+
 	private X509UserCache userCache = new NullX509UserCache();
 
-	// ~ Methods ========================================================================================================
+	// ~ Methods
+	// ========================================================================================================
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -64,18 +71,21 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 	}
 
 	/**
-	 * If the supplied authentication token contains a certificate then this will be passed to the configured
-	 * {@link X509AuthoritiesPopulator} to obtain the user details and authorities for the user identified by the
-	 * certificate.
+	 * If the supplied authentication token contains a certificate then this will be
+	 * passed to the configured {@link X509AuthoritiesPopulator} to obtain the user
+	 * details and authorities for the user identified by the certificate.
 	 * <p>
-	 * If no certificate is present (for example, if the filter is applied to an HttpRequest for which client
-	 * authentication hasn't been configured in the container) then a BadCredentialsException will be raised.
+	 * If no certificate is present (for example, if the filter is applied to an
+	 * HttpRequest for which client authentication hasn't been configured in the
+	 * container) then a BadCredentialsException will be raised.
 	 * </p>
-	 *
 	 * @param authentication the authentication request.
-	 * @return an X509AuthenticationToken containing the authorities of the principal represented by the certificate.
-	 * @throws AuthenticationException if the {@link X509AuthoritiesPopulator} rejects the certficate.
-	 * @throws BadCredentialsException if no certificate was presented in the authentication request.
+	 * @return an X509AuthenticationToken containing the authorities of the principal
+	 * represented by the certificate.
+	 * @throws AuthenticationException if the {@link X509AuthoritiesPopulator} rejects the
+	 * certficate.
+	 * @throws BadCredentialsException if no certificate was presented in the
+	 * authentication request.
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -128,4 +138,5 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 	public boolean supports(Class<?> authentication) {
 		return X509AuthenticationToken.class.isAssignableFrom(authentication);
 	}
+
 }

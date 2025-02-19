@@ -1,3 +1,19 @@
+/*
+ * Copyright 2005-2025 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.springframework.ws.transport.http;
 
 import java.io.IOException;
@@ -6,20 +22,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
-
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
- * Utility class ONLY used for testing SOAP interactions through the JRE's built-in {@link HttpServer}.
+ * Utility class ONLY used for testing SOAP interactions through the JRE's built-in
+ * {@link HttpServer}.
  */
 class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, InitializingBean, DisposableBean {
 
@@ -51,23 +68,24 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 	}
 
 	/**
-	 * Specify the HTTP server's hostname to bind to. Default is localhost; can be overridden with a specific network
-	 * address to bind to.
+	 * Specify the HTTP server's hostname to bind to. Default is localhost; can be
+	 * overridden with a specific network address to bind to.
 	 */
 	public void setHostname(String hostname) {
 		this.hostname = hostname;
 	}
 
 	/**
-	 * Specify the HTTP server's TCP backlog. Default is -1, indicating the system's default value.
+	 * Specify the HTTP server's TCP backlog. Default is -1, indicating the system's
+	 * default value.
 	 */
 	public void setBacklog(int backlog) {
 		this.backlog = backlog;
 	}
 
 	/**
-	 * Specify the number of seconds to wait until HTTP exchanges have completed when shutting down the HTTP server.
-	 * Default is 0.
+	 * Specify the number of seconds to wait until HTTP exchanges have completed when
+	 * shutting down the HTTP server. Default is 0.
 	 */
 	public void setShutdownDelay(int shutdownDelay) {
 		this.shutdownDelay = shutdownDelay;
@@ -75,7 +93,6 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 
 	/**
 	 * Set the JDK concurrent executor to use for dispatching incoming requests.
-	 *
 	 * @see HttpServer#setExecutor
 	 */
 	public void setExecutor(Executor executor) {
@@ -84,7 +101,6 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 
 	/**
 	 * Register {@link HttpHandler HttpHandlers} for specific context paths.
-	 *
 	 * @param contexts a Map with context paths as keys and HttpHandler objects as values
 	 */
 	public void setContexts(Map<String, HttpHandler> contexts) {
@@ -92,14 +108,16 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 	}
 
 	/**
-	 * Register common {@link Filter Filters} to be applied to all locally registered {@link #setContexts contexts}.
+	 * Register common {@link Filter Filters} to be applied to all locally registered
+	 * {@link #setContexts contexts}.
 	 */
 	public void setFilters(List<Filter> filters) {
 		this.filters = filters;
 	}
 
 	/**
-	 * Register a common {@link Authenticator} to be applied to all locally registered {@link #setContexts contexts}.
+	 * Register a common {@link Authenticator} to be applied to all locally registered
+	 * {@link #setContexts contexts}.
 	 */
 	public void setAuthenticator(Authenticator authenticator) {
 		this.authenticator = authenticator;
@@ -150,4 +168,5 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 		logger.info("Stopping HttpServer");
 		this.server.stop(this.shutdownDelay);
 	}
+
 }

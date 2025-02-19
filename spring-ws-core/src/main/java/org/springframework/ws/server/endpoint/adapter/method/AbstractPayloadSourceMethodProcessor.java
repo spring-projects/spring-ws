@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,8 +24,8 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
 /**
- * Abstract base class for {@link MethodArgumentResolver} and {@link MethodReturnValueHandler} implementations based on
- * {@link Source}s.
+ * Abstract base class for {@link MethodArgumentResolver} and
+ * {@link MethodReturnValueHandler} implementations based on {@link Source}s.
  *
  * @author Arjen Poutsma
  * @since 2.0
@@ -47,8 +47,8 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	}
 
 	/**
-	 * Resolves the given parameter, annotated with {@link RequestPayload}, into a method argument.
-	 *
+	 * Resolves the given parameter, annotated with {@link RequestPayload}, into a method
+	 * argument.
 	 * @param parameter the parameter to resolve to an argument
 	 * @param requestPayload the request payload
 	 * @return the resolved argument. May be {@code null}.
@@ -73,7 +73,6 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 
 	/**
 	 * Creates a response payload for the given return value.
-	 *
 	 * @param returnType the return type to handle
 	 * @param returnValue the return value to handle
 	 * @return the response payload

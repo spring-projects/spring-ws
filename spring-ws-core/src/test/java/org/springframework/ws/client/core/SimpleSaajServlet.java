@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,10 @@
  */
 
 package org.springframework.ws.client.core;
+
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -26,10 +30,6 @@ import jakarta.xml.soap.MimeHeader;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.StringTokenizer;
 
 import org.springframework.util.StringUtils;
 
@@ -51,7 +51,8 @@ public class SimpleSaajServlet extends HttpServlet {
 
 		try {
 			msgFactory = MessageFactory.newInstance();
-		} catch (SOAPException ex) {
+		}
+		catch (SOAPException ex) {
 			throw new ServletException("Unable to create message factory" + ex.getMessage());
 		}
 	}
@@ -97,14 +98,16 @@ public class SimpleSaajServlet extends HttpServlet {
 				if (reply.saveRequired()) {
 					reply.saveChanges();
 				}
-				resp.setStatus(
-						!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+				resp.setStatus(!reply.getSOAPBody().hasFault() ? HttpServletResponse.SC_OK
+						: HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 				putHeaders(reply.getMimeHeaders(), resp);
 				reply.writeTo(resp.getOutputStream());
-			} else {
+			}
+			else {
 				resp.setStatus(HttpServletResponse.SC_ACCEPTED);
 			}
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new ServletException("SAAJ POST failed " + ex.getMessage());
 		}
 	}
@@ -112,4 +115,5 @@ public class SimpleSaajServlet extends HttpServlet {
 	protected SOAPMessage onMessage(SOAPMessage message) {
 		return message;
 	}
+
 }

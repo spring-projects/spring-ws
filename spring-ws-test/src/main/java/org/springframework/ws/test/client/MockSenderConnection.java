@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,7 +27,8 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Mock implementation of {@link WebServiceConnection}. Implements {@link ResponseActions} to form a fluent API.
+ * Mock implementation of {@link WebServiceConnection}. Implements {@link ResponseActions}
+ * to form a fluent API.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
@@ -75,7 +76,8 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 			for (RequestMatcher requestMatcher : requestMatchers) {
 				requestMatcher.match(uri, message);
 			}
-		} else {
+		}
+		else {
 			throw new AssertionError("Unexpected send() for [" + message + "]");
 		}
 		this.request = message;
@@ -85,7 +87,8 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		if (responseCreator != null) {
 			return responseCreator.createResponse(uri, request, messageFactory);
-		} else {
+		}
+		else {
 			return null;
 		}
 	}
@@ -104,7 +107,8 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	public String getErrorMessage() throws IOException {
 		if (responseCreator instanceof ErrorResponseCreator) {
 			return ((ErrorResponseCreator) responseCreator).getErrorMessage();
-		} else {
+		}
+		else {
 			return null;
 		}
 	}

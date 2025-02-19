@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,8 @@ package org.springframework.ws.soap;
 import javax.xml.transform.Result;
 
 /**
- * Represents the content for an individual SOAP detail entry in a SOAP Message. All {@code SoapFaultDetailElement}s are
- * contained in a {@code SoapDetail}.
+ * Represents the content for an individual SOAP detail entry in a SOAP Message. All
+ * {@code SoapFaultDetailElement}s are contained in a {@code SoapDetail}.
  *
  * @author Arjen Poutsma
  * @see SoapFaultDetail
@@ -28,9 +28,13 @@ import javax.xml.transform.Result;
  */
 public interface SoapFaultDetailElement extends SoapElement {
 
-	/** Returns a {@code Result} that allows for writing to the <strong>contents</strong> of the detail element. */
+	/**
+	 * Returns a {@code Result} that allows for writing to the <strong>contents</strong>
+	 * of the detail element.
+	 */
 	Result getResult();
 
 	/** Adds a new text node to this element. */
 	void addText(String text);
+
 }

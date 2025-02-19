@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,8 +24,8 @@ import javax.xml.namespace.QName;
 import org.springframework.ws.soap.SoapFault;
 
 /**
- * Subinterface of {@code SoapFault} that exposes SOAP 1.2 functionality. Necessary because SOAP 1.1 differs from SOAP
- * 1.2 with respect to SOAP Faults.
+ * Subinterface of {@code SoapFault} that exposes SOAP 1.2 functionality. Necessary
+ * because SOAP 1.1 differs from SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -33,15 +33,14 @@ import org.springframework.ws.soap.SoapFault;
 public interface Soap12Fault extends SoapFault {
 
 	/**
-	 * Returns an iteration over the fault subcodes. The subcodes are returned in order: from top to bottom.
-	 *
+	 * Returns an iteration over the fault subcodes. The subcodes are returned in order:
+	 * from top to bottom.
 	 * @return an Iterator that contains {@code QNames} representing the fault subcodes
 	 */
 	Iterator<QName> getFaultSubcodes();
 
 	/**
 	 * Adds a fault subcode this fault.
-	 *
 	 * @param subcode the qualified name of the subcode
 	 */
 	void addFaultSubcode(QName subcode);

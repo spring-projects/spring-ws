@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,19 +16,19 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletException;
-
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
@@ -43,8 +43,8 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMa
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.w3c.dom.Document;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MessageDispatcherServletTest {
 
@@ -96,7 +96,8 @@ public class MessageDispatcherServletTest {
 
 		servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
 		servlet.init(config);
-		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/definition.wsdl");
+		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET,
+				"/definition.wsdl");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		servlet.service(request, response);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
@@ -119,6 +120,7 @@ public class MessageDispatcherServletTest {
 
 			super.refresh();
 		}
+
 	}
 
 	private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
@@ -132,5 +134,7 @@ public class MessageDispatcherServletTest {
 
 			super.refresh();
 		}
+
 	}
+
 }

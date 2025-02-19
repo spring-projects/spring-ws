@@ -1,11 +1,11 @@
 /*
- * Copyright 2005-2022 the original author or authors.
+ * Copyright 2005-2025 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,14 +16,14 @@
 
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
+import java.lang.reflect.Method;
+
+import javax.xml.namespace.QName;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.JAXBIntrospector;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import java.lang.reflect.Method;
-
-import javax.xml.namespace.QName;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
@@ -32,8 +32,9 @@ import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerHelper;
 
 /**
- * Implementation of the {@link org.springframework.ws.server.EndpointMapping EndpointMapping} interface that uses the
- * JAXB2 {@link XmlRootElement} annotation to map methods to request payload root elements.
+ * Implementation of the {@link org.springframework.ws.server.EndpointMapping
+ * EndpointMapping} interface that uses the JAXB2 {@link XmlRootElement} annotation to map
+ * methods to request payload root elements.
  * <p>
  * Endpoints typically have the following form:
  *
@@ -90,7 +91,8 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 			if (result != null) {
 				return result;
 			}
-		} catch (InstantiationException | IllegalAccessException e) {
+		}
+		catch (InstantiationException | IllegalAccessException e) {
 			// ignore
 		}
 		return null;
@@ -101,7 +103,8 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 			JAXBContext context = JAXBContext.newInstance(parameterType);
 			JAXBIntrospector introspector = context.createJAXBIntrospector();
 			return introspector.getElementName(param);
-		} catch (JAXBException ex) {
+		}
+		catch (JAXBException ex) {
 			return null;
 		}
 	}
@@ -110,4 +113,5 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerHelper);
 	}
+
 }
