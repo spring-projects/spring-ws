@@ -220,7 +220,6 @@
 				<dependency>
 					<groupId>com.sun.mail</groupId>
 					<artifactId>jakarta.mail</artifactId>
-					<version>${sun-mail.version}</version>
 					<scope>test</scope>
 				</dependency>
 			</dependencies>
@@ -234,19 +233,11 @@
 				<dependency>
 					<groupId>jakarta.mail</groupId>
 					<artifactId>jakarta.mail-api</artifactId>
-					<version>${jakarta-mail-api.version}</version>
 				</dependency>
 				<dependency>
 					<groupId>org.eclipse.angus</groupId>
 					<artifactId>angus-mail</artifactId>
-					<version>${eclipse-angus-mail.version}</version>
 					<scope>test</scope>
-					<exclusions>
-						<exclusion>
-							<groupId>jakarta.mail</groupId>
-							<artifactId>jakarta.mail-api</artifactId>
-						</exclusion>
-					</exclusions>
 				</dependency>
 			</dependencies>
 		</profile>
