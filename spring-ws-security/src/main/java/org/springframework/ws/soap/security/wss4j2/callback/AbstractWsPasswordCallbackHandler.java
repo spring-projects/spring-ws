@@ -45,9 +45,8 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	 */
 	@Override
 	protected final void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-		if (callback instanceof WSPasswordCallback) {
-			WSPasswordCallback passwordCallback = (WSPasswordCallback) callback;
-			switch (passwordCallback.getUsage()) {
+		if (callback instanceof WSPasswordCallback passwordCallback) {
+            switch (passwordCallback.getUsage()) {
 				case WSPasswordCallback.DECRYPT:
 					handleDecrypt(passwordCallback);
 					break;
@@ -69,10 +68,10 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 				default:
 					throw new UnsupportedCallbackException(callback, "Unknown usage [" + passwordCallback.getUsage() + "]");
 			}
-		} else if (callback instanceof CleanupCallback) {
-			handleCleanup((CleanupCallback) callback);
-		} else if (callback instanceof UsernameTokenPrincipalCallback) {
-			handleUsernameTokenPrincipal((UsernameTokenPrincipalCallback) callback);
+		} else if (callback instanceof CleanupCallback cleanupCallback) {
+			handleCleanup(cleanupCallback);
+		} else if (callback instanceof UsernameTokenPrincipalCallback usernameTokenPrincipalCallback) {
+			handleUsernameTokenPrincipal(usernameTokenPrincipalCallback);
 		} else {
 			throw new UnsupportedCallbackException(callback);
 		}

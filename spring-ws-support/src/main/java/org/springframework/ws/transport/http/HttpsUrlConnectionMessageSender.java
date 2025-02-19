@@ -134,9 +134,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 	@Override
 	protected void prepareConnection(HttpURLConnection connection) throws IOException {
 		super.prepareConnection(connection);
-		if (connection instanceof HttpsURLConnection) {
-			HttpsURLConnection httpsConnection = (HttpsURLConnection) connection;
-			httpsConnection.setSSLSocketFactory(createSslSocketFactory());
+		if (connection instanceof HttpsURLConnection httpsConnection) {
+            httpsConnection.setSSLSocketFactory(createSslSocketFactory());
 
 			if (hostnameVerifier != null) {
 				httpsConnection.setHostnameVerifier(hostnameVerifier);
