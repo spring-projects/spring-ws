@@ -22,12 +22,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTest;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
-public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
+public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
 	@Override
 	protected AbstractPayloadSourceMethodProcessor createProcessor() {

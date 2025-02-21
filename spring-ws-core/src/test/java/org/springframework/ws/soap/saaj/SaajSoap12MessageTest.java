@@ -26,12 +26,12 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.soap12.AbstractSoap12MessageTestCase;
+import org.springframework.ws.soap.soap12.AbstractSoap12MessageTest;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.xmlunit.assertj.XmlAssert;
 
-public class SaajSoap12MessageTest extends AbstractSoap12MessageTestCase {
+public class SaajSoap12MessageTest extends AbstractSoap12MessageTest {
 
 	@Override
 	protected String getNS() {

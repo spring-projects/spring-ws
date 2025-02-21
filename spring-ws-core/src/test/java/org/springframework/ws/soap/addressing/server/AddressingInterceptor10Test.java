@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTestCase {
+public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTest {
 
 	@Override
 	protected AddressingVersion getVersion() {

@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTest;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 /**
  * @author Tareq Abedrabbo
  */
-public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
+public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodArgumentResolverTest {
 
 	private static final QName HEADER_QNAME = new QName(NAMESPACE_URI, "header");
 

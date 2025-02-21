@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
-public class SaajWss4jSecurityInterceptorDefaultsTest extends Wss4jTestCase {
+public class SaajWss4jSecurityInterceptorDefaultsTest extends Wss4jTest {
 
 	private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 

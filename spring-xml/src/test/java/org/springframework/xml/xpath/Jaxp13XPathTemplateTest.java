@@ -19,7 +19,7 @@ package org.springframework.xml.xpath;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Jaxp13XPathTemplateTest extends AbstractXPathTemplateTestCase {
+public class Jaxp13XPathTemplateTest extends AbstractXPathTemplateTest {
 
 	@Override
 	protected XPathOperations createTemplate() {

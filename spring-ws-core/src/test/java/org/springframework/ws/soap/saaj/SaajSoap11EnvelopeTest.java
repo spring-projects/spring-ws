@@ -21,9 +21,9 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTestCase;
+import org.springframework.ws.soap.soap11.AbstractSoap11EnvelopeTest;
 
-public class SaajSoap11EnvelopeTest extends AbstractSoap11EnvelopeTestCase {
+public class SaajSoap11EnvelopeTest extends AbstractSoap11EnvelopeTest {
 
 	@Override
 	protected SoapEnvelope createSoapEnvelope() throws Exception {

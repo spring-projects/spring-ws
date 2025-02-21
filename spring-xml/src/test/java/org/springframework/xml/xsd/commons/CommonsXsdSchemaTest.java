@@ -27,12 +27,12 @@ import org.w3c.dom.Element;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.sax.SaxUtils;
-import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
+import org.springframework.xml.xsd.AbstractXsdSchemaTest;
 import org.springframework.xml.xsd.XsdSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
+public class CommonsXsdSchemaTest extends AbstractXsdSchemaTest {
 
 	@Override
 	protected XsdSchema createSchema(Resource resource) throws Exception {
@@ -46,7 +46,7 @@ public class CommonsXsdSchemaTest extends AbstractXsdSchemaTestCase {
 	@Test
 	public void testXmime() throws Exception {
 
-		Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTestCase.class);
+		Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTest.class);
 		XsdSchema schema = createSchema(resource);
 		String namespace = "urn:test";
 

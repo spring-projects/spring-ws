@@ -40,7 +40,7 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 
 public class CommonsHttpMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<CommonsHttpMessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<CommonsHttpMessageSender> {
 
 	@Override
 	protected CommonsHttpMessageSender createMessageSender() {

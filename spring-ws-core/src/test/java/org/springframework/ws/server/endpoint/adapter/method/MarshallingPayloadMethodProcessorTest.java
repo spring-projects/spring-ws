@@ -40,7 +40,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumentResolverTestCase {
+public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumentResolverTest {
 
 	private MarshallingPayloadMethodProcessor processor;
 

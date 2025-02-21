@@ -20,9 +20,9 @@ import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConstants;
 
 import org.springframework.ws.WebServiceMessageFactory;
-import org.springframework.ws.soap.soap12.AbstractSoap12MessageFactoryTestCase;
+import org.springframework.ws.soap.soap12.AbstractSoap12MessageFactoryTest;
 
-public class SaajSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryTestCase {
+public class SaajSoap12MessageFactoryTest extends AbstractSoap12MessageFactoryTest {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {

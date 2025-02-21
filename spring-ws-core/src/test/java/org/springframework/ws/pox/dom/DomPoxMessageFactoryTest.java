@@ -16,10 +16,10 @@
 
 package org.springframework.ws.pox.dom;
 
-import org.springframework.ws.AbstractWebServiceMessageFactoryTestCase;
+import org.springframework.ws.AbstractWebServiceMessageFactoryTest;
 import org.springframework.ws.WebServiceMessageFactory;
 
-public class DomPoxMessageFactoryTest extends AbstractWebServiceMessageFactoryTestCase {
+public class DomPoxMessageFactoryTest extends AbstractWebServiceMessageFactoryTest {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {

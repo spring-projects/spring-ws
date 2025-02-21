@@ -21,9 +21,9 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
 
 import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.soap12.AbstractSoap12HeaderTestCase;
+import org.springframework.ws.soap.soap12.AbstractSoap12HeaderTest;
 
-public class SaajSoap12HeaderTest extends AbstractSoap12HeaderTestCase {
+public class SaajSoap12HeaderTest extends AbstractSoap12HeaderTest {
 
 	@Override
 	protected SoapHeader createSoapHeader() throws Exception {

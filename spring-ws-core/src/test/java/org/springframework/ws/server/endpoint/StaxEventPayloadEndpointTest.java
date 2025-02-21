@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see AbstractStaxEventPayloadEndpoint
  */
 @SuppressWarnings("Since15")
-public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTestCase {
+public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTest {
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {

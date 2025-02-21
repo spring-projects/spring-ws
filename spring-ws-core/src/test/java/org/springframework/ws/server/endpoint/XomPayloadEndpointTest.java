@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import nu.xom.Element;
 
-public class XomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class XomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() {

@@ -33,7 +33,7 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.xsd.AbstractXsdSchemaTestCase;
+import org.springframework.xml.xsd.AbstractXsdSchemaTest;
 import org.springframework.xml.xsd.XsdSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,7 +61,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testSingle() throws Exception {
 
-		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTestCase.class);
+		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(resource);
 		collection.afterPropertiesSet();
 
@@ -71,7 +71,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testInlineComplex() throws Exception {
 
-		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
+		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(a);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
@@ -80,7 +80,7 @@ public class CommonsXsdSchemaCollectionTest {
 		assertThat(schemas).hasSize(2);
 		assertThat(schemas[0].getTargetNamespace()).isEqualTo("urn:1");
 
-		Resource abc = new ClassPathResource("ABC.xsd", AbstractXsdSchemaTestCase.class);
+		Resource abc = new ClassPathResource("ABC.xsd", AbstractXsdSchemaTest.class);
 		Document expected = documentBuilder.parse(SaxUtils.createInputSource(abc));
 		DOMResult domResult = new DOMResult();
 		transformer.transform(schemas[0].getSource(), domResult);
@@ -91,7 +91,7 @@ public class CommonsXsdSchemaCollectionTest {
 			.areIdentical();
 		assertThat(schemas[1].getTargetNamespace()).isEqualTo("urn:2");
 
-		Resource cd = new ClassPathResource("CD.xsd", AbstractXsdSchemaTestCase.class);
+		Resource cd = new ClassPathResource("CD.xsd", AbstractXsdSchemaTest.class);
 		expected = documentBuilder.parse(SaxUtils.createInputSource(cd));
 		domResult = new DOMResult();
 		transformer.transform(schemas[1].getSource(), domResult);
@@ -105,7 +105,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testCircular() throws Exception {
 
-		Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTestCase.class);
+		Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
@@ -117,7 +117,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 
 	public void testXmlNamespace() throws Exception {
-		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTestCase.class);
+		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
@@ -129,7 +129,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testCreateValidator() throws Exception {
 
-		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTestCase.class);
+		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(a);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
@@ -142,7 +142,7 @@ public class CommonsXsdSchemaCollectionTest {
 	@Test
 	public void testInvalidSchema() throws Exception {
 
-		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTestCase.class);
+		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(invalid);
 
 		assertThatExceptionOfType(CommonsXsdSchemaException.class).isThrownBy(() -> collection.afterPropertiesSet());

@@ -36,7 +36,7 @@ public class XmlValidatorFactoryTest {
 	@Test
 	public void testCreateValidator() throws Exception {
 
-		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class);
+		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTest.class);
 		XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
 
 		assertThat(validator).isNotNull();
@@ -53,7 +53,7 @@ public class XmlValidatorFactoryTest {
 	public void testInvalidSchemaLanguage() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
-			.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTestCase.class), "bla"));
+			.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTest.class), "bla"));
 	}
 
 	private static class NonExistentResource extends AbstractResource {

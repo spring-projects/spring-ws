@@ -46,7 +46,7 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpComponentsMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponentsMessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<HttpComponentsMessageSender> {
 
 	@Override
 	protected HttpComponentsMessageSender createMessageSender() {

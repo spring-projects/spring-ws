@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Arjen Poutsma
  */
 @SuppressWarnings("Since15")
-public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
+public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumentResolverTest {
 
 	private StaxPayloadMethodArgumentResolver resolver;
 

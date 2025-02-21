@@ -25,11 +25,11 @@ import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.soap11.AbstractSoap11BodyTestCase;
+import org.springframework.ws.soap.soap11.AbstractSoap11BodyTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap11BodyTest extends AbstractSoap11BodyTestCase {
+public class SaajSoap11BodyTest extends AbstractSoap11BodyTest {
 
 	@Override
 	protected SoapBody createSoapBody() throws Exception {

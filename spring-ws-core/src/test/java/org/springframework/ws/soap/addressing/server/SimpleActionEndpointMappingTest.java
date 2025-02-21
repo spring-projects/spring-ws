@@ -28,14 +28,14 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor;
-import org.springframework.ws.soap.addressing.AbstractWsAddressingTestCase;
+import org.springframework.ws.soap.addressing.AbstractWsAddressingTest;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTestCase {
+public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTest {
 
 	private SimpleActionEndpointMapping mapping;
 

@@ -19,14 +19,14 @@ package org.springframework.ws.server.endpoint.adapter.method.dom;
 import nu.xom.Element;
 
 import org.springframework.core.MethodParameter;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTest;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTestCase {
+public class XomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 
 	@Override
 	protected AbstractPayloadSourceMethodProcessor createProcessor() {

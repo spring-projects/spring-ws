@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class DomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {

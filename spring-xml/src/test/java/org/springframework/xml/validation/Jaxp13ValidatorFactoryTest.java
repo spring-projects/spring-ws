@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import org.springframework.core.io.Resource;
 
-public class Jaxp13ValidatorFactoryTest extends AbstractValidatorFactoryTestCase {
+public class Jaxp13ValidatorFactoryTest extends AbstractValidatorFactoryTest {
 
 	@Override
 	protected XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws IOException {

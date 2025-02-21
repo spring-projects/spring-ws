@@ -29,11 +29,11 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTestCase;
+import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTestCase {
+public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTest {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {

@@ -40,7 +40,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTestCase {
+public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptorSignTest {
 
 	private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 

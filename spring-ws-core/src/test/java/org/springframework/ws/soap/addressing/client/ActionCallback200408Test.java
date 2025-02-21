@@ -19,7 +19,7 @@ package org.springframework.ws.soap.addressing.client;
 import org.springframework.ws.soap.addressing.version.Addressing200408;
 import org.springframework.ws.soap.addressing.version.AddressingVersion;
 
-public class ActionCallback200408Test extends AbstractActionCallbackTestCase {
+public class ActionCallback200408Test extends AbstractActionCallbackTest {
 
 	@Override
 	protected AddressingVersion getVersion() {

@@ -27,7 +27,7 @@ import org.springframework.xml.transform.StringSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() {

@@ -21,7 +21,7 @@ import org.jdom2.Namespace;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {

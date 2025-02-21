@@ -46,7 +46,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.ws.transport.http.HttpComponents5ClientFactory.getPort;
 
 class HttpComponents5MessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponents5MessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<HttpComponents5MessageSender> {
 
 	@Override
 	protected HttpComponents5MessageSender createMessageSender() {

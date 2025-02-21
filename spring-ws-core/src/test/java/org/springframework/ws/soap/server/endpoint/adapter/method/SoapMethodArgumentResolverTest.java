@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTestCase;
+import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTest;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.SoapHeader;
@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolverTestCase {
+public class SoapMethodArgumentResolverTest extends AbstractMethodArgumentResolverTest {
 
 	private SoapMethodArgumentResolver resolver;
 

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTestCase {
+public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override
 	protected PayloadEndpoint createResponseEndpoint() {

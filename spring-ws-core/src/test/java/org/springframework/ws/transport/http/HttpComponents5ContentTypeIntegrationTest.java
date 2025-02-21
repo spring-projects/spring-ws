@@ -23,7 +23,7 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HttpComponents5ContentTypeIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpComponents5MessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<HttpComponents5MessageSender> {
 
 	@Override
 	protected HttpComponents5MessageSender createMessageSender() {

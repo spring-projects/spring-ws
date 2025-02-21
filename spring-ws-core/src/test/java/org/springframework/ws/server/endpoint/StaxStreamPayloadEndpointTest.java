@@ -42,7 +42,7 @@ import org.xmlunit.assertj.XmlAssert;
  * @see AbstractStaxStreamPayloadEndpoint
  */
 @SuppressWarnings("Since15")
-public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTestCase {
+public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTest {
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {

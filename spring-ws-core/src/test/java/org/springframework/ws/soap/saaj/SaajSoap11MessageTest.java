@@ -31,12 +31,12 @@ import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.ws.soap.SoapMessage;
-import org.springframework.ws.soap.soap11.AbstractSoap11MessageTestCase;
+import org.springframework.ws.soap.soap11.AbstractSoap11MessageTest;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.xmlunit.assertj.XmlAssert;
 
-public class SaajSoap11MessageTest extends AbstractSoap11MessageTestCase {
+public class SaajSoap11MessageTest extends AbstractSoap11MessageTest {
 
 	private SOAPMessage saajMessage;
 

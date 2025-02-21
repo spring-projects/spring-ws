@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HttpUrlConnectionMessageSenderIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTestCase<HttpUrlConnectionMessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<HttpUrlConnectionMessageSender> {
 
 	@Override
 	protected HttpUrlConnectionMessageSender createMessageSender() {

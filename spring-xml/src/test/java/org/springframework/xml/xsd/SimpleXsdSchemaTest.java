@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
-public class SimpleXsdSchemaTest extends AbstractXsdSchemaTestCase {
+public class SimpleXsdSchemaTest extends AbstractXsdSchemaTest {
 
 	@Override
 	protected XsdSchema createSchema(Resource resource) throws Exception {
