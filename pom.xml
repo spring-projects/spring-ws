@@ -68,7 +68,7 @@
 		<glassfish-xml-bind.version>4.0.5</glassfish-xml-bind.version>
 		<jaxen.version>1.1.6</jaxen.version>
 		<jdom2.version>2.0.6.1</jdom2.version>
-		<jetty.version>11.0.12</jetty.version>
+		<jetty.version>12.0.16</jetty.version>
 		<junit.version>5.9.3</junit.version>
 		<log4j2.version>2.19.0</log4j2.version>
 		<mail.version>1.4.7</mail.version>
@@ -236,6 +236,13 @@
 			<dependency>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-bom</artifactId>
+				<version>${jetty.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.jetty.ee10</groupId>
+				<artifactId>jetty-ee10-bom</artifactId>
 				<version>${jetty.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
