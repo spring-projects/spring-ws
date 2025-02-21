@@ -1,7 +1,7 @@
 :doctype: book
 image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=50%, link="https://spring.io/projects/spring-ws#learn"]
 
-= Spring Web Services
+= Spring Web Services image:https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml/badge.svg?branch=main["Build Status", link="https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml?query=branch%3Amain"]
 
 
 
