@@ -22,10 +22,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>jakarta.mail</groupId>
-			<artifactId>jakarta.mail-api</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 		</dependency>
@@ -38,6 +34,11 @@
 			<groupId>jakarta.jms</groupId>
 			<artifactId>jakarta.jms-api</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
@@ -143,6 +144,7 @@
 				<dependency>
 					<groupId>com.sun.mail</groupId>
 					<artifactId>jakarta.mail</artifactId>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>
@@ -156,6 +158,7 @@
 				<dependency>
 					<groupId>org.eclipse.angus</groupId>
 					<artifactId>angus-mail</artifactId>
+					<scope>provided</scope>
 				</dependency>
 			</dependencies>
 		</profile>
