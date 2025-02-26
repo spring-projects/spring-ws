@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides miscellaneous <code>EndpointAdapter</code> implementations.
+ * Provides miscellaneous {@code EndpointAdapter} implementations.
  */
 package org.springframework.ws.server.endpoint.adapter;

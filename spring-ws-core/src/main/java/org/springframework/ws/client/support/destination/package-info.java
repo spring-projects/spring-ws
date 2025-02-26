@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides the <code>DestinationProvider</code> interface.
+ * Provides the {@code DestinationProvider} interface.
  */
 package org.springframework.ws.client.support.destination;

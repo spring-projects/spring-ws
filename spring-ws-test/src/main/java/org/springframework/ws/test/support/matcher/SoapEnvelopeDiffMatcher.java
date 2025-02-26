@@ -41,6 +41,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @deprecated Migrate to
  * {@link org.springframework.ws.test.support.matcher.xmlunit2.SoapEnvelopeDiffMatcher}.
  */
+@Deprecated
 public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 
 	private final Source expected;

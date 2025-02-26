@@ -16,6 +16,6 @@
 
 /**
  * Provides WS-Security implementation classes. Contains the
- * <code>AbstractWsSecurityInterceptor</code> and exceptions.
+ * {@code AbstractWsSecurityInterceptor} and exceptions.
  */
 package org.springframework.ws.soap.security;

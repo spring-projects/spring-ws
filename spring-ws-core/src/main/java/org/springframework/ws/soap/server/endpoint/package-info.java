@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides <code>EndpointAdapter</code>, <code>EndpointMapping</code>, and
- * <code>EndpointExceptionResolver</code> implementations for SOAP.
+ * Provides {@code EndpointAdapter}, {@code EndpointMapping}, and
+ * {@code EndpointExceptionResolver} implementations for SOAP.
  */
 package org.springframework.ws.soap.server.endpoint;

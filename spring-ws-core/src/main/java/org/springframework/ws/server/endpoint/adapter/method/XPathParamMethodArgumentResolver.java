@@ -32,7 +32,6 @@ import org.w3c.dom.NodeList;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.support.ConversionServiceFactory;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
@@ -64,9 +63,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	/**
 	 * Sets the conversion service to use.
 	 * <p>
-	 * Defaults to the
-	 * {@linkplain ConversionServiceFactory#createDefaultConversionService() default
-	 * conversion service}.
+	 * Defaults to the {@linkplain DefaultConversionService default conversion service}.
 	 */
 	public void setConversionService(ConversionService conversionService) {
 		this.conversionService = conversionService;

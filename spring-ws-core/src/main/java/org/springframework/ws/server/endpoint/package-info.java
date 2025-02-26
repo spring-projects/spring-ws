@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides standard endpoint, and <code>EndpointAdapter</code> implementations.
+ * Provides standard endpoint, and {@code EndpointAdapter} implementations.
  */
 package org.springframework.ws.server.endpoint;

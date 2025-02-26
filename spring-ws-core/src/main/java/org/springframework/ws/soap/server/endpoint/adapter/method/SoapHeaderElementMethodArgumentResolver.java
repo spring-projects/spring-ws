@@ -43,11 +43,11 @@ import org.springframework.xml.namespace.QNameUtils;
  * The following snippet shows an example of supported declarations.
  *
  * <pre>
- * <code>
+ * {@code
  * public void soapHeaderElement(@SoapHeader("{http://springframework.org/ws}header") SoapHeaderElement element)
  *
- * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List&lt;SoapHeaderElement&gt; elements)
- * </code> </pre>
+ * public void soapHeaderElementList(@SoapHeader("{http://springframework.org/ws}header") List<SoapHeaderElement> elements)
+ * } </pre>
  *
  * @author Tareq Abedrabbo
  * @author Arjen Poutsma

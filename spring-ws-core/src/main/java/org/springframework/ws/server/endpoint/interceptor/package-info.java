@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides miscellaneous endpoints <code>EndpointInterceptor</code> implementations.
+ * Provides miscellaneous endpoints {@code EndpointInterceptor} implementations.
  */
 package org.springframework.ws.server.endpoint.interceptor;

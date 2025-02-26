@@ -24,6 +24,7 @@ import jakarta.mail.Session;
 import jakarta.mail.URLName;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -42,7 +43,7 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * created by this message sender will result in a blocking call, for the amount of
  * milliseconds specified by the {@link #setReceiveSleepTime(long) receiveSleepTime}
  * property. This will give the server time to formulate a response message. By default,
- * this propery is set to 1 minute. For a proper request-response conversation to work,
+ * this property is set to 1 minute. For a proper request-response conversation to work,
  * this property value must not be smaller the
  * {@link PollingMonitoringStrategy#setPollingInterval(long) pollingInterval} property of
  * the server-side message receiver polling strategy.
@@ -50,8 +51,8 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * This message sender supports URI's of the following format: <blockquote>
  * <tt><b>mailto:</b></tt><i>to</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
  * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and
- * <tt><b>&amp;</b></tt> stand for themselves. The <i>to</i> represents a RFC 822 mailbox.
- * Valid <i>param-name</i> include: <blockquote>
+ * <tt><b>&amp;</b></tt> stand for themselves. The <i>to</i> represents an RFC 822
+ * mailbox. Valid <i>param-name</i> include: <blockquote>
  * <table>
  * <tr>
  * <th><i>param-name</i></th>
@@ -133,7 +134,7 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 	}
 
 	/**
-	 * Sets the JavaMail Store URI to be used for retrieving response messages. Typically
+	 * Sets the JavaMail Store URI to be used for retrieving response messages. Typically,
 	 * takes the form of {@code [imap|pop3]://user:password@host:port/INBOX}. Setting this
 	 * property is required.
 	 * <p>
@@ -145,9 +146,9 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 	}
 
 	/**
-	 * Sets the JavaMail Transport URI to be used for sending response messages. Typically
-	 * takes the form of {@code smtp://user:password@host:port}. Setting this property is
-	 * required.
+	 * Sets the JavaMail Transport URI to be used for sending response messages.
+	 * Typically, takes the form of {@code smtp://user:password@host:port}. Setting this
+	 * property is required.
 	 * <p>
 	 * For example, {@code smtp://john:secret@smtp.example.com}
 	 * @see Session#getTransport(URLName)

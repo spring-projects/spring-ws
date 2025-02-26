@@ -15,7 +15,7 @@
  */
 
 /**
- * Contains a implementation of the <code>XsdSchema</code> interfaces that uses Apache
+ * Contains a implementation of the {@code XsdSchema} interfaces that uses Apache
  * WS-Commons XML Schema.
  */
 package org.springframework.xml.xsd.commons;

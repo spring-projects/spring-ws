@@ -16,8 +16,8 @@
 
 /**
  * Package providing support for handling messages via HTTP. Includes the
- * <code>MessageDispatcherServlet</code> and <code>WebServiceHttpHandler</code> for
- * server-side access, and the <code>HttpUrlConnectionMessageSender</code> and
- * <code>CommonsHttpMessageSender</code> for client-side access.
+ * {@code MessageDispatcherServlet} and {@code WebServiceHttpHandler} for server-side
+ * access, and the {@code HttpUrlConnectionMessageSender} and
+ * {@code CommonsHttpMessageSender} for client-side access.
  */
 package org.springframework.ws.transport.http;

@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains generic <code>CallbackHandler</code> implementations.
+ * Contains generic {@code CallbackHandler} implementations.
  */
 package org.springframework.ws.soap.security.callback;

@@ -42,8 +42,8 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	 * Default is {@link SimpleAsyncTaskExecutor}, starting up a number of new threads.
 	 * <p>
 	 * Specify an alternative task executor for integration with an existing thread pool,
-	 * such as the {@link org.springframework.scheduling.commonj.WorkManagerTaskExecutor}
-	 * to integrate with WebSphere or WebLogic.
+	 * such as the
+	 * {@link org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor}.
 	 */
 	public void setTaskExecutor(TaskExecutor taskExecutor) {
 		this.taskExecutor = taskExecutor;

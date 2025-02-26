@@ -216,7 +216,6 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * if the {@link #setSecureRequest(boolean) secureRequest} property is {@code true}.
 	 * @param messageContext the message context, containing the request to be secured
 	 * @return {@code true} if the response was secured; {@code false} otherwise.
-	 * @throws Exception in case of errors
 	 * @see #secureMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
 	 */
 	@Override
@@ -246,7 +245,6 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * {@code true}.
 	 * @param messageContext the message context, containing the response to be validated
 	 * @return {@code true} if the request was valid; {@code false} otherwise.
-	 * @throws Exception in case of errors
 	 * @see #validateMessage(org.springframework.ws.soap.SoapMessage,org.springframework.ws.context.MessageContext)
 	 */
 	@Override

@@ -24,6 +24,7 @@ import jakarta.jms.ConnectionFactory;
 import jakarta.jms.Destination;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
+import jakarta.jms.Queue;
 import jakarta.jms.Session;
 import jakarta.jms.Topic;
 
@@ -41,47 +42,45 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * a JMS {@link ConnectionFactory} to operate.
  * <p>
  * This message sender supports URI's of the following format: <blockquote>
- * <tt><b>jms:</b></tt><i>destination</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
- * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and
- * <tt><b>&amp;</b></tt> stand for themselves. The <i>destination</i> represents the name
- * of the {@link Queue} or {@link Topic} that will be resolved by the
- * {@link #getDestinationResolver() destination resolver}. Valid <i>param-name</i>
- * include: <blockquote>
+ * {@code jms:<destination>[?param-name=param-value][&param-name=param-value]}
+ * </blockquote> where the characters {@code :}, {@code ?}, and {@code &} stand for
+ * themselves. The {@code <destination>} represents the name of the {@link Queue} or
+ * {@link Topic} that will be resolved by the {@link #getDestinationResolver() destination
+ * resolver}. Valid {@code param-name} include:
  * <table>
  * <tr>
  * <th><i>param-name</i></th>
  * <th><i>Description</i></th>
  * </tr>
  * <tr>
- * <td><tt>deliveryMode</tt></td>
+ * <td>{@code deliveryMode}</td>
  * <td>Indicates whether the request message is persistent or not. This may be
- * <tt>PERSISTENT</tt> or <tt>NON_PERSISTENT</tt>. See
+ * {@code PERSISTENT} or {@code NON_PERSISTENT}. See
  * {@link jakarta.jms.MessageProducer#setDeliveryMode(int)}</td>
  * </tr>
  * <tr>
- * <td><tt>messageType</tt></td>
- * <td>The message type. This may be <tt>BINARY_MESSAGE</tt> (the default) or
- * <tt>TEXT_MESSAGE</tt></td>
+ * <td>{@code messageType}</td>
+ * <td>The message type. This may be {@code BINARY_MESSAGE} (the default) or
+ * {@code TEXT_MESSAGE}</td>
  * </tr>
  * <tr>
- * <td><tt>priority</tt></td>
+ * <td>{@code priority}</td>
  * <td>The JMS priority (0-9) associated with the request message. See
  * {@link jakarta.jms.MessageProducer#setPriority(int)}</td>
  * </tr>
  * <tr>
- * <td><tt>replyToName</tt></td>
+ * <td>{@code replyToName}</td>
  * <td>The name of the destination to which the response message must be sent, that will
- * be resolved by the {@link #getDestinationResolver() destination resolver}.</td>
+ * be resolved by the {@link #getDestinationResolver() destination resolver}</td>
  * </tr>
  * <tr>
- * <td><tt>timeToLive</tt></td>
+ * <td>{@code timeToLive}</td>
  * <td>The lifetime, in milliseconds, of the request message. See
  * {@link jakarta.jms.MessageProducer#setTimeToLive(long)}</td>
  * </tr>
  * </table>
- * </blockquote>
  * <p>
- * If the <tt>replyToName</tt> is not set, a {@link Session#createTemporaryQueue()
+ * If the {@code replyToName} is not set, a {@link Session#createTemporaryQueue()
  * temporary queue} is used.
  * <p>
  * This class uses {@link jakarta.jms.BytesMessage} messages by default, but can be
@@ -89,14 +88,14 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code BytesMessages} are preferred, since {@code TextMessages} do not support
  * attachments and character encodings reliably.
  * <p>
- * Some examples of JMS URIs are: <blockquote> <tt>jms:SomeQueue</tt><br>
- * <tt>jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT</tt><br>
- * <tt>jms:RequestQueue?replyToName=ResponseQueueName</tt><br>
- * <tt>jms:Queue?messageType=TEXT_MESSAGE</blockquote>
+ * Some examples of JMS URIs are: <blockquote> {@code jms:SomeQueue}<br>
+ * {@code jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT}<br>
+ * {@code jms:RequestQueue?replyToName=ResponseQueueName}<br>
+ * {@code jms:Queue?messageType=TEXT_MESSAGE}
  *
  * @author Arjen Poutsma
- * @see <a href="http://tools.ietf.org/id/draft-merrick-jms-iri-00.txt">IRI Scheme for
- * Java(tm) Message Service 1.0</a>
+ * @see <a href="https://datatracker.ietf.org/doc/rfc6167">IRI Scheme for Java(tm) Message
+ * Service 1.0</a>
  * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
@@ -108,7 +107,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	public static final long DEFAULT_RECEIVE_TIMEOUT = -1;
 
 	/**
-	 * Default encoding used to read fromn and write to {@link jakarta.jms.TextMessage}
+	 * Default encoding used to read from and write to {@link jakarta.jms.TextMessage}
 	 * messages.
 	 */
 	public static final String DEFAULT_TEXT_MESSAGE_ENCODING = "UTF-8";

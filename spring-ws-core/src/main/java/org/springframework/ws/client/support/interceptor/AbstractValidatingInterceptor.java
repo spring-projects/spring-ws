@@ -78,7 +78,9 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 		this.schemaLanguage = schemaLanguage;
 	}
 
-	/** Returns the schema resources to use for validation. */
+	/**
+	 * Returns the schema resources to use for validation.
+	 */
 	public Resource[] getSchemas() {
 		return schemas;
 	}
@@ -86,8 +88,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	/**
 	 * Sets the schema resource to use for validation. Setting this property,
 	 * {@link #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection},
-	 * {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[]) schemas} is
-	 * required.
+	 * {@link #setSchemas(Resource[]) schemas}, or {@link #setXsdSchema(XsdSchema)
+	 * xsdSchema} is required.
 	 */
 	public void setSchema(Resource schema) {
 		setSchemas(schema);
@@ -96,8 +98,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	/**
 	 * Sets the schema resources to use for validation. Setting this property,
 	 * {@link #setXsdSchemaCollection(XsdSchemaCollection) xsdSchemaCollection},
-	 * {@link #setSchema(Resource) schema}, or {@link #setSchemas(Resource[]) schemas} is
-	 * required.
+	 * {@link #setSchema(Resource) schema}, or {@link #setXsdSchema(XsdSchema) xsdSchema}
+	 * is required.
 	 */
 	public void setSchemas(Resource... schemas) {
 		Assert.notEmpty(schemas, "schemas must not be empty or null");

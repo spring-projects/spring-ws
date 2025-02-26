@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides miscellaneous endpoints <code>EndpointInterceptor</code> implementations for
- * SOAP purposes.
+ * Provides miscellaneous endpoints {@code EndpointInterceptor} implementations for SOAP
+ * purposes.
  */
 package org.springframework.ws.soap.server.endpoint.interceptor;

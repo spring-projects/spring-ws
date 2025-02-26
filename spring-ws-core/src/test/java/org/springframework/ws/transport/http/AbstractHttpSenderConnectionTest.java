@@ -44,7 +44,6 @@ public class AbstractHttpSenderConnectionTest {
 	 * before passing it to the message factory. This is a regression test for SWS-707.
 	 * @param chunking Specifies whether the test should simulate a response with chunking
 	 * enabled.
-	 * @throws Exception
 	 */
 	private void testSupportsStreaming(boolean chunking) throws Exception {
 

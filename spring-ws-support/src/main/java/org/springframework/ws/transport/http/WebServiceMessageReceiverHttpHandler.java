@@ -35,7 +35,6 @@ import org.springframework.ws.transport.support.SimpleWebServiceMessageReceiverO
  * registered}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.remoting.support.SimpleHttpServerFactoryBean
  * @since 1.5.0
  */
 public class WebServiceMessageReceiverHttpHandler extends SimpleWebServiceMessageReceiverObjectSupport

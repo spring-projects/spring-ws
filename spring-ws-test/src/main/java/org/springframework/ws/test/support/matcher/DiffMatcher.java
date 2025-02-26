@@ -30,6 +30,7 @@ import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
  * @deprecated Migrate to
  * {@link org.springframework.ws.test.support.matcher.xmlunit2.DiffMatcher}.
  */
+@Deprecated
 public abstract class DiffMatcher implements WebServiceMessageMatcher {
 
 	@Override
@@ -43,7 +44,6 @@ public abstract class DiffMatcher implements WebServiceMessageMatcher {
 	 * Creates a {@link Diff} for the given message.
 	 * @param message the message
 	 * @return the diff
-	 * @throws Exception in case of errors
 	 */
 	protected abstract Diff createDiff(WebServiceMessage message);
 

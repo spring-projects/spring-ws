@@ -57,7 +57,7 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
 
 	/**
 	 * Override the default {@link TransformerFactory}.
-	 * @param transformerFactory
+	 * @param transformerFactory the transformer factory to use
 	 */
 	public static void setTransformerFactory(TransformerFactory transformerFactory) {
 		PayloadRootQNameEndpointMapping.transformerFactory = transformerFactory;

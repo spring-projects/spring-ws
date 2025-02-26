@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides JAXB2-based <code>EndpointMapping</code> implementations.
+ * Provides JAXB2-based {@code EndpointMapping} implementations.
  */
 package org.springframework.ws.server.endpoint.mapping.jaxb;

@@ -68,9 +68,6 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	 * Default is no warn logging. Specify this setting to activate warn logging into a
 	 * specific category. Alternatively, override the {@link #logException} method for
 	 * custom logging.
-	 * @see org.apache.commons.logging.LogFactory#getLog(String)
-	 * @see org.apache.log4j.Logger#getLogger(String)
-	 * @see java.util.logging.Logger#getLogger(String)
 	 */
 	public void setWarnLogCategory(String loggerName) {
 		this.warnLogger = LogFactory.getLog(loggerName);

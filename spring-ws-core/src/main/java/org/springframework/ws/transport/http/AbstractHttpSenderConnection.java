@@ -41,7 +41,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 		implements FaultAwareWebServiceConnection {
 
 	/**
-	 * Cached result of {@link #hasResponse}.
+	 * Cached result of {@code hasResponse}.
 	 */
 	private Boolean hasResponse;
 

@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides helper classes for <code>EndpointAdapter</code>,
- * <code>EndpointInteceptor</code>, and <code>EndpointMapping</code> implementations.
+ * Provides helper classes for {@code EndpointAdapter}, {@code EndpointInterceptor}, and
+ * {@code EndpointMapping} implementations.
  */
 package org.springframework.ws.server.endpoint.support;

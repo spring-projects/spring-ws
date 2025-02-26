@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides the <code>ClientInterceptor</code> interface, and validating interceptors.
+ * Provides the {@code ClientInterceptor} interface, and validating interceptors.
  */
 package org.springframework.ws.client.support.interceptor;

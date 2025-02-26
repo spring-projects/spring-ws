@@ -26,7 +26,8 @@ import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
  * that logs the payload of request and response messages.
  * <p>
  * By default, both request and response messages are logged, but this behaviour can be
- * changed using the {@link #logRequest} and {@link #logResponse} properties.
+ * changed using the {@link #setLogRequest(boolean) logRequest} and
+ * {@link #setLogResponse(boolean) logResponse} properties.
  *
  * @author Arjen Poutsma
  * @see #setLogRequest(boolean)

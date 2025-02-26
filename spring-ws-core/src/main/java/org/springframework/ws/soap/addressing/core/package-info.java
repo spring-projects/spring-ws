@@ -15,7 +15,7 @@
  */
 
 /**
- * Core package for WS-Addressing support. Contains the <code>EndpointReference</code> and
- * <code>MessageAddressingProperties</code> classes.
+ * Core package for WS-Addressing support. Contains the {@code EndpointReference} and
+ * {@code MessageAddressingProperties} classes.
  */
 package org.springframework.ws.soap.addressing.core;

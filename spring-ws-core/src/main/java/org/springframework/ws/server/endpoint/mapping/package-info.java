@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides miscellaneous endpoints <code>EndpointMapping</code> implementations.
+ * Provides miscellaneous endpoints {@code EndpointMapping} implementations.
  */
 package org.springframework.ws.server.endpoint.mapping;

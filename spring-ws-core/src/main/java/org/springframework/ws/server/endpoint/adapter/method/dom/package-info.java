@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides DOM-based implementations of the <code>MethodArgumentResolver</code> and
- * <code>MethodReturnValueHandler</code> interfaces.
+ * Provides DOM-based implementations of the {@code MethodArgumentResolver} and
+ * {@code MethodReturnValueHandler} interfaces.
  */
 package org.springframework.ws.server.endpoint.adapter.method.dom;

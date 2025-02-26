@@ -194,7 +194,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	/**
 	 * Returns the endpoint keys for the given method. Should return an empty array if the
 	 * method is not to be registered. The default delegates to
-	 * {@link #getLookupKeysForMethod(Method)}.
+	 * {@link #getLookupKeyForMethod(Method)}.
 	 * @param method the method
 	 * @return a list of registration keys
 	 * @since 2.2

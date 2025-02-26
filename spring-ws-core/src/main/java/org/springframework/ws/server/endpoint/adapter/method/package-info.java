@@ -15,8 +15,7 @@
  */
 
 /**
- * Provides the <code>MethodArgumentResolver</code> and
- * <code>MethodReturnValueHandler</code> abstractions, and various implementations
- * thereof.
+ * Provides the {@code MethodArgumentResolver} and {@code MethodReturnValueHandler}
+ * abstractions, and various implementations thereof.
  */
 package org.springframework.ws.server.endpoint.adapter.method;

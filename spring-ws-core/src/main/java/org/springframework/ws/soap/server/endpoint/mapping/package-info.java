@@ -15,7 +15,7 @@
  */
 
 /**
- * Provides miscellaneous endpoints <code>EndpointMapping</code> implementations for SOAP
+ * Provides miscellaneous endpoints {@code EndpointMapping} implementations for SOAP
  * purposes.
  */
 package org.springframework.ws.soap.server.endpoint.mapping;

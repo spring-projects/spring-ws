@@ -71,9 +71,6 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * <p>
 	 * This can be specified to not log into the category of a class but rather into a
 	 * specific named category.
-	 * @see org.apache.commons.logging.LogFactory#getLog(String)
-	 * @see org.apache.log4j.Logger#getLogger(String)
-	 * @see java.util.logging.Logger#getLogger(String)
 	 */
 	public void setLoggerName(String loggerName) {
 		this.logger = LogFactory.getLog(loggerName);

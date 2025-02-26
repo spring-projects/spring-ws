@@ -38,6 +38,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @deprecated Migrate to
  * {@link org.springframework.ws.test.support.matcher.xmlunit2.PayloadDiffMatcher}.s
  */
+@Deprecated
 public class PayloadDiffMatcher extends DiffMatcher {
 
 	private final Source expected;

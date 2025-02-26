@@ -58,7 +58,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 
 	/**
 	 * Provide your own {@link DocumentBuilderFactory}.
-	 * @param documentBuilderFactory
+	 * @param documentBuilderFactory the document builder factory to use
 	 */
 	public DomPoxMessageFactory(DocumentBuilderFactory documentBuilderFactory) {
 		this.documentBuilderFactory = documentBuilderFactory;

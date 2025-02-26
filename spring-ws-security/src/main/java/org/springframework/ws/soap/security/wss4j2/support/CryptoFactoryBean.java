@@ -39,7 +39,7 @@ import org.springframework.util.Assert;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see org.apache.ws.security.components.crypto.Crypto
+ * @see Crypto
  * @since 2.3.0
  */
 public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean {
@@ -50,10 +50,12 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 
 	private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.wss4j.crypto.provider";
 
+	private static final String CRYPTO_MERLIN_FILE_PROPERTY = "org.apache.ws.security.crypto.merlin.file";
+
 	/**
 	 * Sets the configuration of the Crypto. Setting this property overrides all
 	 * previously set configuration, through the type-safe properties
-	 * @see org.apache.ws.security.components.crypto.CryptoFactory#getInstance(java.util.Properties)
+	 * @see CryptoFactory#getInstance(java.util.Properties)
 	 */
 	public void setConfiguration(Properties properties) {
 		Assert.notNull(properties, "'properties' must not be null");
@@ -61,11 +63,9 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 	}
 
 	/**
-	 * Sets the {@link org.apache.ws.security.components.crypto.Crypto} provider name.
-	 * Defaults to {@link org.apache.ws.security.components.crypto.Merlin}.
+	 * Sets the {@link Crypto} provider name. Defaults to {@link Merlin}.
 	 * <p>
-	 * This property maps to the WSS4J {@code org.apache.ws.security.crypto.provider}
-	 * property.
+	 * This property maps to the WSS4J {@value CRYPTO_PROVIDER_PROPERTY} property.
 	 * @param cryptoProviderClass the crypto provider class
 	 */
 	public void setCryptoProvider(Class<? extends Crypto> cryptoProviderClass) {
@@ -73,17 +73,15 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 	}
 
 	/**
-	 * Sets the location of the key store to be loaded in the
-	 * {@link org.apache.ws.security.components.crypto.Crypto} instance.
+	 * Sets the location of the key store to be loaded in the {@link Crypto} instance.
 	 * <p>
-	 * This property maps to the WSS4J {@code org.apache.ws.security.crypto.merlin.file}
-	 * property.
+	 * This property maps to the WSS4J {@value CRYPTO_MERLIN_FILE_PROPERTY} property.
 	 * @param location the key store location
 	 * @throws java.io.IOException when the resource cannot be opened
 	 */
 	public void setKeyStoreLocation(Resource location) throws IOException {
 		String resourcePath = getResourcePath(location);
-		this.configuration.setProperty("org.apache.ws.security.crypto.merlin.file", resourcePath);
+		this.configuration.setProperty(CRYPTO_MERLIN_FILE_PROPERTY, resourcePath);
 	}
 
 	private String getResourcePath(Resource resource) throws IOException {

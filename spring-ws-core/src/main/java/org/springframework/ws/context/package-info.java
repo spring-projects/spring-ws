@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains the <code>MessageContext</code> interface and implementations thereof.
+ * Contains the {@code MessageContext} interface and implementations thereof.
  */
 package org.springframework.ws.context;

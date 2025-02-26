@@ -60,7 +60,9 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 
 	private XMPPConnection connection;
 
-	/** Sets the {@code XMPPConnection}. Setting this property is required. */
+	/**
+	 * Sets the {@code XMPPConnection}. Setting this property is required.
+	 */
 	public void setConnection(XMPPConnection connection) {
 		this.connection = connection;
 	}
@@ -68,7 +70,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 	/**
 	 * Set the timeout to use for receive calls. The default is -1, which means no
 	 * timeout.
-	 * @see org.jivesoftware.smack.PacketCollector#nextResult(long)
+	 * @see org.jivesoftware.smack.StanzaCollector#nextResult(long)
 	 */
 	public void setReceiveTimeout(long receiveTimeout) {
 		this.receiveTimeout = receiveTimeout;

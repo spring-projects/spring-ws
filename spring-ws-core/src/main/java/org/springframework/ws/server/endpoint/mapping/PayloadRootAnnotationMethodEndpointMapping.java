@@ -62,7 +62,7 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 
 	/**
 	 * Override the default {@link TransformerFactory}.
-	 * @param transformerFactory
+	 * @param transformerFactory the transformer factory to use
 	 */
 	public static void setTransformerFactory(TransformerFactory transformerFactory) {
 		PayloadRootAnnotationMethodEndpointMapping.transformerFactory = transformerFactory;

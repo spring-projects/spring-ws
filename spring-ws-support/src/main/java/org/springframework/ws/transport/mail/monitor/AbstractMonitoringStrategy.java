@@ -138,7 +138,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 	/**
 	 * Fetches the specified messages from the specified folder. Default implementation
 	 * {@link Folder#fetch(Message[], FetchProfile) fetches} every
-	 * {@link javax.mail.FetchProfile.Item}.
+	 * {@link jakarta.mail.FetchProfile.Item}.
 	 * @param folder the folder to fetch messages from
 	 * @param messages the messages to fetch
 	 * @throws MessagingException in case of JavMail errors
