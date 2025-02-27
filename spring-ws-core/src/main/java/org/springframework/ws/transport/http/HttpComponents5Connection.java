@@ -121,6 +121,7 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 
 		String contentType = httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
