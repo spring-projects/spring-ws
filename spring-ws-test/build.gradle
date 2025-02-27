@@ -1,0 +1,22 @@
+plugins {
+	id "java-library"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+}
+
+description = "Spring WS Test"
+
+dependencies {
+	api(project(":spring-ws-core"))
+	api(project(":spring-xml"))
+	api("org.springframework:spring-context")
+	api("org.xmlunit:xmlunit-core")
+	api("org.xmlunit:xmlunit-legacy")
+	api("org.xmlunit:xmlunit-placeholders")
+
+	testImplementation("org.assertj:assertj-core")
+	testImplementation("org.easymock:easymock")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("org.xmlunit:xmlunit-assertj")
+}

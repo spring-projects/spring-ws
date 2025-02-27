@@ -1,0 +1,63 @@
+plugins {
+	id "java-platform"
+}
+
+javaPlatform {
+	allowDependencies()
+}
+
+dependencies {
+	api(platform("org.eclipse.jetty:jetty-bom:12.0.16"))
+	api(platform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.16"))
+	api(platform("org.junit:junit-bom:5.11.0"))
+	api(platform("org.springframework:spring-framework-bom:6.0.23"))
+	api(platform("org.springframework.security:spring-security-bom:6.1.9"))
+	constraints {
+		api("com.fasterxml.woodstox:woodstox-core:6.5.1")
+		api("com.icegreen:greenmail:2.0.1")
+		api("com.icegreen:greenmail-junit5:2.0.1")
+		api("com.icegreen:greenmail-spring:2.0.1")
+		api("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
+		api("commons-httpclient:commons-httpclient:3.1")
+		api("commons-io:commons-io:2.16.1")
+		api("jakarta.activation:jakarta.activation-api:2.1.3")
+		api("jakarta.annotation:jakarta.annotation-api:2.1.1")
+		api("jakarta.jms:jakarta.jms-api:3.1.0")
+		api("jakarta.mail:jakarta.mail-api:2.1.3")
+		api("jakarta.servlet:jakarta.servlet-api:6.0.0")
+		api("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+		api("jakarta.xml.soap:jakarta.xml.soap-api:3.0.2")
+		api("jaxen:jaxen:1.1.6")
+		api("net.minidev:json-smart:2.5.2")
+		api("net.sf.ehcache:ehcache:2.10.9.2")
+		api("org.apache.activemq:artemis-jakarta-server:2.33.0")
+		api("org.apache.commons:commons-collections4:4.4")
+		api("org.apache.httpcomponents.client5:httpclient5:5.2.3")
+		api("org.apache.httpcomponents:httpclient:4.5.14")
+		api("org.apache.logging.log4j:log4j-core:2.19.0")
+		api("org.apache.santuario:xmlsec:3.0.4")
+		api("org.apache.wss4j:wss4j-ws-security-dom:2.4.3")
+		api("org.apache.ws.xmlschema:xmlschema-core:2.3.1")
+		api("org.aspectj:aspectjrt:1.9.22")
+		api("org.aspectj:aspectjweaver:1.9.22")
+		api("org.assertj:assertj-core:3.25.3")
+		api("org.dom4j:dom4j:2.1.4")
+		api("org.easymock:easymock:4.3")
+		api("org.eclipse.angus:angus-mail:1.1.0")
+		api("org.glassfish.jaxb:jaxb-runtime:4.0.5")
+		api("org.igniterealtime.smack:smack-extensions:4.3.5")
+		api("org.igniterealtime.smack:smack-java7:4.3.5")
+		api("org.igniterealtime.smack:smack-tcp:4.3.5")
+		api("org.jdom:jdom2:2.0.6.1")
+		api("org.jvnet.staxex:stax-ex:2.1.0")
+		api("org.mockito:mockito-core:4.11.0")
+		api("org.slf4j:slf4j-api:2.0.6")
+		api("org.springframework.hateoas:spring-hateoas:2.1.5")
+		api("org.xmlunit:xmlunit-assertj:2.10.0")
+		api("org.xmlunit:xmlunit-core:2.10.0")
+		api("org.xmlunit:xmlunit-legacy:2.10.0")
+		api("org.xmlunit:xmlunit-placeholders:2.10.0")
+		api("wsdl4j:wsdl4j:1.6.3")
+		api("xom:xom:1.3.7")
+	}
+}

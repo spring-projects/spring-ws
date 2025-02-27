@@ -1,0 +1,37 @@
+plugins {
+	id "java-library"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+	id "org.springframework.ws.optional-dependencies"
+}
+
+description = "Spring WS Support"
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	api(project(":spring-ws-core"))
+	api(project(":spring-xml"))
+	api("org.springframework:spring-jms")
+
+	optional("jakarta.jms:jakarta.jms-api")
+	optional("jakarta.mail:jakarta.mail-api")
+	optional("org.eclipse.angus:angus-mail")
+	optional("org.igniterealtime.smack:smack-extensions")
+	optional("org.igniterealtime.smack:smack-java7")
+	optional("org.igniterealtime.smack:smack-tcp")
+
+	testImplementation("com.icegreen:greenmail")
+	testImplementation("com.icegreen:greenmail-junit5")
+	testImplementation("com.icegreen:greenmail-spring")
+	testImplementation("commons-httpclient:commons-httpclient")
+	testImplementation("jakarta.annotation:jakarta.annotation-api")
+	testImplementation("org.apache.activemq:artemis-jakarta-server")
+	testImplementation("org.assertj:assertj-core")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.slf4j:slf4j-api")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("org.xmlunit:xmlunit-assertj")
+}

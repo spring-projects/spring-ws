@@ -1,28 +1,15 @@
 *.ipr
 *.iws
 *.iml
-target
-.clover
-activemq-data
 *.hsp
-atlassian-ide-plugin*.xml
 
 .idea
-out
+out/
 
-/build
-/spring-*/bin
-/spring-*/build
-.gradle
+build/
+.gradle/
 
-_site
-/.classpath
-/.project
-/.settings/
-
-*.versionsBackup
-
-credentials.yml
-.flattened-pom.xml
-.mvn/.gradle-enterprise
-.mvn/.develocity
+.classpath
+.project
+.settings/
+bin/

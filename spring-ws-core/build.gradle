@@ -1,0 +1,56 @@
+plugins {
+	id "java-library"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+	id "org.springframework.ws.optional-dependencies"
+}
+
+description = "Spring WS Core"
+
+dependencies {
+	api(project(":spring-xml"))
+	api("jakarta.xml.bind:jakarta.xml.bind-api")
+	api("jakarta.xml.soap:jakarta.xml.soap-api")
+	api("org.springframework:spring-aop")
+	api("org.springframework:spring-beans")
+	api("org.springframework:spring-oxm")
+	api("org.springframework:spring-web")
+	api("org.springframework:spring-webmvc")
+
+	optional("commons-httpclient:commons-httpclient")
+	optional("jakarta.mail:jakarta.mail-api")
+	optional("jakarta.servlet:jakarta.servlet-api")
+	optional("org.apache.httpcomponents:httpclient")
+	optional("org.apache.httpcomponents.client5:httpclient5")
+	optional("org.apache.ws.xmlschema:xmlschema-core")
+	optional("org.dom4j:dom4j")
+	optional("org.jdom:jdom2")
+	optional("wsdl4j:wsdl4j")
+	optional("xom:xom") {
+		exclude(group: "xalan", module: "xalan")
+		exclude(group: "xerces", module: "xercesImpl")
+		exclude(group: "xml-apis", module: "xml-apis")
+	}
+
+	runtimeOnly("org.glassfish.jaxb:jaxb-runtime") {
+		exclude(group: "org.eclipse.angus", module: "angus-activation")
+	}
+
+	testImplementation("com.fasterxml.woodstox:woodstox-core")
+	testImplementation("commons-io:commons-io")
+	testImplementation("net.minidev:json-smart:jar")
+	testImplementation("org.apache.logging.log4j:log4j-core")
+	testImplementation("org.assertj:assertj-core")
+	testImplementation("org.aspectj:aspectjrt")
+	testImplementation("org.aspectj:aspectjweaver")
+	testImplementation("org.easymock:easymock")
+	testImplementation("org.eclipse.jetty:jetty-server")
+	testImplementation("org.eclipse.jetty.ee10:jetty-ee10-servlet")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.mockito:mockito-core")
+	testImplementation("org.slf4j:slf4j-api")
+	testImplementation("org.springframework:spring-test")
+	testImplementation("org.springframework:spring-webflux")
+	testImplementation("org.springframework.hateoas:spring-hateoas")
+	testImplementation("org.xmlunit:xmlunit-assertj")
+}

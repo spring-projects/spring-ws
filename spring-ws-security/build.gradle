@@ -1,0 +1,31 @@
+plugins {
+	id "java-library"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+	id "org.springframework.ws.optional-dependencies"
+}
+
+description = "Spring WS Security"
+
+dependencies {
+	api(project(":spring-ws-core"))
+	api(project(":spring-xml"))
+	api("org.apache.santuario:xmlsec")
+	api("org.apache.wss4j:wss4j-ws-security-dom") {
+		exclude(group: "org.apache.geronimo.javamail", module: "geronimo-javamail_1.4_mail")
+		exclude(group: "org.cryptacular", module: "cryptacular")
+	}
+	api("org.jvnet.staxex:stax-ex")
+	api("org.slf4j:slf4j-api")
+	api("org.springframework:spring-beans")
+	api("org.springframework:spring-tx")
+	api("org.springframework.security:spring-security-core")
+
+	optional("com.sun.xml.messaging.saaj:saaj-impl")
+	optional("net.sf.ehcache:ehcache")
+
+	testImplementation("org.assertj:assertj-core")
+	testImplementation("org.easymock:easymock")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.springframework:spring-test")
+}

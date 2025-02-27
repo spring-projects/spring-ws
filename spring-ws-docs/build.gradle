@@ -1,0 +1,88 @@
+plugins {
+	id "io.freefair.aggregate-javadoc" version "8.12.1"
+	id "org.asciidoctor.jvm.convert" version "4.0.4"
+	id "org.asciidoctor.jvm.pdf" version "4.0.4"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	asciidoctorExt
+}
+
+dependencies {
+	asciidoctorExt("io.spring.asciidoctor.backends:spring-asciidoctor-backends:0.0.5")
+	javadoc(enforcedPlatform(project(":spring-ws-platform")))
+	[":spring-ws-core", ":spring-ws-security", ":spring-ws-support", ":spring-ws-test", ":spring-xml"].each {
+		javadoc(project(it))
+		javadoc(project(path: it, configuration: "javadocClasspath"))
+	}
+}
+
+asciidoctorj {
+	attributes = [
+		"allow-uri-read": true,
+		"numbered": true,
+		"toclevels": 4
+	]
+	options = [
+		"doctype": "book",
+	]
+}
+
+tasks.named("asciidoctor") {
+	sources {
+		include "index.adoc"
+	}
+	configureOutputOptions {
+		backends = ["spring-html"]
+	}
+	baseDirFollowsSourceFile()
+	configurations("asciidoctorExt")
+}
+
+tasks.named("asciidoctorPdf") {
+	sources {
+		include "index.adoc"
+	}
+	baseDirFollowsSourceFile()
+}
+
+tasks.named("javadoc") {
+	title = "Spring Web Services ${project.version} API"
+	options {
+		use = true
+		bottom = "Copyright © ${java.time.Year.now()} <a href=\"https://spring.io\">VMware by Broadcom</a>. All rights reserved."
+	}
+}
+
+def zip = tasks.register("zip", Zip) {
+	archiveBaseName = project.name
+	archiveVersion = project.version
+	destinationDirectory = project.layout.buildDirectory
+	into("reference/html") {
+		from asciidoctor
+	}
+	into ("reference/pdf") {
+		from asciidoctorPdf
+	}
+	into ("api") {
+		from javadoc
+	}
+}
+
+tasks.named("assemble") {
+	dependsOn(zip)
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			artifact zip
+		}
+	}
+}

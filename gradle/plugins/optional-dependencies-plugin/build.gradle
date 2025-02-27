@@ -1,0 +1,23 @@
+plugins {
+	id "checkstyle"
+	id "java-gradle-plugin"
+	id "io.spring.javaformat" version "$javaFormatVersion"
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	checkstyle("com.puppycrawl.tools:checkstyle:${checkstyle.toolVersion}")
+	checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:${javaFormatVersion}")
+}
+
+gradlePlugin {
+	plugins {
+		optionalDependenciesPlugin {
+			id = "org.springframework.ws.optional-dependencies"
+			implementationClass = "org.springframework.ws.gradle.optional.OptionalDependenciesPlugin"
+		}
+	}
+}

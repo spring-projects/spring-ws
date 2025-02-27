@@ -1,0 +1,17 @@
+plugins {
+	id "java-platform"
+	id "maven-publish"
+	id "org.springframework.ws.conventions"
+}
+
+description = "Spring WS – Bill of Materials (BOM)"
+
+dependencies {
+	constraints {
+		api(project(":spring-ws-core"))
+		api(project(":spring-ws-security"))
+		api(project(":spring-ws-support"))
+		api(project(":spring-ws-test"))
+		api(project(":spring-xml"))
+	}
+}
