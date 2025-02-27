@@ -34,7 +34,7 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  * {@link #setConnection(org.jivesoftware.smack.XMPPConnection) connection}to be set.
  * <p>
  * This message sender supports URI's of the following format: <blockquote>
- * <tt><b>xmpp:</b></tt><i>to</i> </blockquote> The <i>to</i> represents a Jabber ID.
+ * {@code xmpp:<to>} </blockquote> The {@code to} represents a Jabber ID.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma

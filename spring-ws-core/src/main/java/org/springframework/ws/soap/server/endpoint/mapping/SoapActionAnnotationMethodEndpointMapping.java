@@ -40,15 +40,14 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
  * <p>
  * Endpoints typically have the following form:
  *
- * <pre>
+ * <pre><code class='java'>
  * &#64;Endpoint
  * public class MyEndpoint{
  *	  &#64;SoapAction("http://springframework.org/spring-ws/SoapAction")
  *	  public Source doSomethingWithRequest() {
  *		 ...
  *	  }
- * }
- * </pre>
+ * }</code></pre>
  *
  * @author Arjen Poutsma
  * @since 1.0.0

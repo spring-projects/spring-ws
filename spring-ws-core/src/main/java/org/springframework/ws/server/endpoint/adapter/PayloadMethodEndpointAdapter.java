@@ -28,21 +28,12 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 /**
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the
- * following signature:
- *
- * <pre>
- * void handleMyMessage(Source request);
- * </pre>
- *
- * or
- *
- * <pre>
- * Source handleMyMessage(Source request);
- * </pre>
- *
- * I.e. methods that take a single {@link Source} parameter, and return either
- * {@code void} or a {@link Source}. The method can have any name, as long as it is mapped
- * by an {@link org.springframework.ws.server.EndpointMapping}.
+ * following signature: <pre><code class='java'>
+ * void handleMyMessage(Source request);</code></pre> or <pre><code class='java'>
+ * Source handleMyMessage(Source request);</code></pre> I.e. methods that take a single
+ * {@link Source} parameter, and return either {@code void} or a {@link Source}. The
+ * method can have any name, as long as it is mapped by an
+ * {@link org.springframework.ws.server.EndpointMapping}.
  * <p>
  * This adapter is registered by default by the {@link MessageDispatcher} and
  * {@link SoapMessageDispatcher}.

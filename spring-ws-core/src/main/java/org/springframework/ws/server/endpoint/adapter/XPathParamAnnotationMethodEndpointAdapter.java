@@ -45,20 +45,14 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  * Adapter that supports endpoint methods that use XPath expressions. Supports methods
  * with the following signature:
  *
- * <pre>
- * void handleMyMessage(@XPathParam("/root/child/text") String param);
- * </pre>
- *
- * or
- *
- * <pre>
+ * <pre><code class='java'>
+ * void handleMyMessage(@XPathParam("/root/child/text") String param);</code></pre> or
+ * <pre><code class='java'>
  * Source handleMyMessage(@XPathParam("/root/child/text") String param1,
- * 		&#64;XPathParam("/root/child/number") double param2);
- * </pre>
- *
- * I.e. methods that return either {@code void} or a {@link Source}, and have parameters
- * annotated with {@link XPathParam} that specify the XPath expression that should be
- * bound to that parameter. The parameter can be of the following types:
+ * 		&#64;XPathParam("/root/child/number") double param2);</code></pre> I.e. methods
+ * that return either {@code void} or a {@link Source}, and have parameters annotated with
+ * {@link XPathParam} that specify the XPath expression that should be bound to that
+ * parameter. The parameter can be of the following types:
  * <ul>
  * <li>{@code boolean}, or {@link Boolean}</li>
  * <li>{@code double}, or {@link Double}</li>

@@ -48,6 +48,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@link Topic} that will be resolved by the {@link #getDestinationResolver() destination
  * resolver}. Valid {@code param-name} include:
  * <table>
+ * <caption>Parameter Names</caption>
  * <tr>
  * <th><i>param-name</i></th>
  * <th><i>Description</i></th>
@@ -91,7 +92,7 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * Some examples of JMS URIs are: <blockquote> {@code jms:SomeQueue}<br>
  * {@code jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT}<br>
  * {@code jms:RequestQueue?replyToName=ResponseQueueName}<br>
- * {@code jms:Queue?messageType=TEXT_MESSAGE}
+ * {@code jms:Queue?messageType=TEXT_MESSAGE}</blockquote>
  *
  * @author Arjen Poutsma
  * @see <a href="https://datatracker.ietf.org/doc/rfc6167">IRI Scheme for Java(tm) Message

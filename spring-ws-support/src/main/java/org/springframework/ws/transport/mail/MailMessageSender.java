@@ -49,25 +49,23 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * the server-side message receiver polling strategy.
  * <p>
  * This message sender supports URI's of the following format: <blockquote>
- * <tt><b>mailto:</b></tt><i>to</i>[<tt><b>?</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>][<tt><b>&amp;</b></tt><i>param-name</i><tt><b>=</b></tt><i>param-value</i>]*
- * </blockquote> where the characters <tt><b>:</b></tt>, <tt><b>?</b></tt>, and
- * <tt><b>&amp;</b></tt> stand for themselves. The <i>to</i> represents an RFC 822
- * mailbox. Valid <i>param-name</i> include: <blockquote>
+ * {@code mailto:<to>[?param-name=param-value][&param-name=param-value]*} </blockquote>
+ * where the characters {@code :}, {@code ?}, and {@code &} stand for themselves. The
+ * {@code to} represents an RFC 822 mailbox. Valid {@code param-name} include:
  * <table>
+ * <caption>Parameter Names</caption>
  * <tr>
  * <th><i>param-name</i></th>
  * <th><i>Description</i></th>
  * </tr>
  * <tr>
- * <td><tt>subject</tt></td>
+ * <td>{@code subject}</td>
  * <td>The subject of the request message.</td>
  * </tr>
  * </table>
- * </blockquote>
  * <p>
- * Some examples of email URIs are: <blockquote><tt>mailto:john@example.com</tt><br>
- * <tt>mailto:john@example.com@?subject=SOAP%20Test</tt><br>
- * </blockquote>
+ * Some examples of email URIs are: {@code mailto:john@example.com}<br>
+ * {@code mailto:john@example.com@?subject=SOAP%20Test}<br>
  *
  * @author Arjen Poutsma
  * @see <a href="http://www.ietf.org/rfc/rfc2368.txt">The mailto URL scheme</a>

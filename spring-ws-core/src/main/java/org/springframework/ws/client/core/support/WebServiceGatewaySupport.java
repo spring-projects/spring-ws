@@ -41,7 +41,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * template are to be used.
  * <p>
  * Note that when {@link #setWebServiceTemplate(WebServiceTemplate) injecting a
- * {@code WebServiceTemplate}} directly, the convenience setters
+ * WebServiceTemplate directly}, the convenience setters
  * ({@link #setMarshaller(Marshaller)}, {@link #setUnmarshaller(Unmarshaller)},
  * {@link #setMessageSender(WebServiceMessageSender)},
  * {@link #setMessageSenders(WebServiceMessageSender[])}, and

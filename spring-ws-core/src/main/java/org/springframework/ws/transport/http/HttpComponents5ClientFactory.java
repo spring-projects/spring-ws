@@ -129,7 +129,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	/**
 	 * Sets the maximum number of connections allowed for the underlying HttpClient.
 	 * @param maxTotalConnections the maximum number of connections allowed
-	 * @see PoolingHttpClientConnectionManager...
+	 * @see PoolingHttpClientConnectionManager
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
 
@@ -154,7 +154,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * The host can be specified as a URI (with scheme and port).
 	 * @param maxConnectionsPerHost a properties object specifying the maximum number of
 	 * connection
-	 * @see PoolingHttpClientConnectionManager...
+	 * @see PoolingHttpClientConnectionManager
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
 		this.maxConnectionsPerHost = maxConnectionsPerHost;

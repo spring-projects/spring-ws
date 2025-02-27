@@ -33,15 +33,10 @@ import org.springframework.ws.support.MarshallingUtils;
  * Adapter that supports endpoint methods that use marshalling. Supports methods with the
  * following signature:
  *
- * <pre>
- * void handleMyMessage(MyUnmarshalledType request);
- * </pre>
- *
- * or
- *
- * <pre>
- * MyMarshalledType handleMyMessage(MyUnmarshalledType request);
- * </pre>
+ * <pre><code class='java'>
+ * void handleMyMessage(MyUnmarshalledType request);</code></pre> or
+ * <pre><code class='java'>
+ * MyMarshalledType handleMyMessage(MyUnmarshalledType request);</code></pre>
  *
  * I.e. methods that take a single parameter that {@link Unmarshaller#supports(Class) is
  * supported} by the {@link Unmarshaller}, and return either {@code void} or a type

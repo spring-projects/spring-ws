@@ -94,14 +94,14 @@ import org.springframework.ws.transport.support.TransportUtils;
  * <li>Call {@link #hasError(WebServiceConnection,WebServiceMessage) hasError()} to check
  * if the connection has an error. For an HTTP transport, a status code other than
  * {@code 2xx} indicates an error. However, since a status code of 500 can also indicate a
- * SOAP fault, the template verifies whether the error is not a fault.</li>
+ * SOAP fault, the template verifies whether the error is not a fault.
  * <ul>
  * <li>If the connection has an error, call the {@link #handleError handleError()} method,
  * which by default throws a {@link WebServiceTransportException}.</li>
  * <li>If the connection has no error, continue with the next step.</li>
  * </ul>
  * <li>Invoke {@link WebServiceConnection#receive(WebServiceMessageFactory) receive} on
- * the connection to read the response message, if any.</li>
+ * the connection to read the response message, if any.
  * <ul>
  * <li>If no response was received, return {@code null} or {@code false}</li>
  * <li>Call {@link #hasFault(WebServiceConnection,WebServiceMessage) hasFault()} to

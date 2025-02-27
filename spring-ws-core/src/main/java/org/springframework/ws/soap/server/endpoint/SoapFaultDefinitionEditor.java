@@ -27,11 +27,7 @@ import org.springframework.xml.namespace.QNameEditor;
 
 /**
  * PropertyEditor for {@code SoapFaultDefinition} objects. Takes strings of form
- *
- * <pre>
- * faultCode,faultString,locale
- * </pre>
- *
+ * {@code faultCode,faultString,locale}<br/>
  * where {@code faultCode} is the string representation of a {@code QName},
  * {@code faultStringOrReason} is the optional fault string, and {@code locale} is the
  * optional string representations for the {@code faultStringOrReason}language. By
@@ -43,22 +39,11 @@ import org.springframework.xml.namespace.QNameEditor;
  * {@code SENDER} to{@code Client}/{@code Sender} fault respectively.
  * <p>
  * For example:
- *
- * <pre>
- * RECEIVER,Server error
- * </pre>
- *
- * or
- *
- * <pre>
- * CLIENT,Client error
- * </pre>
- *
- * or
- *
- * <pre>
- * {http://springframework.org/spring-ws}spring-ws:FatalError},A fatal error has occurred
- * </pre>
+ * <ul>
+ * <li>{@code RECEIVER,Server error}</li>
+ * <li>{@code CLIENT,Client error}</li>
+ * <li><code>{http://springframework.org/spring-ws}spring-ws:FatalError},A fatal error has occurred</code></li>
+ * </ul>
  *
  * @author Arjen Poutsma
  * @see javax.xml.namespace.QName#toString()

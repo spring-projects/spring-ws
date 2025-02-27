@@ -39,23 +39,18 @@ import org.springframework.xml.transform.TransformerHelper;
  * <p>
  * Endpoints typically have the following form:
  *
- * <pre>
+ * <pre><code class='java'>
  * &#64;Endpoint
  * public class MyEndpoint{
  *	  public void doSomethingWithRequest(&#64;RequestBody MyRootElement rootElement) {
  *		 ...
  *	  }
- * }
- * </pre>
- *
- * where MyRootElement is annotated with {@code @XmlRootElement}:
- *
- * <pre>
+ * }</code></pre> where MyRootElement is annotated with {@code @XmlRootElement}:
+ * <pre><code class='java'>
  * &#64;XmlRootElement(name = "myRoot", namespace = "http://springframework.org/spring-ws")
  * public class MyRootElement {
  *	 ...
- * }
- * </pre>
+ * }</code></pre>
  *
  * @author Arjen Poutsma
  * @since 2.0

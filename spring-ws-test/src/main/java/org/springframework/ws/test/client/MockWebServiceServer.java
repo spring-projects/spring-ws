@@ -49,9 +49,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * can typically use the Code Completion features (i.e. ctrl-space) in your IDE to set up
  * the mocks.
  * <p>
- * For example: <blockquote>
- *
- * <pre>
+ * For example: <pre><code class="java">
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
  * import org.springframework.test.context.ContextConfiguration;
@@ -92,10 +90,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *
  *	   <strong>mockServer.verify();</strong>
  *	 }
- * }
- * </pre>
- *
- * </blockquote>
+ * }</code></pre>
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan

@@ -30,20 +30,19 @@ import org.springframework.context.annotation.Import;
  * Web Services configuration defined in {@link WsConfigurationSupport} imported. For
  * instance:
  *
- * <pre class="code">
+ * <pre><code class='java'>
  * &#064;Configuration
  * &#064;EnableWs
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyWsConfiguration {
  *
- * }
- * </pre>
+ * }</code></pre>
  * <p>
  * Customize the imported configuration by implementing the {@link WsConfigurer} interface
  * or more likely by extending the {@link WsConfigurerAdapter} base class and overriding
  * individual methods:
  *
- * <pre class="code">
+ * <pre><code class='java'>
  * &#064;Configuration
  * &#064;EnableWs
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
@@ -60,14 +59,13 @@ import org.springframework.context.annotation.Import;
  * 	}
  *
  * 	// More overridden methods ...
- * }
- * </pre>
+ * }</code></pre>
  * <p>
  * If the customization options of {@link WsConfigurer} do not expose something you need
  * to configure, consider removing the {@code @EnableWs} annotation and extending directly
  * from {@link WsConfigurationSupport} overriding selected {@code @Bean} methods:
  *
- * <pre class="code">
+ * <pre><code class='java'>
  * &#064;Configuration
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurationSupport {
@@ -83,8 +81,7 @@ import org.springframework.context.annotation.Import;
  * 		// Create or delegate to "super" to create and
  * 		// customize properties of DefaultMethodEndpointAdapter
  * 	}
- * }
- * </pre>
+ * }</code></pre>
  *
  * @see WsConfigurer
  * @see WsConfigurerAdapter

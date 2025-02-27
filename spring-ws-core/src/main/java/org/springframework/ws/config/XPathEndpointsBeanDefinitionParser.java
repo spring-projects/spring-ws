@@ -27,7 +27,7 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 
 /**
- * Parser for the <code>&lt;sws:xpath-endpoints/&gt; element.
+ * Parser for the {@code <sws:xpath-endpoints>} element.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

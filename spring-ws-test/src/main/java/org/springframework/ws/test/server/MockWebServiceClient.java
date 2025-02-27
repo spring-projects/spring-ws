@@ -58,9 +58,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * can typically use the Code Completion features (i.e. ctrl-space) in your IDE to set up
  * the mocks.
  * <p>
- * For example: <blockquote>
- *
- * <pre>
+ * For example: <pre><code class="java">
  * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
  * import org.springframework.context.ApplicationContext;
@@ -101,10 +99,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  *
  *	   <strong>mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload))</strong>;
  *	 }
- * }
- * </pre>
- *
- * </blockquote>
+ * }</code></pre>
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan

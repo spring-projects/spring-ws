@@ -36,7 +36,6 @@
 
 	<properties>
 		<java.version>17</java.version>
-		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring-asciidoctor-backends.version>0.0.5</spring-asciidoctor-backends.version>
@@ -827,7 +826,7 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>2.10.4</version>
 						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
+							<additionalparam>-Xdoclint:-missing</additionalparam>
 							<additionalparam>-quiet</additionalparam>
 						</configuration>
 						<executions>

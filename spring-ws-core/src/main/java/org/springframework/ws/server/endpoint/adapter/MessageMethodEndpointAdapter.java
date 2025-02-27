@@ -27,9 +27,8 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * Adapter that supports endpoint methods with message contexts. Supports methods with the
  * following signature:
  *
- * <pre>
- * void handleMyMessage(MessageContext request);
- * </pre>
+ * <pre><code class='java'>
+ * void handleMyMessage(MessageContext request);</code></pre>
  *
  * I.e. methods that take a single {@link MessageContext} parameter, and return
  * {@code void}. The method can have any name, as long as it is mapped by an

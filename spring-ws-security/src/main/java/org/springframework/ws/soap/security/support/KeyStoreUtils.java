@@ -84,9 +84,9 @@ public abstract class KeyStoreUtils {
 	 * If {@code javax.net.ssl.trustStore} is defined but the specified file does not
 	 * exist, then a default, empty trust store is created.</li>
 	 * <li>If the {@code javax.net.ssl.trustStore} system property was not specified, but
-	 * if the file {@code $JAVA_HOME/lib/security/jssecacerts} exists, that file is
-	 * used.</li> Otherwise,
-	 * <li>If the file {@code $JAVA_HOME/lib/security/cacerts} exists, that file is used.
+	 * if the file {@code $JAVA_HOME/lib/security/jssecacerts} exists, that file is used.
+	 * <li>If the file {@code $JAVA_HOME/lib/security/cacerts} exists, that file is
+	 * used.</li>
 	 * </ol>
 	 * <p>
 	 * This behavior corresponds to the standard J2SDK behavior for SSL trust stores.

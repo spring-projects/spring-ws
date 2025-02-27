@@ -34,12 +34,12 @@ import org.springframework.ws.soap.SoapFaultException;
 public interface Soap11Body extends SoapBody {
 
 	/**
-	 * Adds a SOAP 1.1 <faultCode>Fault</faultCode> to the body with a localized message.
-	 * Adding a fault removes the current content of the body.
+	 * Adds a SOAP 1.1 {@code Fault} to the body with a localized message. Adding a fault
+	 * removes the current content of the body.
 	 * @param faultCode the fully qualified fault faultCode
 	 * @param faultString the faultString
 	 * @param faultStringLocale the faultString locale. May be {@code null}
-	 * @return the added <faultCode>Soap11Fault</faultCode>
+	 * @return the added {@code Soap11Fault}
 	 * @throws IllegalArgumentException if the fault faultCode is not fully qualified
 	 */
 	Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) throws SoapFaultException;

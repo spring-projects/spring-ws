@@ -37,9 +37,7 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * {@link SuffixBasedPortTypesProvider}, {@link SoapProvider} underneath; effectively
  * equivalent to using a {@link ProviderBasedWsdl4jDefinition} with all these providers.
  * <p>
- * Example configuration:
- *
- * <pre>
+ * Example configuration: <pre><code class='xml'>
  * &lt;bean id=&quot;airline&quot; class=&quot;org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition&quot;&gt;
  *	 &lt;property name=&quot;schema&quot;&gt;
  *	   &lt;bean class=&quot;org.springframework.xml.xsd.SimpleXsdSchema&quot;&gt;
@@ -48,8 +46,7 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  *	 &lt;/property&gt;
  *	 &lt;property name=&quot;portTypeName&quot; value=&quot;Airline&quot;/&gt;
  *	 &lt;property name=&quot;locationUri&quot; value=&quot;http://localhost:8080/airline/services&quot;/&gt;
- * &lt;/bean&gt;
- * </pre>
+ * &lt;/bean&gt;</code></pre>
  *
  * @author Arjen Poutsma
  * @since 1.5.0

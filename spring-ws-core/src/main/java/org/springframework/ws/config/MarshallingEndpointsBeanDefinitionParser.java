@@ -25,7 +25,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Parser for the <code>&lt;sws:marshalling-endpoints/&gt; element.
+ * Parser for the {@code <sws:marshalling-endpoints/>} element.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

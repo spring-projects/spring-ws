@@ -91,6 +91,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	 * <p>
 	 * The expression can use the following bound prefixes: <blockquote>
 	 * <table>
+	 * <caption>Bound Prefixes</caption>
 	 * <tr>
 	 * <th>Prefix</th>
 	 * <th>Namespace</th>
