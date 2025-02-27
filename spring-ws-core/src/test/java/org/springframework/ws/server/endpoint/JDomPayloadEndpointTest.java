@@ -21,6 +21,7 @@ import org.jdom2.Namespace;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override

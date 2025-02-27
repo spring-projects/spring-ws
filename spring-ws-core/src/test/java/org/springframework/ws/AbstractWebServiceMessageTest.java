@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -48,7 +49,6 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -187,8 +187,9 @@ public abstract class AbstractWebServiceMessageTest {
 	}
 
 	private void validateMessage() throws Exception {
-
-		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
+		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		parserFactory.setNamespaceAware(true);
+		XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
 		xmlReader.setContentHandler(new DefaultHandler());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		webServiceMessage.writeTo(os);

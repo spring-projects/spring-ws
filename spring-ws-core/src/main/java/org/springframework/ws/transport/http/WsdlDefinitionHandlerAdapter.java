@@ -140,6 +140,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	}
 
 	@Override
+	@Deprecated
 	public long getLastModified(HttpServletRequest request, Object handler) {
 		Source definitionSource = ((WsdlDefinition) handler).getSource();
 		return LastModifiedHelper.getLastModified(definitionSource);

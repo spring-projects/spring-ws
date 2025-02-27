@@ -54,8 +54,8 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 
 			String subjectDN = "unknown";
 
-			if ((userCert != null) && (userCert.getSubjectDN() != null)) {
-				subjectDN = userCert.getSubjectDN().toString();
+			if ((userCert != null) && (userCert.getSubjectX500Principal() != null)) {
+				subjectDN = userCert.getSubjectX500Principal().toString();
 			}
 
 			logger.debug("X.509 Cache hit. SubjectDN: " + subjectDN);
@@ -68,7 +68,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 	public void putUserInCache(X509Certificate userCert, UserDetails user) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Cache put: " + userCert.getSubjectDN());
+			logger.debug("Cache put: " + userCert.getSubjectX500Principal());
 		}
 
 		cache.put(userCert, user);
@@ -78,7 +78,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 	public void removeUserFromCache(X509Certificate userCert) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Cache remove: " + userCert.getSubjectDN());
+			logger.debug("Cache remove: " + userCert.getSubjectX500Principal());
 		}
 
 		cache.evict(userCert);

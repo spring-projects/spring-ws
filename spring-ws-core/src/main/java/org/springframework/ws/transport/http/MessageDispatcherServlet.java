@@ -323,6 +323,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	protected long getLastModified(HttpServletRequest httpServletRequest) {
 		WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
 		if (definition != null) {

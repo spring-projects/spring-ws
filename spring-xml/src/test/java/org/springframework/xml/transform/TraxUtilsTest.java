@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -52,7 +53,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.ext.DefaultHandler2;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
@@ -119,7 +119,9 @@ public class TraxUtilsTest {
 	@Test
 	public void testDoWithSaxSource() throws Exception {
 
-		XMLReader reader = XMLReaderFactory.createXMLReader();
+		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		parserFactory.setNamespaceAware(true);
+		XMLReader reader = parserFactory.newSAXParser().getXMLReader();
 		InputSource inputSource = new InputSource();
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);

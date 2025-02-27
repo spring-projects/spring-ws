@@ -69,7 +69,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
 	@Override
 	public UserDetails getUserDetails(X509Certificate clientCert) throws AuthenticationException {
-		String subjectDN = clientCert.getSubjectDN().getName();
+		String subjectDN = clientCert.getSubjectX500Principal().getName();
 
 		Matcher matcher = subjectDNPattern.matcher(subjectDN);
 

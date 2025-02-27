@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @see AbstractStaxEventPayloadEndpoint
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxEventPayloadEndpointTest extends AbstractMessageEndpointTest {
 
 	@Override

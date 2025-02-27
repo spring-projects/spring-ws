@@ -49,6 +49,7 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 		implements HandlerAdapter {
 
 	@Override
+	@Deprecated
 	public long getLastModified(HttpServletRequest request, Object handler) {
 		return -1L;
 	}

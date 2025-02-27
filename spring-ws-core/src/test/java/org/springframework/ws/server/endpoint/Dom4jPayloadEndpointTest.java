@@ -16,11 +16,12 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Deprecated
 public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override

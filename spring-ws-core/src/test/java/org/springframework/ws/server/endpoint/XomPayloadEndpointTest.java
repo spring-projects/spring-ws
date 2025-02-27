@@ -16,10 +16,11 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.assertj.core.api.Assertions.*;
-
 import nu.xom.Element;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Deprecated
 public class XomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override

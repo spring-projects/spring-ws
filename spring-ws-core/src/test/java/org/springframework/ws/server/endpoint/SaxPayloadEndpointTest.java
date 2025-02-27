@@ -27,6 +27,7 @@ import org.springframework.xml.transform.StringSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+@Deprecated
 public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTest {
 
 	@Override

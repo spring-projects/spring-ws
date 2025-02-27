@@ -16,17 +16,21 @@
 
 package org.springframework.ws.test.support.matcher;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
 import jakarta.xml.soap.MessageFactory;
-
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.xml.transform.StringSource;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
+@Deprecated
 public class PayloadDiffMatcherTest {
 
 	@Test

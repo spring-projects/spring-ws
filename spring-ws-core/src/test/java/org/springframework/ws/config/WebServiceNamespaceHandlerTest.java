@@ -27,6 +27,7 @@ import org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointA
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 public class WebServiceNamespaceHandlerTest {
 
 	private ApplicationContext applicationContext;

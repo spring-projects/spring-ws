@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.CountingInputStream;
+import org.apache.commons.io.input.BoundedInputStream;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -46,11 +46,11 @@ public class AbstractHttpSenderConnectionTest {
 	 * enabled.
 	 */
 	private void testSupportsStreaming(boolean chunking) throws Exception {
-
 		byte[] content = new byte[16 * 1024];
 		new Random().nextBytes(content);
-		CountingInputStream rawInputStream = new CountingInputStream(new ByteArrayInputStream(content));
-
+		BoundedInputStream rawInputStream = BoundedInputStream.builder()
+			.setInputStream(new ByteArrayInputStream(content))
+			.get();
 		AbstractHttpSenderConnection connection = spy(AbstractHttpSenderConnection.class);
 		when(connection.getResponseCode()).thenReturn(200);
 		// Simulate response with chunking enabled

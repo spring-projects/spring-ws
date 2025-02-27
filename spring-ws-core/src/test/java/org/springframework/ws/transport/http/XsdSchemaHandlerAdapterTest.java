@@ -56,6 +56,7 @@ public class XsdSchemaHandlerAdapterTest {
 	}
 
 	@Test
+	@Deprecated
 	public void getLastModified() throws Exception {
 
 		Resource single = new ClassPathResource("single.xsd", getClass());

@@ -41,6 +41,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+@Deprecated
 public class GenericMarshallingMethodEndpointAdapterTest {
 
 	private GenericMarshallingMethodEndpointAdapter adapter;

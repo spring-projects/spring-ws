@@ -16,17 +16,16 @@
 
 package org.springframework.ws.server.endpoint;
 
-import static org.assertj.core.api.Assertions.*;
-
-import jakarta.xml.soap.MessageFactory;
-
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.Transformer;
 
+import jakarta.xml.soap.MessageFactory;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -34,14 +33,15 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test case for AbstractStaxStreamPayloadEndpoint.
  *
  * @see AbstractStaxStreamPayloadEndpoint
  */
-@SuppressWarnings("Since15")
+@Deprecated
 public class StaxStreamPayloadEndpointTest extends AbstractMessageEndpointTest {
 
 	@Override

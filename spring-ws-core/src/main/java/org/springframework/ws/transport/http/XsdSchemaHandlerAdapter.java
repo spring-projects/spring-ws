@@ -88,6 +88,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	}
 
 	@Override
+	@Deprecated
 	public long getLastModified(HttpServletRequest request, Object handler) {
 		Source schemaSource = ((XsdSchema) handler).getSource();
 		return LastModifiedHelper.getLastModified(schemaSource);

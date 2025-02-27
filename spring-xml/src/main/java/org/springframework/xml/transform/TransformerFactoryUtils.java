@@ -15,6 +15,8 @@
  */
 package org.springframework.xml.transform;
 
+import java.lang.reflect.InvocationTargetException;
+
 import javax.xml.XMLConstants;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
@@ -43,9 +45,9 @@ public class TransformerFactoryUtils {
 	 */
 	public static TransformerFactory newInstance(Class<? extends TransformerFactory> transformerFactoryClass) {
 		try {
-			return defaultSettings(transformerFactoryClass.newInstance());
+			return defaultSettings(transformerFactoryClass.getDeclaredConstructor().newInstance());
 		}
-		catch (InstantiationException | IllegalAccessException e) {
+		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
 			throw new TransformerFactoryConfigurationError(e,
 					"Could not instantiate TransformerFactory [" + transformerFactoryClass + "]");
 		}

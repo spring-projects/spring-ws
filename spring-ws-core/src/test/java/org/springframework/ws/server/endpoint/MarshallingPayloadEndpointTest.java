@@ -55,6 +55,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+@Deprecated
 public class MarshallingPayloadEndpointTest {
 
 	private Transformer transformer;

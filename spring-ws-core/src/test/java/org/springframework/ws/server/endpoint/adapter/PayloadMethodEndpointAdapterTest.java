@@ -32,6 +32,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 public class PayloadMethodEndpointAdapterTest {
 
 	private PayloadMethodEndpointAdapter adapter;

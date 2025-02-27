@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server.endpoint.mapping.jaxb;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.xml.namespace.QName;
@@ -86,13 +87,13 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 
 	private QName handleRootElement(Class<?> parameterType) {
 		try {
-			Object param = parameterType.newInstance();
+			Object param = parameterType.getDeclaredConstructor().newInstance();
 			QName result = getElementName(parameterType, param);
 			if (result != null) {
 				return result;
 			}
 		}
-		catch (InstantiationException | IllegalAccessException e) {
+		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
 			// ignore
 		}
 		return null;

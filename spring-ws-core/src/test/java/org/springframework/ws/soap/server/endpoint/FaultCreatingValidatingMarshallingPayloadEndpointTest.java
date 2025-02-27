@@ -46,6 +46,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+@Deprecated
 public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 	private MessageContext messageContext;

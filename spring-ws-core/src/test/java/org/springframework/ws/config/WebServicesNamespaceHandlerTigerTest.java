@@ -28,6 +28,7 @@ import org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethod
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Deprecated
 public class WebServicesNamespaceHandlerTigerTest {
 
 	private ApplicationContext applicationContext;

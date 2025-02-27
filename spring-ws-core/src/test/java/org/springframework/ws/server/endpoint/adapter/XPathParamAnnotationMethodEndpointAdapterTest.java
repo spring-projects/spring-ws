@@ -48,6 +48,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
+@Deprecated
 public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 	private static final String CONTENTS = "<root><child><text>text</text><number>42.0</number></child></root>";
