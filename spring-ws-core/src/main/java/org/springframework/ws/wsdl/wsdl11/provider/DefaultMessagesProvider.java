@@ -52,8 +52,7 @@ public class DefaultMessagesProvider implements MessagesProvider {
 		Assert.notNull(types, "No types element present in definition");
 		for (Object element : types.getExtensibilityElements()) {
 			ExtensibilityElement extensibilityElement = (ExtensibilityElement) element;
-			if (extensibilityElement instanceof Schema) {
-				Schema schema = (Schema) extensibilityElement;
+			if (extensibilityElement instanceof Schema schema) {
 				if (schema.getElement() != null) {
 					createMessages(definition, schema.getElement());
 				}

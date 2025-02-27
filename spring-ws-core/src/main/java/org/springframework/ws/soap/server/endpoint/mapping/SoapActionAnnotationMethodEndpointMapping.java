@@ -93,8 +93,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 
 	@Override
 	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-		if (messageContext.getRequest() instanceof SoapMessage) {
-			SoapMessage request = (SoapMessage) messageContext.getRequest();
+		if (messageContext.getRequest() instanceof SoapMessage request) {
 			String soapAction = request.getSoapAction();
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
 					&& soapAction.charAt(soapAction.length() - 1) == '"') {
@@ -117,7 +116,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 
 	@Override
 	protected List<String> getLookupKeysForMethod(Method method) {
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 
 		SoapActions soapActions = AnnotationUtils.findAnnotation(method, SoapActions.class);
 		if (soapActions != null) {

@@ -80,12 +80,12 @@ public abstract class TransportInputStream extends InputStream {
 	}
 
 	@Override
-	public int read(byte b[]) throws IOException {
+	public int read(byte[] b) throws IOException {
 		return getInputStream().read(b);
 	}
 
 	@Override
-	public int read(byte b[], int off, int len) throws IOException {
+	public int read(byte[] b, int off, int len) throws IOException {
 		return getInputStream().read(b, off, len);
 	}
 

@@ -70,7 +70,7 @@ public class WebServiceTemplateTest {
 		template.setMessageSender(new WebServiceMessageSender() {
 
 			@Override
-			public WebServiceConnection createConnection(URI uri) throws IOException {
+			public WebServiceConnection createConnection(URI uri) {
 				return connectionMock;
 			}
 
@@ -308,7 +308,7 @@ public class WebServiceTemplateTest {
 		template.setMessageSender(new WebServiceMessageSender() {
 
 			@Override
-			public WebServiceConnection createConnection(URI uri) throws IOException {
+			public WebServiceConnection createConnection(URI uri) {
 				return connectionMock;
 			}
 
@@ -347,8 +347,8 @@ public class WebServiceTemplateTest {
 		when(interceptorMock2.handleRequest(isA(MessageContext.class))).thenReturn(true);
 		when(interceptorMock2.handleResponse(isA(MessageContext.class))).thenReturn(true);
 		when(interceptorMock1.handleResponse(isA(MessageContext.class))).thenReturn(true);
-		interceptorMock2.afterCompletion(isA(MessageContext.class), (Exception) isNull());
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
+		interceptorMock2.afterCompletion(isA(MessageContext.class), isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), isNull());
 
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
@@ -377,7 +377,7 @@ public class WebServiceTemplateTest {
 		ClientInterceptor interceptorMock2 = mock(ClientInterceptor.class);
 		template.setInterceptors(new ClientInterceptor[] { interceptorMock1, interceptorMock2 });
 		when(interceptorMock1.handleRequest(isA(MessageContext.class))).thenReturn(false);
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), isNull());
 
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());
@@ -401,7 +401,7 @@ public class WebServiceTemplateTest {
 		template.setInterceptors(new ClientInterceptor[] { interceptorMock1, interceptorMock2 });
 		when(interceptorMock1.handleRequest(isA(MessageContext.class))).thenReturn(false);
 		when(interceptorMock1.handleResponse(isA(MessageContext.class))).thenReturn(true);
-		interceptorMock1.afterCompletion(isA(MessageContext.class), (Exception) isNull());
+		interceptorMock1.afterCompletion(isA(MessageContext.class), isNull());
 
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());

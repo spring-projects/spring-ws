@@ -115,7 +115,6 @@ public abstract class AbstractValidatorFactoryTest {
 		SAXParseException[] errors = validator.validate(new DOMSource(document));
 
 		assertThat(errors).isEmpty();
-		;
 	}
 
 	@Test
@@ -149,7 +148,6 @@ public abstract class AbstractValidatorFactoryTest {
 		errors = validator.validate(document);
 
 		assertThat(errors).isEmpty();
-		;
 	}
 
 	@Test
@@ -160,13 +158,13 @@ public abstract class AbstractValidatorFactoryTest {
 				return new SAXParseException[0];
 			}
 
-			public void warning(SAXParseException exception) throws SAXException {
+			public void warning(SAXParseException exception) {
 			}
 
-			public void error(SAXParseException exception) throws SAXException {
+			public void error(SAXParseException exception) {
 			}
 
-			public void fatalError(SAXParseException exception) throws SAXException {
+			public void fatalError(SAXParseException exception) {
 			}
 		};
 

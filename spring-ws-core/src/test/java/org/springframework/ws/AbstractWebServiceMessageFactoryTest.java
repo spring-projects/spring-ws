@@ -31,7 +31,7 @@ public abstract class AbstractWebServiceMessageFactoryTest {
 	}
 
 	@Test
-	public void testCreateEmptyMessage() throws Exception {
+	public void testCreateEmptyMessage() {
 
 		WebServiceMessage message = messageFactory.createWebServiceMessage();
 

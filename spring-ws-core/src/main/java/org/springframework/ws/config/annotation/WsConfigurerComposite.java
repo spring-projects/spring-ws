@@ -32,7 +32,7 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHa
  */
 public class WsConfigurerComposite implements WsConfigurer {
 
-	private List<WsConfigurer> delegates = new ArrayList<WsConfigurer>();
+	private List<WsConfigurer> delegates = new ArrayList<>();
 
 	public void addWsConfigurers(List<WsConfigurer> configurers) {
 		if (configurers != null) {

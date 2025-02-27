@@ -139,7 +139,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 	protected void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
 		WebServiceMessage request = messageContext.getRequest();
 		Object requestObject = unmarshalRequest(request);
-		Object responseObject = methodEndpoint.invoke(new Object[] { requestObject });
+		Object responseObject = methodEndpoint.invoke(requestObject);
 		if (responseObject != null) {
 			WebServiceMessage response = messageContext.getResponse();
 			marshalResponse(responseObject, response);

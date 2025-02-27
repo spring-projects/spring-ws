@@ -36,7 +36,7 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  */
 public class MockWebServiceMessageSender implements WebServiceMessageSender {
 
-	private final List<MockSenderConnection> expectedConnections = new LinkedList<MockSenderConnection>();
+	private final List<MockSenderConnection> expectedConnections = new LinkedList<>();
 
 	private Iterator<MockSenderConnection> connectionIterator;
 

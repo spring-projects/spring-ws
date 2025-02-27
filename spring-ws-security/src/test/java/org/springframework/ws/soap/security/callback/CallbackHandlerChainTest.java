@@ -51,7 +51,7 @@ public class CallbackHandlerChainTest {
 	}
 
 	@Test
-	public void testUnsupported() throws Exception {
+	public void testUnsupported() {
 
 		assertThatExceptionOfType(UnsupportedCallbackException.class).isThrownBy(() -> {
 

@@ -58,7 +58,7 @@ public class XomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractXomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
+			protected Element invokeInternal(Element requestElement) {
 
 				assertThat(requestElement).isNull();
 				return null;

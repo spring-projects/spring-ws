@@ -31,7 +31,7 @@ public class XPathPayloadEndpointMappingTest {
 	private XPathPayloadEndpointMapping mapping;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		mapping = new XPathPayloadEndpointMapping();
 	}
 

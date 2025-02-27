@@ -60,6 +60,7 @@ public class Soap11ProviderTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testPopulateBinding() throws Exception {
 
 		String namespace = "http://springframework.org/spring-ws";

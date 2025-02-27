@@ -105,8 +105,7 @@ public class DomPoxMessage implements PoxMessage {
 	@Override
 	public void writeTo(OutputStream outputStream) throws IOException {
 		try {
-			if (outputStream instanceof TransportOutputStream) {
-				TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+			if (outputStream instanceof TransportOutputStream transportOutputStream) {
 				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 			}
 			transformer.transform(getPayloadSource(), new StreamResult(outputStream));

@@ -109,11 +109,9 @@ public abstract class AbstractSoapMessageTest extends AbstractMimeMessageTest {
 	@Test
 	public void testSetStreamingPayload() throws Exception {
 
-		if (!(soapMessage instanceof StreamingWebServiceMessage)) {
+		if (!(soapMessage instanceof StreamingWebServiceMessage streamingMessage)) {
 			return;
 		}
-
-		StreamingWebServiceMessage streamingMessage = (StreamingWebServiceMessage) soapMessage;
 
 		final QName name = new QName("http://springframework.org", "root", "");
 
@@ -146,7 +144,7 @@ public abstract class AbstractSoapMessageTest extends AbstractMimeMessageTest {
 	protected abstract Resource[] getSoapSchemas();
 
 	@Test
-	public abstract void testGetVersion() throws Exception;
+	public abstract void testGetVersion();
 
 	@Test
 	public abstract void testWriteToTransportOutputStream() throws Exception;

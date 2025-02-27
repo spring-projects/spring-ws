@@ -149,7 +149,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 			Transformer transformer = createNonIndentingTransformer();
 			StringWriter writer = new StringWriter();
 			transformer.transform(source, new StreamResult(writer));
-			String message = logMessage + writer.toString();
+			String message = logMessage + writer;
 			logMessage(message);
 		}
 	}

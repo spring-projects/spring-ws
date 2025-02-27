@@ -37,7 +37,7 @@ public class WsdlBeanDefinitionParserTest {
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
 	}
 

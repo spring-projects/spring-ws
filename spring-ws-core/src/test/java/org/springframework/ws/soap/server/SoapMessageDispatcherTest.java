@@ -54,7 +54,7 @@ public class SoapMessageDispatcherTest {
 	private SoapEndpointInterceptor interceptorMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		interceptorMock = createMock(SoapEndpointInterceptor.class);
 		dispatcher = new SoapMessageDispatcher();

@@ -32,7 +32,7 @@ public class Wsdl11DestinationProviderTest {
 	private Wsdl11DestinationProvider provider;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		provider = new Wsdl11DestinationProvider();
 	}
 

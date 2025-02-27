@@ -25,7 +25,7 @@ public class JaxenXPathTemplateTest extends AbstractXPathTemplateTest {
 	protected XPathOperations createTemplate() {
 
 		JaxenXPathTemplate template = new JaxenXPathTemplate();
-		Map<String, String> namespaces = new HashMap<String, String>();
+		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put("prefix1", "namespace1");
 		namespaces.put("prefix2", "namespace2");
 		template.setNamespaces(namespaces);

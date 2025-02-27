@@ -211,7 +211,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsObject() throws Exception {
 
-		String result = template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<String>() {
+		String result = template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}
@@ -224,7 +224,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluate() throws Exception {
 
-		List<String> results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper<String>() {
+		List<String> results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}

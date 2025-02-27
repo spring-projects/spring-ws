@@ -141,7 +141,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
-			List<String> headers = new ArrayList<String>();
+			List<String> headers = new ArrayList<>();
 			Enumeration<?> enumeration = requestMessage.getAllHeaders();
 			while (enumeration.hasMoreElements()) {
 				Header header = (Header) enumeration.nextElement();
@@ -229,7 +229,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 		}
 	}
 
-	private class ByteArrayDataSource implements DataSource {
+	private static class ByteArrayDataSource implements DataSource {
 
 		private byte[] data;
 

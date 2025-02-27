@@ -46,7 +46,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	public static final String DEFAULT_FAULT_ACTION_SUFFIX = "Fault";
 
 	// keys are action URIs, values are endpoints
-	private final Map<URI, Object> endpointMap = new HashMap<URI, Object>();
+	private final Map<URI, Object> endpointMap = new HashMap<>();
 
 	private String outputActionSuffix = DEFAULT_OUTPUT_ACTION_SUFFIX;
 
@@ -128,8 +128,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		Assert.notNull(endpoint, "Endpoint object must not be null");
 		Object resolvedEndpoint = endpoint;
 
-		if (endpoint instanceof String) {
-			String endpointName = (String) endpoint;
+		if (endpoint instanceof String endpointName) {
 			if (getApplicationContext().isSingleton(endpointName)) {
 				resolvedEndpoint = getApplicationContext().getBean(endpointName);
 			}
@@ -153,7 +152,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
-			return URI.create(requestAction.toString() + getOutputActionSuffix());
+			return URI.create(requestAction + getOutputActionSuffix());
 		}
 		else {
 			return null;
@@ -164,7 +163,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
-			return URI.create(requestAction.toString() + getFaultActionSuffix());
+			return URI.create(requestAction + getFaultActionSuffix());
 		}
 		else {
 			return null;

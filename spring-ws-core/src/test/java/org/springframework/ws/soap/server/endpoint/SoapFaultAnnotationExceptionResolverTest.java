@@ -45,7 +45,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 	private SoapFaultAnnotationExceptionResolver resolver;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		resolver = new SoapFaultAnnotationExceptionResolver();
 	}
 
@@ -240,18 +240,18 @@ public class SoapFaultAnnotationExceptionResolverTest {
 
 	@SoapFault(faultCode = FaultCode.CLIENT, faultStringOrReason = "Client error")
 	@SuppressWarnings("serial")
-	public class MyClientException extends Exception {
+	public static class MyClientException extends Exception {
 
 	}
 
 	@SuppressWarnings("serial")
-	public class MySubClientException extends MyClientException {
+	public static class MySubClientException extends MyClientException {
 
 	}
 
 	@SoapFault(faultCode = FaultCode.CLIENT)
 	@SuppressWarnings("serial")
-	public class NoStringOrReasonException extends Exception {
+	public static class NoStringOrReasonException extends Exception {
 
 		public NoStringOrReasonException(String message) {
 			super(message);
@@ -261,31 +261,31 @@ public class SoapFaultAnnotationExceptionResolverTest {
 
 	@SoapFault(faultCode = FaultCode.SENDER, faultStringOrReason = "Sender error")
 	@SuppressWarnings("serial")
-	public class MySenderException extends Exception {
+	public static class MySenderException extends Exception {
 
 	}
 
 	@SoapFault(faultCode = FaultCode.SERVER, faultStringOrReason = "Server error")
 	@SuppressWarnings("serial")
-	public class MyServerException extends Exception {
+	public static class MyServerException extends Exception {
 
 	}
 
 	@SoapFault(faultCode = FaultCode.RECEIVER, faultStringOrReason = "Receiver error")
 	@SuppressWarnings("serial")
-	public class MyReceiverException extends Exception {
+	public static class MyReceiverException extends Exception {
 
 	}
 
 	@SoapFault(faultCode = FaultCode.CUSTOM, customFaultCode = "{http://springframework.org/spring-ws}Fault",
 			faultStringOrReason = "MyCustomException thrown", locale = "nl")
 	@SuppressWarnings("serial")
-	public class MyCustomException extends Exception {
+	public static class MyCustomException extends Exception {
 
 	}
 
 	@SuppressWarnings("serial")
-	public class NonAnnotatedException extends Exception {
+	public static class NonAnnotatedException extends Exception {
 
 	}
 

@@ -91,14 +91,10 @@ public class AnnotationActionMethodEndpointMappingTest {
 		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
 		InputStream is = getClass().getResourceAsStream("valid.xml");
 
-		assertThat(is).isNotNull();
-
-		try {
+		try (is) {
+			assertThat(is).isNotNull();
 			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
 			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
-		}
-		finally {
-			is.close();
 		}
 	}
 

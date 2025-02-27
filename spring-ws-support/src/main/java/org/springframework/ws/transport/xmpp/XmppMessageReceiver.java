@@ -111,8 +111,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		@Override
 		public void processStanza(Stanza packet) {
 			logger.info("Received " + packet);
-			if (packet instanceof Message) {
-				Message message = (Message) packet;
+			if (packet instanceof Message message) {
 				try {
 					XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
 					wsConnection.setMessageEncoding(messageEncoding);

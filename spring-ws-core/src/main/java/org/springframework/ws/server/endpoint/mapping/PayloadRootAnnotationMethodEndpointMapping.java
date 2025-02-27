@@ -75,7 +75,7 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 
 	@Override
 	protected List<QName> getLookupKeysForMethod(Method method) {
-		List<QName> result = new ArrayList<QName>();
+		List<QName> result = new ArrayList<>();
 
 		PayloadRoots payloadRoots = AnnotationUtils.findAnnotation(method, PayloadRoots.class);
 		if (payloadRoots != null) {

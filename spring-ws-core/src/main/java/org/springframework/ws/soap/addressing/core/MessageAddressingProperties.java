@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing.core;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
@@ -37,6 +38,7 @@ import org.w3c.dom.Node;
  */
 public final class MessageAddressingProperties implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -6980663311446506672L;
 
 	private final URI to;

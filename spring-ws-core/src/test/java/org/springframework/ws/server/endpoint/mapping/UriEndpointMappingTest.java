@@ -42,7 +42,7 @@ public class UriEndpointMappingTest {
 	private MessageContext context;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		mapping = new UriEndpointMapping();
 		context = new DefaultMessageContext(new MockWebServiceMessageFactory());

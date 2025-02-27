@@ -47,7 +47,7 @@ public class SimpleSoapExceptionResolverTest {
 	private WebServiceMessageFactory factoryMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		exceptionResolver = new SimpleSoapExceptionResolver();
 		factoryMock = createMock(WebServiceMessageFactory.class);

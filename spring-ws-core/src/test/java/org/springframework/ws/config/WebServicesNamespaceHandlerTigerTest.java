@@ -34,7 +34,7 @@ public class WebServicesNamespaceHandlerTigerTest {
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		applicationContext = new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml",
 				getClass());
 	}

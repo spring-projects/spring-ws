@@ -158,7 +158,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	private void initMethodArgumentResolvers() {
 		if (CollectionUtils.isEmpty(methodArgumentResolvers)) {
-			List<MethodArgumentResolver> methodArgumentResolvers = new ArrayList<MethodArgumentResolver>();
+			List<MethodArgumentResolver> methodArgumentResolvers = new ArrayList<>();
 			methodArgumentResolvers.add(new DomPayloadMethodProcessor());
 			methodArgumentResolvers.add(new MessageContextMethodArgumentResolver());
 			methodArgumentResolvers.add(new SourcePayloadMethodProcessor());
@@ -209,7 +209,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	private void initMethodReturnValueHandlers() {
 		if (CollectionUtils.isEmpty(methodReturnValueHandlers)) {
-			List<MethodReturnValueHandler> methodReturnValueHandlers = new ArrayList<MethodReturnValueHandler>();
+			List<MethodReturnValueHandler> methodReturnValueHandlers = new ArrayList<>();
 			methodReturnValueHandlers.add(new DomPayloadMethodProcessor());
 			methodReturnValueHandlers.add(new SourcePayloadMethodProcessor());
 			if (isPresent(DOM4J_CLASS_NAME)) {

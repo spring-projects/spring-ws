@@ -151,7 +151,7 @@ public abstract class MailTransportUtils {
 				tempURL.append(host);
 			}
 			if (port != -1) {
-				tempURL.append(':').append(Integer.toString(port));
+				tempURL.append(':').append(port);
 			}
 			if (StringUtils.hasLength(file)) {
 				tempURL.append('/');

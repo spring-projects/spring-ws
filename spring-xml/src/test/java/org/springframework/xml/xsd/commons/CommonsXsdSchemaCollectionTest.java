@@ -140,7 +140,7 @@ public class CommonsXsdSchemaCollectionTest {
 	}
 
 	@Test
-	public void testInvalidSchema() throws Exception {
+	public void testInvalidSchema() {
 
 		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTest.class);
 		collection.setXsds(invalid);

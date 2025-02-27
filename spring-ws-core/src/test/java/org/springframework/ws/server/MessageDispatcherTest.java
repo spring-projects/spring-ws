@@ -50,7 +50,7 @@ public class MessageDispatcherTest {
 	private WebServiceMessageFactory factoryMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		dispatcher = new MessageDispatcher();
 		factoryMock = createMock(WebServiceMessageFactory.class);
@@ -395,7 +395,7 @@ public class MessageDispatcherTest {
 	}
 
 	@Test
-	public void testNoEndpointFound() throws Exception {
+	public void testNoEndpointFound() {
 
 		dispatcher.setEndpointMappings(Collections.emptyList());
 

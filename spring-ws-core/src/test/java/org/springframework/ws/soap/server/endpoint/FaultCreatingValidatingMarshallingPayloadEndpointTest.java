@@ -128,7 +128,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		AbstractFaultCreatingValidatingMarshallingPayloadEndpoint endpoint = new AbstractFaultCreatingValidatingMarshallingPayloadEndpoint() {
 
 			@Override
-			protected Object invokeInternal(Object requestObject) throws Exception {
+			protected Object invokeInternal(Object requestObject) {
 				return null;
 			}
 		};
@@ -210,7 +210,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		@Override
-		public Object unmarshal(Source source) throws XmlMappingException, IOException {
+		public Object unmarshal(Source source) throws XmlMappingException {
 			return person;
 		}
 
@@ -220,7 +220,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		@Override
-		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+		public void marshal(Object graph, Result result) throws XmlMappingException {
 		}
 
 	}

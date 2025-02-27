@@ -130,7 +130,7 @@ abstract class Jaxp13XPathExpressionFactory {
 		}
 
 		private List<Node> toNodeList(NodeList nodeList) {
-			List<Node> result = new ArrayList<Node>(nodeList.getLength());
+			List<Node> result = new ArrayList<>(nodeList.getLength());
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				result.add(nodeList.item(i));
 			}
@@ -171,7 +171,7 @@ abstract class Jaxp13XPathExpressionFactory {
 		@Override
 		public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
 			NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
-			List<T> results = new ArrayList<T>(nodes.getLength());
+			List<T> results = new ArrayList<>(nodes.getLength());
 			for (int i = 0; i < nodes.getLength(); i++) {
 				try {
 					results.add(nodeMapper.mapNode(nodes.item(i), i));

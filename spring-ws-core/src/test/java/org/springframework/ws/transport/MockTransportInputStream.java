@@ -43,7 +43,7 @@ public class MockTransportInputStream extends TransportInputStream {
 
 		Assert.notNull(inputStream, "inputStream must not be null");
 		this.inputStream = inputStream;
-		headers = new HashMap<String, String>();
+		headers = new HashMap<>();
 	}
 
 	@Override

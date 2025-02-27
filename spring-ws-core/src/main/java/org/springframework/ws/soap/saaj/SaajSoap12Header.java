@@ -72,7 +72,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 	@SuppressWarnings("unchecked")
 	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
 			throws SoapHeaderException {
-		List<SOAPHeaderElement> result = new ArrayList<SOAPHeaderElement>();
+		List<SOAPHeaderElement> result = new ArrayList<>();
 		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
 		while (iterator.hasNext()) {
 			SOAPHeaderElement saajHeaderElement = iterator.next();
@@ -89,14 +89,16 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 		if (!StringUtils.hasLength(headerRole)) {
 			return true;
 		}
-		if (SOAPConstants.URI_SOAP_1_2_ROLE_NEXT.equals(headerRole)) {
-			return true;
-		}
-		if (SOAPConstants.URI_SOAP_1_2_ROLE_ULTIMATE_RECEIVER.equals(headerRole)) {
-			return isUltimateDestination;
-		}
-		if (SOAPConstants.URI_SOAP_1_2_ROLE_NONE.equals(headerRole)) {
-			return false;
+		switch (headerRole) {
+			case SOAPConstants.URI_SOAP_1_2_ROLE_NEXT -> {
+				return true;
+			}
+			case SOAPConstants.URI_SOAP_1_2_ROLE_ULTIMATE_RECEIVER -> {
+				return isUltimateDestination;
+			}
+			case SOAPConstants.URI_SOAP_1_2_ROLE_NONE -> {
+				return false;
+			}
 		}
 		if (!ObjectUtils.isEmpty(roles)) {
 			for (String role : roles) {

@@ -100,8 +100,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
 			.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
 		if (!smartInterceptors.isEmpty()) {
-			this.smartInterceptors = smartInterceptors.values()
-				.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+			this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
 		}
 	}
 
@@ -120,15 +119,14 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		if (endpoint == null) {
 			return null;
 		}
-		if (endpoint instanceof String) {
-			String endpointName = (String) endpoint;
+		if (endpoint instanceof String endpointName) {
 			endpoint = resolveStringEndpoint(endpointName);
 			if (endpoint == null) {
 				return null;
 			}
 		}
 
-		List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
+		List<EndpointInterceptor> interceptors = new ArrayList<>();
 		if (this.interceptors != null) {
 			interceptors.addAll(Arrays.asList(this.interceptors));
 		}
@@ -142,7 +140,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		}
 
 		return createEndpointInvocationChain(messageContext, endpoint,
-				interceptors.toArray(new EndpointInterceptor[interceptors.size()]));
+				interceptors.toArray(new EndpointInterceptor[0]));
 	}
 
 	/**

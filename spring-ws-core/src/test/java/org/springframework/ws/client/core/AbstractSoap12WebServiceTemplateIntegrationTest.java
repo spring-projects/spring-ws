@@ -219,7 +219,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 		Marshaller marshaller = new Marshaller() {
 
 			@Override
-			public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+			public void marshal(Object graph, Result result) throws XmlMappingException {
 
 				assertThat(requestObject).isEqualTo(graph);
 

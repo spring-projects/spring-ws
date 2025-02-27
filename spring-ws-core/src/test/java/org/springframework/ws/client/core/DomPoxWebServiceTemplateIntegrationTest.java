@@ -118,7 +118,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 		}
 
 		@Override
-		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 			resp.sendError(sc);
 		}
 

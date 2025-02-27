@@ -49,7 +49,7 @@ public class EndpointExceptionResolverTest {
 		};
 
 		exceptionResolver.setMappedEndpoints(Collections.singleton(this));
-		methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod", new Class[0]));
+		methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod"));
 	}
 
 	@Test

@@ -58,7 +58,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml",
 				getClass());
 	}

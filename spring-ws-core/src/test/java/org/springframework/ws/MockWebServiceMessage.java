@@ -201,7 +201,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 		}
 
 		@Override
-		public void write(char cbuf[], int off, int len) {
+		public void write(char[] cbuf, int off, int len) {
 
 			if (off < 0 || off > cbuf.length || len < 0 || off + len > cbuf.length || off + len < 0) {
 				throw new IndexOutOfBoundsException();

@@ -31,7 +31,7 @@ public class XmlRootElementEndpointMappingTest {
 	private XmlRootElementEndpointMapping mapping;
 
 	@BeforeEach
-	public void createMapping() throws NoSuchMethodException {
+	public void createMapping() {
 		mapping = new XmlRootElementEndpointMapping();
 	}
 

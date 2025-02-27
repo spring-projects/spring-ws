@@ -43,7 +43,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 
 	private Document namespacesDocument;
 
-	private Map<String, String> namespaces = new HashMap<String, String>();
+	private Map<String, String> namespaces = new HashMap<>();
 
 	@BeforeEach
 	public void setUp() throws Exception {
@@ -82,7 +82,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanInvalidNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsBooleanInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		boolean result = expression.evaluateAsBoolean(namespacesDocument);
@@ -91,7 +91,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanInvalidNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsBooleanInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		boolean result = expression.evaluateAsBoolean(noNamespacesDocument);
@@ -100,7 +100,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsBooleanNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:boolean/text()",
 				namespaces);
@@ -110,7 +110,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsBooleanNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/boolean/text()");
 		boolean result = expression.evaluateAsBoolean(noNamespacesDocument);
@@ -119,7 +119,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleInvalidNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
@@ -128,7 +128,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleInvalidNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
@@ -137,7 +137,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()",
 				namespaces);
@@ -147,7 +147,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/number/text()");
 		double result = expression.evaluateAsNumber(noNamespacesDocument);
@@ -156,7 +156,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsNodeInvalidNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", namespaces);
 		Node result = expression.evaluateAsNode(namespacesDocument);
@@ -165,7 +165,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsNodeInvalidNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		Node result = expression.evaluateAsNode(noNamespacesDocument);
@@ -174,7 +174,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsNodeNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child", namespaces);
 		Node result = expression.evaluateAsNode(namespacesDocument);
@@ -184,7 +184,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsNodeNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child");
 		Node result = expression.evaluateAsNode(noNamespacesDocument);
@@ -194,7 +194,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	}
 
 	@Test
-	public void testEvaluateAsNodeListNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsNodeListNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/*", namespaces);
 		List<Node> results = expression.evaluateAsNodeList(namespacesDocument);
@@ -254,7 +254,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	public void testEvaluateAsObject() {
 
 		XPathExpression expression = createXPathExpression("/root/child");
-		String result = expression.evaluateAsObject(noNamespacesDocument, new NodeMapper<String>() {
+		String result = expression.evaluateAsObject(noNamespacesDocument, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}
@@ -268,7 +268,7 @@ public abstract class AbstractXPathExpressionFactoryTest {
 	public void testEvaluate() throws Exception {
 
 		XPathExpression expression = createXPathExpression("/root/child/*");
-		List<String> results = expression.evaluate(noNamespacesDocument, new NodeMapper<String>() {
+		List<String> results = expression.evaluate(noNamespacesDocument, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}

@@ -116,7 +116,7 @@ public class MarshallingPayloadEndpointTest {
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
 			@Override
-			protected Object invokeInternal(Object requestObject) throws Exception {
+			protected Object invokeInternal(Object requestObject) {
 
 				assertThat(requestObject).isEqualTo(42L);
 				return "result";
@@ -174,7 +174,7 @@ public class MarshallingPayloadEndpointTest {
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
 			@Override
-			protected Object invokeInternal(Object requestObject) throws Exception {
+			protected Object invokeInternal(Object requestObject) {
 
 				assertThat(requestObject).isEqualTo(42L);
 				return null;
@@ -201,7 +201,7 @@ public class MarshallingPayloadEndpointTest {
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
 			@Override
-			protected Object invokeInternal(Object requestObject) throws Exception {
+			protected Object invokeInternal(Object requestObject) {
 
 				assertThat(requestObject).isNull();
 				return null;
@@ -239,7 +239,7 @@ public class MarshallingPayloadEndpointTest {
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
 			@Override
-			protected Object invokeInternal(Object requestObject) throws Exception {
+			protected Object invokeInternal(Object requestObject) {
 
 				assertThat(requestObject).isEqualTo(42L);
 				return "result";
@@ -261,12 +261,12 @@ public class MarshallingPayloadEndpointTest {
 	private static class SimpleMarshaller implements Marshaller, Unmarshaller {
 
 		@Override
-		public void marshal(Object graph, Result result) throws XmlMappingException, IOException {
+		public void marshal(Object graph, Result result) throws XmlMappingException {
 			fail("Not expected");
 		}
 
 		@Override
-		public Object unmarshal(Source source) throws XmlMappingException, IOException {
+		public Object unmarshal(Source source) throws XmlMappingException {
 			fail("Not expected");
 			return null;
 		}

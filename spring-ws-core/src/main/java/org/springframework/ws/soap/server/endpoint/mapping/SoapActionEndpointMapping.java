@@ -92,8 +92,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 
 	@Override
 	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-		if (messageContext.getRequest() instanceof SoapMessage) {
-			SoapMessage request = (SoapMessage) messageContext.getRequest();
+		if (messageContext.getRequest() instanceof SoapMessage request) {
 			String soapAction = request.getSoapAction();
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
 					&& soapAction.charAt(soapAction.length() - 1) == '"') {

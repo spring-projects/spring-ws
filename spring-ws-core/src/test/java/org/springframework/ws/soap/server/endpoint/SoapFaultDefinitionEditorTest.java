@@ -30,7 +30,7 @@ public class SoapFaultDefinitionEditorTest {
 	private SoapFaultDefinitionEditor editor;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		editor = new SoapFaultDefinitionEditor();
 	}
 

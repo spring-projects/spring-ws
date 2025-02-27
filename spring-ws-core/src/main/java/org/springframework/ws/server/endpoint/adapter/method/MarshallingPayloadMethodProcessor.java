@@ -141,8 +141,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 		if (marshaller == null) {
 			return false;
 		}
-		else if (marshaller instanceof GenericMarshaller) {
-			GenericMarshaller genericMarshaller = (GenericMarshaller) marshaller;
+		else if (marshaller instanceof GenericMarshaller genericMarshaller) {
 			return genericMarshaller.supports(returnType.getGenericParameterType());
 		}
 		else {

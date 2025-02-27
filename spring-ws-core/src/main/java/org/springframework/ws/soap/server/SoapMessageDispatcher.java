@@ -90,8 +90,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 		if (messageContext.getRequest() instanceof SoapMessage) {
 			String[] actorsOrRoles = null;
 			boolean isUltimateReceiver = true;
-			if (mappedEndpoint instanceof SoapEndpointInvocationChain) {
-				SoapEndpointInvocationChain soapChain = (SoapEndpointInvocationChain) mappedEndpoint;
+			if (mappedEndpoint instanceof SoapEndpointInvocationChain soapChain) {
 				actorsOrRoles = soapChain.getActorsOrRoles();
 				isUltimateReceiver = soapChain.isUltimateReceiver();
 			}
@@ -115,7 +114,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 			headerIterator = ((Soap12Header) soapHeader).examineHeaderElementsToProcess(actorsOrRoles,
 					isUltimateReceiver);
 		}
-		List<QName> notUnderstoodHeaderNames = new ArrayList<QName>();
+		List<QName> notUnderstoodHeaderNames = new ArrayList<>();
 		while (headerIterator.hasNext()) {
 			SoapHeaderElement headerElement = headerIterator.next();
 			QName headerName = headerElement.getName();
@@ -171,8 +170,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 			fault.setFaultActorOrRole(actorsOrRoles[0]);
 		}
 		SoapHeader header = soapResponse.getSoapHeader();
-		if (header instanceof Soap12Header) {
-			Soap12Header soap12Header = (Soap12Header) header;
+		if (header instanceof Soap12Header soap12Header) {
 			for (QName headerName : notUnderstoodHeaderNames) {
 				soap12Header.addNotUnderstoodHeaderElement(headerName);
 			}

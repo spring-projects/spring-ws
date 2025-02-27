@@ -32,7 +32,7 @@ import org.springframework.util.CollectionUtils;
  */
 public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 
-	private Map<String, String> exceptionMappings = new LinkedHashMap<String, String>();
+	private Map<String, String> exceptionMappings = new LinkedHashMap<>();
 
 	/**
 	 * Set the mappings between exception class names and SOAP Faults. The exception class

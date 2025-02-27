@@ -36,7 +36,7 @@ public class MessageMethodEndpointAdapterTest {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		adapter = new MessageMethodEndpointAdapter();
 		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
@@ -44,30 +44,28 @@ public class MessageMethodEndpointAdapterTest {
 	@Test
 	public void testSupported() throws NoSuchMethodException {
 
-		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[] { MessageContext.class });
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
 		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
 	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams",
-				new Class[] { MessageContext.class, MessageContext.class })))
+		assertThat(adapter.supportsInternal(
+				new MethodEndpoint(this, "unsupportedMultipleParams", MessageContext.class, MessageContext.class)))
 			.isFalse();
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
-		assertThat(adapter
-			.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", new Class[] { String.class })))
-			.isFalse();
+		assertThat(adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class))).isFalse();
 	}
 
 	@Test
 	public void testInvokeSupported() throws Exception {
 
-		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", new Class[] { MessageContext.class });
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
 
 		assertThat(supportedInvoked).isFalse();
 

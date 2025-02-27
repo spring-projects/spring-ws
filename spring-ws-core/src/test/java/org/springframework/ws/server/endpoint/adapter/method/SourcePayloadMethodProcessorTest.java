@@ -60,7 +60,7 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
 	}
 
 	@Override
-	protected Object getReturnValue(MethodParameter returnType) throws Exception {
+	protected Object getReturnValue(MethodParameter returnType) {
 		return new StringSource(XML);
 	}
 

@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.x509;
 
+import java.io.Serial;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
@@ -35,6 +36,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 	// ~ Instance fields
 	// ================================================================================================
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Object principal;

@@ -53,7 +53,7 @@ public class MessageDispatcherServletTest {
 	private MessageDispatcherServlet servlet;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		config = new MockServletConfig(new MockServletContext(), "spring-ws");
 		servlet = new MessageDispatcherServlet();

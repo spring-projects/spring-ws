@@ -38,7 +38,7 @@ public class EndpointMappingTest {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
@@ -48,7 +48,7 @@ public class EndpointMappingTest {
 		Object defaultEndpoint = new Object();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
-			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+			protected Object getEndpointInternal(MessageContext givenRequest) {
 				assertThat(givenRequest).isEqualTo(messageContext);
 				return null;
 			}
@@ -67,7 +67,7 @@ public class EndpointMappingTest {
 		final Object endpoint = new Object();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
-			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+			protected Object getEndpointInternal(MessageContext givenRequest) {
 				assertThat(givenRequest).isEqualTo(messageContext);
 				return endpoint;
 			}
@@ -86,7 +86,7 @@ public class EndpointMappingTest {
 		EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
-			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+			protected Object getEndpointInternal(MessageContext givenRequest) {
 				assertThat(givenRequest).isEqualTo(messageContext);
 				return endpoint;
 			}
@@ -109,7 +109,7 @@ public class EndpointMappingTest {
 		EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
-			protected Object getEndpointInternal(MessageContext givenRequest) throws Exception {
+			protected Object getEndpointInternal(MessageContext givenRequest) {
 				assertThat(givenRequest).isEqualTo(messageContext);
 				return endpoint;
 			}
@@ -133,7 +133,7 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
 			@Override
-			protected Object getEndpointInternal(MessageContext message) throws Exception {
+			protected Object getEndpointInternal(MessageContext message) {
 				assertThat(message).isEqualTo(messageContext);
 				return "endpoint";
 			}
@@ -154,7 +154,7 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
 			@Override
-			protected Object getEndpointInternal(MessageContext message) throws Exception {
+			protected Object getEndpointInternal(MessageContext message) {
 				assertThat(message).isEqualTo(messageContext);
 				return "noSuchBean";
 			}
@@ -175,7 +175,7 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 
 			@Override
-			protected Object getEndpointInternal(MessageContext message) throws Exception {
+			protected Object getEndpointInternal(MessageContext message) {
 				assertThat(message).isEqualTo(messageContext);
 				return "endpoint";
 			}

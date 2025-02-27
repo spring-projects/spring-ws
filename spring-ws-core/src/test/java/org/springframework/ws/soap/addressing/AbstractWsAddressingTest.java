@@ -46,13 +46,9 @@ public abstract class AbstractWsAddressingTest {
 		mimeHeaders.addHeader("Content-Type", " application/soap+xml");
 		InputStream is = AbstractWsAddressingTest.class.getResourceAsStream(fileName);
 
-		assertThat(is).isNotNull();
-
-		try {
+		try (is) {
+			assertThat(is).isNotNull();
 			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-		}
-		finally {
-			is.close();
 		}
 	}
 

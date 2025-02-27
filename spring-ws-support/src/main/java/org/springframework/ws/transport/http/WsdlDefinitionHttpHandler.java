@@ -60,7 +60,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
-		try {
+		try (httpExchange) {
 			if (HttpTransportConstants.METHOD_GET.equals(httpExchange.getRequestMethod())) {
 				Headers headers = httpExchange.getResponseHeaders();
 				headers.set(HttpTransportConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
@@ -76,9 +76,6 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 		}
 		catch (TransformerException ex) {
 			logger.error(ex, ex);
-		}
-		finally {
-			httpExchange.close();
 		}
 	}
 

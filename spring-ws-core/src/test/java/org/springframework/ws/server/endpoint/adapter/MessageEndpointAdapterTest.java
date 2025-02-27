@@ -33,7 +33,7 @@ public class MessageEndpointAdapterTest {
 	private MessageEndpoint endpointMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		adapter = new MessageEndpointAdapter();
 		endpointMock = createMock(MessageEndpoint.class);
 	}

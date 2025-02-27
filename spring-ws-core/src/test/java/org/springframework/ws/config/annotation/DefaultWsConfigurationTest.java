@@ -40,7 +40,7 @@ public class DefaultWsConfigurationTest {
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);

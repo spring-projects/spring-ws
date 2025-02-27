@@ -68,7 +68,7 @@ class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
 		if (commonsSchemaPresent) {
 			RootBeanDefinition collectionDef = createBeanDefinition(CommonsXsdSchemaCollection.class, source);
 			collectionDef.getPropertyValues().addPropertyValue("inline", "true");
-			ManagedList<String> xsds = new ManagedList<String>();
+			ManagedList<String> xsds = new ManagedList<>();
 			xsds.setSource(source);
 			for (Element schema : schemas) {
 				xsds.add(schema.getAttribute("location"));

@@ -188,12 +188,11 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) throws URISyntaxException {
 		org.apache.http.conn.ClientConnectionManager connectionManager = getHttpClient().getConnectionManager();
-		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager)) {
+		if (!(connectionManager instanceof org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager)) {
 			throw new IllegalArgumentException(
 					"maxConnectionsPerHost is not supported on " + connectionManager.getClass().getName() + ". Use "
 							+ org.apache.http.impl.conn.PoolingClientConnectionManager.class.getName() + " instead");
 		}
-		org.apache.http.impl.conn.PoolingClientConnectionManager poolingConnectionManager = (org.apache.http.impl.conn.PoolingClientConnectionManager) connectionManager;
 
 		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
 			URI uri = new URI(entry.getKey());

@@ -33,7 +33,7 @@ public class PayloadRootQNameEndpointMappingTest {
 	private PayloadRootQNameEndpointMapping mapping;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		mapping = new PayloadRootQNameEndpointMapping();
 	}
 

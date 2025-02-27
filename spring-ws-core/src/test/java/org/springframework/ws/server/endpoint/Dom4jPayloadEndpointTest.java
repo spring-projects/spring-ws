@@ -30,7 +30,7 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractDom4jPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+			protected Element invokeInternal(Element requestElement, Document responseDocument) {
 
 				assertThat(requestElement).isNotNull();
 				assertThat(responseDocument).isNotNull();
@@ -47,7 +47,7 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractDom4jPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+			protected Element invokeInternal(Element requestElement, Document responseDocument) {
 				return null;
 			}
 		};
@@ -59,7 +59,7 @@ public class Dom4jPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractDom4jPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement, Document responseDocument) throws Exception {
+			protected Element invokeInternal(Element requestElement, Document responseDocument) {
 
 				assertThat(requestElement).isNull();
 				return null;

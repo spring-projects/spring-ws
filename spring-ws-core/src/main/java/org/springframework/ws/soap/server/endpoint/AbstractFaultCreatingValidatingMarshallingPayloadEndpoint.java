@@ -170,8 +170,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 			String msg = messageSource.getMessage(objectError, getFaultLocale());
 			logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
 		}
-		if (messageContext.getResponse() instanceof SoapMessage) {
-			SoapMessage response = (SoapMessage) messageContext.getResponse();
+		if (messageContext.getResponse() instanceof SoapMessage response) {
 			SoapBody body = response.getSoapBody();
 			SoapFault fault = body.addClientOrSenderFault(getFaultStringOrReason(), getFaultLocale());
 			if (getAddValidationErrorDetail()) {

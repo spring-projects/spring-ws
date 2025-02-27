@@ -33,7 +33,7 @@ public class SimpleFaultMessageResolverTest {
 	private SimpleFaultMessageResolver resolver;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		resolver = new SimpleFaultMessageResolver();
 	}
 

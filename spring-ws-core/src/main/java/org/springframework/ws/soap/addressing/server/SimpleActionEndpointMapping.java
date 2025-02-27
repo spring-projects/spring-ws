@@ -55,7 +55,7 @@ import org.springframework.beans.BeansException;
 public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
 	// contents will be copied over to endpointMap
-	private final Map<URI, Object> actionMap = new HashMap<URI, Object>();
+	private final Map<URI, Object> actionMap = new HashMap<>();
 
 	private URI address;
 

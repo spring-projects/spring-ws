@@ -71,8 +71,7 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 		// List<SoapHeaderElement> parameter
 		if (List.class.equals(parameterType)) {
 			Type genericType = parameter.getGenericParameterType();
-			if (genericType instanceof ParameterizedType) {
-				ParameterizedType parameterizedType = (ParameterizedType) genericType;
+			if (genericType instanceof ParameterizedType parameterizedType) {
 				Type[] typeArguments = parameterizedType.getActualTypeArguments();
 				if (typeArguments.length == 1 && SoapHeaderElement.class.equals(typeArguments[0])) {
 					return true;
@@ -120,7 +119,7 @@ public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentRe
 
 	private List<SoapHeaderElement> extractSoapHeaderList(QName qname,
 			org.springframework.ws.soap.SoapHeader soapHeader) {
-		List<SoapHeaderElement> result = new ArrayList<SoapHeaderElement>();
+		List<SoapHeaderElement> result = new ArrayList<>();
 		Iterator<SoapHeaderElement> elements = soapHeader.examineAllHeaderElements();
 		while (elements.hasNext()) {
 			SoapHeaderElement e = elements.next();

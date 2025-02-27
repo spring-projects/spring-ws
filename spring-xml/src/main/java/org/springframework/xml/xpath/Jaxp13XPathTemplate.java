@@ -88,7 +88,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	@Override
 	public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
 		NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-		List<Node> nodes = new ArrayList<Node>(result.getLength());
+		List<Node> nodes = new ArrayList<>(result.getLength());
 		for (int i = 0; i < result.getLength(); i++) {
 			nodes.add(result.item(i));
 		}
@@ -125,7 +125,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	@Override
 	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
 		NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-		List<T> results = new ArrayList<T>(nodes.getLength());
+		List<T> results = new ArrayList<>(nodes.getLength());
 		for (int i = 0; i < nodes.getLength(); i++) {
 			try {
 				results.add(nodeMapper.mapNode(nodes.item(i), i));

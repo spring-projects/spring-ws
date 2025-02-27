@@ -41,7 +41,7 @@ class BytesMessageInputStream extends InputStream {
 	}
 
 	@Override
-	public int read(byte b[]) throws IOException {
+	public int read(byte[] b) throws IOException {
 		try {
 			return message.readBytes(b);
 		}
@@ -51,7 +51,7 @@ class BytesMessageInputStream extends InputStream {
 	}
 
 	@Override
-	public int read(byte b[], int off, int len) throws IOException {
+	public int read(byte[] b, int off, int len) throws IOException {
 		if (off == 0) {
 			try {
 				return message.readBytes(b, len);

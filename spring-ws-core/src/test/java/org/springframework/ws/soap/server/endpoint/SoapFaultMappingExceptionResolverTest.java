@@ -44,7 +44,7 @@ public class SoapFaultMappingExceptionResolverTest {
 	private SoapFaultMappingExceptionResolver resolver;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		resolver = new SoapFaultMappingExceptionResolver();
 	}
 

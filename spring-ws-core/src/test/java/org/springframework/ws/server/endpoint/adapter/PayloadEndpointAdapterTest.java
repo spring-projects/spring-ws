@@ -44,7 +44,7 @@ public class PayloadEndpointAdapterTest {
 	private PayloadEndpoint endpointMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		adapter = new PayloadEndpointAdapter();
 		endpointMock = createMock(PayloadEndpoint.class);

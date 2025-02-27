@@ -89,12 +89,10 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 			fault = soapBody.addClientOrSenderFault(faultStringOrReason, definition.getLocale());
 		}
 		else {
-			if (soapBody instanceof Soap11Body) {
-				Soap11Body soap11Body = (Soap11Body) soapBody;
+			if (soapBody instanceof Soap11Body soap11Body) {
 				fault = soap11Body.addFault(definition.getFaultCode(), faultStringOrReason, definition.getLocale());
 			}
-			else if (soapBody instanceof Soap12Body) {
-				Soap12Body soap12Body = (Soap12Body) soapBody;
+			else if (soapBody instanceof Soap12Body soap12Body) {
 				Soap12Fault soap12Fault = soap12Body.addServerOrReceiverFault(faultStringOrReason,
 						definition.getLocale());
 				soap12Fault.addFaultSubcode(definition.getFaultCode());

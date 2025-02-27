@@ -110,10 +110,10 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 	private void registerEndpointAdapters(Element element, Object source, ParserContext parserContext) {
 		RootBeanDefinition adapterDef = createBeanDefinition(DefaultMethodEndpointAdapter.class, source);
 
-		ManagedList<BeanMetadataElement> argumentResolvers = new ManagedList<BeanMetadataElement>();
+		ManagedList<BeanMetadataElement> argumentResolvers = new ManagedList<>();
 		argumentResolvers.setSource(source);
 
-		ManagedList<BeanMetadataElement> returnValueHandlers = new ManagedList<BeanMetadataElement>();
+		ManagedList<BeanMetadataElement> returnValueHandlers = new ManagedList<>();
 		returnValueHandlers.setSource(source);
 
 		argumentResolvers.add(createBeanDefinition(MessageContextMethodArgumentResolver.class, source));

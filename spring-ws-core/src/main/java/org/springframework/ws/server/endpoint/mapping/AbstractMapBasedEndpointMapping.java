@@ -42,10 +42,10 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 
 	private boolean registerBeanNames = false;
 
-	private final Map<String, Object> endpointMap = new HashMap<String, Object>();
+	private final Map<String, Object> endpointMap = new HashMap<>();
 
 	// holds mappings set via setEndpointMap and setMappings
-	private Map<String, Object> temporaryEndpointMap = new HashMap<String, Object>();
+	private Map<String, Object> temporaryEndpointMap = new HashMap<>();
 
 	/**
 	 * Set whether to lazily initialize endpoints. Only applicable to singleton endpoints,
@@ -144,8 +144,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
 					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
 		}
-		if (!lazyInitEndpoints && endpoint instanceof String) {
-			String endpointName = (String) endpoint;
+		if (!lazyInitEndpoints && endpoint instanceof String endpointName) {
 			endpoint = resolveStringEndpoint(endpointName);
 		}
 		if (endpoint == null) {

@@ -124,7 +124,7 @@ public class MapBasedSoapEndpointMappingTest {
 		}
 
 		@Override
-		protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+		protected String getLookupKeyForMessage(MessageContext messageContext) {
 			return key;
 		}
 

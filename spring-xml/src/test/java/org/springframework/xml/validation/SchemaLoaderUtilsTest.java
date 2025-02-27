@@ -40,7 +40,7 @@ public class SchemaLoaderUtilsTest {
 	}
 
 	@Test
-	public void testLoadNonExistantSchema() throws Exception {
+	public void testLoadNonExistantSchema() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 			Resource nonExistent = new ClassPathResource("bla");
@@ -49,7 +49,7 @@ public class SchemaLoaderUtilsTest {
 	}
 
 	@Test
-	public void testLoadNullSchema() throws Exception {
+	public void testLoadNullSchema() {
 
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> SchemaLoaderUtils.loadSchema((Resource) null, XMLConstants.W3C_XML_SCHEMA_NS_URI));

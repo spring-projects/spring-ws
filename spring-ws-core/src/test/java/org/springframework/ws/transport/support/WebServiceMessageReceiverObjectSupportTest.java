@@ -46,7 +46,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 	private MockWebServiceMessage request;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		receiverSupport = new MyReceiverSupport();
 		messageFactory = new MockWebServiceMessageFactory();
@@ -67,7 +67,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
 			@Override
-			public void receive(MessageContext messageContext) throws Exception {
+			public void receive(MessageContext messageContext) {
 				assertThat(messageContext).isNotNull();
 				messageContext.getResponse();
 			}
@@ -91,7 +91,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
 			@Override
-			public void receive(MessageContext messageContext) throws Exception {
+			public void receive(MessageContext messageContext) {
 
 				assertThat(messageContext).isNotNull();
 				MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
@@ -112,7 +112,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 
 		WebServiceMessageReceiver receiver = new WebServiceMessageReceiver() {
 
-			public void receive(MessageContext messageContext) throws Exception {
+			public void receive(MessageContext messageContext) {
 				assertThat(messageContext).isNotNull();
 			}
 		};

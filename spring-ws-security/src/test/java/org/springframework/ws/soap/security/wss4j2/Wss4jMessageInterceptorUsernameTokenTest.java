@@ -34,7 +34,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTest extends Wss4jTest
 	private Properties users = new Properties();
 
 	@Override
-	protected void onSetup() throws Exception {
+	protected void onSetup() {
 		users.setProperty("Bert", "Ernie");
 	}
 

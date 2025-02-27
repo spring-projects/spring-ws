@@ -297,39 +297,19 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
 		private static Attribute.Type convertAttributeType(String type) {
 			type = type.toUpperCase(Locale.ENGLISH);
-			if ("CDATA".equals(type)) {
-				return Attribute.Type.CDATA;
-			}
-			else if ("ENTITIES".equals(type)) {
-				return Attribute.Type.ENTITIES;
-			}
-			else if ("ENTITY".equals(type)) {
-				return Attribute.Type.ENTITY;
-			}
-			else if ("ENUMERATION".equals(type)) {
-				return Attribute.Type.ENUMERATION;
-			}
-			else if ("ID".equals(type)) {
-				return Attribute.Type.ID;
-			}
-			else if ("IDREF".equals(type)) {
-				return Attribute.Type.IDREF;
-			}
-			else if ("IDREFS".equals(type)) {
-				return Attribute.Type.IDREFS;
-			}
-			else if ("NMTOKEN".equals(type)) {
-				return Attribute.Type.NMTOKEN;
-			}
-			else if ("NMTOKENS".equals(type)) {
-				return Attribute.Type.NMTOKENS;
-			}
-			else if ("NOTATION".equals(type)) {
-				return Attribute.Type.NOTATION;
-			}
-			else {
-				return Attribute.Type.UNDECLARED;
-			}
+			return switch (type) {
+				case "CDATA" -> Attribute.Type.CDATA;
+				case "ENTITIES" -> Attribute.Type.ENTITIES;
+				case "ENTITY" -> Attribute.Type.ENTITY;
+				case "ENUMERATION" -> Attribute.Type.ENUMERATION;
+				case "ID" -> Attribute.Type.ID;
+				case "IDREF" -> Attribute.Type.IDREF;
+				case "IDREFS" -> Attribute.Type.IDREFS;
+				case "NMTOKEN" -> Attribute.Type.NMTOKEN;
+				case "NMTOKENS" -> Attribute.Type.NMTOKENS;
+				case "NOTATION" -> Attribute.Type.NOTATION;
+				default -> Attribute.Type.UNDECLARED;
+			};
 		}
 
 	}

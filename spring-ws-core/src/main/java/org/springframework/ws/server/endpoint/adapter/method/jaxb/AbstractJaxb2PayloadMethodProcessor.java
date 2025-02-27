@@ -76,7 +76,7 @@ import org.springframework.xml.transform.TraxUtils;
  */
 public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloadMethodProcessor {
 
-	private final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<Class<?>, JAXBContext>();
+	private final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<>();
 
 	@Override
 	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
@@ -106,8 +106,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 			logger.debug("Marshalling [" + jaxbElement + "] to response payload");
 		}
 		WebServiceMessage response = messageContext.getResponse();
-		if (response instanceof StreamingWebServiceMessage) {
-			StreamingWebServiceMessage streamingResponse = (StreamingWebServiceMessage) response;
+		if (response instanceof StreamingWebServiceMessage streamingResponse) {
 
 			StreamingPayload payload = new JaxbStreamingPayload(clazz, jaxbElement);
 			streamingResponse.setStreamingPayload(payload);
@@ -164,7 +163,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 			return null;
 		}
 		try {
-			JaxbElementSourceCallback<T> callback = new JaxbElementSourceCallback<T>(clazz);
+			JaxbElementSourceCallback<T> callback = new JaxbElementSourceCallback<>(clazz);
 			TraxUtils.doWithSource(requestPayload, callback);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Unmarshalled payload request to [" + callback.result + "]");

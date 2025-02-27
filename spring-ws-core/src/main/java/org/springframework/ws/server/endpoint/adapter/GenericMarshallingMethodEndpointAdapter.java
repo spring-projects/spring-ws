@@ -104,8 +104,7 @@ public class GenericMarshallingMethodEndpointAdapter extends MarshallingMethodEn
 		if (method.getParameterTypes().length != 1) {
 			return false;
 		}
-		else if (getUnmarshaller() instanceof GenericUnmarshaller) {
-			GenericUnmarshaller genericUnmarshaller = (GenericUnmarshaller) getUnmarshaller();
+		else if (getUnmarshaller() instanceof GenericUnmarshaller genericUnmarshaller) {
 			return genericUnmarshaller.supports(method.getGenericParameterTypes()[0]);
 		}
 		else {

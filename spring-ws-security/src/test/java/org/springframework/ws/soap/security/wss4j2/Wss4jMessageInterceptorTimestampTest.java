@@ -63,7 +63,7 @@ public abstract class Wss4jMessageInterceptorTimestampTest extends Wss4jTest {
 	}
 
 	@Test
-	public void testValidateTimestampWithExpiredTtl() throws Exception {
+	public void testValidateTimestampWithExpiredTtl() {
 
 		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
 
@@ -77,7 +77,7 @@ public abstract class Wss4jMessageInterceptorTimestampTest extends Wss4jTest {
 	}
 
 	@Test
-	public void testValidateTimestampWithExpiredTtlCustomTtl() throws Exception {
+	public void testValidateTimestampWithExpiredTtlCustomTtl() {
 
 		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
 

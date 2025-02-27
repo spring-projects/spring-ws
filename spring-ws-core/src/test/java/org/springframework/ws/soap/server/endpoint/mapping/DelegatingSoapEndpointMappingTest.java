@@ -39,7 +39,7 @@ public class DelegatingSoapEndpointMappingTest {
 	private EndpointMapping mock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		endpointMapping = new DelegatingSoapEndpointMapping();
 		mock = createMock(EndpointMapping.class);

@@ -65,7 +65,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 
 	@Override
 	public UserDetails getUserFromCache(X509Certificate userCert) {
-		Element element = null;
+		Element element;
 
 		try {
 			element = cache.get(userCert);

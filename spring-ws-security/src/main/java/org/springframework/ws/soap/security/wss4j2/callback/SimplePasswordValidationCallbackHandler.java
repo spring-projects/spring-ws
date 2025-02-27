@@ -41,7 +41,7 @@ import org.springframework.util.Assert;
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {
 
-	private Map<String, String> users = new HashMap<String, String>();
+	private Map<String, String> users = new HashMap<>();
 
 	/**
 	 * Sets the users to validate against. Property names are usernames, property values

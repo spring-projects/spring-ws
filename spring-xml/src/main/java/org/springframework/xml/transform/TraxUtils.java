@@ -98,13 +98,11 @@ public abstract class TraxUtils {
 				}
 			}
 		}
-		else if (source instanceof SAXSource) {
-			SAXSource saxSource = (SAXSource) source;
+		else if (source instanceof SAXSource saxSource) {
 			callback.saxSource(saxSource.getXMLReader(), saxSource.getInputSource());
 			return;
 		}
-		else if (source instanceof StreamSource) {
-			StreamSource streamSource = (StreamSource) source;
+		else if (source instanceof StreamSource streamSource) {
 			if (streamSource.getInputStream() != null) {
 				callback.streamSource(streamSource.getInputStream());
 				return;
@@ -151,13 +149,11 @@ public abstract class TraxUtils {
 				}
 			}
 		}
-		else if (result instanceof SAXResult) {
-			SAXResult saxSource = (SAXResult) result;
+		else if (result instanceof SAXResult saxSource) {
 			callback.saxResult(saxSource.getHandler(), saxSource.getLexicalHandler());
 			return;
 		}
-		else if (result instanceof StreamResult) {
-			StreamResult streamSource = (StreamResult) result;
+		else if (result instanceof StreamResult streamSource) {
 			if (streamSource.getOutputStream() != null) {
 				callback.streamResult(streamSource.getOutputStream());
 				return;

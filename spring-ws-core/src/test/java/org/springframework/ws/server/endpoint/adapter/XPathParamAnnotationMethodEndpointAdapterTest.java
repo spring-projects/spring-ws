@@ -71,7 +71,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 	@Test
 	public void testUnsupportedInvalidParam() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParamType", new Class[] { Integer.TYPE });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParamType", Integer.TYPE);
 
 		assertThat(adapter.supports(endpoint)).isFalse();
 	}
@@ -79,45 +79,43 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 	@Test
 	public void testUnsupportedInvalidReturnType() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidReturnType",
-				new Class[] { String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidReturnType", String.class);
 		assertThat(adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
 	public void testUnsupportedInvalidParams() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParams",
-				new Class[] { String.class, String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParams", String.class, String.class);
 		assertThat(adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
 	public void testSupportedTypes() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes",
-				new Class[] { Boolean.TYPE, Double.TYPE, Node.class, NodeList.class, String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
+				NodeList.class, String.class);
 		assertThat(adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsStringSource() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedStringSource", new Class[] { String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedStringSource", String.class);
 		assertThat(adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsSource() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", new Class[] { String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", String.class);
 		assertThat(adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsVoid() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedVoid", new Class[] { String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedVoid", String.class);
 		assertThat(adapter.supports(endpoint)).isTrue();
 	}
 
@@ -130,8 +128,8 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 		replay(messageMock, factoryMock);
 
 		MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes",
-				new Class[] { Boolean.TYPE, Double.TYPE, Node.class, NodeList.class, String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
+				NodeList.class, String.class);
 		adapter.invoke(messageContext, endpoint);
 
 		assertThat(supportedTypesInvoked).isTrue();
@@ -151,7 +149,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 		replay(requestMock, responseMock, factoryMock);
 
 		MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
-		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", new Class[] { String.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", String.class);
 		adapter.invoke(messageContext, endpoint);
 
 		assertThat(supportedSourceInvoked).isTrue();
@@ -185,13 +183,13 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 		replay(requestMock, factoryMock);
 
-		Map<String, String> namespaces = new HashMap<String, String>();
+		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put("root", rootNamespace);
 		namespaces.put("child", childNamespace);
 		adapter.setNamespaces(namespaces);
 
 		MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
-		MethodEndpoint endpoint = new MethodEndpoint(this, "namespaces", new Class[] { Node.class });
+		MethodEndpoint endpoint = new MethodEndpoint(this, "namespaces", Node.class);
 		adapter.invoke(messageContext, endpoint);
 
 		assertThat(namespacesInvoked).isTrue();

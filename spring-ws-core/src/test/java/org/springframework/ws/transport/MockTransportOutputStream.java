@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 
 public class MockTransportOutputStream extends TransportOutputStream {
 
-	private Map<String, String> headers = new HashMap<String, String>();
+	private Map<String, String> headers = new HashMap<>();
 
 	private OutputStream outputStream;
 

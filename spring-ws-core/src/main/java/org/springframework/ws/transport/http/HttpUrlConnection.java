@@ -106,7 +106,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		Set<String> headerNames = new HashSet<String>();
+		Set<String> headerNames = new HashSet<>();
 		// Header field 0 is the status line, so we start at 1
 		int i = 1;
 		while (true) {

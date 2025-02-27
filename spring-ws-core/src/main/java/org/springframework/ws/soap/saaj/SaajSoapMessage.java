@@ -243,8 +243,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		try {
 			SOAPMessage message = getSaajMessage();
 			message.saveChanges();
-			if (outputStream instanceof TransportOutputStream) {
-				TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
+			if (outputStream instanceof TransportOutputStream transportOutputStream) {
 				// some SAAJ implementations (Axis 1) do not have a Content-Type header by
 				// default
 				MimeHeaders headers = message.getMimeHeaders();

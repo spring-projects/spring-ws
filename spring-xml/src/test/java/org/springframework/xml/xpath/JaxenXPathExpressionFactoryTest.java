@@ -34,12 +34,12 @@ public class JaxenXPathExpressionFactoryTest extends AbstractXPathExpressionFact
 	}
 
 	@Override
-	public void testEvaluateAsDoubleNoNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleNoNamespaces() {
 		// Currently not working on Jaxen 1.1 beta 8, hence the override here
 	}
 
 	@Override
-	public void testEvaluateAsDoubleNamespaces() throws IOException, SAXException {
+	public void testEvaluateAsDoubleNamespaces() {
 		// Currently not working on Jaxen 1.1 beta 8, hence the override here
 	}
 

@@ -66,7 +66,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
 	private final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
 
-	private final List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
+	private final List<XmlSchema> xmlSchemas = new ArrayList<>();
 
 	private Resource[] xsdResources;
 
@@ -132,8 +132,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 
 		schemaCollection.setSchemaResolver(uriResolver);
 
-		Set<XmlSchema> processedIncludes = new HashSet<XmlSchema>();
-		Set<XmlSchema> processedImports = new HashSet<XmlSchema>();
+		Set<XmlSchema> processedIncludes = new HashSet<>();
+		Set<XmlSchema> processedImports = new HashSet<>();
 
 		for (Resource xsdResource : xsdResources) {
 			Assert.isTrue(xsdResource.exists(), xsdResource + " does not exist");
@@ -208,8 +208,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		processedImports.add(schema);
 		List<XmlSchemaExternal> externals = schema.getExternals();
 		for (XmlSchemaExternal external : externals) {
-			if (external instanceof XmlSchemaImport) {
-				XmlSchemaImport schemaImport = (XmlSchemaImport) external;
+			if (external instanceof XmlSchemaImport schemaImport) {
 				XmlSchema importedSchema = schemaImport.getSchema();
 				if (!"http://www.w3.org/XML/1998/namespace".equals(schemaImport.getNamespace())
 						&& importedSchema != null && !processedImports.contains(importedSchema)) {

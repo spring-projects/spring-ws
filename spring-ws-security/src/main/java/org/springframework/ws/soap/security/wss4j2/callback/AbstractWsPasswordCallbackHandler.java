@@ -46,8 +46,7 @@ public abstract class AbstractWsPasswordCallbackHandler extends AbstractCallback
 	 */
 	@Override
 	protected final void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
-		if (callback instanceof WSPasswordCallback) {
-			WSPasswordCallback passwordCallback = (WSPasswordCallback) callback;
+		if (callback instanceof WSPasswordCallback passwordCallback) {
 			switch (passwordCallback.getUsage()) {
 				case WSPasswordCallback.DECRYPT:
 					handleDecrypt(passwordCallback);

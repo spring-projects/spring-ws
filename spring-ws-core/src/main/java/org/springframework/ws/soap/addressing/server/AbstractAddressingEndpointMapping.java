@@ -247,8 +247,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 			Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
 				.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
 			if (!smartInterceptors.isEmpty()) {
-				this.smartInterceptors = smartInterceptors.values()
-					.toArray(new SmartEndpointInterceptor[smartInterceptors.size()]);
+				this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
 			}
 		}
 	}
@@ -288,8 +287,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
 		MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
 
-		List<EndpointInterceptor> interceptors = new ArrayList<EndpointInterceptor>();
-		interceptors.addAll(Arrays.asList(preInterceptors));
+		List<EndpointInterceptor> interceptors = new ArrayList<>(Arrays.asList(preInterceptors));
 
 		AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version,
 				messageIdStrategy, messageSenders, responseAction, faultAction);
@@ -304,8 +302,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 			}
 		}
 
-		return new SoapEndpointInvocationChain(endpoint,
-				interceptors.toArray(new EndpointInterceptor[interceptors.size()]), actorsOrRoles, isUltimateReceiver);
+		return new SoapEndpointInvocationChain(endpoint, interceptors.toArray(new EndpointInterceptor[0]),
+				actorsOrRoles, isUltimateReceiver);
 	}
 
 	private boolean supports(AddressingVersion version, SoapMessage request) {

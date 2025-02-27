@@ -43,7 +43,7 @@ public class WsConfigurerAdapterTest {
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
@@ -131,7 +131,7 @@ public class WsConfigurerAdapterTest {
 		}
 
 		@Override
-		public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
+		public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
 			return null;
 		}
 
@@ -145,8 +145,7 @@ public class WsConfigurerAdapterTest {
 		}
 
 		@Override
-		public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-				throws Exception {
+		public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue) {
 		}
 
 	}

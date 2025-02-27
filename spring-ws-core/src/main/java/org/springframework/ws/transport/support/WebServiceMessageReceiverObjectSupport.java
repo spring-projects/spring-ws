@@ -92,10 +92,8 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			receiver.receive(messageContext);
 			if (messageContext.hasResponse()) {
 				WebServiceMessage response = messageContext.getResponse();
-				if (response instanceof FaultAwareWebServiceMessage
-						&& connection instanceof FaultAwareWebServiceConnection) {
-					FaultAwareWebServiceMessage faultResponse = (FaultAwareWebServiceMessage) response;
-					FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+				if (response instanceof FaultAwareWebServiceMessage faultResponse
+						&& connection instanceof FaultAwareWebServiceConnection faultConnection) {
 					faultConnection.setFaultCode(faultResponse.getFaultCode());
 				}
 				connection.send(messageContext.getResponse());

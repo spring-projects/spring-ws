@@ -34,7 +34,7 @@ public class TransformerHelperTest {
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		helper = new TransformerHelper();
 		transformer = mock(Transformer.class);

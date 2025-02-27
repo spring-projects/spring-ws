@@ -29,7 +29,7 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractJDomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
+			protected Element invokeInternal(Element requestElement) {
 				return null;
 			}
 		};
@@ -41,7 +41,7 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractJDomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
+			protected Element invokeInternal(Element requestElement) {
 
 				assertThat(requestElement).isNotNull();
 				assertThat(requestElement.getName()).isEqualTo(REQUEST_ELEMENT);
@@ -58,7 +58,7 @@ public class JDomPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		return new AbstractJDomPayloadEndpoint() {
 
 			@Override
-			protected Element invokeInternal(Element requestElement) throws Exception {
+			protected Element invokeInternal(Element requestElement) {
 
 				assertThat(requestElement).isNull();
 				return null;

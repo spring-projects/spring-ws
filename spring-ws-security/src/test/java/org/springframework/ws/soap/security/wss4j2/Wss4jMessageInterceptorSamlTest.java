@@ -87,7 +87,7 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 		return new SamlCallbackHandler(crypto, userCert);
 	}
 
-	private class SamlCallbackHandler implements CallbackHandler {
+	private static class SamlCallbackHandler implements CallbackHandler {
 
 		private Crypto crypto;
 
@@ -103,9 +103,8 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 		public void handle(Callback[] callbacks) {
 
 			for (Callback value : callbacks) {
-				if (value instanceof SAMLCallback) {
+				if (value instanceof SAMLCallback callback) {
 
-					SAMLCallback callback = (SAMLCallback) value;
 					callback.setSamlVersion(Version.SAML_20);
 					callback.setIssuerCrypto(crypto);
 					callback.setIssuerKeyName("rsaKey");

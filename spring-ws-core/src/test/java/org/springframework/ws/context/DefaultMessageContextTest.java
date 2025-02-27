@@ -38,7 +38,7 @@ public class DefaultMessageContextTest {
 	private WebServiceMessage request;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		factoryMock = createMock(WebServiceMessageFactory.class);
 		request = new MockWebServiceMessage();

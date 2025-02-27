@@ -150,7 +150,7 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			List<?> nodes = xpath.selectNodes(element);
-			List<T> results = new ArrayList<T>(nodes.size());
+			List<T> results = new ArrayList<>(nodes.size());
 			for (int i = 0; i < nodes.size(); i++) {
 				Node node = (Node) nodes.get(i);
 				try {

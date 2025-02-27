@@ -51,7 +51,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 	public void testCreateSoapMessageNoAttachment() throws Exception {
 
 		InputStream is = AbstractSoap12MessageFactoryTest.class.getResourceAsStream("soap12.xml");
-		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> headers = new HashMap<>();
 		String soapAction = "\"http://springframework.org/spring-ws/Action\"";
 		headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml; action=" + soapAction);
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
@@ -69,7 +69,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 	public void doTestCreateSoapMessageIllFormedXml() throws Exception {
 
 		InputStream is = AbstractSoap12MessageFactoryTest.class.getResourceAsStream("soap12-ill-formed.xml");
-		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> headers = new HashMap<>();
 		headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
@@ -80,7 +80,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 	public void testCreateSoapMessageSwA() throws Exception {
 
 		InputStream is = AbstractSoap12MessageFactoryTest.class.getResourceAsStream("soap12-attachment.bin");
-		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> headers = new HashMap<>();
 		headers.put("Content-Type", "multipart/related;" + "type=\"application/soap+xml\";"
 				+ "boundary=\"----=_Part_0_11416420.1149699787554\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
@@ -103,7 +103,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 	public void testCreateSoapMessageMtom() throws Exception {
 
 		InputStream is = AbstractSoap12MessageFactoryTest.class.getResourceAsStream("soap12-mtom.bin");
-		Map<String, String> headers = new HashMap<String, String>();
+		Map<String, String> headers = new HashMap<>();
 		headers.put("Content-Type",
 				"multipart/related;" + "start-info=\"application/soap+xml\";" + "type=\"application/xop+xml\";"
 						+ "start=\"<0.urn:uuid:40864869929B855F971176851454456@apache.org>\";"

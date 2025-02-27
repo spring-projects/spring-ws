@@ -54,13 +54,13 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		interceptor.setSecurementUsername("rsaKey");
 		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SaajSoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
 				new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
 		interceptor.secureMessage(message, messageContext);
 
-		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
+		SOAPHeader header = message.getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(new QName(
 				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
 
@@ -96,13 +96,13 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		interceptor.setAddInclusivePrefixes(false);
 		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SaajSoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
 				new SaajSoapMessageFactory(saajSoap11MessageFactory));
 
 		interceptor.secureMessage(message, messageContext);
 
-		SOAPHeader header = ((SaajSoapMessage) message).getSaajMessage().getSOAPHeader();
+		SOAPHeader header = message.getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(new QName(
 				"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security"));
 

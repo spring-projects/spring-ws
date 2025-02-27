@@ -94,7 +94,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
 				principal.getPassword(), user.getAuthorities());
 		if (logger.isDebugEnabled()) {
-			logger.debug("Authentication success: " + authRequest.toString());
+			logger.debug("Authentication success: " + authRequest);
 		}
 		authRequest.setDetails(user);
 		SecurityContextHolder.getContext().setAuthentication(authRequest);

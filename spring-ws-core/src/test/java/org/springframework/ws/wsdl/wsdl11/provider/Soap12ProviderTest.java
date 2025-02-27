@@ -60,6 +60,7 @@ public class Soap12ProviderTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testPopulateBinding() throws Exception {
 		String namespace = "http://springframework.org/spring-ws";
 		definition.addNamespace("tns", namespace);

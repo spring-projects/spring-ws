@@ -26,7 +26,7 @@ public class XPathExpressionFactoryBeanTest {
 	private XPathExpressionFactoryBean factoryBean;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 		factoryBean = new XPathExpressionFactoryBean();
 	}
 

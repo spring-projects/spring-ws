@@ -124,8 +124,8 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 
 		MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
 		messageDispatcher.setApplicationContext(applicationContext);
-		messageDispatcher.setEndpointMappings(Collections.<EndpointMapping>singletonList(mapping));
-		messageDispatcher.setEndpointAdapters(Collections.<EndpointAdapter>singletonList(adapter));
+		messageDispatcher.setEndpointMappings(Collections.singletonList(mapping));
+		messageDispatcher.setEndpointAdapters(Collections.singletonList(adapter));
 
 		messageDispatcher.receive(messageContext);
 

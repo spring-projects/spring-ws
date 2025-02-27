@@ -43,6 +43,7 @@ public class SuffixBasedPortTypesProviderTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testAddPortTypes() throws Exception {
 
 		String namespace = "http://springframework.org/spring-ws";

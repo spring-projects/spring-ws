@@ -84,11 +84,11 @@ abstract class Jaxp13ValidatorFactory {
 	 */
 	private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
-		private List<SAXParseException> errors = new ArrayList<SAXParseException>();
+		private List<SAXParseException> errors = new ArrayList<>();
 
 		@Override
 		public SAXParseException[] getErrors() {
-			return errors.toArray(new SAXParseException[errors.size()]);
+			return errors.toArray(new SAXParseException[0]);
 		}
 
 		@Override

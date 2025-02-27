@@ -42,7 +42,7 @@ public class UuidMessageIdStrategy implements MessageIdStrategy {
 
 	@Override
 	public URI newMessageId(SoapMessage message) {
-		return URI.create(PREFIX + UUID.randomUUID().toString());
+		return URI.create(PREFIX + UUID.randomUUID());
 	}
 
 }

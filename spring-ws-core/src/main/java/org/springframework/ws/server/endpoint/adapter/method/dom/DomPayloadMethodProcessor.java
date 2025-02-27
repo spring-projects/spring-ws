@@ -65,8 +65,7 @@ public class DomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 		if (parameterType.isAssignableFrom(requestNode.getClass())) {
 			return requestNode;
 		}
-		else if (Element.class.equals(parameterType) && requestNode instanceof Document) {
-			Document document = (Document) requestNode;
+		else if (Element.class.equals(parameterType) && requestNode instanceof Document document) {
 			return document.getDocumentElement();
 		}
 		// should not happen

@@ -177,7 +177,7 @@ public class PayloadValidatingInterceptorTest {
 	}
 
 	@Test
-	public void testNonExistingSchema() throws Exception {
+	public void testNonExistingSchema() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 

@@ -35,11 +35,10 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator {
 
 	@Override
 	protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
-		if (!(response instanceof SoapMessage)) {
+		if (!(response instanceof SoapMessage soapResponse)) {
 			fail("Response is not a SOAP message");
 			return;
 		}
-		SoapMessage soapResponse = (SoapMessage) response;
 		SoapBody responseBody = soapResponse.getSoapBody();
 		if (responseBody == null) {
 			fail("SOAP message [" + response + "] does not contain SOAP body");

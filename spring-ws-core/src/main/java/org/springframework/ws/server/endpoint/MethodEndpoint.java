@@ -89,8 +89,7 @@ public final class MethodEndpoint {
 
 	/** Returns the object bean for this method endpoint. */
 	public Object getBean() {
-		if (beanFactory != null && bean instanceof String) {
-			String beanName = (String) bean;
+		if (beanFactory != null && bean instanceof String beanName) {
 			return beanFactory.getBean(beanName);
 		}
 		else {

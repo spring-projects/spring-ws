@@ -157,8 +157,7 @@ public class DefaultStrategiesHelper {
 	/** Instantiates the given bean, simulating the standard bean life cycle. */
 	private <T> T instantiateBean(Class<T> clazz, ApplicationContext applicationContext) {
 		T strategy = BeanUtils.instantiateClass(clazz);
-		if (strategy instanceof BeanNameAware) {
-			BeanNameAware beanNameAware = (BeanNameAware) strategy;
+		if (strategy instanceof BeanNameAware beanNameAware) {
 			beanNameAware.setBeanName(clazz.getName());
 		}
 		if (applicationContext != null) {
@@ -177,8 +176,7 @@ public class DefaultStrategiesHelper {
 			if (strategy instanceof MessageSourceAware) {
 				((MessageSourceAware) strategy).setMessageSource(applicationContext);
 			}
-			if (strategy instanceof ApplicationContextAware) {
-				ApplicationContextAware applicationContextAware = (ApplicationContextAware) strategy;
+			if (strategy instanceof ApplicationContextAware applicationContextAware) {
 				applicationContextAware.setApplicationContext(applicationContext);
 			}
 			if (applicationContext instanceof WebApplicationContext && strategy instanceof ServletContextAware) {
@@ -186,8 +184,7 @@ public class DefaultStrategiesHelper {
 				((ServletContextAware) strategy).setServletContext(servletContext);
 			}
 		}
-		if (strategy instanceof InitializingBean) {
-			InitializingBean initializingBean = (InitializingBean) strategy;
+		if (strategy instanceof InitializingBean initializingBean) {
 			try {
 				initializingBean.afterPropertiesSet();
 			}

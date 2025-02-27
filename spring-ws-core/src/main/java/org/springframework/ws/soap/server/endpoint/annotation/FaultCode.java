@@ -70,7 +70,7 @@ public enum FaultCode {
 
 	private final QName value;
 
-	private FaultCode(QName value) {
+	FaultCode(QName value) {
 		this.value = value;
 	}
 

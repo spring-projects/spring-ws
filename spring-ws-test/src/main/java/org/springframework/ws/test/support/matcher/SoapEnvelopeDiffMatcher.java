@@ -64,7 +64,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 		Document actualDocument = soapMessage.getDocument();
 		Document expectedDocument = createDocumentFromSource(expected);
 		Diff diff = new Diff(expectedDocument, actualDocument);
-		assertTrue("Envelopes are different, " + diff.toString(), diff.similar());
+		assertTrue("Envelopes are different, " + diff, diff.similar());
 	}
 
 	private Document createDocumentFromSource(Source source) {

@@ -260,7 +260,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 	}
 
 	@SuppressWarnings("serial")
-	public class MyServlet extends HttpServlet {
+	public static class MyServlet extends HttpServlet {
 
 		private int responseStatus = HttpServletResponse.SC_OK;
 

@@ -106,12 +106,10 @@ public class MockStrategiesHelper {
 						+ ClassUtils.getShortName(defaultType));
 			}
 			T defaultStrategy = BeanUtils.instantiateClass(defaultType);
-			if (defaultStrategy instanceof ApplicationContextAware) {
-				ApplicationContextAware applicationContextAware = (ApplicationContextAware) defaultStrategy;
+			if (defaultStrategy instanceof ApplicationContextAware applicationContextAware) {
 				applicationContextAware.setApplicationContext(applicationContext);
 			}
-			if (defaultStrategy instanceof InitializingBean) {
-				InitializingBean initializingBean = (InitializingBean) defaultStrategy;
+			if (defaultStrategy instanceof InitializingBean initializingBean) {
 				try {
 					initializingBean.afterPropertiesSet();
 				}

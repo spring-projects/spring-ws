@@ -389,7 +389,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 	private void initMessageSenders(DefaultStrategiesHelper helper) {
 		List<WebServiceMessageSender> messageSenders = helper.getDefaultStrategies(WebServiceMessageSender.class);
-		setMessageSenders(messageSenders.toArray(new WebServiceMessageSender[messageSenders.size()]));
+		setMessageSenders(messageSenders.toArray(new WebServiceMessageSender[0]));
 	}
 
 	private void initFaultMessageResolver(DefaultStrategiesHelper helper) throws BeanInitializationException {
@@ -434,7 +434,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 					}
 				}
 			}
-		}, new WebServiceMessageExtractor<Object>() {
+		}, new WebServiceMessageExtractor<>() {
 
 			public Object extractData(WebServiceMessage response) throws IOException {
 				Unmarshaller unmarshaller = getUnmarshaller();
@@ -473,7 +473,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 		try {
 			final Transformer transformer = createTransformer();
 			Boolean retVal = doSendAndReceive(uri, transformer, requestPayload, requestCallback,
-					new SourceExtractor<Boolean>() {
+					new SourceExtractor<>() {
 
 						public Boolean extractData(Source source) throws IOException, TransformerException {
 							if (source != null) {
@@ -532,7 +532,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 					requestCallback.doWithMessage(message);
 				}
 			}
-		}, new SourceExtractorMessageExtractor<T>(responseExtractor));
+		}, new SourceExtractorMessageExtractor<>(responseExtractor));
 	}
 
 	//
@@ -689,8 +689,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
 		if (checkConnectionForError && connection.hasError()) {
 			// could be a fault
-			if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
-				FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
+			if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
 				return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
 			}
 			else {
@@ -755,17 +754,15 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @throws IOException in case of I/O errors
 	 */
 	protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
-		if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection) {
+		if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
 			// check whether the connection has a fault (i.e. status code 500 in HTTP)
-			FaultAwareWebServiceConnection faultConnection = (FaultAwareWebServiceConnection) connection;
 			if (!faultConnection.hasFault()) {
 				return false;
 			}
 		}
-		if (response instanceof FaultAwareWebServiceMessage) {
+		if (response instanceof FaultAwareWebServiceMessage faultMessage) {
 			// either the connection has a fault, or checkConnectionForFault is false:
 			// let's verify the fault
-			FaultAwareWebServiceMessage faultMessage = (FaultAwareWebServiceMessage) response;
 			return faultMessage.hasFault();
 		}
 		return false;

@@ -112,7 +112,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 
 		assertThat(List.class).isAssignableFrom(result.getClass());
 
-		List<SoapHeaderElement> elements = (List) result;
+		List<SoapHeaderElement> elements = (List<SoapHeaderElement>) result;
 
 		assertThat(elements.size()).isGreaterThan(1);
 

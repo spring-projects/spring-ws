@@ -57,6 +57,7 @@ public class DefaultMessagesProviderTest {
 	}
 
 	@Test
+	@SuppressWarnings("unchecked")
 	public void testAddMessages() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";

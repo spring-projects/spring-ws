@@ -45,7 +45,7 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 	private StaticApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("mapping", SoapActionAnnotationMethodEndpointMapping.class);
@@ -67,7 +67,7 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 
 		assertThat(chain).isNotNull();
 
-		Method doIt = MyEndpoint.class.getMethod("doIt", new Class[0]);
+		Method doIt = MyEndpoint.class.getMethod("doIt");
 		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
 
 		assertThat(chain.getEndpoint()).isEqualTo(expected);

@@ -60,12 +60,12 @@ public abstract class TransportOutputStream extends OutputStream {
 	}
 
 	@Override
-	public void write(byte b[]) throws IOException {
+	public void write(byte[] b) throws IOException {
 		getOutputStream().write(b);
 	}
 
 	@Override
-	public void write(byte b[], int off, int len) throws IOException {
+	public void write(byte[] b, int off, int len) throws IOException {
 		getOutputStream().write(b, off, len);
 	}
 

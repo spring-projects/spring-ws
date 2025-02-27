@@ -22,7 +22,7 @@ import org.springframework.ws.WebServiceMessageFactory;
 public class DomPoxMessageFactoryTest extends AbstractWebServiceMessageFactoryTest {
 
 	@Override
-	protected WebServiceMessageFactory createMessageFactory() throws Exception {
+	protected WebServiceMessageFactory createMessageFactory() {
 		return new DomPoxMessageFactory();
 	}
 

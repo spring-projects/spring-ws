@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.callback;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.security.auth.callback.Callback;
@@ -29,6 +30,7 @@ import javax.security.auth.callback.Callback;
  */
 public class CleanupCallback implements Callback, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 4744181820980888237L;
 
 }

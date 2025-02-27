@@ -49,7 +49,7 @@ public abstract class XPathExpressionFactory {
 	 */
 	public static XPathExpression createXPathExpression(String expression)
 			throws IllegalStateException, XPathParseException {
-		return createXPathExpression(expression, Collections.<String, String>emptyMap());
+		return createXPathExpression(expression, Collections.emptyMap());
 	}
 
 	/**
@@ -67,13 +67,8 @@ public abstract class XPathExpressionFactory {
 		if (namespaces == null) {
 			namespaces = Collections.emptyMap();
 		}
-		try {
-			logger.trace("Creating [javax.xml.xpath.XPathExpression]");
-			return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
-		}
-		catch (XPathException e) {
-			throw e;
-		}
+		logger.trace("Creating [javax.xml.xpath.XPathExpression]");
+		return Jaxp13XPathExpressionFactory.createXPathExpression(expression, namespaces);
 	}
 
 }

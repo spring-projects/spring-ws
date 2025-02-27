@@ -28,7 +28,7 @@ public class QNameEditorTest {
 	private QNameEditor editor;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	public void setUp() {
 
 		editor = new QNameEditor();
 	}

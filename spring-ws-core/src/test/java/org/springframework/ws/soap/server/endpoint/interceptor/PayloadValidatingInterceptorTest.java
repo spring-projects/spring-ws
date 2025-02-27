@@ -344,13 +344,13 @@ public class PayloadValidatingInterceptorTest {
 				return new SAXParseException[0];
 			}
 
-			public void warning(SAXParseException exception) throws SAXException {
+			public void warning(SAXParseException exception) {
 			}
 
-			public void error(SAXParseException exception) throws SAXException {
+			public void error(SAXParseException exception) {
 			}
 
-			public void fatalError(SAXParseException exception) throws SAXException {
+			public void fatalError(SAXParseException exception) {
 			}
 		};
 

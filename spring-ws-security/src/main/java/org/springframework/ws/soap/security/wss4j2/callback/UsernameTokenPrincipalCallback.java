@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.security.wss4j2.callback;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import javax.security.auth.callback.Callback;
@@ -34,6 +35,7 @@ import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
  */
 public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -3022202225157082715L;
 
 	private final WSUsernameTokenPrincipalImpl principal;

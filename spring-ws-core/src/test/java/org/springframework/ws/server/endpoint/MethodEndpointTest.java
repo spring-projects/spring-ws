@@ -59,7 +59,6 @@ public class MethodEndpointTest {
 	@Test
 	public void testEquals() throws Exception {
 
-		assertThat(endpoint).isEqualTo(endpoint);
 		assertThat(endpoint).isEqualTo(new MethodEndpoint(this, method));
 
 		Method otherMethod = getClass().getMethod("testEquals");

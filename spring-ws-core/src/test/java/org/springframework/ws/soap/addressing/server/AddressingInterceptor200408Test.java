@@ -32,7 +32,7 @@ public class AddressingInterceptor200408Test extends AbstractAddressingIntercept
 	}
 
 	@Override
-	public void testNoneReplyTo() throws Exception {
+	public void testNoneReplyTo() {
 		// This version of the spec does not have none addresses
 	}
 

@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.addressing.core;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import org.springframework.util.Assert;
  */
 public final class EndpointReference implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 8999416009328865260L;
 
 	private final URI address;
