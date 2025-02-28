@@ -3,7 +3,6 @@ image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services"
 
 = Spring Web Services
 
-image:https://jenkins.spring.io/buildStatus/icon?job=spring-ws%2Fmain)[link='https://jenkins.spring.io/job/spring-ws/job/main/']
 
 
 Spring Web Services is a product of the Spring community focused on creating
@@ -25,109 +24,6 @@ Please visit https://spring.io/projects/spring-ws to get the right Maven/Gradle 
 This will generate the artifacts.
 
 You can also import the project into your IDE.
-
-== Making a release
-
-Before you make a release, follow this checklist:
-
-* Are you using the latest milestone/release candidate/release of Spring Framework? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
-* Are you using the latest milestone/release candidate/release of Spring Security? If not, upgrade. (Don't forget `spring-buildsnapshot` profile.)
-* Are you set up with the right version of Java? If not switch. (Java 17 for 4.0+, Java 8 for everything else.)
-* Is it time to switch from milestone to release candidate? Or from release candidate to release?
-
-NOTE: The _actual_ building and releasing is done on CI inside a Docker container, ensuring little risk between versions of Java.
-But part of the release process requires a local check, which DOES depend upon your environment.
-
-. Create a new release (on the main branch).
-+
-[source,shell]
-----
-% ci/create-release.sh <release version> <next snapshot version>
-----
-+
-. With the release tagged, update the release branch to the newly created tag.
-+
-[source,shell]
-----
-% git checkout release
-% git reset --hard <tag>
-----
-+
-. Verify this builds locally and passes all tests.
-+
-[source,shell]
-----
-% ./mvnw clean package
-% ./mvnw -Pspring-buildsnapshot clean package
-% ./mvnw -Pspring-next-gen clean package
-% ./mvnw -Pspring-next-gen-snapshot clean package
-----
-+
-. Push the tagged version to the release branch.
-+
-[source,shell]
-----
-% git push -f origin release
-----
-+
-. Once completed, push the `main` branch for next version's snapshots.
-+
-[source,shell]
-----
-% git checkout main
-% git push
-% git push --tags
-----
-
-The pipeline will build and release the "release" branch on artifactory for milestones and RCs.
-For releases, they are sent to maven central.
-
-Once the release is completed and tags are pushed:
-
-. Close the GitHub issue milestone.
-. Run the `ChangeLogCreator` report against that milestone.
-. Go to https://github.com/spring-projects/spring-ws/releases.
-. Find that tag and create a new release. Use the output from `ChangeLogCreator` as the content for the release report.
-. Announce on #spring-release.
-
-=== Running CI tasks locally
-
-Since the pipeline uses Docker, it's easy to:
-
-* Debug what went wrong on your local machine.
-* Test out a tweak to your `test.sh` script before sending it out.
-* Experiment against a new image before submitting your pull request.
-
-All of these use cases are great reasons to know what Jenkins does, on your local machine.
-
-IMPORTANT: To do this you must have Docker installed on your machine.
-
-1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github openjdk:17-bullseye /bin/bash`
-+
-This will launch the Docker image and mount your source code at `spring-ws-github`.
-+
-2. `cd spring-ws-github`
-+
-Next, run the `test.sh` script from inside the container:
-+
-3. `PROFILE=none ci/test.sh`
-
-Since the container is binding to your source, you can make edits from your IDE and continue to run build jobs.
-
-If you need to test the `build.sh` script, then do this:
-
-1. `docker run -it --mount type=bind,source="$(pwd)",target=/spring-ws-github openjdk:17-bullseye /bin/bash`
-+
-This will launch the Docker image and mount your source code at `spring-ws-github` and the temporary
-artifactory output directory at `spring-ws-artifactory`.
-+
-Next, run the `build.sh` script from inside the container:
-+
-2. `ci/build.sh`
-
-IMPORTANT: `build.sh` will attempt to push to Artifactory. If you don't supply credentials, it will fail.
-
-NOTE: Docker containers can eat up disk space fast! From time to time, run `docker system prune` to clean out old images.
 
 == Code of Conduct
 
