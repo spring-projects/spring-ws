@@ -1,7 +1,7 @@
 :doctype: book
 image:https://spring.io/img/projects/logo-web-services.svg["Spring Web Services", width=50%, link="https://spring.io/projects/spring-ws#learn"]
 
-= Spring Web Services image:https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml/badge.svg?branch=main["Build Status", link="https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml?query=branch%3Amain"]
+= Spring Web Services image:https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml/badge.svg?branch=main["Build Status", link="https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml?query=branch%3Amain"] image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?&search.rootProjectNames=Spring%20WS&search.rootProjectNames=spring-ws"]
 
 
 
