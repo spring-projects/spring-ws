@@ -7,9 +7,11 @@ javaPlatform {
 }
 
 dependencies {
+	api(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
 	api(platform("org.eclipse.jetty:jetty-bom:12.0.16"))
 	api(platform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.16"))
 	api(platform("org.junit:junit-bom:5.11.0"))
+	api(platform("org.slf4j:slf4j-bom:2.0.17"))
 	api(platform("org.springframework:spring-framework-bom:6.0.23"))
 	api(platform("org.springframework.security:spring-security-bom:6.1.9"))
 	constraints {
@@ -34,7 +36,6 @@ dependencies {
 		api("org.apache.commons:commons-collections4:4.4")
 		api("org.apache.httpcomponents.client5:httpclient5:5.2.3")
 		api("org.apache.httpcomponents:httpclient:4.5.14")
-		api("org.apache.logging.log4j:log4j-core:2.19.0")
 		api("org.apache.santuario:xmlsec:3.0.4")
 		api("org.apache.wss4j:wss4j-ws-security-dom:2.4.3")
 		api("org.apache.ws.xmlschema:xmlschema-core:2.3.1")
@@ -51,7 +52,6 @@ dependencies {
 		api("org.jdom:jdom2:2.0.6.1")
 		api("org.jvnet.staxex:stax-ex:2.1.0")
 		api("org.mockito:mockito-core:4.11.0")
-		api("org.slf4j:slf4j-api:2.0.6")
 		api("org.springframework.hateoas:spring-hateoas:2.1.5")
 		api("org.xmlunit:xmlunit-assertj:2.10.0")
 		api("org.xmlunit:xmlunit-core:2.10.0")

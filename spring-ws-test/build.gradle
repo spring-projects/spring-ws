@@ -14,6 +14,8 @@ dependencies {
 	api("org.xmlunit:xmlunit-legacy")
 	api("org.xmlunit:xmlunit-placeholders")
 
+	testImplementation("org.apache.logging.log4j:log4j-core")
+	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 	testImplementation("org.assertj:assertj-core")
 	testImplementation("org.easymock:easymock")
 	testImplementation("org.junit.jupiter:junit-jupiter")
