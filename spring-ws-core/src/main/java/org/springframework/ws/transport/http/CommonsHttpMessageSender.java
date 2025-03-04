@@ -52,7 +52,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @see HttpClient
  * @see #setCredentials(Credentials)
  * @since 1.0.0
- * @deprecated In favor of {@link HttpComponentsMessageSender}
+ * @deprecated In favor of {@link HttpComponents5MessageSender}
  */
 @Deprecated
 public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSender

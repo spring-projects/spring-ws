@@ -3,9 +3,8 @@
 
 When creating web services, there are two development styles: contract-last and contract-first. When you use a contract-last approach, you start with the Java code and let the web service contract (in WSDL -- see sidebar) be generated from that. When using contract-first, you start with the WSDL contract and use Java to implement the contract.
 
+.What is WSDL?
 ****
-*What is WSDL?*
-
 WSDL stands for Web Service Description Language. A WSDL file is an XML document that describes a web service. It specifies the location of the service and the operations (or methods) the service exposes. For more information about WSDL, see the https://www.w3.org/TR/wsdl[WSDL specification].
 ****
 
@@ -70,7 +69,7 @@ This problem is also present when working on the client side. Consider the follo
 ----
 ====
 
-This contract defines a request that takes an `date`, which is a XSD datatype representing a year, month, and day. If we call this service from Java, we probably use  either a `java.util.Date` or `java.util.Calendar`. However, both of these classes actually describe times, rather than dates. So, we actually end up sending data that represents the fourth of April 2007 at midnight (`2007-04-04T00:00:00`), which is not the same as `2007-04-04`.
+This contract defines a request that takes an `date`, which is a XSD datatype representing a year, month, and day. If we call this service from Java, we probably use  either a `java.time.LocalDateTime` or `java.time.Instant`. However, both of these classes actually describe times, rather than dates. So, we actually end up sending data that represents the fourth of April 2007 at midnight (`2007-04-04T00:00:00`), which is not the same as `2007-04-04`.
 
 === Cyclic Graphs
 

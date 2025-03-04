@@ -3,7 +3,7 @@
 
 This tutorial shows you how to write <<why-contract-first,contract-first web services>> -- that is, how to develop web services that start with the XML Schema or WSDL contract first followed by the Java code second. Spring-WS focuses on this development style, and this tutorial should help you get started. Note that the first part of this tutorial contains almost no Spring-WS specific information. It is mostly about XML, XSD, and WSDL. The <<tutorial-creating-project,second part>> focuses on implementing this contract with Spring-WS .
 
-The most important thing when doing contract-first web service development is tothink in terms of XML. This means that Java language concepts are of lesser importance. It is the XML that is sent across the wire, and you should focus on that. Java being used to implement the web service is an implementation detail.
+The most important thing when doing contract-first web service development is to think in terms of XML. This means that Java language concepts are of lesser importance. It is the XML that is sent across the wire, and you should focus on that. Java being used to implement the web service is an implementation detail.
 
 In this tutorial, we define a web service that is created by a Human Resources department. Clients can send holiday request forms to this service to book a holiday.
 

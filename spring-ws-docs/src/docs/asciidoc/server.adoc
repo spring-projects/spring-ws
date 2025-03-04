@@ -33,12 +33,12 @@ The message dispatcher operates on a <<message-context,message context>> and not
 
 == Transports
 
-Spring Web Services supports multiple transport protocols. The most common is the HTTP transport, for which a custom servlet is supplied, but you can also send messages over JMS and even email.
+Spring-WS supports multiple transport protocols. The most common is the HTTP transport, for which a custom servlet is supplied, but you can also send messages over JMS and even email.
 
 [[message-dispatcher-servlet]]
 === `MessageDispatcherServlet`
 
-The `MessageDispatcherServlet` is a standard `Servlet` that conveniently extends from the standard Spring Web `DispatcherServlet` and wraps a `MessageDispatcher`. As a result, it combines the attributes of these into one. As a `MessageDispatcher`, it follows the same request handling flow as described in the previous section. As a servlet, the `MessageDispatcherServlet` is configured in the `web.xml` of your web application. Requests that you want the `MessageDispatcherServlet` to handle must be mapped by a URL mapping in the same `web.xml` file. This is standard Java EE servlet configuration. The following example shows such a `MessageDispatcherServlet` declaration and mapping:
+The `MessageDispatcherServlet` is a standard `Servlet` that conveniently extends from the standard Spring Web `DispatcherServlet` and wraps a `MessageDispatcher`. As a result, it combines the attributes of these into one. As a `MessageDispatcher`, it follows the same request handling flow as described in the previous section. As a servlet, the `MessageDispatcherServlet` is configured in the `web.xml` of your web application. Requests that you want the `MessageDispatcherServlet` to handle must be mapped by a URL mapping in the same `web.xml` file. This is standard JavaEE servlet configuration. The following example shows such a `MessageDispatcherServlet` declaration and mapping:
 
 ====
 [source,xml]
@@ -60,10 +60,10 @@ The `MessageDispatcherServlet` is a standard `Servlet` that conveniently extends
 ----
 ====
 
-In the preceding example, all requests are handled by the `spring-ws` `MessageDispatcherServlet`. This is only the first step in setting up Spring Web Services, because the various component beans used by the Spring-WS framework also need to be configured. This configuration consists of standard Spring XML `<bean/>` definitions. Because the `MessageDispatcherServlet` is a standard Spring `DispatcherServlet`, it
-looks for a file named [servlet-name]-servlet.xml in the `WEB-INF` directory of your web application and creates the beans defined there in a Spring container. In the preceding example, it looks for '`/WEB-INF/spring-ws-servlet.xml`'. This file contains all of the Spring Web Services beans, such as endpoints, marshallers, and so on.
+In the preceding example, all requests are handled by the `spring-ws` `MessageDispatcherServlet`. This is only the first step in setting up Spring-WS, because the various component beans used by the Spring-WS framework also need to be configured. This configuration consists of standard Spring XML `<bean/>` definitions. Because the `MessageDispatcherServlet` is a standard Spring `DispatcherServlet`, it
+looks for a file named `[servlet-name]-servlet.xml` in the `WEB-INF` directory of your web application and creates the beans defined there in a Spring container. In the preceding example, it looks for `/WEB-INF/spring-ws-servlet.xml`. This file contains all the Spring-WS beans, such as endpoints, marshallers, and so on.
 
-As an alternative for `web.xml`, if you run on a Servlet 3+ environment, you can configure Spring-WS programmatically. For this purpose, Spring-WS provides a number of abstract base classes that extend the `WebApplicationInitializer` interface found in the Spring Framework. If you also use `@Configuration` classes for your bean definitions, you should extend the `AbstractAnnotationConfigMessageDispatcherServletInitializer`:
+As an alternative for `web.xml`, you can configure Spring-WS programmatically. For this purpose, Spring-WS provides a number of abstract base classes that extend the `WebApplicationInitializer` interface found in the Spring Framework. If you also use `@Configuration` classes for your bean definitions, you should extend the `AbstractAnnotationConfigMessageDispatcherServletInitializer`:
 
 ====
 [source,java]
@@ -85,7 +85,7 @@ public class MyServletInitializer
 ----
 ====
 
-In the preceding example, we tell Spring that endpoint bean definitions can be found in the `MyEndpointConfig` class (which is a `@Configuration` class). Other bean definitions (typically services, repositories, and so on) can be found in the `MyRootConfig` class. By default, the `AbstractAnnotationConfigMessageDispatcherServletInitializer` maps the servlet to two patterns: `/services` and `*.wsdl`, though you can change this by overriding the `getServletMappings()` method. For more details on the programmatic configuration of the `MessageDispatcherServlet`, refer to the Javadoc of https://docs.spring.io/spring-ws/docs/current/org/springframework/ws/transport/http/support/AbstractMessageDispatcherServletInitializer.html[`AbstractMessageDispatcherServletInitializer`] and https://docs.spring.io/spring-ws/docs/current/org/springframework/ws/transport/http/support/AbstractAnnotationConfigMessageDispatcherServletInitializer.html[`AbstractAnnotationConfigMessageDispatcherServletInitializer`].
+In the preceding example, we tell Spring that endpoint bean definitions can be found in the `MyEndpointConfig` class (which is a `@Configuration` class). Other bean definitions (typically services, repositories, and so on) can be found in the `MyRootConfig` class. By default, the `AbstractAnnotationConfigMessageDispatcherServletInitializer` maps the servlet to two patterns: `/services` and `*.wsdl`, though you can change this by overriding the `getServletMappings()` method. For more details on the programmatic configuration of the `MessageDispatcherServlet`, refer to the Javadoc of {spring-ws-api}/transport/http/support/AbstractMessageDispatcherServletInitializer.html[`AbstractMessageDispatcherServletInitializer`] and {spring-ws-api}/transport/http/support/AbstractAnnotationConfigMessageDispatcherServletInitializer.html[`AbstractAnnotationConfigMessageDispatcherServletInitializer`].
 
 [[server-automatic-wsdl-exposure]]
 ==== Automatic WSDL exposure
@@ -153,9 +153,9 @@ Note that this `location` transformation feature is off by default. To switch th
 
 If you use `AbstractAnnotationConfigMessageDispatcherServletInitializer`, enabling transformation is as simple as overriding the `isTransformWsdlLocations()` method to return `true`.
 
-Consult the class-level Javadoc on the https://docs.spring.io/spring-ws/docs/current/org/springframework/ws/transport/http/WsdlDefinitionHandlerAdapter.html[`WsdlDefinitionHandlerAdapter`] class to learn more about the whole transformation process.
+Consult the class-level Javadoc on the {spring-ws-api}/transport/http/WsdlDefinitionHandlerAdapter.html[`WsdlDefinitionHandlerAdapter`] class to learn more about the whole transformation process.
 
-As an alternative to writing the WSDL by hand and exposing it with `<static-wsdl>`, Spring Web Services can also generate a WSDL from an XSD schema. This is the approach shown in <<tutorial-publishing-wsdl>>. The next application context snippet shows how to create such a dynamic WSDL file:
+As an alternative to writing the WSDL by hand and exposing it with `<static-wsdl>`, Spring-WS can also generate a WSDL from an XSD schema. This is the approach shown in <<tutorial-publishing-wsdl>>. The next application context snippet shows how to create such a dynamic WSDL file:
 
 ====
 [source,xml]
@@ -178,14 +178,13 @@ public DefaultWsdl11Definition orders() {
     DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
     definition.setPortTypeName("Orders");
     definition.setLocationUri("http://localhost:8080/ordersService/");
-    definition.setSchema(new SimpleXsdSchema(new ClassPathResource("echo.xsd")));
-
+    definition.setSchema(new SimpleXsdSchema(new ClassPathResource("Orders.xsd")));
     return definition;
 }
 ----
 ====
 
-The `<dynamic-wsdl>` element depends on the `DefaultWsdl11Definition` class. This definition class uses WSDL providers in the https://docs.spring.io/spring-ws/sites/1.5/apidocs/org/springframework/ws/wsdl/wsdl11/provider/package-summary.html[`org.springframework.ws.wsdl.wsdl11.provider`] package and the https://docs.spring.io/spring-ws/docs/current/org/springframework/ws/wsdl/wsdl11/ProviderBasedWsdl4jDefinition.html[`ProviderBasedWsdl4jDefinition`] class to generate a WSDL the first time it is requested. See the class-level Javadoc of these classes to see how you can extend this mechanism, if necessary.
+The `<dynamic-wsdl>` element depends on the `DefaultWsdl11Definition` class. This definition class uses WSDL providers in the https://docs.spring.io/spring-ws/sites/1.5/apidocs/org/springframework/ws/wsdl/wsdl11/provider/package-summary.html[`org.springframework.ws.wsdl.wsdl11.provider`] package and the {spring-ws-api}/wsdl/wsdl11/ProviderBasedWsdl4jDefinition.html[`ProviderBasedWsdl4jDefinition`] class to generate a WSDL the first time it is requested. See the class-level Javadoc of these classes to see how you can extend this mechanism, if necessary.
 
 The `DefaultWsdl11Definition` (and therefore, the `<dynamic-wsdl>` tag) builds a WSDL from an XSD schema by using conventions. It iterates over all `element` elements found in the schema and creates a `message` for all elements. Next, it creates a WSDL `operation` for all messages that end with the defined request or response suffix. The default request suffix is `Request`. The default response suffix is `Response`, though these can be changed by setting the `requestSuffix` and `responseSuffix` attributes on `<dynamic-wsdl />`, respectively. It also builds a `portType`, `binding`, and `service` based on the operations.
 
@@ -247,7 +246,7 @@ In a similar fashion, you can wire a `WsdlDefinitionHandlerAdapter` to make sure
     <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>
 
     *<bean id="myServiceDefinition" class="org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition">
-       <prop name="wsdl" value="/WEB-INF/myServiceDefintion.wsdl"/>
+       <prop name="wsdl" value="/WEB-INF/myServiceDefinition.wsdl"/>
     </bean>*
 
     ...
@@ -258,7 +257,7 @@ In a similar fashion, you can wire a `WsdlDefinitionHandlerAdapter` to make sure
 
 === JMS transport
 
-Spring Web Services supports server-side JMS handling through the JMS functionality provided in the Spring framework. Spring Web Services provides the `WebServiceMessageListener` to plug in to a `MessageListenerContainer`. This message listener requires a `WebServiceMessageFactory` and `MessageDispatcher` to operate. The following configuration example shows this:
+Spring-WS supports server-side JMS handling through the JMS functionality provided in the Spring framework. Spring-WS provides the `WebServiceMessageListener` to plug in to a `MessageListenerContainer`. This message listener requires a `WebServiceMessageFactory` and `MessageDispatcher` to operate. The following configuration example shows this:
 
 ====
 [source,xml]
@@ -298,11 +297,11 @@ Spring Web Services supports server-side JMS handling through the JMS functional
 
 === Email Transport
 
-In addition to HTTP and JMS, Spring Web Services also provides server-side email handling. This functionality is provided through the `MailMessageReceiver` class. This class monitors a POP3 or IMAP folder, converts the email to a `WebServiceMessage`, and sends any response by using SMTP. You can configure the host names through the `storeUri`, which indicates the mail folder to monitor for requests (typically a POP3 or IMAP folder), and a `transportUri`, which indicates the server to use for sending responses (typically an SMTP server).
+In addition to HTTP and JMS, Spring-WS also provides server-side email handling. This functionality is provided through the `MailMessageReceiver` class. This class monitors a POP3 or IMAP folder, converts the email to a `WebServiceMessage`, and sends any response by using SMTP. You can configure the host names through the `storeUri`, which indicates the mail folder to monitor for requests (typically a POP3 or IMAP folder), and a `transportUri`, which indicates the server to use for sending responses (typically an SMTP server).
 
 You can configure how the `MailMessageReceiver` monitors incoming messages with a pluggable strategy: the `MonitoringStrategy`. By default, a polling strategy is used, where the incoming folder is polled for new messages every five minutes. You can change this interval by setting the `pollingInterval` property on the strategy. By default, all `MonitoringStrategy` implementations delete the handled messages. You can change this setting by setting the `deleteMessages` property.
 
-As an alternative to the polling approaches, which are quite inefficient, there is a monitoring strategy that uses IMAP IDLE. The IDLE command is an optional expansion of the IMAP email protocol that lets the mail server send new message updates to the `MailMessageReceiver` asynchronously. If you use an IMAP server that supports the IDLE command, you can plug the `ImapIdleMonitoringStrategy` into the `monitoringStrategy` property. In addition to a supporting server, you need to use JavaMail version 1.4.1 or higher.
+As an alternative to the polling approaches, which are quite inefficient, there is a monitoring strategy that uses IMAP IDLE. The IDLE command is an optional expansion of the IMAP email protocol that lets the mail server send new message updates to the `MailMessageReceiver` asynchronously. If you use an IMAP server that supports the IDLE command, you can plug the `ImapIdleMonitoringStrategy` into the `monitoringStrategy` property.
 
 The following piece of configuration shows how to use the server-side email support, overriding the default polling interval to check every 30 seconds (30.000 milliseconds):
 
@@ -342,11 +341,13 @@ The following piece of configuration shows how to use the server-side email supp
 
 === Embedded HTTP Server transport
 
-Spring Web Services provides a transport based on Sun's JRE 1.6 http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html[HTTP server]. The embedded HTTP Server is a standalone server that is simple to configure. It offers a lighter alternative to conventional servlet containers.
+NOTE: This should only be used for testing purposes.
 
-When using the embedded HTTP server, you need no external deployment descriptor (`web.xml`). You need  only define an instance of the server and configure it to handle incoming requests. The remoting module in the Core Spring Framework contains a convenient factory bean for the HTTP server: the `SimpleHttpServerFactoryBean`. The most important property is `contexts`, which maps context paths to corresponding `HttpHandler` instances.
+Spring-WS provides a transport based on Sun's JRE 1.6 http://java.sun.com/javase/6/docs/jre/api/net/httpserver/spec/index.html[HTTP server]. The embedded HTTP Server is a standalone server that is simple to configure. It offers a lighter alternative to conventional servlet containers.
 
-Spring Web Services provides two implementations of the `HttpHandler` interface: https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/transport/http/WsdlDefinitionHttpHandler.html[`WsdlDefinitionHttpHandler`] and https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/transport/http/WebServiceMessageReceiverHttpHandler.html[`WebServiceMessageReceiverHttpHandler`]. The former maps an incoming GET request to a `WsdlDefinition`. The latter is responsible for handling POST requests for web services messages and, thus, needs a `WebServiceMessageFactory` (typically a `SaajSoapMessageFactory`) and a `WebServiceMessageReceiver` (typically the `SoapMessageDispatcher`) to accomplish its task.
+When using the embedded HTTP server, you need no external deployment descriptor (`web.xml`). You need  only define an instance of the server and configure it to handle incoming requests. `SimpleHttpServerFactoryBean` wires things up, and the most important property is `contexts`, which maps context paths to corresponding `HttpHandler` instances.
+
+Spring-WS provides two implementations of the `HttpHandler` interface: {spring-ws-api}/transport/http/WsdlDefinitionHttpHandler.html[`WsdlDefinitionHttpHandler`] and {spring-ws-api}/transport/http/WebServiceMessageReceiverHttpHandler.html[`WebServiceMessageReceiverHttpHandler`]. The former maps an incoming GET request to a `WsdlDefinition`. The latter is responsible for handling POST requests for web services messages and, thus, needs a `WebServiceMessageFactory` (typically a `SaajSoapMessageFactory`) and a `WebServiceMessageReceiver` (typically the `SoapMessageDispatcher`) to accomplish its task.
 
 To draw parallels with the servlet world, the `contexts` property plays the role of servlet mappings in `web.xml` and the `WebServiceMessageReceiverHttpHandler` is the equivalent of a `MessageDispatcherServlet`.
 
@@ -367,7 +368,7 @@ The following snippet shows a configuration example of the HTTP server transport
         <property name="defaultEndpoint" ref="stockEndpoint"/>
     </bean>
 
-    <bean id="httpServer" class="org.springframework.remoting.support.SimpleHttpServerFactoryBean">
+    <bean id="httpServer" class="org.springframework.ws.transport.http.SimpleHttpServerFactoryBean">
         <property name="contexts">
             <map>
                 <entry key="/StockService.wsdl" value-ref="wsdlHandler"/>
@@ -388,13 +389,11 @@ The following snippet shows a configuration example of the HTTP server transport
 ----
 ====
 
-For more information on the `SimpleHttpServerFactoryBean`, see the http://static.springframework.org/spring/docs/2.5.x/api/org/springframework/remoting/support/SimpleHttpServerFactoryBean.html[Javadoc].
-
 === XMPP transport
 
-Spring Web Services 2.0 introduced support for XMPP, otherwise known as Jabber. The support is based on the https://www.igniterealtime.org/projects/smack/index.jsp[Smack] library.
+Spring-WS has support for XMPP, otherwise known as Jabber. The support is based on the https://www.igniterealtime.org/projects/smack/index.jsp[Smack] library.
 
-Spring Web Services support for XMPP is very similar to the other transports: There is a a `XmppMessageSender` for the `WebServiceTemplate` and a `XmppMessageReceiver` to use with the `MessageDispatcher`.
+Spring-WS support for XMPP is very similar to the other transports: There is a a `XmppMessageSender` for the `WebServiceTemplate` and a `XmppMessageReceiver` to use with the `MessageDispatcher`.
 
 The following example shows how to set up the server-side XMPP components:
 
@@ -457,41 +456,37 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.soap.SoapHeader;
 
-@Endpoint                                                                                      // <1>
+@Endpoint // <1>
 public class AnnotationOrderEndpoint {
 
   private final OrderService orderService;
 
-  @Autowired                                                                                   // <2>
   public AnnotationOrderEndpoint(OrderService orderService) {
       this.orderService = orderService;
   }
 
-  @PayloadRoot(localPart = "order", namespace = "http://samples")                              // <5>
-  public void order(@RequestPayload Element orderElement) {                                    // <3>
+  @PayloadRoot(localPart = "order", namespace = "http://samples") // <4>
+  public void order(@RequestPayload Element orderElement) { // <2>
     Order order = createOrder(orderElement);
     orderService.createOrder(order);
   }
 
-  @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")                       // <5>
+  @PayloadRoot(localPart = "orderRequest", namespace = "http://samples") // <4>
   @ResponsePayload
-  public Order getOrder(@RequestPayload OrderRequest orderRequest, SoapHeader header) {        // <4>
+  public Order getOrder(@RequestPayload OrderRequest orderRequest, SoapHeader header) { // <3>
     checkSoapHeaderForSomething(header);
     return orderService.getOrder(orderRequest.getId());
   }
-
-  ...
 
 }
 ----
 
 <1> The class is annotated with `@Endpoint`, marking it as a Spring-WS endpoint.
-<2> The constructor is marked with `@Autowired` so that the `OrderService` business service is injected into this endpoint.
-<3> The `order` method takes an `Element` (annotated with `@RequestPayload`) as a parameter. This means that the payload of the message is passed on this method as a DOM element. The method has a `void` return type, indicating that no response message is sent.
+<2> The `order` method takes an `Element` (annotated with `@RequestPayload`) as a parameter. This means that the payload of the message is passed on this method as a DOM element. The method has a `void` return type, indicating that no response message is sent.
 For more information about endpoint methods, see <<server-atEndpoint-methods>>.
-<4> The `getOrder` method takes an `OrderRequest` (also annotated with `@RequestPayload`) as a parameter. This parameter is a JAXB2-supported object (it is annotated with `@XmlRootElement`). This means that the payload of the message is passed to this method as a unmarshalled object. The `SoapHeader` type is also given as a parameter. On invocation, this parameter contains the SOAP header of the request message. The method is also annotated with `@ResponsePayload`, indicating that the return value (the `Order`) is used as the payload of the response message.
+<3> The `getOrder` method takes an `OrderRequest` (also annotated with `@RequestPayload`) as a parameter. This parameter is a JAXB2-supported object (it is annotated with `@XmlRootElement`). This means that the payload of the message is passed to this method as a unmarshalled object. The `SoapHeader` type is also given as a parameter. On invocation, this parameter contains the SOAP header of the request message. The method is also annotated with `@ResponsePayload`, indicating that the return value (the `Order`) is used as the payload of the response message.
 For more information about endpoint methods, see <<server-atEndpoint-methods>>.
-<5> The two handling methods of this endpoint are marked with `@PayloadRoot`, indicating what sort of request messages can be handled by the method: the `getOrder` method is invoked for requests with a `orderRequest` local name and a `http://samples` namespace URI. The order method is invoked for requests with a `order` local name.
+<4> The two handling methods of this endpoint are marked with `@PayloadRoot`, indicating what sort of request messages can be handled by the method: the `getOrder` method is invoked for requests with a `orderRequest` local name and a `http://samples` namespace URI. The order method is invoked for requests with a `order` local name.
 For more information about `@PayloadRoot`, see <<server-endpoint-mapping>>.
 ====
 
@@ -536,7 +531,6 @@ To customize the `@EnableWs` configuration, you can implement `WsConfigurer` or,
 ----
 @Configuration
 @EnableWs
-@ComponentScan(basePackageClasses = { MyConfiguration.class })
 public class MyConfiguration extends WsConfigurerAdapter {
 
   @Override
@@ -556,7 +550,7 @@ public class MyConfiguration extends WsConfigurerAdapter {
 
 In the next couple of sections, a more elaborate description of the `@Endpoint` programming model is given.
 
-NOTE: Endpoints, like any other Spring Bean, are scoped as a singleton by default. That is, one instance of the bean definition is created per container. Being a singleton implies that more than one thread can use it at the same time, so the endpoint has to be thread safe. If you want to use a different scope, such as prototype, see the https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#beans-factory-scopes[Spring Reference documentation].
+NOTE: Endpoints, like any other Spring Bean, are scoped as a singleton by default. That is, one instance of the bean definition is created per container. Being a singleton implies that more than one thread can use it at the same time, so the endpoint has to be thread safe. If you want to use a different scope, such as prototype, see the {spring-framework-docs}/core/beans/factory-scopes.html#beans-factory-scopes-other-injection[Spring Reference documentation].
 
  Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated in the class-level Javadoc.
 
@@ -628,7 +622,7 @@ The following table describes the supported parameter types. It shows the suppor
 | Enabled when StAX is on the classpath.
 
 | XPath
-| Any boolean, double, `String`, `org.w3c.Node`, `org.w3c.dom.NodeList`, or type that can be converted from a `String` by a Spring https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#core-convert-ConversionService-API[conversion service], and that is annotated with `@XPathParam`.
+| Any boolean, double, `String`, `org.w3c.Node`, `org.w3c.dom.NodeList`, or type that can be converted from a `String` by a Spring {spring-framework-docs}/core/validation/convert.html#core-convert-ConversionService-API[conversion service], and that is annotated with `@XPathParam`.
 | No
 | Enabled by default, see <<server-xpath-param,the section called `XPathParam`>>.
 
@@ -648,7 +642,7 @@ The following table describes the supported parameter types. It shows the suppor
 | Enabled when JAXB2 is on the classpath.
 
 | OXM
-| Any type supported by a Spring OXM https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#oxm-marshaller-unmarshaller[`Unmarshaller`].
+| Any type supported by a Spring OXM {spring-framework-docs}/data-access/oxm.html#oxm-marshaller-unmarshaller[`Unmarshaller`].
 | Yes
 | Enabled when the `unmarshaller` attribute of `<sws:annotation-driven/>` is specified.
 |===
@@ -680,7 +674,7 @@ public void handle(@RequestPayload MyJaxb2Object requestObject, @RequestPayload 
 ----
 ====
 
-As you can see, there are a lot of possibilities when it comes to defining how to handle method signatures. You can even extend this mechanism to support your own parameter types. See the Javadoc of https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/server/endpoint/adapter/method/MethodArgumentResolver.html[`MethodArgumentResolver`] to see how.
+As you can see, there are a lot of possibilities when it comes to defining how to handle method signatures. You can even extend this mechanism to support your own parameter types. See the Javadoc of {spring-ws-api}/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and {spring-ws-api}/server/endpoint/adapter/method/MethodArgumentResolver.html[`MethodArgumentResolver`] to see how.
 
 [[server-xpath-param]]
 ===== `@XPathParam`
@@ -709,8 +703,8 @@ public class AnnotationOrderEndpoint {
   }
 
   @PayloadRoot(localPart = "orderRequest", namespace = "http://samples")
-  *@Namespace(prefix = "s", uri="http://samples")*
-  public Order getOrder(*@XPathParam("/s:orderRequest/@id") int orderId*) {
+  @Namespace(prefix = "s", uri="http://samples")
+  public Order getOrder(@XPathParam("/s:orderRequest/@id") int orderId) {
     Order order = orderService.getOrder(orderId);
     // create Source from order and return it
   }
@@ -729,7 +723,7 @@ By using the `@XPathParam`, you can bind to all the data types supported by XPat
 * `Node`
 * `NodeList`
 
-In addition to this list, you can use any type that can be converted from a `String` by a Spring https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#core-convert-ConversionService-API[conversion service].
+In addition to this list, you can use any type that can be converted from a `String` by a Spring {spring-framework-docs}/core/validation/convert.html#core-convert-ConversionService-API[conversion service].
 
 ==== Handling method return types
 
@@ -783,12 +777,12 @@ The following table describes the supported return types. It shows the supported
 | Enabled when JAXB2 is on the classpath.
 
 | OXM
-| Any type supported by a Spring OXM https://docs.spring.io/spring/docs/current/spring-framework-reference/data-access.html#oxm-marshaller-unmarshaller[`Marshaller`].
+| Any type supported by a Spring OXM {spring-framework-docs}/data-access/oxm.html#oxm-marshaller-unmarshaller[`Marshaller`].
 | Yes
 | Enabled when the `marshaller` attribute of `<sws:annotation-driven/>` is specified.
 |===
 
-There are a lot of possibilities when it comes to defining handling method signatures. It is even possible to extend this mechanism to support your own parameter types. See the class-level Javadoc of https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/server/endpoint/adapter/method/MethodReturnValueHandler.html[`MethodReturnValueHandler`] to see how.
+There are a lot of possibilities when it comes to defining handling method signatures. It is even possible to extend this mechanism to support your own parameter types. See the class-level Javadoc of {spring-ws-api}/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and {spring-ws-api}/server/endpoint/adapter/method/MethodReturnValueHandler.html[`MethodReturnValueHandler`] to see how.
 
 [[server-endpoint-mapping]]
 == Endpoint mappings
@@ -805,7 +799,7 @@ As explained in <<server-endpoints>>, the `@Endpoint` style lets you handle mult
 
 There are two endpoint mappings that can direct requests to methods: the `PayloadRootAnnotationMethodEndpointMapping` and the `SoapActionAnnotationMethodEndpointMapping` You can enable both methods by using `<sws:annotation-driven/>` in your application context.
 
-The `PayloadRootAnnotationMethodEndpointMapping` uses the `@PayloadRoot` annotation, with the `localPart` and `namespace` elements, to mark methods with a particular qualified name. Whenever a message comes in with this qualified name for the payload root element, the method is invoked. For an example, see <<server-payload-root-annotation,above>>.
+The `PayloadRootAnnotationMethodEndpointMapping` uses the `@PayloadRoot` annotation, with the `localPart` and `namespace` elements, to mark methods with a particular qualified name. Whenever a message comes in with this qualified name for the payload root element, the method is invoked.
 
 Alternatively, the `SoapActionAnnotationMethodEndpointMapping` uses the `@SoapAction` annotation to mark methods with a particular SOAP Action. Whenever a message comes in with this `SOAPAction` header, the method is invoked.
 
@@ -819,7 +813,7 @@ WS-Addressing specifies a transport-neutral routing mechanism. It is based on th
 ----
 <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope"
     xmlns:wsa="http://www.w3.org/2005/08/addressing">
-  <SOAP-ENV::Header>
+  <SOAP-ENV:Header>
     <wsa:MessageID>urn:uuid:21363e0d-2645-4eb7-8afd-2f5ee1bb25cf</wsa:MessageID>
     <wsa:ReplyTo>
       <wsa:Address>http://example.com/business/client1</wsa:Address>
@@ -836,7 +830,7 @@ WS-Addressing specifies a transport-neutral routing mechanism. It is based on th
 ----
 ====
 
-In the preceding example, the destination is set to `http://example/com/fabrikam`, while the action is set to `http://example.com/fabrikam/mail/Delete`. Additionally, there is a message identifier and a reply-to address. By default, this address is the "`anonymous`" address, indicating that a response should be sent byusing the same channel as the request (that is, the HTTP response), but it can also be another address, as indicated in this example.
+In the preceding example, the destination is set to `http://example/com/fabrikam`, while the action is set to `http://example.com/fabrikam/mail/Delete`. Additionally, there is a message identifier and a reply-to address. By default, this address is the "`anonymous`" address, indicating that a response should be sent by using the same channel as the request (that is, the HTTP response), but it can also be another address, as indicated in this example.
 
 In Spring Web Services, WS-Addressing is implemented as an endpoint mapping. By using this mapping, you associate WS-Addressing actions with endpoints, similar to the `SoapActionAnnotationMethodEndpointMapping` described earlier.
 
@@ -856,6 +850,7 @@ import org.springframework.ws.soap.addressing.server.annotation.Action
 
 @Endpoint
 public class AnnotationOrderEndpoint {
+
     private final OrderService orderService;
 
     public AnnotationOrderEndpoint(OrderService orderService) {
@@ -929,7 +924,7 @@ public class MyWsConfiguration extends WsConfigurerAdapter {
 ----
 ====
 
-Interceptors must implement the `EndpointInterceptor` interface from the `org.springframework.ws.server` package. This interface defines three methods, one that can be used for handling the request message *before* the actual endpoint is processed, one that can be used for handling a normal response message, and one that can be used for handling fault messages. The second two are called *after* the endpoint is processed. These three methods should provide enough flexibility to do all kinds of pre- and post-processing.
+Interceptors must implement {spring-ws-api}/server/EndpointInterceptor.html[`EndpointInterceptor`]. This interface defines three methods, one that can be used for handling the request message *before* the actual endpoint is processed, one that can be used for handling a normal response message, and one that can be used for handling fault messages. The second two are called *after* the endpoint is processed. These three methods should provide enough flexibility to do all kinds of pre- and post-processing.
 
 The `handleRequest(..)` method on the interceptor returns a boolean value. You can use this method to interrupt or continue the processing of the invocation chain. When this method returns `true`, the endpoint processing chain will continue. When it returns `false`, the `MessageDispatcher` interprets this to mean that the interceptor itself has taken care of things and does not continue processing the other interceptors and the actual endpoint in the invocation chain. The `handleResponse(..)` and `handleFault(..)` methods also have a boolean return value. When these methods return `false`, the response will not be sent back to the client.
 
@@ -937,7 +932,7 @@ There are a number of standard `EndpointInterceptor` implementations that you ca
 
 ==== `PayloadLoggingInterceptor` and `SoapEnvelopeLoggingInterceptor`
 
-When developing a web service, it can be useful to log the incoming and outgoing XML messages. Spring WS facilitates this with the `PayloadLoggingInterceptor` and `SoapEnvelopeLoggingInterceptor` classes. The former logs only the payload of the message to the Commons Logging Log. The latter logs the entire SOAP envelope, including SOAP headers. The following example shows how to define the `PayloadLoggingInterceptor` in an endpoint mapping:
+When developing a web service, it can be useful to log the incoming and outgoing XML messages. Spring WS facilitates this with the `PayloadLoggingInterceptor` and `SoapEnvelopeLoggingInterceptor` classes. The former logs only the payload of the message. The latter logs the entire SOAP envelope, including SOAP headers. The following example shows how to define the `PayloadLoggingInterceptor` in an endpoint mapping:
 
 ====
 [source,xml]
@@ -956,8 +951,12 @@ You could use the `WsConfigurerAdapter` approach, as described earlier, for the 
 
 One of the benefits of using a contract-first development style is that we can use the schema to validate incoming and outgoing XML messages. Spring-WS facilitates this with the `PayloadValidatingInterceptor`. This interceptor requires a reference to one or more W3C XML or RELAX NG schemas and can be set to validate requests, responses, or both.
 
-NOTE: Note that request validation may sound like a good idea, but it makes the resulting Web service very strict. Usually, it is not really important whether the request validates, only if the endpoint can get sufficient information to fulfill a request. Validating the response is a good idea, because the endpoint should adhere to its schema. Remember Postel's Law:
+[NOTE]
+====
+While request validation may sound like a good idea, it makes the resulting Web service very strict. Usually, it is not really important whether the request validates, only if the endpoint can get sufficient information to fulfill a request. Validating the response is a good idea, because the endpoint should adhere to its schema. Remember Postel's Law:
 "Be conservative in what you do; be liberal in what you accept from others."
+====
+
 
 The following example uses the `PayloadValidatingInterceptor`. In this example, we use the schema in `/WEB-INF/orders.xsd` to validate the response but not the request. Note that the `PayloadValidatingInterceptor` can also accept multiple schemas by setting the `schemas` property.
 
@@ -977,7 +976,7 @@ Of course, you could use the `WsConfigurerAdapter` approach, as described earlie
 
 ==== Using `PayloadTransformingInterceptor`
 
-To transform the payload to another XML format, Spring Web Services offers the `PayloadTransformingInterceptor`. This endpoint interceptor is based on XSLT style sheets and is especially useful when supporting multiple versions of a web service, because you can transform the older message format to the newer format. The following example uses the `PayloadTransformingInterceptor`:
+To transform the payload to another XML format, Spring-WS offers the `PayloadTransformingInterceptor`. This endpoint interceptor is based on XSLT style sheets and is especially useful when supporting multiple versions of a web service, because you can transform the older message format to the newer format. The following example uses the `PayloadTransformingInterceptor`:
 
 ====
 [source,xml]
@@ -997,7 +996,7 @@ You could use the `WsConfigurerAdapter` approach, as described earlier, for the 
 [[server-endpoint-exception-resolver]]
 == Handling Exceptions
 
-Spring-WS provides `EndpointExceptionResolvers` to ease the pain of unexpected exceptions occurring while your message is being processed by an endpoint that matched the request. Endpoint exception resolvers somewhat resemble the exception mappings that can be defined in the web application descriptor `web.xml`. However, they provide a more flexible way to handle exceptions. They provide information about what endpoint was invoked when the exception was thrown. Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond appropriately. Rather than expose the innards of your application by giving an exception and stack trace, you can handle the exception any way you want -- for example, by returning a SOAP fault with a specific fault code and string.
+Spring-WS provides {spring-ws-api}/server/EndpointExceptionResolver.html[`EndpointExceptionResolver`] implementations to ease the pain of unexpected exceptions occurring while your message is being processed by an endpoint that matched the request. Endpoint exception resolvers somewhat resemble the exception mappings that can be defined in the web application descriptor `web.xml`. However, they provide a more flexible way to handle exceptions. They provide information about what endpoint was invoked when the exception was thrown. Furthermore, a programmatic way of handling exceptions gives you many more options for how to respond appropriately. Rather than expose the innards of your application by giving an exception and stack trace, you can handle the exception any way you want -- for example, by returning a SOAP fault with a specific fault code and string.
 
 Endpoint exception resolvers are automatically picked up by the `MessageDispatcher`, so no explicit configuration is necessary.
 
@@ -1085,16 +1084,14 @@ Whenever the `MyBusinessException` is thrown with the constructor string `"Oops!
 When it comes to testing your Web service endpoints, you have two possible approaches:
 
 * Write Unit Tests, where you provide (mock) arguments for your endpoint to consume.
-+
 The advantage of this approach is that it is quite easy to accomplish (especially for classes annotated with `@Endpoint`). The disadvantage is that you are not really testing the exact content of the XML messages that are sent over the wire.
-+
 * Write Integrations Tests, which do test the contents of the message.
 
-The first approach can easily be accomplished with mocking frameworks such as EasyMock, JMock, and others. The next section focuses on writing integration tests, using the test features introduced in Spring Web Services 2.0.
+The first approach can easily be accomplished with mocking frameworks such as Mockito, EasyMock, and others. The next section focuses on writing integration tests.
 
 === Writing server-side integration tests
 
-Spring Web Services 2.0 introduced support for creating endpoint integration tests. In this context, an endpoint is a class that handles (SOAP) messages (see <<server-endpoints>>).
+Spring-WS has support for creating endpoint integration tests. In this context, an endpoint is a class that handles (SOAP) messages (see <<server-endpoints>>).
 
 The integration test support lives in the `org.springframework.ws.test.server` package. The core class in that package is the `MockWebServiceClient`. The underlying idea is that this client creates a request message and then sends it over to the endpoints that are configured in a standard `MessageDispatcherServlet` application context (see <<message-dispatcher-servlet>>). These endpoints handle the message and create a response. The client then receives this response and verifies it against registered expectations.
 
@@ -1104,9 +1101,15 @@ The typical usage of the `MockWebServiceClient` is: .
 . Send request messages by calling `sendRequest(RequestCreator)`, possibly by using the default `RequestCreator` implementations provided in `RequestCreators` (which can be statically imported).
 . Set up response expectations by calling `andExpect(ResponseMatcher)`, possibly by using the default `ResponseMatcher` implementations provided in `ResponseMatchers` (which can be statically imported). Multiple expectations can be set up by chaining `andExpect(ResponseMatcher)` calls.
 
-NOTE: Note that the `MockWebServiceClient` (and related classes) offers a "`fluent`" API, so you can typically use the code-completion features in your IDE to guide you through the process of setting up the mock server.
+[NOTE]
+====
+`MockWebServiceClient` (and related classes) offers a "`fluent`" API, so you can typically use the code-completion features in your IDE to guide you through the process of setting up the mock server.
+====
 
-NOTE: Also note that you can rely on the standard logging features available in Spring Web Services in your unit tests. Sometimes, it might be useful to inspect the request or response message to find out why a particular tests failed. See <<logging>> for more information.
+[NOTE]
+====
+You can rely on the standard logging features available in Spring-WS in your unit tests. Sometimes, it might be useful to inspect the request or response message to find out why a particular tests failed. See <<logging>> for more information.
+====
 
 Consider, for example, the following web service endpoint class:
 
@@ -1121,8 +1124,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 public class CustomerEndpoint {
 
   @ResponsePayload                                                       // <2>
-  public CustomerCountResponse getCustomerCount(                         // <2>
-      @RequestPayload CustomerCountRequest request) {                    // <2>
+  public CustomerCountResponse getCustomerCount(
+      @RequestPayload CustomerCountRequest request) {
     CustomerCountResponse response = new CustomerCountResponse();
     response.setCustomerCount(10);
     return response;
@@ -1151,49 +1154,49 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.springframework.ws.test.server.MockWebServiceClient;                       // <1>
-import static org.springframework.ws.test.server.RequestCreators.*;                   // <1>
-import static org.springframework.ws.test.server.ResponseMatchers.*;                  // <1>
+import org.springframework.ws.test.server.MockWebServiceClient;
+import static org.springframework.ws.test.server.RequestCreators.*;
+import static org.springframework.ws.test.server.ResponseMatchers.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)                                               // <2>
-@ContextConfiguration("spring-ws-servlet.xml")                                        // <2>
+@RunWith(SpringJUnit4ClassRunner.class)                                               // <1>
+@ContextConfiguration("spring-ws-servlet.xml")
 public class CustomerEndpointIntegrationTest {
 
   @Autowired
-  private ApplicationContext applicationContext;                                      // <3>
+  private ApplicationContext applicationContext;                                      // <2>
 
   private MockWebServiceClient mockClient;
 
   @Before
   public void createClient() {
-    mockClient = MockWebServiceClient.createClient(applicationContext);               // <4>
+    mockClient = MockWebServiceClient.createClient(applicationContext);               // <3>
   }
 
   @Test
   public void customerEndpoint() throws Exception {
-    Source requestPayload = new StringSource(
-      "<customerCountRequest xmlns='http://springframework.org/spring-ws'>" +
-        "<customerName>John Doe</customerName>" +
-      "</customerCountRequest>");
-    Source responsePayload = new StringSource(
-      "<customerCountResponse xmlns='http://springframework.org/spring-ws'>" +
-        "<customerCount>10</customerCount>" +
-      "</customerCountResponse>");
+    Source requestPayload = new StringSource("""
+      <customerCountRequest xmlns='http://springframework.org/spring-ws'>
+        <customerName>John Doe</customerName>
+      </customerCountRequest>
+    """);
+    Source responsePayload = new StringSource("""
+      <customerCountResponse xmlns='http://springframework.org/spring-ws'>
+        <customerCount>10</customerCount>
+      </customerCountResponse>
+    """);
 
-    mockClient.sendRequest(withPayload(requestPayload)).                              // <5>
-      andExpect(payload(responsePayload));                                            // <5>
+    mockClient.sendRequest(withPayload(requestPayload)).                              // <4>
+      andExpect(payload(responsePayload));
   }
 }
 ----
 
-<1> The `CustomerEndpointIntegrationTest` imports the `MockWebServiceClient` and statically imports `RequestCreators` and `ResponseMatchers`.
-<2> This test uses the standard testing facilities provided in the Spring Framework. This is not required but is generally the easiest way to set up the test.
-<3> The application context is a standard Spring-WS application context (see <<message-dispatcher-servlet>>), read from `spring-ws-servlet.xml`. In this case, the application context contains a bean definition for `CustomerEndpoint` (or perhaps a `<context:component-scan />` is used).
-<4> In a `@Before` method, we create a `MockWebServiceClient` by using the `createClient` factory method.
-<5> We send a request by calling `sendRequest()` with a `withPayload()` `RequestCreator` provided by the statically imported `RequestCreators` (see <<server-test-request-creator>>).
-+
+<1> This test uses the standard testing facilities provided in the Spring Framework. This is not required but is generally the easiest way to set up the test.
+<2> The application context is a standard Spring-WS application context (see <<message-dispatcher-servlet>>), read from `spring-ws-servlet.xml`. In this case, the application context contains a bean definition for `CustomerEndpoint` (or perhaps a `<context:component-scan />` is used).
+<3> In a `@Before` method, we create a `MockWebServiceClient` by using the `createClient` factory method.
+<4> We send a request by calling `sendRequest()` with a `withPayload()` `RequestCreator` provided by the statically imported `RequestCreators` (see <<server-test-request-creator>>).
 We also set up response expectations by calling `andExpect()` with a `payload()` `ResponseMatcher` provided by the statically imported `ResponseMatchers` (see <<server-test-response-matcher>>).
-+
+
 This part of the test might look a bit confusing, but the code completion features of your IDE are of great help. After typing `sendRequest(`, your IDE can provide you with a list of possible request creating strategies, provided you statically imported `RequestCreators`. The same applies to `andExpect()`, provided you statically imported `ResponseMatchers`.
 ====
 
@@ -1226,8 +1229,7 @@ When the request message has been processed by the endpoint and a response has b
 ----
 public interface ResponseMatcher {
 
-    void match(WebServiceMessage request,
-               WebServiceMessage response)
+    void match(WebServiceMessage request, WebServiceMessage response)
       throws IOException, AssertionError;
 
 }
@@ -1276,4 +1278,4 @@ mockClient.sendRequest(...).
 ----
 ====
 
-For more information on the response matchers provided by `ResponseMatchers`, see the https://docs.spring.io/spring-ws/docs/current/api/org/springframework/ws/test/server/ResponseMatchers.html[Javadoc].
+For more information on the response matchers provided by `ResponseMatchers`, see the {spring-ws-api}/test/server/ResponseMatchers.html[Javadoc].

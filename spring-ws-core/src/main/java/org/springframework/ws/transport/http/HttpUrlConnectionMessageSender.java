@@ -30,7 +30,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * execute POST requests, without support for HTTP authentication or advanced
  * configuration options.
  * <p>
- * Consider {@link HttpComponentsMessageSender} for more sophisticated needs: this class
+ * Consider {@link HttpComponents5MessageSender} for more sophisticated needs: this class
  * is rather limited in its capabilities.
  *
  * @author Arjen Poutsma

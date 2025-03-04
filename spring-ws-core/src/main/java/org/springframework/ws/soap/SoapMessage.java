@@ -22,10 +22,10 @@ import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.mime.MimeMessage;
 
 /**
- * Represents an abstraction for SOAP messages, providing access to a SOAP Envelope. The
- * contents of the SOAP body can be retrieved by {@code getPayloadSource()} and
- * {@code getPayloadResult()} on {@code WebServiceMessage}, the super-interface of this
- * interface.
+ * Represents an abstraction for SOAP messages, providing access to a
+ * {@linkplain #getEnvelope() SOAP Envelope}. The contents of the SOAP body can be
+ * retrieved by {@link #getPayloadSource()} and {@link #getPayloadResult()} on
+ * {@code WebServiceMessage}, the super-interface of this interface.
  *
  * @author Arjen Poutsma
  * @see #getPayloadSource()
@@ -35,7 +35,9 @@ import org.springframework.ws.mime.MimeMessage;
  */
 public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 
-	/** Returns the {@code SoapEnvelope} associated with this {@code SoapMessage}. */
+	/**
+	 * Returns the {@link SoapEnvelope} associated with this message.
+	 */
 	SoapEnvelope getEnvelope() throws SoapEnvelopeException;
 
 	/**
@@ -51,15 +53,15 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 	void setSoapAction(String soapAction);
 
 	/**
-	 * Returns the {@code SoapBody} associated with this {@code SoapMessage}. This is a
-	 * convenience method for {@code getEnvelope().getBody()}.
+	 * Returns the {@link SoapBody} associated with this message. This is a convenience
+	 * method for {@code getEnvelope().getBody()}.
 	 * @see SoapEnvelope#getBody()
 	 */
 	SoapBody getSoapBody() throws SoapBodyException;
 
 	/**
-	 * Returns the {@code SoapHeader} associated with this {@code SoapMessage}. This is a
-	 * convenience method for {@code getEnvelope().getHeader()}.
+	 * Returns the {@link SoapHeader} associated with this message. This is a convenience
+	 * method for {@code getEnvelope().getHeader()}.
 	 * @see SoapEnvelope#getHeader()
 	 */
 	SoapHeader getSoapHeader() throws SoapHeaderException;

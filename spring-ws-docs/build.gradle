@@ -27,6 +27,8 @@ asciidoctorj {
 	attributes = [
 		"allow-uri-read": true,
 		"numbered": true,
+		"spring-framework-version": springFrameworkVersion,
+		"spring-ws-version": project.version,
 		"toclevels": 4
 	]
 	options = [

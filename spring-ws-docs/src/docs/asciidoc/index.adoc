@@ -1,5 +1,5 @@
 = Spring Web Services Reference Documentation
-Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant, Corneil du Plessis
+Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant, Corneil du Plessis, Stéphane Nicoll
 :doctype: book
 :revnumber: {gradle-project-version}
 :revdate: {localdate}
@@ -7,8 +7,12 @@ Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant, Corneil
 :toclevels: 4
 :source-highlighter: prettify
 :sectnumlevels: 3
-
-(C) 2005-2020 The original authors.
+:docs-site: https://docs.spring.io
+:spring-framework-docs-root: {docs-site}/spring-framework/docs
+:spring-framework-api: {spring-framework-docs-root}/{spring-framework-version}/javadoc-api/org/springframework
+:spring-framework-docs: https://docs.spring.io/spring-framework/reference
+:spring-ws-docs-root: {docs-site}/spring-ws/docs
+:spring-ws-api: {spring-ws-docs-root}/{spring-ws-version}/api/org/springframework/ws
 
 NOTE: Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
 
@@ -21,7 +25,7 @@ include::preface.adoc[leveloffset=+1]
 = I. Introduction
 :sectnums:
 
-This first part of the reference documentation <<what-is-spring-ws,is an overview>> of Spring Web Services and the underlying concepts. Spring-WS is then introduced, and <<why-contract-first,the concepts>> behind contract-first web service development are explained.
+This first part of the reference documentation <<what-is-spring-ws,is an overview>> of Spring Web Services and the underlying concepts. Then, <<why-contract-first,the concepts>> behind contract-first web service development are explained. Finally, the third section provides <<tutorial,a tutorial>>.
 
 include::what-is-spring-ws.adoc[leveloffset=+1]
 
