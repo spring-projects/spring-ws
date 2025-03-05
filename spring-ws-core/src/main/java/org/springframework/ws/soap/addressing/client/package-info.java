@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Client-side WS-Addressing support.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.soap.addressing.client;

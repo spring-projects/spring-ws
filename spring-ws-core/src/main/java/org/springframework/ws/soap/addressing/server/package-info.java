@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains servers-side WS-Addressing support, in the form of {@code EndpointMappings}.
+ * Server-side WS-Addressing support, in the form of {@code EndpointMappings}.
  */
 package org.springframework.ws.soap.addressing.server;

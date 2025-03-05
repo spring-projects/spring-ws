@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Annotations and supporting classes for declarative configuration.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.config.annotation;

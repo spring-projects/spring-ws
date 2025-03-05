@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Matcher support for XMLUnit.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.test.support.matcher.xmlunit2;

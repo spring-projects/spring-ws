@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * X.509 client-certificate authentication support.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.soap.security.x509;

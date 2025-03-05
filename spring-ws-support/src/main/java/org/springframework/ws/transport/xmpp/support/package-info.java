@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Support classes for handling messages via XMPP.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.transport.xmpp.support;

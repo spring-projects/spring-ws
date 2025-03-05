@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Caching support for X.509 client certificates.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.soap.security.x509.cache;

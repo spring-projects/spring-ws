@@ -56,7 +56,6 @@ tasks.named("javadoc") {
 	title = "Spring Web Services ${project.version} API"
 	options {
 		use = true
-		bottom = "Copyright © ${java.time.Year.now()} <a href=\"https://spring.io\">VMware by Broadcom</a>. All rights reserved."
 	}
 }
 

@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Streaming support.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.stream;

@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides an namespace handler for the Spring Web Services namespace.
+ * Provide a namespace handler for the Spring Web Services namespace.
  */
 package org.springframework.ws.config;

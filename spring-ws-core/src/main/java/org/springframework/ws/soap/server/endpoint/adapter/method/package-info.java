@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations for Spring-WS SOAP endpoints.
+ * Method argument resolvers for SOAP headers.
  */
-package org.springframework.ws.soap.server.endpoint.annotation;
+package org.springframework.ws.soap.server.endpoint.adapter.method;

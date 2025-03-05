@@ -15,6 +15,6 @@
  */
 
 /**
- * Package providing support for handling messages via xmpp.
+ * Package providing support for handling messages via XMPP.
  */
 package org.springframework.ws.transport.xmpp;
