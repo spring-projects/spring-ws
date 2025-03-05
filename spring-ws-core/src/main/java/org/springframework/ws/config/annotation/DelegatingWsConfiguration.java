@@ -16,8 +16,12 @@
 
 package org.springframework.ws.config.annotation;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -25,8 +29,8 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResol
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
 
 /**
- * A sub-class of {@code WsConfigurationSupport} that detects and delegates to all beans
- * of type {@link WsConfigurer} allowing them to customize the configuration provided by
+ * A subclass of {@code WsConfigurationSupport} that detects and delegates to all beans of
+ * type {@link WsConfigurer} allowing them to customize the configuration provided by
  * {@code WsConfigurationSupport}. This is the class actually imported by
  * {@link EnableWs @EnableWs}.
  *
@@ -36,13 +40,18 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHa
 @Configuration
 public class DelegatingWsConfiguration extends WsConfigurationSupport {
 
-	private final WsConfigurerComposite configurers = new WsConfigurerComposite();
+	private WsConfigurers configurers = new WsConfigurers(Collections.emptyList());
 
-	@Autowired(required = false)
+	@Deprecated(since = "4.0.12", forRemoval = true)
 	public void setConfigurers(List<WsConfigurer> configurers) {
 		if (configurers != null && !configurers.isEmpty()) {
-			this.configurers.addWsConfigurers(configurers);
+			this.configurers = new WsConfigurers(configurers);
 		}
+	}
+
+	@Autowired
+	public void setConfigurers(ObjectProvider<WsConfigurer> configurers) {
+		this.configurers = new WsConfigurers(configurers);
 	}
 
 	@Override
@@ -58,6 +67,35 @@ public class DelegatingWsConfiguration extends WsConfigurationSupport {
 	@Override
 	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 		this.configurers.addReturnValueHandlers(returnValueHandlers);
+	}
+
+	private static class WsConfigurers implements WsConfigurer {
+
+		private final Supplier<Stream<WsConfigurer>> delegates;
+
+		WsConfigurers(ObjectProvider<WsConfigurer> wsConfigurers) {
+			this.delegates = wsConfigurers::stream;
+		}
+
+		WsConfigurers(List<WsConfigurer> wsConfigurers) {
+			this.delegates = wsConfigurers::stream;
+		}
+
+		@Override
+		public void addInterceptors(List<EndpointInterceptor> interceptors) {
+			this.delegates.get().forEach(configurer -> configurer.addInterceptors(interceptors));
+		}
+
+		@Override
+		public void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
+			this.delegates.get().forEach(configurer -> configurer.addArgumentResolvers(argumentResolvers));
+		}
+
+		@Override
+		public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
+			this.delegates.get().forEach(configurer -> configurer.addReturnValueHandlers(returnValueHandlers));
+		}
+
 	}
 
 }
