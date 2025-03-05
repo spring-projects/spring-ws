@@ -1,49 +1,43 @@
 = Contributing to Spring Web Services
 
-Spring Web Services is released under the Apache 2.0 license. If you would like to contribute
-something, or simply want to hack on the code this document should help you get started.
+Spring Web Services is released under the Apache 2.0 license.
+If you would like to contribute something, or simply want to hack on the code this document should help you get started.
 
 == Code of Conduct
-This project adheres to the Contributor Covenant link:CODE_OF_CONDUCT.adoc[code of
-conduct]. By participating, you  are expected to uphold this code. Please report
-unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
-== Using Github issues
-We use Github issues to track bugs and enhancements. If you have a general usage question
-please ask on https://stackoverflow.com[Stack Overflow]. The Spring Web Services team and the
-broader community monitor the https://stackoverflow.com/tags/spring-ws[`spring-ws`]
-tag.
+This project adheres to the Contributor Covenant https://github.com/spring-projects/spring-ws?tab=coc-ov-file#contributor-code-of-conduct[code of conduct].
+By participating, you are expected to uphold this code. Please report unacceptable behavior to code-of-conduct@spring.io.
 
-If you are reporting a bug, please help to speed up problem diagnosis by providing as much
-information as possible. Submitting a github-hosted sample project replicating the problem helps.
+== Using GitHub issues
+
+We use GitHub issues to track bugs and enhancements.
+If you have a general usage question please ask on https://stackoverflow.com[Stack Overflow].
+The Spring Web Services team and the broader community monitor the https://stackoverflow.com/tags/spring-ws[`spring-ws`] tag.
+
+If you are reporting a bug, please help to speed up problem diagnosis by providing as much information as possible.
+Submitting a github-hosted sample project replicating the problem helps.
 
 == Include a Signed Off By Trailer
 
-All commits must include a __Signed-off-by__ trailer at the end of each commit message to
-indicate that the contributor agrees to the Developer Certificate of Origin.
-For additional details, please refer to the blog post
-https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello
-DCO, Goodbye CLA: Simplifying Contributions to Spring].
+All commits must include a __Signed-off-by__ trailer at the end of each commit message to indicate that the contributor agrees to the Developer Certificate of Origin.
+For additional details, please refer to the blog post https://spring.io/blog/2025/01/06/hello-dco-goodbye-cla-simplifying-contributions-to-spring[Hello DCO, Goodbye CLA: Simplifying Contributions to Spring].
 
 == Code Conventions and Housekeeping
-None of these are essential for a pull request, but they help.  They can also be
-added after the original pull request but before a merge.
+
+None of these are essential for a pull request, but they help.
+They can also be added after the original pull request but before a merge.
 
 * Use the Spring Framework code format conventions.
-* Make sure all new `.java` files to have a simple Javadoc class comment with at least an
-  `@author` tag identifying you, and preferably at least a paragraph on what the class is
-  for.
-* Add the ASF license header comment to all new `.java` files (copy from existing files
-  in the project)
-* Add yourself as an `@author` to the `.java` files that you modify substantially (more
-  than cosmetic changes).
+* Make sure all new `.java` files to have a simple Javadoc class comment with at least an `@author` tag identifying you, and preferably at least a paragraph on what the class is for.
+* Add the ASF license header comment to all new `.java` files (copy from existing files in the project)
+* Add yourself as an `@author` to the `.java` files that you modify substantially (more than cosmetic changes).
 * Add some Javadocs.
 * A few unit tests would help a lot as well -- someone has to do it.
-* If no-one else is using your branch, please rebase it against the current main (or
-  other target branch in the main project).
+* If no-one else is using your branch, please rebase it against the current main (or other target branch in the main project).
 * When writing a commit message please follow http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html[these conventions].
 
 === Building from source
+
 This project includes the Gradle wrapper, meaning you don't have to install any CLI tools to compile.
 Once you've cloned the project, it can be built from the root directory using the following command:
 

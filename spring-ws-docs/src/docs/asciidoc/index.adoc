@@ -25,7 +25,9 @@ include::preface.adoc[leveloffset=+1]
 = I. Introduction
 :sectnums:
 
-This first part of the reference documentation <<what-is-spring-ws,is an overview>> of Spring Web Services and the underlying concepts. Then, <<why-contract-first,the concepts>> behind contract-first web service development are explained. Finally, the third section provides <<tutorial,a tutorial>>.
+This first part of the reference documentation <<what-is-spring-ws,is an overview>> of Spring Web Services and the underlying concepts.
+Then, <<why-contract-first,the concepts>> behind contract-first web service development are explained.
+Finally, the third section provides <<tutorial,a tutorial>>.
 
 include::what-is-spring-ws.adoc[leveloffset=+1]
 
@@ -37,7 +39,8 @@ include::tutorial.adoc[leveloffset=+1]
 = II. Reference
 :sectnums:
 
-This part of the reference documentation details the various components that comprise Spring Web Services. This includes <<common,a chapter>> that discusses the parts common to both client- and server-side WS, a chapter devoted to the specifics of <<server,writing server-side web services>>, a chapter about using web services on <<client,the client-side>>, and a chapter on using <<security,WS-Security>>.
+This part of the reference documentation details the various components that comprise Spring Web Services.
+This includes <<common,a chapter>> that discusses the parts common to both client- and server-side WS, a chapter devoted to the specifics of <<server,writing server-side web services>>, a chapter about using web services on <<client,the client-side>>, and a chapter on using <<security,WS-Security>>.
 
 include::common.adoc[leveloffset=+1]
 
@@ -52,7 +55,8 @@ include::security.adoc[leveloffset=+1]
 = III. Other Resources
 :sectnums:
 
-In addition to this reference documentation, a number of other resources may help you learn how to use Spring Web Services. These additional, third-party resources are enumerated in this section.
+In addition to this reference documentation, a number of other resources may help you learn how to use Spring Web Services.
+These additional, third-party resources are enumerated in this section.
 
 :sectnums!:
 

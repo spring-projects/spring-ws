@@ -3,17 +3,22 @@
 
 == Introduction
 
-Spring Web Services (Spring-WS) is a product of the Spring community and is focused on creating document-driven web services. Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services by using one of the many ways to manipulate XML payloads. The product is based on Spring itself, which means you can use the Spring concepts (such as dependency injection) as an integral part of your web service.
+Spring Web Services (Spring-WS) is a product of the Spring community and is focused on creating document-driven web services.
+Spring Web Services aims to facilitate contract-first SOAP service development, allowing for the creation of flexible web services by using one of the many ways to manipulate XML payloads.
+The product is based on Spring itself, which means you can use the Spring concepts (such as dependency injection) as an integral part of your web service.
 
-People use Spring-WS for many reasons, but most are drawn to it after finding alternative SOAP stacks lacking when it comes to following web service best practices. Spring-WS makes the best practice an easy practice. This includes practices such as the WS-I basic profile, contract-first development, and having a loose coupling between contract and implementation. The other key features of Spring-WS are:
+People use Spring-WS for many reasons, but most are drawn to it after finding alternative SOAP stacks lacking when it comes to following web service best practices.
+Spring-WS makes the best practice an easy practice.
+This includes practices such as the WS-I basic profile, contract-first development, and having a loose coupling between contract and implementation.
+The other key features of Spring-WS are:
 
-* <<features-powerful-mappings>>
-* <<features-xml-api-support>>
-* <<features-flexible-xml-marshalling>>
-* <<features-reusing-your-spring-expertise>>
-* <<features-support-for-ws-security>>
-* <<features-integration-with-spring-security>>
-* <<features-apache-license>>
+* <<features-powerful-mappings>>.
+* <<features-xml-api-support>>.
+* <<features-flexible-xml-marshalling>>.
+* <<features-reusing-your-spring-expertise>>.
+* <<features-support-for-ws-security>>.
+* <<features-integration-with-spring-security>>.
+* <<features-apache-license>>.
 
 [[features-powerful-mappings]]
 === Powerful mappings
@@ -33,7 +38,8 @@ Spring-WS builds on the Object/XML Mapping module in the Spring Framework, which
 [[features-reusing-your-spring-expertise]]
 === Reusing Your Spring expertise
 
-Spring-WS uses Spring application contexts for all configuration, which should help Spring developers get up-to-speed quickly. Also, the architecture of Spring-WS resembles that of Spring-MVC.
+Spring-WS uses Spring application contexts for all configuration, which should help Spring developers get up-to-speed quickly.
+Also, the architecture of Spring-WS resembles that of Spring-MVC.
 
 [[features-support-for-ws-security]]
 === Support for WS-Security
@@ -43,7 +49,8 @@ WS-Security lets you sign SOAP messages, encrypt and decrypt them, or authentica
 [[features-integration-with-spring-security]]
 === Integration with Spring Security
 
-The WS-Security implementation of Spring-WS provides integration with Spring Security. This means you can use your existing Spring Security configuration for your SOAP service as well.
+The WS-Security implementation of Spring-WS provides integration with Spring Security.
+This means you can use your existing Spring Security configuration for your SOAP service as well.
 
 [[features-apache-license]]
 === Apache license
@@ -52,16 +59,22 @@ You can confidently use Spring-WS in your project.
 
 == Runtime environment
 
-Spring-WS requires a standard Java 17 Runtime Environment. Spring-WS is built on Spring Framework 6.x.
+Spring-WS requires a standard Java 17 Runtime Environment.
+Spring-WS is built on Spring Framework 6.x.
 
 Spring-WS consists of a number of modules, which are described in the remainder of this section.
 
-* The XML module (`spring-xml`) contains various XML support classes for Spring-WS. This module is mainly intended for the Spring-WS framework itself and not web service  developers.
-* The Core module (`spring-ws-core`) is the central part of the Spring's web services functionality. It provides the central <<web-service-messages,`WebServiceMessage`>> and <<soap-message,`SoapMessage`>> interfaces, the <<server,server-side>> framework (with powerful message dispatching), the various support classes for implementing web service endpoints, and the <<client,client-side>> `WebServiceTemplate`.
+* The XML module (`spring-xml`) contains various XML support classes for Spring-WS.
+This module is mainly intended for the Spring-WS framework itself and not web service  developers.
+* The Core module (`spring-ws-core`) is the central part of the Spring's web services functionality.
+It provides the central <<web-service-messages,`WebServiceMessage`>> and <<soap-message,`SoapMessage`>> interfaces, the <<server,server-side>> framework (with powerful message dispatching), the various support classes for implementing web service endpoints, and the <<client,client-side>> `WebServiceTemplate`.
 * The Support module (`spring-ws-support`) contains additional transports (JMS, Email, and others).
-* The <<security,Security>> module (`spring-ws-security`) provides a WS-Security implementation that integrates with the core web service package. It lets you sign, decrypt and encrypt, and add principal tokens to SOAP messages. Additionally, it lets you use your existing Spring Security security implementation for authentication and authorization.
+* The <<security,Security>> module (`spring-ws-security`) provides a WS-Security implementation that integrates with the core web service package.
+It lets you sign, decrypt and encrypt, and add principal tokens to SOAP messages.
+Additionally, it lets you use your existing Spring Security implementation for authentication and authorization.
 
-The following figure shows and the dependencies between the Spring-WS modules. Arrows indicate dependencies (that is, Spring-WS Core depends on Spring-XML and the OXM module found in Spring 3 and higher).
+The following figure shows and the dependencies between the Spring-WS modules.
+Arrows indicate dependencies (that is, Spring-WS Core depends on Spring-XML and the Spring OXM).
 
 image::images/spring-deps.png[align="center"]
 
@@ -69,8 +82,8 @@ image::images/spring-deps.png[align="center"]
 
 Spring-WS supports the following standards:
 
-* SOAP 1.1 and 1.2
-* WSDL 1.1 and 2.0 (XSD-based generation is supported only for WSDL 1.1)
-* WS-I Basic Profile 1.0, 1.1, 1.2, and 2.0
-* WS-Addressing 1.0 and the August 2004 draft
-* SOAP Message Security 1.1, Username Token Profile 1.1, X.509 Certificate Token Profile 1.1, SAML Token Profile 1.1, Kerberos Token Profile 1.1, Basic Security Profile 1.1
+* SOAP 1.1 and 1.2.
+* WSDL 1.1 and 2.0 (XSD-based generation is supported only for WSDL 1.1).
+* WS-I Basic Profile 1.0, 1.1, 1.2, and 2.0.
+* WS-Addressing 1.0 and the August 2004 draft.
+* SOAP Message Security 1.1, Username Token Profile 1.1, X.509 Certificate Token Profile 1.1, SAML Token Profile 1.1, Kerberos Token Profile 1.1, Basic Security Profile 1.1.
