@@ -16,11 +16,12 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
-import static org.assertj.core.api.Assertions.*;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTest;
@@ -28,8 +29,8 @@ import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSour
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DomPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 

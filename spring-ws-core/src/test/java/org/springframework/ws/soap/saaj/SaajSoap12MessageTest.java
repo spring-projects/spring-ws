@@ -16,20 +16,20 @@
 
 package org.springframework.ws.soap.saaj;
 
-import static org.assertj.core.api.Assertions.*;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap12.AbstractSoap12MessageTest;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SaajSoap12MessageTest extends AbstractSoap12MessageTest {
 

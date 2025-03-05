@@ -16,16 +16,17 @@
 
 package org.springframework.xml.namespace;
 
-import static org.assertj.core.api.Assertions.*;
-
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import org.springframework.xml.DocumentBuilderFactoryUtils;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class QNameUtilsTest {
 

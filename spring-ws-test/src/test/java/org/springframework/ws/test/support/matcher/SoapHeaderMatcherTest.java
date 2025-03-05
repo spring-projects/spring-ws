@@ -16,19 +16,19 @@
 
 package org.springframework.ws.test.support.matcher;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
+import javax.xml.namespace.QName;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPMessage;
-
-import javax.xml.namespace.QName;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.easymock.EasyMock.createMock;
 
 public class SoapHeaderMatcherTest {
 

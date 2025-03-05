@@ -16,7 +16,11 @@
 
 package org.springframework.ws.soap.saaj.support;
 
-import static org.assertj.core.api.Assertions.*;
+import java.io.InputStream;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.MimeHeaders;
@@ -24,21 +28,18 @@ import jakarta.xml.soap.Name;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.io.InputStream;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
-import org.w3c.dom.Document;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class SaajUtilsTest {
 

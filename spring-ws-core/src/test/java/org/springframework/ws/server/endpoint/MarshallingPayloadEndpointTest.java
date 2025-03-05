@@ -16,7 +16,6 @@
 
 package org.springframework.ws.server.endpoint;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 

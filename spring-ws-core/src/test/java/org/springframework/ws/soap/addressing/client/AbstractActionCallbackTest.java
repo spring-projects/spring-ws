@@ -16,21 +16,19 @@
 
 package org.springframework.ws.soap.addressing.client;
 
-import static org.easymock.EasyMock.*;
+import java.net.URI;
+
+import javax.xml.namespace.QName;
 
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPBodyElement;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.net.URI;
-
-import javax.xml.namespace.QName;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.soap.addressing.AbstractWsAddressingTest;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
 import org.springframework.ws.soap.addressing.messageid.MessageIdStrategy;
@@ -40,6 +38,11 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public abstract class AbstractActionCallbackTest extends AbstractWsAddressingTest {
 

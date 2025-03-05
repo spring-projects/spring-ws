@@ -16,10 +16,11 @@
 
 package org.springframework.xml.xsd;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.io.Resource;
+
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 public class SimpleXsdSchemaTest extends AbstractXsdSchemaTest {
 

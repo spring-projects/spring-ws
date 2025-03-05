@@ -16,14 +16,15 @@
 
 package org.springframework.xml.transform;
 
-import static org.assertj.core.api.Assertions.*;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
+
+import org.springframework.core.io.ClassPathResource;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResourceSourceTest {
 

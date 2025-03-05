@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;

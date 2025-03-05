@@ -16,25 +16,25 @@
 
 package org.springframework.ws.soap.saaj;
 
-import static org.assertj.core.api.Assertions.*;
+import java.util.Iterator;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPBodyElement;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
-
-import java.util.Iterator;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTest;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SaajSoap11MessageTest extends AbstractSoap11MessageTest {
 

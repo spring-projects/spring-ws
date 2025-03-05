@@ -16,7 +16,6 @@
 
 package org.springframework.ws.client.core;
 
-import java.io.IOException;
 import java.net.URI;
 
 import javax.xml.transform.Result;

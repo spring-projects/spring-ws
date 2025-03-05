@@ -16,16 +16,17 @@
 
 package org.springframework.ws.server.endpoint.adapter.method.dom;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadMethodProcessorTest;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractPayloadSourceMethodProcessor;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Dom4jPayloadMethodProcessorTest extends AbstractPayloadMethodProcessorTest {
 

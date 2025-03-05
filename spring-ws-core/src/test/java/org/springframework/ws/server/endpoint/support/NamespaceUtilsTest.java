@@ -16,16 +16,17 @@
 
 package org.springframework.ws.server.endpoint.support;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.lang.reflect.Method;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.server.endpoint.annotation.Namespace;
 import org.springframework.ws.server.endpoint.annotation.Namespaces;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Namespaces({ @Namespace(prefix = "prefix1", uri = "class1"), @Namespace(uri = "class2") })
 public class NamespaceUtilsTest {

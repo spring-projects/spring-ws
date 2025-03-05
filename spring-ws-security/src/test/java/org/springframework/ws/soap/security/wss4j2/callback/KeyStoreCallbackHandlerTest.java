@@ -16,15 +16,16 @@
 
 package org.springframework.ws.soap.security.wss4j2.callback;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.security.KeyStore;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class KeyStoreCallbackHandlerTest {
 

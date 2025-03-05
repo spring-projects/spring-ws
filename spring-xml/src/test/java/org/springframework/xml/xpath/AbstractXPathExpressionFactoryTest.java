@@ -16,7 +16,6 @@
 
 package org.springframework.xml.xpath;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 

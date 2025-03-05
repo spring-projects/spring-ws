@@ -16,18 +16,19 @@
 
 package org.springframework.ws.config;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
 import org.springframework.ws.soap.server.endpoint.interceptor.PayloadRootSmartSoapEndpointInterceptor;
 import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEndpointInterceptor;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class InterceptorsBeanDefinitionParserTest {
 

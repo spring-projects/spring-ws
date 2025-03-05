@@ -28,7 +28,6 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import org.springframework.core.io.ClassPathResource;

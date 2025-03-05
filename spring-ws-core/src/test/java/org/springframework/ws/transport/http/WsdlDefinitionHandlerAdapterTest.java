@@ -16,11 +16,6 @@
 
 package org.springframework.ws.transport.http;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
@@ -28,8 +23,12 @@ import java.net.URI;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -37,8 +36,12 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Document;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class WsdlDefinitionHandlerAdapterTest {
 

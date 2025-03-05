@@ -16,17 +16,18 @@
 
 package org.springframework.ws.mime;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.io.IOException;
 import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.ws.AbstractWebServiceMessageTest;
 import org.springframework.ws.WebServiceMessage;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageTest {
 

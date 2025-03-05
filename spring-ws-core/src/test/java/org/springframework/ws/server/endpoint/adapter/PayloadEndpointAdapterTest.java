@@ -16,9 +16,6 @@
 
 package org.springframework.ws.server.endpoint.adapter;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.easymock.EasyMock.*;
-
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -29,13 +26,21 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xmlunit.assertj.XmlAssert;
+
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.PayloadEndpoint;
 import org.springframework.xml.transform.TransformerFactoryUtils;
-import org.xmlunit.assertj.XmlAssert;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 public class PayloadEndpointAdapterTest {
 

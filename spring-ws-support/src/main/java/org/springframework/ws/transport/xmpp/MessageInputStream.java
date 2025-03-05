@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.jivesoftware.smack.packet.Message;
+
 import org.springframework.util.Assert;
 
 /**

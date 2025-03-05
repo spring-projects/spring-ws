@@ -16,19 +16,20 @@
 
 package org.springframework.ws.soap;
 
-import static org.assertj.core.api.Assertions.*;
-
 import java.util.Locale;
 
 import javax.xml.transform.dom.DOMResult;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xmlunit.assertj.XmlAssert;
+
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractSoapBodyTest extends AbstractSoapElementTest {
 

@@ -16,11 +16,13 @@
 
 package org.springframework.ws.test.support;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.context.support.StaticApplicationContext;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class MockStrategiesHelperTest {
 

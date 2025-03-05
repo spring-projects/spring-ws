@@ -16,10 +16,10 @@
 
 package org.springframework.ws.soap.saaj;
 
-import jakarta.xml.soap.SOAPHeaderElement;
-
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
+
+import jakarta.xml.soap.SOAPHeaderElement;
 
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;

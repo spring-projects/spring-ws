@@ -16,10 +16,7 @@
 
 package org.springframework.xml.xpath;
 
-import java.io.IOException;
 import java.util.Map;
-
-import org.xml.sax.SAXException;
 
 public class JaxenXPathExpressionFactoryTest extends AbstractXPathExpressionFactoryTest {
 
