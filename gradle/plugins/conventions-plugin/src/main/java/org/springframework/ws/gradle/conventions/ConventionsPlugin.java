@@ -33,9 +33,10 @@ public class ConventionsPlugin implements Plugin<Project> {
 	@Override
 	public void apply(Project project) {
 		project.setGroup("org.springframework.ws");
-		project.getPlugins()
-			.withType(JavaBasePlugin.class)
-			.all((plugin) -> new JavaBasePluginConventions().apply(project));
+		project.getPlugins().withType(JavaBasePlugin.class).all((plugin) -> {
+			new JavaBasePluginConventions().apply(project);
+			new CheckstyleConventions().apply(project);
+		});
 		project.getPlugins().withType(JavaPlugin.class).all((plugin) -> new JavaPluginConventions().apply(project));
 		project.getPlugins()
 			.withType(MavenPublishPlugin.class)
