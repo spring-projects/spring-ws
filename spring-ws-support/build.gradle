@@ -30,7 +30,7 @@ dependencies {
 		exclude(group: "commons-logging", module: "commons-logging")
 	}
 	testImplementation("jakarta.annotation:jakarta.annotation-api")
-	testImplementation("org.apache.activemq:artemis-jakarta-server") {
+	testImplementation("org.apache.activemq:activemq-broker") {
 		exclude(group: "commons-logging", module: "commons-logging")
 	}
 	testImplementation("org.apache.logging.log4j:log4j-core")

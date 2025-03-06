@@ -15,11 +15,6 @@
  */
 package org.springframework.ws.transport.jms;
 
-import org.apache.activemq.artemis.core.config.Configuration;
-import org.apache.activemq.artemis.core.config.impl.ConfigurationImpl;
-import org.apache.activemq.artemis.core.server.embedded.EmbeddedActiveMQ;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -38,24 +33,6 @@ public class JmsIntegrationTest {
 
 	@Autowired
 	private WebServiceTemplate webServiceTemplate;
-
-	private static EmbeddedActiveMQ server;
-
-	@BeforeAll
-	static void setUp() throws Exception {
-		Configuration config = new ConfigurationImpl();
-		config.addAcceptorConfiguration("vm", "vm://0");
-		config.addAcceptorConfiguration("tcp", "tcp://127.0.0.1:61616");
-		config.setSecurityEnabled(false);
-		server = new EmbeddedActiveMQ();
-		server.setConfiguration(config);
-		server.start();
-	}
-
-	@AfterAll
-	static void tearDown() throws Exception {
-		server.stop();
-	}
 
 	@Test
 	public void testTemporaryQueue() {
