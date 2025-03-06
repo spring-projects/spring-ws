@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://www.springframework.org/spring-ws/single/schema"
-            xmlns="http://www.springframework.org/spring-ws/single/schema" elementFormDefault="qualified"
-            attributeFormDefault="unqualified">
+			targetNamespace="http://www.springframework.org/spring-ws/single/schema"
+			xmlns="http://www.springframework.org/spring-ws/single/schema"
+			elementFormDefault="qualified"
+			attributeFormDefault="unqualified">
 
 	<xsd:simpleType name="customType">
 		<xsd:restriction base="xsd:string"/>

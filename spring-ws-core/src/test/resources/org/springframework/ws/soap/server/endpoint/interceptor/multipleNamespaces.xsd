@@ -3,6 +3,6 @@
 		targetNamespace="http://springframework.org/spring-ws"
 		elementFormDefault="qualified">
 
-    <element name="GetAllRuleSetsRequest" />
+	<element name="GetAllRuleSetsRequest"/>
 
 </schema>

@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tns="http://schemas.xmlsoap.org/soap/envelope/"
-           targetNamespace="http://schemas.xmlsoap.org/soap/envelope/">
+		   xmlns:tns="http://schemas.xmlsoap.org/soap/envelope/"
+		   targetNamespace="http://schemas.xmlsoap.org/soap/envelope/">
 
 
 	<!-- Envelope, header and body -->
@@ -11,7 +11,8 @@
 		<xs:sequence>
 			<xs:element ref="tns:Header" minOccurs="0"/>
 			<xs:element ref="tns:Body" minOccurs="1"/>
-			<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"
+					processContents="lax"/>
 		</xs:sequence>
 		<xs:anyAttribute namespace="##other" processContents="lax"/>
 	</xs:complexType>
@@ -19,7 +20,8 @@
 	<xs:element name="Header" type="tns:Header"/>
 	<xs:complexType name="Header">
 		<xs:sequence>
-			<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any namespace="##other" minOccurs="0" maxOccurs="unbounded"
+					processContents="lax"/>
 		</xs:sequence>
 		<xs:anyAttribute namespace="##other" processContents="lax"/>
 	</xs:complexType>
@@ -27,12 +29,14 @@
 	<xs:element name="Body" type="tns:Body"/>
 	<xs:complexType name="Body">
 		<xs:sequence>
-			<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"
+					processContents="lax"/>
 		</xs:sequence>
 		<xs:anyAttribute namespace="##any" processContents="lax">
 			<xs:annotation>
 				<xs:documentation>
-					Prose in the spec does not specify that attributes are allowed on the Body element
+					Prose in the spec does not specify that attributes are allowed on the
+					Body element
 				</xs:documentation>
 			</xs:annotation>
 		</xs:anyAttribute>
@@ -52,8 +56,10 @@
 	<xs:simpleType name="encodingStyle">
 		<xs:annotation>
 			<xs:documentation>
-				'encodingStyle' indicates any canonicalization conventions followed in the contents of the containing
-				element. For example, the value 'http://schemas.xmlsoap.org/soap/encoding/' indicates the pattern
+				'encodingStyle' indicates any canonicalization conventions followed in the
+				contents of the containing
+				element. For example, the value
+				'http://schemas.xmlsoap.org/soap/encoding/' indicates the pattern
 				described in SOAP specification
 			</xs:documentation>
 		</xs:annotation>
@@ -82,7 +88,8 @@
 
 	<xs:complexType name="detail">
 		<xs:sequence>
-			<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
+			<xs:any namespace="##any" minOccurs="0" maxOccurs="unbounded"
+					processContents="lax"/>
 		</xs:sequence>
 		<xs:anyAttribute namespace="##any" processContents="lax"/>
 	</xs:complexType>

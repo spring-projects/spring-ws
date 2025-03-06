@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="urn:2"
-            xmlns="urn:2" elementFormDefault="qualified">
+			targetNamespace="urn:2"
+			xmlns="urn:2" elementFormDefault="qualified">
 	<xsd:include schemaLocation="C.xsd"/>
 	<xsd:simpleType name="D">
 		<xsd:restriction base="C"/>

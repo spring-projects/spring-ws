@@ -3,10 +3,10 @@
 		targetNamespace="http://www.springframework.org/spring-ws/test/validation"
 		elementFormDefault="qualified">
 
-    <simpleType name="SizeType">
-        <restriction base="integer">
-            <minInclusive value="2"/>
-            <maxInclusive value="18"/>
-        </restriction>
-    </simpleType>
+	<simpleType name="SizeType">
+		<restriction base="integer">
+			<minInclusive value="2"/>
+			<maxInclusive value="18"/>
+		</restriction>
+	</simpleType>
 </schema>

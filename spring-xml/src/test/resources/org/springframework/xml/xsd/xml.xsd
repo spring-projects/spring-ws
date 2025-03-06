@@ -1,9 +1,9 @@
 <?xml version='1.0'?>
 <?xml-stylesheet href="../2008/09/xsd.xsl" type="text/xsl"?>
 <xs:schema targetNamespace="http://www.w3.org/XML/1998/namespace"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.w3.org/1999/xhtml"
-           xml:lang="en">
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns="http://www.w3.org/1999/xhtml"
+		   xml:lang="en">
 
 	<xs:annotation>
 		<xs:documentation>
@@ -34,7 +34,8 @@
 					</p>
 					<p>
 						See further below in this document for more information about <a
-							href="#usage">how to refer to this schema document from your own
+							href="#usage">how to refer to this schema document from your
+						own
 						XSD schema documents
 					</a> and about <a href="#nsversioning">the
 						namespace-versioning policy governing this schema document</a>.
@@ -136,7 +137,8 @@
 					<p>
 						See
 						<a
-								href="http://www.w3.org/TR/xmlbase/">http://www.w3.org/TR/xmlbase/
+								href="http://www.w3.org/TR/xmlbase/">
+							http://www.w3.org/TR/xmlbase/
 						</a>
 						for information about this attribute.
 					</p>
@@ -161,7 +163,8 @@
 					<p>
 						See
 						<a
-								href="http://www.w3.org/TR/xml-id/">http://www.w3.org/TR/xml-id/
+								href="http://www.w3.org/TR/xml-id/">
+							http://www.w3.org/TR/xml-id/
 						</a>
 						for information about this attribute.
 					</p>

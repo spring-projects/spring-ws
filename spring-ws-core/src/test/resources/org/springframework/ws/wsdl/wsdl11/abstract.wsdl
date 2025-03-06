@@ -3,22 +3,23 @@
 			 xmlns:tns="http://www.springframework.org/spring-ws/wsdl/definitions"
 			 targetNamespace="http://www.springframework.org/spring-ws/wsdl/definitions">
 
-    <import namespace="http://www.springframework.org/spring-ws/wsdl/schemas" location="types.xsd"/>
+	<import namespace="http://www.springframework.org/spring-ws/wsdl/schemas"
+			location="types.xsd"/>
 
-    <message name="responseMessage">
-        <part name="body" element="tns:response"/>
-    </message>
+	<message name="responseMessage">
+		<part name="body" element="tns:response"/>
+	</message>
 
-    <message name="requestMessage">
-        <part name="body" element="tns:request"/>
-    </message>
+	<message name="requestMessage">
+		<part name="body" element="tns:request"/>
+	</message>
 
-    <portType name="portType">
-        <operation name="operation">
-            <input message="tns:requestMessage" name="request"/>
-            <output message="tns:responseMessage" name="response"/>
-        </operation>
-    </portType>
+	<portType name="portType">
+		<operation name="operation">
+			<input message="tns:requestMessage" name="request"/>
+			<output message="tns:responseMessage" name="response"/>
+		</operation>
+	</portType>
 
 </definitions>
 

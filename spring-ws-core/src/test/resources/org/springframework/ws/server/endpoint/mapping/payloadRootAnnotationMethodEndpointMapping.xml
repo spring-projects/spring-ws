@@ -5,14 +5,17 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
-    <bean id="endpoint" class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$MyEndpoint"/>
+	<bean id="endpoint"
+		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$MyEndpoint"/>
 
-    <aop:aspectj-autoproxy/>
+	<aop:aspectj-autoproxy/>
 
-    <bean id="other" class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$OtherBean"/>
+	<bean id="other"
+		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$OtherBean"/>
 
-    <bean id="logAspect" class="org.springframework.ws.server.endpoint.mapping.LogAspect"/>
+	<bean id="logAspect"
+		  class="org.springframework.ws.server.endpoint.mapping.LogAspect"/>
 
-    <bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
+	<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping"/>
 
 </beans>

@@ -5,9 +5,9 @@
 
        http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-1.5.xsd">
 
-    <sws:marshalling-endpoints/>
+	<sws:marshalling-endpoints/>
 
-    <bean id="marshaller" class="org.springframework.ws.config.DummyMarshaller"/>
+	<bean id="marshaller" class="org.springframework.ws.config.DummyMarshaller"/>
 
 </beans>
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
 		<property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
 	</bean>
 
-	<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+	<bean id="messageFactory"
+		  class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
 
 	<bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory"/>
@@ -19,7 +21,8 @@
 		</property>
 	</bean>
 
-	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
+	<bean id="webServiceTemplate"
+		  class="org.springframework.ws.client.core.WebServiceTemplate">
 		<constructor-arg ref="messageFactory"/>
 		<property name="messageSender">
 			<bean class="org.springframework.ws.transport.jms.JmsMessageSender">
@@ -29,7 +32,8 @@
 		<property name="defaultUri" value="jms:RequestQueue?deliveryMode=NON_PERSISTENT"/>
 	</bean>
 
-	<bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher">
+	<bean id="messageDispatcher"
+		  class="org.springframework.ws.soap.server.SoapMessageDispatcher">
 		<property name="endpointMappings">
 			<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
 				<property name="defaultEndpoint">

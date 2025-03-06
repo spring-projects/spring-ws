@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified"
-           targetNamespace="http://mycompany.com/hr/schemas">
+		   elementFormDefault="qualified"
+		   targetNamespace="http://mycompany.com/hr/schemas">
 	<xs:complexType name="EmployeeType">
 		<xs:sequence>
 			<xs:element name="Number" type="xs:integer"/>
