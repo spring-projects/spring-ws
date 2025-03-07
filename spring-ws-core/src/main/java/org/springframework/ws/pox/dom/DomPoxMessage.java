@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import org.springframework.util.Assert;
+import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.pox.PoxMessage;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportOutputStream;
@@ -84,10 +85,25 @@ public class DomPoxMessage implements PoxMessage {
 		return new DOMSource(this.document);
 	}
 
+	/**
+	 * Does this message have a fault?
+	 * @return {@code true} if the message has a fault
+	 * @deprecated as of 4.0.12 with no replacement as this class does not implement
+	 * {@link FaultAwareWebServiceMessage}
+	 */
+	@Deprecated(since = "4.0.12", forRemoval = true)
 	public boolean hasFault() {
 		return false;
 	}
 
+	/**
+	 * Returns the fault reason message.
+	 * @return the fault reason message, if any; returns {@code null} when no fault is
+	 * present
+	 * @deprecated as of 4.0.12 with no replacement as this class does not implement
+	 * {@link FaultAwareWebServiceMessage}
+	 */
+	@Deprecated(since = "4.0.12", forRemoval = true)
 	public String getFaultReason() {
 		return null;
 	}
