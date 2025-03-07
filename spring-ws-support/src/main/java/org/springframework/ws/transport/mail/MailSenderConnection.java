@@ -211,7 +211,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 			try {
 				Thread.sleep(this.receiveTimeout);
 			}
-			catch (InterruptedException e) {
+			catch (InterruptedException ex) {
 				// Re-interrupt current thread, to allow other threads to react.
 				Thread.currentThread().interrupt();
 			}
@@ -313,7 +313,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 
 		private String contentType;
 
-		public ByteArrayDataSource(String contentType, byte[] data) {
+		ByteArrayDataSource(String contentType, byte[] data) {
 			this.data = data;
 			this.contentType = contentType;
 		}

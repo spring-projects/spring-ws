@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Factory to make {@link org.jivesoftware.smack.XMPPConnection} and perform connection
- * and login on the XMPP server
+ * and login on the XMPP server.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
@@ -107,8 +107,8 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 				this.connection.login(this.username, this.password);
 			}
 		}
-		catch (InterruptedException e) {
-			throw new IOException(e);
+		catch (InterruptedException ex) {
+			throw new IOException(ex);
 		}
 	}
 

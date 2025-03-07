@@ -71,8 +71,8 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 			try {
 				this.connection.connect();
 			}
-			catch (InterruptedException e) {
-				throw new IOException(e);
+			catch (InterruptedException ex) {
+				throw new IOException(ex);
 			}
 		}
 	}

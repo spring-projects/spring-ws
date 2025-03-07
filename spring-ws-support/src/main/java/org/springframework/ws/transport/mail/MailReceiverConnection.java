@@ -235,7 +235,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 		private String contentType;
 
-		public ByteArrayDataSource(String contentType, byte[] data) {
+		ByteArrayDataSource(String contentType, byte[] data) {
 			this.data = data;
 			this.contentType = contentType;
 		}

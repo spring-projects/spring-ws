@@ -7,6 +7,7 @@
 	<suppress files="." checks="SpringLambdaCheck"/>
 	<suppress files="." checks="SpringMethodVisibility"/>
 
-	<suppress files="HttpTransportConstants\.java" checks="InterfaceIsType"/>
-	<suppress files="TransportConstants\.java" checks="InterfaceIsType"/>
+	<suppress files=".+TransportConstants\.java" checks="InterfaceIsType"/>
+	<suppress files="spring-ws-support[\\/]src[\\/]main[\\/]java[\\/]org[\\/]springframework[\\/]ws[\\/]transport[\\/]http[\\/]" checks="JavadocPackage"/>
+	<suppress files="spring-ws-support[\\/]src[\\/]main[\\/]java[\\/]org[\\/]springframework[\\/]ws[\\/]transport[\\/]support[\\/]" checks="JavadocPackage"/>
 </suppressions>

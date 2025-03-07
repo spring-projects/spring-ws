@@ -42,7 +42,7 @@ class MessageInputStream extends FilterInputStream {
 		Assert.notNull(message, "'message' must not be null");
 		Assert.notNull(encoding, "'encoding' must not be null");
 		String text = message.getBody();
-		byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
+		byte[] contents = (text != null) ? text.getBytes(encoding) : new byte[0];
 		return new ByteArrayInputStream(contents);
 	}
 

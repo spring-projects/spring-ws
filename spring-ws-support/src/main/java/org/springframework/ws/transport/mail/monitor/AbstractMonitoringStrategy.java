@@ -132,7 +132,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 				}
 			}
 		}
-		return searchTerm != null ? folder.search(searchTerm) : folder.getMessages();
+		return (searchTerm != null) ? folder.search(searchTerm) : folder.getMessages();
 	}
 
 	/**

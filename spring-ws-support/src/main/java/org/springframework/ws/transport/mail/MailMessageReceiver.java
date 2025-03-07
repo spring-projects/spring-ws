@@ -265,7 +265,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 		private final Message message;
 
-		public MessageHandler(Message message) {
+		MessageHandler(Message message) {
 			this.message = message;
 		}
 

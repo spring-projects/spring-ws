@@ -59,7 +59,7 @@ public abstract class MailTransportUtils {
 					try {
 						return new InternetAddress(group);
 					}
-					catch (AddressException e) {
+					catch (AddressException ex) {
 						// try next group
 					}
 				}

@@ -70,8 +70,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		try {
 			this.requestMessage = new Message(JidCreate.from(to), Message.Type.chat);
 		}
-		catch (XmppStringprepException e) {
-			throw new RuntimeException(e);
+		catch (XmppStringprepException ex) {
+			throw new RuntimeException(ex);
 		}
 		this.requestMessage.setThread(thread);
 	}
@@ -141,8 +141,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		try {
 			this.connection.sendStanza(this.requestMessage);
 		}
-		catch (SmackException.NotConnectedException | InterruptedException e) {
-			throw new IOException(e);
+		catch (SmackException.NotConnectedException | InterruptedException ex) {
+			throw new IOException(ex);
 		}
 	}
 
@@ -156,7 +156,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 		StanzaCollector collector = this.connection.createStanzaCollector(packetFilter);
 		try {
-			Stanza packet = this.receiveTimeout >= 0 ? collector.nextResult(this.receiveTimeout)
+			Stanza packet = (this.receiveTimeout >= 0) ? collector.nextResult(this.receiveTimeout)
 					: collector.nextResult();
 			if (packet instanceof Message) {
 				this.responseMessage = (Message) packet;
@@ -166,8 +166,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 						"Wrong packet type: [" + packet.getClass() + "]. Only Messages can be handled.");
 			}
 		}
-		catch (InterruptedException e) {
-			throw new IOException(e);
+		catch (InterruptedException ex) {
+			throw new IOException(ex);
 		}
 	}
 

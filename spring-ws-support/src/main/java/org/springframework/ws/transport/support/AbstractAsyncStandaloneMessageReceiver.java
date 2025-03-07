@@ -72,7 +72,7 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	 * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
 	 */
 	protected TaskExecutor createDefaultTaskExecutor() {
-		String threadNamePrefix = this.beanName != null ? this.beanName + "-" : this.DEFAULT_THREAD_NAME_PREFIX;
+		String threadNamePrefix = (this.beanName != null) ? this.beanName + "-" : this.DEFAULT_THREAD_NAME_PREFIX;
 		return new SimpleAsyncTaskExecutor(threadNamePrefix);
 	}
 

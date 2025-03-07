@@ -262,7 +262,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 				String messageSelector = "JMSCorrelationID = '" + messageId + "'";
 				messageConsumer = this.session.createConsumer(this.responseDestination, messageSelector);
 			}
-			Message message = this.receiveTimeout >= 0 ? messageConsumer.receive(this.receiveTimeout)
+			Message message = (this.receiveTimeout >= 0) ? messageConsumer.receive(this.receiveTimeout)
 					: messageConsumer.receive();
 			if (message instanceof BytesMessage || message instanceof TextMessage) {
 				this.responseMessage = message;

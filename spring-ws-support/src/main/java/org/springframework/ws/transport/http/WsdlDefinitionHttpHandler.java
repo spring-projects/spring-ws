@@ -33,6 +33,8 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
+ * {@link HttpHandler} implementation for WSDL documents.
+ *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
