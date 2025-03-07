@@ -113,7 +113,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 					try {
 						this.logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
 					}
-					catch (URISyntaxException e) {
+					catch (URISyntaxException ex) {
 						// ignore
 					}
 				}

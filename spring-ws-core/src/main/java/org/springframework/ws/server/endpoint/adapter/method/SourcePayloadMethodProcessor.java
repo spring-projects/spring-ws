@@ -155,19 +155,19 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 			final Location parentLocation = getParent().getLocation();
 			return new Location() {
 				public int getLineNumber() {
-					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getLineNumber() : -1;
 				}
 
 				public int getColumnNumber() {
-					return parentLocation != null ? parentLocation.getColumnNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getColumnNumber() : -1;
 				}
 
 				public int getCharacterOffset() {
-					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getLineNumber() : -1;
 				}
 
 				public String getPublicId() {
-					return parentLocation != null ? parentLocation.getPublicId() : null;
+					return (parentLocation != null) ? parentLocation.getPublicId() : null;
 				}
 
 				public String getSystemId() {

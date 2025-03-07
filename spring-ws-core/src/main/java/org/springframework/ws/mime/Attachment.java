@@ -22,7 +22,7 @@ import java.io.InputStream;
 import jakarta.activation.DataHandler;
 
 /**
- * Represents an attachment to a {@link org.springframework.ws.mime.MimeMessage}
+ * Represents an attachment to a {@link org.springframework.ws.mime.MimeMessage}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0

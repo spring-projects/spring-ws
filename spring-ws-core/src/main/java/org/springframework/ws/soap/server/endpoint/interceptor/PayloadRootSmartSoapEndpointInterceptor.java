@@ -66,7 +66,7 @@ public class PayloadRootSmartSoapEndpointInterceptor extends DelegatingSmartSoap
 			return !StringUtils.hasLength(this.localPart) || this.localPart.equals(payloadRootName.getLocalPart());
 
 		}
-		catch (TransformerException e) {
+		catch (TransformerException ex) {
 			return false;
 		}
 	}

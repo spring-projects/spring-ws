@@ -130,7 +130,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("Found location [" + location + "] in " + this.wsdlResource);
 			}
-			return location != null ? URI.create(location) : null;
+			return (location != null) ? URI.create(location) : null;
 		}
 		catch (IOException ex) {
 			throw new WebServiceIOException("Error extracting location from WSDL [" + this.wsdlResource + "]", ex);

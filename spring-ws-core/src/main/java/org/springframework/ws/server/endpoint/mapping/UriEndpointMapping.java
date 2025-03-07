@@ -81,7 +81,7 @@ public class UriEndpointMapping extends AbstractMapBasedEndpointMapping {
 			new URI(key);
 			return true;
 		}
-		catch (URISyntaxException e) {
+		catch (URISyntaxException ex) {
 			return false;
 		}
 	}

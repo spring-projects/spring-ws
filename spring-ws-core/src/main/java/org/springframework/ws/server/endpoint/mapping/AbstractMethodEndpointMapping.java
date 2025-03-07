@@ -44,6 +44,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * that qualify as endpoint. The methods of this bean are then registered under a specific
  * key with {@link #registerEndpoint(Object, MethodEndpoint)}.
  *
+ * @param <T> the type of the key
  * @author Arjen Poutsma
  * @since 1.0.0
  */
@@ -165,7 +166,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		}
 		endpointTypes.addAll(Arrays.asList(endpointType.getInterfaces()));
 		for (Class<?> currentEndpointType : endpointTypes) {
-			final Class<?> targetClass = (specificEndpointType != null ? specificEndpointType : currentEndpointType);
+			final Class<?> targetClass = (specificEndpointType != null) ? specificEndpointType : currentEndpointType;
 			ReflectionUtils.doWithMethods(currentEndpointType, new ReflectionUtils.MethodCallback() {
 				public void doWith(Method method) {
 					Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
@@ -201,7 +202,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 */
 	protected List<T> getLookupKeysForMethod(Method method) {
 		T key = getLookupKeyForMethod(method);
-		return key != null ? Collections.singletonList(key) : Collections.emptyList();
+		return (key != null) ? Collections.singletonList(key) : Collections.emptyList();
 	}
 
 	/**

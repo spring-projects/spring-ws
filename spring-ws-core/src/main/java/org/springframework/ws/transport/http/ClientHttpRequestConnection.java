@@ -98,7 +98,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		List<String> headers = this.response.getHeaders().get(name);
-		return headers != null ? headers.iterator() : Collections.emptyIterator();
+		return (headers != null) ? headers.iterator() : Collections.emptyIterator();
 	}
 
 	@Override

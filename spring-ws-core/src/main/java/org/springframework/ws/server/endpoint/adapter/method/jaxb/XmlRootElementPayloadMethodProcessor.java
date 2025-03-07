@@ -54,7 +54,7 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
 		}
 		else {
 			JAXBElement<?> element = unmarshalElementFromRequestPayload(messageContext, parameterType);
-			return element != null ? element.getValue() : null;
+			return (element != null) ? element.getValue() : null;
 		}
 	}
 

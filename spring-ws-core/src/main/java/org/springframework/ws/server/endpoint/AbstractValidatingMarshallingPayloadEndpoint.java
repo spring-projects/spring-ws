@@ -54,7 +54,7 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 	/** Return the primary Validator for this controller. */
 	public Validator getValidator() {
 		Validator[] validators = getValidators();
-		return (validators != null && validators.length > 0 ? validators[0] : null);
+		return (validators != null && validators.length > 0) ? validators[0] : null;
 	}
 
 	/**

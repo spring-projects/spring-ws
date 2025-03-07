@@ -6,4 +6,7 @@
 	<suppress files="." checks="JavadocMethod"/>
 	<suppress files="." checks="SpringLambdaCheck"/>
 	<suppress files="." checks="SpringMethodVisibility"/>
+
+	<suppress files="HttpTransportConstants\.java" checks="InterfaceIsType"/>
+	<suppress files="TransportConstants\.java" checks="InterfaceIsType"/>
 </suppressions>

@@ -41,7 +41,7 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	public SoapFaultClientException(SoapMessage faultMessage) {
 		super(faultMessage);
 		SoapBody body = faultMessage.getSoapBody();
-		this.soapFault = body != null ? body.getFault() : null;
+		this.soapFault = (body != null) ? body.getFault() : null;
 	}
 
 	/** Returns the {@link SoapFault}. */
@@ -51,7 +51,7 @@ public class SoapFaultClientException extends WebServiceFaultException {
 
 	/** Returns the fault code. */
 	public QName getFaultCode() {
-		return this.soapFault != null ? this.soapFault.getFaultCode() : null;
+		return (this.soapFault != null) ? this.soapFault.getFaultCode() : null;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	 * Note that this message returns the same as {@link #getMessage()}.
 	 */
 	public String getFaultStringOrReason() {
-		return this.soapFault != null ? this.soapFault.getFaultStringOrReason() : null;
+		return (this.soapFault != null) ? this.soapFault.getFaultStringOrReason() : null;
 	}
 
 }

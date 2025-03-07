@@ -30,7 +30,7 @@ import org.springframework.ws.client.WebServiceClientException;
 @SuppressWarnings("serial")
 public class WebServiceValidationException extends WebServiceClientException {
 
-	private SAXParseException[] validationErrors;
+	private final SAXParseException[] validationErrors;
 
 	/**
 	 * Create a new instance of the {@code WebServiceValidationException} class.

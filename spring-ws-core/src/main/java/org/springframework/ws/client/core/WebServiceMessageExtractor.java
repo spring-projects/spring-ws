@@ -35,6 +35,7 @@ import org.springframework.ws.WebServiceMessage;
  * Implementations of this interface perform the actual work of extracting results, but
  * don't need to worry about exception handling, or resource handling.
  *
+ * @param <T> the type of the result object
  * @author Arjen Poutsma
  * @since 1.0.0
  */

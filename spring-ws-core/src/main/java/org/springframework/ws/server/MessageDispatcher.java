@@ -256,7 +256,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				throw ex;
 			}
 			catch (Exception ex) {
-				Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
+				Object endpoint = (mappedEndpoint != null) ? mappedEndpoint.getEndpoint() : null;
 				processEndpointException(messageContext, endpoint, ex);
 				triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
 			}
@@ -390,7 +390,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * returned {@code false}.
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that successfully completed
-	 * @param ex Exception thrown on handler execution, or {@code null} if none
+	 * @param ex exception thrown on handler execution, or {@code null} if none
 	 * @see EndpointInterceptor#afterCompletion
 	 */
 	private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint, int interceptorIndex,

@@ -29,8 +29,8 @@ import org.springframework.ws.WebServiceMessage;
  * file, an {@link InputStreamSource}, or a {@link DataHandler}.
  *
  * @author Arjen Poutsma
- * @see Attachment
  * @since 1.0.0
+ * @see Attachment
  */
 public interface MimeMessage extends WebServiceMessage {
 

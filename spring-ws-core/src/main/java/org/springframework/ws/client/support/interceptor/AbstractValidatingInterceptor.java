@@ -184,8 +184,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				try {
 					errors = this.validator.validate(requestSource);
 				}
-				catch (IOException e) {
-					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
+				catch (IOException ex) {
+					throw new WebServiceIOException("Could not validate response: " + ex.getMessage(), ex);
 				}
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleRequestValidationErrors(messageContext, errors);
@@ -234,8 +234,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				try {
 					errors = this.validator.validate(responseSource);
 				}
-				catch (IOException e) {
-					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
+				catch (IOException ex) {
+					throw new WebServiceIOException("Could not validate response: " + ex.getMessage(), ex);
 				}
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleResponseValidationErrors(messageContext, errors);

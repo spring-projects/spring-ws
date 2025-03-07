@@ -131,7 +131,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			try {
 				this.logger.debug("Accepting incoming [" + connection + "] at [" + connection.getUri() + "]");
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				// ignore
 			}
 		}

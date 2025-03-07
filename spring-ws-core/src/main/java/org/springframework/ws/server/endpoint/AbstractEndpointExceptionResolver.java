@@ -91,11 +91,12 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	/**
 	 * Default implementation that checks whether the given {@code endpoint} is in the set
 	 * of {@link #setMappedEndpoints mapped endpoints}.
-	 * @see #resolveExceptionInternal(MessageContext,Object,Exception)
+	 * @see #resolveExceptionInternal(MessageContext, Object, Exception)
 	 */
 	@Override
 	public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
-		Object mappedEndpoint = endpoint instanceof MethodEndpoint ? ((MethodEndpoint) endpoint).getBean() : endpoint;
+		Object mappedEndpoint = (endpoint instanceof MethodEndpoint methodEndpoint) ? methodEndpoint.getBean()
+				: endpoint;
 		if (this.mappedEndpoints != null && !this.mappedEndpoints.contains(mappedEndpoint)) {
 			return false;
 		}
@@ -144,7 +145,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	 * of the exception
 	 * @param ex the exception that got thrown during endpoint execution
 	 * @return {@code true} if resolved; {@code false} otherwise
-	 * @see #resolveException(MessageContext,Object,Exception)
+	 * @see #resolveException(MessageContext, Object, Exception)
 	 */
 	protected abstract boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex);
 

@@ -152,7 +152,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		try {
 			return new URI(messageId);
 		}
-		catch (URISyntaxException e) {
+		catch (URISyntaxException ex) {
 			return null;
 		}
 	}
@@ -184,9 +184,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		if (address == null) {
 			return null;
 		}
-		List<Node> referenceProperties = this.referencePropertiesExpression != null
+		List<Node> referenceProperties = (this.referencePropertiesExpression != null)
 				? this.referencePropertiesExpression.evaluateAsNodeList(node) : Collections.emptyList();
-		List<Node> referenceParameters = this.referenceParametersExpression != null
+		List<Node> referenceParameters = (this.referenceParametersExpression != null)
 				? this.referenceParametersExpression.evaluateAsNodeList(node) : Collections.emptyList();
 		return new EndpointReference(address, referenceProperties, referenceParameters);
 	}

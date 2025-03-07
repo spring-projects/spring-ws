@@ -37,8 +37,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@link DomPoxMessage}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.pox.dom.DomPoxMessage
  * @since 1.0.0
+ * @see org.springframework.ws.pox.dom.DomPoxMessage
  */
 public class DomPoxMessageFactory extends TransformerObjectSupport implements WebServiceMessageFactory {
 

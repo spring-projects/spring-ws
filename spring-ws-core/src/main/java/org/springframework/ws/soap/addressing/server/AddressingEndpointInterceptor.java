@@ -98,13 +98,13 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
 		MessageAddressingProperties requestMap = this.version
 			.getMessageAddressingProperties((SoapMessage) messageContext.getRequest());
-		EndpointReference replyEpr = !isFault ? requestMap.getReplyTo() : requestMap.getFaultTo();
+		EndpointReference replyEpr = (!isFault) ? requestMap.getReplyTo() : requestMap.getFaultTo();
 		if (handleNoneAddress(messageContext, replyEpr)) {
 			return false;
 		}
 		SoapMessage reply = (SoapMessage) messageContext.getResponse();
 		URI replyMessageId = getMessageId(reply);
-		URI action = isFault ? this.faultAction : this.replyAction;
+		URI action = (isFault) ? this.faultAction : this.replyAction;
 		MessageAddressingProperties replyMap = requestMap.getReplyProperties(replyEpr, action, replyMessageId);
 		this.version.addAddressingHeaders(reply, replyMap);
 		if (handleAnonymousAddress(messageContext, replyEpr)) {

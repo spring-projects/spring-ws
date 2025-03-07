@@ -159,7 +159,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
 		private ByteArrayOutputStream os;
 
-		public ResponseCreatingEventWriter(MessageContext messageContext) {
+		ResponseCreatingEventWriter(MessageContext messageContext) {
 			this.messageContext = messageContext;
 		}
 

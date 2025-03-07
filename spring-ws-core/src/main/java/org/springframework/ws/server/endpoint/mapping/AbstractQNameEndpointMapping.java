@@ -33,7 +33,7 @@ public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpo
 	@Override
 	protected final String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		QName qName = resolveQName(messageContext);
-		return qName != null ? qName.toString() : null;
+		return (qName != null) ? qName.toString() : null;
 	}
 
 	/**

@@ -90,7 +90,7 @@ public abstract class MarshallingUtils {
 
 		private final MimeMessage mimeMessage;
 
-		public MimeMessageContainer(MimeMessage mimeMessage) {
+		MimeMessageContainer(MimeMessage mimeMessage) {
 			this.mimeMessage = mimeMessage;
 		}
 
@@ -112,7 +112,7 @@ public abstract class MarshallingUtils {
 		@Override
 		public DataHandler getAttachment(String contentId) {
 			Attachment attachment = this.mimeMessage.getAttachment(contentId);
-			return attachment != null ? attachment.getDataHandler() : null;
+			return (attachment != null) ? attachment.getDataHandler() : null;
 		}
 
 	}

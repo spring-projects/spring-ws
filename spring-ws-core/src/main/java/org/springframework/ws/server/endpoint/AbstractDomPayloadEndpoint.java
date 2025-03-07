@@ -99,7 +99,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 		Element requestElement = getDocumentElement(request, documentBuilder);
 		Document responseDocument = documentBuilder.newDocument();
 		Element responseElement = invokeInternal(requestElement, responseDocument);
-		return responseElement != null ? new DOMSource(responseElement) : null;
+		return (responseElement != null) ? new DOMSource(responseElement) : null;
 	}
 
 	/**

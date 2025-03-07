@@ -94,7 +94,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * <p>
 	 * <strong>Note</strong> that the given {@code InputSource} is not read, but ignored.
 	 * @param ignored is ignored
-	 * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a
+	 * @throws org.xml.sax.SAXException a SAX exception, possibly wrapping a
 	 * {@code XMLStreamException}
 	 */
 	@Override
@@ -107,7 +107,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * <p>
 	 * <strong>Note</strong> that the given system identifier is not read, but ignored.
 	 * @param ignored is ignored
-	 * @throws SAXException A SAX exception, possibly wrapping a
+	 * @throws SAXException a SAX exception, possibly wrapping a
 	 * {@code XMLStreamException}
 	 */
 	@Override
@@ -171,7 +171,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 
 	private void handleText(Text text) throws SAXException {
 		if (getContentHandler() != null) {
-			char[] ch = text.getValue() != null ? text.getValue().toCharArray() : new char[0];
+			char[] ch = (text.getValue() != null) ? text.getValue().toCharArray() : new char[0];
 			getContentHandler().characters(ch, 0, ch.length);
 		}
 	}

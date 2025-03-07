@@ -68,7 +68,7 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 		}
 		Document responseDocument = DocumentHelper.createDocument();
 		Element responseElement = invokeInternal(requestElement, responseDocument);
-		return responseElement != null ? new DocumentSource(responseElement) : null;
+		return (responseElement != null) ? new DocumentSource(responseElement) : null;
 	}
 
 	/**

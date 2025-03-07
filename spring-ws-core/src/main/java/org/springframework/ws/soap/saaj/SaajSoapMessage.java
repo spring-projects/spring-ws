@@ -150,11 +150,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		MimeHeaders mimeHeaders = getSaajMessage().getMimeHeaders();
 		if (SoapVersion.SOAP_11 == getVersion()) {
 			String[] actions = mimeHeaders.getHeader(TransportConstants.HEADER_SOAP_ACTION);
-			return ObjectUtils.isEmpty(actions) ? TransportConstants.EMPTY_SOAP_ACTION : actions[0];
+			return (ObjectUtils.isEmpty(actions)) ? TransportConstants.EMPTY_SOAP_ACTION : actions[0];
 		}
 		else if (SoapVersion.SOAP_12 == getVersion()) {
 			String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
-			return !ObjectUtils.isEmpty(contentTypes) ? SoapUtils.extractActionFromContentType(contentTypes[0])
+			return (!ObjectUtils.isEmpty(contentTypes)) ? SoapUtils.extractActionFromContentType(contentTypes[0])
 					: TransportConstants.EMPTY_SOAP_ACTION;
 		}
 		else {
@@ -178,7 +178,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 				throw new SaajSoapMessageException("Could not save message", ex);
 			}
 			String[] contentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
-			String contentType = !ObjectUtils.isEmpty(contentTypes) ? contentTypes[0] : getVersion().getContentType();
+			String contentType = (!ObjectUtils.isEmpty(contentTypes)) ? contentTypes[0] : getVersion().getContentType();
 			contentType = SoapUtils.setActionInContentType(contentType, soapAction);
 			mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 			mimeHeaders.removeHeader(TransportConstants.HEADER_SOAP_ACTION);
@@ -295,7 +295,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	private void convertMessageToXop() {
 		MimeHeaders mimeHeaders = this.saajMessage.getMimeHeaders();
 		String[] oldContentTypes = mimeHeaders.getHeader(TransportConstants.HEADER_CONTENT_TYPE);
-		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0]
+		String oldContentType = (!ObjectUtils.isEmpty(oldContentTypes)) ? oldContentTypes[0]
 				: getVersion().getContentType();
 		mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE,
 				CONTENT_TYPE_XOP + ";type=" + '"' + oldContentType + '"');
@@ -304,7 +304,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	private void convertPartToXop() {
 		SOAPPart saajPart = this.saajMessage.getSOAPPart();
 		String[] oldContentTypes = saajPart.getMimeHeader(TransportConstants.HEADER_CONTENT_TYPE);
-		String oldContentType = !ObjectUtils.isEmpty(oldContentTypes) ? oldContentTypes[0]
+		String oldContentType = (!ObjectUtils.isEmpty(oldContentTypes)) ? oldContentTypes[0]
 				: getVersion().getContentType();
 		saajPart.setMimeHeader(TransportConstants.HEADER_CONTENT_TYPE,
 				CONTENT_TYPE_XOP + ";type=" + '"' + oldContentType + '"');

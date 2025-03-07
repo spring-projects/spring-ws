@@ -64,7 +64,7 @@ public abstract class TransportInputStream extends InputStream {
 		try {
 			getInputStream().mark(readlimit);
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			// ignored
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class TransportInputStream extends InputStream {
 		try {
 			return getInputStream().markSupported();
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			return false;
 		}
 	}

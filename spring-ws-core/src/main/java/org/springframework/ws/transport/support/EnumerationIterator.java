@@ -22,6 +22,7 @@ import java.util.Iterator;
 /**
  * Adapts an {@link Enumeration} to follow the interface of {@link Iterator}.
  *
+ * @param <T> the element type
  * @author Arjen Poutsma
  * @since 1.0.0
  */

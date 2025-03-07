@@ -106,7 +106,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 		if (inputStream == null) {
 			inputStream = getRawResponseInputStream();
 		}
-		return isGzipResponse() ? new GZIPInputStream(inputStream) : inputStream;
+		return (isGzipResponse()) ? new GZIPInputStream(inputStream) : inputStream;
 	}
 
 	/** Determine whether the response is a GZIP response. */

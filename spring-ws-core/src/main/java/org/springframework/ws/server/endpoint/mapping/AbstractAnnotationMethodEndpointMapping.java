@@ -31,6 +31,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
  * The methods of each bean carrying @Endpoint will be registered using
  * {@link #registerMethods(String)}.
  *
+ * @param <T> the type of the key
  * @author Arjen Poutsma
  * @since 1.0.0
  */

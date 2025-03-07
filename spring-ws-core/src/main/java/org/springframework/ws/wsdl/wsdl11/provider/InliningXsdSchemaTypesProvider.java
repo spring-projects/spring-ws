@@ -114,7 +114,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 			Document schemaDocument = (Document) result.getNode();
 			return schemaDocument.getDocumentElement();
 		}
-		catch (TransformerException e) {
+		catch (TransformerException ex) {
 			throw new WsdlDefinitionException("Could not transform schema source to Document");
 		}
 	}

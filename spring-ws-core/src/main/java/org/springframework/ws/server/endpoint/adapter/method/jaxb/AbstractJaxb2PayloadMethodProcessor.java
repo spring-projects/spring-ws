@@ -177,7 +177,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	private Source getRequestPayload(MessageContext messageContext) {
 		WebServiceMessage request = messageContext.getRequest();
-		return request != null ? request.getPayloadSource() : null;
+		return (request != null) ? request.getPayloadSource() : null;
 	}
 
 	private JAXBException convertToJaxbException(Exception ex) {
@@ -239,7 +239,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		private Object result;
 
-		public Jaxb2SourceCallback(Class<?> clazz) throws JAXBException {
+		Jaxb2SourceCallback(Class<?> clazz) throws JAXBException {
 			this.unmarshaller = createUnmarshaller(clazz);
 		}
 
@@ -309,7 +309,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		private JAXBElement<T> result;
 
-		public JaxbElementSourceCallback(Class<T> declaredType) throws JAXBException {
+		JaxbElementSourceCallback(Class<T> declaredType) throws JAXBException {
 			this.unmarshaller = createUnmarshaller(declaredType);
 			this.declaredType = declaredType;
 		}

@@ -32,6 +32,7 @@ import org.springframework.ws.soap.SoapElement;
  * SAAJ-specific implementation of the {@code SoapElement} interface. Wraps a
  * {@link jakarta.xml.soap.SOAPElement}.
  *
+ * @param <T> the type of the {@link SOAPElement}
  * @author Arjen Poutsma
  * @since 1.0.0
  */

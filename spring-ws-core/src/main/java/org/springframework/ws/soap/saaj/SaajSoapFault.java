@@ -50,7 +50,7 @@ abstract class SaajSoapFault extends SaajSoapElement<SOAPFault> implements SoapF
 	@Override
 	public SoapFaultDetail getFaultDetail() {
 		Detail saajDetail = getSaajFault().getDetail();
-		return saajDetail != null ? new SaajSoapFaultDetail(saajDetail) : null;
+		return (saajDetail != null) ? new SaajSoapFaultDetail(saajDetail) : null;
 	}
 
 	@Override

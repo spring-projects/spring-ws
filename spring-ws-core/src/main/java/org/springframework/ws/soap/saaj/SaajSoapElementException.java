@@ -19,6 +19,8 @@ package org.springframework.ws.soap.saaj;
 import org.springframework.ws.soap.SoapElementException;
 
 /**
+ * A SAAJ {@link SoapElementException}.
+ *
  * @author Arjen Poutsma
  */
 @SuppressWarnings("serial")

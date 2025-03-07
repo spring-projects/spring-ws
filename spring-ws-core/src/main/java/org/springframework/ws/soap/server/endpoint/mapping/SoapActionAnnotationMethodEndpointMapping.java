@@ -111,7 +111,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	protected String getLookupKeyForMethod(Method method) {
 		SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
-		return soapAction != null ? soapAction.value() : null;
+		return (soapAction != null) ? soapAction.value() : null;
 	}
 
 	@Override

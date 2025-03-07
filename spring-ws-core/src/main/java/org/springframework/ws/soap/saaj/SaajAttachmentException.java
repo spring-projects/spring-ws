@@ -19,6 +19,8 @@ package org.springframework.ws.soap.saaj;
 import org.springframework.ws.mime.AttachmentException;
 
 /**
+ * Exception thrown when a {@link SaajAttachment} could not be accessed.
+ *
  * @author Arjen Poutsma
  */
 @SuppressWarnings("serial")

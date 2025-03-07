@@ -71,7 +71,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		private final String contentType;
 
-		public InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
+		InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
 			this.inputStreamSource = inputStreamSource;
 			this.contentType = contentType;
 		}

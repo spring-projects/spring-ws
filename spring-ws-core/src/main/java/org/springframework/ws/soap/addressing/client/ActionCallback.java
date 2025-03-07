@@ -128,7 +128,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	}
 
 	/**
-	 * Returns the WS-Addressing version
+	 * Returns the WS-Addressing version.
 	 */
 	public AddressingVersion getVersion() {
 		return this.version;

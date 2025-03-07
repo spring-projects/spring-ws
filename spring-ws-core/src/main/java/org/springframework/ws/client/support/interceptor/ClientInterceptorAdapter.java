@@ -32,7 +32,7 @@ import org.springframework.ws.context.MessageContext;
 public abstract class ClientInterceptorAdapter implements ClientInterceptor {
 
 	/**
-	 * Logger available to subclasses
+	 * Logger available to subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 

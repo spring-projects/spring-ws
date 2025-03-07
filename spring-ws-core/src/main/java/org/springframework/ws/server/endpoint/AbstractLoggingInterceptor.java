@@ -112,7 +112,9 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 		return true;
 	}
 
-	/** Does nothing by default */
+	/**
+	 * Does nothing by default.
+	 */
 	@Override
 	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
 	}

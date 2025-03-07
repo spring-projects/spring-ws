@@ -201,7 +201,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	 * By default, the {@link AuthScope#ANY} is returned.
 	 */
 	public AuthScope getAuthScope() {
-		return this.authScope != null ? this.authScope : AuthScope.ANY;
+		return (this.authScope != null) ? this.authScope : AuthScope.ANY;
 	}
 
 	/**

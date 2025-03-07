@@ -32,10 +32,14 @@ import org.springframework.ws.server.EndpointInterceptor;
  */
 public class EndpointInterceptorAdapter implements EndpointInterceptor {
 
-	/** Logger available to subclasses */
+	/**
+	 * Logger available to subclasses.
+	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** Returns {@code false}. */
+	/**
+	 * Returns {@code false}.
+	 */
 	public boolean understands(Element header) {
 		return false;
 	}

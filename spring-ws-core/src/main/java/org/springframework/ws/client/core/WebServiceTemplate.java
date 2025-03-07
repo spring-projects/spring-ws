@@ -208,7 +208,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	public String getDefaultUri() {
 		if (this.destinationProvider != null) {
 			URI uri = this.destinationProvider.getDestination();
-			return uri != null ? uri.toString() : null;
+			return (uri != null) ? uri.toString() : null;
 		}
 		else {
 			return null;
@@ -813,7 +813,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * returned {@code false}.
 	 * @param interceptorIndex index of last interceptor that successfully completed
 	 * @param messageContext the message context
-	 * @param ex Exception thrown on handler execution, or {@code null} if none
+	 * @param ex exception thrown on handler execution, or {@code null} if none
 	 * @see ClientInterceptor#afterCompletion
 	 */
 	private void triggerAfterCompletion(int interceptorIndex, MessageContext messageContext, Exception ex)

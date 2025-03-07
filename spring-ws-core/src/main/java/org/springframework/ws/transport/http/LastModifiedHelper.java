@@ -34,7 +34,7 @@ import org.springframework.xml.transform.TraxUtils;
  * @author Arjen Poutsma
  * @since 1.5.3
  */
-class LastModifiedHelper {
+final class LastModifiedHelper {
 
 	private LastModifiedHelper() {
 	}
@@ -47,7 +47,7 @@ class LastModifiedHelper {
 	static long getLastModified(Source source) {
 		if (source instanceof DOMSource) {
 			Document document = TraxUtils.getDocument((DOMSource) source);
-			return document != null ? getLastModified(document.getDocumentURI()) : -1;
+			return (document != null) ? getLastModified(document.getDocumentURI()) : -1;
 		}
 		else {
 			return getLastModified(source.getSystemId());
@@ -65,7 +65,7 @@ class LastModifiedHelper {
 					}
 				}
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				// ignore
 			}
 		}

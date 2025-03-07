@@ -107,7 +107,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 		Element rootElement = getRootElement(messageContext.getRequest().getPayloadSource());
 		String expression = parameter.getParameterAnnotation(XPathParam.class).value();
 		Object result = xpath.evaluate(expression, rootElement, evaluationReturnType);
-		return useConversionService ? this.conversionService.convert(result, parameterType) : result;
+		return (useConversionService) ? this.conversionService.convert(result, parameterType) : result;
 	}
 
 	private QName getReturnType(Class<?> parameterType) {

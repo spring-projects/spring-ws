@@ -112,17 +112,13 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return this.response != null ? this.response.statusCode() : 0;
+		return (this.response != null) ? this.response.statusCode() : 0;
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-
 		HttpStatus status = HttpStatus.resolve(getResponseCode());
-
-		return status != null //
-				? status.getReasonPhrase() //
-				: "";
+		return (status != null) ? status.getReasonPhrase() : "";
 	}
 
 	@Override

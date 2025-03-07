@@ -88,7 +88,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 				return result;
 			}
 		}
-		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
 			// ignore
 		}
 		return null;

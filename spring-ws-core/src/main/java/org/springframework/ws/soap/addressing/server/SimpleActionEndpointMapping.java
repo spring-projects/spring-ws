@@ -109,7 +109,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
 	/**
 	 * Register all endpoints specified in the action map.
-	 * @param actionMap Map with action URIs as keys and endppint beans or bean names as
+	 * @param actionMap map with action URIs as keys and endpoint beans or bean names as
 	 * values
 	 * @throws BeansException if an endpoint couldn't be registered
 	 * @throws IllegalStateException if there is a conflicting endpoint registered

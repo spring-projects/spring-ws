@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapMessage;
 public interface MessageIdStrategy {
 
 	/**
-	 * Indicates whether the given {@code MessageID} value is a duplicate or not
+	 * Indicates whether the given {@code MessageID} value is a duplicate or not.
 	 * @param messageId the message id
 	 * @return {@code true} if a duplicate; {@code false} otherwise
 	 */

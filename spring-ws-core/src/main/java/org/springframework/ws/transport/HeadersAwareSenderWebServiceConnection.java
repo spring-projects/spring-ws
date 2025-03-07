@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
+ * Specialization of {@link WebServiceConnection} that is able to manage headers.
+ *
  * @author Greg Turnquist
  * @since 2.3
  */

@@ -213,7 +213,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 					postProcess(saajMessage);
 					return new SaajSoapMessage(saajMessage, this.langAttributeOnSoap11FaultString);
 				}
-				catch (SOAPException e) {
+				catch (SOAPException ex2) {
 					// fall-through
 				}
 			}

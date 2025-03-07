@@ -37,13 +37,13 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	@Override
 	public final Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
 		Source requestPayload = getRequestPayload(messageContext);
-		return requestPayload != null ? resolveRequestPayloadArgument(parameter, requestPayload) : null;
+		return (requestPayload != null) ? resolveRequestPayloadArgument(parameter, requestPayload) : null;
 	}
 
 	/** Returns the request payload as {@code Source}. */
 	private Source getRequestPayload(MessageContext messageContext) {
 		WebServiceMessage request = messageContext.getRequest();
-		return request != null ? request.getPayloadSource() : null;
+		return (request != null) ? request.getPayloadSource() : null;
 	}
 
 	/**

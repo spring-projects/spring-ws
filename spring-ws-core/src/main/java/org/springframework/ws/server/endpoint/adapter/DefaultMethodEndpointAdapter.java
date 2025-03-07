@@ -137,7 +137,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	private ClassLoader getClassLoader() {
-		return this.classLoader != null ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
+		return (this.classLoader != null) ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 				.forName(className, getClassLoader());
 			methodArgumentResolvers.add(BeanUtils.instantiateClass(methodArgumentResolverClass));
 		}
-		catch (ClassNotFoundException e) {
+		catch (ClassNotFoundException ex) {
 			this.logger.warn("Could not find \"" + className + "\" on the classpath");
 		}
 	}

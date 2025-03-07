@@ -64,7 +64,7 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse(),
 				"SimpleSoapExceptionResolver requires a SoapMessage");
 		SoapMessage response = (SoapMessage) messageContext.getResponse();
-		String faultString = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
+		String faultString = (StringUtils.hasLength(ex.getMessage())) ? ex.getMessage() : ex.toString();
 		SoapBody body = response.getSoapBody();
 		SoapFault fault = body.addServerOrReceiverFault(faultString, getLocale());
 		customizeFault(messageContext, endpoint, ex, fault);

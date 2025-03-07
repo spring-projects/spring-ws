@@ -75,7 +75,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 
 		String faultStringOrReason = definition.getFaultStringOrReason();
 		if (!StringUtils.hasLength(faultStringOrReason)) {
-			faultStringOrReason = StringUtils.hasLength(ex.getMessage()) ? ex.getMessage() : ex.toString();
+			faultStringOrReason = (StringUtils.hasLength(ex.getMessage())) ? ex.getMessage() : ex.toString();
 		}
 		SoapBody soapBody = ((SoapMessage) messageContext.getResponse()).getSoapBody();
 		SoapFault fault;

@@ -61,7 +61,7 @@ public abstract class WebUtils {
 		}
 		int begin = urlPath.lastIndexOf('/', end) + 1;
 		int paramIndex = urlPath.indexOf(';', begin);
-		end = (paramIndex != -1 && paramIndex < end ? paramIndex : end);
+		end = (paramIndex != -1 && paramIndex < end) ? paramIndex : end;
 		return urlPath.substring(begin, end);
 	}
 

@@ -78,7 +78,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 			try {
 				return new URI(action.value());
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				throw new IllegalArgumentException(
 						"Invalid Action annotation [" + action.value() + "] on [" + method + "]");
 			}
@@ -136,7 +136,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		try {
 			return new URI(action);
 		}
-		catch (URISyntaxException e) {
+		catch (URISyntaxException ex) {
 			throw new IllegalArgumentException(
 					"Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
 		}

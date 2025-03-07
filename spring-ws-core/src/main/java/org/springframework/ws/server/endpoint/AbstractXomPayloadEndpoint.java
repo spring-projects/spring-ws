@@ -81,7 +81,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			requestElement = sourceCallback.element;
 		}
 		Element responseElement = invokeInternal(requestElement);
-		return responseElement != null ? convertResponse(responseElement) : null;
+		return (responseElement != null) ? convertResponse(responseElement) : null;
 	}
 
 	private Source convertResponse(Element responseElement) throws IOException {
@@ -151,8 +151,8 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 				}
 				this.element = document.getRootElement();
 			}
-			catch (ParsingException e) {
-				throw new XomParsingException(e);
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
 			}
 		}
 

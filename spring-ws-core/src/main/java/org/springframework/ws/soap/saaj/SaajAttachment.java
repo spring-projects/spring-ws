@@ -37,7 +37,7 @@ class SaajAttachment implements Attachment {
 
 	private final AttachmentPart saajAttachment;
 
-	public SaajAttachment(AttachmentPart saajAttachment) {
+	SaajAttachment(AttachmentPart saajAttachment) {
 		Assert.notNull(saajAttachment, "saajAttachment must not be null");
 		this.saajAttachment = saajAttachment;
 	}
