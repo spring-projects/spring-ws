@@ -19,9 +19,11 @@ package org.springframework.xml;
 import javax.xml.stream.XMLInputFactory;
 
 /**
+ * General utilities for {@link XMLInputFactory}.
+ *
  * @author Greg Turnquist
  */
-public class XMLInputFactoryUtils {
+public abstract class XMLInputFactoryUtils {
 
 	/**
 	 * Build an {@link XMLInputFactory} and set properties to prevent external entities

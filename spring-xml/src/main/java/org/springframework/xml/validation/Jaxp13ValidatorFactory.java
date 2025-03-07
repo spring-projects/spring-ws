@@ -52,7 +52,7 @@ abstract class Jaxp13ValidatorFactory {
 
 		private Schema schema;
 
-		public Jaxp13Validator(Schema schema) {
+		Jaxp13Validator(Schema schema) {
 			this.schema = schema;
 		}
 

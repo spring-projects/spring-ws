@@ -100,7 +100,8 @@ public class TransformerHelper {
 			synchronized (this) {
 				result = this.transformerFactory;
 				if (result == null) {
-					this.transformerFactory = result = newTransformerFactory(this.transformerFactoryClass);
+					result = newTransformerFactory(this.transformerFactoryClass);
+					this.transformerFactory = result;
 				}
 			}
 		}

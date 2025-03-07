@@ -254,7 +254,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 							return createInputSource(resource);
 						}
 					}
-					catch (IOException e) {
+					catch (IOException ex) {
 						// fall through
 					}
 				}

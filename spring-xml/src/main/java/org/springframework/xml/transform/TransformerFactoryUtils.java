@@ -26,10 +26,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * General utilities of {@link TransformerFactory}.
+ *
  * @author Greg Turnquist
  * @since 3.0.5
  */
-public class TransformerFactoryUtils {
+public abstract class TransformerFactoryUtils {
 
 	private static final Log log = LogFactory.getLog(TransformerFactoryUtils.class);
 
@@ -48,8 +50,8 @@ public class TransformerFactoryUtils {
 		try {
 			return defaultSettings(transformerFactoryClass.getDeclaredConstructor().newInstance());
 		}
-		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
-			throw new TransformerFactoryConfigurationError(e,
+		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
+			throw new TransformerFactoryConfigurationError(ex,
 					"Could not instantiate TransformerFactory [" + transformerFactoryClass + "]");
 		}
 	}
@@ -61,7 +63,7 @@ public class TransformerFactoryUtils {
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 		}
-		catch (IllegalArgumentException e) {
+		catch (IllegalArgumentException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -71,7 +73,7 @@ public class TransformerFactoryUtils {
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 		}
-		catch (IllegalArgumentException e) {
+		catch (IllegalArgumentException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_STYLESHEET + " property not supported by "
 						+ factory.getClass().getCanonicalName());

@@ -60,7 +60,7 @@ abstract class Jaxp15ValidatorFactory {
 
 		private Schema schema;
 
-		public Jaxp15Validator(Schema schema) {
+		Jaxp15Validator(Schema schema) {
 			this.schema = schema;
 		}
 
@@ -79,7 +79,7 @@ abstract class Jaxp15ValidatorFactory {
 			try {
 				validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 			}
-			catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+			catch (SAXNotRecognizedException | SAXNotSupportedException ex) {
 				if (log.isWarnEnabled()) {
 					log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
 							+ validator.getClass().getCanonicalName());
@@ -89,7 +89,7 @@ abstract class Jaxp15ValidatorFactory {
 			try {
 				validator.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 			}
-			catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+			catch (SAXNotRecognizedException | SAXNotSupportedException ex) {
 				if (log.isWarnEnabled()) {
 					log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
 							+ validator.getClass().getCanonicalName());

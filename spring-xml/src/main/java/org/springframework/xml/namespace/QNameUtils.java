@@ -41,8 +41,8 @@ public abstract class QNameUtils {
 	 * @param localPart local part of the {@code QName}
 	 * @param prefix prefix of the {@code QName}. May be ignored.
 	 * @return the created {@code QName}
-	 * @see QName#QName(String,String,String)
 	 * @deprecated in favor of {@link QName#QName(String, String, String)}
+	 * @see QName#QName(String,String,String)
 	 */
 	@Deprecated
 	public static QName createQName(String namespaceUri, String localPart, String prefix) {
@@ -56,8 +56,8 @@ public abstract class QNameUtils {
 	 * returned.
 	 * @param qName the {@code QName} to return the prefix from
 	 * @return the prefix, if available, or an empty string
-	 * @see javax.xml.namespace.QName#getPrefix()
 	 * @deprecated in favor of {@link QName#getPrefix()}
+	 * @see javax.xml.namespace.QName#getPrefix()
 	 */
 	@Deprecated
 	public static String getPrefix(QName qName) {
@@ -65,7 +65,7 @@ public abstract class QNameUtils {
 	}
 
 	/**
-	 * Validates the given String as a QName
+	 * Validates the given String as a QName.
 	 * @param text the qualified name
 	 * @return {@code true} if valid, {@code false} otherwise
 	 */

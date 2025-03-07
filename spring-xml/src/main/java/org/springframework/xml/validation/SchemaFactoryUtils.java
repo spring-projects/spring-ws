@@ -27,10 +27,12 @@ import org.xml.sax.SAXNotSupportedException;
 import org.springframework.util.ResourceUtils;
 
 /**
+ * General utilities for {@link SchemaFactory}.
+ *
  * @author Greg Turnquist
  * @since 3.0.5
  */
-public class SchemaFactoryUtils {
+public abstract class SchemaFactoryUtils {
 
 	private static final Log log = LogFactory.getLog(SchemaFactoryUtils.class);
 
@@ -45,7 +47,7 @@ public class SchemaFactoryUtils {
 		try {
 			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 		}
-		catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+		catch (SAXNotRecognizedException | SAXNotSupportedException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
 						+ schemaFactory.getClass().getCanonicalName());
@@ -57,7 +59,7 @@ public class SchemaFactoryUtils {
 			schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, ResourceUtils.URL_PROTOCOL_FILE + ","
 					+ "jar:file" + "," + "nested" + "," + ResourceUtils.URL_PROTOCOL_WSJAR);
 		}
-		catch (SAXNotRecognizedException | SAXNotSupportedException e) {
+		catch (SAXNotRecognizedException | SAXNotSupportedException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
 						+ schemaFactory.getClass().getCanonicalName());

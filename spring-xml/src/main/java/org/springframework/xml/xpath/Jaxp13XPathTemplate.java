@@ -98,7 +98,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	@Override
 	public double evaluateAsDouble(String expression, Source context) throws XPathException {
 		Double result = (Double) evaluate(expression, context, XPathConstants.NUMBER);
-		return result != null ? result : Double.NaN;
+		return (result != null) ? result : Double.NaN;
 	}
 
 	@Override

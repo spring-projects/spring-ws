@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
  * of mapping each node to a result object, but don't need to worry about exception
  * handling.
  *
+ * @param <T> the type of the result object
  * @author Arjen Poutsma
  * @since 1.0.0
  * @see XPathOperations#evaluate(String,javax.xml.transform.Source,NodeMapper)
