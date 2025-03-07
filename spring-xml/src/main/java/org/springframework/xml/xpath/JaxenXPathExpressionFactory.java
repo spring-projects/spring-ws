@@ -75,7 +75,7 @@ abstract class JaxenXPathExpressionFactory {
 	}
 
 	/** Jaxen implementation of the {@code XPathExpression} interface. */
-	private static class JaxenXpathExpression implements XPathExpression {
+	private static final class JaxenXpathExpression implements XPathExpression {
 
 		private XPath xpath;
 

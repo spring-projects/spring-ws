@@ -151,7 +151,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the
 	 * response.
 	 */
-	private class ResponseCreatingEventWriter implements XMLEventWriter {
+	private final class ResponseCreatingEventWriter implements XMLEventWriter {
 
 		private XMLEventWriter eventWriter;
 

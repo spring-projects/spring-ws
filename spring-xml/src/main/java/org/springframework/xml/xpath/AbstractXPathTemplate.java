@@ -60,7 +60,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 	 * Static inner class that adapts a {@link NodeCallbackHandler} to the interface of
 	 * {@link NodeMapper}.
 	 */
-	private static class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
+	private static final class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
 
 		private final NodeCallbackHandler callbackHandler;
 

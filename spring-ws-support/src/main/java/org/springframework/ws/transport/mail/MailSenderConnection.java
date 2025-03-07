@@ -307,7 +307,7 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		MailTransportUtils.closeService(this.store);
 	}
 
-	private static class ByteArrayDataSource implements DataSource {
+	private static final class ByteArrayDataSource implements DataSource {
 
 		private byte[] data;
 

@@ -194,7 +194,7 @@ public abstract class ResponseCreators {
 	/**
 	 * Adapts a {@link WebServiceMessageCreator} to the {@link ResponseCreator} contract.
 	 */
-	private static class WebServiceMessageCreatorAdapter implements ResponseCreator {
+	private static final class WebServiceMessageCreatorAdapter implements ResponseCreator {
 
 		private final WebServiceMessageCreator adaptee;
 

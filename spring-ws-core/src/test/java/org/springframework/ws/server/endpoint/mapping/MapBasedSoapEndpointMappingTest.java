@@ -102,7 +102,7 @@ public class MapBasedSoapEndpointMappingTest {
 		assertThat(mapping.getEndpointInternal(null)).isNull();
 	}
 
-	private static class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
+	private static final class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
 
 		private String key;
 

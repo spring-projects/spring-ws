@@ -106,7 +106,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		}
 	}
 
-	private class WebServicePacketListener implements StanzaListener {
+	private final class WebServicePacketListener implements StanzaListener {
 
 		@Override
 		public void processStanza(Stanza packet) {

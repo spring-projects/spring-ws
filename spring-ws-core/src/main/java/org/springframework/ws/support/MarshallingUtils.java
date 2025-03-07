@@ -86,7 +86,7 @@ public abstract class MarshallingUtils {
 		}
 	}
 
-	private static class MimeMessageContainer implements MimeContainer {
+	private static final class MimeMessageContainer implements MimeContainer {
 
 		private final MimeMessage mimeMessage;
 

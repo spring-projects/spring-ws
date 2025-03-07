@@ -171,7 +171,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 		return builder.toString();
 	}
 
-	private class StringBufferWriter extends Writer {
+	private final class StringBufferWriter extends Writer {
 
 		private StringBufferWriter() {
 			super(MockWebServiceMessage.this.content);

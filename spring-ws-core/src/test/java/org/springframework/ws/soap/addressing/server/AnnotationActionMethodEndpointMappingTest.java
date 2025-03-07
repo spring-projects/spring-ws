@@ -100,7 +100,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	@Endpoint
 	@Address("mailto:joe@fabrikam123.example")
-	private static class MyEndpoint {
+	private static final class MyEndpoint {
 
 		@Action("http://fabrikam123.example/mail/Delete")
 		public void doIt() {
@@ -109,7 +109,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	}
 
-	private static class MyInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MyInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		public MyInterceptor() {
 			super(new PayloadLoggingInterceptor());
@@ -117,7 +117,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	}
 
-	private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		public MySmartInterceptor() {
 			super(new PayloadLoggingInterceptor());

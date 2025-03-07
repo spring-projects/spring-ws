@@ -128,7 +128,7 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 	}
 
 	@Endpoint
-	private static class MyEndpoint {
+	private static final class MyEndpoint {
 
 		@SoapAction("http://springframework.org/spring-ws/SoapAction")
 		public void doIt() {

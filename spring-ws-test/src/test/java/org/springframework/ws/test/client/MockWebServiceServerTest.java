@@ -420,7 +420,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@XmlRootElement(name = "EnvelopeMatcherRequest")
-	private static class EnvelopeMatcherRequest {
+	private static final class EnvelopeMatcherRequest {
 
 		private String myData;
 
@@ -435,7 +435,7 @@ public class MockWebServiceServerTest {
 	}
 
 	@XmlRootElement(name = "EnvelopeMatcherResponse")
-	private static class EnvelopeMatcherResponse {
+	private static final class EnvelopeMatcherResponse {
 
 		private String myData;
 

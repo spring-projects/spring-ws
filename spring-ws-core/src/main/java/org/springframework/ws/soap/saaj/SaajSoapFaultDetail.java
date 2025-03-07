@@ -71,7 +71,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 		return (Detail) getSaajElement();
 	}
 
-	private static class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
+	private static final class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
 		private final Iterator<DetailEntry> iterator;
 

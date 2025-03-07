@@ -143,7 +143,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		assertThat(response.getSOAPBody().hasFault()).isFalse();
 	}
 
-	private static class PersonValidator implements Validator {
+	private static final class PersonValidator implements Validator {
 
 		@Override
 		public boolean supports(Class<?> clazz) {
@@ -166,7 +166,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 	}
 
-	private static class Person {
+	private static final class Person {
 
 		private String name;
 
@@ -200,7 +200,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 	}
 
-	private static class PersonMarshaller implements Unmarshaller, Marshaller {
+	private static final class PersonMarshaller implements Unmarshaller, Marshaller {
 
 		private final Person person;
 

@@ -192,7 +192,7 @@ public class EndpointMappingTest {
 		assertThat(MyEndpoint.constructorCount).isEqualTo(2);
 	}
 
-	private static class MyEndpoint {
+	private static final class MyEndpoint {
 
 		private static int constructorCount;
 
@@ -202,7 +202,7 @@ public class EndpointMappingTest {
 
 	}
 
-	private static class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		private MySmartEndpointInterceptor() {
 			super(new EndpointInterceptorAdapter());

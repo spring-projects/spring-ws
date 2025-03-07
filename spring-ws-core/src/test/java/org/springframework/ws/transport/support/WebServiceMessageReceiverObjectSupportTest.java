@@ -122,7 +122,7 @@ public class WebServiceMessageReceiverObjectSupportTest {
 		verify(this.connectionMock).receive(this.messageFactory);
 	}
 
-	private static class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {
+	private static final class MyReceiverSupport extends WebServiceMessageReceiverObjectSupport {
 
 	}
 

@@ -364,7 +364,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		return builder.toString();
 	}
 
-	private static class SaajAttachmentIterator implements Iterator<Attachment> {
+	private static final class SaajAttachmentIterator implements Iterator<Attachment> {
 
 		private final Iterator<AttachmentPart> saajIterator;
 

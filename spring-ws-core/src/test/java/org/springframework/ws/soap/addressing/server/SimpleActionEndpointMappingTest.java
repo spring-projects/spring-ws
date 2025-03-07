@@ -92,11 +92,11 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTest {
 		assertThat(endpoint).isNull();
 	}
 
-	private static class Endpoint1 {
+	private static final class Endpoint1 {
 
 	}
 
-	private static class Endpoint2 {
+	private static final class Endpoint2 {
 
 	}
 

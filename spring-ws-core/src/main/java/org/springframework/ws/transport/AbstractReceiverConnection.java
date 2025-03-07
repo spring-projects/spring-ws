@@ -67,7 +67,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 	protected abstract OutputStream getResponseOutputStream() throws IOException;
 
 	/** Implementation of {@code TransportInputStream} for receiving-side connections. */
-	private class RequestTransportInputStream extends TransportInputStream {
+	private final class RequestTransportInputStream extends TransportInputStream {
 
 		@Override
 		protected InputStream createInputStream() throws IOException {
@@ -87,7 +87,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 	}
 
 	/** Implementation of {@code TransportOutputStream} for sending-side connections. */
-	private class ResponseTransportOutputStream extends TransportOutputStream {
+	private final class ResponseTransportOutputStream extends TransportOutputStream {
 
 		@Override
 		public void addHeader(String name, String value) throws IOException {

@@ -224,11 +224,11 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 		return s;
 	}
 
-	private static class MyType {
+	private static final class MyType {
 
 	}
 
-	private static class MyGenericType<T> {
+	private static final class MyGenericType<T> {
 
 	}
 

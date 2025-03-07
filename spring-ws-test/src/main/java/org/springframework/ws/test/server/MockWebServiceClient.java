@@ -193,7 +193,7 @@ public class MockWebServiceClient {
 
 	// ResponseActions
 
-	private static class MockWebServiceClientResponseActions implements ResponseActions {
+	private static final class MockWebServiceClientResponseActions implements ResponseActions {
 
 		private final MessageContext messageContext;
 

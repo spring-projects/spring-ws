@@ -236,7 +236,7 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		return builder.toString();
 	}
 
-	private class ClasspathUriResolver extends DefaultURIResolver {
+	private final class ClasspathUriResolver extends DefaultURIResolver {
 
 		@Override
 		public InputSource resolveEntity(String namespace, String schemaLocation, String baseUri) {

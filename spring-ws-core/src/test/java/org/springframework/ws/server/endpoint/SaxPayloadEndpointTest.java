@@ -83,7 +83,7 @@ public class SaxPayloadEndpointTest extends AbstractPayloadEndpointTest {
 		};
 	}
 
-	private static class TestContentHandler extends DefaultHandler {
+	private static final class TestContentHandler extends DefaultHandler {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) {

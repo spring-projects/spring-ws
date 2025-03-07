@@ -89,7 +89,7 @@ public abstract class PayloadRootUtils {
 		}
 	}
 
-	private static class PayloadRootSourceCallback implements TraxUtils.SourceCallback {
+	private static final class PayloadRootSourceCallback implements TraxUtils.SourceCallback {
 
 		private QName result;
 

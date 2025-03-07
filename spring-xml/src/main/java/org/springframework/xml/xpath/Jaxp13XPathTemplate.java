@@ -164,7 +164,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 		return this.xpathFactory.newXPath();
 	}
 
-	private static class EvaluationCallback implements TraxUtils.SourceCallback {
+	private static final class EvaluationCallback implements TraxUtils.SourceCallback {
 
 		private final XPath xpath;
 

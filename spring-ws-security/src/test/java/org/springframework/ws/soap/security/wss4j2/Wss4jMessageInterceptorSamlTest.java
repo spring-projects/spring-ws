@@ -87,7 +87,7 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 		return new SamlCallbackHandler(crypto, userCert);
 	}
 
-	private static class SamlCallbackHandler implements CallbackHandler {
+	private static final class SamlCallbackHandler implements CallbackHandler {
 
 		private Crypto crypto;
 

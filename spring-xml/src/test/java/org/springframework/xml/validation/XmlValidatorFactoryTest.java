@@ -56,7 +56,7 @@ public class XmlValidatorFactoryTest {
 			.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTest.class), "bla"));
 	}
 
-	private static class NonExistentResource extends AbstractResource {
+	private static final class NonExistentResource extends AbstractResource {
 
 		@Override
 		public Resource createRelative(String relativePath) throws IOException {

@@ -233,7 +233,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	// Callbacks
 
-	private class Jaxb2SourceCallback implements TraxUtils.SourceCallback {
+	private final class Jaxb2SourceCallback implements TraxUtils.SourceCallback {
 
 		private final Unmarshaller unmarshaller;
 
@@ -301,7 +301,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	}
 
-	private class JaxbElementSourceCallback<T> implements TraxUtils.SourceCallback {
+	private final class JaxbElementSourceCallback<T> implements TraxUtils.SourceCallback {
 
 		private final Unmarshaller unmarshaller;
 
@@ -351,7 +351,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	}
 
-	private class Jaxb2ResultCallback implements TraxUtils.ResultCallback {
+	private final class Jaxb2ResultCallback implements TraxUtils.ResultCallback {
 
 		private final Marshaller marshaller;
 
@@ -399,7 +399,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	}
 
-	private class JaxbStreamingPayload implements StreamingPayload {
+	private final class JaxbStreamingPayload implements StreamingPayload {
 
 		private final Object jaxbElement;
 

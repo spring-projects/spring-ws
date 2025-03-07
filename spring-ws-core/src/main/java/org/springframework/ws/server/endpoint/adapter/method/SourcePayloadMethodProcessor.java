@@ -129,7 +129,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 	}
 
 	/** Inner class to avoid a static JAXP 1.4 dependency. */
-	private static class Jaxp14StaxHandler {
+	private static final class Jaxp14StaxHandler {
 
 		private static boolean isStaxSource(Class<?> clazz) {
 			return StAXSource.class.isAssignableFrom(clazz);
@@ -141,7 +141,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 
 	}
 
-	private static class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
+	private static final class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
 
 		private final String systemId;
 

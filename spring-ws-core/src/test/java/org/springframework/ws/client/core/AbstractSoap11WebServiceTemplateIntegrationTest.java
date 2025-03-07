@@ -288,7 +288,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTest {
 
 	/** Servlet that returns and error message for a given status code. */
 	@SuppressWarnings("serial")
-	private static class ErrorServlet extends HttpServlet {
+	private static final class ErrorServlet extends HttpServlet {
 
 		private int sc;
 

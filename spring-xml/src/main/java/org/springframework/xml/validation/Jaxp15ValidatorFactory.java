@@ -56,7 +56,7 @@ abstract class Jaxp15ValidatorFactory {
 		}
 	}
 
-	private static class Jaxp15Validator implements XmlValidator {
+	private static final class Jaxp15Validator implements XmlValidator {
 
 		private Schema schema;
 
@@ -111,7 +111,7 @@ abstract class Jaxp15ValidatorFactory {
 	/**
 	 * {@code ErrorHandler} implementation that stores errors and fatal errors in a list.
 	 */
-	private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
+	private static final class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
 		private List<SAXParseException> errors = new ArrayList<>();
 

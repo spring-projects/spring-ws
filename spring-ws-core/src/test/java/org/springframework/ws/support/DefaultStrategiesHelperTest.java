@@ -105,11 +105,11 @@ public class DefaultStrategiesHelperTest {
 
 	}
 
-	private static class StrategyImpl implements Strategy {
+	private static final class StrategyImpl implements Strategy {
 
 	}
 
-	private static class ContextAwareStrategyImpl implements Strategy, ApplicationContextAware {
+	private static final class ContextAwareStrategyImpl implements Strategy, ApplicationContextAware {
 
 		private ApplicationContext applicationContext;
 

@@ -69,7 +69,7 @@ public class SimpleMethodEndpointMappingTest {
 		assertThat(this.mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
 	}
 
-	private static class MyBean {
+	private static final class MyBean {
 
 		public void prefixMyRequestSuffix() {
 

@@ -229,7 +229,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 		}
 	}
 
-	private static class ByteArrayDataSource implements DataSource {
+	private static final class ByteArrayDataSource implements DataSource {
 
 		private byte[] data;
 

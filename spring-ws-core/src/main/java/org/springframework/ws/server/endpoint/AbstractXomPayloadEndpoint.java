@@ -116,7 +116,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	 */
 	protected abstract Element invokeInternal(Element requestElement) throws Exception;
 
-	private static class XomSourceCallback implements TraxUtils.SourceCallback {
+	private static final class XomSourceCallback implements TraxUtils.SourceCallback {
 
 		private Element element;
 
@@ -206,7 +206,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	}
 
 	@SuppressWarnings("serial")
-	private static class XomParsingException extends NestedRuntimeException {
+	private static final class XomParsingException extends NestedRuntimeException {
 
 		private XomParsingException(ParsingException ex) {
 			super(ex.getMessage(), ex);
@@ -214,7 +214,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
 	}
 
-	private static class StaxStreamConverter {
+	private static final class StaxStreamConverter {
 
 		private static Document convert(XMLStreamReader streamReader) throws XMLStreamException {
 			NodeFactory nodeFactory = new NodeFactory();

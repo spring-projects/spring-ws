@@ -208,7 +208,7 @@ public class MarshallingMethodEndpointAdapterTest {
 		return s;
 	}
 
-	private static class MyType {
+	private static final class MyType {
 
 	}
 

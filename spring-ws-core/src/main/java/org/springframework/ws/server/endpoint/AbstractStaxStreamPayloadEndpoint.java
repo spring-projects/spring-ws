@@ -126,7 +126,7 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the
 	 * response.
 	 */
-	private class ResponseCreatingStreamWriter implements XMLStreamWriter {
+	private final class ResponseCreatingStreamWriter implements XMLStreamWriter {
 
 		private MessageContext messageContext;
 

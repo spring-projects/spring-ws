@@ -258,7 +258,7 @@ public class MarshallingPayloadEndpointTest {
 		verify(this.factoryMock, unmarshaller, marshaller, request, response);
 	}
 
-	private static class SimpleMarshaller implements Marshaller, Unmarshaller {
+	static class SimpleMarshaller implements Marshaller, Unmarshaller {
 
 		@Override
 		public void marshal(Object graph, Result result) throws XmlMappingException {

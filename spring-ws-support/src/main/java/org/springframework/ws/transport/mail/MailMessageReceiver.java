@@ -219,7 +219,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 		MailTransportUtils.closeService(this.store);
 	}
 
-	private class MonitoringRunnable implements SchedulingAwareRunnable {
+	private final class MonitoringRunnable implements SchedulingAwareRunnable {
 
 		@Override
 		public void run() {
@@ -261,7 +261,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 	}
 
-	private class MessageHandler implements SchedulingAwareRunnable {
+	private final class MessageHandler implements SchedulingAwareRunnable {
 
 		private final Message message;
 

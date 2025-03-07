@@ -109,7 +109,7 @@ public class MessageDispatcherServletTest {
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
 
-	private static class DetectWebApplicationContext extends StaticWebApplicationContext {
+	private static final class DetectWebApplicationContext extends StaticWebApplicationContext {
 
 		@Override
 		public void refresh() throws BeansException, IllegalStateException {
@@ -123,7 +123,7 @@ public class MessageDispatcherServletTest {
 
 	}
 
-	private static class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
+	private static final class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
 
 		@Override
 		public void refresh() throws BeansException, IllegalStateException {
