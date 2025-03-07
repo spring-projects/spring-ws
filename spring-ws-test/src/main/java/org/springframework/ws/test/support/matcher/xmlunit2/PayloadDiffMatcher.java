@@ -28,9 +28,8 @@ import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} payloads.
@@ -57,7 +56,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 		Source payload = message.getPayloadSource();
 
 		if (payload == null) {
-			fail("Request message does not contain payload");
+			AssertionErrors.fail("Request message does not contain payload");
 		}
 
 		return createDiff(payload);
@@ -86,8 +85,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {
-
-			fail("Could not transform source to DOMResult" + ex.getMessage());
+			AssertionErrors.fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}
 	}

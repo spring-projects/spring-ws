@@ -48,7 +48,7 @@ public interface RequestXPathExpectations {
 	 * @param expectedValue the expected value
 	 * @return the request matcher
 	 */
-	RequestMatcher evaluatesTo(final boolean expectedValue);
+	RequestMatcher evaluatesTo(boolean expectedValue);
 
 	/**
 	 * Expects the XPath expression to evaluate to the given integer.

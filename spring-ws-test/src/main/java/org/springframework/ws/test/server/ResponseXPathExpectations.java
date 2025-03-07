@@ -50,7 +50,7 @@ public interface ResponseXPathExpectations {
 	 * @param expectedValue the expected value
 	 * @return the request matcher
 	 */
-	ResponseMatcher evaluatesTo(final boolean expectedValue);
+	ResponseMatcher evaluatesTo(boolean expectedValue);
 
 	/**
 	 * Expects the XPath expression to evaluate to the given integer.

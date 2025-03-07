@@ -28,13 +28,12 @@ import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
 import org.springframework.ws.test.support.matcher.xmlunit2.PayloadDiffMatcher;
 import org.springframework.ws.test.support.matcher.xmlunit2.SoapEnvelopeDiffMatcher;
 import org.springframework.xml.transform.ResourceSource;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Factory methods for {@link ResponseMatcher} classes. Typically used to provide input
@@ -139,7 +138,7 @@ public abstract class ResponseMatchers {
 					throws IOException, AssertionError {
 				if (response instanceof FaultAwareWebServiceMessage faultMessage) {
 					if (faultMessage.hasFault()) {
-						fail("Response has a SOAP Fault: \"" + faultMessage.getFaultReason() + "\"");
+						AssertionErrors.fail("Response has a SOAP Fault: \"" + faultMessage.getFaultReason() + "\"");
 					}
 				}
 			}

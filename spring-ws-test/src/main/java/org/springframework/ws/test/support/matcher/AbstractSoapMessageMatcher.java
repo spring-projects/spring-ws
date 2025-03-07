@@ -20,8 +20,7 @@ import java.io.IOException;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import org.springframework.ws.test.support.AssertionErrors;
 
 /**
  * Abstract base class for SOAP-specific {@link WebServiceMessageMatcher} implementations.
@@ -36,7 +35,7 @@ public abstract class AbstractSoapMessageMatcher implements WebServiceMessageMat
 
 	@Override
 	public final void match(WebServiceMessage message) throws IOException, AssertionError {
-		assertTrue("Message is not a SOAP message", message instanceof SoapMessage);
+		AssertionErrors.assertTrue("Message is not a SOAP message", message instanceof SoapMessage);
 		match((SoapMessage) message);
 	}
 

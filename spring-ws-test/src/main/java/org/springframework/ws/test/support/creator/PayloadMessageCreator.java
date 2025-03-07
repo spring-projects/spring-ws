@@ -23,9 +23,8 @@ import javax.xml.transform.TransformerException;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link WebServiceMessageCreator} that creates a request based on a
@@ -56,7 +55,7 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 			this.transformerHelper.transform(this.payload, message.getPayloadResult());
 		}
 		catch (TransformerException ex) {
-			fail("Could not transform request payload to message: " + ex.getMessage());
+			AssertionErrors.fail("Could not transform request payload to message: " + ex.getMessage());
 		}
 	}
 

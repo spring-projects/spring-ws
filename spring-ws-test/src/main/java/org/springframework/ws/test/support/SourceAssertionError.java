@@ -68,7 +68,7 @@ public class SourceAssertionError extends AssertionError {
 		if (sourceString != null) {
 			String newLine = System.lineSeparator();
 			builder.append(newLine);
-			String label = this.sourceLabel != null ? this.sourceLabel : "Source";
+			String label = (this.sourceLabel != null) ? this.sourceLabel : "Source";
 			builder.append(label);
 			builder.append(": ");
 			builder.append(sourceString);

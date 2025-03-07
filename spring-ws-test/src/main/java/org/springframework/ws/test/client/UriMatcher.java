@@ -19,8 +19,7 @@ package org.springframework.ws.test.client;
 import java.net.URI;
 
 import org.springframework.ws.WebServiceMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
+import org.springframework.ws.test.support.AssertionErrors;
 
 /**
  * Matches {@link URI}s.
@@ -38,7 +37,8 @@ class UriMatcher implements RequestMatcher {
 
 	@Override
 	public void match(URI actual, WebServiceMessage request) {
-		assertEquals("Unexpected connection", this.expected, actual, "Payload", request.getPayloadSource());
+		AssertionErrors.assertEquals("Unexpected connection", this.expected, actual, "Payload",
+				request.getPayloadSource());
 	}
 
 }
