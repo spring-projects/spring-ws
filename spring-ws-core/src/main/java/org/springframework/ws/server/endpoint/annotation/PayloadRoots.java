@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
  * Marks an endpoint method as containing multiple {@link PayloadRoot PayloadRoots}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
  * @since 2.2
+ * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

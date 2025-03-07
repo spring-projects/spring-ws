@@ -59,8 +59,8 @@ import org.springframework.xml.transform.TraxUtils;
  * elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
- * @see Element
  * @since 1.0.0
+ * @see Element
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

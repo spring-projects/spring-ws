@@ -32,9 +32,9 @@ import org.springframework.util.StringUtils;
  *
  * @author Stephen More
  * @author Arjen Poutsma
+ * @since 2.1.2
  * @see KeyManager
  * @see KeyManagerFactory
- * @since 2.1.2
  */
 public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, InitializingBean {
 

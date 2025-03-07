@@ -49,8 +49,8 @@ import org.springframework.beans.BeansException;
  * bean definitions with different {@code address} property values.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
  * @since 1.5.0
+ * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
  */
 public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 

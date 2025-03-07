@@ -27,9 +27,9 @@ package org.springframework.ws.test.server;
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
+ * @since 2.0
  * @see org.springframework.ws.test.client.RequestMatchers#xpath(String)
  * @see org.springframework.ws.test.client.RequestMatchers#xpath(String, java.util.Map)
- * @since 2.0
  */
 public interface ResponseXPathExpectations {
 

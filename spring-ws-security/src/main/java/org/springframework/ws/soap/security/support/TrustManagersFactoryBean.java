@@ -31,9 +31,9 @@ import org.springframework.util.StringUtils;
  * Uses the {@link TrustManagerFactory} to create the {@code TrustManager}s.
  *
  * @author Arjen Poutsma
+ * @since 2.2
  * @see TrustManager
  * @see TrustManagerFactory
- * @since 2.2
  */
 public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, InitializingBean {
 

@@ -21,8 +21,8 @@ package org.springframework.ws.server;
  * interceptors.
  *
  * @author Arjen Poutsma
- * @see EndpointInterceptor
  * @since 1.0.0
+ * @see EndpointInterceptor
  */
 public class EndpointInvocationChain {
 

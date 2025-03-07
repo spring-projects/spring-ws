@@ -41,9 +41,9 @@ import org.springframework.ws.transport.TransportConstants;
  * {@link Name} objects to {@link QName}s and vice-versa, and SAAJ version checking.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see Name
  * @see QName
- * @since 1.0.0
  */
 public abstract class SaajUtils {
 

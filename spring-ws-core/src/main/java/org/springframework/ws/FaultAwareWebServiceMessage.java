@@ -24,8 +24,8 @@ import javax.xml.namespace.QName;
  * often require different processing rules.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.soap.SoapMessage
  * @since 1.0.0
+ * @see org.springframework.ws.soap.SoapMessage
  */
 public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 

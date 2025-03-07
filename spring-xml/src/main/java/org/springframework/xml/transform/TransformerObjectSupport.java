@@ -33,8 +33,8 @@ import org.apache.commons.logging.LogFactory;
  * thread-safe.
  *
  * @author Arjen Poutsma
- * @see Transformer
  * @since 1.0.0
+ * @see Transformer
  */
 public abstract class TransformerObjectSupport {
 

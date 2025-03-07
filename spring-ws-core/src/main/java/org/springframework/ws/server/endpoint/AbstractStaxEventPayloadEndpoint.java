@@ -43,11 +43,11 @@ import org.springframework.ws.context.MessageContext;
  * create a response using a {@code XMLEventWriter}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
  * javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

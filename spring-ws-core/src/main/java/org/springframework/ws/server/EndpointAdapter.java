@@ -28,8 +28,8 @@ import org.springframework.ws.context.MessageContext;
  * who want to develop their own message flow.
  *
  * @author Arjen Poutsma
- * @see MessageDispatcher
  * @since 1.0.0
+ * @see MessageDispatcher
  */
 public interface EndpointAdapter {
 

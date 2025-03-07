@@ -38,8 +38,8 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
  * @since 2.3.0
+ * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
  */
 public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler implements InitializingBean {
 

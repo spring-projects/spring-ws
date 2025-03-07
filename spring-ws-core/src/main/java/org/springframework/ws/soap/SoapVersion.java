@@ -23,9 +23,9 @@ import javax.xml.namespace.QName;
  * properties for elements that make up a soap envelope.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #SOAP_11
  * @see #SOAP_12
- * @since 1.0.0
  */
 public interface SoapVersion {
 

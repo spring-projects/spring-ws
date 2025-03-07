@@ -33,10 +33,10 @@ import org.springframework.ws.context.MessageContext;
  * if all {@code handlerRequest} methods have returned {@code true}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping
  * @see org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping
  * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping
- * @since 1.0.0
  */
 public interface EndpointMapping {
 

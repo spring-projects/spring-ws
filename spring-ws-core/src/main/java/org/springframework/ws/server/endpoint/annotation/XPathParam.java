@@ -35,8 +35,8 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
  * @since 1.0.0
+ * @see org.springframework.ws.server.endpoint.adapter.method.XPathParamMethodArgumentResolver
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

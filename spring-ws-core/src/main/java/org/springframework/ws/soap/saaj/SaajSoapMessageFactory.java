@@ -60,8 +60,8 @@ import org.springframework.ws.transport.TransportInputStream;
  * @author Arjen Poutsma
  * @author Greg Turnquist
  * @author Corneil du Plessis
- * @see org.springframework.ws.soap.saaj.SaajSoapMessage
  * @since 1.0.0
+ * @see org.springframework.ws.soap.saaj.SaajSoapMessage
  */
 public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingBean {
 

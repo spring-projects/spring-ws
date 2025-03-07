@@ -45,9 +45,9 @@ import org.springframework.ws.transport.WebServiceConnection;
  * {@link HttpClient}.
  *
  * @author Marten Deinum
+ * @since 4.0
  * @see java.net.http.HttpClient
  * @see java.net.http.HttpRequest
- * @since 4.0
  */
 public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 

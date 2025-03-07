@@ -28,8 +28,8 @@ import org.springframework.ws.client.WebServiceClientException;
  * testability, as it can easily be mocked or stubbed.
  *
  * @author Arjen Poutsma
- * @see WebServiceTemplate
  * @since 1.0.0
+ * @see WebServiceTemplate
  */
 public interface WebServiceOperations {
 

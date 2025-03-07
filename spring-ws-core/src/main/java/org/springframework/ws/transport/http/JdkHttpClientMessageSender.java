@@ -34,8 +34,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * with a pre-configured {@code HttpClient}.
  *
  * @author Marten Deinum
- * @see java.net.http.HttpClient
  * @since 4.0
+ * @see java.net.http.HttpClient
  */
 public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSender implements InitializingBean {
 

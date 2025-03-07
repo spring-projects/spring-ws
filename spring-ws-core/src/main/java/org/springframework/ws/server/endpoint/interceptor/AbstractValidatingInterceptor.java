@@ -51,9 +51,9 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * using the {@code validateRequest} and {@code validateResponse} properties.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getValidationRequestSource(org.springframework.ws.WebServiceMessage)
  * @see #getValidationResponseSource(org.springframework.ws.WebServiceMessage)
- * @since 1.0.0
  */
 public abstract class AbstractValidatingInterceptor extends TransformerObjectSupport
 		implements EndpointInterceptor, InitializingBean {

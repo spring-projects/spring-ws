@@ -28,10 +28,10 @@ import org.springframework.ws.mime.MimeMessage;
  * {@code WebServiceMessage}, the super-interface of this interface.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getPayloadSource()
  * @see #getPayloadResult()
  * @see #getEnvelope()
- * @since 1.0.0
  */
 public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 

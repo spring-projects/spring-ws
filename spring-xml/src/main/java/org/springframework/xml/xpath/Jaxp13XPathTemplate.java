@@ -54,8 +54,8 @@ import org.springframework.xml.transform.TraxUtils;
  * Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
- * @see #setNamespaces(java.util.Map)
  * @since 1.0.0
+ * @see #setNamespaces(java.util.Map)
  */
 public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 

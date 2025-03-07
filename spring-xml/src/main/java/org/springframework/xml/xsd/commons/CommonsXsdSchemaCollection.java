@@ -57,8 +57,8 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * schemas.
  *
  * @author Arjen Poutsma
- * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
  * @since 1.5.0
+ * @see <a href="http://ws.apache.org/commons/XmlSchema/">Commons XML Schema</a>
  */
 public class CommonsXsdSchemaCollection implements XsdSchemaCollection, InitializingBean, ResourceLoaderAware {
 

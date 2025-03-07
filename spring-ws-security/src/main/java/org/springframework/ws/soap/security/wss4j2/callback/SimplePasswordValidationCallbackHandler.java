@@ -35,8 +35,8 @@ import org.springframework.util.Assert;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see #setUsers(java.util.Properties)
  * @since 2.3.0
+ * @see #setUsers(java.util.Properties)
  */
 public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordCallbackHandler
 		implements InitializingBean {

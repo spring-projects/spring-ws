@@ -25,8 +25,8 @@ import javax.xml.transform.Source;
  * The base interface for all elements that are contained in a SOAP message.
  *
  * @author Arjen Poutsma
- * @see SoapMessage
  * @since 1.0.0
+ * @see SoapMessage
  */
 public interface SoapElement {
 

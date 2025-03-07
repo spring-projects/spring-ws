@@ -40,10 +40,10 @@ import org.springframework.ws.context.MessageContext;
  * response using a {@code XMLStreamWriter}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #invokeInternal(javax.xml.stream.XMLStreamReader,javax.xml.stream.XMLStreamWriter)
  * @see XMLStreamReader
  * @see XMLStreamWriter
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

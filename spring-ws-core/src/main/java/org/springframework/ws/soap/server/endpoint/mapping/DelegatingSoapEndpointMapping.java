@@ -38,9 +38,9 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  * endpoint, as described in the SOAP specificication, this mapping is useful.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.ws.soap.SoapHeader#examineMustUnderstandHeaderElements(String)
  * @see org.springframework.ws.soap.SoapVersion#getNextActorOrRoleUri()
- * @since 1.0.0
  */
 public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndpointMapping {
 

@@ -52,9 +52,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * simply not transformed. Setting one of the two is required, though.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setRequestXslt(org.springframework.core.io.Resource)
  * @see #setResponseXslt(org.springframework.core.io.Resource)
- * @since 1.0.0
  */
 public class PayloadTransformingInterceptor extends TransformerObjectSupport
 		implements EndpointInterceptor, InitializingBean {

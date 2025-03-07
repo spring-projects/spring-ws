@@ -27,8 +27,8 @@ import org.springframework.util.Assert;
  * transport.
  *
  * @author Arjen Poutsma
- * @see #addHeader(String,String)
  * @since 1.0.0
+ * @see #addHeader(String,String)
  */
 public abstract class TransportOutputStream extends OutputStream {
 

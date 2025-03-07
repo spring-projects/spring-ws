@@ -40,9 +40,9 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
  * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents
  * HttpClient 5.
  *
- * @see <a href=https://hc.apache.org/httpcomponents-client>HttpComponents</a>
  * @author Lars Uffmann
  * @since 4.0.5
+ * @see <a href=https://hc.apache.org/httpcomponents-client>HttpComponents</a>
  */
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
 

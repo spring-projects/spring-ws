@@ -30,8 +30,8 @@ import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
  *
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see WSUsernameTokenPrincipalImpl
  * @since 2.3.0
+ * @see WSUsernameTokenPrincipalImpl
  */
 public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 

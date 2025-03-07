@@ -47,9 +47,9 @@ import org.springframework.ws.support.MarshallingUtils;
  * set using properties.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of
  * {@link DefaultMethodEndpointAdapter} and
  * {@link org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor

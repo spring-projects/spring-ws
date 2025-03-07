@@ -39,13 +39,13 @@ import org.springframework.ws.soap.SoapMessage;
  * overriding {@code handleRequestValidationErrors}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setAddValidationErrorDetail(boolean)
  * @see #setFaultStringOrReason(String)
  * @see #DEFAULT_FAULTSTRING_OR_REASON
  * @see #setDetailElementName(javax.xml.namespace.QName)
  * @see #DEFAULT_DETAIL_ELEMENT_NAME
  * @see #handleResponseValidationErrors(org.springframework.ws.context.MessageContext,org.xml.sax.SAXParseException[])
- * @since 1.0.0
  */
 public abstract class AbstractFaultCreatingValidatingInterceptor extends AbstractValidatingInterceptor {
 

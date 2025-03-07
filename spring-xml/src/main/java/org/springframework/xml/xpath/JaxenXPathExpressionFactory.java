@@ -32,8 +32,8 @@ import org.w3c.dom.Node;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see #createXPathExpression(String)
  * @since 1.0.0
+ * @see #createXPathExpression(String)
  */
 abstract class JaxenXPathExpressionFactory {
 

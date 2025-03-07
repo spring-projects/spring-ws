@@ -23,8 +23,8 @@ import javax.xml.transform.Result;
  * {@code SoapHeaderElement}s are contained in a {@code SoapHeader}.
  *
  * @author Arjen Poutsma
- * @see SoapHeader
  * @since 1.0.0
+ * @see SoapHeader
  */
 public interface SoapHeaderElement extends SoapElement {
 

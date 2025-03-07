@@ -25,9 +25,9 @@ import org.springframework.ws.server.EndpointInvocationChain;
  * the MustUnderstand headers for particular endpoint.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getActorsOrRoles()
  * @see SoapMessageDispatcher
- * @since 1.0.0
  */
 public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 

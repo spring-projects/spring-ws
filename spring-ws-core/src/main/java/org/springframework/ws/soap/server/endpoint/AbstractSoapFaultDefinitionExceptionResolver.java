@@ -34,9 +34,9 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
  * template method that provides the definition for a given exception.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setDefaultFault(SoapFaultDefinition)
  * @see #getFaultDefinition(Object,Exception)
- * @since 1.0.0
  */
 public abstract class AbstractSoapFaultDefinitionExceptionResolver extends AbstractEndpointExceptionResolver {
 

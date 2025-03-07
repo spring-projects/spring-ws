@@ -33,8 +33,8 @@ import org.springframework.util.Assert;
  * implementations to Jaxen.
  *
  * @author Arjen Poutsma
- * @see XPathExpression
  * @since 1.0.0
+ * @see XPathExpression
  */
 public abstract class XPathExpressionFactory {
 

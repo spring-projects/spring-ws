@@ -95,9 +95,9 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code jms:Queue?messageType=TEXT_MESSAGE}</blockquote>
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see <a href="https://datatracker.ietf.org/doc/rfc6167">IRI Scheme for Java(tm) Message
  * Service 1.0</a>
- * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 

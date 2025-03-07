@@ -27,9 +27,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@code XMLOutputFactory}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see XMLInputFactory
  * @see XMLOutputFactory
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

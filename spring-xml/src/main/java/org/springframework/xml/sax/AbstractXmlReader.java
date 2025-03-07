@@ -30,11 +30,11 @@ import org.xml.sax.ext.LexicalHandler;
  * defined in {@link XMLReader}, and does not recognize any features
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setContentHandler(org.xml.sax.ContentHandler)
  * @see #setDTDHandler(org.xml.sax.DTDHandler)
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
- * @since 1.0.0
  */
 public abstract class AbstractXmlReader implements XMLReader {
 

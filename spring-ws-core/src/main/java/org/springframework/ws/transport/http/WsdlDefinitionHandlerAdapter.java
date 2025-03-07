@@ -65,11 +65,11 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  * attributes to change.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see WsdlDefinition
  * @see #setTransformLocations(boolean)
  * @see #setLocationExpression(String)
  * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
- * @since 1.0.0
  */
 public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSupport
 		implements HandlerAdapter, InitializingBean {

@@ -55,8 +55,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Arjen Poutsma
  * @author Greg Turnquist
  * @author Lars Uffmann
- * @see HttpClient
  * @since 4.0.5
+ * @see HttpClient
  */
 public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageSender
 		implements InitializingBean, DisposableBean {

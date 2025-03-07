@@ -35,8 +35,8 @@ import javax.xml.transform.TransformerException;
  * don't need to worry about exception handling, or resource handling.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate
  * @since 1.0.0
+ * @see org.springframework.ws.client.core.WebServiceTemplate
  */
 public interface SourceExtractor<T> {
 

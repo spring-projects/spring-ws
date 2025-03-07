@@ -58,8 +58,8 @@ import org.springframework.ws.transport.TransportOutputStream;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see SOAPMessage
  * @since 1.0.0
+ * @see SOAPMessage
  */
 public class SaajSoapMessage extends AbstractSoapMessage {
 

@@ -36,8 +36,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@link org.springframework.ws.client.core.WebServiceTemplate}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate
  * @since 1.0.0
+ * @see org.springframework.ws.client.core.WebServiceTemplate
  */
 public abstract class WebServiceAccessor extends TransformerObjectSupport implements InitializingBean {
 

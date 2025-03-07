@@ -22,8 +22,8 @@ package org.springframework.ws.transport.context;
  * spawned by the current thread.
  *
  * @author Arjen Poutsma
- * @see TransportContext
  * @since 1.0.0
+ * @see TransportContext
  */
 public abstract class TransportContextHolder {
 

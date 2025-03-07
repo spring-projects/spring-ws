@@ -39,8 +39,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * payload elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
- * @see org.dom4j.Element
  * @since 1.0.0
+ * @see org.dom4j.Element
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

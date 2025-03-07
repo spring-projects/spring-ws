@@ -71,11 +71,11 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  * <li>{@link SimpleSoapExceptionResolver} for creating default exceptions.
  * </ul>
  *
+ * @author Arjen Poutsma
+ * @since 2.2
  * @see EnableWs
  * @see WsConfigurer
  * @see WsConfigurerAdapter
- * @author Arjen Poutsma
- * @since 2.2
  */
 public class WsConfigurationSupport {
 

@@ -26,8 +26,8 @@ import org.springframework.ws.WebServiceMessageFactory;
  * {@link RequestCreators}.
  *
  * @author Arjen Poutsma
- * @see RequestCreators
  * @since 2.0
+ * @see RequestCreators
  */
 public interface RequestCreator {
 

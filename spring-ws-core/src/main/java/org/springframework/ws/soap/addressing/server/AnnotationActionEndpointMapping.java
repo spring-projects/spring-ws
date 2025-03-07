@@ -55,9 +55,9 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  *
  * @author Arjen Poutsma
  * @author Corneil du Plessis (with thanks to Chris Bono)
+ * @since 1.5.0
  * @see Action
  * @see Address
- * @since 1.5.0
  */
 public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping
 		implements SmartInitializingSingleton {

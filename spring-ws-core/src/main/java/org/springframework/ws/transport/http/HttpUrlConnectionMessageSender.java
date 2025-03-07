@@ -35,8 +35,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  * @author Kazuki Shimizu
- * @see java.net.HttpURLConnection
  * @since 1.0.0
+ * @see java.net.HttpURLConnection
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 

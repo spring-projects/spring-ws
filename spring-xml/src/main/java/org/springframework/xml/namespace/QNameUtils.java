@@ -27,8 +27,8 @@ import org.springframework.util.StringUtils;
  * Helper class for using {@link QName}.
  *
  * @author Arjen Poutsma
- * @see javax.xml.namespace.QName
  * @since 1.0.0
+ * @see javax.xml.namespace.QName
  */
 public abstract class QNameUtils {
 

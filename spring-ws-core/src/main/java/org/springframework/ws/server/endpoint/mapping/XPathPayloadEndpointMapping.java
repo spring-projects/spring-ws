@@ -58,9 +58,9 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  * XPath expression for the incoming message, the value is the name of the endpoint.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setExpression(String)
  * @see #setNamespaces(java.util.Map)
- * @since 1.0.0
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
 

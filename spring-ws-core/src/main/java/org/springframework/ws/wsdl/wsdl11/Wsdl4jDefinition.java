@@ -36,9 +36,9 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
+ * @since 1.0.0
  * @see #Wsdl4jDefinition(javax.wsdl.Definition)
  * @see #setDefinition(javax.wsdl.Definition)
- * @since 1.0.0
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 

@@ -48,10 +48,10 @@ import org.springframework.ws.transport.WebServiceConnection;
  * {@link Credentials} instance (such as the {@link UsernamePasswordCredentials}).
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see HttpUrlConnectionMessageSender
  * @see HttpClient
  * @see #setCredentials(Credentials)
- * @since 1.0.0
  * @deprecated In favor of {@link HttpComponents5MessageSender}
  */
 @Deprecated

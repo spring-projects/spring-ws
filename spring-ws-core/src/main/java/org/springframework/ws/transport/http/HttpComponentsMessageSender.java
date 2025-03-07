@@ -53,8 +53,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Barry Pitman
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see HttpClient
  * @since 2.1.0
+ * @see HttpClient
  */
 @SuppressWarnings("deprecation")
 public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSender

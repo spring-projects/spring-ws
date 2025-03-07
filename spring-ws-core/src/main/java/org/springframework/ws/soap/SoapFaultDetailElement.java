@@ -23,8 +23,8 @@ import javax.xml.transform.Result;
  * {@code SoapFaultDetailElement}s are contained in a {@code SoapDetail}.
  *
  * @author Arjen Poutsma
- * @see SoapFaultDetail
  * @since 1.0.0
+ * @see SoapFaultDetail
  */
 public interface SoapFaultDetailElement extends SoapElement {
 

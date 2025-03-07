@@ -30,8 +30,8 @@ import javax.xml.namespace.QName;
  * exception is thrown.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver
  * @since 1.0.0
+ * @see org.springframework.ws.soap.server.endpoint.SoapFaultAnnotationExceptionResolver
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

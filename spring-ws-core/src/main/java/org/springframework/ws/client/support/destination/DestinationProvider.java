@@ -27,8 +27,8 @@ import java.net.URI;
  * to determine the destination URI.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate#setDestinationProvider(DestinationProvider)
  * @since 1.5.4
+ * @see org.springframework.ws.client.core.WebServiceTemplate#setDestinationProvider(DestinationProvider)
  */
 public interface DestinationProvider {
 

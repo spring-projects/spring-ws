@@ -49,13 +49,13 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
  * {@link #setTargetNamespace(String)}
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see #setImportsProvider(ImportsProvider)
  * @see #setTypesProvider(TypesProvider)
  * @see #setMessagesProvider(MessagesProvider)
  * @see #setPortTypesProvider(PortTypesProvider)
  * @see #setBindingsProvider(BindingsProvider)
  * @see #setServicesProvider(ServicesProvider)
- * @since 1.5.0
  */
 public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements InitializingBean {
 

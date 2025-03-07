@@ -34,9 +34,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  * @see org.springframework.ws.server.EndpointInvocationChain
- * @since 1.0.0
  */
 public class PayloadEndpointAdapter extends TransformerObjectSupport implements EndpointAdapter {
 

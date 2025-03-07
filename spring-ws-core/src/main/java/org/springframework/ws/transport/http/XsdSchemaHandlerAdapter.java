@@ -45,9 +45,9 @@ import org.springframework.xml.xsd.XsdSchema;
  * subclasses.
  *
  * @author Arjen Poutsma
+ * @since 1.5.3
  * @see XsdSchema
  * @see #getSchemaSource(XsdSchema)
- * @since 1.5.3
  */
 public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 		implements HandlerAdapter, InitializingBean {

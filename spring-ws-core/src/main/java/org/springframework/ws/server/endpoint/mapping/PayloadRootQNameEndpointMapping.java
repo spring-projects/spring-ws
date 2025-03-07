@@ -44,8 +44,8 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  * described in {@code QNameEditor}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.xml.namespace.QNameEditor
  * @since 1.0.0
+ * @see org.springframework.xml.namespace.QNameEditor
  */
 public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 

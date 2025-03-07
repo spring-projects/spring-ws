@@ -22,8 +22,8 @@ import org.springframework.ws.WebServiceMessage;
  * Sub-interface of {@link WebServiceMessage} that allows for setting a streaming payload.
  *
  * @author Arjen Poutsma
- * @see StreamingPayload
  * @since 2.0
+ * @see StreamingPayload
  */
 public interface StreamingWebServiceMessage extends WebServiceMessage {
 

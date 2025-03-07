@@ -37,9 +37,9 @@ import org.springframework.util.StringUtils;
  * you want.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setLocation(org.springframework.core.io.Resource)
  * @see KeyStore
- * @since 1.0.0
  */
 public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingBean {
 

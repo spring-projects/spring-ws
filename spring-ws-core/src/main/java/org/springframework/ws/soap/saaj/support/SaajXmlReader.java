@@ -38,9 +38,9 @@ import org.springframework.xml.sax.AbstractXmlReader;
  * interfaces.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see jakarta.xml.soap.Node
  * @see jakarta.xml.soap.SOAPElement
- * @since 1.0.0
  */
 public class SaajXmlReader extends AbstractXmlReader {
 

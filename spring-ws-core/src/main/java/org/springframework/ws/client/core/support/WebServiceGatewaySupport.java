@@ -50,10 +50,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * directly.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMessageFactory(WebServiceMessageFactory)
  * @see WebServiceTemplate
  * @see #setMarshaller(Marshaller)
- * @since 1.0.0
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
 

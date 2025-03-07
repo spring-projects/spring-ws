@@ -36,9 +36,9 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  * and endpoint interceptors.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
  * @see org.springframework.ws.server.EndpointInterceptor
- * @since 1.0.0
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 

@@ -35,8 +35,8 @@ import org.springframework.util.Assert;
  * SAX {@code ContentHandler} that transforms callback calls to DOM {@code Node}s.
  *
  * @author Arjen Poutsma
- * @see org.w3c.dom.Node
  * @since 1.0.0
+ * @see org.w3c.dom.Node
  */
 public class DomContentHandler implements ContentHandler {
 

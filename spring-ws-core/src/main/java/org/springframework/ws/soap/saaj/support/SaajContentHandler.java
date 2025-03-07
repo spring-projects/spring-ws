@@ -36,9 +36,9 @@ import org.springframework.util.StringUtils;
  * {@code Node}s and {@code SOAPElement}s.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see jakarta.xml.soap.Node
  * @see jakarta.xml.soap.SOAPElement
- * @since 1.0.0
  */
 public class SaajContentHandler implements ContentHandler {
 

@@ -31,8 +31,8 @@ import org.springframework.util.CollectionUtils;
  * and Jaxen XPaths.
  *
  * @author Arjen Poutsma
- * @see #setExpression(String)
  * @since 1.0.0
+ * @see #setExpression(String)
  */
 public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>, InitializingBean {
 

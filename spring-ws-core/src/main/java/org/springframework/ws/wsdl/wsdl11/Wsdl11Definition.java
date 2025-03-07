@@ -24,8 +24,8 @@ import org.springframework.ws.wsdl.WsdlDefinition;
  * Just a marker interface at the moment.
  *
  * @author Arjen Poutsma
- * @see DefaultWsdl11Definition
  * @since 1.0.0
+ * @see DefaultWsdl11Definition
  */
 public interface Wsdl11Definition extends WsdlDefinition {
 

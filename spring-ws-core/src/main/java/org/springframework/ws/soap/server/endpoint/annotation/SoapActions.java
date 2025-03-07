@@ -26,8 +26,8 @@ import java.lang.annotation.Target;
  * Marks an endpoint method as containing multiple {@link SoapAction SoapActions}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
  * @since 2.2.1
+ * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

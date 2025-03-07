@@ -26,8 +26,8 @@ import java.io.InputStream;
  * Allows the creation of empty messages, or messages based on {@code InputStream}s.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.WebServiceMessage
  * @since 1.0.0
+ * @see org.springframework.ws.WebServiceMessage
  */
 public interface WebServiceMessageFactory {
 

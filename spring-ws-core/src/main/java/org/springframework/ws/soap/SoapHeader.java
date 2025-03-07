@@ -26,9 +26,9 @@ import javax.xml.transform.Result;
  * {@code SoapHeaderElement}s, which represent the individual headers.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see SoapHeaderElement
  * @see SoapEnvelope#getHeader()
- * @since 1.0.0
  */
 public interface SoapHeader extends SoapElement {
 

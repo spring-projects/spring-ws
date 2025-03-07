@@ -31,11 +31,10 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  *
  * @author Arjen Poutsma
  * @author Leandro Quiroga
+ * @since 1.5.0
  * @see <a href="http://www.w3.org/TR/2006/REC-ws-addr-core-20060509">Web Services
  * Addressing 1.0, May 2006</a>
- * @since 1.5.0
  */
-
 public class Addressing10 extends AbstractAddressingVersion {
 
 	private static final String NAMESPACE_URI = "http://www.w3.org/2005/08/addressing";

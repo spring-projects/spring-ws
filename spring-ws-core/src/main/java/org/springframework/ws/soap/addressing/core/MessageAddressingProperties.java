@@ -32,9 +32,9 @@ import org.w3c.dom.Node;
  * Headers.
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see <a href="http://www.w3.org/TR/ws-addr-core/#msgaddrprops">Message Addressing
  * Properties</a>
- * @since 1.5.0
  */
 public final class MessageAddressingProperties implements Serializable {
 

@@ -75,11 +75,11 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * </ul>
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see EndpointMapping
  * @see EndpointAdapter
  * @see EndpointExceptionResolver
  * @see org.springframework.web.servlet.DispatcherServlet
- * @since 1.0.0
  */
 public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 

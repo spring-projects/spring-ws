@@ -28,9 +28,9 @@ import javax.xml.transform.Source;
  * Contains methods that provide access to the payload of the message.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.ws.soap.SoapMessage
  * @see WebServiceMessageFactory
- * @since 1.0.0
  */
 public interface WebServiceMessage {
 

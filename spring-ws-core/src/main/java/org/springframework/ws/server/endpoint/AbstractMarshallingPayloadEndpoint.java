@@ -36,12 +36,12 @@ import org.springframework.ws.support.MarshallingUtils;
  * parameter, and allows for a response object to be returned.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see Marshaller
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
  * @see Unmarshaller
  * @see #invokeInternal(Object)
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated

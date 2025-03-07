@@ -50,8 +50,8 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  * local name.
  *
  * @author Arjen Poutsma
- * @see #setEndpoints(Object[])
  * @since 1.0.0
+ * @see #setEndpoints(Object[])
  */
 public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<String> implements InitializingBean {
 

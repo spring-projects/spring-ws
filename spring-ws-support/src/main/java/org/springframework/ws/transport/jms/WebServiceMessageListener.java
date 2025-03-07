@@ -35,9 +35,9 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * {@link #setMessageReceiver(WebServiceMessageReceiver) registered}.
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
- * @since 1.5.0
  */
 public class WebServiceMessageListener extends JmsMessageReceiver implements SessionAwareMessageListener<Message> {
 

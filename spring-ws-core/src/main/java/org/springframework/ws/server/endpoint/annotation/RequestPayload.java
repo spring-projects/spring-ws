@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  * payload}. Supported for annotated endpoint methods.
  *
  * @author Arjen Poutsma
- * @see ResponsePayload
  * @since 2.0
+ * @see ResponsePayload
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

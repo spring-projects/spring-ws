@@ -32,9 +32,9 @@ import javax.xml.XMLConstants;
  * {@link PayloadRoot @PayloadRoot}.
  *
  * @author Arjen Poutsma
+ * @since 2.0
  * @see XPathParam
  * @see PayloadRoot
- * @since 2.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

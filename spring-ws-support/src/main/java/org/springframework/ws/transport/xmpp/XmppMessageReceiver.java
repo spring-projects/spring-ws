@@ -40,8 +40,8 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean
  * @since 2.0
+ * @see org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean
  */
 public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 

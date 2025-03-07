@@ -41,8 +41,8 @@ import org.springframework.xml.namespace.QNameUtils;
  * Implementation of the {@code PoxMessage} interface that is based on a DOM Document.
  *
  * @author Arjen Poutsma
- * @see Document
  * @since 1.0.0
+ * @see Document
  */
 public class DomPoxMessage implements PoxMessage {
 

@@ -26,8 +26,8 @@ import org.springframework.ws.context.MessageContext;
  * and can be used to create a response.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  * @since 1.0.0
+ * @see org.springframework.ws.server.endpoint.PayloadEndpoint
  */
 public interface MessageEndpoint {
 

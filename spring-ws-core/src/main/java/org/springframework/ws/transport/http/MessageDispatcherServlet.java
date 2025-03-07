@@ -61,10 +61,10 @@ import org.springframework.xml.xsd.XsdSchema;
  * definitions will reflect the URL of the incoming request.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.ws.server.MessageDispatcher
  * @see org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter
- * @since 1.0.0
  */
 @SuppressWarnings("serial")
 public class MessageDispatcherServlet extends FrameworkServlet {
