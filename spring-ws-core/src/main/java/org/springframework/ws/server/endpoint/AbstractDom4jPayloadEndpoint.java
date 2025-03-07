@@ -89,7 +89,7 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
+		if (!this.alwaysTransform && source instanceof DOMSource) {
 			Node node = ((DOMSource) source).getNode();
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				DOMReader domReader = new DOMReader();

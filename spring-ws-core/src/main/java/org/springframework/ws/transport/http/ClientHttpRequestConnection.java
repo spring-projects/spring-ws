@@ -52,74 +52,74 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	}
 
 	public ClientHttpRequest getClientHttpRequest() {
-		return request;
+		return this.request;
 	}
 
 	public ClientHttpResponse getClientHttpResponse() {
-		return response;
+		return this.response;
 	}
 
 	// URI
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return request.getURI();
+		return this.request.getURI();
 	}
 
 	// Sending request
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
-		request.getHeaders().add(name, value);
+		this.request.getHeaders().add(name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return request.getBody();
+		return this.request.getBody();
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		response = request.execute();
+		this.response = this.request.execute();
 	}
 
 	// Receiving response
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		return response.getHeaders().getContentLength();
+		return this.response.getHeaders().getContentLength();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		return response.getHeaders().keySet().iterator();
+		return this.response.getHeaders().keySet().iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		List<String> headers = response.getHeaders().get(name);
+		List<String> headers = this.response.getHeaders().get(name);
 		return headers != null ? headers.iterator() : Collections.emptyIterator();
 	}
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return response.getStatusCode().value();
+		return this.response.getStatusCode().value();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return response.getStatusText();
+		return this.response.getStatusText();
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return response.getBody();
+		return this.response.getBody();
 	}
 
 	@Override
 	protected void onClose() throws IOException {
-		if (response != null) {
-			response.close();
+		if (this.response != null) {
+			this.response.close();
 		}
 	}
 

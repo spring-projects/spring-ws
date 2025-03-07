@@ -49,15 +49,15 @@ public class WebServiceHttpHandlerIntegrationTest {
 	@BeforeEach
 	public void createHttpClient() {
 
-		client = new HttpClient();
-		url = "http://localhost:" + port + "/service";
+		this.client = new HttpClient();
+		this.url = "http://localhost:" + this.port + "/service";
 	}
 
 	@Test
 	public void testInvalidMethod() throws IOException {
 
-		GetMethod getMethod = new GetMethod(url);
-		client.executeMethod(getMethod);
+		GetMethod getMethod = new GetMethod(this.url);
+		this.client.executeMethod(getMethod);
 
 		assertThat(getMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED);
 		assertThat(getMethod.getResponseContentLength()).isEqualTo(0);
@@ -66,14 +66,14 @@ public class WebServiceHttpHandlerIntegrationTest {
 	@Test
 	public void testNoResponse() throws IOException {
 
-		PostMethod postMethod = new PostMethod(url);
+		PostMethod postMethod = new PostMethod(this.url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
 				"http://springframework.org/spring-ws/NoResponse");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
 
-		client.executeMethod(postMethod);
+		this.client.executeMethod(postMethod);
 
 		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_ACCEPTED);
 		assertThat(postMethod.getResponseContentLength()).isEqualTo(0);
@@ -82,13 +82,13 @@ public class WebServiceHttpHandlerIntegrationTest {
 	@Test
 	public void testResponse() throws IOException {
 
-		PostMethod postMethod = new PostMethod(url);
+		PostMethod postMethod = new PostMethod(this.url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
 				"http://springframework.org/spring-ws/Response");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
-		client.executeMethod(postMethod);
+		this.client.executeMethod(postMethod);
 
 		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_OK);
 		assertThat(postMethod.getResponseContentLength()).isGreaterThan(0);
@@ -97,14 +97,14 @@ public class WebServiceHttpHandlerIntegrationTest {
 	@Test
 	public void testNoEndpoint() throws IOException {
 
-		PostMethod postMethod = new PostMethod(url);
+		PostMethod postMethod = new PostMethod(this.url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
 				"http://springframework.org/spring-ws/NoEndpoint");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
 
-		client.executeMethod(postMethod);
+		this.client.executeMethod(postMethod);
 
 		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_NOT_FOUND);
 		assertThat(postMethod.getResponseContentLength()).isEqualTo(0);
@@ -113,14 +113,14 @@ public class WebServiceHttpHandlerIntegrationTest {
 	@Test
 	public void testFault() throws IOException {
 
-		PostMethod postMethod = new PostMethod(url);
+		PostMethod postMethod = new PostMethod(this.url);
 		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
 		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
 				"http://springframework.org/spring-ws/Fault");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
 		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
 
-		client.executeMethod(postMethod);
+		this.client.executeMethod(postMethod);
 
 		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
 	}

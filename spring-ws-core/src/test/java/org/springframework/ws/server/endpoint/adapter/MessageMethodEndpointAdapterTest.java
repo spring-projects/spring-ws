@@ -37,21 +37,21 @@ public class MessageMethodEndpointAdapterTest {
 
 	@BeforeEach
 	public void setUp() {
-		adapter = new MessageMethodEndpointAdapter();
-		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		this.adapter = new MessageMethodEndpointAdapter();
+		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@Test
 	public void testSupported() throws NoSuchMethodException {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
-		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
 	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
-		assertThat(adapter.supportsInternal(
+		assertThat(this.adapter.supportsInternal(
 				new MethodEndpoint(this, "unsupportedMultipleParams", MessageContext.class, MessageContext.class)))
 			.isFalse();
 	}
@@ -59,7 +59,8 @@ public class MessageMethodEndpointAdapterTest {
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class)))
+			.isFalse();
 	}
 
 	@Test
@@ -67,15 +68,15 @@ public class MessageMethodEndpointAdapterTest {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
 
-		assertThat(supportedInvoked).isFalse();
+		assertThat(this.supportedInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(this.messageContext, methodEndpoint);
 
-		assertThat(supportedInvoked).isTrue();
+		assertThat(this.supportedInvoked).isTrue();
 	}
 
 	public void supported(MessageContext context) {
-		supportedInvoked = true;
+		this.supportedInvoked = true;
 	}
 
 	public void unsupportedMultipleParams(MessageContext s1, MessageContext s2) {

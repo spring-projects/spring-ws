@@ -102,8 +102,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		Assert.notNull(messageContext, "'messageContext' must not be null");
 		Assert.notNull(clazz, "'clazz' must not be null");
 		Assert.notNull(jaxbElement, "'jaxbElement' must not be null");
-		if (logger.isDebugEnabled()) {
-			logger.debug("Marshalling [" + jaxbElement + "] to response payload");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Marshalling [" + jaxbElement + "] to response payload");
 		}
 		WebServiceMessage response = messageContext.getResponse();
 		if (response instanceof StreamingWebServiceMessage streamingResponse) {
@@ -139,8 +139,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		try {
 			Jaxb2SourceCallback callback = new Jaxb2SourceCallback(clazz);
 			TraxUtils.doWithSource(requestPayload, callback);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
 		}
@@ -165,8 +165,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		try {
 			JaxbElementSourceCallback<T> callback = new JaxbElementSourceCallback<>(clazz);
 			TraxUtils.doWithSource(requestPayload, callback);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Unmarshalled payload request to [" + callback.result + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Unmarshalled payload request to [" + callback.result + "]");
 			}
 			return callback.result;
 		}
@@ -223,10 +223,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 	private JAXBContext getJaxbContext(Class<?> clazz) throws JAXBException {
 		Assert.notNull(clazz, "'clazz' must not be null");
-		JAXBContext jaxbContext = jaxbContexts.get(clazz);
+		JAXBContext jaxbContext = this.jaxbContexts.get(clazz);
 		if (jaxbContext == null) {
 			jaxbContext = JAXBContext.newInstance(clazz);
-			jaxbContexts.putIfAbsent(clazz, jaxbContext);
+			this.jaxbContexts.putIfAbsent(clazz, jaxbContext);
 		}
 		return jaxbContext;
 	}
@@ -245,7 +245,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		@Override
 		public void domSource(Node node) throws JAXBException {
-			result = unmarshaller.unmarshal(node);
+			this.result = this.unmarshaller.unmarshal(node);
 		}
 
 		@Override
@@ -260,43 +260,43 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				// In this case, we need to use a ContentHandler to feed the SAX events
 				// into
 				// the unmarshaller.
-				UnmarshallerHandler handler = unmarshaller.getUnmarshallerHandler();
+				UnmarshallerHandler handler = this.unmarshaller.getUnmarshallerHandler();
 				reader.setContentHandler(handler);
 				reader.parse(inputSource);
-				result = handler.getResult();
+				this.result = handler.getResult();
 			}
 			else {
 				// If a stream or system ID is set, we assume that the SAXSource is backed
 				// by a SAX parser and we only pass the InputSource to the unmarshaller.
 				// This effectively ignores the SAX parser and lets the unmarshaller take
 				// care of the parsing (in a potentially more efficient way).
-				result = unmarshaller.unmarshal(inputSource);
+				this.result = this.unmarshaller.unmarshal(inputSource);
 			}
 		}
 
 		@Override
 		public void staxSource(XMLEventReader eventReader) throws JAXBException {
-			result = unmarshaller.unmarshal(eventReader);
+			this.result = this.unmarshaller.unmarshal(eventReader);
 		}
 
 		@Override
 		public void staxSource(XMLStreamReader streamReader) throws JAXBException {
-			result = unmarshaller.unmarshal(streamReader);
+			this.result = this.unmarshaller.unmarshal(streamReader);
 		}
 
 		@Override
 		public void streamSource(InputStream inputStream) throws IOException, JAXBException {
-			result = unmarshaller.unmarshal(inputStream);
+			this.result = this.unmarshaller.unmarshal(inputStream);
 		}
 
 		@Override
 		public void streamSource(Reader reader) throws IOException, JAXBException {
-			result = unmarshaller.unmarshal(reader);
+			this.result = this.unmarshaller.unmarshal(reader);
 		}
 
 		@Override
 		public void source(String systemId) throws Exception {
-			result = unmarshaller.unmarshal(new URL(systemId));
+			this.result = this.unmarshaller.unmarshal(new URL(systemId));
 		}
 
 	}
@@ -316,37 +316,37 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		@Override
 		public void domSource(Node node) throws JAXBException {
-			result = unmarshaller.unmarshal(node, declaredType);
+			this.result = this.unmarshaller.unmarshal(node, this.declaredType);
 		}
 
 		@Override
 		public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException {
-			result = unmarshaller.unmarshal(new SAXSource(reader, inputSource), declaredType);
+			this.result = this.unmarshaller.unmarshal(new SAXSource(reader, inputSource), this.declaredType);
 		}
 
 		@Override
 		public void staxSource(XMLEventReader eventReader) throws JAXBException {
-			result = unmarshaller.unmarshal(eventReader, declaredType);
+			this.result = this.unmarshaller.unmarshal(eventReader, this.declaredType);
 		}
 
 		@Override
 		public void staxSource(XMLStreamReader streamReader) throws JAXBException {
-			result = unmarshaller.unmarshal(streamReader, declaredType);
+			this.result = this.unmarshaller.unmarshal(streamReader, this.declaredType);
 		}
 
 		@Override
 		public void streamSource(InputStream inputStream) throws IOException, JAXBException {
-			result = unmarshaller.unmarshal(new StreamSource(inputStream), declaredType);
+			this.result = this.unmarshaller.unmarshal(new StreamSource(inputStream), this.declaredType);
 		}
 
 		@Override
 		public void streamSource(Reader reader) throws IOException, JAXBException {
-			result = unmarshaller.unmarshal(new StreamSource(reader), declaredType);
+			this.result = this.unmarshaller.unmarshal(new StreamSource(reader), this.declaredType);
 		}
 
 		@Override
 		public void source(String systemId) throws Exception {
-			result = unmarshaller.unmarshal(new StreamSource(systemId), declaredType);
+			this.result = this.unmarshaller.unmarshal(new StreamSource(systemId), this.declaredType);
 		}
 
 	}
@@ -364,37 +364,37 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		@Override
 		public void domResult(Node node) throws JAXBException {
-			marshaller.marshal(jaxbElement, node);
+			this.marshaller.marshal(this.jaxbElement, node);
 		}
 
 		@Override
 		public void saxResult(ContentHandler contentHandler, LexicalHandler lexicalHandler) throws JAXBException {
-			marshaller.marshal(jaxbElement, contentHandler);
+			this.marshaller.marshal(this.jaxbElement, contentHandler);
 		}
 
 		@Override
 		public void staxResult(XMLEventWriter eventWriter) throws JAXBException {
-			marshaller.marshal(jaxbElement, eventWriter);
+			this.marshaller.marshal(this.jaxbElement, eventWriter);
 		}
 
 		@Override
 		public void staxResult(XMLStreamWriter streamWriter) throws JAXBException {
-			marshaller.marshal(jaxbElement, streamWriter);
+			this.marshaller.marshal(this.jaxbElement, streamWriter);
 		}
 
 		@Override
 		public void streamResult(OutputStream outputStream) throws JAXBException {
-			marshaller.marshal(jaxbElement, outputStream);
+			this.marshaller.marshal(this.jaxbElement, outputStream);
 		}
 
 		@Override
 		public void streamResult(Writer writer) throws JAXBException {
-			marshaller.marshal(jaxbElement, writer);
+			this.marshaller.marshal(this.jaxbElement, writer);
 		}
 
 		@Override
 		public void result(String systemId) throws Exception {
-			marshaller.marshal(jaxbElement, new StreamResult(systemId));
+			this.marshaller.marshal(this.jaxbElement, new StreamResult(systemId));
 		}
 
 	}
@@ -418,16 +418,16 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		@Override
 		public QName getName() {
-			return name;
+			return this.name;
 		}
 
 		@Override
 		public void writeTo(XMLStreamWriter streamWriter) throws XMLStreamException {
 			try {
-				marshaller.marshal(jaxbElement, streamWriter);
+				this.marshaller.marshal(this.jaxbElement, streamWriter);
 			}
 			catch (JAXBException ex) {
-				throw new XMLStreamException("Could not marshal [" + jaxbElement + "]: " + ex.getMessage(), ex);
+				throw new XMLStreamException("Could not marshal [" + this.jaxbElement + "]: " + ex.getMessage(), ex);
 			}
 		}
 

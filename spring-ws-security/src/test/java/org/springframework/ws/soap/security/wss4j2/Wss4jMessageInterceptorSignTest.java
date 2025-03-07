@@ -36,8 +36,8 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 	@Override
 	protected void onSetup() throws Exception {
 
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setValidationActions("Signature");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setValidationActions("Signature");
 
 		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 		Properties cryptoFactoryBeanConfig = new Properties();
@@ -50,9 +50,9 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
 		cryptoFactoryBean.afterPropertiesSet();
-		interceptor.setValidationSignatureCrypto(cryptoFactoryBean.getObject());
-		interceptor.setSecurementSignatureCrypto(cryptoFactoryBean.getObject());
-		interceptor.afterPropertiesSet();
+		this.interceptor.setValidationSignatureCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.setSecurementSignatureCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.afterPropertiesSet();
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 		SoapMessage message = loadSoap11Message("signed-soap.xml");
 
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 		Object result = getMessage(message);
 
 		assertThat(result).isNotNull();
@@ -75,10 +75,10 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 
 		SoapMessage message = loadSoap11Message("signed-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
-		interceptor.setEnableSignatureConfirmation(true);
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.setEnableSignatureConfirmation(true);
+		this.interceptor.validateMessage(message, messageContext);
 		WebServiceMessage response = messageContext.getResponse();
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		assertThat(response).isNotNull();
 
@@ -90,16 +90,16 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 	@Test
 	public void testSignResponse() throws Exception {
 
-		interceptor.setSecurementActions("Signature");
-		interceptor.setEnableSignatureConfirmation(false);
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementUsername("rsaKey");
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setEnableSignatureConfirmation(false);
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
 
 		// interceptor.setSecurementSignatureKeyIdentifier("IssuerSerial");
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		Document document = getDocument(message);
 		assertXpathExists("Absent SignatureConfirmation element",
@@ -109,14 +109,14 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 	@Test
 	public void testSignResponseWithSignatureUser() throws Exception {
 
-		interceptor.setSecurementActions("Signature");
-		interceptor.setEnableSignatureConfirmation(false);
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementSignatureUser("rsaKey");
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setEnableSignatureConfirmation(false);
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementSignatureUser("rsaKey");
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		Document document = getDocument(message);
 		assertXpathExists("Absent SignatureConfirmation element",

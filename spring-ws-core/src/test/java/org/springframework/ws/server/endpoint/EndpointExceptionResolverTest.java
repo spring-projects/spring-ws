@@ -40,7 +40,7 @@ public class EndpointExceptionResolverTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		exceptionResolver = new AbstractEndpointExceptionResolver() {
+		this.exceptionResolver = new AbstractEndpointExceptionResolver() {
 
 			@Override
 			protected boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
@@ -48,14 +48,14 @@ public class EndpointExceptionResolverTest {
 			}
 		};
 
-		exceptionResolver.setMappedEndpoints(Collections.singleton(this));
-		methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod"));
+		this.exceptionResolver.setMappedEndpoints(Collections.singleton(this));
+		this.methodEndpoint = new MethodEndpoint(this, getClass().getMethod("emptyMethod"));
 	}
 
 	@Test
 	public void testMatchMethodEndpoint() {
 
-		boolean matched = exceptionResolver.resolveException(null, methodEndpoint, null);
+		boolean matched = this.exceptionResolver.resolveException(null, this.methodEndpoint, null);
 
 		assertThat(matched).isTrue();
 	}

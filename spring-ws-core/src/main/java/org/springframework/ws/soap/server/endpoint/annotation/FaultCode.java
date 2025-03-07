@@ -75,7 +75,7 @@ public enum FaultCode {
 	}
 
 	public QName value() {
-		return value;
+		return this.value;
 	}
 
 }

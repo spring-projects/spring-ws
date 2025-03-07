@@ -85,14 +85,14 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 		else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
 			XMLStreamReader streamReader;
 			try {
-				streamReader = inputFactory.createXMLStreamReader(requestPayload);
+				streamReader = this.inputFactory.createXMLStreamReader(requestPayload);
 			}
 			catch (UnsupportedOperationException | XMLStreamException ignored) {
 				streamReader = null;
 			}
 			if (streamReader == null) {
 				ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-				streamReader = inputFactory.createXMLStreamReader(bis);
+				streamReader = this.inputFactory.createXMLStreamReader(bis);
 			}
 			return Jaxp14StaxHandler.createStaxSource(streamReader, requestPayload.getSystemId());
 		}
@@ -171,7 +171,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 				}
 
 				public String getSystemId() {
-					return systemId;
+					return SystemIdStreamReaderDelegate.this.systemId;
 				}
 			};
 		}

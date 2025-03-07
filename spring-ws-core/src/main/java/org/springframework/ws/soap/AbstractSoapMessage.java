@@ -87,20 +87,20 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 
 	@Override
 	public SoapVersion getVersion() {
-		if (version == null) {
+		if (this.version == null) {
 			String envelopeNamespace = getEnvelope().getName().getNamespaceURI();
 			if (SoapVersion.SOAP_11.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
-				version = SoapVersion.SOAP_11;
+				this.version = SoapVersion.SOAP_11;
 			}
 			else if (SoapVersion.SOAP_12.getEnvelopeNamespaceUri().equals(envelopeNamespace)) {
-				version = SoapVersion.SOAP_12;
+				this.version = SoapVersion.SOAP_12;
 			}
 			else {
 				throw new IllegalStateException(
 						"Unknown Envelope namespace uri '" + envelopeNamespace + "'. " + "Cannot deduce SoapVersion.");
 			}
 		}
-		return version;
+		return this.version;
 	}
 
 }

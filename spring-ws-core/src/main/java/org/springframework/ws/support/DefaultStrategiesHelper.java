@@ -80,7 +80,7 @@ public class DefaultStrategiesHelper {
 	 */
 	public DefaultStrategiesHelper(Resource resource) throws IllegalStateException {
 		try {
-			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
+			this.defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
 		}
 		catch (IOException ex) {
 			throw new IllegalStateException("Could not load '" + resource + "': " + ex.getMessage());
@@ -125,7 +125,7 @@ public class DefaultStrategiesHelper {
 			throws BeanInitializationException {
 		String key = strategyInterface.getName();
 		try {
-			String value = defaultStrategies.getProperty(key);
+			String value = this.defaultStrategies.getProperty(key);
 			if (value == null) {
 				return Collections.emptyList();
 			}

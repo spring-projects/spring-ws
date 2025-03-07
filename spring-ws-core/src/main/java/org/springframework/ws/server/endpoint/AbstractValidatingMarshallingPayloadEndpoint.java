@@ -43,7 +43,7 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 
 	/** Return the name of the request object for validation error codes. */
 	public String getRequestName() {
-		return requestName;
+		return this.requestName;
 	}
 
 	/** Set the name of the request object user for validation errors. */
@@ -69,7 +69,7 @@ public abstract class AbstractValidatingMarshallingPayloadEndpoint extends Abstr
 
 	/** Return the Validators for this controller. */
 	public Validator[] getValidators() {
-		return validators;
+		return this.validators;
 	}
 
 	/**

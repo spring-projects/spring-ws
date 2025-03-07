@@ -39,8 +39,8 @@ public abstract class AbstractSoapElementTest {
 	public final void setUp() throws Exception {
 
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
-		soapElement = createSoapElement();
+		this.transformer = transformerFactory.newTransformer();
+		this.soapElement = createSoapElement();
 	}
 
 	protected abstract SoapElement createSoapElement() throws Exception;
@@ -50,11 +50,11 @@ public abstract class AbstractSoapElementTest {
 
 		QName name = new QName("http://springframework.org/spring-ws", "attribute");
 		String value = "value";
-		soapElement.addAttribute(name, value);
+		this.soapElement.addAttribute(name, value);
 
-		assertThat(soapElement.getAttributeValue(name)).isEqualTo(value);
+		assertThat(this.soapElement.getAttributeValue(name)).isEqualTo(value);
 
-		Iterator<QName> allAttributes = soapElement.getAllAttributes();
+		Iterator<QName> allAttributes = this.soapElement.getAllAttributes();
 
 		assertThat(allAttributes.hasNext()).isTrue();
 	}
@@ -64,7 +64,7 @@ public abstract class AbstractSoapElementTest {
 
 		String prefix = "p";
 		String namespace = "http://springframework.org/spring-ws";
-		soapElement.addNamespaceDeclaration(prefix, namespace);
+		this.soapElement.addNamespaceDeclaration(prefix, namespace);
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public abstract class AbstractSoapElementTest {
 
 		String prefix = "";
 		String namespace = "http://springframework.org/spring-ws";
-		soapElement.addNamespaceDeclaration(prefix, namespace);
+		this.soapElement.addNamespaceDeclaration(prefix, namespace);
 	}
 
 }

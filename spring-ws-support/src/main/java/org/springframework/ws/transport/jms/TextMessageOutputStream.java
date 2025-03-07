@@ -49,9 +49,9 @@ class TextMessageOutputStream extends FilterOutputStream {
 	public void flush() throws IOException {
 		super.flush();
 		try {
-			ByteArrayOutputStream baos = (ByteArrayOutputStream) out;
-			String text = baos.toString(encoding);
-			message.setText(text);
+			ByteArrayOutputStream baos = (ByteArrayOutputStream) this.out;
+			String text = baos.toString(this.encoding);
+			this.message.setText(text);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException(ex);

@@ -52,8 +52,8 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
 			return XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
 		}
-		else if (prefixToNamespaceUri.containsKey(prefix)) {
-			return prefixToNamespaceUri.get(prefix);
+		else if (this.prefixToNamespaceUri.containsKey(prefix)) {
+			return this.prefixToNamespaceUri.get(prefix);
 		}
 		return XMLConstants.NULL_NS_URI;
 	}
@@ -108,15 +108,15 @@ public class SimpleNamespaceContext implements NamespaceContext {
 							+ XMLConstants.XMLNS_ATTRIBUTE_NS_URI + "\")");
 		}
 		else {
-			prefixToNamespaceUri.put(prefix, namespaceUri);
+			this.prefixToNamespaceUri.put(prefix, namespaceUri);
 			getPrefixesInternal(namespaceUri).add(prefix);
 		}
 	}
 
 	/** Removes all declared prefixes. */
 	public void clear() {
-		prefixToNamespaceUri.clear();
-		namespaceUriToPrefixes.clear();
+		this.prefixToNamespaceUri.clear();
+		this.namespaceUriToPrefixes.clear();
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	 * @return the declared prefixes
 	 */
 	public Iterator<String> getBoundPrefixes() {
-		Set<String> prefixes = new HashSet<>(prefixToNamespaceUri.keySet());
+		Set<String> prefixes = new HashSet<>(this.prefixToNamespaceUri.keySet());
 		prefixes.remove(XMLConstants.DEFAULT_NS_PREFIX);
 		prefixes = Collections.unmodifiableSet(prefixes);
 		return prefixes.iterator();
@@ -137,7 +137,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 		else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceUri)) {
 			return Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
 		}
-		return namespaceUriToPrefixes.computeIfAbsent(namespaceUri, k -> new LinkedHashSet<>());
+		return this.namespaceUriToPrefixes.computeIfAbsent(namespaceUri, k -> new LinkedHashSet<>());
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	 * @param prefix the prefix to be removed
 	 */
 	public void removeBinding(String prefix) {
-		String namespaceUri = prefixToNamespaceUri.remove(prefix);
+		String namespaceUri = this.prefixToNamespaceUri.remove(prefix);
 		if (namespaceUri != null) {
 			Set<String> prefixes = getPrefixesInternal(namespaceUri);
 			prefixes.remove(prefix);
@@ -153,7 +153,7 @@ public class SimpleNamespaceContext implements NamespaceContext {
 	}
 
 	public boolean hasBinding(String prefix) {
-		return prefixToNamespaceUri.containsKey(prefix);
+		return this.prefixToNamespaceUri.containsKey(prefix);
 	}
 
 }

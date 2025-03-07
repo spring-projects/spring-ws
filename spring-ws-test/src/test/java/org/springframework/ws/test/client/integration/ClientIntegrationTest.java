@@ -49,7 +49,7 @@ public class ClientIntegrationTest {
 
 	@BeforeEach
 	public void createServer() {
-		mockServer = MockWebServiceServer.createServer(client);
+		this.mockServer = MockWebServiceServer.createServer(this.client);
 	}
 
 	@Test
@@ -61,13 +61,13 @@ public class ClientIntegrationTest {
 		Source responsePayload = new StringSource("<customerCountResponse xmlns='http://springframework.org/spring-ws'>"
 				+ "<customerCount>10</customerCount>" + "</customerCountResponse>");
 
-		mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
+		this.mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
 
-		int result = client.getCustomerCount();
+		int result = this.client.getCustomerCount();
 
 		assertThat(result).isEqualTo(10);
 
-		mockServer.verify();
+		this.mockServer.verify();
 	}
 
 }

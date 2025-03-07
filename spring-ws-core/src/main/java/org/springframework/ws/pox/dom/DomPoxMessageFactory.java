@@ -79,12 +79,12 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	 * {@code true}.
 	 */
 	public void setNamespaceAware(boolean namespaceAware) {
-		documentBuilderFactory.setNamespaceAware(namespaceAware);
+		this.documentBuilderFactory.setNamespaceAware(namespaceAware);
 	}
 
 	/** Set if the XML parser should validate the document. Default is {@code false}. */
 	public void setValidating(boolean validating) {
-		documentBuilderFactory.setValidating(validating);
+		this.documentBuilderFactory.setValidating(validating);
 	}
 
 	/**
@@ -92,15 +92,15 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	 * {@code false}.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityRef) {
-		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
+		this.documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
 	}
 
 	@Override
 	public DomPoxMessage createWebServiceMessage() {
 		try {
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			DocumentBuilder documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.newDocument();
-			return new DomPoxMessage(request, createTransformer(), contentType);
+			return new DomPoxMessage(request, createTransformer(), this.contentType);
 		}
 		catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);
@@ -113,9 +113,9 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	@Override
 	public DomPoxMessage createWebServiceMessage(InputStream inputStream) throws IOException {
 		try {
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			DocumentBuilder documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
 			Document request = documentBuilder.parse(inputStream);
-			return new DomPoxMessage(request, createTransformer(), contentType);
+			return new DomPoxMessage(request, createTransformer(), this.contentType);
 		}
 		catch (ParserConfigurationException ex) {
 			throw new DomPoxMessageException("Could not create message context", ex);

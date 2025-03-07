@@ -62,7 +62,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 
 		Document actualDocument = soapMessage.getDocument();
-		Document expectedDocument = createDocumentFromSource(expected);
+		Document expectedDocument = createDocumentFromSource(this.expected);
 		Diff diff = new Diff(expectedDocument, actualDocument);
 		assertTrue("Envelopes are different, " + diff, diff.similar());
 	}
@@ -71,7 +71,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 
 		try {
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(source, result);
+			this.transformerHelper.transform(source, result);
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {

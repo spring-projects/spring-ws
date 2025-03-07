@@ -52,22 +52,22 @@ public abstract class Wss4jMessageInterceptorHeaderTest extends Wss4jTest {
 
 		Properties users = new Properties();
 		users.setProperty("Bert", "Ernie");
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setValidateRequest(true);
-		interceptor.setSecureResponse(true);
-		interceptor.setValidationActions("UsernameToken");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setValidateRequest(true);
+		this.interceptor.setSecureResponse(true);
+		this.interceptor.setValidationActions("UsernameToken");
 		SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
 		callbackHandler.setUsers(users);
-		interceptor.setValidationCallbackHandler(callbackHandler);
-		interceptor.afterPropertiesSet();
+		this.interceptor.setValidationCallbackHandler(callbackHandler);
+		this.interceptor.afterPropertiesSet();
 
-		interceptorThatKeepsSecurityHeader = new Wss4jSecurityInterceptor();
-		interceptorThatKeepsSecurityHeader.setValidateRequest(true);
-		interceptorThatKeepsSecurityHeader.setSecureResponse(true);
-		interceptorThatKeepsSecurityHeader.setValidationActions("UsernameToken");
-		interceptorThatKeepsSecurityHeader.setValidationCallbackHandler(callbackHandler);
-		interceptorThatKeepsSecurityHeader.setRemoveSecurityHeader(false);
-		interceptorThatKeepsSecurityHeader.afterPropertiesSet();
+		this.interceptorThatKeepsSecurityHeader = new Wss4jSecurityInterceptor();
+		this.interceptorThatKeepsSecurityHeader.setValidateRequest(true);
+		this.interceptorThatKeepsSecurityHeader.setSecureResponse(true);
+		this.interceptorThatKeepsSecurityHeader.setValidationActions("UsernameToken");
+		this.interceptorThatKeepsSecurityHeader.setValidationCallbackHandler(callbackHandler);
+		this.interceptorThatKeepsSecurityHeader.setRemoveSecurityHeader(false);
+		this.interceptorThatKeepsSecurityHeader.afterPropertiesSet();
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public abstract class Wss4jMessageInterceptorHeaderTest extends Wss4jTest {
 
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 		Object result = getMessage(message);
 
 		assertThat(result).isNotNull();
@@ -102,7 +102,7 @@ public abstract class Wss4jMessageInterceptorHeaderTest extends Wss4jTest {
 
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptorThatKeepsSecurityHeader.validateMessage(message, messageContext);
+		this.interceptorThatKeepsSecurityHeader.validateMessage(message, messageContext);
 		Object result = getMessage(message);
 
 		assertThat(result).isNotNull();
@@ -132,16 +132,16 @@ public abstract class Wss4jMessageInterceptorHeaderTest extends Wss4jTest {
 
 			SoapMessage message = loadSoap11Message("emptySecurityHeader-soap.xml");
 			MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-			interceptor.validateMessage(message, messageContext);
+			this.interceptor.validateMessage(message, messageContext);
 		});
 	}
 
 	@Test
 	public void testPreserveCustomHeaders() throws Exception {
 
-		interceptor.setSecurementActions("UsernameToken");
-		interceptor.setSecurementUsername("Bert");
-		interceptor.setSecurementPassword("Ernie");
+		this.interceptor.setSecurementActions("UsernameToken");
+		this.interceptor.setSecurementUsername("Bert");
+		this.interceptor.setSecurementPassword("Ernie");
 
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		SoapMessage message = loadSoap11Message("customHeader-soap.xml");
@@ -153,7 +153,7 @@ public abstract class Wss4jMessageInterceptorHeaderTest extends Wss4jTest {
 				document);
 		assertXpathNotExists("Header 2 exist", "/SOAP-ENV:Envelope/SOAP-ENV:Header/test:header2", document);
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		SoapHeaderElement element = message.getSoapHeader().addHeaderElement(new QName("http://test", "header2"));
 		element.setText("test2");

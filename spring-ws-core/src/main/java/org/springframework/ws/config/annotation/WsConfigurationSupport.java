@@ -123,11 +123,11 @@ public class WsConfigurationSupport {
 	 * {@link #addInterceptors(List)} instead.
 	 */
 	protected final EndpointInterceptor[] getInterceptors() {
-		if (interceptors == null) {
-			interceptors = new ArrayList<>();
-			addInterceptors(interceptors);
+		if (this.interceptors == null) {
+			this.interceptors = new ArrayList<>();
+			addInterceptors(this.interceptors);
 		}
-		return interceptors.toArray(new EndpointInterceptor[0]);
+		return this.interceptors.toArray(new EndpointInterceptor[0]);
 	}
 
 	/**

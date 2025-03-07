@@ -57,7 +57,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 		Assert.hasLength(faultString, "faultString cannot be empty");
 		Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
 		Assert.hasLength(faultCode.getNamespaceURI(), "faultCode's namespaceUri cannot be empty");
-		if (!langAttributeOnSoap11FaultString) {
+		if (!this.langAttributeOnSoap11FaultString) {
 			faultStringLocale = null;
 		}
 		try {

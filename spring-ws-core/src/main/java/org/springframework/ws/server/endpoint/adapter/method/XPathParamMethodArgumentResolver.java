@@ -86,7 +86,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 			return true;
 		}
 		else {
-			return conversionService.canConvert(String.class, parameterType);
+			return this.conversionService.canConvert(String.class, parameterType);
 		}
 	}
 
@@ -107,7 +107,7 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 		Element rootElement = getRootElement(messageContext.getRequest().getPayloadSource());
 		String expression = parameter.getParameterAnnotation(XPathParam.class).value();
 		Object result = xpath.evaluate(expression, rootElement, evaluationReturnType);
-		return useConversionService ? conversionService.convert(result, parameterType) : result;
+		return useConversionService ? this.conversionService.convert(result, parameterType) : result;
 	}
 
 	private QName getReturnType(Class<?> parameterType) {
@@ -132,14 +132,14 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	}
 
 	private XPath createXPath() {
-		synchronized (xpathFactory) {
-			return xpathFactory.newXPath();
+		synchronized (this.xpathFactory) {
+			return this.xpathFactory.newXPath();
 		}
 	}
 
 	private Element getRootElement(Source source) throws TransformerException {
 		DOMResult domResult = new DOMResult();
-		transformerHelper.transform(source, domResult);
+		this.transformerHelper.transform(source, domResult);
 		Document document = (Document) domResult.getNode();
 		return document.getDocumentElement();
 	}

@@ -73,7 +73,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	 * {@link HttpClient} that uses a default {@link MultiThreadedHttpConnectionManager}.
 	 */
 	public CommonsHttpMessageSender() {
-		httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
+		this.httpClient = new HttpClient(new MultiThreadedHttpConnectionManager());
 		setConnectionTimeout(DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS);
 		setReadTimeout(DEFAULT_READ_TIMEOUT_MILLISECONDS);
 	}
@@ -90,7 +90,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 
 	/** Returns the {@code HttpClient} used by this message sender. */
 	public HttpClient getHttpClient() {
-		return httpClient;
+		return this.httpClient;
 	}
 
 	/** Set the {@code HttpClient} used by this message sender. */
@@ -100,7 +100,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 
 	/** Returns the credentials to be used. */
 	public Credentials getCredentials() {
-		return credentials;
+		return this.credentials;
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class CommonsHttpMessageSender extends AbstractHttpWebServiceMessageSende
 	 * By default, the {@link AuthScope#ANY} is returned.
 	 */
 	public AuthScope getAuthScope() {
-		return authScope != null ? authScope : AuthScope.ANY;
+		return this.authScope != null ? this.authScope : AuthScope.ANY;
 	}
 
 	/**

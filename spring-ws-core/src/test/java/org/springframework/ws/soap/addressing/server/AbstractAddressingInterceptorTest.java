@@ -51,12 +51,12 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 	@BeforeEach
 	public void createMocks() throws Exception {
 
-		strategyMock = createMock(MessageIdStrategy.class);
-		expect(strategyMock.isDuplicate(isA(URI.class))).andReturn(false).anyTimes();
+		this.strategyMock = createMock(MessageIdStrategy.class);
+		expect(this.strategyMock.isDuplicate(isA(URI.class))).andReturn(false).anyTimes();
 		URI replyAction = new URI("urn:replyAction");
 		URI faultAction = new URI("urn:faultAction");
-		interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock, new WebServiceMessageSender[0],
-				replyAction, faultAction);
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
+				new WebServiceMessageSender[0], replyAction, faultAction);
 	}
 
 	@Test
@@ -65,41 +65,41 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 		SaajSoapMessage validRequest = loadSaajMessage(getTestPath() + "/valid.xml");
 		Iterator<SoapHeaderElement> iterator = validRequest.getSoapHeader().examineAllHeaderElements();
 
-		replay(strategyMock);
+		replay(this.strategyMock);
 
 		while (iterator.hasNext()) {
 			SoapHeaderElement headerElement = iterator.next();
-			assertThat(interceptor.understands(headerElement)).isTrue();
+			assertThat(this.interceptor.understands(headerElement)).isTrue();
 		}
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testValidRequest() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/valid.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 
-		replay(strategyMock);
+		replay(this.strategyMock);
 
-		boolean result = interceptor.handleRequest(context, null);
+		boolean result = this.interceptor.handleRequest(context, null);
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isFalse();
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testNoMessageId() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-message-id.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 
-		replay(strategyMock);
+		replay(this.strategyMock);
 
-		boolean result = interceptor.handleRequest(context, null);
+		boolean result = this.interceptor.handleRequest(context, null);
 
 		assertThat(result).isFalse();
 		assertThat(context.hasResponse()).isTrue();
@@ -108,20 +108,20 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 
 		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testNoReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-reply-to.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		URI messageId = new URI("uid:1234");
 
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
-		replay(strategyMock);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		replay(this.strategyMock);
 
-		boolean result = interceptor.handleResponse(context, null);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -130,20 +130,20 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 
 		assertXMLNotSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testAnonymousReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-anonymous.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		URI messageId = new URI("uid:1234");
 
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
-		replay(strategyMock);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		replay(this.strategyMock);
 
-		boolean result = interceptor.handleResponse(context, null);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isTrue();
 
@@ -151,37 +151,37 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 
 		assertXMLNotSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testNoneReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-none.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
-		replay(strategyMock);
-		boolean result = interceptor.handleResponse(context, null);
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		replay(this.strategyMock);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isFalse();
 		assertThat(context.hasResponse()).isFalse();
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
 	public void testFaultTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
 		response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
 		URI messageId = new URI("uid:1234");
 
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
-		replay(strategyMock);
+		replay(this.strategyMock);
 
-		boolean result = interceptor.handleFault(context, null);
+		boolean result = this.interceptor.handleFault(context, null);
 
 		assertThat(result).isTrue();
 
@@ -189,7 +189,7 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 
 		assertXMLNotSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 	@Test
@@ -199,17 +199,17 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 
 		URI replyAction = new URI("urn:replyAction");
 		URI faultAction = new URI("urn:replyAction");
-		interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
 				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/valid.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
 
 		URI messageId = new URI("uid:1234");
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
 		URI uri = new URI("http://example.com/business/client1");
 		expect(senderMock.supports(uri)).andReturn(true);
@@ -217,14 +217,14 @@ public abstract class AbstractAddressingInterceptorTest extends AbstractWsAddres
 		connectionMock.send(response);
 		connectionMock.close();
 
-		replay(strategyMock, senderMock, connectionMock);
+		replay(this.strategyMock, senderMock, connectionMock);
 
-		boolean result = interceptor.handleResponse(context, null);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isFalse();
 		assertThat(context.hasResponse()).isFalse();
 
-		verify(strategyMock, senderMock, connectionMock);
+		verify(this.strategyMock, senderMock, connectionMock);
 	}
 
 	protected abstract AddressingVersion getVersion();

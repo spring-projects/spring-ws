@@ -73,10 +73,10 @@ public class MockWebServiceServerTest {
 	@BeforeEach
 	public void setUp() {
 
-		template = new WebServiceTemplate();
-		template.setDefaultUri("http://example.com");
+		this.template = new WebServiceTemplate();
+		this.template.setDefaultUri("http://example.com");
 
-		server = MockWebServiceServer.createServer(template);
+		this.server = MockWebServiceServer.createServer(this.template);
 	}
 
 	@Test
@@ -153,9 +153,9 @@ public class MockWebServiceServerTest {
 
 		replay(requestMatcher1, requestMatcher2, responseCreator);
 
-		server.expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCreator);
-		template.sendSourceAndReceiveToResult(uri.toString(), new StringSource("<request xmlns='http://example.com'/>"),
-				new StringResult());
+		this.server.expect(requestMatcher1).andExpect(requestMatcher2).andRespond(responseCreator);
+		this.template.sendSourceAndReceiveToResult(uri.toString(),
+				new StringSource("<request xmlns='http://example.com'/>"), new StringResult());
 
 		verify(requestMatcher1, requestMatcher2, responseCreator);
 	}
@@ -166,10 +166,10 @@ public class MockWebServiceServerTest {
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-		server.expect(payload(request)).andRespond(withPayload(response));
+		this.server.expect(payload(request)).andRespond(withPayload(response));
 
 		StringResult result = new StringResult();
-		template.sendSourceAndReceiveToResult(request, result);
+		this.template.sendSourceAndReceiveToResult(request, result);
 
 		XmlAssert.assertThat(response.toString()).and(result.toString()).ignoreWhitespace().areSimilar();
 	}
@@ -181,11 +181,11 @@ public class MockWebServiceServerTest {
 
 			Source expected = new StringSource("<request xmlns='http://example.com'/>");
 
-			server.expect(payload(expected));
+			this.server.expect(payload(expected));
 
 			StringResult result = new StringResult();
 			String actual = "<request xmlns='http://other.com'/>";
-			template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+			this.template.sendSourceAndReceiveToResult(new StringSource(actual), result);
 		});
 	}
 
@@ -194,13 +194,14 @@ public class MockWebServiceServerTest {
 
 		final QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
 
-		server.expect(soapHeader(soapHeaderName));
+		this.server.expect(soapHeader(soapHeaderName));
 
-		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"), message -> {
+		this.template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+				message -> {
 
-			SoapMessage soapMessage = (SoapMessage) message;
-			soapMessage.getSoapHeader().addHeaderElement(soapHeaderName);
-		}, new StringResult());
+					SoapMessage soapMessage = (SoapMessage) message;
+					soapMessage.getSoapHeader().addHeaderElement(soapHeaderName);
+				}, new StringResult());
 	}
 
 	@Test
@@ -210,9 +211,9 @@ public class MockWebServiceServerTest {
 
 			QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
 
-			server.expect(soapHeader(soapHeaderName));
+			this.server.expect(soapHeader(soapHeaderName));
 
-			template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+			this.template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
 					new StringResult());
 		});
 	}
@@ -221,9 +222,9 @@ public class MockWebServiceServerTest {
 	public void connectionMatch() {
 
 		String uri = "http://example.com";
-		server.expect(connectionTo(uri));
+		this.server.expect(connectionTo(uri));
 
-		template.sendSourceAndReceiveToResult(uri, new StringSource("<request xmlns='http://example.com'/>"),
+		this.template.sendSourceAndReceiveToResult(uri, new StringSource("<request xmlns='http://example.com'/>"),
 				new StringResult());
 	}
 
@@ -233,11 +234,11 @@ public class MockWebServiceServerTest {
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
 			String expected = "http://expected.com";
-			server.expect(connectionTo(expected));
+			this.server.expect(connectionTo(expected));
 
 			String actual = "http://actual.com";
-			template.sendSourceAndReceiveToResult(actual, new StringSource("<request xmlns='http://example.com'/>"),
-					new StringResult());
+			this.template.sendSourceAndReceiveToResult(actual,
+					new StringSource("<request xmlns='http://example.com'/>"), new StringResult());
 		});
 	}
 
@@ -249,10 +250,10 @@ public class MockWebServiceServerTest {
 			Source request = new StringSource("<request xmlns='http://example.com'/>");
 			Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-			server.expect(payload(request)).andRespond(withPayload(response));
+			this.server.expect(payload(request)).andRespond(withPayload(response));
 
-			template.sendSourceAndReceiveToResult(request, new StringResult());
-			template.sendSourceAndReceiveToResult(request, new StringResult());
+			this.template.sendSourceAndReceiveToResult(request, new StringResult());
+			this.template.sendSourceAndReceiveToResult(request, new StringResult());
 		});
 	}
 
@@ -263,11 +264,11 @@ public class MockWebServiceServerTest {
 				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
 					.getBytes());
 
-		server.expect(validPayload(schema));
+		this.server.expect(validPayload(schema));
 
 		StringResult result = new StringResult();
 		String actual = "<request xmlns='http://example.com'/>";
-		template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+		this.template.sendSourceAndReceiveToResult(new StringSource(actual), result);
 	}
 
 	@Test
@@ -279,11 +280,11 @@ public class MockWebServiceServerTest {
 					"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
 						.getBytes());
 
-			server.expect(validPayload(schema));
+			this.server.expect(validPayload(schema));
 
 			StringResult result = new StringResult();
 			String actual = "<request2 xmlns='http://example.com'/>";
-			template.sendSourceAndReceiveToResult(new StringSource(actual), result);
+			this.template.sendSourceAndReceiveToResult(new StringSource(actual), result);
 		});
 	}
 
@@ -292,9 +293,9 @@ public class MockWebServiceServerTest {
 
 		final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
-		server.expect(xpath("/ns:request", ns).exists());
+		this.server.expect(xpath("/ns:request", ns).exists());
 
-		template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+		this.template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
 				new StringResult());
 	}
 
@@ -305,9 +306,9 @@ public class MockWebServiceServerTest {
 
 			final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
-			server.expect(xpath("/ns:foo", ns).exists());
+			this.server.expect(xpath("/ns:foo", ns).exists());
 
-			template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
+			this.template.sendSourceAndReceiveToResult(new StringSource("<request xmlns='http://example.com'/>"),
 					new StringResult());
 		});
 	}
@@ -318,14 +319,14 @@ public class MockWebServiceServerTest {
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-		server.expect(anything()).andRespond(withPayload(response));
+		this.server.expect(anything()).andRespond(withPayload(response));
 
 		StringResult result = new StringResult();
-		template.sendSourceAndReceiveToResult(request, result);
+		this.template.sendSourceAndReceiveToResult(request, result);
 
 		XmlAssert.assertThat(response.toString()).and(result.toString()).ignoreWhitespace().areSimilar();
 
-		server.verify();
+		this.server.verify();
 	}
 
 	@Test
@@ -336,15 +337,15 @@ public class MockWebServiceServerTest {
 			Source request = new StringSource("<request xmlns='http://example.com'/>");
 			Source response = new StringSource("<response xmlns='http://example.com'/>");
 
-			server.expect(anything()).andRespond(withPayload(response));
-			server.expect(anything()).andRespond(withPayload(response));
+			this.server.expect(anything()).andRespond(withPayload(response));
+			this.server.expect(anything()).andRespond(withPayload(response));
 
 			StringResult result = new StringResult();
-			template.sendSourceAndReceiveToResult(request, result);
+			this.template.sendSourceAndReceiveToResult(request, result);
 
 			XmlAssert.assertThat(response.toString()).and(result.toString()).ignoreWhitespace().areSimilar();
 
-			server.expect(anything()).andRespond(withPayload(response));
+			this.server.expect(anything()).andRespond(withPayload(response));
 		});
 	}
 
@@ -353,9 +354,9 @@ public class MockWebServiceServerTest {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
 		marshaller.setClassesToBeBound(EnvelopeMatcherRequest.class, EnvelopeMatcherResponse.class);
 
-		template = new WebServiceTemplate(marshaller);
-		template.setDefaultUri("https://example.com");
-		server = MockWebServiceServer.createServer(template);
+		this.template = new WebServiceTemplate(marshaller);
+		this.template.setDefaultUri("https://example.com");
+		this.server = MockWebServiceServer.createServer(this.template);
 
 		Source expectedSoapRequest = new StringSource("""
 				<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
@@ -375,12 +376,12 @@ public class MockWebServiceServerTest {
 				  </SOAP-ENV:Body>
 				</SOAP-ENV:Envelope>""");
 
-		server.expect(soapEnvelope(expectedSoapRequest)).andRespond(withSoapEnvelope(soapResponse));
+		this.server.expect(soapEnvelope(expectedSoapRequest)).andRespond(withSoapEnvelope(soapResponse));
 
 		EnvelopeMatcherRequest request = new EnvelopeMatcherRequest();
 		request.setMyData("123456");
 		assertThat(request.getMyData()).isEqualTo("123456");
-		EnvelopeMatcherResponse response = (EnvelopeMatcherResponse) template.marshalSendAndReceive(request);
+		EnvelopeMatcherResponse response = (EnvelopeMatcherResponse) this.template.marshalSendAndReceive(request);
 
 		assertThat(response.getMyData()).isEqualTo("654321");
 	}
@@ -390,14 +391,14 @@ public class MockWebServiceServerTest {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			server.expect(anything());
-			server.verify();
+			this.server.expect(anything());
+			this.server.verify();
 		});
 	}
 
 	@Test
 	public void verifyOnly() {
-		server.verify();
+		this.server.verify();
 	}
 
 	@Test
@@ -407,10 +408,10 @@ public class MockWebServiceServerTest {
 
 			Source request = new StringSource("<request xmlns='http://example.com'/>");
 
-			server.expect(anything()).andRespond(withClientOrSenderFault("reason", Locale.ENGLISH));
+			this.server.expect(anything()).andRespond(withClientOrSenderFault("reason", Locale.ENGLISH));
 
 			StringResult result = new StringResult();
-			template.sendSourceAndReceiveToResult(request, result);
+			this.template.sendSourceAndReceiveToResult(request, result);
 		});
 	}
 
@@ -424,7 +425,7 @@ public class MockWebServiceServerTest {
 		private String myData;
 
 		public String getMyData() {
-			return myData;
+			return this.myData;
 		}
 
 		public void setMyData(String myData) {
@@ -439,7 +440,7 @@ public class MockWebServiceServerTest {
 		private String myData;
 
 		public String getMyData() {
-			return myData;
+			return this.myData;
 		}
 
 		public void setMyData(String myData) {

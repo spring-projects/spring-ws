@@ -104,7 +104,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
 	/** Returns the marshaller used for transforming objects into XML. */
 	public Marshaller getMarshaller() {
-		return marshaller;
+		return this.marshaller;
 	}
 
 	/** Sets the marshaller used for transforming objects into XML. */
@@ -114,7 +114,7 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 
 	/** Returns the unmarshaller used for transforming XML into objects. */
 	public Unmarshaller getUnmarshaller() {
-		return unmarshaller;
+		return this.unmarshaller;
 	}
 
 	/** Sets the unmarshaller used for transforming XML into objects. */
@@ -145,8 +145,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 		Unmarshaller unmarshaller = getUnmarshaller();
 		Assert.notNull(unmarshaller, "No unmarshaller registered. Check configuration of endpoint.");
 		Object requestObject = MarshallingUtils.unmarshal(unmarshaller, request);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Unmarshalled payload request to [" + requestObject + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Unmarshalled payload request to [" + requestObject + "]");
 		}
 		return requestObject;
 	}
@@ -169,8 +169,8 @@ public abstract class AbstractMarshallingPayloadEndpoint implements MessageEndpo
 	private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
 		Marshaller marshaller = getMarshaller();
 		Assert.notNull(marshaller, "No marshaller registered. Check configuration of endpoint.");
-		if (logger.isDebugEnabled()) {
-			logger.debug("Marshalling [" + responseObject + "] to response payload");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Marshalling [" + responseObject + "] to response payload");
 		}
 		MarshallingUtils.marshal(marshaller, responseObject, response);
 	}

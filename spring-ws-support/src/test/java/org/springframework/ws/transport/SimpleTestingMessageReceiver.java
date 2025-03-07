@@ -29,7 +29,7 @@ public class SimpleTestingMessageReceiver extends TransformerObjectSupport imple
 
 		Assert.notNull(messageContext, "MessageContext is null");
 
-		logger.info("Received " + messageContext.getRequest());
+		this.logger.info("Received " + messageContext.getRequest());
 
 		Transformer transformer = createTransformer();
 		transformer.transform(messageContext.getRequest().getPayloadSource(),

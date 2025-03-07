@@ -38,23 +38,23 @@ public abstract class TransportOutputStream extends OutputStream {
 	}
 
 	private OutputStream getOutputStream() throws IOException {
-		if (outputStream == null) {
-			outputStream = createOutputStream();
-			Assert.notNull(outputStream, "outputStream must not be null");
+		if (this.outputStream == null) {
+			this.outputStream = createOutputStream();
+			Assert.notNull(this.outputStream, "outputStream must not be null");
 		}
-		return outputStream;
+		return this.outputStream;
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (outputStream != null) {
+		if (this.outputStream != null) {
 			getOutputStream().close();
 		}
 	}
 
 	@Override
 	public void flush() throws IOException {
-		if (outputStream != null) {
+		if (this.outputStream != null) {
 			getOutputStream().flush();
 		}
 	}

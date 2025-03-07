@@ -39,9 +39,9 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
 	@BeforeEach
 	public final void setUp() throws NoSuchMethodException {
 
-		processor = createProcessor();
-		supportedParameters = createSupportedParameters();
-		supportedReturnTypes = createSupportedReturnTypes();
+		this.processor = createProcessor();
+		this.supportedParameters = createSupportedParameters();
+		this.supportedReturnTypes = createSupportedReturnTypes();
 	}
 
 	protected abstract AbstractPayloadSourceMethodProcessor createProcessor();
@@ -53,27 +53,27 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
 	@Test
 	public void supportsParameter() throws NoSuchMethodException {
 
-		for (MethodParameter supportedParameter : supportedParameters) {
-			assertThat(processor.supportsParameter(supportedParameter)).isTrue();
+		for (MethodParameter supportedParameter : this.supportedParameters) {
+			assertThat(this.processor.supportsParameter(supportedParameter)).isTrue();
 		}
 
 		MethodParameter unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class),
 				0);
 
-		assertThat(processor.supportsParameter(unsupportedParameter)).isFalse();
+		assertThat(this.processor.supportsParameter(unsupportedParameter)).isFalse();
 	}
 
 	@Test
 	public void supportsReturnType() throws NoSuchMethodException {
 
-		for (MethodParameter supportedReturnType : supportedReturnTypes) {
-			assertThat(processor.supportsReturnType(supportedReturnType)).isTrue();
+		for (MethodParameter supportedReturnType : this.supportedReturnTypes) {
+			assertThat(this.processor.supportsReturnType(supportedReturnType)).isTrue();
 		}
 
 		MethodParameter unsupportedReturnType = new MethodParameter(getClass().getMethod("unsupported", String.class),
 				-1);
 
-		assertThat(processor.supportsReturnType(unsupportedReturnType)).isFalse();
+		assertThat(this.processor.supportsReturnType(unsupportedReturnType)).isFalse();
 	}
 
 	@Test
@@ -98,9 +98,9 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
 
 	private void testResolveArgument(MessageContext messageContext) throws Exception {
 
-		for (MethodParameter supportedParameter : supportedParameters) {
+		for (MethodParameter supportedParameter : this.supportedParameters) {
 
-			Object argument = processor.resolveArgument(messageContext, supportedParameter);
+			Object argument = this.processor.resolveArgument(messageContext, supportedParameter);
 
 			assertThat(supportedParameter.getParameterType().isInstance(argument)).isTrue();
 			testArgument(argument, supportedParameter);
@@ -132,10 +132,10 @@ public abstract class AbstractPayloadMethodProcessorTest extends AbstractMethodA
 
 	private void testHandleReturnValue(MessageContext messageContext) throws Exception {
 
-		for (MethodParameter supportedReturnType : supportedReturnTypes) {
+		for (MethodParameter supportedReturnType : this.supportedReturnTypes) {
 
 			Object returnValue = getReturnValue(supportedReturnType);
-			processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
+			this.processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
 
 			assertThat(messageContext.hasResponse()).isTrue();
 

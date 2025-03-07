@@ -86,7 +86,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(connection, "'connection' is required");
+		Assert.notNull(this.connection, "'connection' is required");
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 		String to = XmppTransportUtils.getTo(uri);
 		String thread = createThread();
 		XmppSenderConnection connection = new XmppSenderConnection(this.connection, to, thread);
-		connection.setReceiveTimeout(receiveTimeout);
-		connection.setMessageEncoding(messageEncoding);
+		connection.setReceiveTimeout(this.receiveTimeout);
+		connection.setMessageEncoding(this.messageEncoding);
 		return connection;
 	}
 

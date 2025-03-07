@@ -88,9 +88,9 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 	 */
 	@Override
 	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-		if (requestTemplates != null) {
+		if (this.requestTemplates != null) {
 			WebServiceMessage request = messageContext.getRequest();
-			Transformer transformer = requestTemplates.newTransformer();
+			Transformer transformer = this.requestTemplates.newTransformer();
 			transformMessage(request, transformer);
 			logger.debug("Request message transformed");
 		}
@@ -106,9 +106,9 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 	 */
 	@Override
 	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-		if (responseTemplates != null) {
+		if (this.responseTemplates != null) {
 			WebServiceMessage response = messageContext.getResponse();
-			Transformer transformer = responseTemplates.newTransformer();
+			Transformer transformer = this.responseTemplates.newTransformer();
 			transformMessage(response, transformer);
 			logger.debug("Response message transformed");
 		}
@@ -135,7 +135,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (requestXslt == null && responseXslt == null) {
+		if (this.requestXslt == null && this.responseXslt == null) {
 			throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
 		}
 		TransformerFactory transformerFactory = getTransformerFactory();
@@ -143,21 +143,21 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 		parserFactory.setNamespaceAware(true);
 		XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
 		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-		if (requestXslt != null) {
-			Assert.isTrue(requestXslt.exists(), "requestXslt \"" + requestXslt + "\" does not exit");
+		if (this.requestXslt != null) {
+			Assert.isTrue(this.requestXslt.exists(), "requestXslt \"" + this.requestXslt + "\" does not exit");
 			if (logger.isInfoEnabled()) {
-				logger.info("Transforming request using " + requestXslt);
+				logger.info("Transforming request using " + this.requestXslt);
 			}
-			Source requestSource = new ResourceSource(xmlReader, requestXslt);
-			requestTemplates = transformerFactory.newTemplates(requestSource);
+			Source requestSource = new ResourceSource(xmlReader, this.requestXslt);
+			this.requestTemplates = transformerFactory.newTemplates(requestSource);
 		}
-		if (responseXslt != null) {
-			Assert.isTrue(responseXslt.exists(), "responseXslt \"" + responseXslt + "\" does not exit");
+		if (this.responseXslt != null) {
+			Assert.isTrue(this.responseXslt.exists(), "responseXslt \"" + this.responseXslt + "\" does not exit");
 			if (logger.isInfoEnabled()) {
-				logger.info("Transforming response using " + responseXslt);
+				logger.info("Transforming response using " + this.responseXslt);
 			}
-			Source responseSource = new ResourceSource(xmlReader, responseXslt);
-			responseTemplates = transformerFactory.newTemplates(responseSource);
+			Source responseSource = new ResourceSource(xmlReader, this.responseXslt);
+			this.responseTemplates = transformerFactory.newTemplates(responseSource);
 		}
 	}
 

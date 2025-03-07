@@ -54,19 +54,19 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTest {
 	protected final SoapMessage createSoapMessage() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-		saajMessage = messageFactory.createMessage();
-		saajMessage.getSOAPHeader().detachNode();
+		this.saajMessage = messageFactory.createMessage();
+		this.saajMessage.getSOAPHeader().detachNode();
 
-		return new SaajSoapMessage(saajMessage, true, messageFactory);
+		return new SaajSoapMessage(this.saajMessage, true, messageFactory);
 	}
 
 	@Test
 	public void testGetPayloadSource() throws Exception {
 
-		saajMessage.getSOAPPart().getEnvelope().getBody().addChildElement("child");
-		Source source = soapMessage.getPayloadSource();
+		this.saajMessage.getSOAPPart().getEnvelope().getBody().addChildElement("child");
+		Source source = this.soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
-		transformer.transform(source, result);
+		this.transformer.transform(source, result);
 
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
@@ -74,12 +74,12 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTest {
 	@Test
 	public void testGetPayloadSourceText() throws Exception {
 
-		SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
+		SOAPBody body = this.saajMessage.getSOAPPart().getEnvelope().getBody();
 		body.addTextNode(" ");
 		body.addChildElement("child");
-		Source source = soapMessage.getPayloadSource();
+		Source source = this.soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
-		transformer.transform(source, result);
+		this.transformer.transform(source, result);
 
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
@@ -88,9 +88,9 @@ public class SaajSoap11MessageTest extends AbstractSoap11MessageTest {
 	public void testGetPayloadResult() throws Exception {
 
 		StringSource source = new StringSource("<child/>");
-		Result result = soapMessage.getPayloadResult();
-		transformer.transform(source, result);
-		SOAPBody body = saajMessage.getSOAPPart().getEnvelope().getBody();
+		Result result = this.soapMessage.getPayloadResult();
+		this.transformer.transform(source, result);
+		SOAPBody body = this.saajMessage.getSOAPPart().getEnvelope().getBody();
 		Iterator<?> iterator = body.getChildElements();
 
 		assertThat(iterator.hasNext()).isTrue();

@@ -29,17 +29,17 @@ public class UuidMessageIdStrategyTest {
 
 	@BeforeEach
 	public final void setUp() {
-		strategy = new UuidMessageIdStrategy();
+		this.strategy = new UuidMessageIdStrategy();
 	}
 
 	@Test
 	public void testStrategy() {
 
-		URI messageId1 = strategy.newMessageId(null);
+		URI messageId1 = this.strategy.newMessageId(null);
 
 		assertThat(messageId1).isNotNull();
 
-		URI messageId2 = strategy.newMessageId(null);
+		URI messageId2 = this.strategy.newMessageId(null);
 
 		assertThat(messageId2).isNotNull();
 		assertThat(messageId2).isNotEqualTo(messageId1);

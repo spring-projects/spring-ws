@@ -78,7 +78,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
 	 */
 	public boolean getAddValidationErrorDetail() {
-		return addValidationErrorDetail;
+		return this.addValidationErrorDetail;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 	 * Returns the fault detail element name when validation errors occur on the request.
 	 */
 	public QName getDetailElementName() {
-		return detailElementName;
+		return this.detailElementName;
 	}
 
 	/**
@@ -113,7 +113,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 	 * occur on the request.
 	 */
 	public String getFaultStringOrReason() {
-		return faultStringOrReason;
+		return this.faultStringOrReason;
 	}
 
 	/**
@@ -131,7 +131,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 	 * request.
 	 */
 	public Locale getFaultStringOrReasonLocale() {
-		return faultStringOrReasonLocale;
+		return this.faultStringOrReasonLocale;
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class AbstractFaultCreatingValidatingInterceptor extends Abstrac
 	protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors)
 			throws TransformerException {
 		for (SAXParseException error : errors) {
-			logger.warn("XML validation error on request: " + error.getMessage());
+			this.logger.warn("XML validation error on request: " + error.getMessage());
 		}
 		if (messageContext.getResponse() instanceof SoapMessage response) {
 			SoapBody body = response.getSoapBody();

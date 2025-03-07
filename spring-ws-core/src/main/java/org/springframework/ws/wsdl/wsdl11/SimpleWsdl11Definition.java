@@ -77,7 +77,7 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 			parserFactory.setNamespaceAware(true);
 			XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
 			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
-			return new ResourceSource(xmlReader, wsdlResource);
+			return new ResourceSource(xmlReader, this.wsdlResource);
 		}
 		catch (SAXException | ParserConfigurationException ex) {
 			throw new WsdlDefinitionException("Could not create XMLReader", ex);
@@ -97,7 +97,7 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 	}
 
 	public String toString() {
-		return "SimpleWsdl11Definition " + wsdlResource;
+		return "SimpleWsdl11Definition " + this.wsdlResource;
 	}
 
 }

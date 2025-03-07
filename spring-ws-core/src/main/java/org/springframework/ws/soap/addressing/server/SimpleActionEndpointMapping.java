@@ -104,7 +104,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		registerEndpoints(actionMap);
+		registerEndpoints(this.actionMap);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	 */
 	protected void registerEndpoints(Map<URI, Object> actionMap) throws BeansException {
 		if (actionMap.isEmpty()) {
-			logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
+			this.logger.warn("Neither 'actionMap' nor 'mappings' set on SimpleActionEndpointMapping");
 		}
 		else {
 			for (Map.Entry<URI, Object> entry : actionMap.entrySet()) {
@@ -133,7 +133,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 
 	@Override
 	protected URI getEndpointAddress(Object endpoint) {
-		return address;
+		return this.address;
 	}
 
 }

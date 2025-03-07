@@ -65,8 +65,8 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(userCache, "An x509UserCache must be set");
-		Assert.notNull(x509AuthoritiesPopulator, "An X509AuthoritiesPopulator must be set");
+		Assert.notNull(this.userCache, "An x509UserCache must be set");
+		Assert.notNull(this.x509AuthoritiesPopulator, "An X509AuthoritiesPopulator must be set");
 		Assert.notNull(this.messages, "A message source must be set");
 	}
 
@@ -101,17 +101,17 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 
 		if (clientCertificate == null) {
 			throw new BadCredentialsException(
-					messages.getMessage("X509AuthenticationProvider.certificateNull", "Certificate is null"));
+					this.messages.getMessage("X509AuthenticationProvider.certificateNull", "Certificate is null"));
 		}
 
-		UserDetails user = userCache.getUserFromCache(clientCertificate);
+		UserDetails user = this.userCache.getUserFromCache(clientCertificate);
 
 		if (user == null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Authenticating with certificate " + clientCertificate);
 			}
-			user = x509AuthoritiesPopulator.getUserDetails(clientCertificate);
-			userCache.putUserInCache(clientCertificate, user);
+			user = this.x509AuthoritiesPopulator.getUserDetails(clientCertificate);
+			this.userCache.putUserInCache(clientCertificate, user);
 		}
 
 		X509AuthenticationToken result = new X509AuthenticationToken(user, clientCertificate, user.getAuthorities());

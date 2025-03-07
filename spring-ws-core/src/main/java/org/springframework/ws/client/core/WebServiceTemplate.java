@@ -206,8 +206,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * Returns the default URI to be used on operations that do not have a URI parameter.
 	 */
 	public String getDefaultUri() {
-		if (destinationProvider != null) {
-			URI uri = destinationProvider.getDestination();
+		if (this.destinationProvider != null) {
+			URI uri = this.destinationProvider.getDestination();
 			return uri != null ? uri.toString() : null;
 		}
 		else {
@@ -229,7 +229,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @see #sendAndReceive(WebServiceMessageCallback,WebServiceMessageCallback)
 	 */
 	public void setDefaultUri(final String uri) {
-		destinationProvider = new DestinationProvider() {
+		this.destinationProvider = new DestinationProvider() {
 
 			public URI getDestination() {
 				return URI.create(uri);
@@ -242,7 +242,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * parameter.
 	 */
 	public DestinationProvider getDestinationProvider() {
-		return destinationProvider;
+		return this.destinationProvider;
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 	/** Returns the marshaller for this template. */
 	public Marshaller getMarshaller() {
-		return marshaller;
+		return this.marshaller;
 	}
 
 	/** Sets the marshaller for this template. */
@@ -275,7 +275,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 	/** Returns the unmarshaller for this template. */
 	public Unmarshaller getUnmarshaller() {
-		return unmarshaller;
+		return this.unmarshaller;
 	}
 
 	/** Sets the unmarshaller for this template. */
@@ -285,7 +285,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 	/** Returns the fault message resolver for this template. */
 	public FaultMessageResolver getFaultMessageResolver() {
-		return faultMessageResolver;
+		return this.faultMessageResolver;
 	}
 
 	/**
@@ -347,7 +347,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @return array of endpoint interceptors, or {@code null} if none
 	 */
 	public ClientInterceptor[] getInterceptors() {
-		return interceptors;
+		return this.interceptors;
 	}
 
 	/**
@@ -613,10 +613,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			}
 			// Apply handleRequest of registered interceptors
 			boolean intercepted = false;
-			if (interceptors != null) {
-				for (int i = 0; i < interceptors.length; i++) {
+			if (this.interceptors != null) {
+				for (int i = 0; i < this.interceptors.length; i++) {
 					interceptorIndex = i;
-					if (!interceptors[i].handleRequest(messageContext)) {
+					if (!this.interceptors[i].handleRequest(messageContext)) {
 						intercepted = true;
 						break;
 					}
@@ -687,9 +687,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @throws IOException in case of I/O errors
 	 */
 	protected boolean hasError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-		if (checkConnectionForError && connection.hasError()) {
+		if (this.checkConnectionForError && connection.hasError()) {
 			// could be a fault
-			if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
+			if (this.checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
 				return !(faultConnection.hasFault() && request instanceof FaultAwareWebServiceMessage);
 			}
 			else {
@@ -709,8 +709,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * if any
 	 */
 	protected Object handleError(WebServiceConnection connection, WebServiceMessage request) throws IOException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Received error for request [" + request + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Received error for request [" + request + "]");
 		}
 		throw new WebServiceTransportException(connection.getErrorMessage());
 	}
@@ -754,7 +754,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @throws IOException in case of I/O errors
 	 */
 	protected boolean hasFault(WebServiceConnection connection, WebServiceMessage response) throws IOException {
-		if (checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
+		if (this.checkConnectionForFault && connection instanceof FaultAwareWebServiceConnection faultConnection) {
 			// check whether the connection has a fault (i.e. status code 500 in HTTP)
 			if (!faultConnection.hasFault()) {
 				return false;
@@ -778,9 +778,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @see ClientInterceptor#handleFault(MessageContext)
 	 */
 	private void triggerHandleResponse(int interceptorIndex, MessageContext messageContext) {
-		if (messageContext.hasResponse() && interceptors != null) {
+		if (messageContext.hasResponse() && this.interceptors != null) {
 			for (int i = interceptorIndex; i >= 0; i--) {
-				if (!interceptors[i].handleResponse(messageContext)) {
+				if (!this.interceptors[i].handleResponse(messageContext)) {
 					break;
 				}
 			}
@@ -797,9 +797,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * @see ClientInterceptor#handleFault(MessageContext)
 	 */
 	private void triggerHandleFault(int interceptorIndex, MessageContext messageContext) {
-		if (messageContext.hasResponse() && interceptors != null) {
+		if (messageContext.hasResponse() && this.interceptors != null) {
 			for (int i = interceptorIndex; i >= 0; i--) {
-				if (!interceptors[i].handleFault(messageContext)) {
+				if (!this.interceptors[i].handleFault(messageContext)) {
 					break;
 				}
 			}
@@ -818,9 +818,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 */
 	private void triggerAfterCompletion(int interceptorIndex, MessageContext messageContext, Exception ex)
 			throws WebServiceClientException {
-		if (interceptors != null) {
+		if (this.interceptors != null) {
 			for (int i = interceptorIndex; i >= 0; i--) {
-				interceptors[i].afterCompletion(messageContext, ex);
+				this.interceptors[i].afterCompletion(messageContext, ex);
 			}
 		}
 	}
@@ -836,8 +836,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * if any
 	 */
 	protected Object handleFault(WebServiceConnection connection, MessageContext messageContext) throws IOException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Received Fault message for request [" + messageContext.getRequest() + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Received Fault message for request [" + messageContext.getRequest() + "]");
 		}
 		if (getFaultMessageResolver() != null) {
 			getFaultMessageResolver().resolveFault(messageContext.getResponse());
@@ -862,7 +862,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 		@Override
 		public Boolean extractData(WebServiceMessage message) throws IOException, TransformerException {
-			callback.doWithMessage(message);
+			this.callback.doWithMessage(message);
 			return Boolean.TRUE;
 		}
 
@@ -879,7 +879,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 		@Override
 		public T extractData(WebServiceMessage message) throws IOException, TransformerException {
-			return sourceExtractor.extractData(message.getPayloadSource());
+			return this.sourceExtractor.extractData(message.getPayloadSource());
 		}
 
 	}

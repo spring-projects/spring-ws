@@ -61,11 +61,11 @@ public class SaajWss4jSecurityInterceptorDefaultsTest extends Wss4jTest {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 
-		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		SOAPMessage saajMessage = this.saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SoapMessage message = new SaajSoapMessage(saajMessage, this.saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
-				new SaajSoapMessageFactory(saajSoap11MessageFactory));
+				new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
 		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
 				messageContext);
@@ -81,11 +81,11 @@ public class SaajWss4jSecurityInterceptorDefaultsTest extends Wss4jTest {
 		subject.setAddInclusivePrefixes(false);
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 
-		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		SOAPMessage saajMessage = this.saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SoapMessage message = new SaajSoapMessage(saajMessage, this.saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
-				new SaajSoapMessageFactory(saajSoap11MessageFactory));
+				new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
 		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
 				messageContext);

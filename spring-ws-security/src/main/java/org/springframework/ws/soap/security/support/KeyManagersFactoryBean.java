@@ -85,7 +85,7 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 
 	@Override
 	public KeyManager[] getObject() throws Exception {
-		return keyManagers;
+		return this.keyManagers;
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 		KeyManagerFactory keyManagerFactory = StringUtils.hasLength(this.provider)
 				? KeyManagerFactory.getInstance(algorithm, this.provider) : KeyManagerFactory.getInstance(algorithm);
 
-		keyManagerFactory.init(keyStore, password);
+		keyManagerFactory.init(this.keyStore, this.password);
 
 		this.keyManagers = keyManagerFactory.getKeyManagers();
 	}

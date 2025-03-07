@@ -61,13 +61,13 @@ public class SimplePasswordValidationCallbackHandler extends AbstractWsPasswordC
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(users, "users is required");
+		Assert.notNull(this.users, "users is required");
 	}
 
 	@Override
 	public void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
 		String username = callback.getIdentifier();
-		String passwd = users.get(username);
+		String passwd = this.users.get(username);
 		callback.setPassword(passwd);
 	}
 

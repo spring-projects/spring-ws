@@ -58,11 +58,12 @@ public class PayloadRootSmartSoapEndpointInterceptor extends DelegatingSmartSoap
 	@Override
 	protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
 		try {
-			QName payloadRootName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), transformerHelper);
-			if (payloadRootName == null || !namespaceUri.equals(payloadRootName.getNamespaceURI())) {
+			QName payloadRootName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(),
+					this.transformerHelper);
+			if (payloadRootName == null || !this.namespaceUri.equals(payloadRootName.getNamespaceURI())) {
 				return false;
 			}
-			return !StringUtils.hasLength(localPart) || localPart.equals(payloadRootName.getLocalPart());
+			return !StringUtils.hasLength(this.localPart) || this.localPart.equals(payloadRootName.getLocalPart());
 
 		}
 		catch (TransformerException e) {

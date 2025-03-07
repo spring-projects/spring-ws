@@ -32,14 +32,14 @@ public class XmlRootElementEndpointMappingTest {
 
 	@BeforeEach
 	public void createMapping() {
-		mapping = new XmlRootElementEndpointMapping();
+		this.mapping = new XmlRootElementEndpointMapping();
 	}
 
 	@Test
 	public void rootElement() throws NoSuchMethodException {
 
 		Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
-		QName name = mapping.getLookupKeyForMethod(rootElement);
+		QName name = this.mapping.getLookupKeyForMethod(rootElement);
 
 		assertThat(name).isEqualTo(new QName("myNamespace", "myRoot"));
 	}

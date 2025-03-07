@@ -49,17 +49,17 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 	public void setExceptionMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
 			if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
-				exceptionMappings.put((String) entry.getKey(), (String) entry.getValue());
+				this.exceptionMappings.put((String) entry.getKey(), (String) entry.getValue());
 			}
 		}
 	}
 
 	@Override
 	protected SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
-		if (!CollectionUtils.isEmpty(exceptionMappings)) {
+		if (!CollectionUtils.isEmpty(this.exceptionMappings)) {
 			String definitionText = null;
 			int deepest = Integer.MAX_VALUE;
-			for (Map.Entry<String, String> exceptionMapping : exceptionMappings.entrySet()) {
+			for (Map.Entry<String, String> exceptionMapping : this.exceptionMappings.entrySet()) {
 				int depth = getDepth(exceptionMapping.getKey(), ex);
 				if (depth >= 0 && depth < deepest) {
 					deepest = depth;

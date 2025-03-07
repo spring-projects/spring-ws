@@ -51,7 +51,7 @@ public class WebServiceValidationException extends WebServiceClientException {
 
 	/** Returns the validation errors. */
 	public SAXParseException[] getValidationErrors() {
-		return validationErrors;
+		return this.validationErrors;
 	}
 
 }

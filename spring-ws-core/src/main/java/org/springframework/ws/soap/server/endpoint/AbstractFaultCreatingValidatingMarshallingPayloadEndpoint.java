@@ -86,7 +86,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 	 * @see org.springframework.ws.soap.SoapFault#addFaultDetail()
 	 */
 	public boolean getAddValidationErrorDetail() {
-		return addValidationErrorDetail;
+		return this.addValidationErrorDetail;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 	 * Returns the fault detail element name when validation errors occur on the request.
 	 */
 	public QName getDetailElementName() {
-		return detailElementName;
+		return this.detailElementName;
 	}
 
 	/**
@@ -121,7 +121,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 	 * occur on the request.
 	 */
 	public String getFaultStringOrReason() {
-		return faultStringOrReason;
+		return this.faultStringOrReason;
 	}
 
 	/**
@@ -136,7 +136,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 
 	/** Returns the locale for SOAP fault reason and validation message resolution. */
 	public Locale getFaultLocale() {
-		return faultStringOrReasonLocale;
+		return this.faultStringOrReasonLocale;
 	}
 
 	/**
@@ -167,8 +167,8 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 	@Override
 	protected final boolean onValidationErrors(MessageContext messageContext, Object requestObject, Errors errors) {
 		for (ObjectError objectError : errors.getAllErrors()) {
-			String msg = messageSource.getMessage(objectError, getFaultLocale());
-			logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
+			String msg = this.messageSource.getMessage(objectError, getFaultLocale());
+			this.logger.warn("Validation error on request object[" + requestObject + "]: " + msg);
 		}
 		if (messageContext.getResponse() instanceof SoapMessage response) {
 			SoapBody body = response.getSoapBody();
@@ -176,7 +176,7 @@ public abstract class AbstractFaultCreatingValidatingMarshallingPayloadEndpoint
 			if (getAddValidationErrorDetail()) {
 				SoapFaultDetail detail = fault.addFaultDetail();
 				for (ObjectError objectError : errors.getAllErrors()) {
-					String msg = messageSource.getMessage(objectError, getFaultLocale());
+					String msg = this.messageSource.getMessage(objectError, getFaultLocale());
 					SoapFaultDetailElement detailElement = detail.addFaultDetailElement(getDetailElementName());
 					detailElement.addText(msg);
 				}

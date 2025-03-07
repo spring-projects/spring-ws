@@ -103,7 +103,7 @@ abstract class Jaxp13XPathExpressionFactory {
 
 		@Override
 		public String toString() {
-			return expression;
+			return this.expression;
 		}
 
 		@Override
@@ -120,8 +120,8 @@ abstract class Jaxp13XPathExpressionFactory {
 		private Object evaluate(Node node, QName returnType) {
 			try {
 				// XPathExpression is not thread-safe
-				synchronized (xpathExpression) {
-					return xpathExpression.evaluate(node, returnType);
+				synchronized (this.xpathExpression) {
+					return this.xpathExpression.evaluate(node, returnType);
 				}
 			}
 			catch (XPathExpressionException ex) {

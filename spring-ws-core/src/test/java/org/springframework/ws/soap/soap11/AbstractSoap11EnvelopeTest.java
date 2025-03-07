@@ -31,7 +31,7 @@ public abstract class AbstractSoap11EnvelopeTest extends AbstractSoapEnvelopeTes
 
 	@Test
 	public void testGetName() {
-		assertThat(soapEnvelope.getName())
+		assertThat(this.soapEnvelope.getName())
 			.isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Envelope"));
 	}
 
@@ -39,7 +39,7 @@ public abstract class AbstractSoap11EnvelopeTest extends AbstractSoapEnvelopeTes
 	public void testGetContent() throws Exception {
 
 		StringResult result = new StringResult();
-		transformer.transform(soapEnvelope.getSource(), result);
+		this.transformer.transform(this.soapEnvelope.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'><Header/><Body/></Envelope>")

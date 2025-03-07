@@ -36,18 +36,18 @@ public abstract class AbstractMessageEndpointTest extends AbstractEndpointTest {
 
 	@BeforeEach
 	public void createEndpoint() throws Exception {
-		endpoint = createResponseEndpoint();
+		this.endpoint = createResponseEndpoint();
 	}
 
 	@Test
 	public void testNoResponse() throws Exception {
 
-		endpoint = createNoResponseEndpoint();
+		this.endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
 				new MockWebServiceMessageFactory());
-		endpoint.invoke(context);
+		this.endpoint.invoke(context);
 
 		assertThat(context.hasResponse()).isFalse();
 	}
@@ -55,11 +55,11 @@ public abstract class AbstractMessageEndpointTest extends AbstractEndpointTest {
 	@Test
 	public void testNoRequestPayload() throws Exception {
 
-		endpoint = createNoRequestPayloadEndpoint();
+		this.endpoint = createNoRequestPayloadEndpoint();
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage((StringBuilder) null),
 				new MockWebServiceMessageFactory());
-		endpoint.invoke(context);
+		this.endpoint.invoke(context);
 
 		assertThat(context.hasResponse()).isFalse();
 	}
@@ -69,7 +69,7 @@ public abstract class AbstractMessageEndpointTest extends AbstractEndpointTest {
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessage(requestSource),
 				new MockWebServiceMessageFactory());
-		endpoint.invoke(context);
+		this.endpoint.invoke(context);
 
 		assertThat(context.hasResponse()).isTrue();
 		XmlAssert.assertThat(((MockWebServiceMessage) context.getResponse()).getPayloadAsString())

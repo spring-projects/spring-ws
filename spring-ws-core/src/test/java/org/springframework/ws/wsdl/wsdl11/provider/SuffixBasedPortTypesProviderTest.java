@@ -37,9 +37,9 @@ public class SuffixBasedPortTypesProviderTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		provider = new SuffixBasedPortTypesProvider();
+		this.provider = new SuffixBasedPortTypesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
-		definition = factory.newDefinition();
+		this.definition = factory.newDefinition();
 	}
 
 	@Test
@@ -47,25 +47,25 @@ public class SuffixBasedPortTypesProviderTest {
 	public void testAddPortTypes() throws Exception {
 
 		String namespace = "http://springframework.org/spring-ws";
-		definition.addNamespace("tns", namespace);
-		definition.setTargetNamespace(namespace);
+		this.definition.addNamespace("tns", namespace);
+		this.definition.setTargetNamespace(namespace);
 
-		Message message = definition.createMessage();
+		Message message = this.definition.createMessage();
 		message.setQName(new QName(namespace, "OperationRequest"));
-		definition.addMessage(message);
+		this.definition.addMessage(message);
 
-		message = definition.createMessage();
+		message = this.definition.createMessage();
 		message.setQName(new QName(namespace, "OperationResponse"));
-		definition.addMessage(message);
+		this.definition.addMessage(message);
 
-		message = definition.createMessage();
+		message = this.definition.createMessage();
 		message.setQName(new QName(namespace, "OperationFault"));
-		definition.addMessage(message);
+		this.definition.addMessage(message);
 
-		provider.setPortTypeName("PortType");
-		provider.addPortTypes(definition);
+		this.provider.setPortTypeName("PortType");
+		this.provider.addPortTypes(this.definition);
 
-		PortType portType = definition.getPortType(new QName(namespace, "PortType"));
+		PortType portType = this.definition.getPortType(new QName(namespace, "PortType"));
 
 		assertThat(portType).isNotNull();
 

@@ -105,10 +105,10 @@ public abstract class Wss4jMessageInterceptorTimestampTest extends Wss4jTest {
 		MessageContext context = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.secureMessage(message, context);
 
-		String created = xpathTemplate.evaluateAsString(
+		String created = this.xpathTemplate.evaluateAsString(
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Created/text()",
 				message.getEnvelope().getSource());
-		String expires = xpathTemplate.evaluateAsString(
+		String expires = this.xpathTemplate.evaluateAsString(
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp/wsu:Expires/text()",
 				message.getEnvelope().getSource());
 

@@ -40,17 +40,17 @@ public abstract class Wss4jMessageInterceptorSoapActionTest extends Wss4jTest {
 	@Override
 	protected void onSetup() throws Exception {
 
-		users = new Properties();
-		users.setProperty("Bert", "Ernie");
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setValidationActions("UsernameToken");
-		interceptor.setSecurementActions("UsernameToken");
-		interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
+		this.users = new Properties();
+		this.users.setProperty("Bert", "Ernie");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setValidationActions("UsernameToken");
+		this.interceptor.setSecurementActions("UsernameToken");
+		this.interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
 		SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
-		callbackHandler.setUsers(users);
-		interceptor.setValidationCallbackHandler(callbackHandler);
+		callbackHandler.setUsers(this.users);
+		this.interceptor.setValidationCallbackHandler(callbackHandler);
 
-		interceptor.afterPropertiesSet();
+		this.interceptor.afterPropertiesSet();
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTest extends Wss4jTest {
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
 		message.setSoapAction(SOAP_ACTION);
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 
 		assertThat(message.getSoapAction()).isNotNull();
 		assertThat(message.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -71,7 +71,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTest extends Wss4jTest {
 		message.setSoapAction(SOAP_ACTION);
 		WebServiceMessageFactory messageFactory = getSoap12MessageFactory();
 		MessageContext messageContext = new DefaultMessageContext(message, messageFactory);
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 
 		assertThat(message.getSoapAction()).isNotNull();
 		assertThat(message.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -81,10 +81,10 @@ public abstract class Wss4jMessageInterceptorSoapActionTest extends Wss4jTest {
 	public void testPreserveSoapActionOnSecurement() throws Exception {
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		message.setSoapAction(SOAP_ACTION);
-		interceptor.setSecurementUsername("Bert");
-		interceptor.setSecurementPassword("Ernie");
+		this.interceptor.setSecurementUsername("Bert");
+		this.interceptor.setSecurementPassword("Ernie");
 		MessageContext messageContext = getSoap11MessageContext(message);
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		assertThat(message.getSoapAction()).isNotNull();
 		assertThat(message.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -94,10 +94,10 @@ public abstract class Wss4jMessageInterceptorSoapActionTest extends Wss4jTest {
 	public void testPreserveSoap12ActionOnSecurement() throws Exception {
 		SoapMessage message = loadSoap12Message("empty-soap12.xml");
 		message.setSoapAction(SOAP_ACTION);
-		interceptor.setSecurementUsername("Bert");
-		interceptor.setSecurementPassword("Ernie");
+		this.interceptor.setSecurementUsername("Bert");
+		this.interceptor.setSecurementPassword("Ernie");
 		MessageContext messageContext = getSoap12MessageContext(message);
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		assertThat(message.getSoapAction()).isNotNull();
 		assertThat(message.getSoapAction()).isEqualTo(SOAP_ACTION);

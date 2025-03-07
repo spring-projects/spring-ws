@@ -33,16 +33,16 @@ public class Wsdl11DestinationProviderTest {
 
 	@BeforeEach
 	public void setUp() {
-		provider = new Wsdl11DestinationProvider();
+		this.provider = new Wsdl11DestinationProvider();
 	}
 
 	@Test
 	public void testSimple() throws URISyntaxException {
 
 		Resource wsdl = new ClassPathResource("simple.wsdl", getClass());
-		provider.setWsdl(wsdl);
+		this.provider.setWsdl(wsdl);
 
-		URI result = provider.getDestination();
+		URI result = this.provider.getDestination();
 
 		assertThat(result).isEqualTo(new URI("http://example.com/myService"));
 	}
@@ -50,20 +50,20 @@ public class Wsdl11DestinationProviderTest {
 	@Test
 	public void testComplex() throws URISyntaxException {
 		Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
-		provider.setWsdl(wsdl);
+		this.provider.setWsdl(wsdl);
 
-		URI result = provider.getDestination();
+		URI result = this.provider.getDestination();
 
 		assertThat(result).isEqualTo(new URI("http://example.com/soap11"));
 	}
 
 	@Test
 	public void testCustomExpression() throws URISyntaxException {
-		provider.setLocationExpression("/wsdl:definitions/wsdl:service/wsdl:port/soap12:address/@location");
+		this.provider.setLocationExpression("/wsdl:definitions/wsdl:service/wsdl:port/soap12:address/@location");
 		Resource wsdl = new ClassPathResource("complex.wsdl", getClass());
-		provider.setWsdl(wsdl);
+		this.provider.setWsdl(wsdl);
 
-		URI result = provider.getDestination();
+		URI result = this.provider.getDestination();
 
 		assertThat(result).isEqualTo(new URI("http://example.com/soap12"));
 	}

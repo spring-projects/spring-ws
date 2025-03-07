@@ -35,46 +35,46 @@ class SimpleNamespaceContextTest {
 
 	@BeforeEach
 	void setUp() {
-		context = new SimpleNamespaceContext();
-		context.bindNamespaceUri("prefix", "namespaceURI");
+		this.context = new SimpleNamespaceContext();
+		this.context.bindNamespaceUri("prefix", "namespaceURI");
 	}
 
 	@Test
 	void testGetNamespaceURI() {
 
-		assertThat(context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEmpty();
+		assertThat(this.context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEmpty();
 
 		String defaultNamespaceUri = "defaultNamespace";
-		context.bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceUri);
+		this.context.bindNamespaceUri(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceUri);
 
-		assertThat(context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo(defaultNamespaceUri);
-		assertThat(context.getNamespaceURI("prefix")).isEqualTo("namespaceURI");
-		assertThat(context.getNamespaceURI("unbound")).isEmpty();
-		assertThat(context.getNamespaceURI(XMLConstants.XML_NS_PREFIX)).isEqualTo(XMLConstants.XML_NS_URI);
-		assertThat(context.getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE))
+		assertThat(this.context.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)).isEqualTo(defaultNamespaceUri);
+		assertThat(this.context.getNamespaceURI("prefix")).isEqualTo("namespaceURI");
+		assertThat(this.context.getNamespaceURI("unbound")).isEmpty();
+		assertThat(this.context.getNamespaceURI(XMLConstants.XML_NS_PREFIX)).isEqualTo(XMLConstants.XML_NS_URI);
+		assertThat(this.context.getNamespaceURI(XMLConstants.XMLNS_ATTRIBUTE))
 			.isEqualTo(XMLConstants.XMLNS_ATTRIBUTE_NS_URI);
 	}
 
 	@Test
 	void testGetPrefix() {
 
-		context.bindDefaultNamespaceUri("defaultNamespaceURI");
+		this.context.bindDefaultNamespaceUri("defaultNamespaceURI");
 
-		assertThat(context.getPrefix("defaultNamespaceURI")).isEqualTo(XMLConstants.DEFAULT_NS_PREFIX);
-		assertThat(context.getPrefix("namespaceURI")).isEqualTo("prefix");
-		assertThat(context.getPrefix("unbound")).isNull();
-		assertThat(context.getPrefix(XMLConstants.XML_NS_URI)).isEqualTo(XMLConstants.XML_NS_PREFIX);
-		assertThat(context.getPrefix(XMLConstants.XMLNS_ATTRIBUTE_NS_URI)).isEqualTo(XMLConstants.XMLNS_ATTRIBUTE);
+		assertThat(this.context.getPrefix("defaultNamespaceURI")).isEqualTo(XMLConstants.DEFAULT_NS_PREFIX);
+		assertThat(this.context.getPrefix("namespaceURI")).isEqualTo("prefix");
+		assertThat(this.context.getPrefix("unbound")).isNull();
+		assertThat(this.context.getPrefix(XMLConstants.XML_NS_URI)).isEqualTo(XMLConstants.XML_NS_PREFIX);
+		assertThat(this.context.getPrefix(XMLConstants.XMLNS_ATTRIBUTE_NS_URI)).isEqualTo(XMLConstants.XMLNS_ATTRIBUTE);
 	}
 
 	@Test
 	void testGetPrefixes() {
 
-		context.bindDefaultNamespaceUri("defaultNamespaceURI");
+		this.context.bindDefaultNamespaceUri("defaultNamespaceURI");
 
 		assertPrefixes("defaultNamespaceURI", XMLConstants.DEFAULT_NS_PREFIX);
 		assertPrefixes("namespaceURI", "prefix");
-		assertThat(context.getPrefixes("unbound").hasNext()).isFalse();
+		assertThat(this.context.getPrefixes("unbound").hasNext()).isFalse();
 		assertPrefixes(XMLConstants.XML_NS_URI, XMLConstants.XML_NS_PREFIX);
 		assertPrefixes(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, XMLConstants.XMLNS_ATTRIBUTE);
 	}
@@ -82,10 +82,10 @@ class SimpleNamespaceContextTest {
 	@Test
 	void unmodifiableGetPrefixes() {
 		String namespaceUri = "namespaceUri";
-		context.bindNamespaceUri("prefix1", namespaceUri);
-		context.bindNamespaceUri("prefix2", namespaceUri);
+		this.context.bindNamespaceUri("prefix1", namespaceUri);
+		this.context.bindNamespaceUri("prefix2", namespaceUri);
 
-		Iterator<String> prefixes = context.getPrefixes(namespaceUri);
+		Iterator<String> prefixes = this.context.getPrefixes(namespaceUri);
 		prefixes.next();
 		assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(prefixes::remove);
 	}
@@ -93,10 +93,10 @@ class SimpleNamespaceContextTest {
 	@Test
 	void testMultiplePrefixes() {
 
-		context.bindNamespaceUri("prefix1", "namespace");
-		context.bindNamespaceUri("prefix2", "namespace");
+		this.context.bindNamespaceUri("prefix1", "namespace");
+		this.context.bindNamespaceUri("prefix2", "namespace");
 
-		Iterator<String> iterator = context.getPrefixes("namespace");
+		Iterator<String> iterator = this.context.getPrefixes("namespace");
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -116,7 +116,7 @@ class SimpleNamespaceContextTest {
 
 	private void assertPrefixes(String namespaceUri, String prefix) {
 
-		Iterator<String> iterator = context.getPrefixes(namespaceUri);
+		Iterator<String> iterator = this.context.getPrefixes(namespaceUri);
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -130,7 +130,7 @@ class SimpleNamespaceContextTest {
 	@Test
 	void testGetBoundPrefixes() {
 
-		Iterator<String> iterator = context.getBoundPrefixes();
+		Iterator<String> iterator = this.context.getBoundPrefixes();
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -144,47 +144,47 @@ class SimpleNamespaceContextTest {
 	@Test
 	void testSetBindings() {
 
-		context.setBindings(Collections.singletonMap("prefix", "namespace"));
+		this.context.setBindings(Collections.singletonMap("prefix", "namespace"));
 
-		assertThat(context.getNamespaceURI("prefix")).isEqualTo("namespace");
+		assertThat(this.context.getNamespaceURI("prefix")).isEqualTo("namespace");
 	}
 
 	@Test
 	void testRemoveBinding() {
 
-		context.clear();
+		this.context.clear();
 
 		String prefix1 = "prefix1";
 		String prefix2 = "prefix2";
 		String namespaceUri = "namespaceUri";
 
-		context.bindNamespaceUri(prefix1, namespaceUri);
-		context.bindNamespaceUri(prefix2, namespaceUri);
+		this.context.bindNamespaceUri(prefix1, namespaceUri);
+		this.context.bindNamespaceUri(prefix2, namespaceUri);
 
-		assertThat(IteratorUtils.toList(context.getPrefixes(namespaceUri))).containsExactly(prefix1, prefix2);
+		assertThat(IteratorUtils.toList(this.context.getPrefixes(namespaceUri))).containsExactly(prefix1, prefix2);
 
-		context.removeBinding(prefix1);
+		this.context.removeBinding(prefix1);
 
-		assertThat(IteratorUtils.toList(context.getPrefixes(namespaceUri))).containsExactly(prefix2);
+		assertThat(IteratorUtils.toList(this.context.getPrefixes(namespaceUri))).containsExactly(prefix2);
 
-		context.removeBinding(prefix2);
+		this.context.removeBinding(prefix2);
 
-		assertThat(context.getPrefixes(namespaceUri).hasNext()).isFalse();
+		assertThat(this.context.getPrefixes(namespaceUri).hasNext()).isFalse();
 	}
 
 	@Test
 	void testHasBinding() {
 
-		context.clear();
+		this.context.clear();
 
 		String prefix = "prefix";
 
-		assertThat(context.hasBinding(prefix)).isFalse();
+		assertThat(this.context.hasBinding(prefix)).isFalse();
 
 		String namespaceUri = "namespaceUri";
-		context.bindNamespaceUri(prefix, namespaceUri);
+		this.context.bindNamespaceUri(prefix, namespaceUri);
 
-		assertThat(context.hasBinding(prefix)).isTrue();
+		assertThat(this.context.hasBinding(prefix)).isTrue();
 	}
 
 	@Test
@@ -192,12 +192,12 @@ class SimpleNamespaceContextTest {
 
 		String defaultNamespace = "http://springframework.org/spring-ws";
 
-		context.bindDefaultNamespaceUri(defaultNamespace);
-		context.bindNamespaceUri("prefix", defaultNamespace);
+		this.context.bindDefaultNamespaceUri(defaultNamespace);
+		this.context.bindNamespaceUri("prefix", defaultNamespace);
 
-		assertThat(context.getPrefix(defaultNamespace)).isEqualTo(XMLConstants.DEFAULT_NS_PREFIX);
+		assertThat(this.context.getPrefix(defaultNamespace)).isEqualTo(XMLConstants.DEFAULT_NS_PREFIX);
 
-		Iterator<String> iterator = context.getPrefixes(defaultNamespace);
+		Iterator<String> iterator = this.context.getPrefixes(defaultNamespace);
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();

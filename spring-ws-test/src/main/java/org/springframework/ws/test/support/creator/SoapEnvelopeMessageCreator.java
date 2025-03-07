@@ -61,7 +61,7 @@ public class SoapEnvelopeMessageCreator extends AbstractMessageCreator {
 		SoapMessage soapMessage = (SoapMessage) message;
 		try {
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(soapEnvelope, result);
+			this.transformerHelper.transform(this.soapEnvelope, result);
 			soapMessage.setDocument((Document) result.getNode());
 		}
 		catch (TransformerException ex) {

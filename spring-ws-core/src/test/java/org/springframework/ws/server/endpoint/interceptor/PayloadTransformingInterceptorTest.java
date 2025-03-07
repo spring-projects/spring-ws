@@ -59,28 +59,28 @@ public class PayloadTransformingInterceptorTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		interceptor = new PayloadTransformingInterceptor();
+		this.interceptor = new PayloadTransformingInterceptor();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
-		input = new ClassPathResource("transformInput.xml", getClass());
-		output = new ClassPathResource("transformOutput.xml", getClass());
-		xslt = new ClassPathResource("transformation.xslt", getClass());
+		this.transformer = transformerFactory.newTransformer();
+		this.input = new ClassPathResource("transformInput.xml", getClass());
+		this.output = new ClassPathResource("transformOutput.xml", getClass());
+		this.xslt = new ClassPathResource("transformation.xslt", getClass());
 	}
 
 	@Test
 	public void testHandleRequest() throws Exception {
 
-		interceptor.setRequestXslt(xslt);
-		interceptor.afterPropertiesSet();
-		MockWebServiceMessage request = new MockWebServiceMessage(input);
+		this.interceptor.setRequestXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
+		MockWebServiceMessage request = new MockWebServiceMessage(this.input);
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		boolean result = interceptor.handleRequest(context, null);
+		boolean result = this.interceptor.handleRequest(context, null);
 
 		assertThat(result).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.output)), expected);
 
 		XmlAssert.assertThat(request.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
@@ -88,36 +88,36 @@ public class PayloadTransformingInterceptorTest {
 	@Test
 	public void testHandleRequestNoXslt() throws Exception {
 
-		interceptor.setResponseXslt(xslt);
-		interceptor.afterPropertiesSet();
-		MockWebServiceMessage request = new MockWebServiceMessage(input);
+		this.interceptor.setResponseXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
+		MockWebServiceMessage request = new MockWebServiceMessage(this.input);
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		boolean result = interceptor.handleRequest(context, null);
+		boolean result = this.interceptor.handleRequest(context, null);
 
 		assertThat(result).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.input)), expected);
 		XmlAssert.assertThat(request.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void testHandleResponse() throws Exception {
 
-		interceptor.setResponseXslt(xslt);
-		interceptor.afterPropertiesSet();
-		MockWebServiceMessage request = new MockWebServiceMessage(input);
+		this.interceptor.setResponseXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
+		MockWebServiceMessage request = new MockWebServiceMessage(this.input);
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
-		response.setPayload(input);
+		response.setPayload(this.input);
 
-		boolean result = interceptor.handleResponse(context, null);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.output)), expected);
 
 		XmlAssert.assertThat(response.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
@@ -125,19 +125,19 @@ public class PayloadTransformingInterceptorTest {
 	@Test
 	public void testHandleResponseNoXslt() throws Exception {
 
-		interceptor.setRequestXslt(xslt);
-		interceptor.afterPropertiesSet();
-		MockWebServiceMessage request = new MockWebServiceMessage(input);
+		this.interceptor.setRequestXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
+		MockWebServiceMessage request = new MockWebServiceMessage(this.input);
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
-		response.setPayload(input);
+		response.setPayload(this.input);
 
-		boolean result = interceptor.handleResponse(context, null);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(input)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.input)), expected);
 
 		XmlAssert.assertThat(response.getPayloadAsString()).and(expected.toString()).ignoreWhitespace().areIdentical();
 	}
@@ -145,20 +145,20 @@ public class PayloadTransformingInterceptorTest {
 	@Test
 	public void testSaaj() throws Exception {
 
-		interceptor.setRequestXslt(xslt);
-		interceptor.afterPropertiesSet();
+		this.interceptor.setRequestXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage saajMessage = messageFactory.createMessage();
 		SaajSoapMessage message = new SaajSoapMessage(saajMessage);
-		transformer.transform(new ResourceSource(input), message.getPayloadResult());
+		this.transformer.transform(new ResourceSource(this.input), message.getPayloadResult());
 		MessageContext context = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
 
-		assertThat(interceptor.handleRequest(context, null)).isTrue();
+		assertThat(this.interceptor.handleRequest(context, null)).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.output)), expected);
 		StringResult result = new StringResult();
-		transformer.transform(message.getPayloadSource(), result);
+		this.transformer.transform(message.getPayloadSource(), result);
 
 		XmlAssert.assertThat(result.toString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 	}
@@ -166,19 +166,19 @@ public class PayloadTransformingInterceptorTest {
 	@Test
 	public void testPox() throws Exception {
 
-		interceptor.setRequestXslt(xslt);
-		interceptor.afterPropertiesSet();
+		this.interceptor.setRequestXslt(this.xslt);
+		this.interceptor.afterPropertiesSet();
 		DomPoxMessageFactory factory = new DomPoxMessageFactory();
 		DomPoxMessage message = factory.createWebServiceMessage();
-		transformer.transform(new ResourceSource(input), message.getPayloadResult());
+		this.transformer.transform(new ResourceSource(this.input), message.getPayloadResult());
 		MessageContext context = new DefaultMessageContext(message, factory);
 
-		assertThat(interceptor.handleRequest(context, null)).isTrue();
+		assertThat(this.interceptor.handleRequest(context, null)).isTrue();
 
 		StringResult expected = new StringResult();
-		transformer.transform(new SAXSource(SaxUtils.createInputSource(output)), expected);
+		this.transformer.transform(new SAXSource(SaxUtils.createInputSource(this.output)), expected);
 		StringResult result = new StringResult();
-		transformer.transform(message.getPayloadSource(), result);
+		this.transformer.transform(message.getPayloadSource(), result);
 
 		XmlAssert.assertThat(result.toString()).and(expected.toString()).ignoreWhitespace().areSimilar();
 
@@ -186,7 +186,7 @@ public class PayloadTransformingInterceptorTest {
 
 	@Test
 	public void testNoStylesheetsSet() {
-		assertThatIllegalArgumentException().isThrownBy(() -> interceptor.afterPropertiesSet());
+		assertThatIllegalArgumentException().isThrownBy(() -> this.interceptor.afterPropertiesSet());
 	}
 
 }

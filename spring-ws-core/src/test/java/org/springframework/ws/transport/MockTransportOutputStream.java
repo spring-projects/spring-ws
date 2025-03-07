@@ -36,16 +36,16 @@ public class MockTransportOutputStream extends TransportOutputStream {
 
 	@Override
 	protected OutputStream createOutputStream() {
-		return outputStream;
+		return this.outputStream;
 	}
 
 	public Map<String, String> getHeaders() {
-		return headers;
+		return this.headers;
 	}
 
 	@Override
 	public void addHeader(String name, String value) {
-		headers.put(name, value);
+		this.headers.put(name, value);
 	}
 
 }

@@ -36,8 +36,8 @@ public class TransformerHelperTest {
 	@BeforeEach
 	public void setUp() {
 
-		helper = new TransformerHelper();
-		transformer = mock(Transformer.class);
+		this.helper = new TransformerHelper();
+		this.transformer = mock(Transformer.class);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class TransformerHelperTest {
 		Source source = new StringSource(xml);
 		Result result = new StringResult();
 
-		helper.transform(source, result);
+		this.helper.transform(source, result);
 
 		assertThat(result.toString()).and(xml).ignoreWhitespace().areIdentical();
 	}

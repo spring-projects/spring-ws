@@ -40,28 +40,30 @@ public class SoapActionSmartEndpointInterceptorTest {
 	@BeforeEach
 	public void setUp() {
 
-		delegate = new EndpointInterceptorAdapter();
+		this.delegate = new EndpointInterceptorAdapter();
 
-		soapAction = "http://springframework.org/spring-ws";
+		this.soapAction = "http://springframework.org/spring-ws";
 
 		SaajSoapMessageFactory messageFactory = new SaajSoapMessageFactory();
 		messageFactory.afterPropertiesSet();
 		SaajSoapMessage request = messageFactory.createWebServiceMessage();
-		request.setSoapAction(soapAction);
-		messageContext = new DefaultMessageContext(request, messageFactory);
+		request.setSoapAction(this.soapAction);
+		this.messageContext = new DefaultMessageContext(request, messageFactory);
 	}
 
 	@Test
 	public void neitherNamespaceNorLocalPart() {
-		assertThatIllegalArgumentException().isThrownBy(() -> new SoapActionSmartEndpointInterceptor(delegate, null));
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new SoapActionSmartEndpointInterceptor(this.delegate, null));
 	}
 
 	@Test
 	public void shouldInterceptMatch() {
 
-		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(delegate, soapAction);
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
+				this.soapAction);
 
-		boolean result = interceptor.shouldIntercept(messageContext, null);
+		boolean result = interceptor.shouldIntercept(this.messageContext, null);
 
 		assertThat(result).isTrue();
 	}
@@ -69,10 +71,10 @@ public class SoapActionSmartEndpointInterceptorTest {
 	@Test
 	public void shouldInterceptNonMatch() {
 
-		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(delegate,
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
 				"http://springframework.org/other");
 
-		boolean result = interceptor.shouldIntercept(messageContext, null);
+		boolean result = interceptor.shouldIntercept(this.messageContext, null);
 
 		assertThat(result).isFalse();
 	}

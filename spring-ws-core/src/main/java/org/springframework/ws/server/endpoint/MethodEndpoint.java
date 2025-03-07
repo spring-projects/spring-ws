@@ -89,11 +89,11 @@ public final class MethodEndpoint {
 
 	/** Returns the object bean for this method endpoint. */
 	public Object getBean() {
-		if (beanFactory != null && bean instanceof String beanName) {
-			return beanFactory.getBean(beanName);
+		if (this.beanFactory != null && this.bean instanceof String beanName) {
+			return this.beanFactory.getBean(beanName);
 		}
 		else {
-			return bean;
+			return this.bean;
 		}
 	}
 
@@ -114,7 +114,7 @@ public final class MethodEndpoint {
 
 	/** Returns the method return type, as {@code MethodParameter}. */
 	public MethodParameter getReturnType() {
-		return new MethodParameter(method, -1);
+		return new MethodParameter(this.method, -1);
 	}
 
 	/**
@@ -125,9 +125,9 @@ public final class MethodEndpoint {
 	 */
 	public Object invoke(Object... args) throws Exception {
 		Object endpoint = getBean();
-		ReflectionUtils.makeAccessible(method);
+		ReflectionUtils.makeAccessible(this.method);
 		try {
-			return method.invoke(endpoint, args);
+			return this.method.invoke(endpoint, args);
 		}
 		catch (InvocationTargetException ex) {
 			handleInvocationTargetException(ex);
@@ -165,7 +165,7 @@ public final class MethodEndpoint {
 	}
 
 	public String toString() {
-		return method.toGenericString();
+		return this.method.toGenericString();
 	}
 
 }

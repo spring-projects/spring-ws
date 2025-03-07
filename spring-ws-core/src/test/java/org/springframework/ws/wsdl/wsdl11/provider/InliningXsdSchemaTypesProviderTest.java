@@ -40,29 +40,29 @@ public class InliningXsdSchemaTypesProviderTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		provider = new InliningXsdSchemaTypesProvider();
+		this.provider = new InliningXsdSchemaTypesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
-		definition = factory.newDefinition();
+		this.definition = factory.newDefinition();
 	}
 
 	@Test
 	public void testSingle() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
-		definition.addNamespace("tns", definitionNamespace);
-		definition.setTargetNamespace(definitionNamespace);
+		this.definition.addNamespace("tns", definitionNamespace);
+		this.definition.setTargetNamespace(definitionNamespace);
 		String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
-		definition.addNamespace("schema", schemaNamespace);
+		this.definition.addNamespace("schema", schemaNamespace);
 
 		Resource resource = new ClassPathResource("schema.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
 
-		provider.setSchema(schema);
+		this.provider.setSchema(schema);
 
-		provider.addTypes(definition);
+		this.provider.addTypes(this.definition);
 
-		Types types = definition.getTypes();
+		Types types = this.definition.getTypes();
 
 		assertThat(types).isNotNull();
 		assertThat(types.getExtensibilityElements()).hasSize(1);
@@ -76,21 +76,21 @@ public class InliningXsdSchemaTypesProviderTest {
 	public void testComplex() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
-		definition.addNamespace("tns", definitionNamespace);
-		definition.setTargetNamespace(definitionNamespace);
+		this.definition.addNamespace("tns", definitionNamespace);
+		this.definition.setTargetNamespace(definitionNamespace);
 		String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
-		definition.addNamespace("schema", schemaNamespace);
+		this.definition.addNamespace("schema", schemaNamespace);
 
 		Resource resource = new ClassPathResource("A.xsd", getClass());
 		CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection(resource);
 		collection.setInline(true);
 		collection.afterPropertiesSet();
 
-		provider.setSchemaCollection(collection);
+		this.provider.setSchemaCollection(collection);
 
-		provider.addTypes(definition);
+		this.provider.addTypes(this.definition);
 
-		Types types = definition.getTypes();
+		Types types = this.definition.getTypes();
 
 		assertThat(types).isNotNull();
 		assertThat(types.getExtensibilityElements()).hasSize(2);

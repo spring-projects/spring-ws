@@ -46,13 +46,13 @@ public class BridgedMethodRegistrationTest {
 	@Test
 	public void registration() throws NoSuchMethodException {
 
-		MethodEndpoint bridgedMethod = mapping
+		MethodEndpoint bridgedMethod = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
 
 		assertThat(bridgedMethod).isNotNull();
 
 		Method doIt = B.class.getMethod("doIt");
-		MethodEndpoint expected = new MethodEndpoint("bridgedMethodEndpoint", applicationContext, doIt);
+		MethodEndpoint expected = new MethodEndpoint("bridgedMethodEndpoint", this.applicationContext, doIt);
 
 		assertThat(bridgedMethod).isEqualTo(expected);
 	}

@@ -91,19 +91,20 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	@Override
 	public void afterPropertiesSet() throws XMPPException, IOException, SmackException {
-		XMPPTCPConnectionConfiguration configuration = createConnectionConfiguration(host, port, serviceName);
+		XMPPTCPConnectionConfiguration configuration = createConnectionConfiguration(this.host, this.port,
+				this.serviceName);
 		Assert.notNull(configuration, "'configuration' must not be null");
-		Assert.hasText(username, "'username' must not be empty");
-		Assert.hasText(password, "'password' must not be empty");
+		Assert.hasText(this.username, "'username' must not be empty");
+		Assert.hasText(this.password, "'password' must not be empty");
 
-		connection = new XMPPTCPConnection(configuration);
+		this.connection = new XMPPTCPConnection(configuration);
 		try {
-			connection.connect();
-			if (StringUtils.hasText(resource)) {
-				connection.login(username, password, Resourcepart.from(resource));
+			this.connection.connect();
+			if (StringUtils.hasText(this.resource)) {
+				this.connection.login(this.username, this.password, Resourcepart.from(this.resource));
 			}
 			else {
-				connection.login(username, password);
+				this.connection.login(this.username, this.password);
 			}
 		}
 		catch (InterruptedException e) {
@@ -113,12 +114,12 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	@Override
 	public void destroy() {
-		connection.disconnect();
+		this.connection.disconnect();
 	}
 
 	@Override
 	public XMPPTCPConnection getObject() {
-		return connection;
+		return this.connection;
 	}
 
 	@Override

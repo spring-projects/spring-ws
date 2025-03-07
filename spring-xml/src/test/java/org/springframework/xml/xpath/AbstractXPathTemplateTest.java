@@ -58,9 +58,10 @@ public abstract class AbstractXPathTemplateTest {
 
 	@BeforeEach
 	public final void setUp() throws Exception {
-		template = createTemplate();
-		namespaces = new ResourceSource(new ClassPathResource("namespaces.xml", AbstractXPathTemplateTest.class));
-		nonamespaces = new ResourceSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTest.class));
+		this.template = createTemplate();
+		this.namespaces = new ResourceSource(new ClassPathResource("namespaces.xml", AbstractXPathTemplateTest.class));
+		this.nonamespaces = new ResourceSource(
+				new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTest.class));
 	}
 
 	protected abstract XPathOperations createTemplate() throws Exception;
@@ -68,7 +69,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsBoolean() {
 
-		boolean result = template.evaluateAsBoolean("/root/child/boolean", nonamespaces);
+		boolean result = this.template.evaluateAsBoolean("/root/child/boolean", this.nonamespaces);
 
 		assertThat(result).isTrue();
 	}
@@ -76,7 +77,8 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsBooleanNamespaces() {
 
-		boolean result = template.evaluateAsBoolean("/prefix1:root/prefix2:child/prefix2:boolean", namespaces);
+		boolean result = this.template.evaluateAsBoolean("/prefix1:root/prefix2:child/prefix2:boolean",
+				this.namespaces);
 
 		assertThat(result).isTrue();
 	}
@@ -84,7 +86,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsDouble() {
 
-		double result = template.evaluateAsDouble("/root/child/number", nonamespaces);
+		double result = this.template.evaluateAsDouble("/root/child/number", this.nonamespaces);
 
 		assertThat(result).isEqualTo(42D);
 	}
@@ -92,7 +94,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsDoubleNamespaces() {
 
-		double result = template.evaluateAsDouble("/prefix1:root/prefix2:child/prefix2:number", namespaces);
+		double result = this.template.evaluateAsDouble("/prefix1:root/prefix2:child/prefix2:number", this.namespaces);
 
 		assertThat(result).isEqualTo(42D);
 	}
@@ -100,7 +102,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsNode() {
 
-		Node result = template.evaluateAsNode("/root/child", nonamespaces);
+		Node result = this.template.evaluateAsNode("/root/child", this.nonamespaces);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getLocalName()).isEqualTo("child");
@@ -109,7 +111,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsNodeNamespaces() {
 
-		Node result = template.evaluateAsNode("/prefix1:root/prefix2:child", namespaces);
+		Node result = this.template.evaluateAsNode("/prefix1:root/prefix2:child", this.namespaces);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getLocalName()).isEqualTo("child");
@@ -118,7 +120,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsNodes() {
 
-		List<Node> results = template.evaluateAsNodeList("/root/child/*", nonamespaces);
+		List<Node> results = this.template.evaluateAsNodeList("/root/child/*", this.nonamespaces);
 
 		assertThat(results).isNotNull();
 		assertThat(results).hasSize(3);
@@ -127,7 +129,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsNodesNamespaces() {
 
-		List<Node> results = template.evaluateAsNodeList("/prefix1:root/prefix2:child/*", namespaces);
+		List<Node> results = this.template.evaluateAsNodeList("/prefix1:root/prefix2:child/*", this.namespaces);
 
 		assertThat(results).isNotNull();
 		assertThat(results).hasSize(3);
@@ -136,7 +138,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsStringNamespaces() throws IOException, SAXException {
 
-		String result = template.evaluateAsString("/prefix1:root/prefix2:child/prefix2:text", namespaces);
+		String result = this.template.evaluateAsString("/prefix1:root/prefix2:child/prefix2:text", this.namespaces);
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -144,7 +146,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluateAsString() throws IOException, SAXException {
 
-		String result = template.evaluateAsString("/root/child/text", nonamespaces);
+		String result = this.template.evaluateAsString("/root/child/text", this.nonamespaces);
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -158,7 +160,7 @@ public abstract class AbstractXPathTemplateTest {
 		Document document = documentBuilder.parse(
 				SaxUtils.createInputSource(new ClassPathResource("nonamespaces.xml", AbstractXPathTemplateTest.class)));
 
-		String result = template.evaluateAsString("/root/child/text", new DOMSource(document));
+		String result = this.template.evaluateAsString("/root/child/text", new DOMSource(document));
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -168,7 +170,7 @@ public abstract class AbstractXPathTemplateTest {
 
 		InputStream in = AbstractXPathTemplateTest.class.getResourceAsStream("nonamespaces.xml");
 		SAXSource source = new SAXSource(new InputSource(in));
-		String result = template.evaluateAsString("/root/child/text", source);
+		String result = this.template.evaluateAsString("/root/child/text", source);
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -179,7 +181,7 @@ public abstract class AbstractXPathTemplateTest {
 		InputStream in = AbstractXPathTemplateTest.class.getResourceAsStream("nonamespaces.xml");
 		XMLStreamReader streamReader = XMLInputFactory.newFactory().createXMLStreamReader(in);
 		StAXSource source = new StAXSource(streamReader);
-		String result = template.evaluateAsString("/root/child/text", source);
+		String result = this.template.evaluateAsString("/root/child/text", source);
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -189,7 +191,7 @@ public abstract class AbstractXPathTemplateTest {
 
 		InputStream in = AbstractXPathTemplateTest.class.getResourceAsStream("nonamespaces.xml");
 		StreamSource source = new StreamSource(in);
-		String result = template.evaluateAsString("/root/child/text", source);
+		String result = this.template.evaluateAsString("/root/child/text", source);
 
 		assertThat(result).isEqualTo("text");
 	}
@@ -198,20 +200,21 @@ public abstract class AbstractXPathTemplateTest {
 	public void testEvaluateStreamSourceSystemId() throws IOException, SAXException, ParserConfigurationException {
 
 		URL url = AbstractXPathTemplateTest.class.getResource("nonamespaces.xml");
-		String result = template.evaluateAsString("/root/child/text", new StreamSource(url.toString()));
+		String result = this.template.evaluateAsString("/root/child/text", new StreamSource(url.toString()));
 
 		assertThat(result).isEqualTo("text");
 	}
 
 	@Test
 	public void testInvalidExpression() {
-		assertThatExceptionOfType(XPathException.class).isThrownBy(() -> template.evaluateAsBoolean("\\", namespaces));
+		assertThatExceptionOfType(XPathException.class)
+			.isThrownBy(() -> this.template.evaluateAsBoolean("\\", this.namespaces));
 	}
 
 	@Test
 	public void testEvaluateAsObject() throws Exception {
 
-		String result = template.evaluateAsObject("/root/child", nonamespaces, new NodeMapper<>() {
+		String result = this.template.evaluateAsObject("/root/child", this.nonamespaces, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}
@@ -224,7 +227,7 @@ public abstract class AbstractXPathTemplateTest {
 	@Test
 	public void testEvaluate() throws Exception {
 
-		List<String> results = template.evaluate("/root/child/*", nonamespaces, new NodeMapper<>() {
+		List<String> results = this.template.evaluate("/root/child/*", this.nonamespaces, new NodeMapper<>() {
 			public String mapNode(Node node, int nodeNum) throws DOMException {
 				return node.getLocalName();
 			}

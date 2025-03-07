@@ -31,7 +31,7 @@ public class LogAspect {
 	private boolean logInvoked = false;
 
 	public boolean isLogInvoked() {
-		return logInvoked;
+		return this.logInvoked;
 	}
 
 	@Pointcut("@annotation(org.springframework.ws.server.endpoint.mapping.Log)")
@@ -42,7 +42,7 @@ public class LogAspect {
 	@Around("loggedMethod()")
 	public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
 
-		logInvoked = true;
+		this.logInvoked = true;
 		logger.info("Before: " + joinPoint.getSignature());
 
 		try {

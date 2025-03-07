@@ -38,19 +38,19 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 
 	@Test
 	public void testGetType() {
-		assertThat(soapBody).isInstanceOf(Soap12Body.class);
+		assertThat(this.soapBody).isInstanceOf(Soap12Body.class);
 	}
 
 	@Test
 	public void testGetName() {
-		assertThat(soapBody.getName()).isEqualTo(new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Body"));
+		assertThat(this.soapBody.getName()).isEqualTo(new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Body"));
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
-		transformer.transform(soapBody.getSource(), result);
+		this.transformer.transform(this.soapBody.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<Body xmlns='http://www.w3.org/2003/05/soap-envelope' />")
@@ -61,17 +61,17 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddMustUnderstandFault() throws Exception {
 
-		SoapFault fault = soapBody.addMustUnderstandFault("SOAP Must Understand Error", Locale.ENGLISH);
+		SoapFault fault = this.soapBody.addMustUnderstandFault("SOAP Must Understand Error", Locale.ENGLISH);
 
 		assertThat(fault.getFaultCode())
 			.isEqualTo(new QName("http://www.w3.org/2003/05/soap-envelope", "MustUnderstand"));
 
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix()
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
 					+ ":MustUnderstand</soapenv:Value></soapenv:Code>"
 					+ "<soapenv:Reason><soapenv:Text xml:lang='en'>SOAP Must Understand Error</soapenv:Text>"
 					+ "</soapenv:Reason></soapenv:Fault>")
@@ -82,16 +82,16 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddSenderFault() throws Exception {
 
-		SoapFault fault = soapBody.addClientOrSenderFault("faultString", Locale.ENGLISH);
+		SoapFault fault = this.soapBody.addClientOrSenderFault("faultString", Locale.ENGLISH);
 
 		assertThat(fault.getFaultCode()).isEqualTo(new QName("http://www.w3.org/2003/05/soap-envelope", "Sender"));
 
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix()
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
 					+ ":Sender</soapenv:Value></soapenv:Code>"
 					+ "<soapenv:Reason><soapenv:Text xml:lang='en'>faultString</soapenv:Text></soapenv:Reason>"
 					+ "</soapenv:Fault>")
@@ -102,16 +102,16 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddReceiverFault() throws Exception {
 
-		SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
+		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 
 		assertThat(fault.getFaultCode()).isEqualTo(new QName("http://www.w3.org/2003/05/soap-envelope", "Receiver"));
 
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix()
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
 					+ ":Receiver</soapenv:Value></soapenv:Code>"
 					+ "<soapenv:Reason><soapenv:Text xml:lang='en'>faultString</soapenv:Text></soapenv:Reason>"
 					+ "</soapenv:Fault>")
@@ -122,19 +122,19 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddFaultWithDetail() throws Exception {
 
-		SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
+		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		SoapFaultDetail detail = fault.addFaultDetail();
 		SoapFaultDetailElement detailElement = detail
 			.addFaultDetailElement(new QName("namespace", "localPart", "prefix"));
 		StringSource detailContents = new StringSource("<detailContents xmlns='namespace'/>");
-		transformer.transform(detailContents, detailElement.getResult());
+		this.transformer.transform(detailContents, detailElement.getResult());
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix() + ":Receiver</soapenv:Value>"
-					+ "</soapenv:Code>"
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
+					+ ":Receiver</soapenv:Value>" + "</soapenv:Code>"
 					+ "<soapenv:Reason><soapenv:Text xml:lang='en'>faultString</soapenv:Text></soapenv:Reason>"
 					+ "<soapenv:Detail><prefix:localPart xmlns:prefix='namespace'><detailContents xmlns='namespace'/>"
 					+ "</prefix:localPart></soapenv:Detail></soapenv:Fault>")
@@ -145,17 +145,17 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddFaultWithDetailResult() throws Exception {
 
-		SoapFault fault = soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
+		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		SoapFaultDetail detail = fault.addFaultDetail();
-		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
-		transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
+		this.transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
+		this.transformer.transform(new StringSource("<detailContents xmlns='namespace'/>"), detail.getResult());
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix() + ":Receiver</soapenv:Value>"
-					+ "</soapenv:Code>"
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
+					+ ":Receiver</soapenv:Value>" + "</soapenv:Code>"
 					+ "<soapenv:Reason><soapenv:Text xml:lang='en'>faultString</soapenv:Text></soapenv:Reason>"
 					+ "<soapenv:Detail>" + "<detailContents xmlns='namespace'/>" + "<detailContents xmlns='namespace'/>"
 					+ "</soapenv:Detail></soapenv:Fault>")
@@ -166,7 +166,7 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 	@Test
 	public void testAddFaultWithSubcode() throws Exception {
 
-		Soap12Fault fault = (Soap12Fault) soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
+		Soap12Fault fault = (Soap12Fault) this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		QName subcode1 = new QName("http://www.springframework.org", "Subcode1", "spring-ws");
 		fault.addFaultSubcode(subcode1);
 		QName subcode2 = new QName("http://www.springframework.org", "Subcode2", "spring-ws");
@@ -180,11 +180,12 @@ public abstract class AbstractSoap12BodyTest extends AbstractSoapBodyTest {
 		assertThat(iterator.hasNext()).isFalse();
 
 		StringResult result = new StringResult();
-		transformer.transform(fault.getSource(), result);
+		this.transformer.transform(fault.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<soapenv:Fault xmlns:soapenv='http://www.w3.org/2003/05/soap-envelope'>"
-					+ "<soapenv:Code><soapenv:Value>" + soapBody.getName().getPrefix() + ":Receiver</soapenv:Value>"
+					+ "<soapenv:Code><soapenv:Value>" + this.soapBody.getName().getPrefix()
+					+ ":Receiver</soapenv:Value>"
 					+ "<soapenv:Subcode><soapenv:Value xmlns:spring-ws='http://www.springframework.org'>spring-ws:Subcode1</soapenv:Value>"
 					+ "<soapenv:Subcode><soapenv:Value xmlns:spring-ws='http://www.springframework.org'>spring-ws:Subcode2</soapenv:Value>"
 					+ "</soapenv:Subcode></soapenv:Subcode></soapenv:Code>"

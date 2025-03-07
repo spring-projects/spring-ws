@@ -39,7 +39,7 @@ class WebServiceMessageMatcherAdapter implements ResponseMatcher {
 
 	@Override
 	public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-		adaptee.match(response);
+		this.adaptee.match(response);
 	}
 
 }

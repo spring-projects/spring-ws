@@ -44,7 +44,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(cache, "cache is mandatory");
+		Assert.notNull(this.cache, "cache is mandatory");
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 			logger.debug("X.509 Cache hit. SubjectDN: " + subjectDN);
 		}
 
-		return cache.get(userCert, UserDetails.class);
+		return this.cache.get(userCert, UserDetails.class);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 			logger.debug("Cache put: " + userCert.getSubjectX500Principal());
 		}
 
-		cache.put(userCert, user);
+		this.cache.put(userCert, user);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 			logger.debug("Cache remove: " + userCert.getSubjectX500Principal());
 		}
 
-		cache.evict(userCert);
+		this.cache.evict(userCert);
 	}
 
 	public void setCache(Cache cache) {

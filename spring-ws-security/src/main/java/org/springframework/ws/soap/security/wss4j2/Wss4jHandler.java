@@ -53,8 +53,8 @@ class Wss4jHandler extends WSHandler {
 
 	Wss4jHandler() {
 		// set up default handler properties
-		options.setProperty(ConfigurationConstants.MUST_UNDERSTAND, Boolean.toString(true));
-		options.setProperty(ConfigurationConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
+		this.options.setProperty(ConfigurationConstants.MUST_UNDERSTAND, Boolean.toString(true));
+		this.options.setProperty(ConfigurationConstants.ENABLE_SIGNATURE_CONFIRMATION, Boolean.toString(true));
 	}
 
 	@Override
@@ -69,16 +69,16 @@ class Wss4jHandler extends WSHandler {
 	}
 
 	void setOption(String key, String value) {
-		options.setProperty(key, value);
+		this.options.setProperty(key, value);
 	}
 
 	void setOption(String key, boolean value) {
-		options.setProperty(key, Boolean.toString(value));
+		this.options.setProperty(key, Boolean.toString(value));
 	}
 
 	@Override
 	public Object getOption(String key) {
-		return options.getProperty(key);
+		return this.options.getProperty(key);
 	}
 
 	void setSecurementPassword(String securementPassword) {
@@ -99,7 +99,7 @@ class Wss4jHandler extends WSHandler {
 		if (StringUtils.hasLength(contextPassword)) {
 			return contextPassword;
 		}
-		return securementPassword;
+		return this.securementPassword;
 	}
 
 	@Override
@@ -109,17 +109,17 @@ class Wss4jHandler extends WSHandler {
 
 	@Override
 	protected Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
-		return securementEncryptionCrypto;
+		return this.securementEncryptionCrypto;
 	}
 
 	@Override
 	public Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
-		return securementSignatureCrypto;
+		return this.securementSignatureCrypto;
 	}
 
 	@Override
 	public void setPassword(Object msgContext, String password) {
-		securementPassword = password;
+		this.securementPassword = password;
 	}
 
 	@Override

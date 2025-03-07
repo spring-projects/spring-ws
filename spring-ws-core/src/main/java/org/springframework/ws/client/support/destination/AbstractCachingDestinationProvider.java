@@ -51,11 +51,11 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 
 	@Override
 	public final URI getDestination() {
-		if (cache) {
-			if (cachedUri == null) {
-				cachedUri = lookupDestination();
+		if (this.cache) {
+			if (this.cachedUri == null) {
+				this.cachedUri = lookupDestination();
 			}
-			return cachedUri;
+			return this.cachedUri;
 		}
 		else {
 			return lookupDestination();

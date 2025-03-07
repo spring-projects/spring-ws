@@ -67,7 +67,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 
 		SoapFaultDefinition definition = getFaultDefinition(endpoint, ex);
 		if (definition == null) {
-			definition = defaultFault;
+			definition = this.defaultFault;
 		}
 		if (definition == null) {
 			return false;

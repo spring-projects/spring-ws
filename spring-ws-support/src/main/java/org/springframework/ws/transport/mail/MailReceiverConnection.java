@@ -82,12 +82,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 	/** Returns the request message for this connection. */
 	public Message getRequestMessage() {
-		return requestMessage;
+		return this.requestMessage;
 	}
 
 	/** Returns the response message, if any, for this connection. */
 	public Message getResponseMessage() {
-		return responseMessage;
+		return this.responseMessage;
 	}
 
 	/*
@@ -108,9 +108,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public URI getUri() throws URISyntaxException {
 		try {
-			Address[] recipients = requestMessage.getRecipients(Message.RecipientType.TO);
+			Address[] recipients = this.requestMessage.getRecipients(Message.RecipientType.TO);
 			if (!ObjectUtils.isEmpty(recipients) && recipients[0] instanceof InternetAddress) {
-				return MailTransportUtils.toUri((InternetAddress) recipients[0], requestMessage.getSubject());
+				return MailTransportUtils.toUri((InternetAddress) recipients[0], this.requestMessage.getSubject());
 			}
 			else {
 				throw new URISyntaxException("", "Could not determine To header");
@@ -142,7 +142,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
 			List<String> headers = new ArrayList<>();
-			Enumeration<?> enumeration = requestMessage.getAllHeaders();
+			Enumeration<?> enumeration = this.requestMessage.getAllHeaders();
 			while (enumeration.hasMoreElements()) {
 				Header header = (Header) enumeration.nextElement();
 				headers.add(header.getName());
@@ -157,7 +157,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		try {
-			String[] headers = requestMessage.getHeader(name);
+			String[] headers = this.requestMessage.getHeader(name);
 			return Arrays.asList(headers).iterator();
 		}
 		catch (MessagingException ex) {
@@ -168,7 +168,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	protected InputStream getRequestInputStream() throws IOException {
 		try {
-			return requestMessage.getInputStream();
+			return this.requestMessage.getInputStream();
 		}
 		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
@@ -178,9 +178,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
 		try {
-			responseMessage.addHeader(name, value);
+			this.responseMessage.addHeader(name, value);
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
-				responseContentType = value;
+				this.responseContentType = value;
 			}
 		}
 		catch (MessagingException ex) {
@@ -190,7 +190,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
-		return responseBuffer;
+		return this.responseBuffer;
 	}
 
 	/*
@@ -200,10 +200,10 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
 		try {
-			responseMessage = requestMessage.reply(false);
-			responseMessage.setFrom(from);
+			this.responseMessage = this.requestMessage.reply(false);
+			this.responseMessage.setFrom(this.from);
 
-			responseBuffer = new ByteArrayOutputStream();
+			this.responseBuffer = new ByteArrayOutputStream();
 		}
 		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
@@ -214,12 +214,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		Transport transport = null;
 		try {
-			responseMessage.setDataHandler(
-					new DataHandler(new ByteArrayDataSource(responseContentType, responseBuffer.toByteArray())));
-			transport = session.getTransport(transportUri);
+			this.responseMessage.setDataHandler(new DataHandler(
+					new ByteArrayDataSource(this.responseContentType, this.responseBuffer.toByteArray())));
+			transport = this.session.getTransport(this.transportUri);
 			transport.connect();
-			responseMessage.saveChanges();
-			transport.sendMessage(responseMessage, responseMessage.getAllRecipients());
+			this.responseMessage.saveChanges();
+			transport.sendMessage(this.responseMessage, this.responseMessage.getAllRecipients());
 		}
 		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
@@ -242,12 +242,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 		@Override
 		public String getContentType() {
-			return contentType;
+			return this.contentType;
 		}
 
 		@Override
 		public InputStream getInputStream() throws IOException {
-			return new ByteArrayInputStream(data);
+			return new ByteArrayInputStream(this.data);
 		}
 
 		@Override

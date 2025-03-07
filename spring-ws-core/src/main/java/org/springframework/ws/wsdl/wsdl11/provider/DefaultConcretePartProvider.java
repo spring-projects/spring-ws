@@ -61,7 +61,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	/** Returns the service name. */
 	public String getServiceName() {
-		return serviceName;
+		return this.serviceName;
 	}
 
 	/** Sets the service name. */
@@ -73,7 +73,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 	/** Returns the suffix to append to the port type name to obtain the binding name. */
 	public String getBindingSuffix() {
-		return bindingSuffix;
+		return this.bindingSuffix;
 	}
 
 	/** Sets the suffix to append to the port type name to obtain the binding name. */
@@ -115,8 +115,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 			}
 		}
 
-		if (definition.getBindings().isEmpty() && logger.isWarnEnabled()) {
-			logger.warn("No bindings were created, make sure the WSDL contains port types");
+		if (definition.getBindings().isEmpty() && this.logger.isWarnEnabled()) {
+			this.logger.warn("No bindings were created, make sure the WSDL contains port types");
 		}
 	}
 
@@ -138,8 +138,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 			QName bindingName = new QName(portTypeName.getNamespaceURI(),
 					portTypeName.getLocalPart() + getBindingSuffix());
-			if (logger.isDebugEnabled()) {
-				logger.debug("Creating binding [" + bindingName + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Creating binding [" + bindingName + "]");
 			}
 			binding.setQName(bindingName);
 		}
@@ -304,8 +304,8 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 
 		if (StringUtils.hasText(definition.getTargetNamespace()) && StringUtils.hasText(getServiceName())) {
 			QName serviceName = new QName(definition.getTargetNamespace(), getServiceName());
-			if (logger.isDebugEnabled()) {
-				logger.debug("Creating service [" + serviceName + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Creating service [" + serviceName + "]");
 			}
 			service.setQName(serviceName);
 		}
@@ -328,15 +328,15 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 			}
 			populatePort(definition, port);
 			if (StringUtils.hasText(port.getName())) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Adding port [" + port.getName() + "] to service [" + service.getQName() + "]");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Adding port [" + port.getName() + "] to service [" + service.getQName() + "]");
 				}
 				service.addPort(port);
 			}
 		}
 
-		if (service.getPorts().isEmpty() && logger.isWarnEnabled()) {
-			logger.warn("No ports were created, make sure the WSDL contains bindings");
+		if (service.getPorts().isEmpty() && this.logger.isWarnEnabled()) {
+			this.logger.warn("No ports were created, make sure the WSDL contains bindings");
 		}
 	}
 

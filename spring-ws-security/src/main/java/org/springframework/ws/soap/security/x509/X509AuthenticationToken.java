@@ -78,12 +78,12 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 
 	@Override
 	public Object getCredentials() {
-		return credentials;
+		return this.credentials;
 	}
 
 	@Override
 	public Object getPrincipal() {
-		return principal;
+		return this.principal;
 	}
 
 }

@@ -46,7 +46,7 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 	 * Defaults to {@link Locale#ENGLISH}.
 	 */
 	public Locale getLocale() {
-		return locale;
+		return this.locale;
 	}
 
 	/**

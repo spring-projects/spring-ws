@@ -44,32 +44,33 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTest {
 	@BeforeEach
 	public void createMappings() throws Exception {
 
-		mapping = new SimpleActionEndpointMapping();
+		this.mapping = new SimpleActionEndpointMapping();
 
-		endpoint1 = new Endpoint1();
+		this.endpoint1 = new Endpoint1();
 		Endpoint2 endpoint2 = new Endpoint2();
 
 		Map<String, Object> map = new HashMap<>();
-		map.put("http://example.com/fabrikam/mail/Delete", endpoint1);
+		map.put("http://example.com/fabrikam/mail/Delete", this.endpoint1);
 		map.put("http://example.com/fabrikam/mail/Add", endpoint2);
 
-		mapping.setPreInterceptors(new EndpointInterceptor[] { new PayloadLoggingInterceptor() });
-		mapping.setPostInterceptors(new EndpointInterceptor[] { new PayloadValidatingInterceptor() });
-		mapping.setAddress(new URI("mailto:fabrikam@example.com"));
-		mapping.setActionMap(map);
-		mapping.afterPropertiesSet();
+		this.mapping.setPreInterceptors(new EndpointInterceptor[] { new PayloadLoggingInterceptor() });
+		this.mapping.setPostInterceptors(new EndpointInterceptor[] { new PayloadValidatingInterceptor() });
+		this.mapping.setAddress(new URI("mailto:fabrikam@example.com"));
+		this.mapping.setActionMap(map);
+		this.mapping.afterPropertiesSet();
 	}
 
 	@Test
 	public void testMatch() throws Exception {
 
 		SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
-		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+		MessageContext messageContext = new DefaultMessageContext(message,
+				new SaajSoapMessageFactory(this.messageFactory));
 
-		EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain endpoint = this.mapping.getEndpoint(messageContext);
 
 		assertThat(endpoint).isNotNull();
-		assertThat(endpoint.getEndpoint()).isEqualTo(endpoint1);
+		assertThat(endpoint.getEndpoint()).isEqualTo(this.endpoint1);
 
 		EndpointInterceptor[] interceptors = endpoint.getInterceptors();
 
@@ -83,9 +84,10 @@ public class SimpleActionEndpointMappingTest extends AbstractWsAddressingTest {
 	public void testNoMatch() throws Exception {
 
 		SaajSoapMessage message = loadSaajMessage("200408/response-no-message-id.xml");
-		MessageContext messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+		MessageContext messageContext = new DefaultMessageContext(message,
+				new SaajSoapMessageFactory(this.messageFactory));
 
-		EndpointInvocationChain endpoint = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain endpoint = this.mapping.getEndpoint(messageContext);
 
 		assertThat(endpoint).isNull();
 	}

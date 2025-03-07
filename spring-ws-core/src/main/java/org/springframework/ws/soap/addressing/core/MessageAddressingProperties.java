@@ -103,47 +103,47 @@ public final class MessageAddressingProperties implements Serializable {
 
 	/** Returns the value of the destination property. */
 	public URI getTo() {
-		return to;
+		return this.to;
 	}
 
 	/** Returns the value of the source endpoint property. */
 	public EndpointReference getFrom() {
-		return from;
+		return this.from;
 	}
 
 	/** Returns the value of the reply endpoint property. */
 	public EndpointReference getReplyTo() {
-		return replyTo;
+		return this.replyTo;
 	}
 
 	/** Returns the value of the fault endpoint property. */
 	public EndpointReference getFaultTo() {
-		return faultTo;
+		return this.faultTo;
 	}
 
 	/** Returns the value of the action property. */
 	public URI getAction() {
-		return action;
+		return this.action;
 	}
 
 	/** Returns the value of the message id property. */
 	public URI getMessageId() {
-		return messageId;
+		return this.messageId;
 	}
 
 	/** Returns the value of the relationship property. */
 	public URI getRelatesTo() {
-		return relatesTo;
+		return this.relatesTo;
 	}
 
 	/** Returns the endpoint properties. Returns an empty list of none are set. */
 	public List<Node> getReferenceProperties() {
-		return Collections.unmodifiableList(referenceProperties);
+		return Collections.unmodifiableList(this.referenceProperties);
 	}
 
 	/** Returns the endpoint parameters. Returns an empty list of none are set. */
 	public List<Node> getReferenceParameters() {
-		return Collections.unmodifiableList(referenceParameters);
+		return Collections.unmodifiableList(this.referenceParameters);
 	}
 
 	/**

@@ -75,47 +75,47 @@ public class SoapProvider implements BindingsProvider, ServicesProvider {
 	 * @param soapActions the soap
 	 */
 	public void setSoapActions(Properties soapActions) {
-		soap11BindingProvider.setSoapActions(soapActions);
-		soap12BindingProvider.setSoapActions(soapActions);
+		this.soap11BindingProvider.setSoapActions(soapActions);
+		this.soap12BindingProvider.setSoapActions(soapActions);
 	}
 
 	/**
 	 * Sets the value used for the binding transport attribute value. Defaults to HTTP.
 	 */
 	public void setTransportUri(String transportUri) {
-		soap11BindingProvider.setTransportUri(transportUri);
-		soap12BindingProvider.setTransportUri(transportUri);
+		this.soap11BindingProvider.setTransportUri(transportUri);
+		this.soap12BindingProvider.setTransportUri(transportUri);
 	}
 
 	/** Sets the value used for the SOAP Address location attribute value. */
 	public void setLocationUri(String locationUri) {
-		soap11BindingProvider.setLocationUri(locationUri);
-		soap12BindingProvider.setLocationUri(locationUri);
+		this.soap11BindingProvider.setLocationUri(locationUri);
+		this.soap12BindingProvider.setLocationUri(locationUri);
 	}
 
 	/** Sets the service name. */
 	public void setServiceName(String serviceName) {
-		soap11BindingProvider.setServiceName(serviceName);
-		soap12BindingProvider.setServiceName(serviceName);
+		this.soap11BindingProvider.setServiceName(serviceName);
+		this.soap12BindingProvider.setServiceName(serviceName);
 	}
 
 	@Override
 	public void addBindings(Definition definition) throws WSDLException {
-		if (createSoap11Binding) {
-			soap11BindingProvider.addBindings(definition);
+		if (this.createSoap11Binding) {
+			this.soap11BindingProvider.addBindings(definition);
 		}
-		if (createSoap12Binding) {
-			soap12BindingProvider.addBindings(definition);
+		if (this.createSoap12Binding) {
+			this.soap12BindingProvider.addBindings(definition);
 		}
 	}
 
 	@Override
 	public void addServices(Definition definition) throws WSDLException {
-		if (createSoap11Binding) {
-			soap11BindingProvider.addServices(definition);
+		if (this.createSoap11Binding) {
+			this.soap11BindingProvider.addServices(definition);
 		}
-		if (createSoap12Binding) {
-			soap12BindingProvider.addServices(definition);
+		if (this.createSoap12Binding) {
+			this.soap12BindingProvider.addServices(definition);
 		}
 	}
 

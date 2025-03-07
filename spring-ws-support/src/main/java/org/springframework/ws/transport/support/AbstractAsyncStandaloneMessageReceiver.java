@@ -56,8 +56,8 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (taskExecutor == null) {
-			taskExecutor = createDefaultTaskExecutor();
+		if (this.taskExecutor == null) {
+			this.taskExecutor = createDefaultTaskExecutor();
 		}
 		super.afterPropertiesSet();
 	}
@@ -72,7 +72,7 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	 * @see org.springframework.core.task.SimpleAsyncTaskExecutor#SimpleAsyncTaskExecutor(String)
 	 */
 	protected TaskExecutor createDefaultTaskExecutor() {
-		String threadNamePrefix = beanName != null ? beanName + "-" : DEFAULT_THREAD_NAME_PREFIX;
+		String threadNamePrefix = this.beanName != null ? this.beanName + "-" : this.DEFAULT_THREAD_NAME_PREFIX;
 		return new SimpleAsyncTaskExecutor(threadNamePrefix);
 	}
 
@@ -81,7 +81,7 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	 * @see #setTaskExecutor(TaskExecutor)
 	 */
 	protected void execute(Runnable runnable) {
-		taskExecutor.execute(runnable);
+		this.taskExecutor.execute(runnable);
 	}
 
 }

@@ -43,20 +43,20 @@ public class SaajSoapActionCallbackTest {
 
 		MessageFactory messageFactory11 = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 
-		saaj11Factory.setSoapVersion(SoapVersion.SOAP_11);
-		saaj11Factory.setMessageFactory(messageFactory11);
-		saaj11Factory.afterPropertiesSet();
+		this.saaj11Factory.setSoapVersion(SoapVersion.SOAP_11);
+		this.saaj11Factory.setMessageFactory(messageFactory11);
+		this.saaj11Factory.afterPropertiesSet();
 
 		MessageFactory messageFactory12 = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		saaj12Factory.setSoapVersion(SoapVersion.SOAP_12);
-		saaj12Factory.setMessageFactory(messageFactory12);
-		saaj12Factory.afterPropertiesSet();
+		this.saaj12Factory.setSoapVersion(SoapVersion.SOAP_12);
+		this.saaj12Factory.setMessageFactory(messageFactory12);
+		this.saaj12Factory.afterPropertiesSet();
 	}
 
 	@Test
 	public void noSoapAction11ShouldProduceEmptySoapActionHeader() {
 
-		SaajSoapMessage message = saaj11Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		String[] soapActionHeaders = message.getSaajMessage()
 			.getMimeHeaders()
 			.getHeader(TransportConstants.HEADER_SOAP_ACTION);
@@ -67,7 +67,7 @@ public class SaajSoapActionCallbackTest {
 	@Test
 	public void soapAction11ShouldProduceSoapActionHeader() throws IOException {
 
-		SaajSoapMessage message = saaj11Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback("testAction");
 		callback.doWithMessage(message);
 		String[] soapActionHeaders = message.getSaajMessage()
@@ -80,7 +80,7 @@ public class SaajSoapActionCallbackTest {
 	@Test
 	public void emptySoapAction11() throws IOException {
 
-		SaajSoapMessage message = saaj11Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback(null);
 		callback.doWithMessage(message);
 		String[] soapActionHeaders = message.getSaajMessage()
@@ -93,7 +93,7 @@ public class SaajSoapActionCallbackTest {
 	@Test
 	public void noSoapAction12() {
 
-		SaajSoapMessage message = saaj12Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		String[] soapActionHeaders = message.getSaajMessage()
 			.getMimeHeaders()
 			.getHeader(TransportConstants.HEADER_SOAP_ACTION);
@@ -104,7 +104,7 @@ public class SaajSoapActionCallbackTest {
 	@Test
 	public void soapAction12ShouldProduceNoSoapActionHeader() throws IOException {
 
-		SaajSoapMessage message = saaj12Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback("testAction");
 		callback.doWithMessage(message);
 		String[] soapActionHeaders = message.getSaajMessage()
@@ -121,7 +121,7 @@ public class SaajSoapActionCallbackTest {
 	@Test
 	public void emptySoapAction12ShouldProduceNoSoapActionHeader() throws IOException {
 
-		SaajSoapMessage message = saaj12Factory.createWebServiceMessage();
+		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback(null);
 		callback.doWithMessage(message);
 		String[] soapActionHeaders = message.getSaajMessage()

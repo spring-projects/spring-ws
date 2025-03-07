@@ -39,13 +39,13 @@ public class CallbackHandlerChain extends AbstractCallbackHandler {
 	}
 
 	public CallbackHandler[] getCallbackHandlers() {
-		return callbackHandlers;
+		return this.callbackHandlers;
 	}
 
 	@Override
 	protected void handleInternal(Callback callback) throws IOException, UnsupportedCallbackException {
 		boolean allUnsupported = true;
-		for (CallbackHandler callbackHandler : callbackHandlers) {
+		for (CallbackHandler callbackHandler : this.callbackHandlers) {
 			try {
 				callbackHandler.handle(new Callback[] { callback });
 				allUnsupported = false;

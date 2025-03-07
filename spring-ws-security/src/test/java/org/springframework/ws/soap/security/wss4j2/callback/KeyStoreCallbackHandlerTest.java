@@ -36,8 +36,8 @@ public class KeyStoreCallbackHandlerTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		callbackHandler = new KeyStoreCallbackHandler();
-		callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
+		this.callbackHandler = new KeyStoreCallbackHandler();
+		this.callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
 
 		KeyStoreFactoryBean factory = new KeyStoreFactoryBean();
 		factory.setLocation(new ClassPathResource("private.jks"));
@@ -45,16 +45,16 @@ public class KeyStoreCallbackHandlerTest {
 		factory.setType("JCEKS");
 		factory.afterPropertiesSet();
 		KeyStore keyStore = factory.getObject();
-		callbackHandler.setKeyStore(keyStore);
-		callbackHandler.setSymmetricKeyPassword("123456");
+		this.callbackHandler.setKeyStore(keyStore);
+		this.callbackHandler.setSymmetricKeyPassword("123456");
 	}
 
 	@Test
 	public void testHandleKeyName() throws Exception {
 
-		callbackHandler.handleInternal(callback);
+		this.callbackHandler.handleInternal(this.callback);
 
-		assertThat(callback.getKey()).isNotNull();
+		assertThat(this.callback.getKey()).isNotNull();
 	}
 
 }

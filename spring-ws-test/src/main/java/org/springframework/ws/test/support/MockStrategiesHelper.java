@@ -56,7 +56,7 @@ public class MockStrategiesHelper {
 	 * Returns the application context.
 	 */
 	public ApplicationContext getApplicationContext() {
-		return applicationContext;
+		return this.applicationContext;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class MockStrategiesHelper {
 	 */
 	public <T> T getStrategy(Class<T> type) {
 		Assert.notNull(type, "'type' must not be null");
-		Map<String, T> map = applicationContext.getBeansOfType(type);
+		Map<String, T> map = this.applicationContext.getBeansOfType(type);
 		if (map.isEmpty()) {
 			return null;
 		}
@@ -107,7 +107,7 @@ public class MockStrategiesHelper {
 			}
 			T defaultStrategy = BeanUtils.instantiateClass(defaultType);
 			if (defaultStrategy instanceof ApplicationContextAware applicationContextAware) {
-				applicationContextAware.setApplicationContext(applicationContext);
+				applicationContextAware.setApplicationContext(this.applicationContext);
 			}
 			if (defaultStrategy instanceof InitializingBean initializingBean) {
 				try {

@@ -62,30 +62,30 @@ public class XPathParamMethodArgumentResolverTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		resolver = new XPathParamMethodArgumentResolver();
+		this.resolver = new XPathParamMethodArgumentResolver();
 		Method supportedTypes = getClass().getMethod("supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
 				NodeList.class, String.class);
-		booleanParameter = new MethodParameter(supportedTypes, 0);
-		doubleParameter = new MethodParameter(supportedTypes, 1);
-		nodeParameter = new MethodParameter(supportedTypes, 2);
-		nodeListParameter = new MethodParameter(supportedTypes, 3);
-		stringParameter = new MethodParameter(supportedTypes, 4);
-		convertedParameter = new MethodParameter(getClass().getMethod("convertedType", Integer.TYPE), 0);
-		unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
-		namespaceMethodParameter = new MethodParameter(getClass().getMethod("namespacesMethod", String.class), 0);
-		namespaceClassParameter = new MethodParameter(getClass().getMethod("namespacesClass", String.class), 0);
+		this.booleanParameter = new MethodParameter(supportedTypes, 0);
+		this.doubleParameter = new MethodParameter(supportedTypes, 1);
+		this.nodeParameter = new MethodParameter(supportedTypes, 2);
+		this.nodeListParameter = new MethodParameter(supportedTypes, 3);
+		this.stringParameter = new MethodParameter(supportedTypes, 4);
+		this.convertedParameter = new MethodParameter(getClass().getMethod("convertedType", Integer.TYPE), 0);
+		this.unsupportedParameter = new MethodParameter(getClass().getMethod("unsupported", String.class), 0);
+		this.namespaceMethodParameter = new MethodParameter(getClass().getMethod("namespacesMethod", String.class), 0);
+		this.namespaceClassParameter = new MethodParameter(getClass().getMethod("namespacesClass", String.class), 0);
 	}
 
 	@Test
 	public void supportsParameter() {
 
-		assertThat(resolver.supportsParameter(booleanParameter)).isTrue();
-		assertThat(resolver.supportsParameter(doubleParameter)).isTrue();
-		assertThat(resolver.supportsParameter(nodeParameter)).isTrue();
-		assertThat(resolver.supportsParameter(nodeListParameter)).isTrue();
-		assertThat(resolver.supportsParameter(stringParameter)).isTrue();
-		assertThat(resolver.supportsParameter(convertedParameter)).isTrue();
-		assertThat(resolver.supportsParameter(unsupportedParameter)).isFalse();
+		assertThat(this.resolver.supportsParameter(this.booleanParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.doubleParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.nodeParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.nodeListParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.stringParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.convertedParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.unsupportedParameter)).isFalse();
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, booleanParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.booleanParameter);
 
 		assertThat(result).isInstanceOf(Boolean.class);
 
@@ -109,7 +109,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, doubleParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.doubleParameter);
 
 		assertThat(result).isInstanceOf(Double.class);
 
@@ -124,7 +124,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, nodeParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.nodeParameter);
 
 		assertThat(result).isInstanceOf(Node.class);
 
@@ -139,7 +139,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, nodeListParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.nodeListParameter);
 
 		assertThat(result).isInstanceOf(NodeList.class);
 
@@ -155,7 +155,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, stringParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.stringParameter);
 
 		assertThat(result).isInstanceOf(String.class);
 
@@ -170,7 +170,7 @@ public class XPathParamMethodArgumentResolverTest {
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, convertedParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.convertedParameter);
 
 		assertThat(result).isInstanceOf(Integer.class);
 		assertThat(result).isEqualTo(42);
@@ -183,7 +183,7 @@ public class XPathParamMethodArgumentResolverTest {
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, namespaceMethodParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.namespaceMethodParameter);
 
 		assertThat(result).isInstanceOf(String.class);
 		assertThat(result).isEqualTo("text");
@@ -196,7 +196,7 @@ public class XPathParamMethodArgumentResolverTest {
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = resolver.resolveArgument(messageContext, namespaceClassParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.namespaceClassParameter);
 
 		assertThat(result).isInstanceOf(String.class);
 		assertThat(result).isEqualTo("text");

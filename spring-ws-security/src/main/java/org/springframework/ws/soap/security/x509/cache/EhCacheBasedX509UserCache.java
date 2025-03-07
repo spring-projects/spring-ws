@@ -60,7 +60,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(cache, "cache is mandatory");
+		Assert.notNull(this.cache, "cache is mandatory");
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 		Element element;
 
 		try {
-			element = cache.get(userCert);
+			element = this.cache.get(userCert);
 		}
 		catch (CacheException cacheException) {
 			throw new DataRetrievalFailureException("Cache failure: " + cacheException.getMessage());
@@ -100,7 +100,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 			logger.debug("Cache put: " + userCert.getSubjectDN());
 		}
 
-		cache.put(element);
+		this.cache.put(element);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class EhCacheBasedX509UserCache implements X509UserCache, InitializingBea
 			logger.debug("Cache remove: " + userCert.getSubjectDN());
 		}
 
-		cache.remove(userCert);
+		this.cache.remove(userCert);
 	}
 
 	public void setCache(Ehcache cache) {

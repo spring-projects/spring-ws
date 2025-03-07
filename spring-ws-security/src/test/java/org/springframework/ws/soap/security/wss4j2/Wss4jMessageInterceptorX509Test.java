@@ -32,9 +32,9 @@ public abstract class Wss4jMessageInterceptorX509Test extends Wss4jTest {
 	@Override
 	protected void onSetup() throws Exception {
 
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setSecurementActions("Signature");
-		interceptor.setValidationActions("Signature");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setValidationActions("Signature");
 		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 		cryptoFactoryBean.setCryptoProvider(Merlin.class);
 		cryptoFactoryBean.setKeyStoreType("jceks");
@@ -42,29 +42,29 @@ public abstract class Wss4jMessageInterceptorX509Test extends Wss4jTest {
 		cryptoFactoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
 
 		cryptoFactoryBean.afterPropertiesSet();
-		interceptor.setSecurementSignatureCrypto(cryptoFactoryBean.getObject());
-		interceptor.setValidationSignatureCrypto(cryptoFactoryBean.getObject());
-		interceptor.afterPropertiesSet();
+		this.interceptor.setSecurementSignatureCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.setValidationSignatureCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.afterPropertiesSet();
 	}
 
 	@Test
 	public void testAddCertificate() throws Exception {
 
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementUsername("rsaKey");
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
 
-		interceptor.setSecurementSignatureKeyIdentifier("DirectReference");
+		this.interceptor.setSecurementSignatureKeyIdentifier("DirectReference");
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 		Document document = getDocument(message);
 
 		assertXpathExists("Absent BinarySecurityToken element",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", document);
 
 		// lets verify the signature that we've just generated
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 	}
 
 }

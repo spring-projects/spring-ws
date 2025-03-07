@@ -74,7 +74,7 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 
 	/** Sets the XPath expression to be used. */
 	public void setExpression(String expression) {
-		expressionString = expression;
+		this.expressionString = expression;
 	}
 
 	/**
@@ -87,24 +87,24 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(expressionString, "expression is required");
-		if (namespaces == null) {
-			expression = XPathExpressionFactory.createXPathExpression(expressionString);
+		Assert.notNull(this.expressionString, "expression is required");
+		if (this.namespaces == null) {
+			this.expression = XPathExpressionFactory.createXPathExpression(this.expressionString);
 		}
 		else {
-			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
+			this.expression = XPathExpressionFactory.createXPathExpression(this.expressionString, this.namespaces);
 		}
-		transformerFactory = TransformerFactoryUtils.newInstance();
+		this.transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	@Override
 	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
-		return expression.evaluateAsString(payloadElement);
+		return this.expression.evaluateAsString(payloadElement);
 	}
 
 	private Element getMessagePayloadElement(WebServiceMessage message) throws TransformerException {
-		Transformer transformer = transformerFactory.newTransformer();
+		Transformer transformer = this.transformerFactory.newTransformer();
 		DOMResult domResult = new DOMResult();
 		transformer.transform(message.getPayloadSource(), domResult);
 		return (Element) domResult.getNode().getFirstChild();

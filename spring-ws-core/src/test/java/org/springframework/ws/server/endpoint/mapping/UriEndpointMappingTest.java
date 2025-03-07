@@ -44,8 +44,8 @@ public class UriEndpointMappingTest {
 	@BeforeEach
 	public void setUp() {
 
-		mapping = new UriEndpointMapping();
-		context = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		this.mapping = new UriEndpointMapping();
+		this.context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@AfterEach
@@ -64,7 +64,7 @@ public class UriEndpointMappingTest {
 
 		replay(connectionMock);
 
-		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(uri.toString());
+		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo(uri.toString());
 
 		verify(connectionMock);
 	}
@@ -72,7 +72,7 @@ public class UriEndpointMappingTest {
 	@Test
 	public void getLookupKeyForMessagePath() throws Exception {
 
-		mapping.setUsePath(true);
+		this.mapping.setUsePath(true);
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
@@ -82,7 +82,7 @@ public class UriEndpointMappingTest {
 
 		replay(connectionMock);
 
-		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo("/foo/bar");
+		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo("/foo/bar");
 
 		verify(connectionMock);
 	}
@@ -90,8 +90,8 @@ public class UriEndpointMappingTest {
 	@Test
 	public void testValidateLookupKey() {
 
-		assertThat(mapping.validateLookupKey("http://example.com/services")).isTrue();
-		assertThat(mapping.validateLookupKey("some string")).isFalse();
+		assertThat(this.mapping.validateLookupKey("http://example.com/services")).isTrue();
+		assertThat(this.mapping.validateLookupKey("some string")).isFalse();
 	}
 
 }

@@ -47,11 +47,11 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 	@BeforeEach
 	public void setUp() {
 
-		applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("mapping", SoapActionAnnotationMethodEndpointMapping.class);
-		applicationContext.registerSingleton("endpoint", MyEndpoint.class);
-		applicationContext.refresh();
-		mapping = (SoapActionAnnotationMethodEndpointMapping) applicationContext.getBean("mapping");
+		this.applicationContext = new StaticApplicationContext();
+		this.applicationContext.registerSingleton("mapping", SoapActionAnnotationMethodEndpointMapping.class);
+		this.applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+		this.applicationContext.refresh();
+		this.mapping = (SoapActionAnnotationMethodEndpointMapping) this.applicationContext.getBean("mapping");
 	}
 
 	@Test
@@ -63,12 +63,12 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 		replay(requestMock, factoryMock);
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
-		EndpointInvocationChain chain = mapping.getEndpoint(context);
+		EndpointInvocationChain chain = this.mapping.getEndpoint(context);
 
 		assertThat(chain).isNotNull();
 
 		Method doIt = MyEndpoint.class.getMethod("doIt");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doIt);
 
 		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
@@ -85,15 +85,15 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 		replay(requestMock, factoryMock);
 
 		Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItMultiple);
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
-		EndpointInvocationChain chain = mapping.getEndpoint(context);
+		EndpointInvocationChain chain = this.mapping.getEndpoint(context);
 
 		assertThat(chain).isNotNull();
 		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
-		chain = mapping.getEndpoint(context);
+		chain = this.mapping.getEndpoint(context);
 
 		assertThat(chain).isNotNull();
 		assertThat(chain.getEndpoint()).isEqualTo(expected);
@@ -111,15 +111,15 @@ public class SoapActionAnnotationMethodEndpointMappingTest {
 		replay(requestMock, factoryMock);
 
 		Method doItRepeatable = MyEndpoint.class.getMethod("doItRepeatable");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItRepeatable);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItRepeatable);
 
 		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
-		EndpointInvocationChain chain = mapping.getEndpoint(context);
+		EndpointInvocationChain chain = this.mapping.getEndpoint(context);
 
 		assertThat(chain).isNotNull();
 		assertThat(chain.getEndpoint()).isEqualTo(expected);
 
-		chain = mapping.getEndpoint(context);
+		chain = this.mapping.getEndpoint(context);
 
 		assertThat(chain).isNotNull();
 		assertThat(chain.getEndpoint()).isEqualTo(expected);

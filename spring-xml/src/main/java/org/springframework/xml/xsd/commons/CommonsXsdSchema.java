@@ -82,11 +82,11 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	@Override
 	public String getTargetNamespace() {
-		return schema.getTargetNamespace();
+		return this.schema.getTargetNamespace();
 	}
 
 	public QName[] getElementNames() {
-		List<QName> result = new ArrayList<>(schema.getElements().keySet());
+		List<QName> result = new ArrayList<>(this.schema.getElements().keySet());
 		return result.toArray(new QName[0]);
 	}
 
@@ -96,10 +96,10 @@ public class CommonsXsdSchema implements XsdSchema {
 		// stream-based version
 		try {
 			XmlSchemaSerializer serializer = BeanUtils.instantiateClass(XmlSchemaSerializer.class);
-			if (collection != null) {
-				serializer.setExtReg(collection.getExtReg());
+			if (this.collection != null) {
+				serializer.setExtReg(this.collection.getExtReg());
 			}
-			Document[] serializedSchemas = serializer.serializeSchema(schema, false);
+			Document[] serializedSchemas = serializer.serializeSchema(this.schema, false);
 			return new DOMSource(serializedSchemas[0]);
 		}
 		catch (BeanInstantiationException | XmlSchemaSerializer.XmlSchemaSerializerException ex) {
@@ -107,7 +107,7 @@ public class CommonsXsdSchema implements XsdSchema {
 		}
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
-			schema.write(bos);
+			this.schema.write(bos);
 		}
 		catch (UnsupportedEncodingException ex) {
 			throw new CommonsXsdSchemaException(ex.getMessage(), ex);
@@ -119,7 +119,7 @@ public class CommonsXsdSchema implements XsdSchema {
 	@Override
 	public XmlValidator createValidator() {
 		try {
-			Resource resource = new UrlResource(schema.getSourceURI());
+			Resource resource = new UrlResource(this.schema.getSourceURI());
 			return XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
 		}
 		catch (IOException ex) {
@@ -129,7 +129,7 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	/** Returns the wrapped Commons {@code XmlSchema} object. */
 	public XmlSchema getSchema() {
-		return schema;
+		return this.schema;
 	}
 
 	public String toString() {

@@ -100,7 +100,7 @@ public abstract class RequestCreators {
 
 		@Override
 		public WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
-			return adaptee.createMessage(messageFactory);
+			return this.adaptee.createMessage(messageFactory);
 		}
 
 	}

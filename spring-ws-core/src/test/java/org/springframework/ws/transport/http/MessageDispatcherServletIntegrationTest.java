@@ -82,8 +82,8 @@ public class MessageDispatcherServletIntegrationTest {
 	@BeforeEach
 	public void setUpSaaj() throws SOAPException {
 
-		messageFactory = MessageFactory.newInstance();
-		connectionFactory = SOAPConnectionFactory.newInstance();
+		this.messageFactory = MessageFactory.newInstance();
+		this.connectionFactory = SOAPConnectionFactory.newInstance();
 	}
 
 	@AfterEach
@@ -97,12 +97,12 @@ public class MessageDispatcherServletIntegrationTest {
 	@Test
 	public void echo() throws SOAPException {
 
-		SOAPMessage request = messageFactory.createMessage();
+		SOAPMessage request = this.messageFactory.createMessage();
 		SOAPElement element = request.getSOAPBody()
 			.addChildElement(new QName(EchoPayloadEndpoint.NAMESPACE, EchoPayloadEndpoint.LOCAL_PART));
 		element.setTextContent("Hello World");
 
-		SOAPConnection connection = connectionFactory.createConnection();
+		SOAPConnection connection = this.connectionFactory.createConnection();
 
 		SOAPMessage response = connection.call(request, url);
 

@@ -177,10 +177,10 @@ public class MockWebServiceClient {
 	public ResponseActions sendRequest(RequestCreator requestCreator) {
 		Assert.notNull(requestCreator, "'requestCreator' must not be null");
 		try {
-			WebServiceMessage request = requestCreator.createRequest(messageFactory);
-			MessageContext messageContext = new DefaultMessageContext(request, messageFactory);
+			WebServiceMessage request = requestCreator.createRequest(this.messageFactory);
+			MessageContext messageContext = new DefaultMessageContext(request, this.messageFactory);
 
-			messageReceiver.receive(messageContext);
+			this.messageReceiver.receive(messageContext);
 
 			return new MockWebServiceClientResponseActions(messageContext);
 		}
@@ -204,8 +204,8 @@ public class MockWebServiceClient {
 
 		@Override
 		public ResponseActions andExpect(ResponseMatcher responseMatcher) {
-			WebServiceMessage request = messageContext.getRequest();
-			WebServiceMessage response = messageContext.getResponse();
+			WebServiceMessage request = this.messageContext.getRequest();
+			WebServiceMessage response = this.messageContext.getResponse();
 			if (response == null) {
 				fail("No response received");
 				return null;

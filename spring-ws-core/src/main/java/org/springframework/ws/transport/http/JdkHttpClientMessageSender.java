@@ -73,7 +73,7 @@ public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSen
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 
-		JdkHttpClientConnection connection = new JdkHttpClientConnection(httpClient, uri, requestTimeout);
+		JdkHttpClientConnection connection = new JdkHttpClientConnection(this.httpClient, uri, this.requestTimeout);
 
 		if (isAcceptGzipEncoding()) {
 			connection.addRequestHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
@@ -86,8 +86,8 @@ public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSen
 	@Override
 	public void afterPropertiesSet() throws Exception {
 
-		if (httpClient == null) {
-			httpClient = HttpClient.newBuilder().connectTimeout(connectionTimeout).build();
+		if (this.httpClient == null) {
+			this.httpClient = HttpClient.newBuilder().connectTimeout(this.connectionTimeout).build();
 		}
 	}
 

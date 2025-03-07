@@ -74,7 +74,7 @@ abstract class Jaxp15ValidatorFactory {
 			if (errorHandler == null) {
 				errorHandler = new DefaultValidationErrorHandler();
 			}
-			Validator validator = schema.newValidator();
+			Validator validator = this.schema.newValidator();
 
 			try {
 				validator.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -117,7 +117,7 @@ abstract class Jaxp15ValidatorFactory {
 
 		@Override
 		public SAXParseException[] getErrors() {
-			return errors.toArray(new SAXParseException[0]);
+			return this.errors.toArray(new SAXParseException[0]);
 		}
 
 		@Override
@@ -126,12 +126,12 @@ abstract class Jaxp15ValidatorFactory {
 
 		@Override
 		public void error(SAXParseException ex) throws SAXException {
-			errors.add(ex);
+			this.errors.add(ex);
 		}
 
 		@Override
 		public void fatalError(SAXParseException ex) throws SAXException {
-			errors.add(ex);
+			this.errors.add(ex);
 		}
 
 	}

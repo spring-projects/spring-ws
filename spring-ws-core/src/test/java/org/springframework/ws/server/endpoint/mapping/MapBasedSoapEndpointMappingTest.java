@@ -120,12 +120,12 @@ public class MapBasedSoapEndpointMappingTest {
 
 		@Override
 		protected boolean validateLookupKey(String key) {
-			return Arrays.binarySearch(validKeys, key) >= 0;
+			return Arrays.binarySearch(this.validKeys, key) >= 0;
 		}
 
 		@Override
 		protected String getLookupKeyForMessage(MessageContext messageContext) {
-			return key;
+			return this.key;
 		}
 
 	}

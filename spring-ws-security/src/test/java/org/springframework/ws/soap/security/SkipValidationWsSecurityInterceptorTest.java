@@ -47,9 +47,9 @@ public class SkipValidationWsSecurityInterceptorTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		messageFactory = MessageFactory.newInstance();
-		soapMessageFactory = new SaajSoapMessageFactory(messageFactory);
-		interceptor = new AbstractWsSecurityInterceptor() {
+		this.messageFactory = MessageFactory.newInstance();
+		this.soapMessageFactory = new SaajSoapMessageFactory(this.messageFactory);
+		this.interceptor = new AbstractWsSecurityInterceptor() {
 
 			@Override
 			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
@@ -66,7 +66,7 @@ public class SkipValidationWsSecurityInterceptorTest {
 			protected void cleanUp() {
 			}
 		};
-		interceptor.setSkipValidationIfNoHeaderPresent(true);
+		this.interceptor.setSkipValidationIfNoHeaderPresent(true);
 	}
 
 	@Test
@@ -87,9 +87,9 @@ public class SkipValidationWsSecurityInterceptorTest {
 	private void doTestSkipValidation(String fileName) throws Exception {
 
 		SoapMessage message = loadSaajMessage(fileName);
-		MessageContext messageContext = new DefaultMessageContext(message, soapMessageFactory);
+		MessageContext messageContext = new DefaultMessageContext(message, this.soapMessageFactory);
 
-		assertThat(interceptor.handleRequest(messageContext, null)).isTrue();
+		assertThat(this.interceptor.handleRequest(messageContext, null)).isTrue();
 	}
 
 	private SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
@@ -101,7 +101,7 @@ public class SkipValidationWsSecurityInterceptorTest {
 		assertThat(resource.exists()).isTrue();
 
 		try (InputStream is = resource.getInputStream()) {
-			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+			return new SaajSoapMessage(this.messageFactory.createMessage(mimeHeaders, is));
 		}
 	}
 

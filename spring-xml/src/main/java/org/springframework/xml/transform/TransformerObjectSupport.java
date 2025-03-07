@@ -49,7 +49,7 @@ public abstract class TransformerObjectSupport {
 	 * Specify the {@code TransformerFactory} class to use.
 	 */
 	public void setTransformerFactoryClass(Class<? extends TransformerFactory> transformerFactoryClass) {
-		transformerHelper.setTransformerFactoryClass(transformerFactoryClass);
+		this.transformerHelper.setTransformerFactoryClass(transformerFactoryClass);
 	}
 
 	/**
@@ -67,14 +67,14 @@ public abstract class TransformerObjectSupport {
 	 * @see #getTransformerFactory()
 	 */
 	protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
-		return transformerHelper.newTransformerFactory(transformerFactoryClass);
+		return this.transformerHelper.newTransformerFactory(transformerFactoryClass);
 	}
 
 	/**
 	 * Returns the {@code TransformerFactory}.
 	 */
 	protected TransformerFactory getTransformerFactory() {
-		return transformerHelper.getTransformerFactory();
+		return this.transformerHelper.getTransformerFactory();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class TransformerObjectSupport {
 	 * @throws TransformerConfigurationException if thrown by JAXP methods
 	 */
 	protected final Transformer createTransformer() throws TransformerConfigurationException {
-		return transformerHelper.createTransformer();
+		return this.transformerHelper.createTransformer();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public abstract class TransformerObjectSupport {
 	 * @throws TransformerException if thrown by JAXP methods
 	 */
 	protected final void transform(Source source, Result result) throws TransformerException {
-		transformerHelper.transform(source, result);
+		this.transformerHelper.transform(source, result);
 	}
 
 }

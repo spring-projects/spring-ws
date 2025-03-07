@@ -73,7 +73,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * @return a string array of URIs for SOAP actors/roles
 	 */
 	public String[] getActorsOrRoles() {
-		return actorsOrRoles;
+		return this.actorsOrRoles;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * is {@code true}.
 	 */
 	public boolean isUltimateReceiver() {
-		return isUltimateReceiver;
+		return this.isUltimateReceiver;
 	}
 
 }

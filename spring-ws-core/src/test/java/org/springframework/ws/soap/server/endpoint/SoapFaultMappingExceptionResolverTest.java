@@ -45,15 +45,15 @@ public class SoapFaultMappingExceptionResolverTest {
 
 	@BeforeEach
 	public void setUp() {
-		resolver = new SoapFaultMappingExceptionResolver();
+		this.resolver = new SoapFaultMappingExceptionResolver();
 	}
 
 	@Test
 	public void testGetDepth() {
 
-		assertThat(resolver.getDepth("java.lang.Exception", new Exception())).isEqualTo(0);
-		assertThat(resolver.getDepth("java.lang.Exception", new IllegalArgumentException())).isEqualTo(2);
-		assertThat(resolver.getDepth("IllegalArgumentException", new IllegalStateException())).isEqualTo(-1);
+		assertThat(this.resolver.getDepth("java.lang.Exception", new Exception())).isEqualTo(0);
+		assertThat(this.resolver.getDepth("java.lang.Exception", new IllegalArgumentException())).isEqualTo(2);
+		assertThat(this.resolver.getDepth("IllegalArgumentException", new IllegalStateException())).isEqualTo(-1);
 	}
 
 	@Test
@@ -62,14 +62,14 @@ public class SoapFaultMappingExceptionResolverTest {
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "SERVER, Server error");
 		mappings.setProperty(RuntimeException.class.getName(), "CLIENT, Client error");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
+		boolean result = this.resolver.resolveException(context, null, new IllegalArgumentException("bla"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -91,14 +91,14 @@ public class SoapFaultMappingExceptionResolverTest {
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "RECEIVER, Receiver error, en");
 		mappings.setProperty(RuntimeException.class.getName(), "SENDER, Sender error, en");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
+		boolean result = this.resolver.resolveException(context, null, new IllegalArgumentException("bla"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -120,14 +120,14 @@ public class SoapFaultMappingExceptionResolverTest {
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "CLIENT, Client error");
 		mappings.setProperty(RuntimeException.class.getName(), "SERVER, Server error");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
+		boolean result = this.resolver.resolveException(context, null, new IllegalArgumentException("bla"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -149,14 +149,14 @@ public class SoapFaultMappingExceptionResolverTest {
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "SENDER, Sender error");
 		mappings.setProperty(RuntimeException.class.getName(), "RECEIVER, Receiver error");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
+		boolean result = this.resolver.resolveException(context, null, new IllegalArgumentException("bla"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -177,16 +177,16 @@ public class SoapFaultMappingExceptionResolverTest {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(SoapMessageException.class.getName(), "SERVER,Server error");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 		SoapFaultDefinition defaultFault = new SoapFaultDefinition();
 		defaultFault.setFaultCode(SoapFaultDefinition.CLIENT);
-		resolver.setDefaultFault(defaultFault);
+		this.resolver.setDefaultFault(defaultFault);
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IllegalArgumentException("bla"));
+		boolean result = this.resolver.resolveException(context, null, new IllegalArgumentException("bla"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -202,7 +202,7 @@ public class SoapFaultMappingExceptionResolverTest {
 		assertThat(fault.getFaultDetail()).isNull();
 
 		// SWS-226
-		result = resolver.resolveException(context, null, new IllegalArgumentException());
+		result = this.resolver.resolveException(context, null, new IllegalArgumentException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -223,14 +223,14 @@ public class SoapFaultMappingExceptionResolverTest {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(IOException.class.getName(), "SERVER");
-		resolver.setExceptionMappings(mappings);
+		this.resolver.setExceptionMappings(mappings);
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage message = messageFactory.createMessage();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new IOException());
+		boolean result = this.resolver.resolveException(context, null, new IOException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();

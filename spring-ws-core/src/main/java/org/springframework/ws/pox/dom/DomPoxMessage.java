@@ -67,21 +67,21 @@ public class DomPoxMessage implements PoxMessage {
 
 	/** Returns the document underlying this message. */
 	public Document getDocument() {
-		return document;
+		return this.document;
 	}
 
 	@Override
 	public Result getPayloadResult() {
-		NodeList children = document.getChildNodes();
+		NodeList children = this.document.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
-			document.removeChild(children.item(i));
+			this.document.removeChild(children.item(i));
 		}
-		return new DOMResult(document);
+		return new DOMResult(this.document);
 	}
 
 	@Override
 	public Source getPayloadSource() {
-		return new DOMSource(document);
+		return new DOMSource(this.document);
 	}
 
 	public boolean hasFault() {
@@ -94,7 +94,7 @@ public class DomPoxMessage implements PoxMessage {
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder("DomPoxMessage ");
-		Element root = document.getDocumentElement();
+		Element root = this.document.getDocumentElement();
 		if (root != null) {
 			builder.append(' ');
 			builder.append(QNameUtils.getQNameForNode(root));
@@ -106,9 +106,9 @@ public class DomPoxMessage implements PoxMessage {
 	public void writeTo(OutputStream outputStream) throws IOException {
 		try {
 			if (outputStream instanceof TransportOutputStream transportOutputStream) {
-				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, this.contentType);
 			}
-			transformer.transform(getPayloadSource(), new StreamResult(outputStream));
+			this.transformer.transform(getPayloadSource(), new StreamResult(outputStream));
 		}
 		catch (TransformerException ex) {
 			throw new DomPoxMessageException("Could write document: " + ex.getMessage(), ex);

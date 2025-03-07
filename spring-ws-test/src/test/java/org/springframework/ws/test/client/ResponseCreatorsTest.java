@@ -50,8 +50,8 @@ public class ResponseCreatorsTest {
 	@BeforeEach
 	public void createMessageFactory() {
 
-		messageFactory = new SaajSoapMessageFactory();
-		messageFactory.afterPropertiesSet();
+		this.messageFactory = new SaajSoapMessageFactory();
+		this.messageFactory.afterPropertiesSet();
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class ResponseCreatorsTest {
 		String payload = "<payload xmlns='http://springframework.org'/>";
 		ResponseCreator responseCreator = ResponseCreators.withPayload(new StringSource(payload));
 
-		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, this.messageFactory);
 
 		XmlAssert.assertThat(getPayloadAsString(response)).and(payload).ignoreWhitespace().areSimilar();
 	}
@@ -72,7 +72,7 @@ public class ResponseCreatorsTest {
 		ResponseCreator responseCreator = ResponseCreators
 			.withPayload(new ByteArrayResource(payload.getBytes(StandardCharsets.UTF_8)));
 
-		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, this.messageFactory);
 
 		XmlAssert.assertThat(getPayloadAsString(response)).and(payload).ignoreWhitespace().areSimilar();
 	}
@@ -88,7 +88,7 @@ public class ResponseCreatorsTest {
 		xmlBuilder.append("</soap:Envelope>");
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators.withSoapEnvelope(new StringSource(envelope));
-		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, this.messageFactory);
 
 		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response))
 			.and(envelope)
@@ -108,7 +108,7 @@ public class ResponseCreatorsTest {
 		String envelope = xmlBuilder.toString();
 		ResponseCreator responseCreator = ResponseCreators
 			.withSoapEnvelope(new ByteArrayResource(envelope.getBytes(StandardCharsets.UTF_8)));
-		WebServiceMessage response = responseCreator.createResponse(null, null, messageFactory);
+		WebServiceMessage response = responseCreator.createResponse(null, null, this.messageFactory);
 
 		XmlAssert.assertThat(getSoapEnvelopeAsString((SoapMessage) response))
 			.and(envelope)
@@ -182,7 +182,7 @@ public class ResponseCreatorsTest {
 
 	private void testFault(ResponseCreator responseCreator, String faultString, QName faultCode) throws IOException {
 
-		SoapMessage response = (SoapMessage) responseCreator.createResponse(null, null, messageFactory);
+		SoapMessage response = (SoapMessage) responseCreator.createResponse(null, null, this.messageFactory);
 
 		assertThat(response.hasFault()).isTrue();
 
@@ -196,7 +196,7 @@ public class ResponseCreatorsTest {
 	private String getPayloadAsString(WebServiceMessage message) throws TransformerException {
 
 		Result result = new StringResult();
-		transformerHelper.transform(message.getPayloadSource(), result);
+		this.transformerHelper.transform(message.getPayloadSource(), result);
 		return result.toString();
 	}
 
@@ -204,7 +204,7 @@ public class ResponseCreatorsTest {
 
 		DOMSource source = new DOMSource(message.getDocument());
 		Result result = new StringResult();
-		transformerHelper.transform(source, result);
+		this.transformerHelper.transform(source, result);
 		return result.toString();
 	}
 

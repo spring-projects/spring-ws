@@ -87,24 +87,24 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	protected AbstractAddressingVersion() {
 		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put(getNamespacePrefix(), getNamespaceUri());
-		toExpression = createNormalizedExpression(getToName(), namespaces);
-		actionExpression = createNormalizedExpression(getActionName(), namespaces);
-		messageIdExpression = createNormalizedExpression(getMessageIdName(), namespaces);
-		fromExpression = createExpression(getFromName(), namespaces);
-		replyToExpression = createExpression(getReplyToName(), namespaces);
-		faultToExpression = createExpression(getFaultToName(), namespaces);
-		addressExpression = createNormalizedExpression(getAddressName(), namespaces);
+		this.toExpression = createNormalizedExpression(getToName(), namespaces);
+		this.actionExpression = createNormalizedExpression(getActionName(), namespaces);
+		this.messageIdExpression = createNormalizedExpression(getMessageIdName(), namespaces);
+		this.fromExpression = createExpression(getFromName(), namespaces);
+		this.replyToExpression = createExpression(getReplyToName(), namespaces);
+		this.faultToExpression = createExpression(getFaultToName(), namespaces);
+		this.addressExpression = createNormalizedExpression(getAddressName(), namespaces);
 		if (getReferencePropertiesName() != null) {
-			referencePropertiesExpression = createChildrenExpression(getReferencePropertiesName(), namespaces);
+			this.referencePropertiesExpression = createChildrenExpression(getReferencePropertiesName(), namespaces);
 		}
 		else {
-			referencePropertiesExpression = null;
+			this.referencePropertiesExpression = null;
 		}
 		if (getReferenceParametersName() != null) {
-			referenceParametersExpression = createChildrenExpression(getReferenceParametersName(), namespaces);
+			this.referenceParametersExpression = createChildrenExpression(getReferenceParametersName(), namespaces);
 		}
 		else {
-			referenceParametersExpression = null;
+			this.referenceParametersExpression = null;
 		}
 	}
 
@@ -126,21 +126,21 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	@Override
 	public MessageAddressingProperties getMessageAddressingProperties(SoapMessage message) {
 		Element headerElement = getSoapHeaderElement(message);
-		URI to = getUri(headerElement, toExpression);
+		URI to = getUri(headerElement, this.toExpression);
 		if (to == null) {
 			to = getDefaultTo();
 		}
-		EndpointReference from = getEndpointReference(fromExpression.evaluateAsNode(headerElement));
-		EndpointReference replyTo = getEndpointReference(replyToExpression.evaluateAsNode(headerElement));
+		EndpointReference from = getEndpointReference(this.fromExpression.evaluateAsNode(headerElement));
+		EndpointReference replyTo = getEndpointReference(this.replyToExpression.evaluateAsNode(headerElement));
 		if (replyTo == null) {
 			replyTo = getDefaultReplyTo(from);
 		}
-		EndpointReference faultTo = getEndpointReference(faultToExpression.evaluateAsNode(headerElement));
+		EndpointReference faultTo = getEndpointReference(this.faultToExpression.evaluateAsNode(headerElement));
 		if (faultTo == null) {
 			faultTo = replyTo;
 		}
-		URI action = getUri(headerElement, actionExpression);
-		URI messageId = getUri(headerElement, messageIdExpression);
+		URI action = getUri(headerElement, this.actionExpression);
+		URI messageId = getUri(headerElement, this.messageIdExpression);
 		return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
 	}
 
@@ -180,14 +180,14 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		if (node == null) {
 			return null;
 		}
-		URI address = getUri(node, addressExpression);
+		URI address = getUri(node, this.addressExpression);
 		if (address == null) {
 			return null;
 		}
-		List<Node> referenceProperties = referencePropertiesExpression != null
-				? referencePropertiesExpression.evaluateAsNodeList(node) : Collections.emptyList();
-		List<Node> referenceParameters = referenceParametersExpression != null
-				? referenceParametersExpression.evaluateAsNodeList(node) : Collections.emptyList();
+		List<Node> referenceProperties = this.referencePropertiesExpression != null
+				? this.referencePropertiesExpression.evaluateAsNodeList(node) : Collections.emptyList();
+		List<Node> referenceParameters = this.referenceParametersExpression != null
+				? this.referenceParametersExpression.evaluateAsNodeList(node) : Collections.emptyList();
 		return new EndpointReference(address, referenceProperties, referenceParameters);
 	}
 

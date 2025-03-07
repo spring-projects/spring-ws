@@ -46,17 +46,17 @@ public abstract class WsSecurityFaultException extends WsSecurityException {
 
 	/** Returns the fault code for the exception. */
 	public QName getFaultCode() {
-		return faultCode;
+		return this.faultCode;
 	}
 
 	/** Returns the fault string for the exception. */
 	public String getFaultString() {
-		return faultString;
+		return this.faultString;
 	}
 
 	/** Returns the fault actor for the exception. */
 	public String getFaultActor() {
-		return faultActor;
+		return this.faultActor;
 	}
 
 }

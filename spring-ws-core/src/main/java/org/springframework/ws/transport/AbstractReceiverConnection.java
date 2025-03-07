@@ -38,18 +38,18 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 
 	@Override
 	protected final TransportInputStream createTransportInputStream() throws IOException {
-		if (requestInputStream == null) {
-			requestInputStream = new RequestTransportInputStream();
+		if (this.requestInputStream == null) {
+			this.requestInputStream = new RequestTransportInputStream();
 		}
-		return requestInputStream;
+		return this.requestInputStream;
 	}
 
 	@Override
 	protected final TransportOutputStream createTransportOutputStream() throws IOException {
-		if (responseOutputStream == null) {
-			responseOutputStream = new ResponseTransportOutputStream();
+		if (this.responseOutputStream == null) {
+			this.responseOutputStream = new ResponseTransportOutputStream();
 		}
-		return responseOutputStream;
+		return this.responseOutputStream;
 	}
 
 	/**

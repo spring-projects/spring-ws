@@ -38,19 +38,19 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 
 	@Override
 	protected final TransportOutputStream createTransportOutputStream() throws IOException {
-		if (requestOutputStream == null) {
-			requestOutputStream = new RequestTransportOutputStream();
+		if (this.requestOutputStream == null) {
+			this.requestOutputStream = new RequestTransportOutputStream();
 		}
-		return requestOutputStream;
+		return this.requestOutputStream;
 	}
 
 	@Override
 	protected final TransportInputStream createTransportInputStream() throws IOException {
 		if (hasResponse()) {
-			if (responseInputStream == null) {
-				responseInputStream = new ResponseTransportInputStream();
+			if (this.responseInputStream == null) {
+				this.responseInputStream = new ResponseTransportInputStream();
 			}
-			return responseInputStream;
+			return this.responseInputStream;
 		}
 		else {
 			return null;

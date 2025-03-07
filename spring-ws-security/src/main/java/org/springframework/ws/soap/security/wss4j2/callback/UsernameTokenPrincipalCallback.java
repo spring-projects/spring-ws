@@ -47,7 +47,7 @@ public class UsernameTokenPrincipalCallback implements Callback, Serializable {
 
 	/** Get the retrieved {@code Principal}. */
 	public WSUsernameTokenPrincipalImpl getPrincipal() {
-		return principal;
+		return this.principal;
 	}
 
 }

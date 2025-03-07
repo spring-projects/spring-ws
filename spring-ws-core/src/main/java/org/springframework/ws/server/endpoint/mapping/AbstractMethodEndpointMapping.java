@@ -63,8 +63,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (key == null) {
 			return null;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Looking up endpoint for [" + key + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
 		return lookupEndpoint(key);
 	}
@@ -81,7 +81,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
 	protected MethodEndpoint lookupEndpoint(T key) {
-		return endpointMap.get(key);
+		return this.endpointMap.get(key);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @throws BeansException if the endpoint could not be registered
 	 */
 	protected void registerEndpoint(T key, MethodEndpoint endpoint) throws BeansException {
-		Object mappedEndpoint = endpointMap.get(key);
+		Object mappedEndpoint = this.endpointMap.get(key);
 		if (mappedEndpoint != null) {
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
 					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
@@ -99,9 +99,9 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (endpoint == null) {
 			throw new ApplicationContextException("Could not find endpoint for key [" + key + "]");
 		}
-		endpointMap.put(key, endpoint);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Mapped [" + key + "] onto endpoint [" + endpoint + "]");
+		this.endpointMap.put(key, endpoint);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Mapped [" + key + "] onto endpoint [" + endpoint + "]");
 		}
 	}
 

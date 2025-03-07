@@ -50,7 +50,7 @@ public class SimpleSaajServlet extends HttpServlet {
 		super.init(servletConfig);
 
 		try {
-			msgFactory = MessageFactory.newInstance();
+			this.msgFactory = MessageFactory.newInstance();
 		}
 		catch (SOAPException ex) {
 			throw new ServletException("Unable to create message factory" + ex.getMessage());
@@ -91,7 +91,7 @@ public class SimpleSaajServlet extends HttpServlet {
 
 		try {
 			MimeHeaders headers = getHeaders(req);
-			SOAPMessage request = msgFactory.createMessage(headers, req.getInputStream());
+			SOAPMessage request = this.msgFactory.createMessage(headers, req.getInputStream());
 			SOAPMessage reply = onMessage(request);
 
 			if (reply != null) {

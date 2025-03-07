@@ -53,7 +53,7 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 	@Override
 	protected void doWithMessage(WebServiceMessage message) throws IOException {
 		try {
-			transformerHelper.transform(payload, message.getPayloadResult());
+			this.transformerHelper.transform(this.payload, message.getPayloadResult());
 		}
 		catch (TransformerException ex) {
 			fail("Could not transform request payload to message: " + ex.getMessage());

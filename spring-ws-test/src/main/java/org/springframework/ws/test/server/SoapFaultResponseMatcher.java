@@ -53,8 +53,8 @@ abstract class SoapFaultResponseMatcher implements ResponseMatcher {
 		SoapFault soapFault = responseBody.getFault();
 		QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
 		assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
-		if (expectedFaultStringOrReason != null) {
-			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
+		if (this.expectedFaultStringOrReason != null) {
+			assertEquals("Invalid SOAP Fault string/reason", this.expectedFaultStringOrReason,
 					soapFault.getFaultStringOrReason());
 		}
 	}

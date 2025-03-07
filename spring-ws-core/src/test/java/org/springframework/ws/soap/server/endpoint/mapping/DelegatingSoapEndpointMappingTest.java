@@ -41,28 +41,29 @@ public class DelegatingSoapEndpointMappingTest {
 	@BeforeEach
 	public void setUp() {
 
-		endpointMapping = new DelegatingSoapEndpointMapping();
-		mock = createMock(EndpointMapping.class);
-		endpointMapping.setDelegate(mock);
+		this.endpointMapping = new DelegatingSoapEndpointMapping();
+		this.mock = createMock(EndpointMapping.class);
+		this.endpointMapping.setDelegate(this.mock);
 	}
 
 	@Test
 	public void testGetEndpointMapping() throws Exception {
 
 		String role = "http://www.springframework.org/spring-ws/role";
-		endpointMapping.setActorOrRole(role);
+		this.endpointMapping.setActorOrRole(role);
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 		EndpointInvocationChain delegateChain = new EndpointInvocationChain(new Object());
-		expect(mock.getEndpoint(context)).andReturn(delegateChain);
+		expect(this.mock.getEndpoint(context)).andReturn(delegateChain);
 
-		replay(mock);
+		replay(this.mock);
 
-		SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) endpointMapping.getEndpoint(context);
+		SoapEndpointInvocationChain resultChain = (SoapEndpointInvocationChain) this.endpointMapping
+			.getEndpoint(context);
 
 		assertThat(resultChain).isNotNull();
 		assertThat(resultChain.getActorsOrRoles()).containsExactly(role);
 
-		verify(mock);
+		verify(this.mock);
 	}
 
 }

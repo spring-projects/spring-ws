@@ -66,12 +66,12 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	/** Returns the {@code HttpExchange} for this connection. */
 	public HttpExchange getHttpExchange() {
-		return httpExchange;
+		return this.httpExchange;
 	}
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return httpExchange.getRequestURI();
+		return this.httpExchange.getRequestURI();
 	}
 
 	void setChunkedEncoding(boolean chunkedEncoding) {
@@ -80,7 +80,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	@Override
 	public void endpointNotFound() {
-		responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
+		this.responseStatusCode = HttpTransportConstants.STATUS_NOT_FOUND;
 	}
 
 	/*
@@ -103,18 +103,18 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
-		return httpExchange.getRequestHeaders().keySet().iterator();
+		return this.httpExchange.getRequestHeaders().keySet().iterator();
 	}
 
 	@Override
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
-		List<String> headers = httpExchange.getRequestHeaders().get(name);
+		List<String> headers = this.httpExchange.getRequestHeaders().get(name);
 		return headers != null ? headers.iterator() : Collections.emptyIterator();
 	}
 
 	@Override
 	protected InputStream getRequestInputStream() throws IOException {
-		return httpExchange.getRequestBody();
+		return this.httpExchange.getRequestBody();
 	}
 
 	/*
@@ -123,41 +123,41 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
-		httpExchange.getResponseHeaders().add(name, value);
+		this.httpExchange.getResponseHeaders().add(name, value);
 	}
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
-		if (chunkedEncoding) {
-			httpExchange.sendResponseHeaders(responseStatusCode, 0);
-			return httpExchange.getResponseBody();
+		if (this.chunkedEncoding) {
+			this.httpExchange.sendResponseHeaders(this.responseStatusCode, 0);
+			return this.httpExchange.getResponseBody();
 		}
 		else {
-			if (responseBuffer == null) {
-				responseBuffer = new ByteArrayOutputStream();
+			if (this.responseBuffer == null) {
+				this.responseBuffer = new ByteArrayOutputStream();
 			}
-			return responseBuffer;
+			return this.responseBuffer;
 		}
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		if (!chunkedEncoding) {
-			byte[] buf = responseBuffer.toByteArray();
-			httpExchange.sendResponseHeaders(responseStatusCode, buf.length);
-			OutputStream responseBody = httpExchange.getResponseBody();
+		if (!this.chunkedEncoding) {
+			byte[] buf = this.responseBuffer.toByteArray();
+			this.httpExchange.sendResponseHeaders(this.responseStatusCode, buf.length);
+			OutputStream responseBody = this.httpExchange.getResponseBody();
 			FileCopyUtils.copy(buf, responseBody);
 		}
-		responseBuffer = null;
+		this.responseBuffer = null;
 	}
 
 	@Override
 	public void onClose() throws IOException {
-		if (responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED
-				|| responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {
-			httpExchange.sendResponseHeaders(responseStatusCode, -1);
+		if (this.responseStatusCode == HttpTransportConstants.STATUS_ACCEPTED
+				|| this.responseStatusCode == HttpTransportConstants.STATUS_NOT_FOUND) {
+			this.httpExchange.sendResponseHeaders(this.responseStatusCode, -1);
 		}
-		httpExchange.close();
+		this.httpExchange.close();
 	}
 
 	/*
@@ -166,17 +166,17 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	@Override
 	public boolean hasFault() throws IOException {
-		return responseStatusCode == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+		return this.responseStatusCode == HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
 	}
 
 	@Override
 	@Deprecated
 	public void setFault(boolean fault) throws IOException {
 		if (fault) {
-			responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+			this.responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
 		}
 		else {
-			responseStatusCode = HttpTransportConstants.STATUS_OK;
+			this.responseStatusCode = HttpTransportConstants.STATUS_OK;
 		}
 	}
 
@@ -184,14 +184,14 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	public void setFaultCode(QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
-				responseStatusCode = HttpTransportConstants.STATUS_BAD_REQUEST;
+				this.responseStatusCode = HttpTransportConstants.STATUS_BAD_REQUEST;
 			}
 			else {
-				responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
+				this.responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
 			}
 		}
 		else {
-			responseStatusCode = HttpTransportConstants.STATUS_OK;
+			this.responseStatusCode = HttpTransportConstants.STATUS_OK;
 		}
 	}
 

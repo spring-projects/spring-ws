@@ -60,8 +60,8 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 			if (locationNode instanceof Attr location) {
 				if (StringUtils.hasLength(location.getValue())) {
 					String newLocation = transformLocation(location.getValue(), request);
-					if (logger.isDebugEnabled()) {
-						logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+					if (this.logger.isDebugEnabled()) {
+						this.logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
 					}
 					location.setValue(newLocation);
 				}

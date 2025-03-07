@@ -46,7 +46,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 
 	@BeforeEach
 	public void setUp() {
-		resolver = new SoapFaultAnnotationExceptionResolver();
+		this.resolver = new SoapFaultAnnotationExceptionResolver();
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new MyClientException());
+		boolean result = this.resolver.resolveException(context, null, new MyClientException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -79,7 +79,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new MySenderException());
+		boolean result = this.resolver.resolveException(context, null, new MySenderException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -102,7 +102,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new MyServerException());
+		boolean result = this.resolver.resolveException(context, null, new MyServerException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -126,7 +126,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(message), factory);
 
-		boolean result = resolver.resolveException(context, null, new MyReceiverException());
+		boolean result = this.resolver.resolveException(context, null, new MyReceiverException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -148,12 +148,12 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapFaultDefinition defaultFault = new SoapFaultDefinition();
 		defaultFault.setFaultCode(SoapFaultDefinition.CLIENT);
 		defaultFault.setFaultStringOrReason("faultstring");
-		resolver.setDefaultFault(defaultFault);
+		this.resolver.setDefaultFault(defaultFault);
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new NonAnnotatedException());
+		boolean result = this.resolver.resolveException(context, null, new NonAnnotatedException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -176,7 +176,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new MyCustomException());
+		boolean result = this.resolver.resolveException(context, null, new MyCustomException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -199,7 +199,7 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new MySubClientException());
+		boolean result = this.resolver.resolveException(context, null, new MySubClientException());
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -222,7 +222,8 @@ public class SoapFaultAnnotationExceptionResolverTest {
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
 		MessageContext context = new DefaultMessageContext(factory);
 
-		boolean result = resolver.resolveException(context, null, new NoStringOrReasonException("Exception message"));
+		boolean result = this.resolver.resolveException(context, null,
+				new NoStringOrReasonException("Exception message"));
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();

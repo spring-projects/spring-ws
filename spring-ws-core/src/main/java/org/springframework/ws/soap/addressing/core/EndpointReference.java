@@ -74,7 +74,7 @@ public final class EndpointReference implements Serializable {
 
 	/** Returns the address of the endpoint. */
 	public URI getAddress() {
-		return address;
+		return this.address;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public final class EndpointReference implements Serializable {
 	 * objects.
 	 */
 	public List<Node> getReferenceProperties() {
-		return referenceProperties;
+		return this.referenceProperties;
 	}
 
 	/**
@@ -90,7 +90,7 @@ public final class EndpointReference implements Serializable {
 	 * objects.
 	 */
 	public List<Node> getReferenceParameters() {
-		return referenceParameters;
+		return this.referenceParameters;
 	}
 
 	public boolean equals(Object o) {
@@ -98,17 +98,17 @@ public final class EndpointReference implements Serializable {
 			return true;
 		}
 		if (o instanceof EndpointReference other) {
-			return address.equals(other.address);
+			return this.address.equals(other.address);
 		}
 		return false;
 	}
 
 	public int hashCode() {
-		return address.hashCode();
+		return this.address.hashCode();
 	}
 
 	public String toString() {
-		return address.toString();
+		return this.address.toString();
 	}
 
 }

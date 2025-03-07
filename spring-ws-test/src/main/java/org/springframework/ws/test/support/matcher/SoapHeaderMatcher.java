@@ -58,12 +58,12 @@ public class SoapHeaderMatcher extends AbstractSoapMessageMatcher {
 		boolean found = false;
 		while (soapHeaderElementIterator.hasNext()) {
 			SoapHeaderElement soapHeaderElement = soapHeaderElementIterator.next();
-			if (soapHeaderName.equals(soapHeaderElement.getName())) {
+			if (this.soapHeaderName.equals(soapHeaderElement.getName())) {
 				found = true;
 				break;
 			}
 		}
-		assertTrue("SOAP header [" + soapHeaderName + "] not found", found, "Envelope",
+		assertTrue("SOAP header [" + this.soapHeaderName + "] not found", found, "Envelope",
 				soapMessage.getEnvelope().getSource());
 	}
 

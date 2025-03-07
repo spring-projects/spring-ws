@@ -48,7 +48,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
 	 * @see #DEFAULT_REQUEST_SUFFIX
 	 */
 	public String getRequestSuffix() {
-		return requestSuffix;
+		return this.requestSuffix;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
 	 * @see #DEFAULT_RESPONSE_SUFFIX
 	 */
 	public String getResponseSuffix() {
-		return responseSuffix;
+		return this.responseSuffix;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SuffixBasedMessagesProvider extends DefaultMessagesProvider {
 	 * @see #DEFAULT_FAULT_SUFFIX
 	 */
 	public String getFaultSuffix() {
-		return faultSuffix;
+		return this.faultSuffix;
 	}
 
 	/**

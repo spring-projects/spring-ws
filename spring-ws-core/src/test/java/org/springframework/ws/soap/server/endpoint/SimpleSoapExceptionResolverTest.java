@@ -49,28 +49,28 @@ public class SimpleSoapExceptionResolverTest {
 	@BeforeEach
 	public void setUp() {
 
-		exceptionResolver = new SimpleSoapExceptionResolver();
-		factoryMock = createMock(WebServiceMessageFactory.class);
-		messageContext = new DefaultMessageContext(new MockWebServiceMessage(), factoryMock);
-		messageMock = createMock(SoapMessage.class);
-		bodyMock = createMock(Soap11Body.class);
+		this.exceptionResolver = new SimpleSoapExceptionResolver();
+		this.factoryMock = createMock(WebServiceMessageFactory.class);
+		this.messageContext = new DefaultMessageContext(new MockWebServiceMessage(), this.factoryMock);
+		this.messageMock = createMock(SoapMessage.class);
+		this.bodyMock = createMock(Soap11Body.class);
 	}
 
 	@Test
 	public void testResolveExceptionInternal() {
 
 		Exception exception = new Exception("message");
-		expect(factoryMock.createWebServiceMessage()).andReturn(messageMock);
-		expect(messageMock.getSoapBody()).andReturn(bodyMock);
-		expect(bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH)).andReturn(null);
+		expect(this.factoryMock.createWebServiceMessage()).andReturn(this.messageMock);
+		expect(this.messageMock.getSoapBody()).andReturn(this.bodyMock);
+		expect(this.bodyMock.addServerOrReceiverFault(exception.getMessage(), Locale.ENGLISH)).andReturn(null);
 
-		replay(factoryMock, messageMock, bodyMock);
+		replay(this.factoryMock, this.messageMock, this.bodyMock);
 
-		boolean result = exceptionResolver.resolveExceptionInternal(messageContext, null, exception);
+		boolean result = this.exceptionResolver.resolveExceptionInternal(this.messageContext, null, exception);
 
 		assertThat(result).isTrue();
 
-		verify(factoryMock, messageMock, bodyMock);
+		verify(this.factoryMock, this.messageMock, this.bodyMock);
 	}
 
 }

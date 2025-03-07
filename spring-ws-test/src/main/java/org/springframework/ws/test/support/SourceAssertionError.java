@@ -57,7 +57,7 @@ public class SourceAssertionError extends AssertionError {
 	 * @return the source
 	 */
 	public Source getSource() {
-		return source;
+		return this.source;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class SourceAssertionError extends AssertionError {
 		if (sourceString != null) {
 			String newLine = System.lineSeparator();
 			builder.append(newLine);
-			String label = sourceLabel != null ? sourceLabel : "Source";
+			String label = this.sourceLabel != null ? this.sourceLabel : "Source";
 			builder.append(label);
 			builder.append(": ");
 			builder.append(sourceString);
@@ -77,11 +77,11 @@ public class SourceAssertionError extends AssertionError {
 	}
 
 	private String getSourceString() {
-		if (source != null) {
+		if (this.source != null) {
 			try {
 				StringResult result = new StringResult();
 				Transformer transformer = createNonIndentingTransformer();
-				transformer.transform(source, result);
+				transformer.transform(this.source, result);
 				return result.toString();
 			}
 			catch (TransformerException ex) {
@@ -92,7 +92,7 @@ public class SourceAssertionError extends AssertionError {
 	}
 
 	private Transformer createNonIndentingTransformer() throws TransformerConfigurationException {
-		Transformer transformer = transformerHelper.createTransformer();
+		Transformer transformer = this.transformerHelper.createTransformer();
 		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.setOutputProperty(OutputKeys.INDENT, "no");
 		return transformer;

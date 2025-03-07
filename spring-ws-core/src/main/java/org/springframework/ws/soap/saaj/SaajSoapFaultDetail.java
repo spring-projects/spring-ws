@@ -82,18 +82,18 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 
 		@Override
 		public boolean hasNext() {
-			return iterator.hasNext();
+			return this.iterator.hasNext();
 		}
 
 		@Override
 		public SoapFaultDetailElement next() {
-			DetailEntry saajDetailEntry = iterator.next();
+			DetailEntry saajDetailEntry = this.iterator.next();
 			return new SaajSoapFaultDetailElement(saajDetailEntry);
 		}
 
 		@Override
 		public void remove() {
-			iterator.remove();
+			this.iterator.remove();
 		}
 
 	}

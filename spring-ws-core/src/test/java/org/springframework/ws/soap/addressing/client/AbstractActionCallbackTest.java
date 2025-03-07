@@ -55,11 +55,11 @@ public abstract class AbstractActionCallbackTest extends AbstractWsAddressingTes
 	@BeforeEach
 	public void createMocks() {
 
-		strategyMock = createMock(MessageIdStrategy.class);
+		this.strategyMock = createMock(MessageIdStrategy.class);
 
-		connectionMock = createMock(WebServiceConnection.class);
+		this.connectionMock = createMock(WebServiceConnection.class);
 
-		TransportContext transportContext = new DefaultTransportContext(connectionMock);
+		TransportContext transportContext = new DefaultTransportContext(this.connectionMock);
 		TransportContextHolder.setTransportContext(transportContext);
 	}
 
@@ -73,21 +73,21 @@ public abstract class AbstractActionCallbackTest extends AbstractWsAddressingTes
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI to = new URI("mailto:fabrikam@example.com");
-		callback = new ActionCallback(action, getVersion(), to);
-		callback.setMessageIdStrategy(strategyMock);
+		this.callback = new ActionCallback(action, getVersion(), to);
+		this.callback.setMessageIdStrategy(this.strategyMock);
 		SaajSoapMessage message = createDeleteMessage();
-		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		expect(this.strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		this.callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
 
-		replay(strategyMock, connectionMock);
+		replay(this.strategyMock, this.connectionMock);
 
-		callback.doWithMessage(message);
+		this.callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
 
 		assertXMLNotSimilar(expected, message);
 
-		verify(strategyMock, connectionMock);
+		verify(this.strategyMock, this.connectionMock);
 	}
 
 	@Test
@@ -95,24 +95,24 @@ public abstract class AbstractActionCallbackTest extends AbstractWsAddressingTes
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
-		callback = new ActionCallback(action, getVersion());
-		callback.setMessageIdStrategy(strategyMock);
-		callback.setShouldInitializeTo(true);
-		expect(connectionMock.getUri()).andReturn(connectionUri);
+		this.callback = new ActionCallback(action, getVersion());
+		this.callback.setMessageIdStrategy(this.strategyMock);
+		this.callback.setShouldInitializeTo(true);
+		expect(this.connectionMock.getUri()).andReturn(connectionUri);
 
 		SaajSoapMessage message = createDeleteMessage();
-		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		expect(this.strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		this.callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
 
-		replay(strategyMock, connectionMock);
+		replay(this.strategyMock, this.connectionMock);
 
-		callback.doWithMessage(message);
+		this.callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/valid.xml");
 
 		assertXMLNotSimilar(expected, message);
 
-		verify(strategyMock, connectionMock);
+		verify(this.strategyMock, this.connectionMock);
 	}
 
 	@Test
@@ -120,29 +120,29 @@ public abstract class AbstractActionCallbackTest extends AbstractWsAddressingTes
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
-		callback = new ActionCallback(action, getVersion());
-		callback.setMessageIdStrategy(strategyMock);
-		callback.setShouldInitializeTo(false);
-		expect(connectionMock.getUri()).andReturn(connectionUri).times(0, 1);
+		this.callback = new ActionCallback(action, getVersion());
+		this.callback.setMessageIdStrategy(this.strategyMock);
+		this.callback.setShouldInitializeTo(false);
+		expect(this.connectionMock.getUri()).andReturn(connectionUri).times(0, 1);
 
 		SaajSoapMessage message = createDeleteMessage();
-		expect(strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
-		callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
+		expect(this.strategyMock.newMessageId(message)).andReturn(new URI("http://example.com/someuniquestring"));
+		this.callback.setReplyTo(new EndpointReference(new URI("http://example.com/business/client1")));
 
-		replay(strategyMock, connectionMock);
+		replay(this.strategyMock, this.connectionMock);
 
-		callback.doWithMessage(message);
+		this.callback.doWithMessage(message);
 
 		SaajSoapMessage expected = loadSaajMessage(getTestPath() + "/request-without-shouldInitializeTo.xml");
 
 		assertXMLSimilar(expected, message);
 
-		verify(strategyMock, connectionMock);
+		verify(this.strategyMock, this.connectionMock);
 	}
 
 	private SaajSoapMessage createDeleteMessage() throws SOAPException {
 
-		SOAPMessage saajMessage = messageFactory.createMessage();
+		SOAPMessage saajMessage = this.messageFactory.createMessage();
 		SOAPBody saajBody = saajMessage.getSOAPBody();
 		SOAPBodyElement delete = saajBody.addBodyElement(new QName("http://example.com/fabrikam", "Delete"));
 		SOAPElement maxCount = delete.addChildElement(new QName("http://example.com/fabrikam", "maxCount"));

@@ -42,7 +42,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 
 	/** Returns namespaces used in the XPath expression. */
 	public Map<String, String> getNamespaces() {
-		return namespaces;
+		return this.namespaces;
 	}
 
 	/** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
@@ -70,7 +70,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 
 		@Override
 		public Object mapNode(Node node, int nodeNum) throws DOMException {
-			callbackHandler.processNode(node);
+			this.callbackHandler.processNode(node);
 			return null;
 		}
 

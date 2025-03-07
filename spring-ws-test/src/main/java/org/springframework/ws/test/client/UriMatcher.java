@@ -38,7 +38,7 @@ class UriMatcher implements RequestMatcher {
 
 	@Override
 	public void match(URI actual, WebServiceMessage request) {
-		assertEquals("Unexpected connection", expected, actual, "Payload", request.getPayloadSource());
+		assertEquals("Unexpected connection", this.expected, actual, "Payload", request.getPayloadSource());
 	}
 
 }

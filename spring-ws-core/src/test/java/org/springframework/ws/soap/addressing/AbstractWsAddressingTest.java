@@ -37,7 +37,7 @@ public abstract class AbstractWsAddressingTest {
 
 	@BeforeEach
 	public void createMessageFactory() throws Exception {
-		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 	}
 
 	protected SaajSoapMessage loadSaajMessage(String fileName) throws SOAPException, IOException {
@@ -48,7 +48,7 @@ public abstract class AbstractWsAddressingTest {
 
 		try (is) {
 			assertThat(is).isNotNull();
-			return new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
+			return new SaajSoapMessage(this.messageFactory.createMessage(mimeHeaders, is));
 		}
 	}
 

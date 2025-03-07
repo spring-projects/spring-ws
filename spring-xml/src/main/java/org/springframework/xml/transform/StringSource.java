@@ -47,7 +47,7 @@ public class StringSource extends StreamSource {
 
 	@Override
 	public Reader getReader() {
-		return new StringReader(content);
+		return new StringReader(this.content);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class StringSource extends StreamSource {
 
 	@Override
 	public String toString() {
-		return content;
+		return this.content;
 	}
 
 }

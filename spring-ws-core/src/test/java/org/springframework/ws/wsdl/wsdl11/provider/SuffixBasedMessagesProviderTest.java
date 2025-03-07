@@ -48,13 +48,13 @@ public class SuffixBasedMessagesProviderTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		provider = new SuffixBasedMessagesProvider();
-		provider.setFaultSuffix("Foo");
+		this.provider = new SuffixBasedMessagesProvider();
+		this.provider.setFaultSuffix("Foo");
 		WSDLFactory factory = WSDLFactory.newInstance();
-		definition = factory.newDefinition();
+		this.definition = factory.newDefinition();
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 	}
 
 	@Test
@@ -62,25 +62,25 @@ public class SuffixBasedMessagesProviderTest {
 	public void testAddMessages() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
-		definition.addNamespace("tns", definitionNamespace);
-		definition.setTargetNamespace(definitionNamespace);
+		this.definition.addNamespace("tns", definitionNamespace);
+		this.definition.setTargetNamespace(definitionNamespace);
 		String schemaNamespace = "http://www.springframework.org/spring-ws/schema";
-		definition.addNamespace("schema", schemaNamespace);
+		this.definition.addNamespace("schema", schemaNamespace);
 
 		Resource resource = new ClassPathResource("schema.xsd", getClass());
-		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(resource));
-		Types types = definition.createTypes();
-		definition.setTypes(types);
-		Schema schema = (Schema) definition.getExtensionRegistry()
+		Document schemaDocument = this.documentBuilder.parse(SaxUtils.createInputSource(resource));
+		Types types = this.definition.createTypes();
+		this.definition.setTypes(types);
+		Schema schema = (Schema) this.definition.getExtensionRegistry()
 			.createExtension(Types.class, new QName("http://www.w3.org/2001/XMLSchema", "schema"));
 		types.addExtensibilityElement(schema);
 		schema.setElement(schemaDocument.getDocumentElement());
 
-		provider.addMessages(definition);
+		this.provider.addMessages(this.definition);
 
-		assertThat(definition.getMessages()).hasSize(2);
+		assertThat(this.definition.getMessages()).hasSize(2);
 
-		Message message = definition.getMessage(new QName(definitionNamespace, "GetOrderRequest"));
+		Message message = this.definition.getMessage(new QName(definitionNamespace, "GetOrderRequest"));
 
 		assertThat(message).isNotNull();
 
@@ -89,7 +89,7 @@ public class SuffixBasedMessagesProviderTest {
 		assertThat(part).isNotNull();
 		assertThat(part.getElementName()).isEqualTo(new QName(schemaNamespace, "GetOrderRequest"));
 
-		message = definition.getMessage(new QName(definitionNamespace, "GetOrderResponse"));
+		message = this.definition.getMessage(new QName(definitionNamespace, "GetOrderResponse"));
 
 		assertThat(message).isNotNull();
 

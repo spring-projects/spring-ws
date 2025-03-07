@@ -44,18 +44,18 @@ class SaajAttachment implements Attachment {
 
 	@Override
 	public String getContentId() {
-		return saajAttachment.getContentId();
+		return this.saajAttachment.getContentId();
 	}
 
 	@Override
 	public String getContentType() {
-		return saajAttachment.getContentType();
+		return this.saajAttachment.getContentType();
 	}
 
 	@Override
 	public InputStream getInputStream() throws IOException {
 		try {
-			return saajAttachment.getDataHandler().getInputStream();
+			return this.saajAttachment.getDataHandler().getInputStream();
 		}
 		catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);
@@ -65,7 +65,7 @@ class SaajAttachment implements Attachment {
 	@Override
 	public long getSize() {
 		try {
-			return saajAttachment.getSize();
+			return this.saajAttachment.getSize();
 		}
 		catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);
@@ -75,7 +75,7 @@ class SaajAttachment implements Attachment {
 	@Override
 	public DataHandler getDataHandler() {
 		try {
-			return saajAttachment.getDataHandler();
+			return this.saajAttachment.getDataHandler();
 		}
 		catch (SOAPException ex) {
 			throw new SaajAttachmentException(ex);

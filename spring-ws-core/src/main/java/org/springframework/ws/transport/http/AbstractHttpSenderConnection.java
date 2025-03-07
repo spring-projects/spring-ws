@@ -79,30 +79,30 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 				|| HttpTransportConstants.STATUS_NO_CONTENT == responseCode) {
 			return false;
 		}
-		if (hasResponse != null) {
-			return hasResponse;
+		if (this.hasResponse != null) {
+			return this.hasResponse;
 		}
 		long contentLength = getResponseContentLength();
 		if (contentLength < 0) {
-			rawResponseInputStream = new PushbackInputStream(getRawResponseInputStream());
-			int b = rawResponseInputStream.read();
+			this.rawResponseInputStream = new PushbackInputStream(getRawResponseInputStream());
+			int b = this.rawResponseInputStream.read();
 			if (b == -1) {
-				hasResponse = Boolean.FALSE;
+				this.hasResponse = Boolean.FALSE;
 			}
 			else {
-				hasResponse = Boolean.TRUE;
-				rawResponseInputStream.unread(b);
+				this.hasResponse = Boolean.TRUE;
+				this.rawResponseInputStream.unread(b);
 			}
 		}
 		else {
-			hasResponse = contentLength > 0;
+			this.hasResponse = contentLength > 0;
 		}
-		return hasResponse;
+		return this.hasResponse;
 	}
 
 	@Override
 	protected final InputStream getResponseInputStream() throws IOException {
-		InputStream inputStream = rawResponseInputStream;
+		InputStream inputStream = this.rawResponseInputStream;
 		if (inputStream == null) {
 			inputStream = getRawResponseInputStream();
 		}

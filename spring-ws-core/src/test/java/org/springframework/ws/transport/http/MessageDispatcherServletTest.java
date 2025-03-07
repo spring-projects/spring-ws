@@ -55,8 +55,8 @@ public class MessageDispatcherServletTest {
 	@BeforeEach
 	public void setUp() {
 
-		config = new MockServletConfig(new MockServletContext(), "spring-ws");
-		servlet = new MessageDispatcherServlet();
+		this.config = new MockServletConfig(new MockServletContext(), "spring-ws");
+		this.servlet = new MessageDispatcherServlet();
 	}
 
 	private void assertStrategies(Class<?> expectedClass, List<?> actual) {
@@ -71,9 +71,9 @@ public class MessageDispatcherServletTest {
 	@Test
 	public void testDefaultStrategies() throws ServletException {
 
-		servlet.setContextClass(StaticWebApplicationContext.class);
-		servlet.init(config);
-		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
+		this.servlet.setContextClass(StaticWebApplicationContext.class);
+		this.servlet.init(this.config);
+		MessageDispatcher messageDispatcher = (MessageDispatcher) this.servlet.getMessageReceiver();
 
 		assertThat(messageDispatcher).isNotNull();
 	}
@@ -81,9 +81,9 @@ public class MessageDispatcherServletTest {
 	@Test
 	public void testDetectedStrategies() throws ServletException {
 
-		servlet.setContextClass(DetectWebApplicationContext.class);
-		servlet.init(config);
-		MessageDispatcher messageDispatcher = (MessageDispatcher) servlet.getMessageReceiver();
+		this.servlet.setContextClass(DetectWebApplicationContext.class);
+		this.servlet.init(this.config);
+		MessageDispatcher messageDispatcher = (MessageDispatcher) this.servlet.getMessageReceiver();
 
 		assertThat(messageDispatcher).isNotNull();
 		assertStrategies(PayloadRootQNameEndpointMapping.class, messageDispatcher.getEndpointMappings());
@@ -94,12 +94,12 @@ public class MessageDispatcherServletTest {
 	@Test
 	public void testDetectWsdlDefinitions() throws Exception {
 
-		servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
-		servlet.init(config);
+		this.servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
+		this.servlet.init(this.config);
 		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET,
 				"/definition.wsdl");
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		servlet.service(request, response);
+		this.servlet.service(request, response);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

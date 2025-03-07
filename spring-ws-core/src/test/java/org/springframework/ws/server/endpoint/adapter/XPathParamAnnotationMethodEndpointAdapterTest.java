@@ -64,8 +64,8 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		adapter = new XPathParamAnnotationMethodEndpointAdapter();
-		adapter.afterPropertiesSet();
+		this.adapter = new XPathParamAnnotationMethodEndpointAdapter();
+		this.adapter.afterPropertiesSet();
 	}
 
 	@Test
@@ -73,21 +73,21 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParamType", Integer.TYPE);
 
-		assertThat(adapter.supports(endpoint)).isFalse();
+		assertThat(this.adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
 	public void testUnsupportedInvalidReturnType() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidReturnType", String.class);
-		assertThat(adapter.supports(endpoint)).isFalse();
+		assertThat(this.adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
 	public void testUnsupportedInvalidParams() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParams", String.class, String.class);
-		assertThat(adapter.supports(endpoint)).isFalse();
+		assertThat(this.adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
@@ -95,28 +95,28 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
 				NodeList.class, String.class);
-		assertThat(adapter.supports(endpoint)).isTrue();
+		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsStringSource() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedStringSource", String.class);
-		assertThat(adapter.supports(endpoint)).isTrue();
+		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsSource() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", String.class);
-		assertThat(adapter.supports(endpoint)).isTrue();
+		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
 	public void testSupportsVoid() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedVoid", String.class);
-		assertThat(adapter.supports(endpoint)).isTrue();
+		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
@@ -130,9 +130,9 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 		MessageContext messageContext = new DefaultMessageContext(messageMock, factoryMock);
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
 				NodeList.class, String.class);
-		adapter.invoke(messageContext, endpoint);
+		this.adapter.invoke(messageContext, endpoint);
 
-		assertThat(supportedTypesInvoked).isTrue();
+		assertThat(this.supportedTypesInvoked).isTrue();
 
 		verify(messageMock, factoryMock);
 	}
@@ -150,9 +150,9 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 		MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", String.class);
-		adapter.invoke(messageContext, endpoint);
+		this.adapter.invoke(messageContext, endpoint);
 
-		assertThat(supportedSourceInvoked).isTrue();
+		assertThat(this.supportedSourceInvoked).isTrue();
 
 		verify(requestMock, responseMock, factoryMock);
 	}
@@ -186,13 +186,13 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put("root", rootNamespace);
 		namespaces.put("child", childNamespace);
-		adapter.setNamespaces(namespaces);
+		this.adapter.setNamespaces(namespaces);
 
 		MessageContext messageContext = new DefaultMessageContext(requestMock, factoryMock);
 		MethodEndpoint endpoint = new MethodEndpoint(this, "namespaces", Node.class);
-		adapter.invoke(messageContext, endpoint);
+		this.adapter.invoke(messageContext, endpoint);
 
-		assertThat(namespacesInvoked).isTrue();
+		assertThat(this.namespacesInvoked).isTrue();
 	}
 
 	public void supportedVoid(@XPathParam("/") String param1) {
@@ -200,7 +200,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 	public Source supportedSource(@XPathParam("/") String param1) {
 
-		supportedSourceInvoked = true;
+		this.supportedSourceInvoked = true;
 		return new StringSource("<response/>");
 	}
 
@@ -212,7 +212,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 			@XPathParam("/root/child/number") double param2, @XPathParam("/root/child") Node param3,
 			@XPathParam("/root/*") NodeList param4, @XPathParam("/root/child/text") String param5) {
 
-		supportedTypesInvoked = true;
+		this.supportedTypesInvoked = true;
 
 		assertThat(param1).isTrue();
 		assertThat(param2).isEqualTo(42D);
@@ -235,7 +235,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTest {
 
 	public void namespaces(@XPathParam(".") Node param) {
 
-		namespacesInvoked = true;
+		this.namespacesInvoked = true;
 		assertThat(param.getLocalName()).isEqualTo("child");
 	}
 

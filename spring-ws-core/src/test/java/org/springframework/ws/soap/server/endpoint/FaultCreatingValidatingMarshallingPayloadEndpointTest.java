@@ -60,7 +60,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage request = messageFactory.createMessage();
 		request.getSOAPBody().addBodyElement(new QName("http://www.springframework.org/spring-ws", "request"));
-		messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
+		this.messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
 				new SaajSoapMessageFactory(messageFactory));
 	}
 
@@ -80,13 +80,13 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 			}
 		};
 		endpoint.setValidator(new PersonValidator());
-		endpoint.setMessageSource(messageSource);
+		endpoint.setMessageSource(this.messageSource);
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(marshaller);
 
-		endpoint.invoke(messageContext);
+		endpoint.invoke(this.messageContext);
 
-		SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
+		SOAPMessage response = ((SaajSoapMessage) this.messageContext.getResponse()).getSaajMessage();
 
 		assertThat(response.getSOAPBody().hasFault()).isTrue();
 
@@ -132,13 +132,13 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 			}
 		};
 		endpoint.setValidator(new PersonValidator());
-		endpoint.setMessageSource(messageSource);
+		endpoint.setMessageSource(this.messageSource);
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(marshaller);
 
-		endpoint.invoke(messageContext);
+		endpoint.invoke(this.messageContext);
 
-		SOAPMessage response = ((SaajSoapMessage) messageContext.getResponse()).getSaajMessage();
+		SOAPMessage response = ((SaajSoapMessage) this.messageContext.getResponse()).getSaajMessage();
 
 		assertThat(response.getSOAPBody().hasFault()).isFalse();
 	}
@@ -179,7 +179,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		public String getName() {
-			return name;
+			return this.name;
 		}
 
 		public void setName(String name) {
@@ -187,7 +187,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		public int getAge() {
-			return age;
+			return this.age;
 		}
 
 		public void setAge(int age) {
@@ -195,7 +195,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 		}
 
 		public String toString() {
-			return "Person{" + name + "," + age + "}";
+			return "Person{" + this.name + "," + this.age + "}";
 		}
 
 	}
@@ -210,7 +210,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTest {
 
 		@Override
 		public Object unmarshal(Source source) throws XmlMappingException {
-			return person;
+			return this.person;
 		}
 
 		@Override

@@ -95,12 +95,12 @@ public class TransformerHelper {
 	 * @return the transformer factory
 	 */
 	public TransformerFactory getTransformerFactory() {
-		TransformerFactory result = transformerFactory;
+		TransformerFactory result = this.transformerFactory;
 		if (result == null) {
 			synchronized (this) {
-				result = transformerFactory;
+				result = this.transformerFactory;
 				if (result == null) {
-					transformerFactory = result = newTransformerFactory(transformerFactoryClass);
+					this.transformerFactory = result = newTransformerFactory(this.transformerFactoryClass);
 				}
 			}
 		}

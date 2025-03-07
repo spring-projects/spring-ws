@@ -30,14 +30,14 @@ public class SimpleWsdl11DefinitionTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		definition = new SimpleWsdl11Definition();
-		definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
-		definition.afterPropertiesSet();
+		this.definition = new SimpleWsdl11Definition();
+		this.definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
+		this.definition.afterPropertiesSet();
 	}
 
 	@Test
 	public void testGetSource() {
-		assertThat(definition.getSource()).isNotNull();
+		assertThat(this.definition.getSource()).isNotNull();
 	}
 
 }

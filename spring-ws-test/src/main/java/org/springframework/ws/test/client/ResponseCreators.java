@@ -205,7 +205,7 @@ public abstract class ResponseCreators {
 		@Override
 		public WebServiceMessage createResponse(URI uri, WebServiceMessage request,
 				WebServiceMessageFactory messageFactory) throws IOException {
-			return adaptee.createMessage(messageFactory);
+			return this.adaptee.createMessage(messageFactory);
 		}
 
 	}

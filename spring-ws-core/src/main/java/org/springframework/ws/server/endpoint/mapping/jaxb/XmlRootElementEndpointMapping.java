@@ -107,7 +107,8 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 
 	@Override
 	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerHelper);
+		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(),
+				this.transformerHelper);
 	}
 
 }

@@ -38,16 +38,16 @@ public abstract class AbstractPayloadEndpointTest extends AbstractEndpointTest {
 	@BeforeEach
 	public void createEndpoint() throws Exception {
 
-		endpoint = createResponseEndpoint();
-		transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		this.endpoint = createResponseEndpoint();
+		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
 	public void testNoResponse() throws Exception {
 
-		endpoint = createNoResponseEndpoint();
+		this.endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
-		Source resultSource = endpoint.invoke(requestSource);
+		Source resultSource = this.endpoint.invoke(requestSource);
 
 		assertThat(resultSource).isNull();
 	}
@@ -55,8 +55,8 @@ public abstract class AbstractPayloadEndpointTest extends AbstractEndpointTest {
 	@Test
 	public void testNoRequest() throws Exception {
 
-		endpoint = createNoRequestEndpoint();
-		Source resultSource = endpoint.invoke(null);
+		this.endpoint = createNoRequestEndpoint();
+		Source resultSource = this.endpoint.invoke(null);
 
 		assertThat(resultSource).isNull();
 	}
@@ -64,12 +64,12 @@ public abstract class AbstractPayloadEndpointTest extends AbstractEndpointTest {
 	@Override
 	protected final void testSource(Source requestSource) throws Exception {
 
-		Source responseSource = endpoint.invoke(requestSource);
+		Source responseSource = this.endpoint.invoke(requestSource);
 
 		assertThat(responseSource).isNotNull();
 
 		StringResult result = new StringResult();
-		transformer.transform(responseSource, result);
+		this.transformer.transform(responseSource, result);
 
 		XmlAssert.assertThat(result.toString()).and(RESPONSE).ignoreWhitespace().areSimilar();
 	}

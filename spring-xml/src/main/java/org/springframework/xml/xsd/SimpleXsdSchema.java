@@ -96,21 +96,21 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	@Override
 	public String getTargetNamespace() {
 
-		Assert.notNull(schemaElement,
+		Assert.notNull(this.schemaElement,
 				"schemaElement must not be null! Did you run afterPropertiesSet() or register this as a Spring bean?");
 
-		return schemaElement.getAttribute("targetNamespace");
+		return this.schemaElement.getAttribute("targetNamespace");
 	}
 
 	@Override
 	public Source getSource() {
-		return new DOMSource(schemaElement);
+		return new DOMSource(this.schemaElement);
 	}
 
 	@Override
 	public XmlValidator createValidator() {
 		try {
-			return XmlValidatorFactory.createValidator(xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
+			return XmlValidatorFactory.createValidator(this.xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
 		}
 		catch (IOException ex) {
 			throw new XsdSchemaException(ex.getMessage(), ex);
@@ -119,21 +119,21 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
-		Assert.notNull(xsdResource, "'xsd' is required");
+		Assert.notNull(this.xsdResource, "'xsd' is required");
 		Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exist");
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		loadSchema(documentBuilder);
 	}
 
 	private void loadSchema(DocumentBuilder documentBuilder) throws SAXException, IOException {
-		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(xsdResource));
-		schemaElement = schemaDocument.getDocumentElement();
-		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()),
-				xsdResource + " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
-		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()),
-				xsdResource + " has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of ["
-						+ SCHEMA_NAME.getNamespaceURI() + "]");
-		Assert.hasText(getTargetNamespace(), xsdResource + " has no targetNamespace");
+		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(this.xsdResource));
+		this.schemaElement = schemaDocument.getDocumentElement();
+		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(this.schemaElement.getLocalName()), this.xsdResource
+				+ " has invalid root element : [" + this.schemaElement.getLocalName() + "] instead of [schema]");
+		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(this.schemaElement.getNamespaceURI()),
+				this.xsdResource + " has invalid root element: [" + this.schemaElement.getNamespaceURI()
+						+ "] instead of [" + SCHEMA_NAME.getNamespaceURI() + "]");
+		Assert.hasText(getTargetNamespace(), this.xsdResource + " has no targetNamespace");
 	}
 
 	public String toString() {

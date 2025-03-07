@@ -93,7 +93,7 @@ public class UriEndpointMapping extends AbstractMapBasedEndpointMapping {
 			WebServiceConnection connection = transportContext.getConnection();
 			if (connection != null) {
 				URI connectionUri = connection.getUri();
-				if (usePath) {
+				if (this.usePath) {
 					return connectionUri.getPath();
 				}
 				else {

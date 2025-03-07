@@ -52,7 +52,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 
 	/** Returns the port type name used for this definition. */
 	public String getPortTypeName() {
-		return portTypeName;
+		return this.portTypeName;
 	}
 
 	/** Sets the port type name used for this definition. Required. */
@@ -89,8 +89,8 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
 
 		QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
-		if (logger.isDebugEnabled()) {
-			logger.debug("Creating port type [" + portTypeName + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Creating port type [" + portTypeName + "]");
 		}
 		portType.setQName(portTypeName);
 	}
@@ -107,8 +107,8 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			}
 		}
 
-		if (operations.isEmpty() && logger.isWarnEnabled()) {
-			logger.warn("No operations were created, make sure the WSDL contains messages");
+		if (operations.isEmpty() && this.logger.isWarnEnabled()) {
+			this.logger.warn("No operations were created, make sure the WSDL contains messages");
 		}
 
 		for (String operationName : operations.keySet()) {
@@ -138,8 +138,8 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			}
 			operation.setStyle(getOperationType(operation));
 			operation.setUndefined(false);
-			if (logger.isDebugEnabled()) {
-				logger
+			if (this.logger.isDebugEnabled()) {
+				this.logger
 					.debug("Adding operation [" + operation.getName() + "] to port type [" + portType.getQName() + "]");
 			}
 			portType.addOperation(operation);

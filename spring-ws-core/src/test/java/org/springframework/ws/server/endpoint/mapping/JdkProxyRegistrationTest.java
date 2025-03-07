@@ -48,12 +48,13 @@ public class JdkProxyRegistrationTest {
 	@Test
 	public void registration() throws NoSuchMethodException {
 
-		MethodEndpoint jdkProxy = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
+		MethodEndpoint jdkProxy = this.mapping
+			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
 
 		assertThat(jdkProxy).isNotNull();
 
 		Method doIt = MyEndpointImpl.class.getMethod("doIt", Source.class);
-		MethodEndpoint expected = new MethodEndpoint("jdkProxyEndpoint", applicationContext, doIt);
+		MethodEndpoint expected = new MethodEndpoint("jdkProxyEndpoint", this.applicationContext, doIt);
 
 		assertThat(jdkProxy).isEqualTo(expected);
 	}

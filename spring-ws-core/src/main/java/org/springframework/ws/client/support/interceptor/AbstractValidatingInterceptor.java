@@ -65,7 +65,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	private XmlValidator validator;
 
 	public String getSchemaLanguage() {
-		return schemaLanguage;
+		return this.schemaLanguage;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * Returns the schema resources to use for validation.
 	 */
 	public Resource[] getSchemas() {
-		return schemas;
+		return this.schemas;
 	}
 
 	/**
@@ -151,17 +151,18 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (validator == null && !ObjectUtils.isEmpty(schemas)) {
-			Assert.hasLength(schemaLanguage, "schemaLanguage is required");
-			for (Resource schema : schemas) {
+		if (this.validator == null && !ObjectUtils.isEmpty(this.schemas)) {
+			Assert.hasLength(this.schemaLanguage, "schemaLanguage is required");
+			for (Resource schema : this.schemas) {
 				Assert.isTrue(schema.exists(), "schema [" + schema + "] does not exist");
 			}
-			if (logger.isInfoEnabled()) {
-				logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(schemas));
+			if (this.logger.isInfoEnabled()) {
+				this.logger.info("Validating using " + StringUtils.arrayToCommaDelimitedString(this.schemas));
 			}
-			validator = XmlValidatorFactory.createValidator(schemas, schemaLanguage);
+			this.validator = XmlValidatorFactory.createValidator(this.schemas, this.schemaLanguage);
 		}
-		Assert.notNull(validator, "Setting 'schema', 'schemas', 'xsdSchema', or 'xsdSchemaCollection' is required");
+		Assert.notNull(this.validator,
+				"Setting 'schema', 'schemas', 'xsdSchema', or 'xsdSchemaCollection' is required");
 	}
 
 	/**
@@ -176,12 +177,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 */
 	@Override
 	public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
-		if (validateRequest) {
+		if (this.validateRequest) {
 			Source requestSource = getValidationRequestSource(messageContext.getRequest());
 			if (requestSource != null) {
 				SAXParseException[] errors;
 				try {
-					errors = validator.validate(requestSource);
+					errors = this.validator.validate(requestSource);
 				}
 				catch (IOException e) {
 					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
@@ -189,8 +190,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleRequestValidationErrors(messageContext, errors);
 				}
-				else if (logger.isDebugEnabled()) {
-					logger.debug("Request message validated");
+				else if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Request message validated");
 				}
 			}
 		}
@@ -209,7 +210,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 */
 	protected boolean handleRequestValidationErrors(MessageContext messageContext, SAXParseException[] errors) {
 		for (SAXParseException error : errors) {
-			logger.error("XML validation error on request: " + error.getMessage());
+			this.logger.error("XML validation error on request: " + error.getMessage());
 		}
 		throw new WebServiceValidationException(errors);
 	}
@@ -226,12 +227,12 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 */
 	@Override
 	public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-		if (validateResponse) {
+		if (this.validateResponse) {
 			Source responseSource = getValidationResponseSource(messageContext.getResponse());
 			if (responseSource != null) {
 				SAXParseException[] errors;
 				try {
-					errors = validator.validate(responseSource);
+					errors = this.validator.validate(responseSource);
 				}
 				catch (IOException e) {
 					throw new WebServiceIOException("Could not validate response: " + e.getMessage(), e);
@@ -239,8 +240,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleResponseValidationErrors(messageContext, errors);
 				}
-				else if (logger.isDebugEnabled()) {
-					logger.debug("Response message validated");
+				else if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Response message validated");
 				}
 			}
 		}
@@ -261,7 +262,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
 			throws WebServiceValidationException {
 		for (SAXParseException error : errors) {
-			logger.warn("XML validation error on response: " + error.getMessage());
+			this.logger.warn("XML validation error on response: " + error.getMessage());
 		}
 		return false;
 	}

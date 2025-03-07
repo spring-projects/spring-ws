@@ -47,9 +47,9 @@ public abstract class AbstractXsdSchemaTest {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
+		this.transformer = transformerFactory.newTransformer();
 	}
 
 	@Test
@@ -61,9 +61,9 @@ public abstract class AbstractXsdSchemaTest {
 		assertThat(single.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/single/schema");
 
 		resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTest.class);
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(single.getSource(), domResult);
+		this.transformer.transform(single.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
@@ -78,9 +78,9 @@ public abstract class AbstractXsdSchemaTest {
 		assertThat(including.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/include/schema");
 
 		resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTest.class);
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(including.getSource(), domResult);
+		this.transformer.transform(including.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
@@ -96,9 +96,9 @@ public abstract class AbstractXsdSchemaTest {
 			.isEqualTo("http://www.springframework.org/spring-ws/importing/schema");
 
 		resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTest.class);
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(importing.getSource(), domResult);
+		this.transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
@@ -113,9 +113,9 @@ public abstract class AbstractXsdSchemaTest {
 		assertThat(importing.getTargetNamespace()).isEqualTo("http://www.springframework.org/spring-ws/xmlNamespace");
 
 		resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTest.class);
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(resource));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(resource));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(importing.getSource(), domResult);
+		this.transformer.transform(importing.getSource(), domResult);
 		Document result = (Document) domResult.getNode();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();

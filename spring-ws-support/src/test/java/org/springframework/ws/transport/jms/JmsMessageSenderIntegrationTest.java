@@ -57,7 +57,7 @@ public class JmsMessageSenderIntegrationTest {
 
 	@BeforeEach
 	public void createMessageFactory() throws Exception {
-		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 	}
 
 	@Test
@@ -65,22 +65,22 @@ public class JmsMessageSenderIntegrationTest {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
 
-		try (WebServiceConnection connection = messageSender.createConnection(uri)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(uri)) {
 
-			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+			SoapMessage soapRequest = new SaajSoapMessage(this.messageFactory.createMessage());
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 
-			BytesMessage request = (BytesMessage) jmsTemplate.receive();
+			BytesMessage request = (BytesMessage) this.jmsTemplate.receive();
 
 			assertThat(request).isNotNull();
 			assertThat(request.readByte()).isNotEqualTo(-1);
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			messageFactory.createMessage().writeTo(bos);
+			this.messageFactory.createMessage().writeTo(bos);
 			final byte[] buf = bos.toByteArray();
 
-			jmsTemplate.send(request.getJMSReplyTo(), session -> {
+			this.jmsTemplate.send(request.getJMSReplyTo(), session -> {
 
 				BytesMessage response = session.createBytesMessage();
 				response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
@@ -90,7 +90,7 @@ public class JmsMessageSenderIntegrationTest {
 				return response;
 			});
 
-			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(this.messageFactory));
 
 			assertThat(response).isNotNull();
 			assertThat(response.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -104,22 +104,22 @@ public class JmsMessageSenderIntegrationTest {
 		String responseQueueName = "SenderResponseQueue";
 		URI uri = new URI("jms:SenderRequestQueue?replyToName=" + responseQueueName + "&deliveryMode=NON_PERSISTENT");
 
-		try (WebServiceConnection connection = messageSender.createConnection(uri)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(uri)) {
 
-			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+			SoapMessage soapRequest = new SaajSoapMessage(this.messageFactory.createMessage());
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 
-			final BytesMessage request = (BytesMessage) jmsTemplate.receive();
+			final BytesMessage request = (BytesMessage) this.jmsTemplate.receive();
 
 			assertThat(request).isNotNull();
 			assertThat(request.readByte()).isNotEqualTo(-1);
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			messageFactory.createMessage().writeTo(bos);
+			this.messageFactory.createMessage().writeTo(bos);
 			final byte[] buf = bos.toByteArray();
 
-			jmsTemplate.send(responseQueueName, session -> {
+			this.jmsTemplate.send(responseQueueName, session -> {
 
 				BytesMessage response = session.createBytesMessage();
 				response.setJMSCorrelationID(request.getJMSMessageID());
@@ -130,7 +130,7 @@ public class JmsMessageSenderIntegrationTest {
 				return response;
 			});
 
-			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(this.messageFactory));
 
 			assertThat(response).isNotNull();
 			assertThat(response.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -143,22 +143,22 @@ public class JmsMessageSenderIntegrationTest {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT&messageType=TEXT_MESSAGE");
 
-		try (WebServiceConnection connection = messageSender.createConnection(uri)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(uri)) {
 
-			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+			SoapMessage soapRequest = new SaajSoapMessage(this.messageFactory.createMessage());
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 
-			TextMessage request = (TextMessage) jmsTemplate.receive();
+			TextMessage request = (TextMessage) this.jmsTemplate.receive();
 
 			assertThat(request).isNotNull();
 			assertThat(request.getText()).isNotNull();
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			messageFactory.createMessage().writeTo(bos);
+			this.messageFactory.createMessage().writeTo(bos);
 			final String text = bos.toString(StandardCharsets.UTF_8);
 
-			jmsTemplate.send(request.getJMSReplyTo(), session -> {
+			this.jmsTemplate.send(request.getJMSReplyTo(), session -> {
 
 				TextMessage response = session.createTextMessage();
 				response.setStringProperty(JmsTransportConstants.PROPERTY_SOAP_ACTION, SOAP_ACTION);
@@ -168,7 +168,7 @@ public class JmsMessageSenderIntegrationTest {
 				return response;
 			});
 
-			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(this.messageFactory));
 
 			assertThat(response).isNotNull();
 			assertThat(response.getSoapAction()).isEqualTo(SOAP_ACTION);
@@ -181,19 +181,19 @@ public class JmsMessageSenderIntegrationTest {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
 
-		try (WebServiceConnection connection = messageSender.createConnection(uri)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(uri)) {
 
-			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+			SoapMessage soapRequest = new SaajSoapMessage(this.messageFactory.createMessage());
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 
-			BytesMessage request = (BytesMessage) jmsTemplate.receive();
+			BytesMessage request = (BytesMessage) this.jmsTemplate.receive();
 
 			assertThat(request).isNotNull();
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			messageFactory.createMessage().writeTo(bos);
-			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
+			this.messageFactory.createMessage().writeTo(bos);
+			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(this.messageFactory));
 
 			assertThat(response).isNull();
 		}
@@ -210,13 +210,13 @@ public class JmsMessageSenderIntegrationTest {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
 
-		try (JmsSenderConnection connection = (JmsSenderConnection) messageSender.createConnection(uri)) {
+		try (JmsSenderConnection connection = (JmsSenderConnection) this.messageSender.createConnection(uri)) {
 
 			connection.setPostProcessor(processor);
-			SoapMessage soapRequest = new SaajSoapMessage(messageFactory.createMessage());
+			SoapMessage soapRequest = new SaajSoapMessage(this.messageFactory.createMessage());
 			connection.send(soapRequest);
 
-			BytesMessage request = (BytesMessage) jmsTemplate.receive();
+			BytesMessage request = (BytesMessage) this.jmsTemplate.receive();
 
 			assertThat(request).isNotNull();
 			assertThat(request.getBooleanProperty("processed")).isTrue();

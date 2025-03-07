@@ -47,13 +47,13 @@ public class SaajUtilsTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		messageFactory = MessageFactory.newInstance();
+		this.messageFactory = MessageFactory.newInstance();
 	}
 
 	@Test
 	public void testToName() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("localPart");
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
 		Name name = SaajUtils.toName(qName, envelope);
@@ -67,7 +67,7 @@ public class SaajUtilsTest {
 	@Test
 	public void testToNameNamespace() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("namespace", "localPart");
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
 		envelope.addNamespaceDeclaration("prefix", "namespace");
@@ -82,7 +82,7 @@ public class SaajUtilsTest {
 	@Test
 	public void testToNameNamespacePrefix() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("namespace", "localPart", "prefix");
 		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
 		Name name = SaajUtils.toName(qName, envelope);
@@ -96,7 +96,7 @@ public class SaajUtilsTest {
 	@Test
 	public void testToQName() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, null);
 		QName qName = SaajUtils.toQName(name);
 
@@ -109,7 +109,7 @@ public class SaajUtilsTest {
 	@Test
 	public void testToQNameNamespace() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, "namespace");
 		QName qName = SaajUtils.toQName(name);
 
@@ -122,7 +122,7 @@ public class SaajUtilsTest {
 	@Test
 	public void testToQNamePrefixNamespace() throws Exception {
 
-		SOAPMessage message = messageFactory.createMessage();
+		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", "prefix", "namespace");
 		QName qName = SaajUtils.toQName(name);
 
@@ -140,7 +140,7 @@ public class SaajUtilsTest {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document document = builder.parse(getClass().getResourceAsStream("soapMessage.xml"));
 		SOAPMessage soapMessage = SaajUtils.loadMessage(new ClassPathResource("soapMessage.xml", getClass()),
-				messageFactory);
+				this.messageFactory);
 
 		XmlAssert.assertThat(document).and(soapMessage.getSOAPPart()).ignoreWhitespace().areIdentical();
 	}
@@ -158,7 +158,7 @@ public class SaajUtilsTest {
 			Resource resource = new ClassPathResource("invalidNamespaceReferenceSoapMessage.xml", getClass());
 			InputStream in = resource.getInputStream();
 			MimeHeaders headers = new MimeHeaders();
-			SOAPMessage soapMessage = messageFactory.createMessage(headers, in);
+			SOAPMessage soapMessage = this.messageFactory.createMessage(headers, in);
 			SaajUtils.getSaajVersion(soapMessage);
 		});
 	}

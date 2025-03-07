@@ -63,18 +63,18 @@ public class HttpServletConnection extends AbstractReceiverConnection
 
 	/** Returns the {@code HttpServletRequest} for this connection. */
 	public HttpServletRequest getHttpServletRequest() {
-		return httpServletRequest;
+		return this.httpServletRequest;
 	}
 
 	/** Returns the {@code HttpServletResponse} for this connection. */
 	public HttpServletResponse getHttpServletResponse() {
-		return httpServletResponse;
+		return this.httpServletResponse;
 	}
 
 	@Override
 	public void endpointNotFound() {
 		getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_NOT_FOUND);
-		statusCodeSet = true;
+		this.statusCodeSet = true;
 	}
 
 	/*
@@ -97,9 +97,9 @@ public class HttpServletConnection extends AbstractReceiverConnection
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return new URI(httpServletRequest.getScheme(), null, httpServletRequest.getServerName(),
-				httpServletRequest.getServerPort(), httpServletRequest.getRequestURI(),
-				httpServletRequest.getQueryString(), null);
+		return new URI(this.httpServletRequest.getScheme(), null, this.httpServletRequest.getServerName(),
+				this.httpServletRequest.getServerPort(), this.httpServletRequest.getRequestURI(),
+				this.httpServletRequest.getQueryString(), null);
 	}
 
 	/*
@@ -137,12 +137,12 @@ public class HttpServletConnection extends AbstractReceiverConnection
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		statusCodeSet = true;
+		this.statusCodeSet = true;
 	}
 
 	@Override
 	public void onClose() throws IOException {
-		if (!statusCodeSet) {
+		if (!this.statusCodeSet) {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_ACCEPTED);
 		}
 	}
@@ -165,7 +165,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 		else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
-		statusCodeSet = true;
+		this.statusCodeSet = true;
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 		else {
 			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
 		}
-		statusCodeSet = true;
+		this.statusCodeSet = true;
 	}
 
 }

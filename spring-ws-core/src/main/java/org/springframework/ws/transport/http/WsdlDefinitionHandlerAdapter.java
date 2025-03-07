@@ -155,14 +155,14 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 			Transformer transformer = createTransformer();
 			Source definitionSource = definition.getSource();
 
-			if (transformLocations || transformSchemaLocations) {
+			if (this.transformLocations || this.transformSchemaLocations) {
 				DOMResult domResult = new DOMResult();
 				transformer.transform(definitionSource, domResult);
 				Document definitionDocument = (Document) domResult.getNode();
-				if (transformLocations) {
+				if (this.transformLocations) {
 					transformLocations(definitionDocument, request);
 				}
-				if (transformSchemaLocations) {
+				if (this.transformSchemaLocations) {
 					transformSchemaLocations(definitionDocument, request);
 				}
 				definitionSource = new DOMSource(definitionDocument);
@@ -185,10 +185,10 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		locationXPathExpression = XPathExpressionFactory.createXPathExpression(locationExpression,
-				expressionNamespaces);
-		schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(schemaLocationExpression,
-				expressionNamespaces);
+		this.locationXPathExpression = XPathExpressionFactory.createXPathExpression(this.locationExpression,
+				this.expressionNamespaces);
+		this.schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(this.schemaLocationExpression,
+				this.expressionNamespaces);
 	}
 
 	/**
@@ -203,7 +203,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-		transformLocations(locationXPathExpression, definitionDocument, request);
+		transformLocations(this.locationXPathExpression, definitionDocument, request);
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-		transformLocations(schemaLocationXPathExpression, definitionDocument, request);
+		transformLocations(this.schemaLocationXPathExpression, definitionDocument, request);
 	}
 
 }

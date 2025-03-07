@@ -27,20 +27,20 @@ public class XPathExpressionFactoryBeanTest {
 
 	@BeforeEach
 	public void setUp() {
-		factoryBean = new XPathExpressionFactoryBean();
+		this.factoryBean = new XPathExpressionFactoryBean();
 	}
 
 	@Test
 	public void testFactoryBean() throws Exception {
 
-		factoryBean.setExpression("/root");
-		factoryBean.afterPropertiesSet();
-		Object result = factoryBean.getObject();
+		this.factoryBean.setExpression("/root");
+		this.factoryBean.afterPropertiesSet();
+		Object result = this.factoryBean.getObject();
 
 		assertThat(result).isNotNull();
 		assertThat(result).isInstanceOf(XPathExpression.class);
-		assertThat(factoryBean.isSingleton()).isTrue();
-		assertThat(factoryBean.getObject()).isInstanceOf(XPathExpression.class);
+		assertThat(this.factoryBean.isSingleton()).isTrue();
+		assertThat(this.factoryBean.getObject()).isInstanceOf(XPathExpression.class);
 	}
 
 }

@@ -65,7 +65,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 
 	protected Diff createDiff(Source payload) {
 
-		Document expectedDocument = createDocumentFromSource(expected);
+		Document expectedDocument = createDocumentFromSource(this.expected);
 		Document actualDocument = createDocumentFromSource(payload);
 
 		return DiffBuilder.compare(expectedDocument) //
@@ -82,7 +82,7 @@ public class PayloadDiffMatcher extends DiffMatcher {
 		try {
 
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(source, result);
+			this.transformerHelper.transform(source, result);
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {

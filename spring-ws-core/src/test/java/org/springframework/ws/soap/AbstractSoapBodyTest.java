@@ -38,8 +38,8 @@ public abstract class AbstractSoapBodyTest extends AbstractSoapElementTest {
 	@Override
 	protected final SoapElement createSoapElement() throws Exception {
 
-		soapBody = createSoapBody();
-		return soapBody;
+		this.soapBody = createSoapBody();
+		return this.soapBody;
 	}
 
 	protected abstract SoapBody createSoapBody() throws Exception;
@@ -48,7 +48,7 @@ public abstract class AbstractSoapBodyTest extends AbstractSoapElementTest {
 	public void testPayload() throws Exception {
 
 		String payload = "<payload xmlns='http://www.springframework.org' />";
-		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+		this.transformer.transform(new StringSource(payload), this.soapBody.getPayloadResult());
 
 		assertPayloadEqual(payload);
 	}
@@ -57,10 +57,10 @@ public abstract class AbstractSoapBodyTest extends AbstractSoapElementTest {
 	public void testGetPayloadResultTwice() throws Exception {
 
 		String payload = "<payload xmlns='http://www.springframework.org' />";
-		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
-		transformer.transform(new StringSource(payload), soapBody.getPayloadResult());
+		this.transformer.transform(new StringSource(payload), this.soapBody.getPayloadResult());
+		this.transformer.transform(new StringSource(payload), this.soapBody.getPayloadResult());
 		DOMResult domResult = new DOMResult();
-		transformer.transform(soapBody.getSource(), domResult);
+		this.transformer.transform(this.soapBody.getSource(), domResult);
 		Element bodyElement = ((Document) domResult.getNode()).getDocumentElement();
 		NodeList children = bodyElement.getChildNodes();
 
@@ -69,23 +69,23 @@ public abstract class AbstractSoapBodyTest extends AbstractSoapElementTest {
 
 	@Test
 	public void testNoFault() {
-		assertThat(soapBody.hasFault()).isFalse();
+		assertThat(this.soapBody.hasFault()).isFalse();
 	}
 
 	@Test
 	public void testAddFaultWithExistingPayload() throws Exception {
 
 		StringSource contents = new StringSource("<payload xmlns='http://www.springframework.org' />");
-		transformer.transform(contents, soapBody.getPayloadResult());
-		soapBody.addMustUnderstandFault("faultString", Locale.ENGLISH);
+		this.transformer.transform(contents, this.soapBody.getPayloadResult());
+		this.soapBody.addMustUnderstandFault("faultString", Locale.ENGLISH);
 
-		assertThat(soapBody.hasFault()).isTrue();
+		assertThat(this.soapBody.hasFault()).isTrue();
 	}
 
 	protected void assertPayloadEqual(String expectedPayload) throws Exception {
 
 		StringResult result = new StringResult();
-		transformer.transform(soapBody.getPayloadSource(), result);
+		this.transformer.transform(this.soapBody.getPayloadSource(), result);
 
 		XmlAssert.assertThat(result.toString()).and(expectedPayload).ignoreWhitespace().areSimilar();
 	}

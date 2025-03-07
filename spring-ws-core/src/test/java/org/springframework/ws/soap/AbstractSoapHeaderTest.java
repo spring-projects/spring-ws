@@ -39,8 +39,8 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	@Override
 	protected final SoapElement createSoapElement() throws Exception {
 
-		soapHeader = createSoapHeader();
-		return soapHeader;
+		this.soapHeader = createSoapHeader();
+		return this.soapHeader;
 	}
 
 	protected abstract SoapHeader createSoapHeader() throws Exception;
@@ -49,17 +49,17 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	public void testAddHeaderElement() throws Exception {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
-		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
 
 		assertThat(headerElement).isNotNull();
 		assertThat(headerElement.getName()).isEqualTo(qName);
 
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineAllHeaderElements();
 
 		assertThat(iterator.hasNext()).isTrue();
 
 		String payload = "<content xmlns='http://www.springframework.org'/>";
-		transformer.transform(new StringSource(payload), headerElement.getResult());
+		this.transformer.transform(new StringSource(payload), headerElement.getResult());
 
 		assertHeaderElementEqual(headerElement,
 				"<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>");
@@ -69,10 +69,10 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	public void testRemoveHeaderElement() {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
-		soapHeader.removeHeaderElement(qName);
-		soapHeader.addHeaderElement(qName);
-		soapHeader.removeHeaderElement(qName);
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
+		this.soapHeader.removeHeaderElement(qName);
+		this.soapHeader.addHeaderElement(qName);
+		this.soapHeader.removeHeaderElement(qName);
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineAllHeaderElements();
 
 		assertThat(iterator.hasNext()).isFalse();
 	}
@@ -81,14 +81,14 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	public void testExamineAllHeaderElement() throws Exception {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
-		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
 
 		assertThat(headerElement.getName()).isEqualTo(qName);
 		assertThat(headerElement).isNotNull();
 
 		String payload = "<content xmlns='http://www.springframework.org'/>";
-		transformer.transform(new StringSource(payload), headerElement.getResult());
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
+		this.transformer.transform(new StringSource(payload), headerElement.getResult());
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineAllHeaderElements();
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -98,7 +98,7 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 		assertThat(headerElement.getName()).isEqualTo(qName);
 
 		StringResult result = new StringResult();
-		transformer.transform(headerElement.getSource(), result);
+		this.transformer.transform(headerElement.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>")
@@ -112,9 +112,9 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 
 		QName name1 = new QName(NAMESPACE, "name1", PREFIX);
 		QName name2 = new QName(NAMESPACE, "name2", PREFIX);
-		soapHeader.addHeaderElement(name1);
-		soapHeader.addHeaderElement(name2);
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineHeaderElements(name1);
+		this.soapHeader.addHeaderElement(name1);
+		this.soapHeader.addHeaderElement(name2);
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineHeaderElements(name1);
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -129,14 +129,14 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	public void testExamineMustUnderstandHeaderElements() {
 
 		QName qName1 = new QName(NAMESPACE, "localName1", PREFIX);
-		SoapHeaderElement headerElement1 = soapHeader.addHeaderElement(qName1);
+		SoapHeaderElement headerElement1 = this.soapHeader.addHeaderElement(qName1);
 		headerElement1.setMustUnderstand(true);
 		headerElement1.setActorOrRole("role1");
 		QName qName2 = new QName(NAMESPACE, "localName2", PREFIX);
-		SoapHeaderElement headerElement2 = soapHeader.addHeaderElement(qName2);
+		SoapHeaderElement headerElement2 = this.soapHeader.addHeaderElement(qName2);
 		headerElement2.setMustUnderstand(true);
 		headerElement2.setActorOrRole("role2");
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineMustUnderstandHeaderElements("role1");
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineMustUnderstandHeaderElements("role1");
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -153,8 +153,8 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	public void testGetResult() throws Exception {
 
 		String content = "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
-		transformer.transform(new StringSource(content), soapHeader.getResult());
-		Iterator<SoapHeaderElement> iterator = soapHeader.examineAllHeaderElements();
+		this.transformer.transform(new StringSource(content), this.soapHeader.getResult());
+		Iterator<SoapHeaderElement> iterator = this.soapHeader.examineAllHeaderElements();
 
 		assertThat(iterator.hasNext()).isTrue();
 
@@ -167,7 +167,7 @@ public abstract class AbstractSoapHeaderTest extends AbstractSoapElementTest {
 	protected void assertHeaderElementEqual(SoapHeaderElement headerElement, String expected) throws Exception {
 
 		StringResult result = new StringResult();
-		transformer.transform(headerElement.getSource(), result);
+		this.transformer.transform(headerElement.getSource(), result);
 
 		XmlAssert.assertThat(result.toString()).and(expected).ignoreWhitespace().areSimilar();
 	}

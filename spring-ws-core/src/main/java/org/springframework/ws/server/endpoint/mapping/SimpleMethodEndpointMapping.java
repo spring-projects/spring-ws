@@ -70,7 +70,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 	private TransformerFactory transformerFactory;
 
 	public Object[] getEndpoints() {
-		return endpoints;
+		return this.endpoints;
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
 	/** Returns the method prefix. */
 	public String getMethodPrefix() {
-		return methodPrefix;
+		return this.methodPrefix;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
 	/** Returns the method suffix. */
 	public String getMethodSuffix() {
-		return methodSuffix;
+		return this.methodSuffix;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 	@Override
 	public final void afterPropertiesSet() throws Exception {
 		Assert.notEmpty(getEndpoints(), "'endpoints' is required");
-		transformerFactory = TransformerFactoryUtils.newInstance();
+		this.transformerFactory = TransformerFactoryUtils.newInstance();
 		for (int i = 0; i < getEndpoints().length; i++) {
 			registerMethods(getEndpoints()[i]);
 		}
@@ -136,7 +136,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 	@Override
 	protected String getLookupKeyForMessage(MessageContext messageContext) throws TransformerException {
 		WebServiceMessage request = messageContext.getRequest();
-		QName rootQName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), transformerFactory);
+		QName rootQName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), this.transformerFactory);
 		return rootQName.getLocalPart();
 	}
 

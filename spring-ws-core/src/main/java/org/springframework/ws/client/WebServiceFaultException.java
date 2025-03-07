@@ -32,7 +32,7 @@ public class WebServiceFaultException extends WebServiceClientException {
 	/** Create a new instance of the {@code WebServiceFaultException} class. */
 	public WebServiceFaultException(String msg) {
 		super(msg);
-		faultMessage = null;
+		this.faultMessage = null;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class WebServiceFaultException extends WebServiceClientException {
 
 	/** Returns the fault message. */
 	public FaultAwareWebServiceMessage getWebServiceMessage() {
-		return faultMessage;
+		return this.faultMessage;
 	}
 
 }

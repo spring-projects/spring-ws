@@ -61,10 +61,10 @@ public abstract class AbstractMessageContext implements MessageContext {
 	}
 
 	private Map<String, Object> getProperties() {
-		if (properties == null) {
-			properties = new HashMap<>();
+		if (this.properties == null) {
+			this.properties = new HashMap<>();
 		}
-		return properties;
+		return this.properties;
 	}
 
 }

@@ -77,7 +77,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 	 * {@code false}.
 	 */
 	public void setExpandEntityReferences(boolean expandEntityRef) {
-		documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
+		this.documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
 	}
 
 	/**
@@ -92,10 +92,10 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 
 	@Override
 	public final Source invoke(Source request) throws Exception {
-		if (documentBuilderFactory == null) {
-			documentBuilderFactory = createDocumentBuilderFactory();
+		if (this.documentBuilderFactory == null) {
+			this.documentBuilderFactory = createDocumentBuilderFactory();
 		}
-		DocumentBuilder documentBuilder = createDocumentBuilder(documentBuilderFactory);
+		DocumentBuilder documentBuilder = createDocumentBuilder(this.documentBuilderFactory);
 		Element requestElement = getDocumentElement(request, documentBuilder);
 		Document responseDocument = documentBuilder.newDocument();
 		Element responseElement = invokeInternal(requestElement, responseDocument);
@@ -126,9 +126,9 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 	 */
 	protected DocumentBuilderFactory createDocumentBuilderFactory() throws ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
-		factory.setValidating(validating);
-		factory.setNamespaceAware(namespaceAware);
-		factory.setExpandEntityReferences(expandEntityReferences);
+		factory.setValidating(this.validating);
+		factory.setNamespaceAware(this.namespaceAware);
+		factory.setExpandEntityReferences(this.expandEntityReferences);
 		return factory;
 	}
 
@@ -149,7 +149,7 @@ public abstract class AbstractDomPayloadEndpoint extends TransformerObjectSuppor
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
+		if (!this.alwaysTransform && source instanceof DOMSource) {
 			Node node = ((DOMSource) source).getNode();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				return (Element) node;

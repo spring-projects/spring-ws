@@ -72,7 +72,7 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 
 	@Override
 	public TrustManager[] getObject() throws Exception {
-		return trustManagers;
+		return this.trustManagers;
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 				? TrustManagerFactory.getInstance(algorithm, this.provider)
 				: TrustManagerFactory.getInstance(algorithm);
 
-		trustManagerFactory.init(keyStore);
+		trustManagerFactory.init(this.keyStore);
 
 		this.trustManagers = trustManagerFactory.getTrustManagers();
 	}

@@ -105,7 +105,7 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 	 * Non-default properties in this instance will override given JavaMail properties.
 	 */
 	public void setJavaMailProperties(Properties javaMailProperties) {
-		session = Session.getInstance(javaMailProperties, null);
+		this.session = Session.getInstance(javaMailProperties, null);
 	}
 
 	/**
@@ -157,17 +157,17 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(transportUri, "'transportUri' is required");
-		Assert.notNull(storeUri, "'storeUri' is required");
+		Assert.notNull(this.transportUri, "'transportUri' is required");
+		Assert.notNull(this.storeUri, "'storeUri' is required");
 	}
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		InternetAddress to = MailTransportUtils.getTo(uri);
-		MailSenderConnection connection = new MailSenderConnection(session, transportUri, storeUri, to,
-				receiveSleepTime);
-		if (from != null) {
-			connection.setFrom(from);
+		MailSenderConnection connection = new MailSenderConnection(this.session, this.transportUri, this.storeUri, to,
+				this.receiveSleepTime);
+		if (this.from != null) {
+			connection.setFrom(this.from);
 		}
 		String subject = MailTransportUtils.getSubject(uri);
 		if (subject != null) {

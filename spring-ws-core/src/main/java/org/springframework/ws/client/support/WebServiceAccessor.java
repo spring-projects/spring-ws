@@ -47,7 +47,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
 	/** Returns the message factory used for creating messages. */
 	public WebServiceMessageFactory getMessageFactory() {
-		return messageFactory;
+		return this.messageFactory;
 	}
 
 	/** Sets the message factory used for creating messages. */
@@ -57,7 +57,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
 	/** Returns the message senders used for sending messages. */
 	public WebServiceMessageSender[] getMessageSenders() {
-		return messageSenders;
+		return this.messageSenders;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 	 */
 	public void setMessageSender(WebServiceMessageSender messageSender) {
 		Assert.notNull(messageSender, "'messageSender' must not be null");
-		messageSenders = new WebServiceMessageSender[] { messageSender };
+		this.messageSenders = new WebServiceMessageSender[] { messageSender };
 	}
 
 	/**
@@ -109,9 +109,9 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 		for (WebServiceMessageSender messageSender : messageSenders) {
 			if (messageSender.supports(uri)) {
 				WebServiceConnection connection = messageSender.createConnection(uri);
-				if (logger.isDebugEnabled()) {
+				if (this.logger.isDebugEnabled()) {
 					try {
-						logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
+						this.logger.debug("Opening [" + connection + "] to [" + connection.getUri() + "]");
 					}
 					catch (URISyntaxException e) {
 						// ignore

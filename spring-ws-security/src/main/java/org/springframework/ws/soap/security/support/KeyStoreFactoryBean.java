@@ -92,7 +92,7 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 
 	@Override
 	public KeyStore getObject() {
-		return keyStore;
+		return this.keyStore;
 	}
 
 	@Override
@@ -107,27 +107,27 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 
 	@Override
 	public final void afterPropertiesSet() throws GeneralSecurityException, IOException {
-		if (StringUtils.hasLength(provider) && StringUtils.hasLength(type)) {
-			keyStore = KeyStore.getInstance(type, provider);
+		if (StringUtils.hasLength(this.provider) && StringUtils.hasLength(this.type)) {
+			this.keyStore = KeyStore.getInstance(this.type, this.provider);
 		}
-		else if (StringUtils.hasLength(type)) {
-			keyStore = KeyStore.getInstance(type);
+		else if (StringUtils.hasLength(this.type)) {
+			this.keyStore = KeyStore.getInstance(this.type);
 		}
 		else {
-			keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			this.keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
 		}
 		InputStream is = null;
 		try {
-			if (location != null && location.exists()) {
-				is = location.getInputStream();
+			if (this.location != null && this.location.exists()) {
+				is = this.location.getInputStream();
 				if (logger.isInfoEnabled()) {
-					logger.info("Loading key store from " + location);
+					logger.info("Loading key store from " + this.location);
 				}
 			}
 			else if (logger.isWarnEnabled()) {
 				logger.warn("Creating empty key store");
 			}
-			keyStore.load(is, password);
+			this.keyStore.load(is, this.password);
 		}
 		finally {
 			if (is != null) {

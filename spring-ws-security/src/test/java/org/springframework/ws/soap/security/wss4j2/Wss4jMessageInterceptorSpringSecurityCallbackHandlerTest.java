@@ -45,14 +45,14 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTest e
 	@Override
 	protected void onSetup() {
 
-		authenticationManager = createMock(AuthenticationManager.class);
-		users.setProperty("Bert", "Ernie,ROLE_TEST");
+		this.authenticationManager = createMock(AuthenticationManager.class);
+		this.users.setProperty("Bert", "Ernie,ROLE_TEST");
 	}
 
 	@AfterEach
 	public void tearDown() {
 
-		verify(authenticationManager);
+		verify(this.authenticationManager);
 		SecurityContextHolder.clearContext();
 	}
 
@@ -121,7 +121,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTest e
 		}
 
 		SpringSecurityPasswordValidationCallbackHandler callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
-		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager(users);
+		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager(this.users);
 		callbackHandler.setUserDetailsService(userDetailsManager);
 
 		if (digest) {
@@ -133,7 +133,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTest e
 
 		interceptor.setValidationCallbackHandler(callbackHandler);
 		interceptor.afterPropertiesSet();
-		replay(authenticationManager);
+		replay(this.authenticationManager);
 
 		return interceptor;
 	}

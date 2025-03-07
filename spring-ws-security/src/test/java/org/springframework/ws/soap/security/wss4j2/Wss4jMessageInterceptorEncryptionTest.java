@@ -34,13 +34,13 @@ public abstract class Wss4jMessageInterceptorEncryptionTest extends Wss4jTest {
 	@Override
 	protected void onSetup() throws Exception {
 
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setValidationActions("Encrypt");
-		interceptor.setSecurementActions("Encrypt");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setValidationActions("Encrypt");
+		this.interceptor.setSecurementActions("Encrypt");
 
 		KeyStoreCallbackHandler callbackHandler = new KeyStoreCallbackHandler();
 		callbackHandler.setPrivateKeyPassword("123456");
-		interceptor.setValidationCallbackHandler(callbackHandler);
+		this.interceptor.setValidationCallbackHandler(callbackHandler);
 
 		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 
@@ -54,10 +54,10 @@ public abstract class Wss4jMessageInterceptorEncryptionTest extends Wss4jTest {
 		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
 		cryptoFactoryBean.afterPropertiesSet();
-		interceptor.setValidationDecryptionCrypto(cryptoFactoryBean.getObject());
-		interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.setValidationDecryptionCrypto(cryptoFactoryBean.getObject());
+		this.interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean.getObject());
 
-		interceptor.afterPropertiesSet();
+		this.interceptor.afterPropertiesSet();
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public abstract class Wss4jMessageInterceptorEncryptionTest extends Wss4jTest {
 
 		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 		Document document = getDocument((SoapMessage) messageContext.getRequest());
 
 		assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
@@ -79,8 +79,8 @@ public abstract class Wss4jMessageInterceptorEncryptionTest extends Wss4jTest {
 
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
-		interceptor.setSecurementEncryptionUser("rsakey");
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.setSecurementEncryptionUser("rsakey");
+		this.interceptor.secureMessage(message, messageContext);
 		Document document = getDocument(message);
 
 		assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",

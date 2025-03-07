@@ -79,7 +79,7 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
+		if (!this.alwaysTransform && source instanceof DOMSource) {
 			Node node = ((DOMSource) source).getNode();
 			DOMBuilder domBuilder = new DOMBuilder();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {

@@ -68,73 +68,73 @@ public class DefaultMethodEndpointAdapterTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		adapter = new DefaultMethodEndpointAdapter();
-		argumentResolver1 = createMock("stringResolver", MethodArgumentResolver.class);
-		argumentResolver2 = createMock("intResolver", MethodArgumentResolver.class);
-		returnValueHandler = createMock(MethodReturnValueHandler.class);
-		adapter.setMethodArgumentResolvers(Arrays.asList(argumentResolver1, argumentResolver2));
-		adapter.setMethodReturnValueHandlers(Collections.singletonList(returnValueHandler));
-		supportedEndpoint = new MethodEndpoint(this, "supported", String.class, Integer.class);
-		nullReturnValue = new MethodEndpoint(this, "nullReturnValue", String.class);
-		unsupportedEndpoint = new MethodEndpoint(this, "unsupported", String.class);
-		exceptionEndpoint = new MethodEndpoint(this, "exception", String.class);
+		this.adapter = new DefaultMethodEndpointAdapter();
+		this.argumentResolver1 = createMock("stringResolver", MethodArgumentResolver.class);
+		this.argumentResolver2 = createMock("intResolver", MethodArgumentResolver.class);
+		this.returnValueHandler = createMock(MethodReturnValueHandler.class);
+		this.adapter.setMethodArgumentResolvers(Arrays.asList(this.argumentResolver1, this.argumentResolver2));
+		this.adapter.setMethodReturnValueHandlers(Collections.singletonList(this.returnValueHandler));
+		this.supportedEndpoint = new MethodEndpoint(this, "supported", String.class, Integer.class);
+		this.nullReturnValue = new MethodEndpoint(this, "nullReturnValue", String.class);
+		this.unsupportedEndpoint = new MethodEndpoint(this, "unsupported", String.class);
+		this.exceptionEndpoint = new MethodEndpoint(this, "exception", String.class);
 	}
 
 	@Test
 	public void initDefaultStrategies() throws Exception {
 
-		adapter = new DefaultMethodEndpointAdapter();
-		adapter.setBeanClassLoader(DefaultMethodEndpointAdapterTest.class.getClassLoader());
-		adapter.afterPropertiesSet();
+		this.adapter = new DefaultMethodEndpointAdapter();
+		this.adapter.setBeanClassLoader(DefaultMethodEndpointAdapterTest.class.getClassLoader());
+		this.adapter.afterPropertiesSet();
 
-		assertThat(adapter.getMethodArgumentResolvers()).isNotEmpty();
-		assertThat(adapter.getMethodReturnValueHandlers()).isNotEmpty();
+		assertThat(this.adapter.getMethodArgumentResolvers()).isNotEmpty();
+		assertThat(this.adapter.getMethodReturnValueHandlers()).isNotEmpty();
 	}
 
 	@Test
 	public void supportsSupported() {
 
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
-		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
+		expect(this.argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		boolean result = adapter.supports(supportedEndpoint);
+		boolean result = this.adapter.supports(this.supportedEndpoint);
 
 		assertThat(result).isTrue();
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	@Test
 	public void supportsUnsupportedParameter() {
 
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
-		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(false);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
+		expect(this.argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(false);
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		boolean result = adapter.supports(unsupportedEndpoint);
+		boolean result = this.adapter.supports(this.unsupportedEndpoint);
 		assertThat(result).isFalse();
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	@Test
 	public void supportsUnsupportedReturnType() {
 
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(false);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(false);
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		boolean result = adapter.supports(unsupportedEndpoint);
+		boolean result = this.adapter.supports(this.unsupportedEndpoint);
 
 		assertThat(result).isFalse();
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	@Test
@@ -145,24 +145,24 @@ public class DefaultMethodEndpointAdapterTest {
 		String value = "Foo";
 
 		// arg 0
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
 
 		// arg 1
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
-		expect(argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(42);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
+		expect(this.argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver2.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(42);
 
-		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
-		returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), eq(value));
+		expect(this.returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
+		this.returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), eq(value));
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		adapter.invoke(messageContext, supportedEndpoint);
+		this.adapter.invoke(messageContext, this.supportedEndpoint);
 
-		assertThat(supportedArgument).isEqualTo(value);
+		assertThat(this.supportedArgument).isEqualTo(value);
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	@Test
@@ -173,19 +173,19 @@ public class DefaultMethodEndpointAdapterTest {
 
 		String value = "Foo";
 
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
 
-		expect(returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
-		returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), isNull());
+		expect(this.returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(true);
+		this.returnValueHandler.handleReturnValue(eq(messageContext), isA(MethodParameter.class), isNull());
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		adapter.invoke(messageContext, nullReturnValue);
+		this.adapter.invoke(messageContext, this.nullReturnValue);
 
-		assertThat(supportedArgument).isEqualTo(value);
+		assertThat(this.supportedArgument).isEqualTo(value);
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	@Test
@@ -196,34 +196,34 @@ public class DefaultMethodEndpointAdapterTest {
 
 		String value = "Foo";
 
-		expect(argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
-		expect(argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
+		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
+		expect(this.argumentResolver1.resolveArgument(eq(messageContext), isA(MethodParameter.class))).andReturn(value);
 
-		replay(argumentResolver1, argumentResolver2, returnValueHandler);
+		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
 		try {
-			adapter.invoke(messageContext, exceptionEndpoint);
+			this.adapter.invoke(messageContext, this.exceptionEndpoint);
 			fail("IOException expected");
 		}
 		catch (IOException expected) {
 			// expected
 		}
 
-		assertThat(supportedArgument).isEqualTo(value);
+		assertThat(this.supportedArgument).isEqualTo(value);
 
-		verify(argumentResolver1, argumentResolver2, returnValueHandler);
+		verify(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 	}
 
 	public String supported(String s, Integer i) {
 
-		supportedArgument = s;
+		this.supportedArgument = s;
 		return s;
 
 	}
 
 	public String nullReturnValue(String s) {
 
-		supportedArgument = s;
+		this.supportedArgument = s;
 		return null;
 	}
 
@@ -233,7 +233,7 @@ public class DefaultMethodEndpointAdapterTest {
 
 	public String exception(String s) throws IOException {
 
-		supportedArgument = s;
+		this.supportedArgument = s;
 		throw new IOException(s);
 	}
 

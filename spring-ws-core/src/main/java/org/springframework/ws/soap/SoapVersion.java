@@ -63,11 +63,11 @@ public interface SoapVersion {
 		private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
 
 		public QName getBodyName() {
-			return BODY_NAME;
+			return this.BODY_NAME;
 		}
 
 		public QName getEnvelopeName() {
-			return ENVELOPE_NAME;
+			return this.ENVELOPE_NAME;
 		}
 
 		public String getEnvelopeNamespaceUri() {
@@ -75,11 +75,11 @@ public interface SoapVersion {
 		}
 
 		public QName getFaultName() {
-			return FAULT_NAME;
+			return this.FAULT_NAME;
 		}
 
 		public QName getHeaderName() {
-			return HEADER_NAME;
+			return this.HEADER_NAME;
 		}
 
 		public String getNextActorOrRoleUri() {
@@ -91,7 +91,7 @@ public interface SoapVersion {
 		}
 
 		public QName getServerOrReceiverFaultName() {
-			return SERVER_FAULT_NAME;
+			return this.SERVER_FAULT_NAME;
 		}
 
 		public String getUltimateReceiverRoleUri() {
@@ -99,11 +99,11 @@ public interface SoapVersion {
 		}
 
 		public QName getActorOrRoleName() {
-			return ACTOR_NAME;
+			return this.ACTOR_NAME;
 		}
 
 		public QName getClientOrSenderFaultName() {
-			return CLIENT_FAULT_NAME;
+			return this.CLIENT_FAULT_NAME;
 		}
 
 		public String getContentType() {
@@ -111,15 +111,15 @@ public interface SoapVersion {
 		}
 
 		public QName getMustUnderstandAttributeName() {
-			return MUST_UNDERSTAND_ATTRIBUTE_NAME;
+			return this.MUST_UNDERSTAND_ATTRIBUTE_NAME;
 		}
 
 		public QName getMustUnderstandFaultName() {
-			return MUST_UNDERSTAND_FAULT_NAME;
+			return this.MUST_UNDERSTAND_FAULT_NAME;
 		}
 
 		public QName getVersionMismatchFaultName() {
-			return VERSION_MISMATCH_FAULT_NAME;
+			return this.VERSION_MISMATCH_FAULT_NAME;
 		}
 
 		public String toString() {
@@ -164,11 +164,11 @@ public interface SoapVersion {
 		private QName VERSION_MISMATCH_FAULT_NAME = new QName(ENVELOPE_NAMESPACE_URI, "VersionMismatch");
 
 		public QName getBodyName() {
-			return BODY_NAME;
+			return this.BODY_NAME;
 		}
 
 		public QName getEnvelopeName() {
-			return ENVELOPE_NAME;
+			return this.ENVELOPE_NAME;
 		}
 
 		public String getEnvelopeNamespaceUri() {
@@ -176,11 +176,11 @@ public interface SoapVersion {
 		}
 
 		public QName getFaultName() {
-			return FAULT_NAME;
+			return this.FAULT_NAME;
 		}
 
 		public QName getHeaderName() {
-			return HEADER_NAME;
+			return this.HEADER_NAME;
 		}
 
 		public String getNextActorOrRoleUri() {
@@ -192,7 +192,7 @@ public interface SoapVersion {
 		}
 
 		public QName getServerOrReceiverFaultName() {
-			return RECEIVER_FAULT_NAME;
+			return this.RECEIVER_FAULT_NAME;
 		}
 
 		public String getUltimateReceiverRoleUri() {
@@ -200,11 +200,11 @@ public interface SoapVersion {
 		}
 
 		public QName getActorOrRoleName() {
-			return ROLE_NAME;
+			return this.ROLE_NAME;
 		}
 
 		public QName getClientOrSenderFaultName() {
-			return SENDER_FAULT_NAME;
+			return this.SENDER_FAULT_NAME;
 		}
 
 		public String getContentType() {
@@ -212,15 +212,15 @@ public interface SoapVersion {
 		}
 
 		public QName getMustUnderstandAttributeName() {
-			return MUST_UNDERSTAND_ATTRIBUTE_NAME;
+			return this.MUST_UNDERSTAND_ATTRIBUTE_NAME;
 		}
 
 		public QName getMustUnderstandFaultName() {
-			return MUST_UNDERSTAND_FAULT_NAME;
+			return this.MUST_UNDERSTAND_FAULT_NAME;
 		}
 
 		public QName getVersionMismatchFaultName() {
-			return VERSION_MISMATCH_FAULT_NAME;
+			return this.VERSION_MISMATCH_FAULT_NAME;
 		}
 
 		public String toString() {

@@ -68,33 +68,33 @@ public class ClientInterceptorAdapterTest {
 		}
 
 		public List<String> getBits() {
-			return bits;
+			return this.bits;
 		}
 
 		@Override
 		public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
 
-			bits.add("handled request");
+			this.bits.add("handled request");
 			return false;
 		}
 
 		@Override
 		public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
 
-			bits.add("handled response");
+			this.bits.add("handled response");
 			return false;
 		}
 
 		@Override
 		public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
 
-			bits.add("handled fault");
+			this.bits.add("handled fault");
 			return false;
 		}
 
 		@Override
 		public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
-			bits.add("handled afterCompletion");
+			this.bits.add("handled afterCompletion");
 		}
 
 	}

@@ -27,8 +27,8 @@ public abstract class AbstractSoapEnvelopeTest extends AbstractSoapElementTest {
 	@Override
 	protected final SoapElement createSoapElement() throws Exception {
 
-		soapEnvelope = createSoapEnvelope();
-		return soapEnvelope;
+		this.soapEnvelope = createSoapEnvelope();
+		return this.soapEnvelope;
 	}
 
 	protected abstract SoapEnvelope createSoapEnvelope() throws Exception;
@@ -36,7 +36,7 @@ public abstract class AbstractSoapEnvelopeTest extends AbstractSoapElementTest {
 	@Test
 	public void testGetHeader() {
 
-		SoapHeader header = soapEnvelope.getHeader();
+		SoapHeader header = this.soapEnvelope.getHeader();
 
 		assertThat(header).isNotNull();
 	}
@@ -44,7 +44,7 @@ public abstract class AbstractSoapEnvelopeTest extends AbstractSoapElementTest {
 	@Test
 	public void testGetBody() {
 
-		SoapBody body = soapEnvelope.getBody();
+		SoapBody body = this.soapEnvelope.getBody();
 
 		assertThat(body).isNotNull();
 	}

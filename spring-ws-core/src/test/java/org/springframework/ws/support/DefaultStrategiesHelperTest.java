@@ -114,7 +114,7 @@ public class DefaultStrategiesHelperTest {
 		private ApplicationContext applicationContext;
 
 		public ApplicationContext getApplicationContext() {
-			return applicationContext;
+			return this.applicationContext;
 		}
 
 		@Override

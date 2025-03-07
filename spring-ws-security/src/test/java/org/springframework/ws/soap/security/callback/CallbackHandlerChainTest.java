@@ -39,15 +39,16 @@ public class CallbackHandlerChainTest {
 	@Test
 	public void testSupported() throws Exception {
 
-		CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { supported });
-		chain.handle(new Callback[] { callback });
+		CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { this.supported });
+		chain.handle(new Callback[] { this.callback });
 	}
 
 	@Test
 	public void testUnsupportedSupported() throws Exception {
 
-		CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { unsupported, supported });
-		chain.handle(new Callback[] { callback });
+		CallbackHandlerChain chain = new CallbackHandlerChain(
+				new CallbackHandler[] { this.unsupported, this.supported });
+		chain.handle(new Callback[] { this.callback });
 	}
 
 	@Test
@@ -55,8 +56,8 @@ public class CallbackHandlerChainTest {
 
 		assertThatExceptionOfType(UnsupportedCallbackException.class).isThrownBy(() -> {
 
-			CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { unsupported });
-			chain.handle(new Callback[] { callback });
+			CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { this.unsupported });
+			chain.handle(new Callback[] { this.callback });
 		});
 	}
 

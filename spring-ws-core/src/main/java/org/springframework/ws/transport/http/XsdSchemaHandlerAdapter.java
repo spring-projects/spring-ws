@@ -101,7 +101,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 			Transformer transformer = createTransformer();
 			Source schemaSource = getSchemaSource((XsdSchema) handler);
 
-			if (transformSchemaLocations) {
+			if (this.transformSchemaLocations) {
 				DOMResult domResult = new DOMResult();
 				transformer.transform(schemaSource, domResult);
 				Document schemaDocument = (Document) domResult.getNode();
@@ -126,8 +126,8 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(schemaLocationExpression,
-				expressionNamespaces);
+		this.schemaLocationXPathExpression = XPathExpressionFactory.createXPathExpression(this.schemaLocationExpression,
+				this.expressionNamespaces);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	 * @see #transformLocation(String, jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
-		transformLocations(schemaLocationXPathExpression, definitionDocument, request);
+		transformLocations(this.schemaLocationXPathExpression, definitionDocument, request);
 	}
 
 }

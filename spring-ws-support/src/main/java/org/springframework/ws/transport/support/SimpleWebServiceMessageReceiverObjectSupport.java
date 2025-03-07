@@ -38,7 +38,7 @@ public abstract class SimpleWebServiceMessageReceiverObjectSupport extends WebSe
 	 * Returns the {@code WebServiceMessageReceiver} used by this listener.
 	 */
 	public WebServiceMessageReceiver getMessageReceiver() {
-		return messageReceiver;
+		return this.messageReceiver;
 	}
 
 	/**

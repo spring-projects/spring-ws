@@ -85,7 +85,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 
 	@Override
 	public final int getOrder() {
-		return order;
+		return this.order;
 	}
 
 	/**
@@ -96,12 +96,12 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	@Override
 	public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
 		Object mappedEndpoint = endpoint instanceof MethodEndpoint ? ((MethodEndpoint) endpoint).getBean() : endpoint;
-		if (mappedEndpoints != null && !mappedEndpoints.contains(mappedEndpoint)) {
+		if (this.mappedEndpoints != null && !this.mappedEndpoints.contains(mappedEndpoint)) {
 			return false;
 		}
 		// Log exception, both at debug log level and at warn level, if desired.
-		if (logger.isDebugEnabled()) {
-			logger.debug("Resolving exception from endpoint [" + endpoint + "]: " + ex);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Resolving exception from endpoint [" + endpoint + "]: " + ex);
 		}
 		logException(ex, messageContext);
 		return resolveExceptionInternal(messageContext, endpoint, ex);

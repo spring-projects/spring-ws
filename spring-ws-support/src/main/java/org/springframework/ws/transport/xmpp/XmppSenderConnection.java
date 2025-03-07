@@ -78,12 +78,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	/** Returns the request message for this connection. */
 	public Message getRequestMessage() {
-		return requestMessage;
+		return this.requestMessage;
 	}
 
 	/** Returns the response message, if any, for this connection. */
 	public Message getResponseMessage() {
-		return responseMessage;
+		return this.responseMessage;
 	}
 
 	/*
@@ -104,7 +104,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return XmppTransportUtils.toUri(requestMessage);
+		return XmppTransportUtils.toUri(this.requestMessage);
 	}
 
 	/*
@@ -113,12 +113,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public boolean hasError() {
-		return XmppTransportUtils.hasError(responseMessage);
+		return XmppTransportUtils.hasError(this.responseMessage);
 	}
 
 	@Override
 	public String getErrorMessage() {
-		return XmppTransportUtils.getErrorMessage(responseMessage);
+		return XmppTransportUtils.getErrorMessage(this.responseMessage);
 	}
 
 	/*
@@ -127,19 +127,19 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public void addRequestHeader(String name, String value) {
-		XmppTransportUtils.addHeader(requestMessage, name, value);
+		XmppTransportUtils.addHeader(this.requestMessage, name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return new MessageOutputStream(requestMessage, messageEncoding);
+		return new MessageOutputStream(this.requestMessage, this.messageEncoding);
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		requestMessage.setFrom(connection.getUser());
+		this.requestMessage.setFrom(this.connection.getUser());
 		try {
-			connection.sendStanza(requestMessage);
+			this.connection.sendStanza(this.requestMessage);
 		}
 		catch (SmackException.NotConnectedException | InterruptedException e) {
 			throw new IOException(e);
@@ -154,11 +154,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	protected void onReceiveBeforeRead() throws IOException {
 		StanzaFilter packetFilter = createPacketFilter();
 
-		StanzaCollector collector = connection.createStanzaCollector(packetFilter);
+		StanzaCollector collector = this.connection.createStanzaCollector(packetFilter);
 		try {
-			Stanza packet = receiveTimeout >= 0 ? collector.nextResult(receiveTimeout) : collector.nextResult();
+			Stanza packet = this.receiveTimeout >= 0 ? collector.nextResult(this.receiveTimeout)
+					: collector.nextResult();
 			if (packet instanceof Message) {
-				responseMessage = (Message) packet;
+				this.responseMessage = (Message) packet;
 			}
 			else if (packet != null) {
 				throw new IllegalArgumentException(
@@ -173,28 +174,28 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	private StanzaFilter createPacketFilter() {
 		AndFilter andFilter = new AndFilter();
 		andFilter.addFilter(new StanzaTypeFilter(Message.class));
-		andFilter.addFilter(new ThreadFilter(requestMessage.getThread()));
+		andFilter.addFilter(new ThreadFilter(this.requestMessage.getThread()));
 		return andFilter;
 	}
 
 	@Override
 	protected boolean hasResponse() throws IOException {
-		return responseMessage != null;
+		return this.responseMessage != null;
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() {
-		return XmppTransportUtils.getHeaderNames(responseMessage);
+		return XmppTransportUtils.getHeaderNames(this.responseMessage);
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		return XmppTransportUtils.getHeaders(responseMessage, name);
+		return XmppTransportUtils.getHeaders(this.responseMessage, name);
 	}
 
 	@Override
 	protected InputStream getResponseInputStream() throws IOException {
-		return new MessageInputStream(responseMessage, messageEncoding);
+		return new MessageInputStream(this.responseMessage, this.messageEncoding);
 	}
 
 }

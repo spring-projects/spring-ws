@@ -78,7 +78,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public InputStream getInputStream() throws IOException {
-			return inputStreamSource.getInputStream();
+			return this.inputStreamSource.getInputStream();
 		}
 
 		@Override
@@ -88,12 +88,12 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public String getContentType() {
-			return contentType;
+			return this.contentType;
 		}
 
 		@Override
 		public String getName() {
-			if (inputStreamSource instanceof Resource resource) {
+			if (this.inputStreamSource instanceof Resource resource) {
 				return resource.getFilename();
 			}
 			else {

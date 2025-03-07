@@ -89,7 +89,7 @@ public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProces
 		if (document == null) {
 			document = new Document(returnedElement);
 		}
-		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		DocumentBuilder documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
 		DOMImplementation domImplementation = documentBuilder.getDOMImplementation();
 		org.w3c.dom.Document w3cDocument = DOMConverter.convert(document, domImplementation);
 		return new DOMSource(w3cDocument);

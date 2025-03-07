@@ -67,7 +67,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
 	public Jaxp13XPathTemplate(String xpathFactoryUri) {
 		try {
-			xpathFactory = XPathFactory.newInstance(xpathFactoryUri);
+			this.xpathFactory = XPathFactory.newInstance(xpathFactoryUri);
 		}
 		catch (XPathFactoryConfigurationException ex) {
 			throw new XPathException("Could not create XPathFactory", ex);
@@ -161,7 +161,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	}
 
 	private synchronized XPath createXPath() {
-		return xpathFactory.newXPath();
+		return this.xpathFactory.newXPath();
 	}
 
 	private static class EvaluationCallback implements TraxUtils.SourceCallback {
@@ -184,7 +184,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
 		@Override
 		public void domSource(Node node) throws XPathExpressionException {
-			result = xpath.evaluate(expression, node, returnType);
+			this.result = this.xpath.evaluate(this.expression, node, this.returnType);
 		}
 
 		@Override
@@ -221,12 +221,12 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 		}
 
 		private void inputSource(InputSource inputSource) throws XPathExpressionException {
-			result = xpath.evaluate(expression, inputSource, returnType);
+			this.result = this.xpath.evaluate(this.expression, inputSource, this.returnType);
 		}
 
 		private Element getRootElement(Source source) throws TransformerException {
 			DOMResult domResult = new DOMResult();
-			transformerHelper.transform(source, domResult);
+			this.transformerHelper.transform(source, domResult);
 			Document document = (Document) domResult.getNode();
 			return document.getDocumentElement();
 		}

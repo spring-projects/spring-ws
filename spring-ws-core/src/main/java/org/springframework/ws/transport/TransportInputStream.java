@@ -40,16 +40,16 @@ public abstract class TransportInputStream extends InputStream {
 	}
 
 	private InputStream getInputStream() throws IOException {
-		if (inputStream == null) {
-			inputStream = createInputStream();
-			Assert.notNull(inputStream, "inputStream must not be null");
+		if (this.inputStream == null) {
+			this.inputStream = createInputStream();
+			Assert.notNull(this.inputStream, "inputStream must not be null");
 		}
-		return inputStream;
+		return this.inputStream;
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (inputStream != null) {
+		if (this.inputStream != null) {
 			getInputStream().close();
 		}
 	}

@@ -46,8 +46,8 @@ public class SaajSoap11MessageFactoryTest extends AbstractSoap11MessageFactoryTe
 	public void properties() throws IOException {
 
 		Map<String, ?> properties = Collections.singletonMap(SOAPMessage.WRITE_XML_DECLARATION, "true");
-		((SaajSoapMessageFactory) messageFactory).setMessageProperties(properties);
-		SoapMessage soapMessage = (SoapMessage) messageFactory.createWebServiceMessage();
+		((SaajSoapMessageFactory) this.messageFactory).setMessageProperties(properties);
+		SoapMessage soapMessage = (SoapMessage) this.messageFactory.createWebServiceMessage();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		soapMessage.writeTo(os);
 		String result = os.toString(StandardCharsets.UTF_8);
