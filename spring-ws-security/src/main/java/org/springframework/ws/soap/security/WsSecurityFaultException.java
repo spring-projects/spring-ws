@@ -27,11 +27,11 @@ import javax.xml.namespace.QName;
 @SuppressWarnings("serial")
 public abstract class WsSecurityFaultException extends WsSecurityException {
 
-	private QName faultCode;
+	private final QName faultCode;
 
-	private String faultString;
+	private final String faultString;
 
-	private String faultActor;
+	private final String faultActor;
 
 	/**
 	 * Construct a new {@code WsSecurityFaultException} with the given fault code, string,

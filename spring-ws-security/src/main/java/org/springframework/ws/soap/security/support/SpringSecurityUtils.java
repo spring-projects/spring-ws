@@ -23,7 +23,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Generic utility methods for Spring Security
+ * Generic utility methods for Spring Security.
  *
  * @author Tareq Abedrabbo
  * @since 1.5.8

@@ -147,8 +147,14 @@ import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincip
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
+	/**
+	 * Property name for securement user.
+	 */
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
+	/**
+	 * Property name for securement password.
+	 */
 	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
 	private String securementActions;
@@ -419,13 +425,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	/**
 	 * Sets the username for securement username token or/and the alias of the private key
-	 * for securement signature
+	 * for securement signature.
 	 */
 	public void setSecurementUsername(String securementUsername) {
 		this.securementUsername = securementUsername;
 	}
 
-	/** Sets the time to live on the outgoing message */
+	/**
+	 * Sets the time to live on the outgoing message.
+	 */
 	public void setSecurementTimeToLive(int securementTimeToLive) {
 
 		if (securementTimeToLive <= 0) {
@@ -450,7 +458,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.samlCallbackHandler = samlCallbackHandler;
 	}
 
-	/** Sets the server-side time to live */
+	/**
+	 * Sets the server-side time to live.
+	 */
 	public void setValidationTimeToLive(int validationTimeToLive) {
 
 		if (validationTimeToLive <= 0) {
@@ -491,12 +501,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.validationCallbackHandler = new CallbackHandlerChain(callbackHandler);
 	}
 
-	/** Sets the Crypto to use to decrypt incoming messages */
+	/**
+	 * Sets the Crypto to use to decrypt incoming messages.
+	 */
 	public void setValidationDecryptionCrypto(Crypto decryptionCrypto) {
 		this.validationDecryptionCrypto = decryptionCrypto;
 	}
 
-	/** Sets the Crypto to use to verify the signature of incoming messages */
+	/**
+	 * Sets the Crypto to use to verify the signature of incoming messages.
+	 */
 	public void setValidationSignatureCrypto(Crypto signatureCrypto) {
 		this.validationSignatureCrypto = signatureCrypto;
 	}
@@ -511,13 +525,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.enableSignatureConfirmation = enableSignatureConfirmation;
 	}
 
-	/** Sets if the generated timestamp header's precision is in milliseconds. */
+	/**
+	 * Sets if the generated timestamp header's precision is in milliseconds.
+	 */
 	public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
 		this.handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
 	}
 
 	/**
-	 * Sets whether timestamp verification is done with the server-side time to live
+	 * Sets whether timestamp verification is done with the server-side time to live.
 	 */
 	public void setTimestampStrict(boolean timestampStrict) {
 		this.timestampStrict = timestampStrict;
@@ -817,9 +833,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@SuppressWarnings("unchecked")
 	private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
 
-		List<WSHandlerResult> handlerResults;
-		if ((handlerResults = (List<WSHandlerResult>) messageContext
-			.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+		List<WSHandlerResult> handlerResults = (List<WSHandlerResult>) messageContext
+			.getProperty(WSHandlerConstants.RECV_RESULTS);
+		if (handlerResults == null) {
 			handlerResults = new ArrayList<>();
 			messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 		}

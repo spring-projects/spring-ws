@@ -74,11 +74,11 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 		Key key;
 
 		try {
-			key = this.keyStore.getKey(id, this.symmetricKeyPassword != null ? this.symmetricKeyPassword
+			key = this.keyStore.getKey(id, (this.symmetricKeyPassword != null) ? this.symmetricKeyPassword
 					: this.privateKeyPassword.toCharArray());
 		}
-		catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
-			throw new IOException("Could not get key", e);
+		catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException ex) {
+			throw new IOException("Could not get key", ex);
 		}
 
 		callback.setKey(key.getEncoded());

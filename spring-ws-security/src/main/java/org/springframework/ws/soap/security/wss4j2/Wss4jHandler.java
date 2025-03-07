@@ -31,9 +31,9 @@ import org.w3c.dom.Document;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 
-import static org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME;
-
 /**
+ * {@link WSHandler} implementation.
+ *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
@@ -95,7 +95,8 @@ class Wss4jHandler extends WSHandler {
 
 	@Override
 	public String getPassword(Object msgContext) {
-		String contextPassword = (String) getProperty(msgContext, SECUREMENT_PASSWORD_PROPERTY_NAME);
+		String contextPassword = (String) getProperty(msgContext,
+				Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME);
 		if (StringUtils.hasLength(contextPassword)) {
 			return contextPassword;
 		}
