@@ -25,8 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import org.springframework.ws.test.support.AssertionErrors;
 
 /**
  * Matches SOAP headers.
@@ -51,19 +50,19 @@ public class SoapHeaderMatcher extends AbstractSoapMessageMatcher {
 	@Override
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 		SoapHeader soapHeader = soapMessage.getSoapHeader();
-		assertTrue("SOAP message [" + soapMessage + "] does not contain SOAP header", soapHeader != null, "Envelope",
-				soapMessage.getEnvelope().getSource());
+		AssertionErrors.assertTrue("SOAP message [" + soapMessage + "] does not contain SOAP header",
+				soapHeader != null, "Envelope", soapMessage.getEnvelope().getSource());
 
 		Iterator<SoapHeaderElement> soapHeaderElementIterator = soapHeader.examineAllHeaderElements();
 		boolean found = false;
 		while (soapHeaderElementIterator.hasNext()) {
 			SoapHeaderElement soapHeaderElement = soapHeaderElementIterator.next();
-			if (soapHeaderName.equals(soapHeaderElement.getName())) {
+			if (this.soapHeaderName.equals(soapHeaderElement.getName())) {
 				found = true;
 				break;
 			}
 		}
-		assertTrue("SOAP header [" + soapHeaderName + "] not found", found, "Envelope",
+		AssertionErrors.assertTrue("SOAP header [" + this.soapHeaderName + "] not found", found, "Envelope",
 				soapMessage.getEnvelope().getSource());
 	}
 

@@ -74,7 +74,7 @@ public abstract class JaxpVersion {
 				ClassUtils.forName(JAXP_14_CLASS_NAME, classLoader);
 				jaxpVersion = JAXP_14;
 			}
-			catch (ClassNotFoundException e) {
+			catch (ClassNotFoundException ex2) {
 				// leave 1.3 as default (it's either 1.3 or unknown)
 				jaxpVersion = JAXP_13;
 			}

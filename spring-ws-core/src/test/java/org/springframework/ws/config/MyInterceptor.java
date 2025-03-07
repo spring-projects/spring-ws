@@ -27,7 +27,7 @@ public class MyInterceptor implements EndpointInterceptor {
 	private int order;
 
 	public int getOrder() {
-		return order;
+		return this.order;
 	}
 
 	public void setOrder(int order) {

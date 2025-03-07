@@ -48,11 +48,11 @@ abstract class Jaxp13ValidatorFactory {
 		}
 	}
 
-	private static class Jaxp13Validator implements XmlValidator {
+	private static final class Jaxp13Validator implements XmlValidator {
 
 		private Schema schema;
 
-		public Jaxp13Validator(Schema schema) {
+		Jaxp13Validator(Schema schema) {
 			this.schema = schema;
 		}
 
@@ -66,7 +66,7 @@ abstract class Jaxp13ValidatorFactory {
 			if (errorHandler == null) {
 				errorHandler = new DefaultValidationErrorHandler();
 			}
-			Validator validator = schema.newValidator();
+			Validator validator = this.schema.newValidator();
 			validator.setErrorHandler(errorHandler);
 			try {
 				validator.validate(source);
@@ -82,13 +82,13 @@ abstract class Jaxp13ValidatorFactory {
 	/**
 	 * {@code ErrorHandler} implementation that stores errors and fatal errors in a list.
 	 */
-	private static class DefaultValidationErrorHandler implements ValidationErrorHandler {
+	private static final class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
 		private List<SAXParseException> errors = new ArrayList<>();
 
 		@Override
 		public SAXParseException[] getErrors() {
-			return errors.toArray(new SAXParseException[0]);
+			return this.errors.toArray(new SAXParseException[0]);
 		}
 
 		@Override
@@ -97,12 +97,12 @@ abstract class Jaxp13ValidatorFactory {
 
 		@Override
 		public void error(SAXParseException ex) throws SAXException {
-			errors.add(ex);
+			this.errors.add(ex);
 		}
 
 		@Override
 		public void fatalError(SAXParseException ex) throws SAXException {
-			errors.add(ex);
+			this.errors.add(ex);
 		}
 
 	}

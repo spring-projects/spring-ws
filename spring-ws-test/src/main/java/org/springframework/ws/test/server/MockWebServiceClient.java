@@ -29,10 +29,9 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.server.SoapMessageDispatcher;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.ws.test.support.MockStrategiesHelper;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * <strong>Main entry point for server-side Web service testing</strong>. Typically used
@@ -105,7 +104,7 @@ import static org.springframework.ws.test.support.AssertionErrors.fail;
  * @author Lukas Krecan
  * @since 2.0
  */
-public class MockWebServiceClient {
+public final class MockWebServiceClient {
 
 	private static final Log logger = LogFactory.getLog(MockWebServiceClient.class);
 
@@ -177,23 +176,23 @@ public class MockWebServiceClient {
 	public ResponseActions sendRequest(RequestCreator requestCreator) {
 		Assert.notNull(requestCreator, "'requestCreator' must not be null");
 		try {
-			WebServiceMessage request = requestCreator.createRequest(messageFactory);
-			MessageContext messageContext = new DefaultMessageContext(request, messageFactory);
+			WebServiceMessage request = requestCreator.createRequest(this.messageFactory);
+			MessageContext messageContext = new DefaultMessageContext(request, this.messageFactory);
 
-			messageReceiver.receive(messageContext);
+			this.messageReceiver.receive(messageContext);
 
 			return new MockWebServiceClientResponseActions(messageContext);
 		}
 		catch (Exception ex) {
 			logger.error("Could not send request", ex);
-			fail(ex.getMessage());
+			AssertionErrors.fail(ex.getMessage());
 			return null;
 		}
 	}
 
 	// ResponseActions
 
-	private static class MockWebServiceClientResponseActions implements ResponseActions {
+	private static final class MockWebServiceClientResponseActions implements ResponseActions {
 
 		private final MessageContext messageContext;
 
@@ -204,10 +203,10 @@ public class MockWebServiceClient {
 
 		@Override
 		public ResponseActions andExpect(ResponseMatcher responseMatcher) {
-			WebServiceMessage request = messageContext.getRequest();
-			WebServiceMessage response = messageContext.getResponse();
+			WebServiceMessage request = this.messageContext.getRequest();
+			WebServiceMessage response = this.messageContext.getResponse();
 			if (response == null) {
-				fail("No response received");
+				AssertionErrors.fail("No response received");
 				return null;
 			}
 			try {
@@ -216,7 +215,7 @@ public class MockWebServiceClient {
 			}
 			catch (IOException ex) {
 				logger.error("Could not match request", ex);
-				fail(ex.getMessage());
+				AssertionErrors.fail(ex.getMessage());
 				return null;
 			}
 		}

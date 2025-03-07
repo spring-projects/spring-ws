@@ -34,17 +34,17 @@ public class JmsTransportException extends TransportException {
 	public JmsTransportException(String msg, JMSException ex) {
 		super(msg + ": " + ex.getMessage());
 		initCause(ex);
-		jmsException = ex;
+		this.jmsException = ex;
 	}
 
 	public JmsTransportException(JMSException ex) {
 		super(ex.getMessage());
 		initCause(ex);
-		jmsException = ex;
+		this.jmsException = ex;
 	}
 
 	public JMSException getJmsException() {
-		return jmsException;
+		return this.jmsException;
 	}
 
 }

@@ -25,9 +25,9 @@ import org.springframework.ws.server.EndpointInvocationChain;
  * the MustUnderstand headers for particular endpoint.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getActorsOrRoles()
  * @see SoapMessageDispatcher
- * @since 1.0.0
  */
 public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 
@@ -73,7 +73,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * @return a string array of URIs for SOAP actors/roles
 	 */
 	public String[] getActorsOrRoles() {
-		return actorsOrRoles;
+		return this.actorsOrRoles;
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * is {@code true}.
 	 */
 	public boolean isUltimateReceiver() {
-		return isUltimateReceiver;
+		return this.isUltimateReceiver;
 	}
 
 }

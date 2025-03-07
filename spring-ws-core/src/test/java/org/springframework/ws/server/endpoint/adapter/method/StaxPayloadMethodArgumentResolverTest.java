@@ -49,18 +49,18 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		resolver = new StaxPayloadMethodArgumentResolver();
-		streamParameter = new MethodParameter(getClass().getMethod("streamReader", XMLStreamReader.class), 0);
-		eventParameter = new MethodParameter(getClass().getMethod("eventReader", XMLEventReader.class), 0);
-		invalidParameter = new MethodParameter(getClass().getMethod("invalid", XMLStreamReader.class), 0);
+		this.resolver = new StaxPayloadMethodArgumentResolver();
+		this.streamParameter = new MethodParameter(getClass().getMethod("streamReader", XMLStreamReader.class), 0);
+		this.eventParameter = new MethodParameter(getClass().getMethod("eventReader", XMLEventReader.class), 0);
+		this.invalidParameter = new MethodParameter(getClass().getMethod("invalid", XMLStreamReader.class), 0);
 	}
 
 	@Test
 	public void supportsParameter() {
 
-		assertThat(resolver.supportsParameter(streamParameter)).isTrue();
-		assertThat(resolver.supportsParameter(eventParameter)).isTrue();
-		assertThat(resolver.supportsParameter(invalidParameter)).isFalse();
+		assertThat(this.resolver.supportsParameter(this.streamParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.eventParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.invalidParameter)).isFalse();
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createSaajMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, streamParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.streamParameter);
 
 		testStreamReader(result);
 	}
@@ -78,7 +78,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createCachingAxiomMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, streamParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.streamParameter);
 
 		testStreamReader(result);
 	}
@@ -88,7 +88,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createNonCachingAxiomMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, streamParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.streamParameter);
 
 		testStreamReader(result);
 	}
@@ -98,7 +98,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createMockMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, streamParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.streamParameter);
 
 		testStreamReader(result);
 	}
@@ -108,7 +108,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createSaajMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, eventParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.eventParameter);
 
 		testEventReader(result);
 	}
@@ -118,7 +118,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createCachingAxiomMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, eventParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.eventParameter);
 
 		testEventReader(result);
 	}
@@ -128,7 +128,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createNonCachingAxiomMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, eventParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.eventParameter);
 
 		testEventReader(result);
 	}
@@ -138,7 +138,7 @@ public class StaxPayloadMethodArgumentResolverTest extends AbstractMethodArgumen
 
 		MessageContext messageContext = createMockMessageContext();
 
-		Object result = resolver.resolveArgument(messageContext, eventParameter);
+		Object result = this.resolver.resolveArgument(messageContext, this.eventParameter);
 
 		testEventReader(result);
 	}

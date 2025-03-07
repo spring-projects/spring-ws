@@ -51,13 +51,13 @@ public class PayloadEndpointAdapterTest {
 	@BeforeEach
 	public void setUp() {
 
-		adapter = new PayloadEndpointAdapter();
-		endpointMock = createMock(PayloadEndpoint.class);
+		this.adapter = new PayloadEndpointAdapter();
+		this.endpointMock = createMock(PayloadEndpoint.class);
 	}
 
 	@Test
 	public void testSupports() {
-		assertThat(adapter.supports(endpointMock)).isTrue();
+		assertThat(this.adapter.supports(this.endpointMock)).isTrue();
 	}
 
 	@Test
@@ -77,7 +77,7 @@ public class PayloadEndpointAdapterTest {
 		endpoint.invoke(request.getPayloadSource());
 
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-		adapter.invoke(messageContext, endpoint);
+		this.adapter.invoke(messageContext, endpoint);
 
 		MockWebServiceMessage response = (MockWebServiceMessage) messageContext.getResponse();
 
@@ -90,13 +90,13 @@ public class PayloadEndpointAdapterTest {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
-		expect(endpointMock.invoke(isA(Source.class))).andReturn(null);
+		expect(this.endpointMock.invoke(isA(Source.class))).andReturn(null);
 
-		replay(endpointMock);
+		replay(this.endpointMock);
 
-		adapter.invoke(messageContext, endpointMock);
+		this.adapter.invoke(messageContext, this.endpointMock);
 
-		verify(endpointMock);
+		verify(this.endpointMock);
 
 		assertThat(messageContext.hasResponse()).isFalse();
 	}

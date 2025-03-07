@@ -91,7 +91,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		}
 		if (streamReader == null) {
 			try {
-				streamReader = inputFactory.createXMLStreamReader(requestSource);
+				streamReader = this.inputFactory.createXMLStreamReader(requestSource);
 			}
 			catch (XMLStreamException | UnsupportedOperationException ex) {
 				streamReader = null;
@@ -100,7 +100,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (streamReader == null) {
 			// as a final resort, transform the source to a stream, and read from that
 			ByteArrayInputStream bis = convertToByteArrayInputStream(requestSource);
-			streamReader = inputFactory.createXMLStreamReader(bis);
+			streamReader = this.inputFactory.createXMLStreamReader(bis);
 		}
 		return streamReader;
 	}
@@ -113,7 +113,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 				XMLStreamReader streamReader = StaxUtils.getXMLStreamReader(requestSource);
 				if (streamReader != null) {
 					try {
-						eventReader = inputFactory.createXMLEventReader(streamReader);
+						eventReader = this.inputFactory.createXMLEventReader(streamReader);
 					}
 					catch (XMLStreamException ex) {
 						eventReader = null;
@@ -124,7 +124,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		}
 		if (eventReader == null) {
 			try {
-				eventReader = inputFactory.createXMLEventReader(requestSource);
+				eventReader = this.inputFactory.createXMLEventReader(requestSource);
 			}
 			catch (XMLStreamException | UnsupportedOperationException ex) {
 				eventReader = null;
@@ -133,7 +133,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 		if (eventReader == null) {
 			// as a final resort, transform the source to a stream, and read from that
 			ByteArrayInputStream bis = convertToByteArrayInputStream(requestSource);
-			eventReader = inputFactory.createXMLEventReader(bis);
+			eventReader = this.inputFactory.createXMLEventReader(bis);
 		}
 		return eventReader;
 	}

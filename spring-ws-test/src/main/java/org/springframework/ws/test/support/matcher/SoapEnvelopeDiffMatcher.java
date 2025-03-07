@@ -28,10 +28,8 @@ import org.w3c.dom.Document;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} SOAP envelopes.
@@ -62,20 +60,20 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 
 		Document actualDocument = soapMessage.getDocument();
-		Document expectedDocument = createDocumentFromSource(expected);
+		Document expectedDocument = createDocumentFromSource(this.expected);
 		Diff diff = new Diff(expectedDocument, actualDocument);
-		assertTrue("Envelopes are different, " + diff, diff.similar());
+		AssertionErrors.assertTrue("Envelopes are different, " + diff, diff.similar());
 	}
 
 	private Document createDocumentFromSource(Source source) {
 
 		try {
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(source, result);
+			this.transformerHelper.transform(source, result);
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {
-			fail("Could not transform source to DOMResult" + ex.getMessage());
+			AssertionErrors.fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}
 	}

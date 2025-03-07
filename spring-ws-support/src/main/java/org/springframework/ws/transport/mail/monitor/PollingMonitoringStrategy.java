@@ -50,7 +50,7 @@ public class PollingMonitoringStrategy extends AbstractMonitoringStrategy {
 
 	@Override
 	protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {
-		Thread.sleep(pollingInterval);
+		Thread.sleep(this.pollingInterval);
 		afterSleep(folder);
 	}
 

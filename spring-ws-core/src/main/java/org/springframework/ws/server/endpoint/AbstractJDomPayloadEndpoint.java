@@ -60,7 +60,7 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 	public final Source invoke(Source request) throws Exception {
 		Element requestElement = getDocumentElement(request);
 		Element responseElement = invokeInternal(requestElement);
-		return responseElement != null ? new JDOMSource(responseElement) : null;
+		return (responseElement != null) ? new JDOMSource(responseElement) : null;
 	}
 
 	/**
@@ -79,7 +79,7 @@ public abstract class AbstractJDomPayloadEndpoint extends TransformerObjectSuppo
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
+		if (!this.alwaysTransform && source instanceof DOMSource) {
 			Node node = ((DOMSource) source).getNode();
 			DOMBuilder domBuilder = new DOMBuilder();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {

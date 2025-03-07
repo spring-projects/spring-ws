@@ -32,19 +32,19 @@ public class XPathPayloadEndpointMappingTest {
 
 	@BeforeEach
 	public void setUp() {
-		mapping = new XPathPayloadEndpointMapping();
+		this.mapping = new XPathPayloadEndpointMapping();
 	}
 
 	@Test
 	public void testGetLookupKeyForMessage() throws Exception {
 
-		mapping.setExpression("/root/text()");
-		mapping.afterPropertiesSet();
+		this.mapping.setExpression("/root/text()");
+		this.mapping.afterPropertiesSet();
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<root>value</root>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		String result = mapping.getLookupKeyForMessage(context);
+		String result = this.mapping.getLookupKeyForMessage(context);
 
 		assertThat(result).isNotNull();
 		assertThat(result).isEqualTo("value");

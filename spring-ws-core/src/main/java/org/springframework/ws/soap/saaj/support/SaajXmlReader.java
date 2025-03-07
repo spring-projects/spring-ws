@@ -38,9 +38,9 @@ import org.springframework.xml.sax.AbstractXmlReader;
  * interfaces.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see jakarta.xml.soap.Node
  * @see jakarta.xml.soap.SOAPElement
- * @since 1.0.0
  */
 public class SaajXmlReader extends AbstractXmlReader {
 
@@ -66,10 +66,10 @@ public class SaajXmlReader extends AbstractXmlReader {
 	@Override
 	public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 		if (NAMESPACES_FEATURE_NAME.equals(name)) {
-			return namespacesFeature;
+			return this.namespacesFeature;
 		}
 		else if (NAMESPACE_PREFIXES_FEATURE_NAME.equals(name)) {
-			return namespacePrefixesFeature;
+			return this.namespacePrefixesFeature;
 		}
 		else {
 			return super.getFeature(name);
@@ -94,7 +94,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * <p>
 	 * <strong>Note</strong> that the given {@code InputSource} is not read, but ignored.
 	 * @param ignored is ignored
-	 * @throws org.xml.sax.SAXException A SAX exception, possibly wrapping a
+	 * @throws org.xml.sax.SAXException a SAX exception, possibly wrapping a
 	 * {@code XMLStreamException}
 	 */
 	@Override
@@ -107,7 +107,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 	 * <p>
 	 * <strong>Note</strong> that the given system identifier is not read, but ignored.
 	 * @param ignored is ignored
-	 * @throws SAXException A SAX exception, possibly wrapping a
+	 * @throws SAXException a SAX exception, possibly wrapping a
 	 * {@code XMLStreamException}
 	 */
 	@Override
@@ -119,7 +119,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 		if (getContentHandler() != null) {
 			getContentHandler().startDocument();
 		}
-		handleNode(startNode);
+		handleNode(this.startNode);
 		if (getContentHandler() != null) {
 			getContentHandler().endDocument();
 		}
@@ -137,7 +137,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 	private void handleElement(SOAPElement element) throws SAXException {
 		Name elementName = element.getElementName();
 		if (getContentHandler() != null) {
-			if (namespacesFeature) {
+			if (this.namespacesFeature) {
 				for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
 					String prefix = (String) iterator.next();
 					String namespaceUri = element.getNamespaceURI(prefix);
@@ -155,7 +155,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 			handleNode(child);
 		}
 		if (getContentHandler() != null) {
-			if (namespacesFeature) {
+			if (this.namespacesFeature) {
 				getContentHandler().endElement(elementName.getURI(), elementName.getLocalName(),
 						elementName.getQualifiedName());
 				for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
@@ -171,7 +171,7 @@ public class SaajXmlReader extends AbstractXmlReader {
 
 	private void handleText(Text text) throws SAXException {
 		if (getContentHandler() != null) {
-			char[] ch = text.getValue() != null ? text.getValue().toCharArray() : new char[0];
+			char[] ch = (text.getValue() != null) ? text.getValue().toCharArray() : new char[0];
 			getContentHandler().characters(ch, 0, ch.length);
 		}
 	}
@@ -182,14 +182,14 @@ public class SaajXmlReader extends AbstractXmlReader {
 		for (Iterator<?> iterator = element.getAllAttributes(); iterator.hasNext();) {
 			Name attributeName = (Name) iterator.next();
 			String namespace = attributeName.getURI();
-			if (namespace == null || !namespacesFeature) {
+			if (namespace == null || !this.namespacesFeature) {
 				namespace = "";
 			}
 			String attributeValue = element.getAttributeValue(attributeName);
 			attributes.addAttribute(namespace, attributeName.getLocalName(), attributeName.getQualifiedName(), "CDATA",
 					attributeValue);
 		}
-		if (namespacePrefixesFeature) {
+		if (this.namespacePrefixesFeature) {
 			for (Iterator<?> iterator = element.getNamespacePrefixes(); iterator.hasNext();) {
 				String prefix = (String) iterator.next();
 				String namespaceUri = element.getNamespaceURI(prefix);

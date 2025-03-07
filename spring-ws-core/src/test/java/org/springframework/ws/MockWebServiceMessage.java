@@ -64,7 +64,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
-		content = new StringBuilder();
+		this.content = new StringBuilder();
 		transformer.transform(source, getPayloadResult());
 	}
 
@@ -84,7 +84,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 	}
 
 	public String getPayloadAsString() {
-		return content != null ? content.toString() : null;
+		return this.content != null ? this.content.toString() : null;
 	}
 
 	public void setPayload(InputStreamSource inputStreamSource) throws IOException {
@@ -93,7 +93,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 		try (InputStream is = inputStreamSource.getInputStream()) {
 			Reader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
-			content.replace(0, content.length(), FileCopyUtils.copyToString(reader));
+			this.content.replace(0, this.content.length(), FileCopyUtils.copyToString(reader));
 		}
 	}
 
@@ -105,8 +105,8 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 	private void checkContent() {
 
-		if (content == null) {
-			content = new StringBuilder();
+		if (this.content == null) {
+			this.content = new StringBuilder();
 		}
 	}
 
@@ -114,18 +114,18 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 	public Result getPayloadResult() {
 
 		checkContent();
-		content.setLength(0);
+		this.content.setLength(0);
 		return new StreamResult(new StringBufferWriter());
 	}
 
 	@Override
 	public Source getPayloadSource() {
-		return content != null ? new StringSource(content.toString()) : null;
+		return this.content != null ? new StringSource(this.content.toString()) : null;
 	}
 
 	@Override
 	public boolean hasFault() {
-		return fault;
+		return this.fault;
 	}
 
 	public void setFault(boolean fault) {
@@ -134,7 +134,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 	@Override
 	public QName getFaultCode() {
-		return faultCode;
+		return this.faultCode;
 	}
 
 	public void setFaultCode(QName faultCode) {
@@ -143,7 +143,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 	@Override
 	public String getFaultReason() {
-		return faultReason;
+		return this.faultReason;
 	}
 
 	public void setFaultReason(String faultReason) {
@@ -153,9 +153,9 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 	@Override
 	public void writeTo(OutputStream outputStream) {
 
-		if (content != null) {
+		if (this.content != null) {
 			PrintWriter writer = new PrintWriter(outputStream);
-			writer.write(content.toString());
+			writer.write(this.content.toString());
 		}
 	}
 
@@ -163,33 +163,33 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 
 		StringBuilder builder = new StringBuilder("MockWebServiceMessage {");
 
-		if (content != null) {
-			builder.append(content);
+		if (this.content != null) {
+			builder.append(this.content);
 		}
 
 		builder.append('}');
 		return builder.toString();
 	}
 
-	private class StringBufferWriter extends Writer {
+	private final class StringBufferWriter extends Writer {
 
 		private StringBufferWriter() {
-			super(content);
+			super(MockWebServiceMessage.this.content);
 		}
 
 		@Override
 		public void write(String str) {
-			content.append(str);
+			MockWebServiceMessage.this.content.append(str);
 		}
 
 		@Override
 		public void write(int c) {
-			content.append((char) c);
+			MockWebServiceMessage.this.content.append((char) c);
 		}
 
 		@Override
 		public void write(String str, int off, int len) {
-			content.append(str, off, off + len);
+			MockWebServiceMessage.this.content.append(str, off, off + len);
 		}
 
 		@Override
@@ -210,7 +210,7 @@ public class MockWebServiceMessage implements FaultAwareWebServiceMessage {
 				return;
 			}
 
-			content.append(cbuf, off, len);
+			MockWebServiceMessage.this.content.append(cbuf, off, len);
 		}
 
 	}

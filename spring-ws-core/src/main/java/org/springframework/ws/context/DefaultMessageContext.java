@@ -58,20 +58,20 @@ public class DefaultMessageContext extends AbstractMessageContext {
 
 	@Override
 	public WebServiceMessage getRequest() {
-		return request;
+		return this.request;
 	}
 
 	@Override
 	public boolean hasResponse() {
-		return response != null;
+		return this.response != null;
 	}
 
 	@Override
 	public WebServiceMessage getResponse() {
-		if (response == null) {
-			response = messageFactory.createWebServiceMessage();
+		if (this.response == null) {
+			this.response = this.messageFactory.createWebServiceMessage();
 		}
-		return response;
+		return this.response;
 	}
 
 	@Override
@@ -82,21 +82,21 @@ public class DefaultMessageContext extends AbstractMessageContext {
 
 	@Override
 	public void clearResponse() {
-		response = null;
+		this.response = null;
 	}
 
 	@Override
 	public void readResponse(InputStream inputStream) throws IOException {
 		checkForResponse();
-		response = messageFactory.createWebServiceMessage(inputStream);
+		this.response = this.messageFactory.createWebServiceMessage(inputStream);
 	}
 
 	public WebServiceMessageFactory getMessageFactory() {
-		return messageFactory;
+		return this.messageFactory;
 	}
 
 	private void checkForResponse() throws IllegalStateException {
-		if (response != null) {
+		if (this.response != null) {
 			throw new IllegalStateException("Response message already created");
 		}
 	}

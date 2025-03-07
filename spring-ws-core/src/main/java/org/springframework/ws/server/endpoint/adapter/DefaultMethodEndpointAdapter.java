@@ -80,7 +80,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 * Returns the list of {@code MethodArgumentResolver}s to use.
 	 */
 	public List<MethodArgumentResolver> getMethodArgumentResolvers() {
-		return methodArgumentResolvers;
+		return this.methodArgumentResolvers;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 * Returns the custom argument resolvers.
 	 */
 	public List<MethodArgumentResolver> getCustomMethodArgumentResolvers() {
-		return customMethodArgumentResolvers;
+		return this.customMethodArgumentResolvers;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 * Returns the list of {@code MethodReturnValueHandler}s to use.
 	 */
 	public List<MethodReturnValueHandler> getMethodReturnValueHandlers() {
-		return methodReturnValueHandlers;
+		return this.methodReturnValueHandlers;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 * Returns the custom return value handlers.
 	 */
 	public List<MethodReturnValueHandler> getCustomMethodReturnValueHandlers() {
-		return customMethodReturnValueHandlers;
+		return this.customMethodReturnValueHandlers;
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	private ClassLoader getClassLoader() {
-		return this.classLoader != null ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
+		return (this.classLoader != null) ? this.classLoader : DefaultMethodEndpointAdapter.class.getClassLoader();
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	private void initMethodArgumentResolvers() {
-		if (CollectionUtils.isEmpty(methodArgumentResolvers)) {
+		if (CollectionUtils.isEmpty(this.methodArgumentResolvers)) {
 			List<MethodArgumentResolver> methodArgumentResolvers = new ArrayList<>();
 			methodArgumentResolvers.add(new DomPayloadMethodProcessor());
 			methodArgumentResolvers.add(new MessageContextMethodArgumentResolver());
@@ -181,8 +181,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 			if (isPresent(XOM_CLASS_NAME)) {
 				methodArgumentResolvers.add(new XomPayloadMethodProcessor());
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
 			}
 			if (getCustomMethodArgumentResolvers() != null) {
 				methodArgumentResolvers.addAll(getCustomMethodArgumentResolvers());
@@ -202,13 +202,13 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 				.forName(className, getClassLoader());
 			methodArgumentResolvers.add(BeanUtils.instantiateClass(methodArgumentResolverClass));
 		}
-		catch (ClassNotFoundException e) {
-			logger.warn("Could not find \"" + className + "\" on the classpath");
+		catch (ClassNotFoundException ex) {
+			this.logger.warn("Could not find \"" + className + "\" on the classpath");
 		}
 	}
 
 	private void initMethodReturnValueHandlers() {
-		if (CollectionUtils.isEmpty(methodReturnValueHandlers)) {
+		if (CollectionUtils.isEmpty(this.methodReturnValueHandlers)) {
 			List<MethodReturnValueHandler> methodReturnValueHandlers = new ArrayList<>();
 			methodReturnValueHandlers.add(new DomPayloadMethodProcessor());
 			methodReturnValueHandlers.add(new SourcePayloadMethodProcessor());
@@ -225,8 +225,8 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 			if (isPresent(XOM_CLASS_NAME)) {
 				methodReturnValueHandlers.add(new XomPayloadMethodProcessor());
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("No MethodReturnValueHandlers set, using defaults: " + methodReturnValueHandlers);
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("No MethodReturnValueHandlers set, using defaults: " + methodReturnValueHandlers);
 			}
 			if (getCustomMethodReturnValueHandlers() != null) {
 				methodReturnValueHandlers.addAll(getCustomMethodReturnValueHandlers());
@@ -248,9 +248,9 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	private boolean supportsParameters(MethodParameter[] methodParameters) {
 		for (MethodParameter methodParameter : methodParameters) {
 			boolean supported = false;
-			for (MethodArgumentResolver methodArgumentResolver : methodArgumentResolvers) {
-				if (logger.isTraceEnabled()) {
-					logger.trace("Testing if argument resolver [" + methodArgumentResolver + "] supports ["
+			for (MethodArgumentResolver methodArgumentResolver : this.methodArgumentResolvers) {
+				if (this.logger.isTraceEnabled()) {
+					this.logger.trace("Testing if argument resolver [" + methodArgumentResolver + "] supports ["
 							+ methodParameter.getGenericParameterType() + "]");
 				}
 				if (methodArgumentResolver.supportsParameter(methodParameter)) {
@@ -269,7 +269,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 		if (Void.TYPE.equals(methodReturnType.getParameterType())) {
 			return true;
 		}
-		for (MethodReturnValueHandler methodReturnValueHandler : methodReturnValueHandlers) {
+		for (MethodReturnValueHandler methodReturnValueHandler : this.methodReturnValueHandlers) {
 			if (methodReturnValueHandler.supportsReturnType(methodReturnType)) {
 				return true;
 			}
@@ -281,14 +281,14 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	protected final void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
 		Object[] args = getMethodArguments(messageContext, methodEndpoint);
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("Invoking [" + methodEndpoint + "] with arguments " + Arrays.asList(args));
+		if (this.logger.isTraceEnabled()) {
+			this.logger.trace("Invoking [" + methodEndpoint + "] with arguments " + Arrays.asList(args));
 		}
 
 		Object returnValue = methodEndpoint.invoke(args);
 
-		if (logger.isTraceEnabled()) {
-			logger.trace("Method [" + methodEndpoint + "] returned [" + returnValue + "]");
+		if (this.logger.isTraceEnabled()) {
+			this.logger.trace("Method [" + methodEndpoint + "] returned [" + returnValue + "]");
 		}
 
 		Class<?> returnType = methodEndpoint.getMethod().getReturnType();
@@ -313,7 +313,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 		MethodParameter[] parameters = methodEndpoint.getMethodParameters();
 		Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
-			for (MethodArgumentResolver methodArgumentResolver : methodArgumentResolvers) {
+			for (MethodArgumentResolver methodArgumentResolver : this.methodArgumentResolvers) {
 				if (methodArgumentResolver.supportsParameter(parameters[i])) {
 					args[i] = methodArgumentResolver.resolveArgument(messageContext, parameters[i]);
 					break;
@@ -337,7 +337,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	protected void handleMethodReturnValue(MessageContext messageContext, Object returnValue,
 			MethodEndpoint methodEndpoint) throws Exception {
 		MethodParameter returnType = methodEndpoint.getReturnType();
-		for (MethodReturnValueHandler methodReturnValueHandler : methodReturnValueHandlers) {
+		for (MethodReturnValueHandler methodReturnValueHandler : this.methodReturnValueHandlers) {
 			if (methodReturnValueHandler.supportsReturnType(returnType)) {
 				methodReturnValueHandler.handleReturnValue(messageContext, returnType, returnValue);
 				return;

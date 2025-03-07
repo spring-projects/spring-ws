@@ -71,13 +71,13 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		SoapMessage request = (SoapMessage) messageContext.getRequest();
-		MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
-		if (!version.hasRequiredProperties(requestMap)) {
-			version.addMessageAddressingHeaderRequiredFault((SoapMessage) messageContext.getResponse());
+		MessageAddressingProperties requestMap = this.version.getMessageAddressingProperties(request);
+		if (!this.version.hasRequiredProperties(requestMap)) {
+			this.version.addMessageAddressingHeaderRequiredFault((SoapMessage) messageContext.getResponse());
 			return false;
 		}
-		if (messageIdStrategy.isDuplicate(requestMap.getMessageId())) {
-			version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
+		if (this.messageIdStrategy.isDuplicate(requestMap.getMessageId())) {
+			this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
 			return false;
 		}
 		return true;
@@ -96,17 +96,17 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	private boolean handleResponseOrFault(MessageContext messageContext, boolean isFault) throws Exception {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-		MessageAddressingProperties requestMap = version
+		MessageAddressingProperties requestMap = this.version
 			.getMessageAddressingProperties((SoapMessage) messageContext.getRequest());
-		EndpointReference replyEpr = !isFault ? requestMap.getReplyTo() : requestMap.getFaultTo();
+		EndpointReference replyEpr = (!isFault) ? requestMap.getReplyTo() : requestMap.getFaultTo();
 		if (handleNoneAddress(messageContext, replyEpr)) {
 			return false;
 		}
 		SoapMessage reply = (SoapMessage) messageContext.getResponse();
 		URI replyMessageId = getMessageId(reply);
-		URI action = isFault ? faultAction : replyAction;
+		URI action = (isFault) ? this.faultAction : this.replyAction;
 		MessageAddressingProperties replyMap = requestMap.getReplyProperties(replyEpr, action, replyMessageId);
-		version.addAddressingHeaders(reply, replyMap);
+		this.version.addAddressingHeaders(reply, replyMap);
 		if (handleAnonymousAddress(messageContext, replyEpr)) {
 			return true;
 		}
@@ -117,7 +117,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	}
 
 	private boolean handleNoneAddress(MessageContext messageContext, EndpointReference replyEpr) {
-		if (replyEpr == null || version.hasNoneAddress(replyEpr)) {
+		if (replyEpr == null || this.version.hasNoneAddress(replyEpr)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
 						+ "] reply address; reply [" + messageContext.getResponse() + "] discarded");
@@ -129,7 +129,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	}
 
 	private boolean handleAnonymousAddress(MessageContext messageContext, EndpointReference replyEpr) {
-		if (version.hasAnonymousAddress(replyEpr)) {
+		if (this.version.hasAnonymousAddress(replyEpr)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
 						+ "] reply address; sending in-band reply [" + messageContext.getResponse() + "]");
@@ -146,7 +146,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		}
 
 		boolean supported = false;
-		for (WebServiceMessageSender messageSender : messageSenders) {
+		for (WebServiceMessageSender messageSender : this.messageSenders) {
 			if (messageSender.supports(replyEpr.getAddress())) {
 				supported = true;
 				try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())) {
@@ -165,7 +165,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	}
 
 	private URI getMessageId(SoapMessage response) {
-		URI responseMessageId = messageIdStrategy.newMessageId(response);
+		URI responseMessageId = this.messageIdStrategy.newMessageId(response);
 		if (logger.isTraceEnabled()) {
 			logger.trace("Generated reply MessageID [" + responseMessageId + "] for [" + response + "]");
 		}
@@ -178,7 +178,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
 	@Override
 	public boolean understands(SoapHeaderElement header) {
-		return version.understands(header);
+		return this.version.understands(header);
 	}
 
 }

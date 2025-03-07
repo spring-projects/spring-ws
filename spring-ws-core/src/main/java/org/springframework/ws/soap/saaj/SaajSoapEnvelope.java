@@ -48,7 +48,7 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 
 	@Override
 	public SoapBody getBody() {
-		if (body == null) {
+		if (this.body == null) {
 			try {
 				SOAPBody saajBody = getSaajEnvelope().getBody();
 				if (saajBody == null) {
@@ -57,43 +57,43 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 				if (saajBody.getElementQName()
 					.getNamespaceURI()
 					.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-					body = new SaajSoap11Body(saajBody, langAttributeOnSoap11FaultString);
+					this.body = new SaajSoap11Body(saajBody, this.langAttributeOnSoap11FaultString);
 				}
 				else {
-					body = new SaajSoap12Body(saajBody);
+					this.body = new SaajSoap12Body(saajBody);
 				}
 			}
 			catch (SOAPException ex) {
 				throw new SaajSoapBodyException(ex);
 			}
 		}
-		return body;
+		return this.body;
 	}
 
 	@Override
 	public SoapHeader getHeader() {
-		if (header == null) {
+		if (this.header == null) {
 			try {
 				SOAPHeader saajHeader = getSaajEnvelope().getHeader();
 				if (saajHeader != null) {
 					if (saajHeader.getElementQName()
 						.getNamespaceURI()
 						.equals(SoapVersion.SOAP_11.getEnvelopeNamespaceUri())) {
-						header = new SaajSoap11Header(saajHeader);
+						this.header = new SaajSoap11Header(saajHeader);
 					}
 					else {
-						header = new SaajSoap12Header(saajHeader);
+						this.header = new SaajSoap12Header(saajHeader);
 					}
 				}
 				else {
-					header = null;
+					this.header = null;
 				}
 			}
 			catch (SOAPException ex) {
 				throw new SaajSoapHeaderException(ex);
 			}
 		}
-		return header;
+		return this.header;
 	}
 
 	protected SOAPEnvelope getSaajEnvelope() {

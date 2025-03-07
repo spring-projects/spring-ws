@@ -119,7 +119,7 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-			resp.sendError(sc);
+			resp.sendError(this.sc);
 		}
 
 	}
@@ -136,18 +136,18 @@ public class DomPoxWebServiceTemplateIntegrationTest {
 		public void init(ServletConfig servletConfig) throws ServletException {
 
 			super.init(servletConfig);
-			documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
-			documentBuilderFactory.setNamespaceAware(true);
-			transformerFactory = TransformerFactoryUtils.newInstance();
+			this.documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
+			this.documentBuilderFactory.setNamespaceAware(true);
+			this.transformerFactory = TransformerFactoryUtils.newInstance();
 		}
 
 		@Override
 		public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
 			try {
-				DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+				DocumentBuilder documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
 				Document message = documentBuilder.parse(req.getInputStream());
-				Transformer transformer = transformerFactory.newTransformer();
+				Transformer transformer = this.transformerFactory.newTransformer();
 				transformer.transform(new DOMSource(message), new StreamResult(resp.getOutputStream()));
 			}
 			catch (Exception ex) {

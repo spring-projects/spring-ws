@@ -59,8 +59,8 @@ import org.springframework.xml.transform.TraxUtils;
  * elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
- * @see Element
  * @since 1.0.0
+ * @see Element
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
@@ -81,7 +81,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			requestElement = sourceCallback.element;
 		}
 		Element responseElement = invokeInternal(requestElement);
-		return responseElement != null ? convertResponse(responseElement) : null;
+		return (responseElement != null) ? convertResponse(responseElement) : null;
 	}
 
 	private Source convertResponse(Element responseElement) throws IOException {
@@ -116,18 +116,18 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	 */
 	protected abstract Element invokeInternal(Element requestElement) throws Exception;
 
-	private static class XomSourceCallback implements TraxUtils.SourceCallback {
+	private static final class XomSourceCallback implements TraxUtils.SourceCallback {
 
 		private Element element;
 
 		@Override
 		public void domSource(Node node) {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				element = DOMConverter.convert((org.w3c.dom.Element) node);
+				this.element = DOMConverter.convert((org.w3c.dom.Element) node);
 			}
 			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = DOMConverter.convert((org.w3c.dom.Document) node);
-				element = document.getRootElement();
+				this.element = document.getRootElement();
 			}
 			else {
 				throw new IllegalArgumentException("DOMSource contains neither Document nor Element");
@@ -149,10 +149,10 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 					throw new IllegalArgumentException(
 							"InputSource in SAXSource contains neither byte stream nor character stream");
 				}
-				element = document.getRootElement();
+				this.element = document.getRootElement();
 			}
-			catch (ParsingException e) {
-				throw new XomParsingException(e);
+			catch (ParsingException ex) {
+				throw new XomParsingException(ex);
 			}
 		}
 
@@ -164,7 +164,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 		@Override
 		public void staxSource(XMLStreamReader streamReader) throws XMLStreamException {
 			Document document = StaxStreamConverter.convert(streamReader);
-			element = document.getRootElement();
+			this.element = document.getRootElement();
 		}
 
 		@Override
@@ -172,7 +172,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			try {
 				Builder builder = new Builder();
 				Document document = builder.build(inputStream);
-				element = document.getRootElement();
+				this.element = document.getRootElement();
 			}
 			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
@@ -184,7 +184,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			try {
 				Builder builder = new Builder();
 				Document document = builder.build(reader);
-				element = document.getRootElement();
+				this.element = document.getRootElement();
 			}
 			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
@@ -196,7 +196,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 			try {
 				Builder builder = new Builder();
 				Document document = builder.build(systemId);
-				element = document.getRootElement();
+				this.element = document.getRootElement();
 			}
 			catch (ParsingException ex) {
 				throw new XomParsingException(ex);
@@ -206,7 +206,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 	}
 
 	@SuppressWarnings("serial")
-	private static class XomParsingException extends NestedRuntimeException {
+	private static final class XomParsingException extends NestedRuntimeException {
 
 		private XomParsingException(ParsingException ex) {
 			super(ex.getMessage(), ex);
@@ -214,7 +214,7 @@ public abstract class AbstractXomPayloadEndpoint extends TransformerObjectSuppor
 
 	}
 
-	private static class StaxStreamConverter {
+	private static final class StaxStreamConverter {
 
 		private static Document convert(XMLStreamReader streamReader) throws XMLStreamException {
 			NodeFactory nodeFactory = new NodeFactory();

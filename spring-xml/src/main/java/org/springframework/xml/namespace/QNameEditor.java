@@ -37,10 +37,10 @@ import org.springframework.util.StringUtils;
  * allows for prefixes to be specified as well.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see javax.xml.namespace.QName
  * @see javax.xml.namespace.QName#toString()
  * @see javax.xml.namespace.QName#valueOf(String)
- * @since 1.0.0
  */
 public class QNameEditor extends PropertyEditorSupport {
 

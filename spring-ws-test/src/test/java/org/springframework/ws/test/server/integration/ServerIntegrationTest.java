@@ -46,7 +46,7 @@ public class ServerIntegrationTest {
 
 	@BeforeEach
 	public void createClient() {
-		mockClient = MockWebServiceClient.createClient(applicationContext);
+		this.mockClient = MockWebServiceClient.createClient(this.applicationContext);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class ServerIntegrationTest {
 				"<customerCountResponse xmlns='http://springframework.org/spring-ws'>"
 						+ "<customerCount>42</customerCount>" + "</customerCountResponse>");
 
-		mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
+		this.mockClient.sendRequest(withPayload(requestPayload)).andExpect(payload(expectedResponsePayload));
 	}
 
 }

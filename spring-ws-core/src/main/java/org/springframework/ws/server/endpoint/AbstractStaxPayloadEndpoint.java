@@ -27,9 +27,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@code XMLOutputFactory}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see XMLInputFactory
  * @see XMLOutputFactory
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
@@ -42,18 +42,18 @@ public abstract class AbstractStaxPayloadEndpoint extends TransformerObjectSuppo
 
 	/** Returns an {@code XMLInputFactory} to read XML from. */
 	protected final XMLInputFactory getInputFactory() {
-		if (inputFactory == null) {
-			inputFactory = createXmlInputFactory();
+		if (this.inputFactory == null) {
+			this.inputFactory = createXmlInputFactory();
 		}
-		return inputFactory;
+		return this.inputFactory;
 	}
 
 	/** Returns an {@code XMLOutputFactory} to write XML to. */
 	protected final XMLOutputFactory getOutputFactory() {
-		if (outputFactory == null) {
-			outputFactory = createXmlOutputFactory();
+		if (this.outputFactory == null) {
+			this.outputFactory = createXmlOutputFactory();
 		}
-		return outputFactory;
+		return this.outputFactory;
 	}
 
 	/**

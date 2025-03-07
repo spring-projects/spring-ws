@@ -39,11 +39,11 @@ public class DefaultTransportContext implements TransportContext {
 
 	@Override
 	public WebServiceConnection getConnection() {
-		return connection;
+		return this.connection;
 	}
 
 	public String toString() {
-		return connection.toString();
+		return this.connection.toString();
 	}
 
 }

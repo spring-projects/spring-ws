@@ -142,13 +142,19 @@ import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincip
  * @author Jamin Hitchcock
  * @author Rob Leland
  * @author Lars Uffmann
- * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  * @since 2.3.0
+ * @see <a href="http://ws.apache.org/wss4j/">Apache WSS4J 2.0</a>
  */
 public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor implements InitializingBean {
 
+	/**
+	 * Property name for securement user.
+	 */
 	public static final String SECUREMENT_USER_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementUser";
 
+	/**
+	 * Property name for securement password.
+	 */
 	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
 	private String securementActions;
@@ -227,11 +233,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * standard values.
 	 */
 	public void setSecurementActor(String securementActor) {
-		handler.setOption(WSHandlerConstants.ACTOR, securementActor);
+		this.handler.setOption(WSHandlerConstants.ACTOR, securementActor);
 	}
 
 	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
-		handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
+		this.handler.setSecurementEncryptionCrypto(securementEncryptionCrypto);
 	}
 
 	/**
@@ -243,7 +249,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * only.
 	 */
 	public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
-		handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
+		this.handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
 	}
 
 	/**
@@ -252,7 +258,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * {@link WSConstants#KEYTRANSPORT_RSAOAEP}.
 	 */
 	public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
-		handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
+		this.handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
 	}
 
 	/**
@@ -291,7 +297,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * by default.
 	 */
 	public void setSecurementEncryptionParts(String securementEncryptionParts) {
-		handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
+		this.handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
 	}
 
 	/**
@@ -325,7 +331,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * a security risk, because the public key of that certificate is used only.
 	 */
 	public void setSecurementEncryptionUser(String securementEncryptionUser) {
-		handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
+		this.handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
 	}
 
 	public void setSecurementPassword(String securementPassword) {
@@ -341,7 +347,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * The default setting is PW_DIGEST.
 	 */
 	public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
-		handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
+		this.handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
 	}
 
 	/**
@@ -350,18 +356,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @see WSConstants#DSA
 	 */
 	public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
-		handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
+		this.handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
 	}
 
 	/**
 	 * Defines which signature digest algorithm to use.
 	 */
 	public void setSecurementSignatureDigestAlgorithm(String digestAlgorithm) {
-		handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
+		this.handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
 	}
 
 	public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
-		handler.setSecurementSignatureCrypto(securementSignatureCrypto);
+		this.handler.setSecurementSignatureCrypto(securementSignatureCrypto);
 	}
 
 	/**
@@ -371,7 +377,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * {@code IssuerSerial} and {@code DirectReference} are valid only.
 	 */
 	public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
-		handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
+		this.handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
 	}
 
 	/**
@@ -401,7 +407,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * the SOAP namespace identifier can be empty ({@code {}}).
 	 */
 	public void setSecurementSignatureParts(String securementSignatureParts) {
-		handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
+		this.handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
 	}
 
 	/**
@@ -414,18 +420,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * specified by {@link #setSecurementUsername(String)}.
 	 */
 	public void setSecurementSignatureUser(String securementSignatureUser) {
-		handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
+		this.handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
 	}
 
 	/**
 	 * Sets the username for securement username token or/and the alias of the private key
-	 * for securement signature
+	 * for securement signature.
 	 */
 	public void setSecurementUsername(String securementUsername) {
 		this.securementUsername = securementUsername;
 	}
 
-	/** Sets the time to live on the outgoing message */
+	/**
+	 * Sets the time to live on the outgoing message.
+	 */
 	public void setSecurementTimeToLive(int securementTimeToLive) {
 
 		if (securementTimeToLive <= 0) {
@@ -450,7 +458,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.samlCallbackHandler = samlCallbackHandler;
 	}
 
-	/** Sets the server-side time to live */
+	/**
+	 * Sets the server-side time to live.
+	 */
 	public void setValidationTimeToLive(int validationTimeToLive) {
 
 		if (validationTimeToLive <= 0) {
@@ -464,7 +474,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		this.validationActions = actions;
 		try {
-			validationActionsVector = WSSecurityUtil.decodeAction(actions);
+			this.validationActionsVector = WSSecurityUtil.decodeAction(actions);
 		}
 		catch (WSSecurityException ex) {
 			throw new IllegalArgumentException(ex);
@@ -491,12 +501,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.validationCallbackHandler = new CallbackHandlerChain(callbackHandler);
 	}
 
-	/** Sets the Crypto to use to decrypt incoming messages */
+	/**
+	 * Sets the Crypto to use to decrypt incoming messages.
+	 */
 	public void setValidationDecryptionCrypto(Crypto decryptionCrypto) {
 		this.validationDecryptionCrypto = decryptionCrypto;
 	}
 
-	/** Sets the Crypto to use to verify the signature of incoming messages */
+	/**
+	 * Sets the Crypto to use to verify the signature of incoming messages.
+	 */
 	public void setValidationSignatureCrypto(Crypto signatureCrypto) {
 		this.validationSignatureCrypto = signatureCrypto;
 	}
@@ -507,17 +521,19 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
 
-		handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
+		this.handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
 		this.enableSignatureConfirmation = enableSignatureConfirmation;
 	}
 
-	/** Sets if the generated timestamp header's precision is in milliseconds. */
+	/**
+	 * Sets if the generated timestamp header's precision is in milliseconds.
+	 */
 	public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
-		handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
+		this.handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
 	}
 
 	/**
-	 * Sets whether timestamp verification is done with the server-side time to live
+	 * Sets whether timestamp verification is done with the server-side time to live.
 	 */
 	public void setTimestampStrict(boolean timestampStrict) {
 		this.timestampStrict = timestampStrict;
@@ -528,7 +544,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * messages. Default is {@code true}.
 	 */
 	public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
-		handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
+		this.handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
 	}
 
 	/**
@@ -536,7 +552,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenNonce(boolean securementUsernameTokenNonce) {
-		handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_NONCE, securementUsernameTokenNonce);
+		this.handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_NONCE, securementUsernameTokenNonce);
 	}
 
 	/**
@@ -544,7 +560,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenCreated(boolean securementUsernameTokenCreated) {
-		handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_CREATED, securementUsernameTokenCreated);
+		this.handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_CREATED, securementUsernameTokenCreated);
 	}
 
 	/**
@@ -557,8 +573,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setWssConfig(WSSConfig config) {
 
-		securityEngine.setWssConfig(config);
-		wssConfig = config;
+		this.securityEngine.setWssConfig(config);
+		this.wssConfig = config;
 	}
 
 	/**
@@ -608,7 +624,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	public boolean getRemoveSecurityHeader() {
-		return removeSecurityHeader;
+		return this.removeSecurityHeader;
 	}
 
 	public void setRemoveSecurityHeader(boolean removeSecurityHeader) {
@@ -618,15 +634,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@Override
 	public void afterPropertiesSet() throws Exception {
 
-		Assert.isTrue(validationActions != null || securementActions != null,
+		Assert.isTrue(this.validationActions != null || this.securementActions != null,
 				"validationActions or securementActions are required");
-		if (validationActions != null) {
-			if (validationActionsVector.contains(WSConstants.UT)) {
-				Assert.notNull(validationCallbackHandler, "validationCallbackHandler is required");
+		if (this.validationActions != null) {
+			if (this.validationActionsVector.contains(WSConstants.UT)) {
+				Assert.notNull(this.validationCallbackHandler, "validationCallbackHandler is required");
 			}
 
-			if (validationActionsVector.contains(WSConstants.SIGN)) {
-				Assert.notNull(validationSignatureCrypto, "validationSignatureCrypto is required");
+			if (this.validationActionsVector.contains(WSConstants.SIGN)) {
+				Assert.notNull(this.validationSignatureCrypto, "validationSignatureCrypto is required");
 			}
 		}
 		// securement actions are not to be validated at start up as they could
@@ -639,23 +655,23 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		List<HandlerAction> securementActionsVector;
 		try {
-			securementActionsVector = WSSecurityUtil.decodeHandlerAction(securementActions, wssConfig);
+			securementActionsVector = WSSecurityUtil.decodeHandlerAction(this.securementActions, this.wssConfig);
 		}
 		catch (WSSecurityException ex) {
 			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
 		}
 
-		if (securementActionsVector.isEmpty() && !enableSignatureConfirmation) {
+		if (securementActionsVector.isEmpty() && !this.enableSignatureConfirmation) {
 			return;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Securing message [" + soapMessage + "] with actions [" + securementActions + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Securing message [" + soapMessage + "] with actions [" + this.securementActions + "]");
 		}
 		RequestData requestData = initializeRequestData(messageContext);
 
 		Document envelopeAsDocument = soapMessage.getDocument();
 		try {
-			handler.doSenderAction(envelopeAsDocument, requestData, securementActionsVector, false);
+			this.handler.doSenderAction(envelopeAsDocument, requestData, securementActionsVector, false);
 		}
 		catch (WSSecurityException ex) {
 			throw new Wss4jSecuritySecurementException(ex.getMessage(), ex);
@@ -680,16 +696,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			requestData.setUsername(contextUsername);
 		}
 		else {
-			requestData.setUsername(securementUsername);
+			requestData.setUsername(this.securementUsername);
 		}
 
-		requestData.setTimeStampTTL(securementTimeToLive);
+		requestData.setTimeStampTTL(this.securementTimeToLive);
 
-		requestData.setUseDerivedKeyForMAC(securementUseDerivedKey);
+		requestData.setUseDerivedKeyForMAC(this.securementUseDerivedKey);
 
-		requestData.setWssConfig(wssConfig);
+		requestData.setWssConfig(this.wssConfig);
 
-		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(securementTimeToLive));
+		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(this.securementTimeToLive));
 
 		if (this.samlCallbackHandler != null) {
 			messageContext.setProperty(WSHandlerConstants.SAML_CALLBACK_REF, this.samlCallbackHandler);
@@ -711,29 +727,29 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		RequestData requestData = new RequestData();
 		requestData.setMsgContext(messageContext);
 
-		requestData.setWssConfig(wssConfig);
+		requestData.setWssConfig(this.wssConfig);
 
-		requestData.setDecCrypto(validationDecryptionCrypto);
+		requestData.setDecCrypto(this.validationDecryptionCrypto);
 
-		requestData.setSigVerCrypto(validationSignatureCrypto);
+		requestData.setSigVerCrypto(this.validationSignatureCrypto);
 
-		requestData.setCallbackHandler(validationCallbackHandler);
+		requestData.setCallbackHandler(this.validationCallbackHandler);
 
-		messageContext.setProperty(WSHandlerConstants.TIMESTAMP_STRICT, timestampStrict);
-		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(validationTimeToLive));
-		messageContext.setProperty(WSHandlerConstants.TTL_FUTURE_TIMESTAMP, Integer.toString(futureTimeToLive));
+		messageContext.setProperty(WSHandlerConstants.TIMESTAMP_STRICT, this.timestampStrict);
+		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(this.validationTimeToLive));
+		messageContext.setProperty(WSHandlerConstants.TTL_FUTURE_TIMESTAMP, Integer.toString(this.futureTimeToLive));
 
-		requestData.setTimeStampStrict(timestampStrict);
-		requestData.setTimeStampTTL(validationTimeToLive);
-		requestData.setTimeStampFutureTTL(futureTimeToLive);
+		requestData.setTimeStampStrict(this.timestampStrict);
+		requestData.setTimeStampTTL(this.validationTimeToLive);
+		requestData.setTimeStampFutureTTL(this.futureTimeToLive);
 
-		requestData.setAllowRSA15KeyTransportAlgorithm(allowRSA15KeyTransportAlgorithm);
+		requestData.setAllowRSA15KeyTransportAlgorithm(this.allowRSA15KeyTransportAlgorithm);
 
-		requestData.setDisableBSPEnforcement(!bspCompliant);
+		requestData.setDisableBSPEnforcement(!this.bspCompliant);
 		if (requestData.getBSPEnforcer() != null) {
-			requestData.getBSPEnforcer().setDisableBSPRules(!bspCompliant);
+			requestData.getBSPEnforcer().setDisableBSPRules(!this.bspCompliant);
 		}
-		requestData.setAddInclusivePrefixes(addInclusivePrefixes);
+		requestData.setAddInclusivePrefixes(this.addInclusivePrefixes);
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
@@ -744,11 +760,11 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
 			throws WsSecurityValidationException {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Validating message [" + soapMessage + "] with actions [" + validationActions + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Validating message [" + soapMessage + "] with actions [" + this.validationActions + "]");
 		}
 
-		if (CollectionUtils.isEmpty(validationActionsVector)) {
+		if (CollectionUtils.isEmpty(this.validationActionsVector)) {
 			return;
 		}
 
@@ -759,20 +775,20 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		try {
 			RequestData validationData = initializeValidationRequestData(messageContext);
 
-			String actor = validationActor;
+			String actor = this.validationActor;
 			if (actor == null) {
 				actor = "";
 			}
 
 			Element elem = WSSecurityUtil.getSecurityHeader(envelopeAsDocument, actor);
-			WSHandlerResult result = securityEngine.processSecurityHeader(elem, validationData);
+			WSHandlerResult result = this.securityEngine.processSecurityHeader(elem, validationData);
 
 			// Results verification
 			if (CollectionUtils.isEmpty(result.getResults())) {
 				throw new Wss4jSecurityValidationException("No WS-Security header found");
 			}
 
-			checkResults(result.getResults(), validationActionsVector);
+			checkResults(result.getResults(), this.validationActionsVector);
 
 			// puts the results in the context
 			// useful for Signature Confirmation
@@ -805,7 +821,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
 			throws Wss4jSecurityValidationException {
 
-		if (!handler.checkReceiverResultsAnyOrder(results, validationActions)) {
+		if (!this.handler.checkReceiverResultsAnyOrder(results, validationActions)) {
 			throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
 		}
 	}
@@ -817,13 +833,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@SuppressWarnings("unchecked")
 	private void updateContextWithResults(MessageContext messageContext, List<WSSecurityEngineResult> results) {
 
-		List<WSHandlerResult> handlerResults;
-		if ((handlerResults = (List<WSHandlerResult>) messageContext
-			.getProperty(WSHandlerConstants.RECV_RESULTS)) == null) {
+		List<WSHandlerResult> handlerResults = (List<WSHandlerResult>) messageContext
+			.getProperty(WSHandlerConstants.RECV_RESULTS);
+		if (handlerResults == null) {
 			handlerResults = new ArrayList<>();
 			messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 		}
-		WSHandlerResult rResult = new WSHandlerResult(validationActor, results, Collections.emptyMap());
+		WSHandlerResult rResult = new WSHandlerResult(this.validationActor, results, Collections.emptyMap());
 		handlerResults.add(0, rResult);
 		messageContext.setProperty(WSHandlerConstants.RECV_RESULTS, handlerResults);
 	}
@@ -844,8 +860,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			credential.setCertificates(new X509Certificate[] { returnCert });
 
 			RequestData requestData = new RequestData();
-			requestData.setSigVerCrypto(validationSignatureCrypto);
-			requestData.setEnableRevocation(enableRevocation);
+			requestData.setSigVerCrypto(this.validationSignatureCrypto);
+			requestData.setEnableRevocation(this.enableRevocation);
 
 			SignatureTrustValidator validator = new SignatureTrustValidator();
 			validator.validate(credential, requestData);
@@ -863,15 +879,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		if (!CollectionUtils.isEmpty(results)) {
 			WSSecurityEngineResult actionResult = results.get(0);
 			Timestamp timestamp = (Timestamp) actionResult.get(WSSecurityEngineResult.TAG_TIMESTAMP);
-			if (timestamp != null && timestampStrict) {
+			if (timestamp != null && this.timestampStrict) {
 				Credential credential = new Credential();
 				credential.setTimestamp(timestamp);
 
 				RequestData requestData = new RequestData();
 				requestData.setWssConfig(WSSConfig.getNewInstance());
-				requestData.setTimeStampTTL(validationTimeToLive);
-				requestData.setTimeStampStrict(timestampStrict);
-				requestData.setTimeStampFutureTTL(futureTimeToLive);
+				requestData.setTimeStampTTL(this.validationTimeToLive);
+				requestData.setTimeStampStrict(this.timestampStrict);
+				requestData.setTimeStampFutureTTL(this.futureTimeToLive);
 
 				TimestampValidator validator = new TimestampValidator();
 				validator.validate(credential, requestData);
@@ -889,10 +905,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			if (principal instanceof WSUsernameTokenPrincipalImpl usernameTokenPrincipal) {
 				UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
 				try {
-					validationCallbackHandler.handle(new Callback[] { callback });
+					this.validationCallbackHandler.handle(new Callback[] { callback });
 				}
 				catch (IOException ex) {
-					logger.warn("Principal callback resulted in IOException", ex);
+					this.logger.warn("Principal callback resulted in IOException", ex);
 				}
 				catch (UnsupportedCallbackException ex) {
 					// ignore
@@ -904,13 +920,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	@Override
 	protected void cleanUp() {
 
-		if (validationCallbackHandler != null) {
+		if (this.validationCallbackHandler != null) {
 			try {
 				CleanupCallback cleanupCallback = new CleanupCallback();
-				validationCallbackHandler.handle(new Callback[] { cleanupCallback });
+				this.validationCallbackHandler.handle(new Callback[] { cleanupCallback });
 			}
 			catch (IOException ex) {
-				logger.warn("Cleanup callback resulted in IOException", ex);
+				this.logger.warn("Cleanup callback resulted in IOException", ex);
 			}
 			catch (UnsupportedCallbackException ex) {
 				// ignore

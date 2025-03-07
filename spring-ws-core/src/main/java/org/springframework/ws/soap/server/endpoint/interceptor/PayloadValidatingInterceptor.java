@@ -34,11 +34,11 @@ import org.springframework.ws.WebServiceMessage;
  * properties. Responses that contains faults are not validated.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setSchema(org.springframework.core.io.Resource)
  * @see #setSchemas(org.springframework.core.io.Resource[])
  * @see #setValidateRequest(boolean)
  * @see #setValidateResponse(boolean)
- * @since 1.0.0
  */
 public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatingInterceptor {
 

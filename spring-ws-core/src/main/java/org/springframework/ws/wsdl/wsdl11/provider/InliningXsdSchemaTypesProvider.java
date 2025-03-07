@@ -71,7 +71,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 
 	/** Returns the XSD schema collection to inline. */
 	public XsdSchemaCollection getSchemaCollection() {
-		return schemaCollection;
+		return this.schemaCollection;
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 	public void addTypes(Definition definition) throws WSDLException {
 		Assert.notNull(getSchemaCollection(), "setting 'schema' or 'schemaCollection' is required");
 		Types types = definition.createTypes();
-		XsdSchema[] schemas = schemaCollection.getXsdSchemas();
+		XsdSchema[] schemas = this.schemaCollection.getXsdSchemas();
 		for (int i = 0; i < schemas.length; i++) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Inlining " + schemas[i]);
@@ -114,7 +114,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 			Document schemaDocument = (Document) result.getNode();
 			return schemaDocument.getDocumentElement();
 		}
-		catch (TransformerException e) {
+		catch (TransformerException ex) {
 			throw new WsdlDefinitionException("Could not transform schema source to Document");
 		}
 	}

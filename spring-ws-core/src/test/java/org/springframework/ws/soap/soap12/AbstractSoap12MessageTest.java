@@ -47,7 +47,7 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 
 	@Override
 	public void testGetVersion() {
-		assertThat(soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
+		assertThat(this.soapMessage.getVersion()).isEqualTo(SoapVersion.SOAP_12);
 	}
 
 	@Override
@@ -60,15 +60,15 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 	@Override
 	public void testWriteToTransportOutputStream() throws Exception {
 
-		SoapBody body = soapMessage.getSoapBody();
+		SoapBody body = this.soapMessage.getSoapBody();
 		String payload = "<payload xmlns='http://www.springframework.org' />";
-		transformer.transform(new StringSource(payload), body.getPayloadResult());
+		this.transformer.transform(new StringSource(payload), body.getPayloadResult());
 
 		final ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MockTransportOutputStream tos = new MockTransportOutputStream(bos);
 		String soapAction = "http://springframework.org/spring-ws/Action";
-		soapMessage.setSoapAction(soapAction);
-		soapMessage.writeTo(tos);
+		this.soapMessage.setSoapAction(soapAction);
+		this.soapMessage.writeTo(tos);
 		String result = bos.toString(StandardCharsets.UTF_8);
 
 		XmlAssert.assertThat(result)
@@ -93,10 +93,10 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 	public void testWriteToTransportResponseAttachment() throws Exception {
 
 		InputStreamSource inputStreamSource = new ByteArrayResource("contents".getBytes(StandardCharsets.UTF_8));
-		soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
+		this.soapMessage.addAttachment("contentId", inputStreamSource, "text/plain");
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MockTransportOutputStream tos = new MockTransportOutputStream(bos);
-		soapMessage.writeTo(tos);
+		this.soapMessage.writeTo(tos);
 		String contentType = tos.getHeaders().get("Content-Type");
 
 		assertThat(contentType).contains("multipart/related");
@@ -106,8 +106,8 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 	@Override
 	public void testToDocument() throws Exception {
 
-		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-				soapMessage.getSoapBody().getPayloadResult());
+		this.transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				this.soapMessage.getSoapBody().getPayloadResult());
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -126,7 +126,7 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 		Element payload = expected.createElementNS("http://www.springframework.org", "payload");
 		body.appendChild(payload);
 
-		Document result = soapMessage.getDocument();
+		Document result = this.soapMessage.getDocument();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
@@ -134,15 +134,15 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 	@Override
 	public void testSetLiveDocument() throws Exception {
 
-		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-				soapMessage.getSoapBody().getPayloadResult());
+		this.transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				this.soapMessage.getSoapBody().getPayloadResult());
 
-		Document document = soapMessage.getDocument();
+		Document document = this.soapMessage.getDocument();
 
-		soapMessage.setDocument(document);
+		this.soapMessage.setDocument(document);
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		soapMessage.writeTo(bos);
+		this.soapMessage.writeTo(bos);
 
 		String result = bos.toString(StandardCharsets.UTF_8);
 
@@ -157,22 +157,22 @@ public abstract class AbstractSoap12MessageTest extends AbstractSoapMessageTest 
 	@Override
 	public void testSetOtherDocument() throws Exception {
 
-		transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
-				soapMessage.getSoapBody().getPayloadResult());
+		this.transformer.transform(new StringSource("<payload xmlns='http://www.springframework.org' />"),
+				this.soapMessage.getSoapBody().getPayloadResult());
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		soapMessage.writeTo(bos);
+		this.soapMessage.writeTo(bos);
 		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
 		DOMResult domResult = new DOMResult();
-		transformer.transform(new StreamSource(bis), domResult);
+		this.transformer.transform(new StreamSource(bis), domResult);
 
 		Document document = (Document) domResult.getNode();
 
-		soapMessage.setDocument(document);
+		this.soapMessage.setDocument(document);
 
 		bos = new ByteArrayOutputStream();
-		soapMessage.writeTo(bos);
+		this.soapMessage.writeTo(bos);
 
 		String result = bos.toString(StandardCharsets.UTF_8);
 

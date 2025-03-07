@@ -88,7 +88,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 				return result;
 			}
 		}
-		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+		catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException ex) {
 			// ignore
 		}
 		return null;
@@ -107,7 +107,8 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 
 	@Override
 	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
-		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerHelper);
+		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(),
+				this.transformerHelper);
 	}
 
 }

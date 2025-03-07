@@ -36,9 +36,9 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
+ * @since 1.0.0
  * @see #Wsdl4jDefinition(javax.wsdl.Definition)
  * @see #setDefinition(javax.wsdl.Definition)
- * @since 1.0.0
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 
@@ -64,26 +64,26 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 
 	/** Returns the WSDL4J {@code Definition}. */
 	public Definition getDefinition() {
-		synchronized (monitor) {
-			return definition;
+		synchronized (this.monitor) {
+			return this.definition;
 		}
 	}
 
 	/** Set the WSDL4J {@code Definition}. */
 	public void setDefinition(Definition definition) {
-		synchronized (monitor) {
+		synchronized (this.monitor) {
 			this.definition = definition;
 		}
 	}
 
 	@Override
 	public Source getSource() {
-		synchronized (monitor) {
-			Assert.notNull(definition, "definition must not be null");
+		synchronized (this.monitor) {
+			Assert.notNull(this.definition, "definition must not be null");
 			try {
 				WSDLFactory wsdlFactory = WSDLFactory.newInstance();
 				WSDLWriter wsdlWriter = wsdlFactory.newWSDLWriter();
-				Document document = wsdlWriter.getDocument(definition);
+				Document document = wsdlWriter.getDocument(this.definition);
 				return new DOMSource(document);
 			}
 			catch (WSDLException ex) {
@@ -94,9 +94,9 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder("Wsdl4jDefinition");
-		if (definition != null && StringUtils.hasLength(definition.getTargetNamespace())) {
+		if (this.definition != null && StringUtils.hasLength(this.definition.getTargetNamespace())) {
 			builder.append('{');
-			builder.append(definition.getTargetNamespace());
+			builder.append(this.definition.getTargetNamespace());
 			builder.append('}');
 		}
 		return builder.toString();

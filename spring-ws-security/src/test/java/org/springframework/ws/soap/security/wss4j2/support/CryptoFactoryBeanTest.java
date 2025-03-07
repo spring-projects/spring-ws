@@ -32,7 +32,7 @@ public class CryptoFactoryBeanTest {
 
 	@BeforeEach
 	public void setUp() {
-		factoryBean = new CryptoFactoryBean();
+		this.factoryBean = new CryptoFactoryBean();
 	}
 
 	@Test
@@ -45,10 +45,10 @@ public class CryptoFactoryBeanTest {
 		configuration.setProperty("org.apache.ws.security.crypto.merlin.keystore.password", "123456");
 		configuration.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 
-		factoryBean.setConfiguration(configuration);
-		factoryBean.afterPropertiesSet();
+		this.factoryBean.setConfiguration(configuration);
+		this.factoryBean.afterPropertiesSet();
 
-		Object result = factoryBean.getObject();
+		Object result = this.factoryBean.getObject();
 
 		assertThat(result).isNotNull();
 		assertThat(result).isInstanceOf(Merlin.class);
@@ -57,11 +57,11 @@ public class CryptoFactoryBeanTest {
 	@Test
 	public void testProperties() throws Exception {
 
-		factoryBean.setKeyStoreType("jceks");
-		factoryBean.setKeyStorePassword("123456");
-		factoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
-		factoryBean.afterPropertiesSet();
-		Object result = factoryBean.getObject();
+		this.factoryBean.setKeyStoreType("jceks");
+		this.factoryBean.setKeyStorePassword("123456");
+		this.factoryBean.setKeyStoreLocation(new ClassPathResource("private.jks"));
+		this.factoryBean.afterPropertiesSet();
+		Object result = this.factoryBean.getObject();
 
 		assertThat(result).isNotNull();
 		assertThat(result).isInstanceOf(Merlin.class);

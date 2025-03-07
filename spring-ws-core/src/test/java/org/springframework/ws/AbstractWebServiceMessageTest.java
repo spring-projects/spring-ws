@@ -73,7 +73,8 @@ public abstract class AbstractWebServiceMessageTest {
 	private String getExpectedString() throws IOException {
 
 		StringWriter expectedWriter = new StringWriter();
-		FileCopyUtils.copy(new InputStreamReader(payload.getInputStream(), StandardCharsets.UTF_8), expectedWriter);
+		FileCopyUtils.copy(new InputStreamReader(this.payload.getInputStream(), StandardCharsets.UTF_8),
+				expectedWriter);
 		return expectedWriter.toString();
 	}
 
@@ -81,9 +82,9 @@ public abstract class AbstractWebServiceMessageTest {
 	public final void setUp() throws Exception {
 
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
-		webServiceMessage = createWebServiceMessage();
-		payload = new ClassPathResource("payload.xml", AbstractWebServiceMessageTest.class);
+		this.transformer = transformerFactory.newTransformer();
+		this.webServiceMessage = createWebServiceMessage();
+		this.payload = new ClassPathResource("payload.xml", AbstractWebServiceMessageTest.class);
 	}
 
 	@Test
@@ -92,12 +93,12 @@ public abstract class AbstractWebServiceMessageTest {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document payloadDocument = documentBuilder.parse(SaxUtils.createInputSource(payload));
+		Document payloadDocument = documentBuilder.parse(SaxUtils.createInputSource(this.payload));
 		DOMSource domSource = new DOMSource(payloadDocument);
-		transformer.transform(domSource, webServiceMessage.getPayloadResult());
+		this.transformer.transform(domSource, this.webServiceMessage.getPayloadResult());
 		Document resultDocument = documentBuilder.newDocument();
 		DOMResult domResult = new DOMResult(resultDocument);
-		transformer.transform(webServiceMessage.getPayloadSource(), domResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), domResult);
 
 		assertThat(resultDocument).and(payloadDocument).ignoreWhitespace().areIdentical();
 
@@ -108,14 +109,14 @@ public abstract class AbstractWebServiceMessageTest {
 	public void testEventReaderPayload() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
-		XMLEventReader eventReader = inputFactory.createXMLEventReader(payload.getInputStream());
+		XMLEventReader eventReader = inputFactory.createXMLEventReader(this.payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(eventReader);
-		transformer.transform(staxSource, webServiceMessage.getPayloadResult());
+		this.transformer.transform(staxSource, this.webServiceMessage.getPayloadResult());
 		StringWriter stringWriter = new StringWriter();
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(stringWriter);
 		Result staxResult = StaxUtils.createCustomStaxResult(eventWriter);
-		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), staxResult);
 		eventWriter.flush();
 
 		assertThat(stringWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
@@ -126,12 +127,12 @@ public abstract class AbstractWebServiceMessageTest {
 	@Test
 	public void testReaderPayload() throws Exception {
 
-		Reader reader = new InputStreamReader(payload.getInputStream(), StandardCharsets.UTF_8);
-		StreamSource streamSource = new StreamSource(reader, payload.getURL().toString());
-		transformer.transform(streamSource, webServiceMessage.getPayloadResult());
+		Reader reader = new InputStreamReader(this.payload.getInputStream(), StandardCharsets.UTF_8);
+		StreamSource streamSource = new StreamSource(reader, this.payload.getURL().toString());
+		this.transformer.transform(streamSource, this.webServiceMessage.getPayloadResult());
 		StringWriter resultWriter = new StringWriter();
 		StreamResult streamResult = new StreamResult(resultWriter);
-		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), streamResult);
 
 		assertThat(resultWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
 	}
@@ -139,10 +140,10 @@ public abstract class AbstractWebServiceMessageTest {
 	@Test
 	public void testSaxPayload() throws Exception {
 
-		SAXSource saxSource = new SAXSource(SaxUtils.createInputSource(payload));
-		transformer.transform(saxSource, webServiceMessage.getPayloadResult());
+		SAXSource saxSource = new SAXSource(SaxUtils.createInputSource(this.payload));
+		this.transformer.transform(saxSource, this.webServiceMessage.getPayloadResult());
 		StringResult stringResult = new StringResult();
-		transformer.transform(webServiceMessage.getPayloadSource(), stringResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), stringResult);
 
 		assertThat(stringResult.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
 
@@ -152,13 +153,13 @@ public abstract class AbstractWebServiceMessageTest {
 	@Test
 	public void testStreamPayload() throws Exception {
 
-		StreamSource streamSource = new StreamSource(payload.getInputStream(), payload.getURL().toString());
-		transformer.transform(streamSource, webServiceMessage.getPayloadResult());
+		StreamSource streamSource = new StreamSource(this.payload.getInputStream(), this.payload.getURL().toString());
+		this.transformer.transform(streamSource, this.webServiceMessage.getPayloadResult());
 		ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
 		StreamResult streamResult = new StreamResult(resultStream);
-		transformer.transform(webServiceMessage.getPayloadSource(), streamResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), streamResult);
 		ByteArrayOutputStream expectedStream = new ByteArrayOutputStream();
-		FileCopyUtils.copy(payload.getInputStream(), expectedStream);
+		FileCopyUtils.copy(this.payload.getInputStream(), expectedStream);
 
 		assertThat(resultStream.toString(StandardCharsets.UTF_8)).and(expectedStream.toString(StandardCharsets.UTF_8))
 			.ignoreWhitespace()
@@ -171,14 +172,14 @@ public abstract class AbstractWebServiceMessageTest {
 	public void testStreamReaderPayload() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
-		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(payload.getInputStream());
+		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(this.payload.getInputStream());
 		Source staxSource = StaxUtils.createCustomStaxSource(streamReader);
-		transformer.transform(staxSource, webServiceMessage.getPayloadResult());
+		this.transformer.transform(staxSource, this.webServiceMessage.getPayloadResult());
 		StringWriter stringWriter = new StringWriter();
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(stringWriter);
 		Result staxResult = StaxUtils.createCustomStaxResult(streamWriter);
-		transformer.transform(webServiceMessage.getPayloadSource(), staxResult);
+		this.transformer.transform(this.webServiceMessage.getPayloadSource(), staxResult);
 		streamWriter.flush();
 
 		assertThat(stringWriter.toString()).and(getExpectedString()).ignoreWhitespace().areIdentical();
@@ -192,7 +193,7 @@ public abstract class AbstractWebServiceMessageTest {
 		XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
 		xmlReader.setContentHandler(new DefaultHandler());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		webServiceMessage.writeTo(os);
+		this.webServiceMessage.writeTo(os);
 		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 		xmlReader.parse(new InputSource(is));
 	}

@@ -42,7 +42,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 
 	/** Returns namespaces used in the XPath expression. */
 	public Map<String, String> getNamespaces() {
-		return namespaces;
+		return this.namespaces;
 	}
 
 	/** Sets namespaces used in the XPath expression. Maps prefixes to namespaces. */
@@ -57,26 +57,6 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 	}
 
 	/**
-	 * Static inner class that adapts a {@link NodeCallbackHandler} to the interface of
-	 * {@link NodeMapper}.
-	 */
-	private static class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
-
-		private final NodeCallbackHandler callbackHandler;
-
-		public NodeCallbackHandlerNodeMapper(NodeCallbackHandler callbackHandler) {
-			this.callbackHandler = callbackHandler;
-		}
-
-		@Override
-		public Object mapNode(Node node, int nodeNum) throws DOMException {
-			callbackHandler.processNode(node);
-			return null;
-		}
-
-	}
-
-	/**
 	 * Returns the root element of the given source.
 	 * @param source the source to get the root element from
 	 * @return the root element
@@ -86,6 +66,26 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 		transform(source, domResult);
 		Document document = (Document) domResult.getNode();
 		return document.getDocumentElement();
+	}
+
+	/**
+	 * Static inner class that adapts a {@link NodeCallbackHandler} to the interface of
+	 * {@link NodeMapper}.
+	 */
+	private static final class NodeCallbackHandlerNodeMapper implements NodeMapper<Object> {
+
+		private final NodeCallbackHandler callbackHandler;
+
+		NodeCallbackHandlerNodeMapper(NodeCallbackHandler callbackHandler) {
+			this.callbackHandler = callbackHandler;
+		}
+
+		@Override
+		public Object mapNode(Node node, int nodeNum) throws DOMException {
+			this.callbackHandler.processNode(node);
+			return null;
+		}
+
 	}
 
 }

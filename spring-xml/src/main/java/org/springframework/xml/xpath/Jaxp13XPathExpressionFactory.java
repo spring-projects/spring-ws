@@ -37,8 +37,8 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see #createXPathExpression(String)
  * @since 1.0.0
+ * @see #createXPathExpression(String)
  */
 abstract class Jaxp13XPathExpressionFactory {
 
@@ -90,7 +90,7 @@ abstract class Jaxp13XPathExpressionFactory {
 	}
 
 	/** JAXP 1.3 implementation of the {@code XPathExpression} interface. */
-	private static class Jaxp13XPathExpression implements XPathExpression {
+	private static final class Jaxp13XPathExpression implements XPathExpression {
 
 		private final javax.xml.xpath.XPathExpression xpathExpression;
 
@@ -103,7 +103,7 @@ abstract class Jaxp13XPathExpressionFactory {
 
 		@Override
 		public String toString() {
-			return expression;
+			return this.expression;
 		}
 
 		@Override
@@ -120,8 +120,8 @@ abstract class Jaxp13XPathExpressionFactory {
 		private Object evaluate(Node node, QName returnType) {
 			try {
 				// XPathExpression is not thread-safe
-				synchronized (xpathExpression) {
-					return xpathExpression.evaluate(node, returnType);
+				synchronized (this.xpathExpression) {
+					return this.xpathExpression.evaluate(node, returnType);
 				}
 			}
 			catch (XPathExpressionException ex) {

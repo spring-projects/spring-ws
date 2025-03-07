@@ -28,8 +28,8 @@ import java.lang.annotation.Target;
  * signify the request payload root element that is handled by the method.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
  * @since 1.0.0
+ * @see org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

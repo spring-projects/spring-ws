@@ -50,40 +50,40 @@ public class CommonsXsdSchemaCollectionTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		collection = new CommonsXsdSchemaCollection();
+		this.collection = new CommonsXsdSchemaCollection();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
+		this.transformer = transformerFactory.newTransformer();
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 	}
 
 	@Test
 	public void testSingle() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(resource);
-		collection.afterPropertiesSet();
+		this.collection.setXsds(resource);
+		this.collection.afterPropertiesSet();
 
-		assertThat(collection.getXsdSchemas()).hasSize(1);
+		assertThat(this.collection.getXsdSchemas()).hasSize(1);
 	}
 
 	@Test
 	public void testInlineComplex() throws Exception {
 
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(a);
-		collection.setInline(true);
-		collection.afterPropertiesSet();
-		XsdSchema[] schemas = collection.getXsdSchemas();
+		this.collection.setXsds(a);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
+		XsdSchema[] schemas = this.collection.getXsdSchemas();
 
 		assertThat(schemas).hasSize(2);
 		assertThat(schemas[0].getTargetNamespace()).isEqualTo("urn:1");
 
 		Resource abc = new ClassPathResource("ABC.xsd", AbstractXsdSchemaTest.class);
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(abc));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(abc));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(schemas[0].getSource(), domResult);
+		this.transformer.transform(schemas[0].getSource(), domResult);
 
 		XmlAssert.assertThat(domResult.getNode())
 			.and(expected) //
@@ -92,9 +92,9 @@ public class CommonsXsdSchemaCollectionTest {
 		assertThat(schemas[1].getTargetNamespace()).isEqualTo("urn:2");
 
 		Resource cd = new ClassPathResource("CD.xsd", AbstractXsdSchemaTest.class);
-		expected = documentBuilder.parse(SaxUtils.createInputSource(cd));
+		expected = this.documentBuilder.parse(SaxUtils.createInputSource(cd));
 		domResult = new DOMResult();
-		transformer.transform(schemas[1].getSource(), domResult);
+		this.transformer.transform(schemas[1].getSource(), domResult);
 
 		XmlAssert.assertThat(domResult.getNode())
 			.and(expected) //
@@ -106,10 +106,10 @@ public class CommonsXsdSchemaCollectionTest {
 	public void testCircular() throws Exception {
 
 		Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(resource);
-		collection.setInline(true);
-		collection.afterPropertiesSet();
-		XsdSchema[] schemas = collection.getXsdSchemas();
+		this.collection.setXsds(resource);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
+		XsdSchema[] schemas = this.collection.getXsdSchemas();
 
 		assertThat(schemas).hasSize(1);
 	}
@@ -118,10 +118,10 @@ public class CommonsXsdSchemaCollectionTest {
 
 	public void testXmlNamespace() throws Exception {
 		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(resource);
-		collection.setInline(true);
-		collection.afterPropertiesSet();
-		XsdSchema[] schemas = collection.getXsdSchemas();
+		this.collection.setXsds(resource);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
+		XsdSchema[] schemas = this.collection.getXsdSchemas();
 
 		assertThat(schemas).hasSize(1);
 	}
@@ -130,11 +130,11 @@ public class CommonsXsdSchemaCollectionTest {
 	public void testCreateValidator() throws Exception {
 
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(a);
-		collection.setInline(true);
-		collection.afterPropertiesSet();
+		this.collection.setXsds(a);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
 
-		XmlValidator validator = collection.createValidator();
+		XmlValidator validator = this.collection.createValidator();
 
 		assertThat(validator).isNotNull();
 	}
@@ -143,36 +143,37 @@ public class CommonsXsdSchemaCollectionTest {
 	public void testInvalidSchema() {
 
 		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTest.class);
-		collection.setXsds(invalid);
+		this.collection.setXsds(invalid);
 
-		assertThatExceptionOfType(CommonsXsdSchemaException.class).isThrownBy(() -> collection.afterPropertiesSet());
+		assertThatExceptionOfType(CommonsXsdSchemaException.class)
+			.isThrownBy(() -> this.collection.afterPropertiesSet());
 	}
 
 	@Test
 	public void testIncludesAndImports() throws Exception {
 
 		Resource hr = new ClassPathResource("hr.xsd", getClass());
-		collection.setXsds(hr);
-		collection.setInline(true);
-		collection.afterPropertiesSet();
+		this.collection.setXsds(hr);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
 
-		XsdSchema[] schemas = collection.getXsdSchemas();
+		XsdSchema[] schemas = this.collection.getXsdSchemas();
 
 		assertThat(schemas).hasSize(2);
 		assertThat(schemas[0].getTargetNamespace()).isEqualTo("http://mycompany.com/hr/schemas");
 
 		Resource hr_employee = new ClassPathResource("hr_employee.xsd", getClass());
-		Document expected = documentBuilder.parse(SaxUtils.createInputSource(hr_employee));
+		Document expected = this.documentBuilder.parse(SaxUtils.createInputSource(hr_employee));
 		DOMResult domResult = new DOMResult();
-		transformer.transform(schemas[0].getSource(), domResult);
+		this.transformer.transform(schemas[0].getSource(), domResult);
 
 		XmlAssert.assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areIdentical();
 		assertThat(schemas[1].getTargetNamespace()).isEqualTo("http://mycompany.com/hr/schemas/holiday");
 
 		Resource holiday = new ClassPathResource("holiday.xsd", getClass());
-		expected = documentBuilder.parse(SaxUtils.createInputSource(holiday));
+		expected = this.documentBuilder.parse(SaxUtils.createInputSource(holiday));
 		domResult = new DOMResult();
-		transformer.transform(schemas[1].getSource(), domResult);
+		this.transformer.transform(schemas[1].getSource(), domResult);
 
 		XmlAssert.assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areIdentical();
 	}

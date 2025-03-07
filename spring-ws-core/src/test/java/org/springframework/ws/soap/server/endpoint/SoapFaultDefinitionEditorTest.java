@@ -31,14 +31,14 @@ public class SoapFaultDefinitionEditorTest {
 
 	@BeforeEach
 	public void setUp() {
-		editor = new SoapFaultDefinitionEditor();
+		this.editor = new SoapFaultDefinitionEditor();
 	}
 
 	@Test
 	public void testSetAsTextNoLocale() {
 
-		editor.setAsText("Server, Server error");
-		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		this.editor.setAsText("Server, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
 
 		assertThat(definition).isNotNull();
 		assertThat(definition.getFaultCode()).isEqualTo(new QName("Server"));
@@ -49,8 +49,8 @@ public class SoapFaultDefinitionEditorTest {
 	@Test
 	public void testSetAsTextLocale() {
 
-		editor.setAsText("Server, Server error, nl");
-		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		this.editor.setAsText("Server, Server error, nl");
+		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
 
 		assertThat(definition).isNotNull();
 		assertThat(definition.getFaultCode()).isEqualTo(new QName("Server"));
@@ -61,8 +61,8 @@ public class SoapFaultDefinitionEditorTest {
 	@Test
 	public void testSetAsTextSender() {
 
-		editor.setAsText("SENDER, Server error");
-		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		this.editor.setAsText("SENDER, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
 
 		assertThat(definition).isNotNull();
 		assertThat(definition.getFaultCode()).isEqualTo(SoapFaultDefinition.SENDER);
@@ -72,8 +72,8 @@ public class SoapFaultDefinitionEditorTest {
 	@Test
 	public void testSetAsTextReceiver() {
 
-		editor.setAsText("RECEIVER, Server error");
-		SoapFaultDefinition definition = (SoapFaultDefinition) editor.getValue();
+		this.editor.setAsText("RECEIVER, Server error");
+		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
 
 		assertThat(definition).isNotNull();
 		assertThat(definition.getFaultCode()).isEqualTo(SoapFaultDefinition.RECEIVER);
@@ -82,15 +82,15 @@ public class SoapFaultDefinitionEditorTest {
 
 	@Test
 	public void testSetAsTextIllegalArgument() {
-		editor.setAsText("SOAP-ENV:Server");
+		this.editor.setAsText("SOAP-ENV:Server");
 	}
 
 	@Test
 	public void testSetAsTextEmpty() {
 
-		editor.setAsText("");
+		this.editor.setAsText("");
 
-		assertThat(editor.getValue()).isNull();
+		assertThat(this.editor.getValue()).isNull();
 	}
 
 }

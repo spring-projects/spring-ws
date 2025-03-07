@@ -36,8 +36,8 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  * {@link SoapActionAnnotationMethodEndpointMapping}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.context.annotation.ClassPathBeanDefinitionScanner
  * @since 1.0.0
+ * @see org.springframework.context.annotation.ClassPathBeanDefinitionScanner
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

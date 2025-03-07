@@ -40,8 +40,8 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean
  * @since 2.0
+ * @see org.springframework.ws.transport.xmpp.support.XmppConnectionFactoryBean
  */
 public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
@@ -67,58 +67,59 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
 	@Override
 	protected void onActivate() throws XMPPException, IOException, SmackException {
-		if (!connection.isConnected()) {
+		if (!this.connection.isConnected()) {
 			try {
-				connection.connect();
+				this.connection.connect();
 			}
-			catch (InterruptedException e) {
-				throw new IOException(e);
+			catch (InterruptedException ex) {
+				throw new IOException(ex);
 			}
 		}
 	}
 
 	@Override
 	protected void onStart() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Starting XMPP receiver [" + connection.getUser() + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Starting XMPP receiver [" + this.connection.getUser() + "]");
 		}
-		packetListener = new WebServicePacketListener();
+		this.packetListener = new WebServicePacketListener();
 		StanzaFilter packetFilter = new StanzaTypeFilter(Message.class);
-		connection.addAsyncStanzaListener(packetListener, packetFilter);
+		this.connection.addAsyncStanzaListener(this.packetListener, packetFilter);
 	}
 
 	@Override
 	protected void onStop() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Stopping XMPP receiver [" + connection.getUser() + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Stopping XMPP receiver [" + this.connection.getUser() + "]");
 		}
-		connection.removeAsyncStanzaListener(packetListener);
-		packetListener = null;
+		this.connection.removeAsyncStanzaListener(this.packetListener);
+		this.packetListener = null;
 	}
 
 	@Override
 	protected void onShutdown() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Shutting down XMPP receiver [" + connection.getUser() + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Shutting down XMPP receiver [" + this.connection.getUser() + "]");
 		}
-		if (connection.isConnected()) {
-			connection.disconnect();
+		if (this.connection.isConnected()) {
+			this.connection.disconnect();
 		}
 	}
 
-	private class WebServicePacketListener implements StanzaListener {
+	private final class WebServicePacketListener implements StanzaListener {
 
 		@Override
 		public void processStanza(Stanza packet) {
-			logger.info("Received " + packet);
+			XmppMessageReceiver.this.logger.info("Received " + packet);
 			if (packet instanceof Message message) {
 				try {
-					XmppReceiverConnection wsConnection = new XmppReceiverConnection(connection, message);
-					wsConnection.setMessageEncoding(messageEncoding);
+					XmppReceiverConnection wsConnection = new XmppReceiverConnection(
+							XmppMessageReceiver.this.connection, message);
+					wsConnection.setMessageEncoding(XmppMessageReceiver.this.messageEncoding);
 					handleConnection(wsConnection);
 				}
 				catch (Exception ex) {
-					logger.error(ex);
+					XmppMessageReceiver.this.logger.error(ex);
 				}
 			}
 		}

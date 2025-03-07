@@ -36,8 +36,8 @@ import org.w3c.dom.Node;
  * Namespaces can be set using the {@code namespaces} property.
  *
  * @author Arjen Poutsma
- * @see <a href="http://www.jaxen.org/">Jaxen</a>
  * @since 1.0.0
+ * @see <a href="http://www.jaxen.org/">Jaxen</a>
  */
 public class JaxenXPathTemplate extends AbstractXPathTemplate {
 

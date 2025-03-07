@@ -56,16 +56,16 @@ public class AnnotationActionMethodEndpointMappingTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
-		applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
-		applicationContext.registerSingleton("interceptor", MyInterceptor.class);
-		applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
-		applicationContext.registerSingleton("endpoint", MyEndpoint.class);
-		applicationContext.refresh();
+		this.applicationContext = new StaticApplicationContext();
+		this.applicationContext.registerSingleton("mapping", AnnotationActionEndpointMapping.class);
+		this.applicationContext.registerSingleton("interceptor", MyInterceptor.class);
+		this.applicationContext.registerSingleton("smartIntercepter", MySmartInterceptor.class);
+		this.applicationContext.registerSingleton("endpoint", MyEndpoint.class);
+		this.applicationContext.refresh();
 
-		mapping = (AnnotationActionEndpointMapping) applicationContext.getBean("mapping");
+		this.mapping = (AnnotationActionEndpointMapping) this.applicationContext.getBean("mapping");
 	}
 
 	@Test
@@ -73,11 +73,11 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 		MessageContext messageContext = createMessageContext();
 
-		EndpointInvocationChain chain = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain chain = this.mapping.getEndpoint(messageContext);
 
 		assertThat(chain).isNotNull();
 
-		MethodEndpoint expected = new MethodEndpoint(applicationContext.getBean("endpoint"), "doIt");
+		MethodEndpoint expected = new MethodEndpoint(this.applicationContext.getBean("endpoint"), "doIt");
 
 		assertThat(chain.getEndpoint()).isEqualTo(expected);
 		assertThat(chain.getInterceptors()).hasSize(2);
@@ -93,14 +93,14 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 		try (is) {
 			assertThat(is).isNotNull();
-			SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(mimeHeaders, is));
-			return new DefaultMessageContext(message, new SaajSoapMessageFactory(messageFactory));
+			SaajSoapMessage message = new SaajSoapMessage(this.messageFactory.createMessage(mimeHeaders, is));
+			return new DefaultMessageContext(message, new SaajSoapMessageFactory(this.messageFactory));
 		}
 	}
 
 	@Endpoint
 	@Address("mailto:joe@fabrikam123.example")
-	private static class MyEndpoint {
+	private static final class MyEndpoint {
 
 		@Action("http://fabrikam123.example/mail/Delete")
 		public void doIt() {
@@ -109,7 +109,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	}
 
-	private static class MyInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MyInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		public MyInterceptor() {
 			super(new PayloadLoggingInterceptor());
@@ -117,7 +117,7 @@ public class AnnotationActionMethodEndpointMappingTest {
 
 	}
 
-	private static class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MySmartInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		public MySmartInterceptor() {
 			super(new PayloadLoggingInterceptor());

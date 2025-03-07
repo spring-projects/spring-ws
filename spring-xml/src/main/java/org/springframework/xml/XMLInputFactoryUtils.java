@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.xml;
 
 import javax.xml.stream.XMLInputFactory;
 
 /**
+ * General utilities for {@link XMLInputFactory}.
+ *
  * @author Greg Turnquist
  */
-public class XMLInputFactoryUtils {
+public abstract class XMLInputFactoryUtils {
 
 	/**
 	 * Build an {@link XMLInputFactory} and set properties to prevent external entities

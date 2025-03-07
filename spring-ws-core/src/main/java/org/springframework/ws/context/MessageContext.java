@@ -65,7 +65,6 @@ public interface MessageContext {
 
 	/**
 	 * Removes the response message, if any.
-	 *
 	 * @since 1.5.0
 	 */
 	void clearResponse();

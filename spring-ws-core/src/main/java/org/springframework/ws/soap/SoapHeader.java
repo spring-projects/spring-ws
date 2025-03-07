@@ -26,9 +26,9 @@ import javax.xml.transform.Result;
  * {@code SoapHeaderElement}s, which represent the individual headers.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see SoapHeaderElement
  * @see SoapEnvelope#getHeader()
- * @since 1.0.0
  */
 public interface SoapHeader extends SoapElement {
 
@@ -86,8 +86,8 @@ public interface SoapHeader extends SoapElement {
 	 * @param name the qualified name for which to search
 	 * @return an iterator over all the header elements
 	 * @throws SoapHeaderException if the header cannot be returned
-	 * @see SoapHeaderElement
 	 * @since 2.0.3
+	 * @see SoapHeaderElement
 	 */
 	Iterator<SoapHeaderElement> examineHeaderElements(QName name) throws SoapHeaderException;
 

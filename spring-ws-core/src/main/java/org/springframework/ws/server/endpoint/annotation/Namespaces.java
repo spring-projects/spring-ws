@@ -27,8 +27,8 @@ import java.lang.annotation.Target;
  * package.
  *
  * @author Arjen Poutsma
- * @see Namespace
  * @since 2.0
+ * @see Namespace
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

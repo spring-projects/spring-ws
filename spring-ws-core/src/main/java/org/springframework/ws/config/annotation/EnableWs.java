@@ -83,11 +83,11 @@ import org.springframework.context.annotation.Import;
  * 	}
  * }</code></pre>
  *
+ * @author Arjen Poutsma
+ * @since 2.2
  * @see WsConfigurer
  * @see WsConfigurerAdapter
  * @see WsConfigurationSupport
- * @author Arjen Poutsma
- * @since 2.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -49,8 +49,8 @@ import org.springframework.xml.namespace.QNameUtils;
  *
  * @author Tareq Abedrabbo
  * @author Arjen Poutsma
- * @see SoapHeader
  * @since 2.0
+ * @see SoapHeader
  */
 public class SoapHeaderElementMethodArgumentResolver implements MethodArgumentResolver {
 

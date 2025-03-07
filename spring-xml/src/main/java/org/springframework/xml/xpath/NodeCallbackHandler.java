@@ -28,8 +28,8 @@ import org.w3c.dom.Node;
  * per node, assembling them in a List.
  *
  * @author Arjen Poutsma
- * @see XPathOperations#evaluate(String,javax.xml.transform.Source,NodeCallbackHandler)
  * @since 1.0.0
+ * @see XPathOperations#evaluate(String,javax.xml.transform.Source,NodeCallbackHandler)
  */
 public interface NodeCallbackHandler {
 

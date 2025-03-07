@@ -69,7 +69,7 @@ public class DelegatingWsConfiguration extends WsConfigurationSupport {
 		this.configurers.addReturnValueHandlers(returnValueHandlers);
 	}
 
-	private static class WsConfigurers implements WsConfigurer {
+	private static final class WsConfigurers implements WsConfigurer {
 
 		private final Supplier<Stream<WsConfigurer>> delegates;
 

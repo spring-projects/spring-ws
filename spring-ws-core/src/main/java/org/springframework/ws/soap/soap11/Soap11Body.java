@@ -28,8 +28,8 @@ import org.springframework.ws.soap.SoapFaultException;
  * SOAP 1.1 differs from SOAP 1.2 with respect to SOAP Faults.
  *
  * @author Arjen Poutsma
- * @see Soap11Fault
  * @since 1.0.0
+ * @see Soap11Fault
  */
 public interface Soap11Body extends SoapBody {
 

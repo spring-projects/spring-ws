@@ -55,9 +55,9 @@ import org.springframework.ws.soap.addressing.server.annotation.Address;
  *
  * @author Arjen Poutsma
  * @author Corneil du Plessis (with thanks to Chris Bono)
+ * @since 1.5.0
  * @see Action
  * @see Address
- * @since 1.5.0
  */
 public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpointMapping
 		implements SmartInitializingSingleton {
@@ -78,7 +78,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 			try {
 				return new URI(action.value());
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				throw new IllegalArgumentException(
 						"Invalid Action annotation [" + action.value() + "] on [" + method + "]");
 			}
@@ -136,7 +136,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 		try {
 			return new URI(action);
 		}
-		catch (URISyntaxException e) {
+		catch (URISyntaxException ex) {
 			throw new IllegalArgumentException(
 					"Invalid Action annotation [" + action + "] on [" + methodEndpoint + "]");
 		}

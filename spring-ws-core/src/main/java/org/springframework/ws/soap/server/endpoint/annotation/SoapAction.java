@@ -29,8 +29,8 @@ import java.lang.annotation.Target;
  * method.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
  * @since 1.0.0
+ * @see org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationMethodEndpointMapping
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

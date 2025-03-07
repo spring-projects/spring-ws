@@ -31,6 +31,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
  * The methods of each bean carrying @Endpoint will be registered using
  * {@link #registerMethods(String)}.
  *
+ * @param <T> the type of the key
  * @author Arjen Poutsma
  * @since 1.0.0
  */
@@ -60,8 +61,8 @@ public abstract class AbstractAnnotationMethodEndpointMapping<T> extends Abstrac
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		super.initApplicationContext();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Looking for endpoints in application context: " + getApplicationContext());
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Looking for endpoints in application context: " + getApplicationContext());
 		}
 		String[] beanNames = (this.detectEndpointsInAncestorContexts
 				? BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class)

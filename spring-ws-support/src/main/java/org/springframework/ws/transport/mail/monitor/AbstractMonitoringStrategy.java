@@ -52,7 +52,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 
 	@Override
 	public int getFolderOpenMode() {
-		return deleteMessages ? Folder.READ_WRITE : Folder.READ_ONLY;
+		return this.deleteMessages ? Folder.READ_WRITE : Folder.READ_ONLY;
 	}
 
 	/**
@@ -71,13 +71,13 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 	public final Message[] monitor(Folder folder) throws MessagingException, InterruptedException {
 		waitForNewMessages(folder);
 		Message[] messages = searchForNewMessages(folder);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Found " + messages.length + " new messages");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Found " + messages.length + " new messages");
 		}
 		if (messages.length > 0) {
 			fetchMessages(folder, messages);
 		}
-		if (deleteMessages) {
+		if (this.deleteMessages) {
 			deleteMessages(folder, messages);
 		}
 		return messages;
@@ -132,7 +132,7 @@ public abstract class AbstractMonitoringStrategy implements MonitoringStrategy {
 				}
 			}
 		}
-		return searchTerm != null ? folder.search(searchTerm) : folder.getMessages();
+		return (searchTerm != null) ? folder.search(searchTerm) : folder.getMessages();
 	}
 
 	/**

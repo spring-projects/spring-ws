@@ -36,9 +36,9 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  * and endpoint interceptors.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
  * @see org.springframework.ws.server.EndpointInterceptor
- * @since 1.0.0
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 
@@ -56,7 +56,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * @return array of endpoint interceptors, or {@code null} if none
 	 */
 	public EndpointInterceptor[] getInterceptors() {
-		return interceptors;
+		return this.interceptors;
 	}
 
 	/**
@@ -70,7 +70,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 
 	@Override
 	public final int getOrder() {
-		return order;
+		return this.order;
 	}
 
 	/**
@@ -114,7 +114,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
 		Object endpoint = getEndpointInternal(messageContext);
 		if (endpoint == null) {
-			endpoint = defaultEndpoint;
+			endpoint = this.defaultEndpoint;
 		}
 		if (endpoint == null) {
 			return null;
@@ -132,7 +132,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		}
 
 		if (this.smartInterceptors != null) {
-			for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+			for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
 				if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
 					interceptors.add(smartInterceptor);
 				}
@@ -162,7 +162,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * @return the default endpoint mapping, or null if none
 	 */
 	protected final Object getDefaultEndpoint() {
-		return defaultEndpoint;
+		return this.defaultEndpoint;
 	}
 
 	/**

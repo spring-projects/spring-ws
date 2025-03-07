@@ -36,9 +36,9 @@ import org.springframework.util.StringUtils;
  * {@code Node}s and {@code SOAPElement}s.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see jakarta.xml.soap.Node
  * @see jakarta.xml.soap.SOAPElement
- * @since 1.0.0
  */
 public class SaajContentHandler implements ContentHandler {
 
@@ -56,10 +56,10 @@ public class SaajContentHandler implements ContentHandler {
 	public SaajContentHandler(SOAPElement element) {
 		Assert.notNull(element, "element must not be null");
 		if (element instanceof SOAPEnvelope) {
-			envelope = (SOAPEnvelope) element;
+			this.envelope = (SOAPEnvelope) element;
 		}
 		else {
-			envelope = SaajUtils.getEnvelope(element);
+			this.envelope = SaajUtils.getEnvelope(element);
 		}
 		this.element = element;
 	}
@@ -68,7 +68,7 @@ public class SaajContentHandler implements ContentHandler {
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		try {
 			String text = new String(ch, start, length);
-			element.addTextNode(text);
+			this.element.addTextNode(text);
 		}
 		catch (SOAPException ex) {
 			throw new SAXException(ex);
@@ -79,23 +79,24 @@ public class SaajContentHandler implements ContentHandler {
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		try {
 			String childPrefix = getPrefix(qName);
-			SOAPElement child = element.addChildElement(localName, childPrefix, uri);
+			SOAPElement child = this.element.addChildElement(localName, childPrefix, uri);
 			for (int i = 0; i < atts.getLength(); i++) {
 				if (StringUtils.hasLength(atts.getLocalName(i))) {
 					String attributePrefix = getPrefix(atts.getQName(i));
 					if (!"xmlns".equals(atts.getLocalName(i)) && !"xmlns".equals(attributePrefix)) {
-						Name attributeName = envelope.createName(atts.getLocalName(i), attributePrefix, atts.getURI(i));
+						Name attributeName = this.envelope.createName(atts.getLocalName(i), attributePrefix,
+								atts.getURI(i));
 						child.addAttribute(attributeName, atts.getValue(i));
 					}
 				}
 			}
-			for (String namespacePrefix : namespaces.keySet()) {
-				String namespaceUri = namespaces.get(namespacePrefix);
+			for (String namespacePrefix : this.namespaces.keySet()) {
+				String namespaceUri = this.namespaces.get(namespacePrefix);
 				if (!findParentNamespaceDeclaration(child, namespacePrefix, namespaceUri)) {
 					child.addNamespaceDeclaration(namespacePrefix, namespaceUri);
 				}
 			}
-			element = child;
+			this.element = child;
 		}
 		catch (SOAPException ex) {
 			throw new SAXException(ex);
@@ -123,19 +124,19 @@ public class SaajContentHandler implements ContentHandler {
 
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		Assert.isTrue(localName.equals(element.getElementName().getLocalName()), "Invalid element on stack");
-		Assert.isTrue(uri.equals(element.getElementName().getURI()), "Invalid element on stack");
-		element = element.getParentElement();
+		Assert.isTrue(localName.equals(this.element.getElementName().getLocalName()), "Invalid element on stack");
+		Assert.isTrue(uri.equals(this.element.getElementName().getURI()), "Invalid element on stack");
+		this.element = this.element.getParentElement();
 	}
 
 	@Override
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {
-		namespaces.put(prefix, uri);
+		this.namespaces.put(prefix, uri);
 	}
 
 	@Override
 	public void endPrefixMapping(String prefix) throws SAXException {
-		namespaces.remove(prefix);
+		this.namespaces.remove(prefix);
 	}
 
 	@Override

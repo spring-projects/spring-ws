@@ -134,8 +134,8 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 	@BeforeEach
 	public void createWebServiceTemplate() throws Exception {
 
-		template = new WebServiceTemplate(createMessageFactory());
-		template.setMessageSender(new HttpComponentsMessageSender());
+		this.template = new WebServiceTemplate(createMessageFactory());
+		this.template.setMessageSender(new HttpComponentsMessageSender());
 	}
 
 	public abstract SoapMessageFactory createMessageFactory() throws Exception;
@@ -144,18 +144,18 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 	public void sendSourceAndReceiveToResult() {
 
 		StringResult result = new StringResult();
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo", new StringSource(messagePayload),
-				result);
+		boolean b = this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
+				new StringSource(this.messagePayload), result);
 
 		assertThat(b).isTrue();
-		XmlAssert.assertThat(result.toString()).and(messagePayload).ignoreWhitespace().areIdentical();
+		XmlAssert.assertThat(result.toString()).and(this.messagePayload).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void sendSourceAndReceiveToResultNoResponse() {
 
-		boolean b = template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
-				new StringSource(messagePayload), new StringResult());
+		boolean b = this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
+				new StringSource(this.messagePayload), new StringResult());
 		assertThat(b).isFalse();
 	}
 
@@ -172,7 +172,9 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 
 				assertThat(requestObject).isEqualTo(graph);
 				try {
-					transformer.transform(new StringSource(messagePayload), result);
+					transformer.transform(
+							new StringSource(AbstractSoap12WebServiceTemplateIntegrationTest.this.messagePayload),
+							result);
 				}
 				catch (TransformerException e) {
 					throw new RuntimeException(e);
@@ -204,9 +206,9 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 			}
 		};
 
-		template.setMarshaller(marshaller);
-		template.setUnmarshaller(unmarshaller);
-		Object result = template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
+		this.template.setMarshaller(marshaller);
+		this.template.setUnmarshaller(unmarshaller);
+		Object result = this.template.marshalSendAndReceive(baseUrl + "/soap/echo", requestObject);
 
 		assertThat(result).isEqualTo(responseObject);
 	}
@@ -224,7 +226,9 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 				assertThat(requestObject).isEqualTo(graph);
 
 				try {
-					transformer.transform(new StringSource(messagePayload), result);
+					transformer.transform(
+							new StringSource(AbstractSoap12WebServiceTemplateIntegrationTest.this.messagePayload),
+							result);
 				}
 				catch (TransformerException e) {
 					throw new RuntimeException(e);
@@ -239,8 +243,8 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 			}
 		};
 
-		template.setMarshaller(marshaller);
-		Object result = template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
+		this.template.setMarshaller(marshaller);
+		Object result = this.template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
 
 		assertThat(result).isNull();
 	}
@@ -249,8 +253,8 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 	public void notFound() {
 
 		assertThatExceptionOfType(WebServiceTransportException.class)
-			.isThrownBy(() -> template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
-					new StringSource(messagePayload), new StringResult()));
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
+					new StringSource(this.messagePayload), new StringResult()));
 	}
 
 	@Test
@@ -258,8 +262,9 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 
 		Result result = new StringResult();
 
-		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
-			.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault", new StringSource(messagePayload), result));
+		assertThatExceptionOfType(SoapFaultClientException.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/receiverFault",
+					new StringSource(this.messagePayload), result));
 	}
 
 	@Test
@@ -267,14 +272,15 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 
 		Result result = new StringResult();
 
-		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> template
-			.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault", new StringSource(messagePayload), result));
+		assertThatExceptionOfType(SoapFaultClientException.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/senderFault",
+					new StringSource(this.messagePayload), result));
 	}
 
 	@Test
 	public void attachment() {
 
-		template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(messagePayload),
+		this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(this.messagePayload),
 				message -> {
 
 					SoapMessage soapMessage = (SoapMessage) message;
@@ -296,7 +302,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 
 		@Override
 		protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-			resp.sendError(sc);
+			resp.sendError(this.sc);
 		}
 
 	}
@@ -313,7 +319,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 			super.init(servletConfig);
 
 			try {
-				messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+				this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 			}
 			catch (SOAPException ex) {
 				throw new ServletException("Unable to create message factory" + ex.getMessage());
@@ -325,7 +331,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 
 			try {
 				MimeHeaders headers = getHeaders(req);
-				SOAPMessage request = messageFactory.createMessage(headers, req.getInputStream());
+				SOAPMessage request = this.messageFactory.createMessage(headers, req.getInputStream());
 				SOAPMessage reply = onMessage(request);
 
 				if (reply != null) {
@@ -415,7 +421,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
 
-			SOAPMessage response = messageFactory.createMessage();
+			SOAPMessage response = this.messageFactory.createMessage();
 			SOAPBody body = response.getSOAPBody();
 			body.addFault(SOAPConstants.SOAP_RECEIVER_FAULT, "Receiver Fault");
 			return response;
@@ -429,7 +435,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTest {
 		@Override
 		protected SOAPMessage onMessage(SOAPMessage message) throws SOAPException {
 
-			SOAPMessage response = messageFactory.createMessage();
+			SOAPMessage response = this.messageFactory.createMessage();
 			SOAPBody body = response.getSOAPBody();
 			body.addFault(SOAPConstants.SOAP_SENDER_FAULT, "Sender Fault");
 			return response;

@@ -39,8 +39,8 @@ import org.springframework.util.Assert;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see Crypto
  * @since 2.3.0
+ * @see Crypto
  */
 public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean {
 
@@ -162,10 +162,10 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (!configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
-			configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
+		if (!this.configuration.containsKey(CRYPTO_PROVIDER_PROPERTY)) {
+			this.configuration.setProperty(CRYPTO_PROVIDER_PROPERTY, Merlin.class.getName());
 		}
-		this.crypto = CryptoFactory.getInstance(configuration);
+		this.crypto = CryptoFactory.getInstance(this.configuration);
 	}
 
 	@Override
@@ -180,7 +180,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 
 	@Override
 	public Crypto getObject() throws Exception {
-		return crypto;
+		return this.crypto;
 	}
 
 }

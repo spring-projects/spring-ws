@@ -45,7 +45,7 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
 	@Override
 	public Soap12Fault getFault() {
 		SOAPFault fault = getSaajBody().getFault();
-		return fault != null ? new SaajSoap12Fault(fault) : null;
+		return (fault != null) ? new SaajSoap12Fault(fault) : null;
 	}
 
 	@Override

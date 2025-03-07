@@ -40,7 +40,7 @@ import org.springframework.ws.soap.SoapFaultDetailElement;
  */
 class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements SoapFaultDetail {
 
-	public SaajSoapFaultDetail(SOAPFaultElement faultElement) {
+	SaajSoapFaultDetail(SOAPFaultElement faultElement) {
 		super(faultElement);
 	}
 
@@ -71,7 +71,7 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 		return (Detail) getSaajElement();
 	}
 
-	private static class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
+	private static final class SaajSoapFaultDetailElementIterator implements Iterator<SoapFaultDetailElement> {
 
 		private final Iterator<DetailEntry> iterator;
 
@@ -82,18 +82,18 @@ class SaajSoapFaultDetail extends SaajSoapElement<SOAPFaultElement> implements S
 
 		@Override
 		public boolean hasNext() {
-			return iterator.hasNext();
+			return this.iterator.hasNext();
 		}
 
 		@Override
 		public SoapFaultDetailElement next() {
-			DetailEntry saajDetailEntry = iterator.next();
+			DetailEntry saajDetailEntry = this.iterator.next();
 			return new SaajSoapFaultDetailElement(saajDetailEntry);
 		}
 
 		@Override
 		public void remove() {
-			iterator.remove();
+			this.iterator.remove();
 		}
 
 	}

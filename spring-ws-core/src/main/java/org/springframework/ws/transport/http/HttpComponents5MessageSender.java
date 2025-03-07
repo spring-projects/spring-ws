@@ -55,8 +55,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Arjen Poutsma
  * @author Greg Turnquist
  * @author Lars Uffmann
- * @see HttpClient
  * @since 4.0.5
+ * @see HttpClient
  */
 public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageSender
 		implements InitializingBean, DisposableBean {
@@ -122,7 +122,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * Returns the {@code HttpClient} used by this message sender.
 	 */
 	public HttpClient getHttpClient() {
-		return httpClient;
+		return this.httpClient;
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	public void afterPropertiesSet() throws Exception {
 
 		if (this.clientFactory != null) {
-			this.httpClient = clientFactory.getObject();
+			this.httpClient = this.clientFactory.getObject();
 		}
 	}
 

@@ -44,11 +44,11 @@ class ExceptionResponseCreator implements ResponseCreator {
 	@Override
 	public WebServiceMessage createResponse(URI uri, WebServiceMessage request, WebServiceMessageFactory factory)
 			throws IOException {
-		if (exception instanceof IOException) {
-			throw (IOException) exception;
+		if (this.exception instanceof IOException) {
+			throw (IOException) this.exception;
 		}
 		else {
-			throw (RuntimeException) exception;
+			throw (RuntimeException) this.exception;
 		}
 	}
 

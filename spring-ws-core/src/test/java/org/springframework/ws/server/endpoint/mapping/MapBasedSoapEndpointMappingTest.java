@@ -102,7 +102,7 @@ public class MapBasedSoapEndpointMappingTest {
 		assertThat(mapping.getEndpointInternal(null)).isNull();
 	}
 
-	private static class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
+	private static final class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {
 
 		private String key;
 
@@ -120,12 +120,12 @@ public class MapBasedSoapEndpointMappingTest {
 
 		@Override
 		protected boolean validateLookupKey(String key) {
-			return Arrays.binarySearch(validKeys, key) >= 0;
+			return Arrays.binarySearch(this.validKeys, key) >= 0;
 		}
 
 		@Override
 		protected String getLookupKeyForMessage(MessageContext messageContext) {
-			return key;
+			return this.key;
 		}
 
 	}

@@ -27,13 +27,13 @@ public abstract class AbstractWebServiceMessageFactoryTest {
 
 	@BeforeEach
 	public final void setUp() throws Exception {
-		messageFactory = createMessageFactory();
+		this.messageFactory = createMessageFactory();
 	}
 
 	@Test
 	public void testCreateEmptyMessage() {
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage();
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage();
 
 		assertThat(message).isNotNull();
 	}

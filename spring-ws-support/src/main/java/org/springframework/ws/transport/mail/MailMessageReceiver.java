@@ -84,7 +84,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 	 * Non-default properties in this instance will override given JavaMail properties.
 	 */
 	public void setJavaMailProperties(Properties javaMailProperties) {
-		session = Session.getInstance(javaMailProperties, null);
+		this.session = Session.getInstance(javaMailProperties, null);
 	}
 
 	/**
@@ -136,15 +136,15 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(storeUri, "Property 'storeUri' is required");
-		Assert.notNull(transportUri, "Property 'transportUri' is required");
-		if (monitoringStrategy == null) {
-			String protocol = storeUri.getProtocol();
+		Assert.notNull(this.storeUri, "Property 'storeUri' is required");
+		Assert.notNull(this.transportUri, "Property 'transportUri' is required");
+		if (this.monitoringStrategy == null) {
+			String protocol = this.storeUri.getProtocol();
 			if ("pop3".equals(protocol)) {
-				monitoringStrategy = new Pop3PollingMonitoringStrategy();
+				this.monitoringStrategy = new Pop3PollingMonitoringStrategy();
 			}
 			else if ("imap".equals(protocol)) {
-				monitoringStrategy = new PollingMonitoringStrategy();
+				this.monitoringStrategy = new PollingMonitoringStrategy();
 			}
 			else {
 				throw new IllegalArgumentException("Cannot determine monitoring strategy for \"" + protocol + "\". "
@@ -162,60 +162,64 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 	@Override
 	protected void onStart() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Starting mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger
+				.info("Starting mail receiver [" + MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
 		execute(new MonitoringRunnable());
 	}
 
 	@Override
 	protected void onStop() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Stopping mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger
+				.info("Stopping mail receiver [" + MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
 		closeFolder();
 	}
 
 	@Override
 	protected void onShutdown() {
-		if (logger.isInfoEnabled()) {
-			logger.info("Shutting down mail receiver [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Shutting down mail receiver ["
+					+ MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
 		closeFolder();
 		closeSession();
 	}
 
 	private void openSession() throws MessagingException {
-		store = session.getStore(storeUri);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Connecting to store [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
+		this.store = this.session.getStore(this.storeUri);
+		if (this.logger.isDebugEnabled()) {
+			this.logger
+				.debug("Connecting to store [" + MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
-		store.connect();
+		this.store.connect();
 	}
 
 	private void openFolder() throws MessagingException {
-		if (folder != null && folder.isOpen()) {
+		if (this.folder != null && this.folder.isOpen()) {
 			return;
 		}
-		folder = store.getFolder(storeUri);
-		if (folder == null || !folder.exists()) {
+		this.folder = this.store.getFolder(this.storeUri);
+		if (this.folder == null || !this.folder.exists()) {
 			throw new IllegalStateException("No default folder to receive from");
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Opening folder [" + MailTransportUtils.toPasswordProtectedString(storeUri) + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Opening folder [" + MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
-		folder.open(monitoringStrategy.getFolderOpenMode());
+		this.folder.open(this.monitoringStrategy.getFolderOpenMode());
 	}
 
 	private void closeFolder() {
-		MailTransportUtils.closeFolder(folder, true);
+		MailTransportUtils.closeFolder(this.folder, true);
 	}
 
 	private void closeSession() {
-		MailTransportUtils.closeService(store);
+		MailTransportUtils.closeService(this.store);
 	}
 
-	private class MonitoringRunnable implements SchedulingAwareRunnable {
+	private final class MonitoringRunnable implements SchedulingAwareRunnable {
 
 		@Override
 		public void run() {
@@ -223,20 +227,21 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 				openFolder();
 				while (isRunning()) {
 					try {
-						Message[] messages = monitoringStrategy.monitor(folder);
+						Message[] messages = MailMessageReceiver.this.monitoringStrategy
+							.monitor(MailMessageReceiver.this.folder);
 						for (Message message : messages) {
 							MessageHandler handler = new MessageHandler(message);
 							execute(handler);
 						}
 					}
 					catch (FolderClosedException ex) {
-						logger.debug("Folder closed, reopening");
+						MailMessageReceiver.this.logger.debug("Folder closed, reopening");
 						if (isRunning()) {
 							openFolder();
 						}
 					}
 					catch (MessagingException ex) {
-						logger.warn(ex);
+						MailMessageReceiver.this.logger.warn(ex);
 					}
 				}
 			}
@@ -245,7 +250,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 				Thread.currentThread().interrupt();
 			}
 			catch (MessagingException ex) {
-				logger.error(ex);
+				MailMessageReceiver.this.logger.error(ex);
 			}
 		}
 
@@ -256,24 +261,25 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 	}
 
-	private class MessageHandler implements SchedulingAwareRunnable {
+	private final class MessageHandler implements SchedulingAwareRunnable {
 
 		private final Message message;
 
-		public MessageHandler(Message message) {
+		MessageHandler(Message message) {
 			this.message = message;
 		}
 
 		@Override
 		public void run() {
-			MailReceiverConnection connection = new MailReceiverConnection(message, session);
-			connection.setTransportUri(transportUri);
-			connection.setFrom(from);
+			MailReceiverConnection connection = new MailReceiverConnection(this.message,
+					MailMessageReceiver.this.session);
+			connection.setTransportUri(MailMessageReceiver.this.transportUri);
+			connection.setFrom(MailMessageReceiver.this.from);
 			try {
 				handleConnection(connection);
 			}
 			catch (Exception ex) {
-				logger.error("Could not handle incoming mail connection", ex);
+				MailMessageReceiver.this.logger.error("Could not handle incoming mail connection", ex);
 			}
 		}
 

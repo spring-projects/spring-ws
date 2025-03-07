@@ -42,21 +42,21 @@ public class WebServiceMessageMatcherAdapterTest {
 	@BeforeEach
 	public void setUp() {
 
-		message = createMock(WebServiceMessage.class);
-		adaptee = createMock(WebServiceMessageMatcher.class);
-		adapter = new WebServiceMessageMatcherAdapter(adaptee);
+		this.message = createMock(WebServiceMessage.class);
+		this.adaptee = createMock(WebServiceMessageMatcher.class);
+		this.adapter = new WebServiceMessageMatcherAdapter(this.adaptee);
 	}
 
 	@Test
 	public void match() throws IOException {
 
-		adaptee.match(message);
+		this.adaptee.match(this.message);
 
-		replay(message, adaptee);
+		replay(this.message, this.adaptee);
 
-		adapter.match(null, message);
+		this.adapter.match(null, this.message);
 
-		verify(message, adaptee);
+		verify(this.message, this.adaptee);
 	}
 
 }

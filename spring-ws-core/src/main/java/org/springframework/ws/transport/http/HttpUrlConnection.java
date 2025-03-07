@@ -59,12 +59,12 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	}
 
 	public HttpURLConnection getConnection() {
-		return connection;
+		return this.connection;
 	}
 
 	@Override
 	public void onClose() {
-		connection.disconnect();
+		this.connection.disconnect();
 	}
 
 	/*
@@ -73,7 +73,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return new URI(StringUtils.replace(connection.getURL().toString(), " ", "%20"));
+		return new URI(StringUtils.replace(this.connection.getURL().toString(), " ", "%20"));
 	}
 
 	/*
@@ -82,17 +82,17 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
-		connection.addRequestProperty(name, value);
+		this.connection.addRequestProperty(name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return connection.getOutputStream();
+		return this.connection.getOutputStream();
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		connection.connect();
+		this.connection.connect();
 	}
 
 	/*
@@ -101,7 +101,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		return connection.getContentLength();
+		return this.connection.getContentLength();
 	}
 
 	@Override
@@ -110,7 +110,7 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 		// Header field 0 is the status line, so we start at 1
 		int i = 1;
 		while (true) {
-			String headerName = connection.getHeaderFieldKey(i);
+			String headerName = this.connection.getHeaderFieldKey(i);
 			if (!StringUtils.hasLength(headerName)) {
 				break;
 			}
@@ -124,9 +124,9 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		Map<String, List<String>> headersListMappedByLowerCaseName = new HashMap<>();
 
-		for (String key : connection.getHeaderFields().keySet()) {
+		for (String key : this.connection.getHeaderFields().keySet()) {
 			if (key != null) {
-				headersListMappedByLowerCaseName.put(key.toLowerCase(), connection.getHeaderFields().get(key));
+				headersListMappedByLowerCaseName.put(key.toLowerCase(), this.connection.getHeaderFields().get(key));
 			}
 		}
 
@@ -142,21 +142,21 @@ public class HttpUrlConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return connection.getResponseCode();
+		return this.connection.getResponseCode();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return connection.getResponseMessage();
+		return this.connection.getResponseMessage();
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		if (connection.getResponseCode() / 100 != 2) {
-			return connection.getErrorStream();
+		if (this.connection.getResponseCode() / 100 != 2) {
+			return this.connection.getErrorStream();
 		}
 		else {
-			return connection.getInputStream();
+			return this.connection.getInputStream();
 		}
 	}
 

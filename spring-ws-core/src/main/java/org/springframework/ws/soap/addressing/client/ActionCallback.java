@@ -124,14 +124,14 @@ public class ActionCallback implements WebServiceMessageCallback {
 		this.action = action;
 		this.version = version;
 		this.to = to;
-		messageIdStrategy = new UuidMessageIdStrategy();
+		this.messageIdStrategy = new UuidMessageIdStrategy();
 	}
 
 	/**
-	 * Returns the WS-Addressing version
+	 * Returns the WS-Addressing version.
 	 */
 	public AddressingVersion getVersion() {
-		return version;
+		return this.version;
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * By default, the {@link UuidMessageIdStrategy} is used.
 	 */
 	public MessageIdStrategy getMessageIdStrategy() {
-		return messageIdStrategy;
+		return this.messageIdStrategy;
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getAction()
 	 */
 	public URI getAction() {
-		return action;
+		return this.action;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
 	public EndpointReference getFrom() {
-		return from;
+		return this.from;
 	}
 
 	/**
@@ -182,7 +182,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
 	public EndpointReference getReplyTo() {
-		return replyTo;
+		return this.replyTo;
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
 	public EndpointReference getFaultTo() {
-		return faultTo;
+		return this.faultTo;
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * URI} if no destination was set.
 	 */
 	protected URI getTo() {
-		if (to == null && (isToHeaderRequired() || shouldInitializeTo)) {
+		if (this.to == null && (isToHeaderRequired() || this.shouldInitializeTo)) {
 			TransportContext transportContext = TransportContextHolder.getTransportContext();
 			if (transportContext != null && transportContext.getConnection() != null) {
 				try {
@@ -230,7 +230,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 			throw new IllegalStateException("Could not obtain connection URI from Transport Context");
 		}
 		else {
-			return to;
+			return this.to;
 		}
 	}
 
@@ -253,7 +253,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 		URI messageId = getMessageIdStrategy().newMessageId(soapMessage);
 		MessageAddressingProperties map = new MessageAddressingProperties(getTo(), getFrom(), getReplyTo(),
 				getFaultTo(), getAction(), messageId);
-		version.addAddressingHeaders(soapMessage, map);
+		this.version.addAddressingHeaders(soapMessage, map);
 	}
 
 }

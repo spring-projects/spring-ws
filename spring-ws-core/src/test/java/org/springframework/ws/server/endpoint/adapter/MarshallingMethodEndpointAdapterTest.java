@@ -57,14 +57,14 @@ public class MarshallingMethodEndpointAdapterTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		adapter = new MarshallingMethodEndpointAdapter();
-		marshallerMock = createMock(Marshaller.class);
-		adapter.setMarshaller(marshallerMock);
-		unmarshallerMock = createMock(Unmarshaller.class);
-		adapter.setUnmarshaller(unmarshallerMock);
-		adapter.afterPropertiesSet();
+		this.adapter = new MarshallingMethodEndpointAdapter();
+		this.marshallerMock = createMock(Marshaller.class);
+		this.adapter.setMarshaller(this.marshallerMock);
+		this.unmarshallerMock = createMock(Unmarshaller.class);
+		this.adapter.setUnmarshaller(this.unmarshallerMock);
+		this.adapter.afterPropertiesSet();
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-		messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		this.messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 	}
 
 	@Test
@@ -72,35 +72,35 @@ public class MarshallingMethodEndpointAdapterTest {
 
 		Method noResponse = getClass().getMethod("noResponse", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyType());
+		expect(this.unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyType());
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(noResponseInvoked).isFalse();
+		assertThat(this.noResponseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(this.messageContext, methodEndpoint);
 
-		assertThat(noResponseInvoked).isTrue();
+		assertThat(this.noResponseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
 	public void testNoRequestPayload() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage();
-		messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		this.messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		Method noResponse = getClass().getMethod("noResponse", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(noResponseInvoked).isFalse();
+		assertThat(this.noResponseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
-		assertThat(noResponseInvoked).isTrue();
+		this.adapter.invoke(this.messageContext, methodEndpoint);
+		assertThat(this.noResponseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -108,18 +108,18 @@ public class MarshallingMethodEndpointAdapterTest {
 
 		Method response = getClass().getMethod("response", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
-		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyType());
-		marshallerMock.marshal(isA(MyType.class), isA(Result.class));
+		expect(this.unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyType());
+		this.marshallerMock.marshal(isA(MyType.class), isA(Result.class));
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(responseInvoked).isFalse();
+		assertThat(this.responseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(this.messageContext, methodEndpoint);
 
-		assertThat(responseInvoked).isTrue();
+		assertThat(this.responseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -127,13 +127,13 @@ public class MarshallingMethodEndpointAdapterTest {
 
 		Method noResponse = getClass().getMethod("noResponse", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-		expect(unmarshallerMock.supports(MyType.class)).andReturn(true);
+		expect(this.unmarshallerMock.supports(MyType.class)).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -141,14 +141,14 @@ public class MarshallingMethodEndpointAdapterTest {
 
 		Method response = getClass().getMethod("response", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
-		expect(unmarshallerMock.supports(MyType.class)).andReturn(true);
-		expect(marshallerMock.supports(MyType.class)).andReturn(true);
+		expect(this.unmarshallerMock.supports(MyType.class)).andReturn(true);
+		expect(this.marshallerMock.supports(MyType.class)).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -156,48 +156,48 @@ public class MarshallingMethodEndpointAdapterTest {
 
 		Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-		expect(unmarshallerMock.supports(String.class)).andReturn(false);
-		expect(marshallerMock.supports(String.class)).andReturn(true);
+		expect(this.unmarshallerMock.supports(String.class)).andReturn(false);
+		expect(this.marshallerMock.supports(String.class)).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-		expect(marshallerMock.supports(String.class)).andReturn(false);
+		expect(this.marshallerMock.supports(String.class)).andReturn(false);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	public void noResponse(MyType type) {
-		noResponseInvoked = true;
+		this.noResponseInvoked = true;
 
 	}
 
 	public MyType response(MyType type) {
 
-		responseInvoked = true;
+		this.responseInvoked = true;
 		return new MyType();
 	}
 
@@ -208,7 +208,7 @@ public class MarshallingMethodEndpointAdapterTest {
 		return s;
 	}
 
-	private static class MyType {
+	private static final class MyType {
 
 	}
 

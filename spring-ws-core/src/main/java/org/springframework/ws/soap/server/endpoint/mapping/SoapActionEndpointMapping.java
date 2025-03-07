@@ -61,7 +61,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	@Override
 	public final void setActorOrRole(String actorOrRole) {
 		Assert.notNull(actorOrRole, "actorOrRole must not be null");
-		actorsOrRoles = new String[] { actorOrRole };
+		this.actorsOrRoles = new String[] { actorOrRole };
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 
 	@Override
 	public final void setUltimateReceiver(boolean ultimateReceiver) {
-		isUltimateReceiver = ultimateReceiver;
+		this.isUltimateReceiver = ultimateReceiver;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	@Override
 	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
 			Object endpoint, EndpointInterceptor[] interceptors) {
-		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
+		return new SoapEndpointInvocationChain(endpoint, interceptors, this.actorsOrRoles, this.isUltimateReceiver);
 	}
 
 	@Override

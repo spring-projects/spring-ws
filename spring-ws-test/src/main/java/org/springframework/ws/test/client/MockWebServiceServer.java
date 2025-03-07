@@ -167,7 +167,7 @@ public class MockWebServiceServer {
 	 * @return the response actions
 	 */
 	public ResponseActions expect(RequestMatcher requestMatcher) {
-		MockSenderConnection connection = mockMessageSender.expectNewConnection();
+		MockSenderConnection connection = this.mockMessageSender.expectNewConnection();
 		connection.addRequestMatcher(requestMatcher);
 		return connection;
 	}
@@ -178,14 +178,14 @@ public class MockWebServiceServer {
 	 * @throws AssertionError in case of unmet expectations
 	 */
 	public void verify() {
-		mockMessageSender.verifyConnections();
+		this.mockMessageSender.verifyConnections();
 	}
 
 	/**
 	 * Reset the {@link MockWebServiceMessageSender}'s expectations.
 	 */
 	public void reset() {
-		mockMessageSender.reset();
+		this.mockMessageSender.reset();
 	}
 
 }

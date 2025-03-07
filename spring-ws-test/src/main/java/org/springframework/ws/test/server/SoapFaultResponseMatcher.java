@@ -25,9 +25,7 @@ import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
+import org.springframework.ws.test.support.AssertionErrors;
 
 /**
  * Abstract Implementation of {@link ResponseMatcher} that checks for a SOAP fault.
@@ -45,16 +43,16 @@ abstract class SoapFaultResponseMatcher implements ResponseMatcher {
 
 	@Override
 	public void match(WebServiceMessage request, WebServiceMessage response) throws IOException, AssertionError {
-		assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
+		AssertionErrors.assertTrue("Response is not a SOAP message", response instanceof SoapMessage);
 		SoapMessage soapResponse = (SoapMessage) response;
 		SoapBody responseBody = soapResponse.getSoapBody();
-		assertTrue("Response has no SOAP Body", responseBody != null);
-		assertTrue("Response has no SOAP Fault", responseBody.hasFault());
+		AssertionErrors.assertTrue("Response has no SOAP Body", responseBody != null);
+		AssertionErrors.assertTrue("Response has no SOAP Fault", responseBody.hasFault());
 		SoapFault soapFault = responseBody.getFault();
 		QName expectedFaultCode = getExpectedFaultCode(soapResponse.getVersion());
-		assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
-		if (expectedFaultStringOrReason != null) {
-			assertEquals("Invalid SOAP Fault string/reason", expectedFaultStringOrReason,
+		AssertionErrors.assertEquals("Invalid SOAP Fault code", expectedFaultCode, soapFault.getFaultCode());
+		if (this.expectedFaultStringOrReason != null) {
+			AssertionErrors.assertEquals("Invalid SOAP Fault string/reason", this.expectedFaultStringOrReason,
 					soapFault.getFaultStringOrReason());
 		}
 	}

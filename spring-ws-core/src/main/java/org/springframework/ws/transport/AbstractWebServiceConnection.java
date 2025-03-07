@@ -39,12 +39,12 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	public final void send(WebServiceMessage message) throws IOException {
 		checkClosed();
 		onSendBeforeWrite(message);
-		tos = createTransportOutputStream();
-		if (tos == null) {
+		this.tos = createTransportOutputStream();
+		if (this.tos == null) {
 			return;
 		}
-		message.writeTo(tos);
-		tos.flush();
+		message.writeTo(this.tos);
+		this.tos.flush();
 		onSendAfterWrite(message);
 	}
 
@@ -82,11 +82,11 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		checkClosed();
 		onReceiveBeforeRead();
-		tis = createTransportInputStream();
-		if (tis == null) {
+		this.tis = createTransportInputStream();
+		if (this.tis == null) {
 			return null;
 		}
-		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		WebServiceMessage message = messageFactory.createWebServiceMessage(this.tis);
 		onReceiveAfterRead(message);
 		return message;
 	}
@@ -123,31 +123,31 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	@Override
 	public final void close() throws IOException {
 		IOException ioex = null;
-		if (tis != null) {
+		if (this.tis != null) {
 			try {
-				tis.close();
+				this.tis.close();
 			}
 			catch (IOException ex) {
 				ioex = ex;
 			}
 		}
-		if (tos != null) {
+		if (this.tos != null) {
 			try {
-				tos.close();
+				this.tos.close();
 			}
 			catch (IOException ex) {
 				ioex = ex;
 			}
 		}
 		onClose();
-		closed = true;
+		this.closed = true;
 		if (ioex != null) {
 			throw ioex;
 		}
 	}
 
 	private void checkClosed() {
-		if (closed) {
+		if (this.closed) {
 			throw new IllegalStateException("Connection has been closed and cannot be reused.");
 		}
 	}

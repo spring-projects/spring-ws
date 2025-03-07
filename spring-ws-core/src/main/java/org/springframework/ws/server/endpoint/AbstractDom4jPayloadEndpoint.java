@@ -39,8 +39,8 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * payload elements are not in accordance with WS-I.
  *
  * @author Arjen Poutsma
- * @see org.dom4j.Element
  * @since 1.0.0
+ * @see org.dom4j.Element
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
@@ -68,7 +68,7 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 		}
 		Document responseDocument = DocumentHelper.createDocument();
 		Element responseElement = invokeInternal(requestElement, responseDocument);
-		return responseElement != null ? new DocumentSource(responseElement) : null;
+		return (responseElement != null) ? new DocumentSource(responseElement) : null;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public abstract class AbstractDom4jPayloadEndpoint extends TransformerObjectSupp
 		if (source == null) {
 			return null;
 		}
-		if (!alwaysTransform && source instanceof DOMSource) {
+		if (!this.alwaysTransform && source instanceof DOMSource) {
 			Node node = ((DOMSource) source).getNode();
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				DOMReader domReader = new DOMReader();

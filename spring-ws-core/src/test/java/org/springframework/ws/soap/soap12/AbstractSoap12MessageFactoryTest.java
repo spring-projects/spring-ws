@@ -38,7 +38,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 	@Override
 	public void testCreateEmptyMessage() {
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage();
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage();
 
 		assertThat(message).isInstanceOf(SoapMessage.class);
 
@@ -56,7 +56,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 		headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml; action=" + soapAction);
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage(tis);
 		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
 
@@ -73,7 +73,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 		headers.put(TransportConstants.HEADER_CONTENT_TYPE, "application/soap+xml");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
-		messageFactory.createWebServiceMessage(tis);
+		this.messageFactory.createWebServiceMessage(tis);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 				+ "boundary=\"----=_Part_0_11416420.1149699787554\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage(tis);
 
 		assertThat(message).isInstanceOf(SoapMessage.class);
 
@@ -110,7 +110,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 						+ "boundary=\"MIMEBoundaryurn_uuid_40864869929B855F971176851454455\"");
 		TransportInputStream tis = new MockTransportInputStream(is, headers);
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage(tis);
 		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
 
@@ -132,7 +132,7 @@ public abstract class AbstractSoap12MessageFactoryTest extends AbstractSoapMessa
 		InputStream is = AbstractSoap12MessageFactoryTest.class.getResourceAsStream("soap12.xml");
 		TransportInputStream tis = new MockTransportInputStream(is, Collections.emptyMap());
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage(tis);
 		assertThat(message).isInstanceOf(SoapMessage.class);
 		SoapMessage soapMessage = (SoapMessage) message;
 

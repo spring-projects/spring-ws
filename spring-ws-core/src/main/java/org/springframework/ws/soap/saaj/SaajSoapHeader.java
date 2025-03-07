@@ -108,12 +108,12 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
 
 		@Override
 		public boolean hasNext() {
-			return iterator.hasNext();
+			return this.iterator.hasNext();
 		}
 
 		@Override
 		public SoapHeaderElement next() {
-			Node saajHeaderElement = iterator.next();
+			Node saajHeaderElement = this.iterator.next();
 			if (saajHeaderElement instanceof SOAPHeaderElement) {
 				return new SaajSoapHeaderElement((SOAPHeaderElement) saajHeaderElement);
 			}
@@ -124,7 +124,7 @@ abstract class SaajSoapHeader extends SaajSoapElement<SOAPHeader> implements Soa
 
 		@Override
 		public void remove() {
-			iterator.remove();
+			this.iterator.remove();
 		}
 
 	}

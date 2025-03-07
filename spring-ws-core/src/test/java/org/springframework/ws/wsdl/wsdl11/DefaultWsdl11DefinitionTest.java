@@ -46,12 +46,12 @@ public class DefaultWsdl11DefinitionTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		definition = new DefaultWsdl11Definition();
+		this.definition = new DefaultWsdl11Definition();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
+		this.transformer = transformerFactory.newTransformer();
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		documentBuilder = documentBuilderFactory.newDocumentBuilder();
+		this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 	}
 
 	@Test
@@ -60,19 +60,19 @@ public class DefaultWsdl11DefinitionTest {
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
-		definition.setSchema(schema);
+		this.definition.setSchema(schema);
 
-		definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
-		definition.setPortTypeName("Order");
-		definition.setLocationUri("http://localhost:8080/");
+		this.definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+		this.definition.setPortTypeName("Order");
+		this.definition.setLocationUri("http://localhost:8080/");
 
-		definition.afterPropertiesSet();
+		this.definition.afterPropertiesSet();
 
 		DOMResult domResult = new DOMResult();
-		transformer.transform(definition.getSource(), domResult);
+		this.transformer.transform(this.definition.getSource(), domResult);
 
 		Document result = (Document) domResult.getNode();
-		Document expected = documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
+		Document expected = this.documentBuilder.parse(getClass().getResourceAsStream("single-inline.wsdl"));
 
 		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
@@ -84,18 +84,18 @@ public class DefaultWsdl11DefinitionTest {
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
 		schemaCollection.afterPropertiesSet();
-		definition.setSchemaCollection(schemaCollection);
+		this.definition.setSchemaCollection(schemaCollection);
 
-		definition.setPortTypeName("Order");
-		definition.setTargetNamespace("http://www.springframework.org/spring-ws/include/definitions");
-		definition.setLocationUri("http://localhost:8080/");
-		definition.afterPropertiesSet();
+		this.definition.setPortTypeName("Order");
+		this.definition.setTargetNamespace("http://www.springframework.org/spring-ws/include/definitions");
+		this.definition.setLocationUri("http://localhost:8080/");
+		this.definition.afterPropertiesSet();
 
 		DOMResult domResult = new DOMResult();
-		transformer.transform(definition.getSource(), domResult);
+		this.transformer.transform(this.definition.getSource(), domResult);
 
 		Document result = (Document) domResult.getNode();
-		Document expected = documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
+		Document expected = this.documentBuilder.parse(getClass().getResourceAsStream("include-inline.wsdl"));
 
 		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
@@ -107,18 +107,18 @@ public class DefaultWsdl11DefinitionTest {
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
 		schemaCollection.setInline(true);
 		schemaCollection.afterPropertiesSet();
-		definition.setSchemaCollection(schemaCollection);
+		this.definition.setSchemaCollection(schemaCollection);
 
-		definition.setPortTypeName("Order");
-		definition.setTargetNamespace("http://www.springframework.org/spring-ws/import/definitions");
-		definition.setLocationUri("http://localhost:8080/");
-		definition.afterPropertiesSet();
+		this.definition.setPortTypeName("Order");
+		this.definition.setTargetNamespace("http://www.springframework.org/spring-ws/import/definitions");
+		this.definition.setLocationUri("http://localhost:8080/");
+		this.definition.afterPropertiesSet();
 
 		DOMResult domResult = new DOMResult();
-		transformer.transform(definition.getSource(), domResult);
+		this.transformer.transform(this.definition.getSource(), domResult);
 
 		Document result = (Document) domResult.getNode();
-		Document expected = documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
+		Document expected = this.documentBuilder.parse(getClass().getResourceAsStream("import-inline.wsdl"));
 
 		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}
@@ -129,21 +129,21 @@ public class DefaultWsdl11DefinitionTest {
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
 		schema.afterPropertiesSet();
-		definition.setSchema(schema);
+		this.definition.setSchema(schema);
 
-		definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
-		definition.setPortTypeName("Order");
-		definition.setLocationUri("http://localhost:8080/");
-		definition.setCreateSoap11Binding(true);
-		definition.setCreateSoap12Binding(true);
+		this.definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+		this.definition.setPortTypeName("Order");
+		this.definition.setLocationUri("http://localhost:8080/");
+		this.definition.setCreateSoap11Binding(true);
+		this.definition.setCreateSoap12Binding(true);
 
-		definition.afterPropertiesSet();
+		this.definition.afterPropertiesSet();
 
 		DOMResult domResult = new DOMResult();
-		transformer.transform(definition.getSource(), domResult);
+		this.transformer.transform(this.definition.getSource(), domResult);
 
 		Document result = (Document) domResult.getNode();
-		Document expected = documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
+		Document expected = this.documentBuilder.parse(getClass().getResourceAsStream("soap-11-12.wsdl"));
 
 		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
 	}

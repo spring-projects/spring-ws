@@ -62,14 +62,14 @@ public class WebServiceMessageListenerIntegrationTest {
 
 		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
 
-		jmsTemplate.send(requestQueue, session -> {
+		this.jmsTemplate.send(this.requestQueue, session -> {
 			BytesMessage request = session.createBytesMessage();
-			request.setJMSReplyTo(responseQueue);
+			request.setJMSReplyTo(this.responseQueue);
 			request.writeBytes(b);
 			return request;
 		});
 
-		BytesMessage response = (BytesMessage) jmsTemplate.receive(responseQueue);
+		BytesMessage response = (BytesMessage) this.jmsTemplate.receive(this.responseQueue);
 
 		assertThat(response).isNotNull();
 	}
@@ -77,14 +77,14 @@ public class WebServiceMessageListenerIntegrationTest {
 	@Test
 	public void testReceiveQueueTextMessage() {
 
-		jmsTemplate.send(requestQueue, session -> {
+		this.jmsTemplate.send(this.requestQueue, session -> {
 
 			TextMessage request = session.createTextMessage(CONTENT);
-			request.setJMSReplyTo(responseQueue);
+			request.setJMSReplyTo(this.responseQueue);
 			return request;
 		});
 
-		TextMessage response = (TextMessage) jmsTemplate.receive(responseQueue);
+		TextMessage response = (TextMessage) this.jmsTemplate.receive(this.responseQueue);
 
 		assertThat(response).isNotNull();
 	}
@@ -94,7 +94,7 @@ public class WebServiceMessageListenerIntegrationTest {
 
 		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
 
-		jmsTemplate.send(requestTopic, session -> {
+		this.jmsTemplate.send(this.requestTopic, session -> {
 
 			BytesMessage request = session.createBytesMessage();
 			request.writeBytes(b);

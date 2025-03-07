@@ -99,24 +99,24 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 	public final void setUp() throws Exception {
 
 		int port = FreePortScanner.getFreePort();
-		connectionUri = new URI("http", null, "localhost", port, null, null, null);
+		this.connectionUri = new URI("http", null, "localhost", port, null, null, null);
 
-		jettyServer = new Server(port);
-		Connector connector = new ServerConnector(jettyServer);
-		jettyServer.addConnector(connector);
+		this.jettyServer = new Server(port);
+		Connector connector = new ServerConnector(this.jettyServer);
+		this.jettyServer.addConnector(connector);
 
-		jettyContext = new ServletContextHandler();
-		jettyContext.setServer(jettyServer);
+		this.jettyContext = new ServletContextHandler();
+		this.jettyContext.setServer(this.jettyServer);
 
-		messageSender = createMessageSender();
+		this.messageSender = createMessageSender();
 
-		if (messageSender instanceof InitializingBean) {
-			((InitializingBean) messageSender).afterPropertiesSet();
+		if (this.messageSender instanceof InitializingBean) {
+			((InitializingBean) this.messageSender).afterPropertiesSet();
 		}
 
-		saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-		messageFactory = new SaajSoapMessageFactory(saajMessageFactory);
-		transformerFactory = TransformerFactoryUtils.newInstance();
+		this.saajMessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		this.messageFactory = new SaajSoapMessageFactory(this.saajMessageFactory);
+		this.transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	protected abstract T createMessageSender();
@@ -124,14 +124,14 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 	@AfterEach
 	public final void tearDown() throws Exception {
 
-		if (jettyServer.isRunning()) {
-			jettyServer.stop();
+		if (this.jettyServer.isRunning()) {
+			this.jettyServer.stop();
 		}
 	}
 
 	@Test
 	public void testSupports() {
-		assertThat(messageSender.supports(connectionUri)).isTrue();
+		assertThat(this.messageSender.supports(this.connectionUri)).isTrue();
 	}
 
 	@Test
@@ -190,15 +190,15 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		servlet.setResponse(true);
 
-		jettyContext.addServlet(new ServletHolder(servlet), "/");
-		jettyServer.setHandler(jettyContext);
-		jettyServer.start();
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
 
-		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-			.createConnection(connectionUri)) {
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
 			SOAPMessage request = createRequest();
 			connection.send(new SaajSoapMessage(request));
-			connection.receive(messageFactory);
+			connection.receive(this.messageFactory);
 
 			assertThat(connection.hasFault()).isTrue();
 		}
@@ -206,15 +206,15 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 
 	private void validateResponse(Servlet servlet) throws Exception {
 
-		jettyContext.addServlet(new ServletHolder(servlet), "/");
-		jettyServer.setHandler(jettyContext);
-		jettyServer.start();
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
 
-		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) messageSender
-			.createConnection(connectionUri)) {
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
 			SOAPMessage request = createRequest();
 			connection.send(new SaajSoapMessage(request));
-			SaajSoapMessage response = (SaajSoapMessage) connection.receive(messageFactory);
+			SaajSoapMessage response = (SaajSoapMessage) connection.receive(this.messageFactory);
 
 			assertThat(response).isNotNull();
 			assertThat(connection.hasFault()).isFalse();
@@ -226,7 +226,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 			assertThat(headerValues).containsExactly(RESPONSE_HEADER_VALUE);
 
 			StringResult result = new StringResult();
-			Transformer transformer = transformerFactory.newTransformer();
+			Transformer transformer = this.transformerFactory.newTransformer();
 			transformer.transform(response.getPayloadSource(), result);
 
 			XmlAssert.assertThat(result.toString()).and(RESPONSE).ignoreWhitespace().areIdentical();
@@ -235,14 +235,14 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 
 	private void validateNonResponse(Servlet servlet) throws Exception {
 
-		jettyContext.addServlet(new ServletHolder(servlet), "/");
-		jettyServer.setHandler(jettyContext);
-		jettyServer.start();
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
 
-		try (WebServiceConnection connection = messageSender.createConnection(connectionUri)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(this.connectionUri)) {
 			SOAPMessage request = createRequest();
 			connection.send(new SaajSoapMessage(request));
-			WebServiceMessage response = connection.receive(messageFactory);
+			WebServiceMessage response = connection.receive(this.messageFactory);
 
 			assertThat(response).isNull();
 		}
@@ -250,10 +250,10 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 
 	private SOAPMessage createRequest() throws TransformerException, SOAPException {
 
-		SOAPMessage request = saajMessageFactory.createMessage();
+		SOAPMessage request = this.saajMessageFactory.createMessage();
 		MimeHeaders mimeHeaders = request.getMimeHeaders();
 		mimeHeaders.addHeader(REQUEST_HEADER_NAME, REQUEST_HEADER_VALUE);
-		Transformer transformer = transformerFactory.newTransformer();
+		Transformer transformer = this.transformerFactory.newTransformer();
 		transformer.transform(new StringSource(REQUEST), new DOMResult(request.getSOAPBody()));
 
 		return request;
@@ -297,28 +297,28 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTest<T exten
 
 				XmlAssert.assertThat(receivedRequest).and(SOAP_REQUEST).ignoreWhitespace().areIdentical();
 
-				if (gzip) {
+				if (this.gzip) {
 					assertThat(httpServletRequest.getHeader("Accept-Encoding")).isEqualTo("gzip");
 				}
 
-				httpServletResponse.setStatus(responseStatus);
+				httpServletResponse.setStatus(this.responseStatus);
 
-				if (response) {
+				if (this.response) {
 
 					httpServletResponse.addHeader("content-type", "text/xml");
 
-					if (contentLength != null) {
-						httpServletResponse.setContentLength(contentLength);
+					if (this.contentLength != null) {
+						httpServletResponse.setContentLength(this.contentLength);
 					}
 
-					if (gzip) {
+					if (this.gzip) {
 						httpServletResponse.addHeader("Content-Encoding", "gzip");
 					}
 
 					httpServletResponse.setHeader(RESPONSE_HEADER_NAME, RESPONSE_HEADER_VALUE);
 					OutputStream os;
 
-					if (gzip) {
+					if (this.gzip) {
 						os = new GZIPOutputStream(httpServletResponse.getOutputStream());
 					}
 					else {

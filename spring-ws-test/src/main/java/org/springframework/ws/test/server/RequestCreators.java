@@ -90,7 +90,7 @@ public abstract class RequestCreators {
 	/**
 	 * Adapts a {@link WebServiceMessageCreator} to the {@link RequestCreator} contract.
 	 */
-	private static class WebServiceMessageCreatorAdapter implements RequestCreator {
+	private static final class WebServiceMessageCreatorAdapter implements RequestCreator {
 
 		private final WebServiceMessageCreator adaptee;
 
@@ -100,7 +100,7 @@ public abstract class RequestCreators {
 
 		@Override
 		public WebServiceMessage createRequest(WebServiceMessageFactory messageFactory) throws IOException {
-			return adaptee.createMessage(messageFactory);
+			return this.adaptee.createMessage(messageFactory);
 		}
 
 	}

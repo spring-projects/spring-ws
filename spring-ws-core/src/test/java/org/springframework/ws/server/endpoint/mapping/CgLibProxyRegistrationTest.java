@@ -48,13 +48,13 @@ public class CgLibProxyRegistrationTest {
 	@Test
 	public void registration() throws NoSuchMethodException {
 
-		MethodEndpoint cglibProxy = mapping
+		MethodEndpoint cglibProxy = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
 
 		assertThat(cglibProxy).isNotNull();
 
 		Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
-		MethodEndpoint expected = new MethodEndpoint("cgLibProxyEndpoint", applicationContext, doIt);
+		MethodEndpoint expected = new MethodEndpoint("cgLibProxyEndpoint", this.applicationContext, doIt);
 
 		assertThat(cglibProxy).isEqualTo(expected);
 	}

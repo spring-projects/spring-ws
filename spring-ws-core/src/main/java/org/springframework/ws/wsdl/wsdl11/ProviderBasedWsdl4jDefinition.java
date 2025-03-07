@@ -49,13 +49,13 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
  * {@link #setTargetNamespace(String)}
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see #setImportsProvider(ImportsProvider)
  * @see #setTypesProvider(TypesProvider)
  * @see #setMessagesProvider(MessagesProvider)
  * @see #setPortTypesProvider(PortTypesProvider)
  * @see #setBindingsProvider(BindingsProvider)
  * @see #setServicesProvider(ServicesProvider)
- * @since 1.5.0
  */
 public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements InitializingBean {
 
@@ -83,7 +83,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the import provider; or {@code null}
 	 */
 	public ImportsProvider getImportsProvider() {
-		return importsProvider;
+		return this.importsProvider;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the types provider; or {@code null}
 	 */
 	public TypesProvider getTypesProvider() {
-		return typesProvider;
+		return this.typesProvider;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the messages provider; or {@code null}
 	 */
 	public MessagesProvider getMessagesProvider() {
-		return messagesProvider;
+		return this.messagesProvider;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the port types provider; or {@code null}
 	 */
 	public PortTypesProvider getPortTypesProvider() {
-		return portTypesProvider;
+		return this.portTypesProvider;
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the binding provider; or {@code null}
 	 */
 	public BindingsProvider getBindingsProvider() {
-		return bindingsProvider;
+		return this.bindingsProvider;
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the services provider; or {@code null}
 	 */
 	public ServicesProvider getServicesProvider() {
-		return servicesProvider;
+		return this.servicesProvider;
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @see javax.wsdl.Definition#getTargetNamespace()
 	 */
 	public String getTargetNamespace() {
-		return targetNamespace;
+		return this.targetNamespace;
 	}
 
 	/**
@@ -229,23 +229,23 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 		Definition definition = wsdlFactory.newDefinition();
 		definition.setTargetNamespace(getTargetNamespace());
 		definition.addNamespace(TARGET_NAMESPACE_PREFIX, getTargetNamespace());
-		if (importsProvider != null) {
-			importsProvider.addImports(definition);
+		if (this.importsProvider != null) {
+			this.importsProvider.addImports(definition);
 		}
-		if (typesProvider != null) {
-			typesProvider.addTypes(definition);
+		if (this.typesProvider != null) {
+			this.typesProvider.addTypes(definition);
 		}
-		if (messagesProvider != null) {
-			messagesProvider.addMessages(definition);
+		if (this.messagesProvider != null) {
+			this.messagesProvider.addMessages(definition);
 		}
-		if (portTypesProvider != null) {
-			portTypesProvider.addPortTypes(definition);
+		if (this.portTypesProvider != null) {
+			this.portTypesProvider.addPortTypes(definition);
 		}
-		if (bindingsProvider != null) {
-			bindingsProvider.addBindings(definition);
+		if (this.bindingsProvider != null) {
+			this.bindingsProvider.addBindings(definition);
 		}
-		if (servicesProvider != null) {
-			servicesProvider.addServices(definition);
+		if (this.servicesProvider != null) {
+			this.servicesProvider.addServices(definition);
 		}
 		setDefinition(definition);
 	}

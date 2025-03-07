@@ -34,9 +34,10 @@ import javax.xml.transform.TransformerException;
  * Implementations of this interface perform the actual work of extracting results, but
  * don't need to worry about exception handling, or resource handling.
  *
+ * @param <T> the type of the source
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate
  * @since 1.0.0
+ * @see org.springframework.ws.client.core.WebServiceTemplate
  */
 public interface SourceExtractor<T> {
 

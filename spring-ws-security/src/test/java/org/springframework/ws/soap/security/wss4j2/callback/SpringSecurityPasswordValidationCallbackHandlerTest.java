@@ -61,30 +61,30 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 		// SecurityContextHolder} isn't clean
 		SecurityContextHolder.clearContext();
 
-		callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
+		this.callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
 
-		grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
-		user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(grantedAuthority));
+		this.grantedAuthority = new SimpleGrantedAuthority("ROLE_1");
+		this.user = new User("Ernie", "Bert", true, true, true, true, Collections.singleton(this.grantedAuthority));
 
 		WSUsernameTokenPrincipalImpl principal = new WSUsernameTokenPrincipalImpl("Ernie", true);
-		callback = new UsernameTokenPrincipalCallback(principal);
+		this.callback = new UsernameTokenPrincipalCallback(principal);
 
-		passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
+		this.passwordCallback = new WSPasswordCallback("Ernie", null, "type", WSPasswordCallback.USERNAME_TOKEN);
 	}
 
 	@Test
 	public void testHandleUsernameToken() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
-		callbackHandler.setUserDetailsService(userDetailsService);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
+		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(this.user).anyTimes();
 
 		replay(userDetailsService);
 
-		callbackHandler.handleUsernameToken(passwordCallback);
+		this.callbackHandler.handleUsernameToken(this.passwordCallback);
 
-		assertThat(passwordCallback.getPassword()).isEqualTo("Bert");
+		assertThat(this.passwordCallback.getPassword()).isEqualTo("Bert");
 
 		verify(userDetailsService);
 	}
@@ -93,16 +93,16 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	public void testHandleUsernameTokenUserNotFound() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
-		callbackHandler.setUserDetailsService(userDetailsService);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
 
 		expect(userDetailsService.loadUserByUsername("Ernie"))
 			.andThrow(new UsernameNotFoundException("User 'Ernie' not found"));
 
 		replay(userDetailsService);
 
-		callbackHandler.handleUsernameToken(passwordCallback);
+		this.callbackHandler.handleUsernameToken(this.passwordCallback);
 
-		assertThat(passwordCallback.getPassword()).isNull();
+		assertThat(this.passwordCallback.getPassword()).isNull();
 
 		verify(userDetailsService);
 	}
@@ -111,13 +111,13 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 	public void testHandleUsernameTokenPrincipal() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
-		callbackHandler.setUserDetailsService(userDetailsService);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(user).anyTimes();
+		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(this.user).anyTimes();
 
 		replay(userDetailsService);
 
-		callbackHandler.handleUsernameTokenPrincipal(callback);
+		this.callbackHandler.handleUsernameTokenPrincipal(this.callback);
 		SecurityContext context = SecurityContextHolder.getContext();
 
 		assertThat(context).isNotNull();
@@ -130,9 +130,9 @@ public class SpringSecurityPasswordValidationCallbackHandlerTest {
 
 		assertThat(authorities).isNotNull();
 		assertThat(authorities).isNotEmpty();
-		assertThat(authorities.iterator().next()).isEqualTo(grantedAuthority);
+		assertThat(authorities.iterator().next()).isEqualTo(this.grantedAuthority);
 
-		assertThat(authentication.getDetails()).isEqualTo(user);
+		assertThat(authentication.getDetails()).isEqualTo(this.user);
 
 		verify(userDetailsService);
 	}

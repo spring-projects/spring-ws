@@ -32,11 +32,11 @@ public class DummyInterceptor implements EndpointInterceptor {
 	}
 
 	public DummyInterceptorDependency getPropertyDependency() {
-		return propertyDependency;
+		return this.propertyDependency;
 	}
 
 	public DummyInterceptorDependency getAutowiredDependency() {
-		return autowiredDependency;
+		return this.autowiredDependency;
 	}
 
 	@Override

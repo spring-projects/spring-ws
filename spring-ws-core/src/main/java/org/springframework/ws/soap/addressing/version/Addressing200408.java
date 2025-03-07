@@ -32,9 +32,9 @@ import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
  *
  * @author Arjen Poutsma
  * @author Leandro Quiroga
+ * @since 1.5.0
  * @see <a href="http://www.w3.org/Submission/2004/SUBM-ws-addressing-20040810/">Web
  * Services Addressing, August 2004</a>
- * @since 1.5.0
  */
 public class Addressing200408 extends AbstractAddressingVersion {
 

@@ -19,9 +19,8 @@ package org.springframework.ws.test.support.matcher.xmlunit2;
 import org.xmlunit.diff.Diff;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
 
 /**
  * Implementation of {@link WebServiceMessageMatcher} based on XMLUnit's {@link Diff}.
@@ -33,9 +32,8 @@ public abstract class DiffMatcher implements WebServiceMessageMatcher {
 
 	@Override
 	public final void match(WebServiceMessage message) throws AssertionError {
-
 		Diff diff = createDiff(message);
-		assertTrue("Messages are different, " + diff.toString(), !diff.hasDifferences(), "Payload",
+		AssertionErrors.assertTrue("Messages are different, " + diff.toString(), !diff.hasDifferences(), "Payload",
 				message.getPayloadSource());
 	}
 

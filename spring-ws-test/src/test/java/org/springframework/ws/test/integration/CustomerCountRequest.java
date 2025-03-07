@@ -26,7 +26,7 @@ public class CustomerCountRequest {
 
 	@XmlElement(namespace = "http://springframework.org/spring-ws")
 	public String getCustomerName() {
-		return customerName;
+		return this.customerName;
 	}
 
 	public void setCustomerName(String name) {

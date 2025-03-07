@@ -44,21 +44,21 @@ public class WsConfigurerComposite implements WsConfigurer {
 
 	@Override
 	public void addInterceptors(List<EndpointInterceptor> interceptors) {
-		for (WsConfigurer delegate : delegates) {
+		for (WsConfigurer delegate : this.delegates) {
 			delegate.addInterceptors(interceptors);
 		}
 	}
 
 	@Override
 	public void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
-		for (WsConfigurer delegate : delegates) {
+		for (WsConfigurer delegate : this.delegates) {
 			delegate.addArgumentResolvers(argumentResolvers);
 		}
 	}
 
 	@Override
 	public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
-		for (WsConfigurer delegate : delegates) {
+		for (WsConfigurer delegate : this.delegates) {
 			delegate.addReturnValueHandlers(returnValueHandlers);
 		}
 	}

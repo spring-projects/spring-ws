@@ -32,8 +32,8 @@ import org.w3c.dom.Node;
  *
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see #createXPathExpression(String)
  * @since 1.0.0
+ * @see #createXPathExpression(String)
  */
 abstract class JaxenXPathExpressionFactory {
 
@@ -75,7 +75,7 @@ abstract class JaxenXPathExpressionFactory {
 	}
 
 	/** Jaxen implementation of the {@code XPathExpression} interface. */
-	private static class JaxenXpathExpression implements XPathExpression {
+	private static final class JaxenXpathExpression implements XPathExpression {
 
 		private XPath xpath;
 
@@ -88,46 +88,50 @@ abstract class JaxenXPathExpressionFactory {
 
 		@Override
 		public String toString() {
-			return expression;
+			return this.expression;
 		}
 
 		@Override
 		public Node evaluateAsNode(Node node) {
 			try {
-				return (Node) xpath.selectSingleNode(node);
+				return (Node) this.xpath.selectSingleNode(node);
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
 		@Override
 		public boolean evaluateAsBoolean(Node node) {
 			try {
-				return xpath.booleanValueOf(node);
+				return this.xpath.booleanValueOf(node);
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
 		@Override
 		public double evaluateAsNumber(Node node) {
 			try {
-				return xpath.numberValueOf(node).doubleValue();
+				return this.xpath.numberValueOf(node).doubleValue();
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
 		@Override
 		public String evaluateAsString(Node node) {
 			try {
-				return xpath.stringValueOf(node);
+				return this.xpath.stringValueOf(node);
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
@@ -135,17 +139,18 @@ abstract class JaxenXPathExpressionFactory {
 		@SuppressWarnings("unchecked")
 		public List<Node> evaluateAsNodeList(Node node) {
 			try {
-				return xpath.selectNodes(node);
+				return this.xpath.selectNodes(node);
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
 		@Override
 		public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
 			try {
-				Node result = (Node) xpath.selectSingleNode(context);
+				Node result = (Node) this.xpath.selectSingleNode(context);
 				if (result != null) {
 					try {
 						return nodeMapper.mapNode(result, 0);
@@ -159,14 +164,15 @@ abstract class JaxenXPathExpressionFactory {
 				}
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 
 		@Override
 		public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
 			try {
-				List<?> nodes = xpath.selectNodes(context);
+				List<?> nodes = this.xpath.selectNodes(context);
 				List<T> results = new ArrayList<>(nodes.size());
 				for (int i = 0; i < nodes.size(); i++) {
 					Node node = (Node) nodes.get(i);
@@ -180,7 +186,8 @@ abstract class JaxenXPathExpressionFactory {
 				return results;
 			}
 			catch (JaxenException ex) {
-				throw new XPathException("Could not evaluate XPath expression [" + xpath + "] :" + ex.getMessage(), ex);
+				throw new XPathException("Could not evaluate XPath expression [" + this.xpath + "] :" + ex.getMessage(),
+						ex);
 			}
 		}
 

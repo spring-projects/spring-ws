@@ -32,11 +32,11 @@ import org.springframework.ws.WebServiceMessage;
  * itself. For the contents of the body, use {@code getPayloadSource()}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see SoapEnvelope#getBody()
  * @see #getPayloadSource()
  * @see #getPayloadResult()
  * @see SoapFault
- * @since 1.0.0
  */
 public interface SoapBody extends SoapElement {
 

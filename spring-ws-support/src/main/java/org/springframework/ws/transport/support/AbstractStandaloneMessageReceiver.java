@@ -43,8 +43,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	 * but not shut down yet.
 	 */
 	public final boolean isActive() {
-		synchronized (lifecycleMonitor) {
-			return active;
+		synchronized (this.lifecycleMonitor) {
+			return this.active;
 		}
 	}
 
@@ -54,8 +54,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	 */
 	@Override
 	public final boolean isRunning() {
-		synchronized (lifecycleMonitor) {
-			return running;
+		synchronized (this.lifecycleMonitor) {
+			return this.running;
 		}
 	}
 
@@ -87,11 +87,11 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	 * autoStartup} hasn't been turned off.
 	 */
 	public final void activate() throws Exception {
-		synchronized (lifecycleMonitor) {
-			active = true;
+		synchronized (this.lifecycleMonitor) {
+			this.active = true;
 		}
 		onActivate();
-		if (autoStartup) {
+		if (this.autoStartup) {
 			start();
 		}
 	}
@@ -99,8 +99,8 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	/** Start this server. */
 	@Override
 	public final void start() {
-		synchronized (lifecycleMonitor) {
-			running = true;
+		synchronized (this.lifecycleMonitor) {
+			this.running = true;
 		}
 		onStart();
 	}
@@ -108,17 +108,17 @@ public abstract class AbstractStandaloneMessageReceiver extends SimpleWebService
 	/** Stop this server. */
 	@Override
 	public final void stop() {
-		synchronized (lifecycleMonitor) {
-			running = false;
+		synchronized (this.lifecycleMonitor) {
+			this.running = false;
 		}
 		onStop();
 	}
 
 	/** Shut down this server. */
 	public final void shutdown() {
-		synchronized (lifecycleMonitor) {
-			running = false;
-			active = false;
+		synchronized (this.lifecycleMonitor) {
+			this.running = false;
+			this.active = false;
 		}
 		onShutdown();
 	}

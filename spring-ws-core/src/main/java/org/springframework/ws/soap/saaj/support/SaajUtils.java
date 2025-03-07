@@ -41,16 +41,25 @@ import org.springframework.ws.transport.TransportConstants;
  * {@link Name} objects to {@link QName}s and vice-versa, and SAAJ version checking.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see Name
  * @see QName
- * @since 1.0.0
  */
 public abstract class SaajUtils {
 
+	/**
+	 * SAAJ version 1.1.
+	 */
 	public static final int SAAJ_11 = 0;
 
+	/**
+	 * SAAJ version 1.2.
+	 */
 	public static final int SAAJ_12 = 1;
 
+	/**
+	 * SAAJ version 1.3.
+	 */
 	public static final int SAAJ_13 = 2;
 
 	private static int saajVersion = SAAJ_13;
@@ -172,7 +181,7 @@ public abstract class SaajUtils {
 	 * Loads a SAAJ {@code SOAPMessage} from the given resource with a given message
 	 * factory.
 	 * @param resource the resource to read from
-	 * @param messageFactory SAAJ message factory used to construct the message
+	 * @param messageFactory the SAAJ message factory used to construct the message
 	 * @return the loaded SAAJ message
 	 * @throws SOAPException if the message cannot be constructed
 	 * @throws IOException if the input stream resource cannot be loaded

@@ -34,7 +34,7 @@ public class PayloadRootQNameEndpointMappingTest {
 
 	@BeforeEach
 	public void setUp() {
-		mapping = new PayloadRootQNameEndpointMapping();
+		this.mapping = new PayloadRootQNameEndpointMapping();
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class PayloadRootQNameEndpointMappingTest {
 		MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		QName qName = mapping.resolveQName(context);
+		QName qName = this.mapping.resolveQName(context);
 
 		assertThat(qName).isNotNull();
 		assertThat(qName).isEqualTo(new QName("root"));
@@ -55,7 +55,7 @@ public class PayloadRootQNameEndpointMappingTest {
 		MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		QName qName = mapping.resolveQName(context);
+		QName qName = this.mapping.resolveQName(context);
 
 		assertThat(qName).isNotNull();
 		assertThat(qName).isEqualTo(new QName("namespace", "localname", "prefix"));

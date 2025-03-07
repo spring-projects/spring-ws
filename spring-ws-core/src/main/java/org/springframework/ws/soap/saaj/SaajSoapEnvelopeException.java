@@ -19,6 +19,8 @@ package org.springframework.ws.soap.saaj;
 import org.springframework.ws.soap.SoapEnvelopeException;
 
 /**
+ * A SAAJ {@link SoapEnvelopeException}.
+ *
  * @author Arjen Poutsma
  * @since 1.0.0
  */

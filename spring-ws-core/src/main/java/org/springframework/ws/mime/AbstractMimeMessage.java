@@ -65,20 +65,20 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 	 * @author Arjen Poutsma
 	 * @since 1.0.0
 	 */
-	private static class InputStreamSourceDataSource implements DataSource {
+	private static final class InputStreamSourceDataSource implements DataSource {
 
 		private final InputStreamSource inputStreamSource;
 
 		private final String contentType;
 
-		public InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
+		InputStreamSourceDataSource(InputStreamSource inputStreamSource, String contentType) {
 			this.inputStreamSource = inputStreamSource;
 			this.contentType = contentType;
 		}
 
 		@Override
 		public InputStream getInputStream() throws IOException {
-			return inputStreamSource.getInputStream();
+			return this.inputStreamSource.getInputStream();
 		}
 
 		@Override
@@ -88,12 +88,12 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public String getContentType() {
-			return contentType;
+			return this.contentType;
 		}
 
 		@Override
 		public String getName() {
-			if (inputStreamSource instanceof Resource resource) {
+			if (this.inputStreamSource instanceof Resource resource) {
 				return resource.getFilename();
 			}
 			else {

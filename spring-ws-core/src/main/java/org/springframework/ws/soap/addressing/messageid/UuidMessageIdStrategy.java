@@ -23,7 +23,7 @@ import org.springframework.ws.soap.SoapMessage;
 
 /**
  * Implementation of the {@link MessageIdStrategy} interface that uses a {@link UUID} to
- * generate a Message Id. The UUID is prefixed by {@code urn:uuid:}.
+ * generate a Message Id. The UUID is prefixed by {@value PREFIX}.
  * <p>
  * Note that the {@link UUID} class is only available on Java 5 and above.
  *
@@ -32,6 +32,9 @@ import org.springframework.ws.soap.SoapMessage;
  */
 public class UuidMessageIdStrategy implements MessageIdStrategy {
 
+	/**
+	 * Prefix of the generated UUID.
+	 */
 	public static final String PREFIX = "urn:uuid:";
 
 	/** Returns {@code false}. */

@@ -45,22 +45,22 @@ public class SaajXmlReaderTest {
 	public void setUp() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
-		message = messageFactory.createMessage();
-		SOAPEnvelope envelope = message.getSOAPPart().getEnvelope();
-		saajReader = new SaajXmlReader(envelope);
-		transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		this.message = messageFactory.createMessage();
+		SOAPEnvelope envelope = this.message.getSOAPPart().getEnvelope();
+		this.saajReader = new SaajXmlReader(envelope);
+		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
 	public void testNamespacesPrefixes() throws Exception {
 
-		saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
-		saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
+		this.saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
+		this.saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		DOMResult result = new DOMResult();
-		Source source = new SAXSource(saajReader, new InputSource());
-		transformer.transform(source, result);
+		Source source = new SAXSource(this.saajReader, new InputSource());
+		this.transformer.transform(source, result);
 		DOMResult expected = new DOMResult();
-		transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
+		this.transformer.transform(new DOMSource(this.message.getSOAPPart().getEnvelope()), expected);
 
 		assertThat(result.getNode()).and(expected.getNode()).ignoreWhitespace().areIdentical();
 	}
@@ -68,13 +68,13 @@ public class SaajXmlReaderTest {
 	@Test
 	public void testNamespacesNoPrefixes() throws Exception {
 
-		saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
-		saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+		this.saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
+		this.saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
 		DOMResult result = new DOMResult();
-		Source source = new SAXSource(saajReader, new InputSource());
-		transformer.transform(source, result);
+		Source source = new SAXSource(this.saajReader, new InputSource());
+		this.transformer.transform(source, result);
 		DOMResult expected = new DOMResult();
-		transformer.transform(new DOMSource(message.getSOAPPart().getEnvelope()), expected);
+		this.transformer.transform(new DOMSource(this.message.getSOAPPart().getEnvelope()), expected);
 
 		assertThat(result.getNode()).and(expected.getNode()).ignoreWhitespace().areIdentical();
 	}

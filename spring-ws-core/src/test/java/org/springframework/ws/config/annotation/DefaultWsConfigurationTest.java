@@ -97,7 +97,7 @@ public class DefaultWsConfigurationTest {
 	}
 
 	@Endpoint
-	private static class TestEndpoint {
+	private static final class TestEndpoint {
 
 		@SoapAction("handle")
 		public void handle() {

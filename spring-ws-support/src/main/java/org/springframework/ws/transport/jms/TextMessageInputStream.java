@@ -43,7 +43,7 @@ class TextMessageInputStream extends FilterInputStream {
 		Assert.notNull(encoding, "'encoding' must not be null");
 		try {
 			String text = message.getText();
-			byte[] contents = text != null ? text.getBytes(encoding) : new byte[0];
+			byte[] contents = (text != null) ? text.getBytes(encoding) : new byte[0];
 			return new ByteArrayInputStream(contents);
 		}
 		catch (JMSException ex) {

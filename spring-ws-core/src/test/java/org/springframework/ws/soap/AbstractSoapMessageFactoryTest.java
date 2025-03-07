@@ -30,7 +30,7 @@ public abstract class AbstractSoapMessageFactoryTest extends AbstractWebServiceM
 	@Test
 	public void testCreateEmptySoapMessage() {
 
-		WebServiceMessage message = messageFactory.createWebServiceMessage();
+		WebServiceMessage message = this.messageFactory.createWebServiceMessage();
 
 		assertThat(message).isInstanceOf(SoapMessage.class);
 	}

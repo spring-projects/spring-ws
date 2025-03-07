@@ -31,9 +31,9 @@ import org.w3c.dom.Node;
  * {@link XPathExpressionFactoryBean} for optimal performance, but less flexibility.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see Jaxp13XPathTemplate
  * @see JaxenXPathTemplate
- * @since 1.0.0
  */
 public interface XPathOperations {
 

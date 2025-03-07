@@ -30,12 +30,12 @@ public class XmppConnectionFactoryBeanTest {
 
 	@BeforeEach
 	public void createFactoryBean() {
-		factoryBean = new XmppConnectionFactoryBean();
+		this.factoryBean = new XmppConnectionFactoryBean();
 	}
 
 	@Test
 	public void noHost() {
-		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.afterPropertiesSet());
+		assertThatIllegalArgumentException().isThrownBy(() -> this.factoryBean.afterPropertiesSet());
 	}
 
 	@Test
@@ -43,14 +43,14 @@ public class XmppConnectionFactoryBeanTest {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 
-			factoryBean.setHost("jabber.org");
-			factoryBean.afterPropertiesSet();
+			this.factoryBean.setHost("jabber.org");
+			this.factoryBean.afterPropertiesSet();
 		});
 	}
 
 	@Test
 	public void wrongPort() {
-		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.setPort(-10));
+		assertThatIllegalArgumentException().isThrownBy(() -> this.factoryBean.setPort(-10));
 	}
 
 }

@@ -47,17 +47,17 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 	public void testSignAndValidate() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
-		interceptor.setSecurementActions("Signature");
-		interceptor.setEnableSignatureConfirmation(false);
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementUsername("rsaKey");
-		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setEnableSignatureConfirmation(false);
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
+		SOAPMessage saajMessage = this.saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SaajSoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SaajSoapMessage message = new SaajSoapMessage(saajMessage, this.saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
-				new SaajSoapMessageFactory(saajSoap11MessageFactory));
+				new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		SOAPHeader header = message.getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(new QName(
@@ -77,29 +77,29 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		mimeHeaders.addHeader("Content-Type", "text/xml");
 		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-		SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
-		message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
-		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		SOAPMessage signed = this.saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
+		message = new SaajSoapMessage(signed, this.saajSoap11MessageFactory);
+		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 	}
 
 	@Test
 	public void testSignWithoutInclusivePrefixesAndValidate() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
-		interceptor.setSecurementActions("Signature");
-		interceptor.setEnableSignatureConfirmation(false);
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementUsername("rsaKey");
-		interceptor.setAddInclusivePrefixes(false);
-		SOAPMessage saajMessage = saajSoap11MessageFactory.createMessage();
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setEnableSignatureConfirmation(false);
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
+		this.interceptor.setAddInclusivePrefixes(false);
+		SOAPMessage saajMessage = this.saajSoap11MessageFactory.createMessage();
 		transformer.transform(new StringSource(PAYLOAD), new DOMResult(saajMessage.getSOAPBody()));
-		SaajSoapMessage message = new SaajSoapMessage(saajMessage, saajSoap11MessageFactory);
+		SaajSoapMessage message = new SaajSoapMessage(saajMessage, this.saajSoap11MessageFactory);
 		MessageContext messageContext = new DefaultMessageContext(message,
-				new SaajSoapMessageFactory(saajSoap11MessageFactory));
+				new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 
 		SOAPHeader header = message.getSaajMessage().getSOAPHeader();
 		Iterator<?> iterator = header.getChildElements(new QName(
@@ -119,11 +119,11 @@ public class SaajWss4jMessageInterceptorSignTest extends Wss4jMessageInterceptor
 		mimeHeaders.addHeader("Content-Type", "text/xml");
 		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 
-		SOAPMessage signed = saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
-		message = new SaajSoapMessage(signed, saajSoap11MessageFactory);
-		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(saajSoap11MessageFactory));
+		SOAPMessage signed = this.saajSoap11MessageFactory.createMessage(mimeHeaders, bis);
+		message = new SaajSoapMessage(signed, this.saajSoap11MessageFactory);
+		messageContext = new DefaultMessageContext(message, new SaajSoapMessageFactory(this.saajSoap11MessageFactory));
 
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 	}
 
 }

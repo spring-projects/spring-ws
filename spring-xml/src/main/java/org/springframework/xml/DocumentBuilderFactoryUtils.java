@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.xml;
 
 import javax.xml.XMLConstants;
@@ -23,10 +24,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * General utilities for {@link DocumentBuilderFactory}.
+ *
  * @author Greg Turnquist
  * @since 3.0.5
  */
-public class DocumentBuilderFactoryUtils {
+public abstract class DocumentBuilderFactoryUtils {
 
 	private static final Log log = LogFactory.getLog(DocumentBuilderFactoryUtils.class);
 
@@ -41,7 +44,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
 		}
-		catch (IllegalArgumentException e) {
+		catch (IllegalArgumentException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_DTD + " property not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -51,7 +54,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 		}
-		catch (IllegalArgumentException e) {
+		catch (IllegalArgumentException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(XMLConstants.ACCESS_EXTERNAL_SCHEMA + " property not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -61,7 +64,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 		}
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn("FEATURE 'http://apache.org/xml/features/disallow-doctype-decl' is probably not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -71,7 +74,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
 		}
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn("FEATURE 'http://xml.org/sax/features/external-general-entities' is probably not supported by "
 						+ factory.getClass().getCanonicalName());
@@ -81,7 +84,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
 		}
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(
 						"FEATURE 'http://xml.org/sax/features/external-parameter-entities' is probably not supported by "
@@ -92,7 +95,7 @@ public class DocumentBuilderFactoryUtils {
 		try {
 			factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
 		}
-		catch (ParserConfigurationException e) {
+		catch (ParserConfigurationException ex) {
 			if (log.isWarnEnabled()) {
 				log.warn(
 						"FEATURE 'http://apache.org/xml/features/nonvalidating/load-external-dtd' is probably not supported by "
@@ -104,9 +107,9 @@ public class DocumentBuilderFactoryUtils {
 			factory.setXIncludeAware(false);
 			factory.setExpandEntityReferences(false);
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			if (log.isWarnEnabled()) {
-				log.warn("Caught " + e.getMessage() + " attempting to configure your XML parser.");
+				log.warn("Caught " + ex.getMessage() + " attempting to configure your XML parser.");
 			}
 		}
 

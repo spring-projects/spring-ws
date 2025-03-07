@@ -61,10 +61,10 @@ import org.springframework.xml.xsd.XsdSchema;
  * definitions will reflect the URL of the incoming request.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.web.servlet.DispatcherServlet
  * @see org.springframework.ws.server.MessageDispatcher
  * @see org.springframework.ws.transport.http.WebServiceMessageReceiverHandlerAdapter
- * @since 1.0.0
  */
 @SuppressWarnings("serial")
 public class MessageDispatcherServlet extends FrameworkServlet {
@@ -194,12 +194,12 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 */
 	public MessageDispatcherServlet(WebApplicationContext webApplicationContext) {
 		super(webApplicationContext);
-		defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
+		this.defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
 	}
 
 	/** Returns the bean name used to lookup a {@link WebServiceMessageFactory}. */
 	public String getMessageFactoryBeanName() {
-		return messageFactoryBeanName;
+		return this.messageFactoryBeanName;
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
 	/** Returns the bean name used to lookup a {@link WebServiceMessageReceiver}. */
 	public String getMessageReceiverBeanName() {
-		return messageReceiverBeanName;
+		return this.messageReceiverBeanName;
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * using the request URI of the incoming {@link HttpServletRequest}.
 	 */
 	public boolean isTransformWsdlLocations() {
-		return transformWsdlLocations;
+		return this.transformWsdlLocations;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * the request URI of the incoming {@link HttpServletRequest}.
 	 */
 	public boolean isTransformSchemaLocations() {
-		return transformSchemaLocations;
+		return this.transformSchemaLocations;
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * {@link WebServiceMessageReceiverHandlerAdapter}.
 	 */
 	public String getMessageReceiverHandlerAdapterBeanName() {
-		return messageReceiverHandlerAdapterBeanName;
+		return this.messageReceiverHandlerAdapterBeanName;
 	}
 
 	/**
@@ -274,7 +274,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
 	/** Returns the bean name used to lookup a {@link WsdlDefinitionHandlerAdapter}. */
 	public String getWsdlDefinitionHandlerAdapterBeanName() {
-		return wsdlDefinitionHandlerAdapterBeanName;
+		return this.wsdlDefinitionHandlerAdapterBeanName;
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
 	/** Returns the bean name used to lookup a {@link XsdSchemaHandlerAdapter}. */
 	public String getXsdSchemaHandlerAdapterBeanName() {
-		return xsdSchemaHandlerAdapterBeanName;
+		return this.xsdSchemaHandlerAdapterBeanName;
 	}
 
 	/**
@@ -303,15 +303,15 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 			throws Exception {
 		WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
 		if (definition != null) {
-			wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
+			this.wsdlDefinitionHandlerAdapter.handle(httpServletRequest, httpServletResponse, definition);
 			return;
 		}
 		XsdSchema schema = getXsdSchema(httpServletRequest);
 		if (schema != null) {
-			xsdSchemaHandlerAdapter.handle(httpServletRequest, httpServletResponse, schema);
+			this.xsdSchemaHandlerAdapter.handle(httpServletRequest, httpServletResponse, schema);
 			return;
 		}
-		messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, messageReceiver);
+		this.messageReceiverHandlerAdapter.handle(httpServletRequest, httpServletResponse, this.messageReceiver);
 	}
 
 	/**
@@ -327,18 +327,18 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	protected long getLastModified(HttpServletRequest httpServletRequest) {
 		WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
 		if (definition != null) {
-			return wsdlDefinitionHandlerAdapter.getLastModified(httpServletRequest, definition);
+			return this.wsdlDefinitionHandlerAdapter.getLastModified(httpServletRequest, definition);
 		}
 		XsdSchema schema = getXsdSchema(httpServletRequest);
 		if (schema != null) {
-			return xsdSchemaHandlerAdapter.getLastModified(httpServletRequest, schema);
+			return this.xsdSchemaHandlerAdapter.getLastModified(httpServletRequest, schema);
 		}
-		return messageReceiverHandlerAdapter.getLastModified(httpServletRequest, messageReceiver);
+		return this.messageReceiverHandlerAdapter.getLastModified(httpServletRequest, this.messageReceiver);
 	}
 
 	/** Returns the {@link WebServiceMessageReceiver} used by this servlet. */
 	protected WebServiceMessageReceiver getMessageReceiver() {
-		return messageReceiver;
+		return this.messageReceiver;
 	}
 
 	/**
@@ -355,7 +355,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())
 				&& request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
 			String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
-			return wsdlDefinitions.get(fileName);
+			return this.wsdlDefinitions.get(fileName);
 		}
 		else {
 			return null;
@@ -376,7 +376,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())
 				&& request.getRequestURI().endsWith(XSD_SUFFIX_NAME)) {
 			String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
-			return xsdSchemas.get(fileName);
+			return this.xsdSchemas.get(fileName);
 		}
 		else {
 			return null;
@@ -400,14 +400,14 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	private void initMessageReceiverHandlerAdapter(ApplicationContext context) {
 		try {
 			try {
-				messageReceiverHandlerAdapter = context.getBean(getMessageReceiverHandlerAdapterBeanName(),
+				this.messageReceiverHandlerAdapter = context.getBean(getMessageReceiverHandlerAdapterBeanName(),
 						WebServiceMessageReceiverHandlerAdapter.class);
 			}
 			catch (NoSuchBeanDefinitionException ignored) {
-				messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
+				this.messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
 			}
 			initWebServiceMessageFactory(context);
-			messageReceiverHandlerAdapter.afterPropertiesSet();
+			this.messageReceiverHandlerAdapter.afterPropertiesSet();
 		}
 		catch (Exception ex) {
 			throw new BeanInitializationException("Could not initialize WebServiceMessageReceiverHandlerAdapter", ex);
@@ -420,27 +420,28 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 			messageFactory = context.getBean(getMessageFactoryBeanName(), WebServiceMessageFactory.class);
 		}
 		catch (NoSuchBeanDefinitionException ignored) {
-			messageFactory = defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageFactory.class, context);
-			if (logger.isDebugEnabled()) {
-				logger.debug("No WebServiceMessageFactory found in servlet '" + getServletName() + "': using default");
+			messageFactory = this.defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageFactory.class, context);
+			if (this.logger.isDebugEnabled()) {
+				this.logger
+					.debug("No WebServiceMessageFactory found in servlet '" + getServletName() + "': using default");
 			}
 		}
-		messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
+		this.messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
 	}
 
 	private void initWsdlDefinitionHandlerAdapter(ApplicationContext context) {
 		try {
 			try {
-				wsdlDefinitionHandlerAdapter = context.getBean(getWsdlDefinitionHandlerAdapterBeanName(),
+				this.wsdlDefinitionHandlerAdapter = context.getBean(getWsdlDefinitionHandlerAdapterBeanName(),
 						WsdlDefinitionHandlerAdapter.class);
 
 			}
 			catch (NoSuchBeanDefinitionException ignored) {
-				wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
+				this.wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
 			}
-			wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
-			wsdlDefinitionHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
-			wsdlDefinitionHandlerAdapter.afterPropertiesSet();
+			this.wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
+			this.wsdlDefinitionHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
+			this.wsdlDefinitionHandlerAdapter.afterPropertiesSet();
 		}
 		catch (Exception ex) {
 			throw new BeanInitializationException("Could not initialize WsdlDefinitionHandlerAdapter", ex);
@@ -450,15 +451,15 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	private void initXsdSchemaHandlerAdapter(ApplicationContext context) {
 		try {
 			try {
-				xsdSchemaHandlerAdapter = context.getBean(getXsdSchemaHandlerAdapterBeanName(),
+				this.xsdSchemaHandlerAdapter = context.getBean(getXsdSchemaHandlerAdapterBeanName(),
 						XsdSchemaHandlerAdapter.class);
 
 			}
 			catch (NoSuchBeanDefinitionException ignored) {
-				xsdSchemaHandlerAdapter = new XsdSchemaHandlerAdapter();
+				this.xsdSchemaHandlerAdapter = new XsdSchemaHandlerAdapter();
 			}
-			xsdSchemaHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
-			xsdSchemaHandlerAdapter.afterPropertiesSet();
+			this.xsdSchemaHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
+			this.xsdSchemaHandlerAdapter.afterPropertiesSet();
 		}
 		catch (Exception ex) {
 			throw new BeanInitializationException("Could not initialize XsdSchemaHandlerAdapter", ex);
@@ -467,37 +468,39 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
 	private void initMessageReceiver(ApplicationContext context) {
 		try {
-			messageReceiver = context.getBean(getMessageReceiverBeanName(), WebServiceMessageReceiver.class);
+			this.messageReceiver = context.getBean(getMessageReceiverBeanName(), WebServiceMessageReceiver.class);
 		}
 		catch (NoSuchBeanDefinitionException ex) {
-			messageReceiver = defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageReceiver.class, context);
-			if (messageReceiver instanceof BeanNameAware) {
-				((BeanNameAware) messageReceiver).setBeanName(getServletName());
+			this.messageReceiver = this.defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageReceiver.class,
+					context);
+			if (this.messageReceiver instanceof BeanNameAware) {
+				((BeanNameAware) this.messageReceiver).setBeanName(getServletName());
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("No MessageDispatcher found in servlet '" + getServletName() + "': using default");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("No MessageDispatcher found in servlet '" + getServletName() + "': using default");
 			}
 		}
 	}
 
 	private void initWsdlDefinitions(ApplicationContext context) {
-		wsdlDefinitions = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, WsdlDefinition.class, true, false);
-		if (logger.isDebugEnabled()) {
-			for (Map.Entry<String, WsdlDefinition> entry : wsdlDefinitions.entrySet()) {
+		this.wsdlDefinitions = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, WsdlDefinition.class, true,
+				false);
+		if (this.logger.isDebugEnabled()) {
+			for (Map.Entry<String, WsdlDefinition> entry : this.wsdlDefinitions.entrySet()) {
 				String beanName = entry.getKey();
 				WsdlDefinition definition = entry.getValue();
-				logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
+				this.logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
 			}
 		}
 	}
 
 	private void initXsdSchemas(ApplicationContext context) {
-		xsdSchemas = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, XsdSchema.class, true, false);
-		if (logger.isDebugEnabled()) {
-			for (Map.Entry<String, XsdSchema> entry : xsdSchemas.entrySet()) {
+		this.xsdSchemas = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, XsdSchema.class, true, false);
+		if (this.logger.isDebugEnabled()) {
+			for (Map.Entry<String, XsdSchema> entry : this.xsdSchemas.entrySet()) {
 				String beanName = entry.getKey();
 				XsdSchema schema = entry.getValue();
-				logger.debug("Published [" + schema + "] as " + beanName + XSD_SUFFIX_NAME);
+				this.logger.debug("Published [" + schema + "] as " + beanName + XSD_SUFFIX_NAME);
 			}
 		}
 	}

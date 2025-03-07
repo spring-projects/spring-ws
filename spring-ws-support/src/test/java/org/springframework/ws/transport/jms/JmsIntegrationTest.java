@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.transport.jms;
 
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ public class JmsIntegrationTest {
 	public void testTemporaryQueue() {
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
-		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+		this.webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
 		assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
 	}
 
@@ -47,7 +48,7 @@ public class JmsIntegrationTest {
 		String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
-		webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
+		this.webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
 		assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
 	}
 

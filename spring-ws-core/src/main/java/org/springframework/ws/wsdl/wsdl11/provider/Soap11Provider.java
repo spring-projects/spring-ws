@@ -86,7 +86,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	 * @return the soap actions
 	 */
 	public Properties getSoapActions() {
-		return soapActions;
+		return this.soapActions;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	 * @return the binding transport value
 	 */
 	public String getTransportUri() {
-		return transportUri;
+		return this.transportUri;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	/** Returns the value used for the SOAP Address location attribute value. */
 	public String getLocationUri() {
-		return locationUri;
+		return this.locationUri;
 	}
 
 	/** Sets the value used for the SOAP Address location attribute value. */

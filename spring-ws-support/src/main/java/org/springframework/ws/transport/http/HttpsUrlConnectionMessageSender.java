@@ -128,7 +128,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.isTrue(
-				!(ObjectUtils.isEmpty(keyManagers) && ObjectUtils.isEmpty(trustManagers) && (sslSocketFactory == null)),
+				!(ObjectUtils.isEmpty(this.keyManagers) && ObjectUtils.isEmpty(this.trustManagers)
+						&& (this.sslSocketFactory == null)),
 				"Setting either 'keyManagers', 'trustManagers' or 'sslSocketFactory' is required");
 	}
 
@@ -138,8 +139,8 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 		if (connection instanceof HttpsURLConnection httpsConnection) {
 			httpsConnection.setSSLSocketFactory(createSslSocketFactory());
 
-			if (hostnameVerifier != null) {
-				httpsConnection.setHostnameVerifier(hostnameVerifier);
+			if (this.hostnameVerifier != null) {
+				httpsConnection.setHostnameVerifier(this.hostnameVerifier);
 			}
 		}
 	}
@@ -149,13 +150,15 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 			return this.sslSocketFactory;
 		}
 		try {
-			SSLContext sslContext = StringUtils.hasLength(sslProvider)
-					? SSLContext.getInstance(sslProtocol, sslProvider) : SSLContext.getInstance(sslProtocol);
-			sslContext.init(keyManagers, trustManagers, rnd);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Initialized SSL Context with key managers ["
-						+ StringUtils.arrayToCommaDelimitedString(keyManagers) + "] trust managers ["
-						+ StringUtils.arrayToCommaDelimitedString(trustManagers) + "] secure random [" + rnd + "]");
+			SSLContext sslContext = StringUtils.hasLength(this.sslProvider)
+					? SSLContext.getInstance(this.sslProtocol, this.sslProvider)
+					: SSLContext.getInstance(this.sslProtocol);
+			sslContext.init(this.keyManagers, this.trustManagers, this.rnd);
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Initialized SSL Context with key managers ["
+						+ StringUtils.arrayToCommaDelimitedString(this.keyManagers) + "] trust managers ["
+						+ StringUtils.arrayToCommaDelimitedString(this.trustManagers) + "] secure random [" + this.rnd
+						+ "]");
 			}
 			return sslContext.getSocketFactory();
 		}

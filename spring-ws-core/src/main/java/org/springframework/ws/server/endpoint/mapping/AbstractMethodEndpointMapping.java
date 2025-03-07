@@ -44,6 +44,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  * that qualify as endpoint. The methods of this bean are then registered under a specific
  * key with {@link #registerEndpoint(Object, MethodEndpoint)}.
  *
+ * @param <T> the type of the key
  * @author Arjen Poutsma
  * @since 1.0.0
  */
@@ -63,8 +64,8 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (key == null) {
 			return null;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Looking up endpoint for [" + key + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
 		return lookupEndpoint(key);
 	}
@@ -81,7 +82,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
 	protected MethodEndpoint lookupEndpoint(T key) {
-		return endpointMap.get(key);
+		return this.endpointMap.get(key);
 	}
 
 	/**
@@ -91,7 +92,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @throws BeansException if the endpoint could not be registered
 	 */
 	protected void registerEndpoint(T key, MethodEndpoint endpoint) throws BeansException {
-		Object mappedEndpoint = endpointMap.get(key);
+		Object mappedEndpoint = this.endpointMap.get(key);
 		if (mappedEndpoint != null) {
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
 					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
@@ -99,9 +100,9 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (endpoint == null) {
 			throw new ApplicationContextException("Could not find endpoint for key [" + key + "]");
 		}
-		endpointMap.put(key, endpoint);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Mapped [" + key + "] onto endpoint [" + endpoint + "]");
+		this.endpointMap.put(key, endpoint);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Mapped [" + key + "] onto endpoint [" + endpoint + "]");
 		}
 	}
 
@@ -165,7 +166,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		}
 		endpointTypes.addAll(Arrays.asList(endpointType.getInterfaces()));
 		for (Class<?> currentEndpointType : endpointTypes) {
-			final Class<?> targetClass = (specificEndpointType != null ? specificEndpointType : currentEndpointType);
+			final Class<?> targetClass = (specificEndpointType != null) ? specificEndpointType : currentEndpointType;
 			ReflectionUtils.doWithMethods(currentEndpointType, new ReflectionUtils.MethodCallback() {
 				public void doWith(Method method) {
 					Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
@@ -201,7 +202,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 */
 	protected List<T> getLookupKeysForMethod(Method method) {
 		T key = getLookupKeyForMethod(method);
-		return key != null ? Collections.singletonList(key) : Collections.emptyList();
+		return (key != null) ? Collections.singletonList(key) : Collections.emptyList();
 	}
 
 	/**

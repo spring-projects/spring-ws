@@ -35,13 +35,13 @@ public class MessageContextMethodArgumentResolverTest {
 	@BeforeEach
 	public void setUp() throws NoSuchMethodException {
 
-		resolver = new MessageContextMethodArgumentResolver();
-		supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
+		this.resolver = new MessageContextMethodArgumentResolver();
+		this.supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
 	}
 
 	@Test
 	public void supportsParameter() {
-		assertThat(resolver.supportsParameter(supported)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.supported)).isTrue();
 	}
 
 	@Test
@@ -49,7 +49,7 @@ public class MessageContextMethodArgumentResolverTest {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-		MessageContext result = resolver.resolveArgument(messageContext, supported);
+		MessageContext result = this.resolver.resolveArgument(messageContext, this.supported);
 
 		assertThat(result).isSameAs(messageContext);
 	}

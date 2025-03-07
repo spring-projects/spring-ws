@@ -48,7 +48,7 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 	 * @return the delegate
 	 */
 	public EndpointInterceptor getDelegate() {
-		return delegate;
+		return this.delegate;
 	}
 
 	/**

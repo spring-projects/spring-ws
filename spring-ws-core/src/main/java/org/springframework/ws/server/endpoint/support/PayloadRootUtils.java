@@ -89,18 +89,18 @@ public abstract class PayloadRootUtils {
 		}
 	}
 
-	private static class PayloadRootSourceCallback implements TraxUtils.SourceCallback {
+	private static final class PayloadRootSourceCallback implements TraxUtils.SourceCallback {
 
 		private QName result;
 
 		@Override
 		public void domSource(Node node) throws Exception {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				result = QNameUtils.getQNameForNode(node);
+				this.result = QNameUtils.getQNameForNode(node);
 			}
 			else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				Document document = (Document) node;
-				result = QNameUtils.getQNameForNode(document.getDocumentElement());
+				this.result = QNameUtils.getQNameForNode(document.getDocumentElement());
 			}
 		}
 
@@ -112,10 +112,10 @@ public abstract class PayloadRootUtils {
 			}
 			if (event != null) {
 				if (event.isStartElement()) {
-					result = event.asStartElement().getName();
+					this.result = event.asStartElement().getName();
 				}
 				else if (event.isEndElement()) {
-					result = event.asEndElement().getName();
+					this.result = event.asEndElement().getName();
 				}
 			}
 		}
@@ -132,7 +132,7 @@ public abstract class PayloadRootUtils {
 			}
 			if (streamReader.getEventType() == XMLStreamConstants.START_ELEMENT
 					|| streamReader.getEventType() == XMLStreamConstants.END_ELEMENT) {
-				result = streamReader.getName();
+				this.result = streamReader.getName();
 			}
 		}
 

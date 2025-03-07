@@ -31,8 +31,8 @@ import org.springframework.util.CollectionUtils;
  * and Jaxen XPaths.
  *
  * @author Arjen Poutsma
- * @see #setExpression(String)
  * @since 1.0.0
+ * @see #setExpression(String)
  */
 public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>, InitializingBean {
 
@@ -44,7 +44,7 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 
 	/** Sets the XPath expression. Setting this property is required. */
 	public void setExpression(String expression) {
-		expressionString = expression;
+		this.expressionString = expression;
 	}
 
 	/**
@@ -57,18 +57,18 @@ public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>,
 
 	@Override
 	public void afterPropertiesSet() throws IllegalStateException, XPathParseException {
-		Assert.notNull(expressionString, "expression is required");
-		if (CollectionUtils.isEmpty(namespaces)) {
-			expression = XPathExpressionFactory.createXPathExpression(expressionString);
+		Assert.notNull(this.expressionString, "expression is required");
+		if (CollectionUtils.isEmpty(this.namespaces)) {
+			this.expression = XPathExpressionFactory.createXPathExpression(this.expressionString);
 		}
 		else {
-			expression = XPathExpressionFactory.createXPathExpression(expressionString, namespaces);
+			this.expression = XPathExpressionFactory.createXPathExpression(this.expressionString, this.namespaces);
 		}
 	}
 
 	@Override
 	public XPathExpression getObject() throws Exception {
-		return expression;
+		return this.expression;
 	}
 
 	@Override

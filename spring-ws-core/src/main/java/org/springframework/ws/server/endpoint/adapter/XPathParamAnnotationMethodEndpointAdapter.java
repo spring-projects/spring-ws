@@ -83,7 +83,7 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		xpathFactory = XPathFactory.newInstance();
+		this.xpathFactory = XPathFactory.newInstance();
 	}
 
 	/**
@@ -166,10 +166,10 @@ public class XPathParamAnnotationMethodEndpointAdapter extends AbstractMethodEnd
 	}
 
 	private synchronized XPath createXPath() {
-		XPath xpath = xpathFactory.newXPath();
-		if (namespaces != null) {
+		XPath xpath = this.xpathFactory.newXPath();
+		if (this.namespaces != null) {
 			SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-			namespaceContext.setBindings(namespaces);
+			namespaceContext.setBindings(this.namespaces);
 			xpath.setNamespaceContext(namespaceContext);
 		}
 		return xpath;

@@ -39,11 +39,11 @@ import org.springframework.ws.transport.support.WebServiceMessageReceiverObjectS
  * gateway to further message handling logic.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * @see org.springframework.ws.transport.WebServiceMessageReceiver
  * @see org.springframework.ws.WebServiceMessageFactory
  * @see org.springframework.ws.server.MessageDispatcher
- * @since 1.0.0
  */
 public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageReceiverObjectSupport
 		implements HandlerAdapter {

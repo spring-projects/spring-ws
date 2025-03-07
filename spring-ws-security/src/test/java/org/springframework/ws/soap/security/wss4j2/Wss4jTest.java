@@ -58,12 +58,12 @@ public abstract class Wss4jTest {
 	@BeforeEach
 	public final void setUp() throws Exception {
 
-		if (!saajTest) {
+		if (!this.saajTest) {
 			throw new IllegalArgumentException("test class name must start with Saaj");
 		}
 
-		saajSoap11MessageFactory = MessageFactory.newInstance();
-		saajSoap12MessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+		this.saajSoap11MessageFactory = MessageFactory.newInstance();
+		this.saajSoap12MessageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
 		Map<String, String> namespaces = new HashMap<>();
 		namespaces.put("SOAP-ENV", "http://schemas.xmlsoap.org/soap/envelope/");
@@ -76,7 +76,7 @@ public abstract class Wss4jTest {
 		namespaces.put("saml", "urn:oasis:names:tc:SAML:2.0:assertion");
 		namespaces.put("test", "http://test");
 
-		xpathTemplate.setNamespaces(namespaces);
+		this.xpathTemplate.setNamespaces(namespaces);
 
 		onSetup();
 	}
@@ -84,7 +84,7 @@ public abstract class Wss4jTest {
 	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
 			Document document) {
 
-		String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new DOMSource(document));
+		String actualValue = this.xpathTemplate.evaluateAsString(xpathExpression, new DOMSource(document));
 
 		assertThat(actualValue).isEqualTo(expectedValue);
 	}
@@ -92,28 +92,28 @@ public abstract class Wss4jTest {
 	protected void assertXpathEvaluatesTo(String message, String expectedValue, String xpathExpression,
 			String document) {
 
-		String actualValue = xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
+		String actualValue = this.xpathTemplate.evaluateAsString(xpathExpression, new StringSource(document));
 
 		assertThat(actualValue).isEqualTo(expectedValue);
 	}
 
 	protected void assertXpathExists(String message, String xpathExpression, Document document) {
 
-		Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
+		Node node = this.xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
 
 		assertThat(node).isNotNull();
 	}
 
 	protected void assertXpathNotExists(String message, String xpathExpression, Document document) {
 
-		Node node = xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
+		Node node = this.xpathTemplate.evaluateAsNode(xpathExpression, new DOMSource(document));
 
 		assertThat(node).isNull();
 	}
 
 	protected void assertXpathNotExists(String message, String xpathExpression, String document) {
 
-		Node node = xpathTemplate.evaluateAsNode(xpathExpression, new StringSource(document));
+		Node node = this.xpathTemplate.evaluateAsNode(xpathExpression, new StringSource(document));
 
 		assertThat(node).isNull();
 	}
@@ -126,8 +126,8 @@ public abstract class Wss4jTest {
 		assertThat(resource.exists()).isTrue();
 
 		try (InputStream is = resource.getInputStream()) {
-			return new SaajSoapMessage(saajSoap11MessageFactory.createMessage(mimeHeaders, is),
-					saajSoap11MessageFactory);
+			return new SaajSoapMessage(this.saajSoap11MessageFactory.createMessage(mimeHeaders, is),
+					this.saajSoap11MessageFactory);
 		}
 	}
 
@@ -140,8 +140,8 @@ public abstract class Wss4jTest {
 		assertThat(resource.exists()).isTrue();
 
 		try (InputStream is = resource.getInputStream()) {
-			return new SaajSoapMessage(saajSoap12MessageFactory.createMessage(mimeHeaders, is),
-					saajSoap12MessageFactory);
+			return new SaajSoapMessage(this.saajSoap12MessageFactory.createMessage(mimeHeaders, is),
+					this.saajSoap12MessageFactory);
 		}
 	}
 
@@ -169,7 +169,7 @@ public abstract class Wss4jTest {
 
 	protected SoapMessage loadSoap11Message(String fileName) throws Exception {
 
-		if (saajTest) {
+		if (this.saajTest) {
 			return loadSaaj11Message(fileName);
 		}
 
@@ -178,7 +178,7 @@ public abstract class Wss4jTest {
 
 	protected SoapMessage loadSoap12Message(String fileName) throws Exception {
 
-		if (saajTest) {
+		if (this.saajTest) {
 			return loadSaaj12Message(fileName);
 		}
 
@@ -187,8 +187,8 @@ public abstract class Wss4jTest {
 
 	protected SoapMessageFactory getSoap11MessageFactory() {
 
-		if (saajTest) {
-			return new SaajSoapMessageFactory(saajSoap11MessageFactory);
+		if (this.saajTest) {
+			return new SaajSoapMessageFactory(this.saajSoap11MessageFactory);
 		}
 
 		throw new IllegalArgumentException();
@@ -197,8 +197,8 @@ public abstract class Wss4jTest {
 	protected SoapMessageFactory getSoap12MessageFactory() {
 
 		SoapMessageFactory messageFactory;
-		if (saajTest) {
-			messageFactory = new SaajSoapMessageFactory(saajSoap12MessageFactory);
+		if (this.saajTest) {
+			messageFactory = new SaajSoapMessageFactory(this.saajSoap12MessageFactory);
 		}
 		else
 			throw new IllegalArgumentException();
@@ -208,7 +208,7 @@ public abstract class Wss4jTest {
 
 	protected Document getDocument(SoapMessage message) {
 
-		if (saajTest) {
+		if (this.saajTest) {
 			return ((SaajSoapMessage) message).getSaajMessage().getSOAPPart();
 		}
 		throw new IllegalArgumentException();

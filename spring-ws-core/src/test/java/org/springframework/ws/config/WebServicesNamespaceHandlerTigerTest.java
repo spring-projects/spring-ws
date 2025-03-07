@@ -35,14 +35,14 @@ public class WebServicesNamespaceHandlerTigerTest {
 
 	@BeforeEach
 	public void setUp() {
-		applicationContext = new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml",
+		this.applicationContext = new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml",
 				getClass());
 	}
 
 	@Test
 	public void testMarshallingEndpoints() {
 
-		Map<String, GenericMarshallingMethodEndpointAdapter> result = applicationContext
+		Map<String, GenericMarshallingMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
 
 		assertThat(result).isNotEmpty();
@@ -51,7 +51,7 @@ public class WebServicesNamespaceHandlerTigerTest {
 	@Test
 	public void testXpathEndpoints() {
 
-		Map<String, XPathParamAnnotationMethodEndpointAdapter> result = applicationContext
+		Map<String, XPathParamAnnotationMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);
 
 		assertThat(result).isNotEmpty();

@@ -67,12 +67,12 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	private Resource wsdlResource;
 
 	public Wsdl11DestinationProvider() {
-		expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
-		expressionNamespaces.put("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
-		expressionNamespaces.put("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
+		this.expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
+		this.expressionNamespaces.put("soap", "http://schemas.xmlsoap.org/wsdl/soap/");
+		this.expressionNamespaces.put("soap12", "http://schemas.xmlsoap.org/wsdl/soap12/");
 
-		locationXPathExpression = XPathExpressionFactory.createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION,
-				expressionNamespaces);
+		this.locationXPathExpression = XPathExpressionFactory.createXPathExpression(DEFAULT_WSDL_LOCATION_EXPRESSION,
+				this.expressionNamespaces);
 	}
 
 	/**
@@ -115,7 +115,8 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	 */
 	public void setLocationExpression(String expression) {
 		Assert.hasText(expression, "'expression' must not be empty");
-		locationXPathExpression = XPathExpressionFactory.createXPathExpression(expression, expressionNamespaces);
+		this.locationXPathExpression = XPathExpressionFactory.createXPathExpression(expression,
+				this.expressionNamespaces);
 	}
 
 	@Override
@@ -123,19 +124,20 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 		try {
 			DOMResult result = new DOMResult();
 			Transformer transformer = transformerFactory.newTransformer();
-			transformer.transform(new ResourceSource(wsdlResource), result);
+			transformer.transform(new ResourceSource(this.wsdlResource), result);
 			Document definitionDocument = (Document) result.getNode();
-			String location = locationXPathExpression.evaluateAsString(definitionDocument);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Found location [" + location + "] in " + wsdlResource);
+			String location = this.locationXPathExpression.evaluateAsString(definitionDocument);
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Found location [" + location + "] in " + this.wsdlResource);
 			}
-			return location != null ? URI.create(location) : null;
+			return (location != null) ? URI.create(location) : null;
 		}
 		catch (IOException ex) {
-			throw new WebServiceIOException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
+			throw new WebServiceIOException("Error extracting location from WSDL [" + this.wsdlResource + "]", ex);
 		}
 		catch (TransformerException ex) {
-			throw new WebServiceTransformerException("Error extracting location from WSDL [" + wsdlResource + "]", ex);
+			throw new WebServiceTransformerException("Error extracting location from WSDL [" + this.wsdlResource + "]",
+					ex);
 		}
 	}
 

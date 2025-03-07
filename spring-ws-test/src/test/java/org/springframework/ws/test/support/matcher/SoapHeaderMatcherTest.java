@@ -39,8 +39,8 @@ public class SoapHeaderMatcherTest {
 	@BeforeEach
 	public void setUp() {
 
-		expectedHeaderName = new QName("http://example.com", "header");
-		matcher = new SoapHeaderMatcher(expectedHeaderName);
+		this.expectedHeaderName = new QName("http://example.com", "header");
+		this.matcher = new SoapHeaderMatcher(this.expectedHeaderName);
 	}
 
 	@Test
@@ -48,10 +48,10 @@ public class SoapHeaderMatcherTest {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage saajMessage = messageFactory.createMessage();
-		saajMessage.getSOAPHeader().addHeaderElement(expectedHeaderName);
+		saajMessage.getSOAPHeader().addHeaderElement(this.expectedHeaderName);
 		SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-		matcher.match(soapMessage);
+		this.matcher.match(soapMessage);
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class SoapHeaderMatcherTest {
 			SOAPMessage saajMessage = messageFactory.createMessage();
 			SoapMessage soapMessage = new SaajSoapMessage(saajMessage);
 
-			matcher.match(soapMessage);
+			this.matcher.match(soapMessage);
 		});
 	}
 
@@ -74,7 +74,7 @@ public class SoapHeaderMatcherTest {
 
 			WebServiceMessage message = createMock(WebServiceMessage.class);
 
-			matcher.match(message);
+			this.matcher.match(message);
 		});
 	}
 

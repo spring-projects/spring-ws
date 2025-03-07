@@ -61,12 +61,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	/** Returns the request message for this connection. */
 	public Message getRequestMessage() {
-		return requestMessage;
+		return this.requestMessage;
 	}
 
 	/** Returns the response message, if any, for this connection. */
 	public Message getResponseMessage() {
-		return responseMessage;
+		return this.responseMessage;
 	}
 
 	/*
@@ -83,7 +83,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return XmppTransportUtils.toUri(requestMessage);
+		return XmppTransportUtils.toUri(this.requestMessage);
 	}
 
 	/*
@@ -92,12 +92,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	public boolean hasError() {
-		return XmppTransportUtils.hasError(responseMessage);
+		return XmppTransportUtils.hasError(this.responseMessage);
 	}
 
 	@Override
 	public String getErrorMessage() {
-		return XmppTransportUtils.getErrorMessage(responseMessage);
+		return XmppTransportUtils.getErrorMessage(this.responseMessage);
 	}
 
 	/*
@@ -106,17 +106,17 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
-		return XmppTransportUtils.getHeaderNames(requestMessage);
+		return XmppTransportUtils.getHeaderNames(this.requestMessage);
 	}
 
 	@Override
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
-		return XmppTransportUtils.getHeaders(requestMessage, name);
+		return XmppTransportUtils.getHeaders(this.requestMessage, name);
 	}
 
 	@Override
 	protected InputStream getRequestInputStream() throws IOException {
-		return new MessageInputStream(requestMessage, messageEncoding);
+		return new MessageInputStream(this.requestMessage, this.messageEncoding);
 	}
 
 	/*
@@ -125,28 +125,28 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		responseMessage = new Message(requestMessage.getFrom(), Message.Type.chat);
-		responseMessage.setFrom(connection.getUser());
-		responseMessage.setThread(requestMessage.getThread());
+		this.responseMessage = new Message(this.requestMessage.getFrom(), Message.Type.chat);
+		this.responseMessage.setFrom(this.connection.getUser());
+		this.responseMessage.setThread(this.requestMessage.getThread());
 	}
 
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
-		XmppTransportUtils.addHeader(responseMessage, name, value);
+		XmppTransportUtils.addHeader(this.responseMessage, name, value);
 	}
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
-		return new MessageOutputStream(responseMessage, messageEncoding);
+		return new MessageOutputStream(this.responseMessage, this.messageEncoding);
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		try {
-			connection.sendStanza(responseMessage);
+			this.connection.sendStanza(this.responseMessage);
 		}
-		catch (SmackException.NotConnectedException | InterruptedException e) {
-			throw new IOException(e);
+		catch (SmackException.NotConnectedException | InterruptedException ex) {
+			throw new IOException(ex);
 		}
 	}
 

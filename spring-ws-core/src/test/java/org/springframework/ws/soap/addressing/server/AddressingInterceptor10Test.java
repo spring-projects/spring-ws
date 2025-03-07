@@ -46,11 +46,11 @@ public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTe
 	public void testNoTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-to.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		URI messageId = new URI("uid:1234");
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
-		replay(strategyMock);
-		boolean result = interceptor.handleResponse(context, null);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		replay(this.strategyMock);
+		boolean result = this.interceptor.handleResponse(context, null);
 
 		assertThat(result).isTrue();
 		assertThat(context.hasResponse()).isTrue();
@@ -59,7 +59,7 @@ public class AddressingInterceptor10Test extends AbstractAddressingInterceptorTe
 
 		assertXMLSimilar(expectedResponse, (SaajSoapMessage) context.getResponse());
 
-		verify(strategyMock);
+		verify(this.strategyMock);
 	}
 
 }

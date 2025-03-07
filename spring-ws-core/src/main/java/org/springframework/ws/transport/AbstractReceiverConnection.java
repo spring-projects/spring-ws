@@ -38,18 +38,18 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 
 	@Override
 	protected final TransportInputStream createTransportInputStream() throws IOException {
-		if (requestInputStream == null) {
-			requestInputStream = new RequestTransportInputStream();
+		if (this.requestInputStream == null) {
+			this.requestInputStream = new RequestTransportInputStream();
 		}
-		return requestInputStream;
+		return this.requestInputStream;
 	}
 
 	@Override
 	protected final TransportOutputStream createTransportOutputStream() throws IOException {
-		if (responseOutputStream == null) {
-			responseOutputStream = new ResponseTransportOutputStream();
+		if (this.responseOutputStream == null) {
+			this.responseOutputStream = new ResponseTransportOutputStream();
 		}
-		return responseOutputStream;
+		return this.responseOutputStream;
 	}
 
 	/**
@@ -67,7 +67,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 	protected abstract OutputStream getResponseOutputStream() throws IOException;
 
 	/** Implementation of {@code TransportInputStream} for receiving-side connections. */
-	private class RequestTransportInputStream extends TransportInputStream {
+	private final class RequestTransportInputStream extends TransportInputStream {
 
 		@Override
 		protected InputStream createInputStream() throws IOException {
@@ -87,7 +87,7 @@ public abstract class AbstractReceiverConnection extends AbstractWebServiceConne
 	}
 
 	/** Implementation of {@code TransportOutputStream} for sending-side connections. */
-	private class ResponseTransportOutputStream extends TransportOutputStream {
+	private final class ResponseTransportOutputStream extends TransportOutputStream {
 
 		@Override
 		public void addHeader(String name, String value) throws IOException {

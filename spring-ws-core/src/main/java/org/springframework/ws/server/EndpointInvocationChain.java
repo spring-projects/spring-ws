@@ -21,8 +21,8 @@ package org.springframework.ws.server;
  * interceptors.
  *
  * @author Arjen Poutsma
- * @see EndpointInterceptor
  * @since 1.0.0
+ * @see EndpointInterceptor
  */
 public class EndpointInvocationChain {
 
@@ -53,7 +53,7 @@ public class EndpointInvocationChain {
 	 * @return the endpoint object
 	 */
 	public Object getEndpoint() {
-		return endpoint;
+		return this.endpoint;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class EndpointInvocationChain {
 	 * @return the array of interceptors
 	 */
 	public EndpointInterceptor[] getInterceptors() {
-		return interceptors;
+		return this.interceptors;
 	}
 
 }

@@ -67,11 +67,11 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	/** Creates a new instance of the {@link DefaultWsdl11Definition}. */
 	public DefaultWsdl11Definition() {
-		delegate.setTypesProvider(typesProvider);
-		delegate.setMessagesProvider(messagesProvider);
-		delegate.setPortTypesProvider(portTypesProvider);
-		delegate.setBindingsProvider(soapProvider);
-		delegate.setServicesProvider(soapProvider);
+		this.delegate.setTypesProvider(this.typesProvider);
+		this.delegate.setMessagesProvider(this.messagesProvider);
+		this.delegate.setPortTypesProvider(this.portTypesProvider);
+		this.delegate.setBindingsProvider(this.soapProvider);
+		this.delegate.setServicesProvider(this.soapProvider);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * Defaults to the target namespace of the defined schema.
 	 */
 	public void setTargetNamespace(String targetNamespace) {
-		delegate.setTargetNamespace(targetNamespace);
+		this.delegate.setTargetNamespace(targetNamespace);
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * {@link #setSchemaCollection(XsdSchemaCollection) schemaCollection} must be set.
 	 */
 	public void setSchema(XsdSchema schema) {
-		typesProvider.setSchema(schema);
+		this.typesProvider.setSchema(schema);
 	}
 
 	/**
@@ -96,30 +96,30 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * {@link #setSchema(XsdSchema) schema} must be set.
 	 */
 	public void setSchemaCollection(XsdSchemaCollection schemaCollection) {
-		typesProvider.setSchemaCollection(schemaCollection);
+		this.typesProvider.setSchemaCollection(schemaCollection);
 	}
 
 	/** Sets the port type name used for this definition. Required. */
 	public void setPortTypeName(String portTypeName) {
-		portTypesProvider.setPortTypeName(portTypeName);
+		this.portTypesProvider.setPortTypeName(portTypeName);
 	}
 
 	/** Sets the suffix used to detect request elements in the schema. */
 	public void setRequestSuffix(String requestSuffix) {
-		portTypesProvider.setRequestSuffix(requestSuffix);
-		messagesProvider.setRequestSuffix(requestSuffix);
+		this.portTypesProvider.setRequestSuffix(requestSuffix);
+		this.messagesProvider.setRequestSuffix(requestSuffix);
 	}
 
 	/** Sets the suffix used to detect response elements in the schema. */
 	public void setResponseSuffix(String responseSuffix) {
-		portTypesProvider.setResponseSuffix(responseSuffix);
-		messagesProvider.setResponseSuffix(responseSuffix);
+		this.portTypesProvider.setResponseSuffix(responseSuffix);
+		this.messagesProvider.setResponseSuffix(responseSuffix);
 	}
 
 	/** Sets the suffix used to detect fault elements in the schema. */
 	public void setFaultSuffix(String faultSuffix) {
-		portTypesProvider.setFaultSuffix(faultSuffix);
-		messagesProvider.setFaultSuffix(faultSuffix);
+		this.portTypesProvider.setFaultSuffix(faultSuffix);
+		this.messagesProvider.setFaultSuffix(faultSuffix);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * Defaults to {@code true}.
 	 */
 	public void setCreateSoap11Binding(boolean createSoap11Binding) {
-		soapProvider.setCreateSoap11Binding(createSoap11Binding);
+		this.soapProvider.setCreateSoap11Binding(createSoap11Binding);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * Defaults to {@code false}.
 	 */
 	public void setCreateSoap12Binding(boolean createSoap12Binding) {
-		soapProvider.setCreateSoap12Binding(createSoap12Binding);
+		this.soapProvider.setCreateSoap12Binding(createSoap12Binding);
 	}
 
 	/**
@@ -148,19 +148,19 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * @param soapActions the soap
 	 */
 	public void setSoapActions(Properties soapActions) {
-		soapProvider.setSoapActions(soapActions);
+		this.soapProvider.setSoapActions(soapActions);
 	}
 
 	/**
 	 * Sets the value used for the binding transport attribute value. Defaults to HTTP.
 	 */
 	public void setTransportUri(String transportUri) {
-		soapProvider.setTransportUri(transportUri);
+		this.soapProvider.setTransportUri(transportUri);
 	}
 
 	/** Sets the value used for the SOAP Address location attribute value. */
 	public void setLocationUri(String locationUri) {
-		soapProvider.setLocationUri(locationUri);
+		this.soapProvider.setLocationUri(locationUri);
 	}
 
 	/**
@@ -169,26 +169,26 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	 * Defaults to the port type name, with the suffix {@code Service} appended to it.
 	 */
 	public void setServiceName(String serviceName) {
-		soapProvider.setServiceName(serviceName);
+		this.soapProvider.setServiceName(serviceName);
 		this.serviceName = serviceName;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (!StringUtils.hasText(delegate.getTargetNamespace()) && typesProvider.getSchemaCollection() != null
-				&& typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
-			XsdSchema schema = typesProvider.getSchemaCollection().getXsdSchemas()[0];
+		if (!StringUtils.hasText(this.delegate.getTargetNamespace()) && this.typesProvider.getSchemaCollection() != null
+				&& this.typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
+			XsdSchema schema = this.typesProvider.getSchemaCollection().getXsdSchemas()[0];
 			setTargetNamespace(schema.getTargetNamespace());
 		}
-		if (!StringUtils.hasText(serviceName) && StringUtils.hasText(portTypesProvider.getPortTypeName())) {
-			soapProvider.setServiceName(portTypesProvider.getPortTypeName() + "Service");
+		if (!StringUtils.hasText(this.serviceName) && StringUtils.hasText(this.portTypesProvider.getPortTypeName())) {
+			this.soapProvider.setServiceName(this.portTypesProvider.getPortTypeName() + "Service");
 		}
-		delegate.afterPropertiesSet();
+		this.delegate.afterPropertiesSet();
 	}
 
 	@Override
 	public Source getSource() {
-		return delegate.getSource();
+		return this.delegate.getSource();
 	}
 
 }

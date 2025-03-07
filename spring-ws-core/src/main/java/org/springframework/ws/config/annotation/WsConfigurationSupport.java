@@ -71,11 +71,11 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  * <li>{@link SimpleSoapExceptionResolver} for creating default exceptions.
  * </ul>
  *
+ * @author Arjen Poutsma
+ * @since 2.2
  * @see EnableWs
  * @see WsConfigurer
  * @see WsConfigurerAdapter
- * @author Arjen Poutsma
- * @since 2.2
  */
 public class WsConfigurationSupport {
 
@@ -123,11 +123,11 @@ public class WsConfigurationSupport {
 	 * {@link #addInterceptors(List)} instead.
 	 */
 	protected final EndpointInterceptor[] getInterceptors() {
-		if (interceptors == null) {
-			interceptors = new ArrayList<>();
-			addInterceptors(interceptors);
+		if (this.interceptors == null) {
+			this.interceptors = new ArrayList<>();
+			addInterceptors(this.interceptors);
 		}
-		return interceptors.toArray(new EndpointInterceptor[0]);
+		return this.interceptors.toArray(new EndpointInterceptor[0]);
 	}
 
 	/**

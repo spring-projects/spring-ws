@@ -77,7 +77,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * @throws IllegalArgumentException if the endpoint is invalid
 	 */
 	public final void setEndpointMap(Map<String, Object> endpointMap) {
-		temporaryEndpointMap.putAll(endpointMap);
+		this.temporaryEndpointMap.putAll(endpointMap);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	public void setMappings(Properties mappings) {
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
 			if (entry.getKey() instanceof String) {
-				temporaryEndpointMap.put((String) entry.getKey(), entry.getValue());
+				this.temporaryEndpointMap.put((String) entry.getKey(), entry.getValue());
 			}
 		}
 	}
@@ -116,8 +116,8 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 		if (!StringUtils.hasLength(key)) {
 			return null;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Looking up endpoint for [" + key + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
 		return lookupEndpoint(key);
 	}
@@ -128,7 +128,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
 	protected Object lookupEndpoint(String key) {
-		return endpointMap.get(key);
+		return this.endpointMap.get(key);
 	}
 
 	/**
@@ -139,20 +139,20 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * registered
 	 */
 	protected void registerEndpoint(String key, Object endpoint) throws BeansException {
-		Object mappedEndpoint = endpointMap.get(key);
+		Object mappedEndpoint = this.endpointMap.get(key);
 		if (mappedEndpoint != null) {
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
 					+ "]: there's already endpoint [" + mappedEndpoint + "] mapped");
 		}
-		if (!lazyInitEndpoints && endpoint instanceof String endpointName) {
+		if (!this.lazyInitEndpoints && endpoint instanceof String endpointName) {
 			endpoint = resolveStringEndpoint(endpointName);
 		}
 		if (endpoint == null) {
 			throw new ApplicationContextException("Could not find endpoint for key [" + key + "]");
 		}
-		endpointMap.put(key, endpoint);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Mapped key [" + key + "] onto endpoint [" + endpoint + "]");
+		this.endpointMap.put(key, endpoint);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Mapped key [" + key + "] onto endpoint [" + endpoint + "]");
 		}
 	}
 
@@ -169,17 +169,18 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	@Override
 	protected final void initApplicationContext() throws BeansException {
 		super.initApplicationContext();
-		for (String key : temporaryEndpointMap.keySet()) {
-			Object endpoint = temporaryEndpointMap.get(key);
+		for (String key : this.temporaryEndpointMap.keySet()) {
+			Object endpoint = this.temporaryEndpointMap.get(key);
 			if (!validateLookupKey(key)) {
 				throw new ApplicationContextException("Invalid key [" + key + "] for endpoint [" + endpoint + "]");
 			}
 			registerEndpoint(key, endpoint);
 		}
-		temporaryEndpointMap = null;
-		if (registerBeanNames) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Looking for endpoint mappings in application context: [" + getApplicationContext() + "]");
+		this.temporaryEndpointMap = null;
+		if (this.registerBeanNames) {
+			if (this.logger.isDebugEnabled()) {
+				this.logger
+					.debug("Looking for endpoint mappings in application context: [" + getApplicationContext() + "]");
 			}
 			String[] beanNames = getApplicationContext().getBeanDefinitionNames();
 			for (String beanName : beanNames) {

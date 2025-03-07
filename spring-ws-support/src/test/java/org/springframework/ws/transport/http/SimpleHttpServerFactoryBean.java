@@ -142,8 +142,8 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 				}
 			});
 		}
-		if (logger.isInfoEnabled()) {
-			logger.info("Starting HttpServer at address " + address);
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Starting HttpServer at address " + address);
 		}
 		this.server.start();
 	}
@@ -165,7 +165,7 @@ class SimpleHttpServerFactoryBean implements FactoryBean<HttpServer>, Initializi
 
 	@Override
 	public void destroy() {
-		logger.info("Stopping HttpServer");
+		this.logger.info("Stopping HttpServer");
 		this.server.stop(this.shutdownDelay);
 	}
 

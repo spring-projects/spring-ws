@@ -25,10 +25,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Uses the {@link XmlValidator} to validate request payload.
@@ -52,15 +51,16 @@ public class SchemaValidatingMatcher implements WebServiceMessageMatcher {
 		Resource[] joinedSchemas = new Resource[furtherSchemas.length + 1];
 		joinedSchemas[0] = schema;
 		System.arraycopy(furtherSchemas, 0, joinedSchemas, 1, furtherSchemas.length);
-		xmlValidator = XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
+		this.xmlValidator = XmlValidatorFactory.createValidator(joinedSchemas, XmlValidatorFactory.SCHEMA_W3C_XML);
 
 	}
 
 	@Override
 	public void match(WebServiceMessage message) throws IOException, AssertionError {
-		SAXParseException[] exceptions = xmlValidator.validate(message.getPayloadSource());
+		SAXParseException[] exceptions = this.xmlValidator.validate(message.getPayloadSource());
 		if (!ObjectUtils.isEmpty(exceptions)) {
-			fail("XML is not valid: " + Arrays.toString(exceptions), "Payload", message.getPayloadSource());
+			AssertionErrors.fail("XML is not valid: " + Arrays.toString(exceptions), "Payload",
+					message.getPayloadSource());
 		}
 	}
 

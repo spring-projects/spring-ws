@@ -54,7 +54,7 @@ public class SoapActionCallback implements WebServiceMessageCallback {
 	public void doWithMessage(WebServiceMessage message) throws IOException {
 		Assert.isInstanceOf(SoapMessage.class, message);
 		SoapMessage soapMessage = (SoapMessage) message;
-		soapMessage.setSoapAction(soapAction);
+		soapMessage.setSoapAction(this.soapAction);
 	}
 
 }

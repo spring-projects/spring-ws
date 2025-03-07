@@ -86,33 +86,33 @@ public abstract class MarshallingUtils {
 		}
 	}
 
-	private static class MimeMessageContainer implements MimeContainer {
+	private static final class MimeMessageContainer implements MimeContainer {
 
 		private final MimeMessage mimeMessage;
 
-		public MimeMessageContainer(MimeMessage mimeMessage) {
+		MimeMessageContainer(MimeMessage mimeMessage) {
 			this.mimeMessage = mimeMessage;
 		}
 
 		@Override
 		public boolean isXopPackage() {
-			return mimeMessage.isXopPackage();
+			return this.mimeMessage.isXopPackage();
 		}
 
 		@Override
 		public boolean convertToXopPackage() {
-			return mimeMessage.convertToXopPackage();
+			return this.mimeMessage.convertToXopPackage();
 		}
 
 		@Override
 		public void addAttachment(String contentId, DataHandler dataHandler) {
-			mimeMessage.addAttachment(contentId, dataHandler);
+			this.mimeMessage.addAttachment(contentId, dataHandler);
 		}
 
 		@Override
 		public DataHandler getAttachment(String contentId) {
-			Attachment attachment = mimeMessage.getAttachment(contentId);
-			return attachment != null ? attachment.getDataHandler() : null;
+			Attachment attachment = this.mimeMessage.getAttachment(contentId);
+			return (attachment != null) ? attachment.getDataHandler() : null;
 		}
 
 	}

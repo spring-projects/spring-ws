@@ -51,24 +51,25 @@ public class MailMessageSenderIntegrationTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		greenMailBean = new GreenMailBean();
-		greenMailBean.setAutostart(true);
-		greenMailBean.setSmtpProtocol(true);
-		greenMailBean.setImapProtocol(true);
-		greenMailBean.setUsers(Collections.singletonList("system:password@localhost"));
-		greenMailBean.afterPropertiesSet();
+		this.greenMailBean = new GreenMailBean();
+		this.greenMailBean.setAutostart(true);
+		this.greenMailBean.setSmtpProtocol(true);
+		this.greenMailBean.setImapProtocol(true);
+		this.greenMailBean.setUsers(Collections.singletonList("system:password@localhost"));
+		this.greenMailBean.afterPropertiesSet();
 
-		messageSender = new MailMessageSender();
-		messageSender.setFrom("Spring-WS SOAP Client <client@localhost>");
-		messageSender.setTransportUri("smtp://localhost:" + greenMailBean.getGreenMail().getSmtp().getPort());
-		messageSender.setStoreUri("imap://localhost:" + greenMailBean.getGreenMail().getImap().getPort() + "/INBOX");
-		messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-		messageSender.afterPropertiesSet();
+		this.messageSender = new MailMessageSender();
+		this.messageSender.setFrom("Spring-WS SOAP Client <client@localhost>");
+		this.messageSender.setTransportUri("smtp://localhost:" + this.greenMailBean.getGreenMail().getSmtp().getPort());
+		this.messageSender
+			.setStoreUri("imap://localhost:" + this.greenMailBean.getGreenMail().getImap().getPort() + "/INBOX");
+		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		this.messageSender.afterPropertiesSet();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		greenMailBean.destroy();
+		this.greenMailBean.destroy();
 	}
 
 	@Disabled
@@ -77,15 +78,15 @@ public class MailMessageSenderIntegrationTest {
 
 		URI mailTo = new URI("mailto:server@localhost?subject=SOAP%20Test");
 
-		try (WebServiceConnection connection = messageSender.createConnection(mailTo)) {
+		try (WebServiceConnection connection = this.messageSender.createConnection(mailTo)) {
 
-			SOAPMessage saajMessage = messageFactory.createMessage();
+			SOAPMessage saajMessage = this.messageFactory.createMessage();
 			saajMessage.getSOAPBody().addBodyElement(new QName("http://springframework.org", "test"));
 			SoapMessage soapRequest = new SaajSoapMessage(saajMessage);
 			soapRequest.setSoapAction(SOAP_ACTION);
 			connection.send(soapRequest);
 
-			MimeMessage[] receivedMessages = greenMailBean.getGreenMail().getReceivedMessages();
+			MimeMessage[] receivedMessages = this.greenMailBean.getGreenMail().getReceivedMessages();
 			assertThat(receivedMessages).hasSize(1);
 			assertThat(receivedMessages[0].getAllRecipients()).extracting(Address::toString)
 				.contains("server@localhost");

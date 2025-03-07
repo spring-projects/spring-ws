@@ -29,8 +29,8 @@ import org.xml.sax.SAXParseException;
  * Instances of this class are designed to be thread safe.
  *
  * @author Arjen Poutsma
- * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource, String)
  * @since 1.0.0
+ * @see XmlValidatorFactory#createValidator(org.springframework.core.io.Resource, String)
  */
 public interface XmlValidator {
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.xml.validation;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,10 +24,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 /**
+ * General utilities to create an {@link XMLReader}.
+ *
  * @author Greg Turnquist
  * @since 3.0.5
  */
-public class XMLReaderFactoryUtils {
+public abstract class XMLReaderFactoryUtils {
 
 	/**
 	 * Build a {@link XMLReader} and set properties to prevent external entity access.

@@ -38,8 +38,8 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  * @author Jamin Hitchcock
- * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
  * @since 2.3.0
+ * @see org.springframework.ws.soap.security.support.KeyStoreFactoryBean
  */
 public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler implements InitializingBean {
 
@@ -61,7 +61,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
 	protected void handleDecrypt(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
-		callback.setPassword(privateKeyPassword);
+		callback.setPassword(this.privateKeyPassword);
 	}
 
 	/**
@@ -74,11 +74,11 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 		Key key;
 
 		try {
-			key = keyStore.getKey(id,
-					symmetricKeyPassword != null ? symmetricKeyPassword : privateKeyPassword.toCharArray());
+			key = this.keyStore.getKey(id, (this.symmetricKeyPassword != null) ? this.symmetricKeyPassword
+					: this.privateKeyPassword.toCharArray());
 		}
-		catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException e) {
-			throw new IOException("Could not get key", e);
+		catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException ex) {
+			throw new IOException("Could not get key", ex);
 		}
 
 		callback.setKey(key.getEncoded());
@@ -112,11 +112,11 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (keyStore == null) {
+		if (this.keyStore == null) {
 			loadDefaultKeyStore();
 		}
-		if (symmetricKeyPassword == null) {
-			symmetricKeyPassword = privateKeyPassword.toCharArray();
+		if (this.symmetricKeyPassword == null) {
+			this.symmetricKeyPassword = this.privateKeyPassword.toCharArray();
 		}
 	}
 
@@ -126,13 +126,13 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 	 */
 	protected void loadDefaultKeyStore() {
 		try {
-			keyStore = KeyStoreUtils.loadDefaultKeyStore();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded default key store");
+			this.keyStore = KeyStoreUtils.loadDefaultKeyStore();
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Loaded default key store");
 			}
 		}
 		catch (Exception ex) {
-			logger.warn("Could not open default key store", ex);
+			this.logger.warn("Could not open default key store", ex);
 		}
 	}
 

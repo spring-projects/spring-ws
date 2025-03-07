@@ -43,14 +43,14 @@ public class MockWebServiceMessageSender implements WebServiceMessageSender {
 	@Override
 	public MockSenderConnection createConnection(URI uri) throws IOException {
 		Assert.notNull(uri, "'uri' must not be null");
-		if (connectionIterator == null) {
-			connectionIterator = expectedConnections.iterator();
+		if (this.connectionIterator == null) {
+			this.connectionIterator = this.expectedConnections.iterator();
 		}
-		if (!connectionIterator.hasNext()) {
+		if (!this.connectionIterator.hasNext()) {
 			throw new AssertionError("No further connections expected");
 		}
 
-		MockSenderConnection currentConnection = connectionIterator.next();
+		MockSenderConnection currentConnection = this.connectionIterator.next();
 		currentConnection.setUri(uri);
 		return currentConnection;
 	}
@@ -64,24 +64,25 @@ public class MockWebServiceMessageSender implements WebServiceMessageSender {
 	}
 
 	MockSenderConnection expectNewConnection() {
-		Assert.state(connectionIterator == null, "Can not expect another connection, the test is already underway");
+		Assert.state(this.connectionIterator == null,
+				"Can not expect another connection, the test is already underway");
 		MockSenderConnection connection = new MockSenderConnection();
-		expectedConnections.add(connection);
+		this.expectedConnections.add(connection);
 		return connection;
 	}
 
 	void verifyConnections() {
-		if (expectedConnections.isEmpty()) {
+		if (this.expectedConnections.isEmpty()) {
 			return;
 		}
-		if (connectionIterator == null || connectionIterator.hasNext()) {
+		if (this.connectionIterator == null || this.connectionIterator.hasNext()) {
 			throw new AssertionError("Further connection(s) expected");
 		}
 	}
 
 	void reset() {
-		expectedConnections.clear();
-		connectionIterator = null;
+		this.expectedConnections.clear();
+		this.connectionIterator = null;
 	}
 
 }

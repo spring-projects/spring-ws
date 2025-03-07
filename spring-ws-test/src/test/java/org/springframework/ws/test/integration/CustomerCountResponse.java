@@ -26,7 +26,7 @@ public class CustomerCountResponse {
 
 	@XmlElement(namespace = "http://springframework.org/spring-ws")
 	public int getCustomerCount() {
-		return customerCount;
+		return this.customerCount;
 	}
 
 	public void setCustomerCount(int customerCount) {

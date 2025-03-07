@@ -28,8 +28,8 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
  * fault occurs.
  *
  * @author Arjen Poutsma
- * @see SoapFaultClientException
  * @since 1.0.0
+ * @see SoapFaultClientException
  */
 public class SoapFaultMessageResolver implements FaultMessageResolver {
 

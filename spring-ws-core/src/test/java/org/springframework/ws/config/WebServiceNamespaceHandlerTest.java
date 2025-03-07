@@ -34,13 +34,13 @@ public class WebServiceNamespaceHandlerTest {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
+		this.applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
 	}
 
 	@Test
 	public void testMarshallingMethods() throws Exception {
 
-		Map<String, MarshallingMethodEndpointAdapter> result = applicationContext
+		Map<String, MarshallingMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(MarshallingMethodEndpointAdapter.class);
 
 		assertThat(result).isNotEmpty();

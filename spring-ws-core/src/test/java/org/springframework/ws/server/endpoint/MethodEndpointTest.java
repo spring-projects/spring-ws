@@ -34,58 +34,58 @@ public class MethodEndpointTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		myMethodInvoked = false;
-		method = getClass().getMethod("myMethod", String.class);
-		endpoint = new MethodEndpoint(this, method);
+		this.myMethodInvoked = false;
+		this.method = getClass().getMethod("myMethod", String.class);
+		this.endpoint = new MethodEndpoint(this, this.method);
 	}
 
 	@Test
 	public void testGetters() {
 
-		assertThat(endpoint.getBean()).isEqualTo(this);
-		assertThat(endpoint.getMethod()).isEqualTo(method);
+		assertThat(this.endpoint.getBean()).isEqualTo(this);
+		assertThat(this.endpoint.getMethod()).isEqualTo(this.method);
 	}
 
 	@Test
 	public void testInvoke() throws Exception {
 
-		assertThat(myMethodInvoked).isFalse();
+		assertThat(this.myMethodInvoked).isFalse();
 
-		endpoint.invoke("arg");
+		this.endpoint.invoke("arg");
 
-		assertThat(myMethodInvoked).isTrue();
+		assertThat(this.myMethodInvoked).isTrue();
 	}
 
 	@Test
 	public void testEquals() throws Exception {
 
-		assertThat(endpoint).isEqualTo(new MethodEndpoint(this, method));
+		assertThat(this.endpoint).isEqualTo(new MethodEndpoint(this, this.method));
 
 		Method otherMethod = getClass().getMethod("testEquals");
 
-		assertThat(new MethodEndpoint(this, otherMethod).equals(endpoint)).isFalse();
+		assertThat(new MethodEndpoint(this, otherMethod).equals(this.endpoint)).isFalse();
 	}
 
 	@Test
 	public void testHashCode() throws Exception {
 
-		assertThat(endpoint.hashCode()).isEqualTo(new MethodEndpoint(this, method).hashCode());
+		assertThat(this.endpoint.hashCode()).isEqualTo(new MethodEndpoint(this, this.method).hashCode());
 
 		Method otherMethod = getClass().getMethod("testEquals");
 
-		assertThat(new MethodEndpoint(this, otherMethod).hashCode() == endpoint.hashCode()).isFalse();
+		assertThat(new MethodEndpoint(this, otherMethod).hashCode() == this.endpoint.hashCode()).isFalse();
 	}
 
 	@Test
 	public void testToString() {
-		assertThat(endpoint.toString()).isNotNull();
+		assertThat(this.endpoint.toString()).isNotNull();
 	}
 
 	public void myMethod(String arg) {
 
 		assertThat(arg).isEqualTo("arg");
 
-		myMethodInvoked = true;
+		this.myMethodInvoked = true;
 	}
 
 }

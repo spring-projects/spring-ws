@@ -104,7 +104,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getRequestMessage() {
-		return requestMessage;
+		return this.requestMessage;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getResponseMessage() {
-		return responseMessage;
+		return this.responseMessage;
 	}
 
 	/*
@@ -158,7 +158,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	@Override
 	public URI getUri() throws URISyntaxException {
 		try {
-			return JmsTransportUtils.toUri(requestDestination);
+			return JmsTransportUtils.toUri(this.requestDestination);
 		}
 		catch (JMSException ex) {
 			throw new URISyntaxException("", ex.getMessage());
@@ -186,7 +186,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
 		try {
-			JmsTransportUtils.addHeader(requestMessage, name, value);
+			JmsTransportUtils.addHeader(this.requestMessage, name, value);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not set property", ex);
@@ -195,14 +195,14 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		if (requestMessage instanceof BytesMessage) {
-			return new BytesMessageOutputStream((BytesMessage) requestMessage);
+		if (this.requestMessage instanceof BytesMessage) {
+			return new BytesMessageOutputStream((BytesMessage) this.requestMessage);
 		}
-		else if (requestMessage instanceof TextMessage) {
-			return new TextMessageOutputStream((TextMessage) requestMessage, textMessageEncoding);
+		else if (this.requestMessage instanceof TextMessage) {
+			return new TextMessageOutputStream((TextMessage) this.requestMessage, this.textMessageEncoding);
 		}
 		else {
-			throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
+			throw new IllegalStateException("Unknown request message type [" + this.requestMessage + "]");
 		}
 
 	}
@@ -211,22 +211,22 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		MessageProducer messageProducer = null;
 		try {
-			messageProducer = session.createProducer(requestDestination);
-			messageProducer.setDeliveryMode(deliveryMode);
-			messageProducer.setTimeToLive(timeToLive);
-			messageProducer.setPriority(priority);
-			if (responseDestination == null) {
-				responseDestination = session.createTemporaryQueue();
-				temporaryResponseQueueCreated = true;
+			messageProducer = this.session.createProducer(this.requestDestination);
+			messageProducer.setDeliveryMode(this.deliveryMode);
+			messageProducer.setTimeToLive(this.timeToLive);
+			messageProducer.setPriority(this.priority);
+			if (this.responseDestination == null) {
+				this.responseDestination = this.session.createTemporaryQueue();
+				this.temporaryResponseQueueCreated = true;
 			}
-			requestMessage.setJMSReplyTo(responseDestination);
-			if (postProcessor != null) {
-				requestMessage = postProcessor.postProcessMessage(requestMessage);
+			this.requestMessage.setJMSReplyTo(this.responseDestination);
+			if (this.postProcessor != null) {
+				this.requestMessage = this.postProcessor.postProcessMessage(this.requestMessage);
 			}
-			connection.start();
-			messageProducer.send(requestMessage);
-			if (session.getTransacted() && isSessionLocallyTransacted(session)) {
-				JmsUtils.commitIfNecessary(session);
+			this.connection.start();
+			messageProducer.send(this.requestMessage);
+			if (this.session.getTransacted() && isSessionLocallyTransacted(this.session)) {
+				JmsUtils.commitIfNecessary(this.session);
 			}
 		}
 		catch (JMSException ex) {
@@ -242,7 +242,8 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 * (Session)
 	 */
 	private boolean isSessionLocallyTransacted(Session session) {
-		return sessionTransacted && !ConnectionFactoryUtils.isSessionTransactional(session, connectionFactory);
+		return this.sessionTransacted
+				&& !ConnectionFactoryUtils.isSessionTransactional(session, this.connectionFactory);
 	}
 
 	/*
@@ -253,17 +254,18 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	protected void onReceiveBeforeRead() throws IOException {
 		MessageConsumer messageConsumer = null;
 		try {
-			if (temporaryResponseQueueCreated) {
-				messageConsumer = session.createConsumer(responseDestination);
+			if (this.temporaryResponseQueueCreated) {
+				messageConsumer = this.session.createConsumer(this.responseDestination);
 			}
 			else {
-				String messageId = requestMessage.getJMSMessageID().replaceAll("'", "''");
+				String messageId = this.requestMessage.getJMSMessageID().replaceAll("'", "''");
 				String messageSelector = "JMSCorrelationID = '" + messageId + "'";
-				messageConsumer = session.createConsumer(responseDestination, messageSelector);
+				messageConsumer = this.session.createConsumer(this.responseDestination, messageSelector);
 			}
-			Message message = receiveTimeout >= 0 ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
+			Message message = (this.receiveTimeout >= 0) ? messageConsumer.receive(this.receiveTimeout)
+					: messageConsumer.receive();
 			if (message instanceof BytesMessage || message instanceof TextMessage) {
-				responseMessage = message;
+				this.responseMessage = message;
 			}
 			else if (message != null) {
 				throw new IllegalArgumentException("Wrong message type: [" + message.getClass() + "]. "
@@ -275,9 +277,9 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		}
 		finally {
 			JmsUtils.closeMessageConsumer(messageConsumer);
-			if (temporaryResponseQueueCreated) {
+			if (this.temporaryResponseQueueCreated) {
 				try {
-					((TemporaryQueue) responseDestination).delete();
+					((TemporaryQueue) this.responseDestination).delete();
 				}
 				catch (JMSException ex) {
 					// ignore
@@ -288,13 +290,13 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	protected boolean hasResponse() throws IOException {
-		return responseMessage != null;
+		return this.responseMessage != null;
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
 		try {
-			return JmsTransportUtils.getHeaderNames(responseMessage);
+			return JmsTransportUtils.getHeaderNames(this.responseMessage);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property names", ex);
@@ -304,7 +306,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		try {
-			return JmsTransportUtils.getHeaders(responseMessage, name);
+			return JmsTransportUtils.getHeaders(this.responseMessage, name);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property value", ex);
@@ -313,22 +315,22 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	protected InputStream getResponseInputStream() throws IOException {
-		if (responseMessage instanceof BytesMessage) {
-			return new BytesMessageInputStream((BytesMessage) responseMessage);
+		if (this.responseMessage instanceof BytesMessage) {
+			return new BytesMessageInputStream((BytesMessage) this.responseMessage);
 		}
-		else if (responseMessage instanceof TextMessage) {
-			return new TextMessageInputStream((TextMessage) responseMessage, textMessageEncoding);
+		else if (this.responseMessage instanceof TextMessage) {
+			return new TextMessageInputStream((TextMessage) this.responseMessage, this.textMessageEncoding);
 		}
 		else {
-			throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
+			throw new IllegalStateException("Unknown response message type [" + this.responseMessage + "]");
 		}
 
 	}
 
 	@Override
 	protected void onClose() throws IOException {
-		JmsUtils.closeSession(session);
-		ConnectionFactoryUtils.releaseConnection(connection, connectionFactory, true);
+		JmsUtils.closeSession(this.session);
+		ConnectionFactoryUtils.releaseConnection(this.connection, this.connectionFactory, true);
 	}
 
 }

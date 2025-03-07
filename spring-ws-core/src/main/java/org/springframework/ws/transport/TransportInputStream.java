@@ -28,9 +28,9 @@ import org.springframework.util.Assert;
  * transport.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #getHeaderNames()
  * @see #getHeaders(String)
- * @since 1.0.0
  */
 public abstract class TransportInputStream extends InputStream {
 
@@ -40,16 +40,16 @@ public abstract class TransportInputStream extends InputStream {
 	}
 
 	private InputStream getInputStream() throws IOException {
-		if (inputStream == null) {
-			inputStream = createInputStream();
-			Assert.notNull(inputStream, "inputStream must not be null");
+		if (this.inputStream == null) {
+			this.inputStream = createInputStream();
+			Assert.notNull(this.inputStream, "inputStream must not be null");
 		}
-		return inputStream;
+		return this.inputStream;
 	}
 
 	@Override
 	public void close() throws IOException {
-		if (inputStream != null) {
+		if (this.inputStream != null) {
 			getInputStream().close();
 		}
 	}
@@ -64,7 +64,7 @@ public abstract class TransportInputStream extends InputStream {
 		try {
 			getInputStream().mark(readlimit);
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			// ignored
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class TransportInputStream extends InputStream {
 		try {
 			return getInputStream().markSupported();
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			return false;
 		}
 	}

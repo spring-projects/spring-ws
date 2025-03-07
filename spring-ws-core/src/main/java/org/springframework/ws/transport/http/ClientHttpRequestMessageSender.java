@@ -47,7 +47,7 @@ public class ClientHttpRequestMessageSender extends AbstractHttpWebServiceMessag
 	}
 
 	public ClientHttpRequestFactory getRequestFactory() {
-		return requestFactory;
+		return this.requestFactory;
 	}
 
 	public void setRequestFactory(ClientHttpRequestFactory requestFactory) {
@@ -57,7 +57,7 @@ public class ClientHttpRequestMessageSender extends AbstractHttpWebServiceMessag
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
-		ClientHttpRequest request = requestFactory.createRequest(uri, HttpMethod.POST);
+		ClientHttpRequest request = this.requestFactory.createRequest(uri, HttpMethod.POST);
 		if (isAcceptGzipEncoding()) {
 			request.getHeaders()
 				.add(HttpTransportConstants.HEADER_ACCEPT_ENCODING, HttpTransportConstants.CONTENT_ENCODING_GZIP);

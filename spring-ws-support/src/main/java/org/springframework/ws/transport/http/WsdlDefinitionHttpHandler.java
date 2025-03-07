@@ -33,6 +33,8 @@ import org.springframework.ws.wsdl.WsdlDefinition;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
+ * {@link HttpHandler} implementation for WSDL documents.
+ *
  * @author Arjen Poutsma
  * @since 1.5.0
  */
@@ -55,7 +57,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(definition, "'definition' is required");
+		Assert.notNull(this.definition, "'definition' is required");
 	}
 
 	@Override
@@ -65,7 +67,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 				Headers headers = httpExchange.getResponseHeaders();
 				headers.set(HttpTransportConstants.HEADER_CONTENT_TYPE, CONTENT_TYPE);
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
-				transform(definition.getSource(), new StreamResult(os));
+				transform(this.definition.getSource(), new StreamResult(os));
 				byte[] buf = os.toByteArray();
 				httpExchange.sendResponseHeaders(HttpTransportConstants.STATUS_OK, buf.length);
 				FileCopyUtils.copy(buf, httpExchange.getResponseBody());
@@ -75,7 +77,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 			}
 		}
 		catch (TransformerException ex) {
-			logger.error(ex, ex);
+			this.logger.error(ex, ex);
 		}
 	}
 

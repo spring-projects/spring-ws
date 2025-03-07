@@ -33,21 +33,21 @@ public class SimpleMethodEndpointMappingTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		mapping = new SimpleMethodEndpointMapping();
-		mapping.setMethodPrefix("prefix");
-		mapping.setMethodSuffix("Suffix");
+		this.mapping = new SimpleMethodEndpointMapping();
+		this.mapping.setMethodPrefix("prefix");
+		this.mapping.setMethodSuffix("Suffix");
 
 		MyBean bean = new MyBean();
 
-		mapping.setEndpoints(new Object[] { bean });
-		mapping.afterPropertiesSet();
+		this.mapping.setEndpoints(new Object[] { bean });
+		this.mapping.afterPropertiesSet();
 	}
 
 	@Test
 	public void testRegistration() {
 
-		assertThat(mapping.lookupEndpoint("MyRequest")).isNotNull();
-		assertThat(mapping.lookupEndpoint("request")).isNull();
+		assertThat(this.mapping.lookupEndpoint("MyRequest")).isNotNull();
+		assertThat(this.mapping.lookupEndpoint("request")).isNull();
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class SimpleMethodEndpointMappingTest {
 		MockWebServiceMessage request = new MockWebServiceMessage("<MyRequest/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		assertThat(mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
+		assertThat(this.mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
 	}
 
 	@Test
@@ -66,10 +66,10 @@ public class SimpleMethodEndpointMappingTest {
 				"<MyRequest xmlns='http://springframework.org/spring-ws/' />");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		assertThat(mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
+		assertThat(this.mapping.getLookupKeyForMessage(messageContext)).isEqualTo("MyRequest");
 	}
 
-	private static class MyBean {
+	private static final class MyBean {
 
 		public void prefixMyRequestSuffix() {
 

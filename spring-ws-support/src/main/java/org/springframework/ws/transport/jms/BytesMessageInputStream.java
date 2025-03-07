@@ -43,7 +43,7 @@ class BytesMessageInputStream extends InputStream {
 	@Override
 	public int read(byte[] b) throws IOException {
 		try {
-			return message.readBytes(b);
+			return this.message.readBytes(b);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
@@ -54,7 +54,7 @@ class BytesMessageInputStream extends InputStream {
 	public int read(byte[] b, int off, int len) throws IOException {
 		if (off == 0) {
 			try {
-				return message.readBytes(b, len);
+				return this.message.readBytes(b, len);
 			}
 			catch (JMSException ex) {
 				throw new JmsTransportException(ex);
@@ -68,7 +68,7 @@ class BytesMessageInputStream extends InputStream {
 	@Override
 	public int read() throws IOException {
 		try {
-			return message.readByte();
+			return this.message.readByte();
 		}
 		catch (MessageEOFException ex) {
 			return -1;

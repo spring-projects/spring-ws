@@ -117,13 +117,13 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 */
 	protected void initDefaultStrategies() {
 		this.versions = new AddressingVersion[] { new Addressing200408(), new Addressing10() };
-		messageIdStrategy = new UuidMessageIdStrategy();
+		this.messageIdStrategy = new UuidMessageIdStrategy();
 	}
 
 	@Override
 	public final void setActorOrRole(String actorOrRole) {
 		Assert.notNull(actorOrRole, "actorOrRole must not be null");
-		actorsOrRoles = new String[] { actorOrRole };
+		this.actorsOrRoles = new String[] { actorOrRole };
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	public ApplicationContext getApplicationContext() {
-		return applicationContext;
+		return this.applicationContext;
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	@Override
 	public final int getOrder() {
-		return order;
+		return this.order;
 	}
 
 	/**
@@ -193,7 +193,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * Returns the message id strategy used for creating WS-Addressing MessageIds.
 	 */
 	public MessageIdStrategy getMessageIdStrategy() {
-		return messageIdStrategy;
+		return this.messageIdStrategy;
 	}
 
 	/**
@@ -240,8 +240,8 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (logger.isInfoEnabled()) {
-			logger.info("Supporting " + Arrays.asList(versions));
+		if (this.logger.isInfoEnabled()) {
+			this.logger.info("Supporting " + Arrays.asList(this.versions));
 		}
 		if (getApplicationContext() != null) {
 			Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
@@ -256,10 +256,10 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		SoapMessage request = (SoapMessage) messageContext.getRequest();
-		for (AddressingVersion version : versions) {
+		for (AddressingVersion version : this.versions) {
 			if (supports(version, request)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Request [" + request + "] uses [" + version + "]");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Request [" + request + "] uses [" + version + "]");
 				}
 				MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
 				if (requestMap == null) {
@@ -287,15 +287,15 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
 		MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
 
-		List<EndpointInterceptor> interceptors = new ArrayList<>(Arrays.asList(preInterceptors));
+		List<EndpointInterceptor> interceptors = new ArrayList<>(Arrays.asList(this.preInterceptors));
 
 		AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version,
 				messageIdStrategy, messageSenders, responseAction, faultAction);
 		interceptors.add(addressingInterceptor);
-		interceptors.addAll(Arrays.asList(postInterceptors));
+		interceptors.addAll(Arrays.asList(this.postInterceptors));
 
 		if (this.smartInterceptors != null) {
-			for (SmartEndpointInterceptor smartInterceptor : smartInterceptors) {
+			for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
 				if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
 					interceptors.add(smartInterceptor);
 				}
@@ -303,7 +303,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		}
 
 		return new SoapEndpointInvocationChain(endpoint, interceptors.toArray(new EndpointInterceptor[0]),
-				actorsOrRoles, isUltimateReceiver);
+				this.actorsOrRoles, this.isUltimateReceiver);
 	}
 
 	private boolean supports(AddressingVersion version, SoapMessage request) {

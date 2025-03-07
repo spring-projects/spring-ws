@@ -30,7 +30,7 @@ public class QNameEditorTest {
 	@BeforeEach
 	public void setUp() {
 
-		editor = new QNameEditor();
+		this.editor = new QNameEditor();
 	}
 
 	@Test
@@ -56,14 +56,14 @@ public class QNameEditorTest {
 
 	private void doTest(QName qname) {
 
-		editor.setValue(qname);
+		this.editor.setValue(qname);
 
-		String text = editor.getAsText();
+		String text = this.editor.getAsText();
 
 		assertThat(text).isNotNull();
 
-		editor.setAsText(text);
-		QName result = (QName) editor.getValue();
+		this.editor.setAsText(text);
+		QName result = (QName) this.editor.getValue();
 
 		assertThat(result).isNotNull();
 		assertThat(result.getLocalPart()).isEqualTo(qname.getLocalPart());

@@ -60,8 +60,8 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 			if (locationNode instanceof Attr location) {
 				if (StringUtils.hasLength(location.getValue())) {
 					String newLocation = transformLocation(location.getValue(), request);
-					if (logger.isDebugEnabled()) {
-						logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
+					if (this.logger.isDebugEnabled()) {
+						this.logger.debug("Transforming [" + location.getValue() + "] to [" + newLocation + "]");
 					}
 					location.setValue(newLocation);
 				}
@@ -93,9 +93,9 @@ public abstract class LocationTransformerObjectSupport extends TransformerObject
 		String xForwardedHost = request.getHeader("X-Forwarded-Host");
 		String xForwardedPort = request.getHeader("X-Forwarded-Port");
 
-		String scheme = StringUtils.hasText(xForwardedProto) ? xForwardedProto : request.getScheme();
-		String serverName = StringUtils.hasText(xForwardedHost) ? xForwardedHost : request.getServerName();
-		int serverPort = StringUtils.hasText(xForwardedPort) ? Integer.parseInt(xForwardedPort)
+		String scheme = (StringUtils.hasText(xForwardedProto)) ? xForwardedProto : request.getScheme();
+		String serverName = (StringUtils.hasText(xForwardedHost)) ? xForwardedHost : request.getServerName();
+		int serverPort = (StringUtils.hasText(xForwardedPort)) ? Integer.parseInt(xForwardedPort)
 				: request.getServerPort();
 
 		StringBuilder url = new StringBuilder(scheme);

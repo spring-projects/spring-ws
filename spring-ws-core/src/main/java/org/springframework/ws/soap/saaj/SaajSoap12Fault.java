@@ -27,12 +27,14 @@ import jakarta.xml.soap.SOAPFault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
 
 /**
+ * A {@link SaajSoapFault} for SOAP 1.2.
+ *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
 class SaajSoap12Fault extends SaajSoapFault implements Soap12Fault {
 
-	public SaajSoap12Fault(SOAPFault fault) {
+	SaajSoap12Fault(SOAPFault fault) {
 		super(fault);
 	}
 

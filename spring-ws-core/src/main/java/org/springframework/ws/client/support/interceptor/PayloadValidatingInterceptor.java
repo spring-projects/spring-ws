@@ -34,11 +34,11 @@ import org.springframework.ws.WebServiceMessage;
  *
  * @author Stefan Schmidt
  * @author Arjen Poutsma
+ * @since 1.5.4
  * @see #setSchema(org.springframework.core.io.Resource)
  * @see #setSchemas(org.springframework.core.io.Resource[])
  * @see #setValidateRequest(boolean)
  * @see #setValidateResponse(boolean)
- * @since 1.5.4
  */
 public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor {
 

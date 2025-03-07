@@ -50,9 +50,9 @@ public class SaajContentHandlerTest {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage message = messageFactory.createMessage();
-		envelope = message.getSOAPPart().getEnvelope();
-		handler = new SaajContentHandler(envelope.getBody());
-		transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		this.envelope = message.getSOAPPart().getEnvelope();
+		this.handler = new SaajContentHandler(this.envelope.getBody());
+		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
@@ -62,15 +62,15 @@ public class SaajContentHandlerTest {
 				+ "xmlns:child='http://springframework.org/spring-ws/2'>"
 				+ "<child:Child attribute='value'>Content</child:Child></Root>";
 		Source source = new StringSource(content);
-		Result result = new SAXResult(handler);
-		transformer.transform(source, result);
-		Name rootName = envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
-		Iterator<?> iterator = envelope.getBody().getChildElements(rootName);
+		Result result = new SAXResult(this.handler);
+		this.transformer.transform(source, result);
+		Name rootName = this.envelope.createName("Root", "", "http://springframework.org/spring-ws/1");
+		Iterator<?> iterator = this.envelope.getBody().getChildElements(rootName);
 
 		assertThat(iterator.hasNext()).isTrue();
 
 		SOAPBodyElement rootElement = (SOAPBodyElement) iterator.next();
-		Name childName = envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
+		Name childName = this.envelope.createName("Child", "child", "http://springframework.org/spring-ws/2");
 		iterator = rootElement.getChildElements(childName);
 
 		assertThat(iterator.hasNext()).isTrue();
@@ -79,7 +79,7 @@ public class SaajContentHandlerTest {
 
 		assertThat(childElement.getValue()).isEqualTo("Content");
 
-		Name attributeName = envelope.createName("attribute");
+		Name attributeName = this.envelope.createName("attribute");
 
 		assertThat(childElement.getAttributeValue(attributeName)).isEqualTo("value");
 	}

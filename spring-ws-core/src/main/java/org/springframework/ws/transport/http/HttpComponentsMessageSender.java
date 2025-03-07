@@ -53,8 +53,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @author Barry Pitman
  * @author Arjen Poutsma
  * @author Greg Turnquist
- * @see HttpClient
  * @since 2.1.0
+ * @see HttpClient
  */
 @SuppressWarnings("deprecation")
 public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSender
@@ -113,7 +113,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 * Returns the {@code HttpClient} used by this message sender.
 	 */
 	public HttpClient getHttpClient() {
-		return httpClient;
+		return this.httpClient;
 	}
 
 	/**
@@ -225,9 +225,9 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
+		if (this.credentials != null && getHttpClient() instanceof org.apache.http.impl.client.DefaultHttpClient) {
 			((org.apache.http.impl.client.DefaultHttpClient) getHttpClient()).getCredentialsProvider()
-				.setCredentials(authScope, credentials);
+				.setCredentials(this.authScope, this.credentials);
 		}
 	}
 

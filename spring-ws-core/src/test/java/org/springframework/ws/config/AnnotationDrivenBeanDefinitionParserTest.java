@@ -59,14 +59,14 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 
 	@BeforeEach
 	public void setUp() {
-		applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml",
+		this.applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml",
 				getClass());
 	}
 
 	@Test
 	public void endpointMappings() {
 
-		Map<String, EndpointMapping> result = applicationContext.getBeansOfType(EndpointMapping.class);
+		Map<String, EndpointMapping> result = this.applicationContext.getBeansOfType(EndpointMapping.class);
 
 		assertThat(result).hasSize(3);
 		assertThat(result.values()).hasAtLeastOneElementOfType(PayloadRootAnnotationMethodEndpointMapping.class);
@@ -77,7 +77,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 	@Test
 	public void endpointAdapters() {
 
-		Map<String, EndpointAdapter> result = applicationContext.getBeansOfType(EndpointAdapter.class);
+		Map<String, EndpointAdapter> result = this.applicationContext.getBeansOfType(EndpointAdapter.class);
 
 		assertThat(result).hasSize(1);
 
@@ -106,7 +106,7 @@ public class AnnotationDrivenBeanDefinitionParserTest {
 	@Test
 	public void endpointExceptionResolver() {
 
-		Map<String, EndpointExceptionResolver> result = applicationContext
+		Map<String, EndpointExceptionResolver> result = this.applicationContext
 			.getBeansOfType(EndpointExceptionResolver.class);
 
 		assertThat(result).hasSize(2);

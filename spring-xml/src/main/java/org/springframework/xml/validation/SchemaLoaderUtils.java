@@ -85,7 +85,7 @@ public abstract class SchemaLoaderUtils {
 		try {
 			return resource.getURL().toString();
 		}
-		catch (IOException e) {
+		catch (IOException ex) {
 			return null;
 		}
 	}

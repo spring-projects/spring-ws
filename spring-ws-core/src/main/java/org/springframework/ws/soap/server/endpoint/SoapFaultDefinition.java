@@ -25,9 +25,9 @@ import javax.xml.namespace.QName;
  * the {@code SoapFaultMappingExceptionResolver}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see SoapFaultDefinitionEditor
  * @see SoapFaultMappingExceptionResolver
- * @since 1.0.0
  */
 public class SoapFaultDefinition {
 
@@ -67,7 +67,7 @@ public class SoapFaultDefinition {
 
 	/** Returns the fault code. */
 	public QName getFaultCode() {
-		return faultCode;
+		return this.faultCode;
 	}
 
 	/** Sets the fault code. */
@@ -80,7 +80,7 @@ public class SoapFaultDefinition {
 	 * message.
 	 */
 	public String getFaultStringOrReason() {
-		return faultStringOrReason;
+		return this.faultStringOrReason;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class SoapFaultDefinition {
 	 * @see Locale#ENGLISH
 	 */
 	public Locale getLocale() {
-		return locale;
+		return this.locale;
 	}
 
 	/**

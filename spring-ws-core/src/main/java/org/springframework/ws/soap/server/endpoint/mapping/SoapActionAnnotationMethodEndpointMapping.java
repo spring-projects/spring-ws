@@ -62,7 +62,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	public final void setActorOrRole(String actorOrRole) {
 		Assert.notNull(actorOrRole, "actorOrRole must not be null");
-		actorsOrRoles = new String[] { actorOrRole };
+		this.actorsOrRoles = new String[] { actorOrRole };
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 
 	@Override
 	public final void setUltimateReceiver(boolean ultimateReceiver) {
-		isUltimateReceiver = ultimateReceiver;
+		this.isUltimateReceiver = ultimateReceiver;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	protected final EndpointInvocationChain createEndpointInvocationChain(MessageContext messageContext,
 			Object endpoint, EndpointInterceptor[] interceptors) {
-		return new SoapEndpointInvocationChain(endpoint, interceptors, actorsOrRoles, isUltimateReceiver);
+		return new SoapEndpointInvocationChain(endpoint, interceptors, this.actorsOrRoles, this.isUltimateReceiver);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	protected String getLookupKeyForMethod(Method method) {
 		SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
-		return soapAction != null ? soapAction.value() : null;
+		return (soapAction != null) ? soapAction.value() : null;
 	}
 
 	@Override

@@ -50,20 +50,20 @@ public class JaxbElementPayloadMethodProcessorTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		processor = new JaxbElementPayloadMethodProcessor();
-		supportedParameter = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), 0);
-		supportedReturnType = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), -1);
-		stringReturnType = new MethodParameter(getClass().getMethod("string"), -1);
+		this.processor = new JaxbElementPayloadMethodProcessor();
+		this.supportedParameter = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), 0);
+		this.supportedReturnType = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), -1);
+		this.stringReturnType = new MethodParameter(getClass().getMethod("string"), -1);
 	}
 
 	@Test
 	public void supportsParameter() {
-		assertThat(processor.supportsParameter(supportedParameter)).isTrue();
+		assertThat(this.processor.supportsParameter(this.supportedParameter)).isTrue();
 	}
 
 	@Test
 	public void supportsReturnType() {
-		assertThat(processor.supportsReturnType(supportedReturnType)).isTrue();
+		assertThat(this.processor.supportsReturnType(this.supportedReturnType)).isTrue();
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 				"<myType xmlns='http://springframework.org'><string>Foo</string></myType>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		JAXBElement<?> result = processor.resolveArgument(messageContext, supportedParameter);
+		JAXBElement<?> result = this.processor.resolveArgument(messageContext, this.supportedParameter);
 
 		assertThat(result.getValue()).isInstanceOf(MyType.class);
 
@@ -91,7 +91,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		type.setString("Foo");
 		JAXBElement<MyType> element = new JAXBElement<>(new QName("http://springframework.org", "type"), MyType.class,
 				type);
-		processor.handleReturnValue(messageContext, supportedReturnType, element);
+		this.processor.handleReturnValue(messageContext, this.supportedReturnType, element);
 
 		assertThat(messageContext.hasResponse()).isTrue();
 
@@ -111,7 +111,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 		String s = "Foo";
 		JAXBElement<String> element = new JAXBElement<>(new QName("http://springframework.org", "string"), String.class,
 				s);
-		processor.handleReturnValue(messageContext, stringReturnType, element);
+		this.processor.handleReturnValue(messageContext, this.stringReturnType, element);
 
 		assertThat(messageContext.hasResponse()).isTrue();
 
@@ -128,7 +128,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-		processor.handleReturnValue(messageContext, stringReturnType, null);
+		this.processor.handleReturnValue(messageContext, this.stringReturnType, null);
 
 		assertThat(messageContext.hasResponse()).isFalse();
 	}
@@ -150,7 +150,7 @@ public class JaxbElementPayloadMethodProcessorTest {
 
 		@XmlElement(name = "string", namespace = "http://springframework.org")
 		public String getString() {
-			return string;
+			return this.string;
 		}
 
 		public void setString(String string) {

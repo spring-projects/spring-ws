@@ -85,7 +85,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 */
 	@Override
 	public boolean handleRequest(MessageContext messageContext, Object endpoint) throws TransformerException {
-		if (logRequest && isLogEnabled()) {
+		if (this.logRequest && isLogEnabled()) {
 			logMessageSource("Request: ", getSource(messageContext.getRequest()));
 		}
 		return true;
@@ -100,7 +100,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 */
 	@Override
 	public boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
-		if (logResponse && isLogEnabled()) {
+		if (this.logResponse && isLogEnabled()) {
 			logMessageSource("Response: ", getSource(messageContext.getResponse()));
 		}
 		return true;
@@ -112,7 +112,9 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 		return true;
 	}
 
-	/** Does nothing by default */
+	/**
+	 * Does nothing by default.
+	 */
 	@Override
 	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
 	}
@@ -124,7 +126,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * this to change the level under which logging occurs.
 	 */
 	protected boolean isLogEnabled() {
-		return logger.isDebugEnabled();
+		return this.logger.isDebugEnabled();
 	}
 
 	private Transformer createNonIndentingTransformer() throws TransformerConfigurationException {
@@ -162,7 +164,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * @param message the message
 	 */
 	protected void logMessage(String message) {
-		logger.debug(message);
+		this.logger.debug(message);
 	}
 
 	/**

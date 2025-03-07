@@ -25,8 +25,8 @@ import javax.xml.stream.XMLStreamWriter;
  * {@link XMLStreamWriter}.
  *
  * @author Arjen Poutsma
- * @see StreamingWebServiceMessage
  * @since 2.0
+ * @see StreamingWebServiceMessage
  */
 public interface StreamingPayload {
 

@@ -44,9 +44,9 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 	@Override
 	protected void onSetup() throws Exception {
 
-		interceptor = new Wss4jSecurityInterceptor();
-		interceptor.setSecurementActions("SAMLTokenSigned");
-		interceptor.setValidationActions("SAMLTokenSigned Signature");
+		this.interceptor = new Wss4jSecurityInterceptor();
+		this.interceptor.setSecurementActions("SAMLTokenSigned");
+		this.interceptor.setValidationActions("SAMLTokenSigned Signature");
 		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 		cryptoFactoryBean.setCryptoProvider(Merlin.class);
 		cryptoFactoryBean.setKeyStoreType("jceks");
@@ -59,35 +59,35 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 		type.setAlias("rsaKey");
 		X509Certificate userCertificate = crypto.getX509Certificates(type)[0];
 
-		interceptor.setSecurementSignatureCrypto(crypto);
-		interceptor.setValidationSignatureCrypto(crypto);
-		interceptor.setSecurementSamlCallbackHandler(getSamlCalbackHandler(crypto, userCertificate));
-		interceptor.afterPropertiesSet();
+		this.interceptor.setSecurementSignatureCrypto(crypto);
+		this.interceptor.setValidationSignatureCrypto(crypto);
+		this.interceptor.setSecurementSamlCallbackHandler(getSamlCalbackHandler(crypto, userCertificate));
+		this.interceptor.afterPropertiesSet();
 	}
 
 	@Test
 	public void testAddSAML() throws Exception {
 
-		interceptor.setSecurementPassword("123456");
-		interceptor.setSecurementUsername("rsaKey");
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
 
-		interceptor.secureMessage(message, messageContext);
+		this.interceptor.secureMessage(message, messageContext);
 		Document document = getDocument(message);
 
 		assertXpathExists("Absent SAML Assertion element",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/saml:Assertion", document);
 
 		// lets verify the signature that we've just generated
-		interceptor.validateMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
 	}
 
 	protected CallbackHandler getSamlCalbackHandler(Crypto crypto, X509Certificate userCert) {
 		return new SamlCallbackHandler(crypto, userCert);
 	}
 
-	private static class SamlCallbackHandler implements CallbackHandler {
+	private static final class SamlCallbackHandler implements CallbackHandler {
 
 		private Crypto crypto;
 
@@ -106,13 +106,13 @@ public abstract class Wss4jMessageInterceptorSamlTest extends Wss4jTest {
 				if (value instanceof SAMLCallback callback) {
 
 					callback.setSamlVersion(Version.SAML_20);
-					callback.setIssuerCrypto(crypto);
+					callback.setIssuerCrypto(this.crypto);
 					callback.setIssuerKeyName("rsaKey");
 					callback.setIssuerKeyPassword("123456");
 					callback.setIssuer("test-issuer");
 					SubjectBean subject = new SubjectBean("test-subject", "", SAML2Constants.CONF_BEARER);
 					KeyInfoBean keyInfo = new KeyInfoBean();
-					keyInfo.setCertificate(userCertificate);
+					keyInfo.setCertificate(this.userCertificate);
 					subject.setKeyInfo(keyInfo);
 					callback.setSubject(subject);
 					callback.setSignAssertion(true);

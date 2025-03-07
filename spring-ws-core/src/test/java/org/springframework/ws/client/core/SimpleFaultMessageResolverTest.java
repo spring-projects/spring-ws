@@ -34,7 +34,7 @@ public class SimpleFaultMessageResolverTest {
 
 	@BeforeEach
 	public void setUp() {
-		resolver = new SimpleFaultMessageResolver();
+		this.resolver = new SimpleFaultMessageResolver();
 	}
 
 	@Test
@@ -46,7 +46,8 @@ public class SimpleFaultMessageResolverTest {
 
 		replay(messageMock);
 
-		assertThatExceptionOfType(WebServiceFaultException.class).isThrownBy(() -> resolver.resolveFault(messageMock))
+		assertThatExceptionOfType(WebServiceFaultException.class)
+			.isThrownBy(() -> this.resolver.resolveFault(messageMock))
 			.withMessage(message);
 
 		verify(messageMock);

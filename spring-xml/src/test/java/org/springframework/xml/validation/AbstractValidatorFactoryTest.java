@@ -51,16 +51,16 @@ public abstract class AbstractValidatorFactoryTest {
 
 		Resource[] schemaResource = new Resource[] {
 				new ClassPathResource("schema.xsd", AbstractValidatorFactoryTest.class) };
-		validator = createValidator(schemaResource, XmlValidatorFactory.SCHEMA_W3C_XML);
-		validInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("validDocument.xml");
-		invalidInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("invalidDocument.xml");
+		this.validator = createValidator(schemaResource, XmlValidatorFactory.SCHEMA_W3C_XML);
+		this.validInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("validDocument.xml");
+		this.invalidInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("invalidDocument.xml");
 	}
 
 	@AfterEach
 	public void tearDown() throws Exception {
 
-		validInputStream.close();
-		invalidInputStream.close();
+		this.validInputStream.close();
+		this.invalidInputStream.close();
 	}
 
 	protected abstract XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws Exception;
@@ -68,7 +68,7 @@ public abstract class AbstractValidatorFactoryTest {
 	@Test
 	public void testHandleValidMessageStream() throws Exception {
 
-		SAXParseException[] errors = validator.validate(new StreamSource(validInputStream));
+		SAXParseException[] errors = this.validator.validate(new StreamSource(this.validInputStream));
 
 		assertThat(errors).isEmpty();
 	}
@@ -76,15 +76,15 @@ public abstract class AbstractValidatorFactoryTest {
 	@Test
 	public void testValidateTwice() throws Exception {
 
-		validator.validate(new StreamSource(validInputStream));
-		validInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("validDocument.xml");
-		validator.validate(new StreamSource(validInputStream));
+		this.validator.validate(new StreamSource(this.validInputStream));
+		this.validInputStream = AbstractValidatorFactoryTest.class.getResourceAsStream("validDocument.xml");
+		this.validator.validate(new StreamSource(this.validInputStream));
 	}
 
 	@Test
 	public void testHandleInvalidMessageStream() throws Exception {
 
-		SAXParseException[] errors = validator.validate(new StreamSource(invalidInputStream));
+		SAXParseException[] errors = this.validator.validate(new StreamSource(this.invalidInputStream));
 
 		assertThat(errors).hasSize(3);
 	}
@@ -92,7 +92,7 @@ public abstract class AbstractValidatorFactoryTest {
 	@Test
 	public void testHandleValidMessageSax() throws Exception {
 
-		SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(validInputStream)));
+		SAXParseException[] errors = this.validator.validate(new SAXSource(new InputSource(this.validInputStream)));
 
 		assertThat(errors).isEmpty();
 	}
@@ -100,7 +100,7 @@ public abstract class AbstractValidatorFactoryTest {
 	@Test
 	public void testHandleInvalidMessageSax() throws Exception {
 
-		SAXParseException[] errors = validator.validate(new SAXSource(new InputSource(invalidInputStream)));
+		SAXParseException[] errors = this.validator.validate(new SAXSource(new InputSource(this.invalidInputStream)));
 
 		assertThat(errors).hasSize(3);
 	}
@@ -110,8 +110,8 @@ public abstract class AbstractValidatorFactoryTest {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(validInputStream));
-		SAXParseException[] errors = validator.validate(new DOMSource(document));
+		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(this.validInputStream));
+		SAXParseException[] errors = this.validator.validate(new DOMSource(document));
 
 		assertThat(errors).isEmpty();
 	}
@@ -121,8 +121,8 @@ public abstract class AbstractValidatorFactoryTest {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
-		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(invalidInputStream));
-		SAXParseException[] errors = validator.validate(new DOMSource(document));
+		Document document = documentBuilderFactory.newDocumentBuilder().parse(new InputSource(this.invalidInputStream));
+		SAXParseException[] errors = this.validator.validate(new DOMSource(document));
 
 		assertThat(errors).hasSize(3);
 	}
@@ -133,18 +133,18 @@ public abstract class AbstractValidatorFactoryTest {
 		Resource[] schemaResources = new Resource[] {
 				new ClassPathResource("multipleSchemas1.xsd", AbstractValidatorFactoryTest.class),
 				new ClassPathResource("multipleSchemas2.xsd", AbstractValidatorFactoryTest.class) };
-		validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
+		this.validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
 
 		Source document = new ResourceSource(
 				new ClassPathResource("multipleSchemas1.xml", AbstractValidatorFactoryTest.class));
-		SAXParseException[] errors = validator.validate(document);
+		SAXParseException[] errors = this.validator.validate(document);
 
 		assertThat(errors).isEmpty();
 
-		validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
+		this.validator = createValidator(schemaResources, XmlValidatorFactory.SCHEMA_W3C_XML);
 		document = new ResourceSource(
 				new ClassPathResource("multipleSchemas2.xml", AbstractValidatorFactoryTest.class));
-		errors = validator.validate(document);
+		errors = this.validator.validate(document);
 
 		assertThat(errors).isEmpty();
 	}
@@ -167,7 +167,7 @@ public abstract class AbstractValidatorFactoryTest {
 			}
 		};
 
-		SAXParseException[] errors = validator.validate(new StreamSource(invalidInputStream), myHandler);
+		SAXParseException[] errors = this.validator.validate(new StreamSource(this.invalidInputStream), myHandler);
 
 		assertThat(errors).isEmpty();
 	}

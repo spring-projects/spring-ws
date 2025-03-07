@@ -61,20 +61,20 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(userDetailsService, "An authenticationDao must be set");
+		Assert.notNull(this.userDetailsService, "An authenticationDao must be set");
 		Assert.notNull(this.messages, "A message source must be set");
 
-		subjectDNPattern = Pattern.compile(subjectDNRegex, Pattern.CASE_INSENSITIVE);
+		this.subjectDNPattern = Pattern.compile(this.subjectDNRegex, Pattern.CASE_INSENSITIVE);
 	}
 
 	@Override
 	public UserDetails getUserDetails(X509Certificate clientCert) throws AuthenticationException {
 		String subjectDN = clientCert.getSubjectX500Principal().getName();
 
-		Matcher matcher = subjectDNPattern.matcher(subjectDN);
+		Matcher matcher = this.subjectDNPattern.matcher(subjectDN);
 
 		if (!matcher.find()) {
-			throw new BadCredentialsException(messages.getMessage("DaoX509AuthoritiesPopulator.noMatching",
+			throw new BadCredentialsException(this.messages.getMessage("DaoX509AuthoritiesPopulator.noMatching",
 					new Object[] { subjectDN }, "No matching pattern was found in subjectDN: {0}"));
 		}
 

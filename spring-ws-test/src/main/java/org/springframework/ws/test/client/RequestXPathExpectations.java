@@ -25,9 +25,9 @@ package org.springframework.ws.test.client;
  *
  * @author Lukas Krecan
  * @author Arjen Poutsma
+ * @since 2.0
  * @see RequestMatchers#xpath(String)
  * @see RequestMatchers#xpath(String, java.util.Map)
- * @since 2.0
  */
 public interface RequestXPathExpectations {
 
@@ -48,7 +48,7 @@ public interface RequestXPathExpectations {
 	 * @param expectedValue the expected value
 	 * @return the request matcher
 	 */
-	RequestMatcher evaluatesTo(final boolean expectedValue);
+	RequestMatcher evaluatesTo(boolean expectedValue);
 
 	/**
 	 * Expects the XPath expression to evaluate to the given integer.

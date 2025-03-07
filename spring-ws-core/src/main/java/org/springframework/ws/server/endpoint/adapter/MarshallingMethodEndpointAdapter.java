@@ -47,9 +47,9 @@ import org.springframework.ws.support.MarshallingUtils;
  * set using properties.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMarshaller(org.springframework.oxm.Marshaller)
  * @see #setUnmarshaller(org.springframework.oxm.Unmarshaller)
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of
  * {@link DefaultMethodEndpointAdapter} and
  * {@link org.springframework.ws.server.endpoint.adapter.method.MarshallingPayloadMethodProcessor
@@ -111,7 +111,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 
 	/** Returns the marshaller used for transforming objects into XML. */
 	public Marshaller getMarshaller() {
-		return marshaller;
+		return this.marshaller;
 	}
 
 	/** Sets the marshaller used for transforming objects into XML. */
@@ -121,7 +121,7 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 
 	/** Returns the unmarshaller used for transforming XML into objects. */
 	public Unmarshaller getUnmarshaller() {
-		return unmarshaller;
+		return this.unmarshaller;
 	}
 
 	/** Sets the unmarshaller used for transforming XML into objects. */
@@ -148,15 +148,15 @@ public class MarshallingMethodEndpointAdapter extends AbstractMethodEndpointAdap
 
 	private Object unmarshalRequest(WebServiceMessage request) throws IOException {
 		Object requestObject = MarshallingUtils.unmarshal(getUnmarshaller(), request);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Unmarshalled payload request to [" + requestObject + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Unmarshalled payload request to [" + requestObject + "]");
 		}
 		return requestObject;
 	}
 
 	private void marshalResponse(Object responseObject, WebServiceMessage response) throws IOException {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Marshalling [" + responseObject + "] to response payload");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Marshalling [" + responseObject + "] to response payload");
 		}
 		MarshallingUtils.marshal(getMarshaller(), responseObject, response);
 	}

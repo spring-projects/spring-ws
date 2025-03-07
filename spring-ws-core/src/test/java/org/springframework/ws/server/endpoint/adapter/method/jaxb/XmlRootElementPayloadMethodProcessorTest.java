@@ -60,23 +60,23 @@ public class XmlRootElementPayloadMethodProcessorTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		processor = new XmlRootElementPayloadMethodProcessor();
-		rootElementParameter = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), 0);
-		typeParameter = new MethodParameter(getClass().getMethod("type", MyType.class), 0);
-		rootElementReturnType = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), -1);
+		this.processor = new XmlRootElementPayloadMethodProcessor();
+		this.rootElementParameter = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), 0);
+		this.typeParameter = new MethodParameter(getClass().getMethod("type", MyType.class), 0);
+		this.rootElementReturnType = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), -1);
 	}
 
 	@Test
 	public void supportsParameter() {
 
-		assertThat(processor.supportsParameter(rootElementParameter)).isTrue();
-		assertThat(processor.supportsParameter(typeParameter)).isTrue();
+		assertThat(this.processor.supportsParameter(this.rootElementParameter)).isTrue();
+		assertThat(this.processor.supportsParameter(this.typeParameter)).isTrue();
 	}
 
 	@Test
 	public void supportsReturnType() {
 
-		assertThat(processor.supportsReturnType(rootElementReturnType)).isTrue();
+		assertThat(this.processor.supportsReturnType(this.rootElementReturnType)).isTrue();
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 				"<root xmlns='http://springframework.org'><string>Foo</string></root>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = processor.resolveArgument(messageContext, rootElementParameter);
+		Object result = this.processor.resolveArgument(messageContext, this.rootElementParameter);
 
 		assertThat(result).isInstanceOf(MyRootElement.class);
 
@@ -102,7 +102,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 				"<type xmlns='http://springframework.org'><string>Foo</string></type>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = processor.resolveArgument(messageContext, typeParameter);
+		Object result = this.processor.resolveArgument(messageContext, this.typeParameter);
 
 		assertThat(result).isInstanceOf(MyType.class);
 
@@ -169,7 +169,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		// it is required but not used.
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
-		Object result = processor.resolveArgument(messageContext, rootElementParameter);
+		Object result = this.processor.resolveArgument(messageContext, this.rootElementParameter);
 
 		assertThat(result).isInstanceOf(MyRootElement.class);
 
@@ -185,7 +185,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 		MyRootElement rootElement = new MyRootElement();
 		rootElement.setString("Foo");
-		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		this.processor.handleReturnValue(messageContext, this.rootElementReturnType, rootElement);
 
 		assertThat(messageContext.hasResponse()).isTrue();
 
@@ -203,7 +203,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
 		MyRootElement rootElement = null;
-		processor.handleReturnValue(messageContext, rootElementReturnType, rootElement);
+		this.processor.handleReturnValue(messageContext, this.rootElementReturnType, rootElement);
 
 		assertThat(messageContext.hasResponse()).isFalse();
 	}
@@ -223,7 +223,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 		@XmlElement(name = "string", namespace = "http://springframework.org")
 		public String getString() {
-			return string;
+			return this.string;
 		}
 
 		public void setString(String string) {
@@ -239,7 +239,7 @@ public class XmlRootElementPayloadMethodProcessorTest {
 
 		@XmlElement(name = "string", namespace = "http://springframework.org")
 		public String getString() {
-			return string;
+			return this.string;
 		}
 
 		public void setString(String string) {

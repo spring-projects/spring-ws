@@ -30,8 +30,8 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
  * {@link SoapMessageDispatcher}.
  *
  * @author Arjen Poutsma
- * @see org.springframework.ws.server.EndpointInvocationChain
  * @since 1.0.0
+ * @see org.springframework.ws.server.EndpointInvocationChain
  */
 public class MessageEndpointAdapter implements EndpointAdapter {
 

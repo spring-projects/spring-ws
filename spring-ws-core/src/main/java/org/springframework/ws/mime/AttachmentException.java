@@ -22,8 +22,8 @@ import org.springframework.ws.WebServiceMessageException;
  * Exception thrown when a MIME attachment could not be accessed.
  *
  * @author Arjen Poutsma
- * @see Attachment
  * @since 1.0.0
+ * @see Attachment
  */
 @SuppressWarnings("serial")
 public class AttachmentException extends WebServiceMessageException {

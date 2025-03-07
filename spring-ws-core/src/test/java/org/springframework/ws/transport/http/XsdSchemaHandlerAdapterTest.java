@@ -49,10 +49,10 @@ public class XsdSchemaHandlerAdapterTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		adapter = new XsdSchemaHandlerAdapter();
-		adapter.afterPropertiesSet();
-		request = new MockHttpServletRequest();
-		response = new MockHttpServletResponse();
+		this.adapter = new XsdSchemaHandlerAdapter();
+		this.adapter.afterPropertiesSet();
+		this.request = new MockHttpServletRequest();
+		this.response = new MockHttpServletResponse();
 	}
 
 	@Test
@@ -64,52 +64,52 @@ public class XsdSchemaHandlerAdapterTest {
 		schema.afterPropertiesSet();
 		long lastModified = single.getFile().lastModified();
 
-		assertThat(adapter.getLastModified(null, schema)).isEqualTo(lastModified);
+		assertThat(this.adapter.getLastModified(null, schema)).isEqualTo(lastModified);
 	}
 
 	@Test
 	public void handleGet() throws Exception {
 
-		request.setMethod(HttpTransportConstants.METHOD_GET);
+		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(single);
 		schema.afterPropertiesSet();
-		adapter.handle(request, response, schema);
+		this.adapter.handle(this.request, this.response, schema);
 		String expected = new String(FileCopyUtils.copyToByteArray(single.getFile()));
 
-		XmlAssert.assertThat(response.getContentAsString()).and(expected).ignoreWhitespace().areIdentical();
+		XmlAssert.assertThat(this.response.getContentAsString()).and(expected).ignoreWhitespace().areIdentical();
 	}
 
 	@Test
 	public void handleNonGet() throws Exception {
 
-		request.setMethod(HttpTransportConstants.METHOD_POST);
-		adapter.handle(request, response, null);
+		this.request.setMethod(HttpTransportConstants.METHOD_POST);
+		this.adapter.handle(this.request, this.response, null);
 
-		assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+		assertThat(this.response.getStatus()).isEqualTo(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
 	}
 
 	@Test
 	public void handleGetWithTransformLocation() throws Exception {
 
-		adapter.setTransformSchemaLocations(true);
+		this.adapter.setTransformSchemaLocations(true);
 
-		request.setMethod(HttpTransportConstants.METHOD_GET);
-		request.setScheme("http");
-		request.setServerName("example.com");
-		request.setServerPort(80);
-		request.setContextPath("/context");
-		request.setServletPath("/service.xsd");
-		request.setPathInfo(null);
-		request.setRequestURI("/context/service.xsd");
+		this.request.setMethod(HttpTransportConstants.METHOD_GET);
+		this.request.setScheme("http");
+		this.request.setServerName("example.com");
+		this.request.setServerPort(80);
+		this.request.setContextPath("/context");
+		this.request.setServletPath("/service.xsd");
+		this.request.setPathInfo(null);
+		this.request.setRequestURI("/context/service.xsd");
 
 		Resource importing = new ClassPathResource("importing-input.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(importing);
 		schema.afterPropertiesSet();
 
-		adapter.handle(request, response, schema);
+		this.adapter.handle(this.request, this.response, schema);
 
-		InputStream inputStream = new ByteArrayInputStream(response.getContentAsByteArray());
+		InputStream inputStream = new ByteArrayInputStream(this.response.getContentAsByteArray());
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

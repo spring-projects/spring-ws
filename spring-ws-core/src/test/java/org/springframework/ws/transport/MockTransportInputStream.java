@@ -43,23 +43,23 @@ public class MockTransportInputStream extends TransportInputStream {
 
 		Assert.notNull(inputStream, "inputStream must not be null");
 		this.inputStream = inputStream;
-		headers = new HashMap<>();
+		this.headers = new HashMap<>();
 	}
 
 	@Override
 	protected InputStream createInputStream() {
-		return inputStream;
+		return this.inputStream;
 	}
 
 	@Override
 	public Iterator<String> getHeaderNames() {
-		return headers.keySet().iterator();
+		return this.headers.keySet().iterator();
 	}
 
 	@Override
 	public Iterator<String> getHeaders(String name) {
 
-		String[] values = StringUtils.delimitedListToStringArray(headers.get(name), ", ");
+		String[] values = StringUtils.delimitedListToStringArray(this.headers.get(name), ", ");
 		return Arrays.asList(values).iterator();
 	}
 

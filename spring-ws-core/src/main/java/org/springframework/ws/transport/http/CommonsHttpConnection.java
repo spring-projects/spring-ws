@@ -64,14 +64,14 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	}
 
 	public PostMethod getPostMethod() {
-		return postMethod;
+		return this.postMethod;
 	}
 
 	@Override
 	public void onClose() throws IOException {
-		postMethod.releaseConnection();
-		if (connectionManager != null) {
-			connectionManager.shutdown();
+		this.postMethod.releaseConnection();
+		if (this.connectionManager != null) {
+			this.connectionManager.shutdown();
 		}
 	}
 
@@ -82,7 +82,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 	@Override
 	public URI getUri() throws URISyntaxException {
 		try {
-			return new URI(postMethod.getURI().toString());
+			return new URI(this.postMethod.getURI().toString());
 		}
 		catch (URIException ex) {
 			throw new URISyntaxException("", ex.getMessage());
@@ -95,34 +95,34 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		requestBuffer = new ByteArrayOutputStream();
+		this.requestBuffer = new ByteArrayOutputStream();
 	}
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
-		postMethod.addRequestHeader(name, value);
+		this.postMethod.addRequestHeader(name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return requestBuffer;
+		return this.requestBuffer;
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		postMethod.setRequestEntity(new ByteArrayRequestEntity(requestBuffer.toByteArray()));
-		requestBuffer = null;
+		this.postMethod.setRequestEntity(new ByteArrayRequestEntity(this.requestBuffer.toByteArray()));
+		this.requestBuffer = null;
 		try {
-			httpClient.executeMethod(postMethod);
+			this.httpClient.executeMethod(this.postMethod);
 		}
 		catch (IllegalStateException ex) {
 			if ("Connection factory has been shutdown.".equals(ex.getMessage())) {
 				// The application context has been closed, resulting in a connection
 				// factory shutdown and an ISE.
 				// Let's create a new connection factory for this connection only.
-				connectionManager = new MultiThreadedHttpConnectionManager();
-				httpClient.setHttpConnectionManager(connectionManager);
-				httpClient.executeMethod(postMethod);
+				this.connectionManager = new MultiThreadedHttpConnectionManager();
+				this.httpClient.setHttpConnectionManager(this.connectionManager);
+				this.httpClient.executeMethod(this.postMethod);
 			}
 			else {
 				throw ex;
@@ -136,27 +136,27 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return postMethod.getStatusCode();
+		return this.postMethod.getStatusCode();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return postMethod.getStatusText();
+		return this.postMethod.getStatusText();
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		return postMethod.getResponseContentLength();
+		return this.postMethod.getResponseContentLength();
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return postMethod.getResponseBodyAsStream();
+		return this.postMethod.getResponseBodyAsStream();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		Header[] headers = postMethod.getResponseHeaders();
+		Header[] headers = this.postMethod.getResponseHeaders();
 		String[] names = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			names[i] = headers[i].getName();
@@ -166,7 +166,7 @@ public class CommonsHttpConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Header[] headers = postMethod.getResponseHeaders(name);
+		Header[] headers = this.postMethod.getResponseHeaders(name);
 		String[] values = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			values[i] = headers[i].getValue();

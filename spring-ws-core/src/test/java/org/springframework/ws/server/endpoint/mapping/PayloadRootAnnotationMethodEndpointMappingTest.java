@@ -60,12 +60,13 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 	@Test
 	public void registrationSingle() throws NoSuchMethodException {
 
-		MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
+		MethodEndpoint endpoint = this.mapping
+			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
 
 		assertThat(endpoint).isNotNull();
 
 		Method doIt = MyEndpoint.class.getMethod("doIt", Source.class);
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doIt);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doIt);
 
 		assertThat(endpoint).isEqualTo(expected);
 	}
@@ -74,14 +75,15 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 	public void registrationMultiple() throws NoSuchMethodException {
 
 		Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItMultiple);
 
-		MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request1"));
+		MethodEndpoint endpoint = this.mapping
+			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request1"));
 
 		assertThat(endpoint).isNotNull();
 		assertThat(endpoint).isEqualTo(expected);
 
-		endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2"));
+		endpoint = this.mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request2"));
 
 		assertThat(endpoint).isNotNull();
 		assertThat(endpoint).isEqualTo(expected);
@@ -91,14 +93,15 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 	public void registrationRepeatable() throws NoSuchMethodException {
 
 		Method doItMultiple = MyEndpoint.class.getMethod("doItRepeatable");
-		MethodEndpoint expected = new MethodEndpoint("endpoint", applicationContext, doItMultiple);
+		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItMultiple);
 
-		MethodEndpoint endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request3"));
+		MethodEndpoint endpoint = this.mapping
+			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request3"));
 
 		assertThat(endpoint).isNotNull();
 		assertThat(endpoint).isEqualTo(expected);
 
-		endpoint = mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request4"));
+		endpoint = this.mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request4"));
 
 		assertThat(endpoint).isNotNull();
 		assertThat(endpoint).isEqualTo(expected);
@@ -106,7 +109,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 
 	@Test
 	public void registrationInvalid() {
-		assertThat(mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Invalid"))).isNull();
+		assertThat(this.mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Invalid"))).isNull();
 	}
 
 	@Test
@@ -121,16 +124,16 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 		adapter.afterPropertiesSet();
 
 		MessageDispatcher messageDispatcher = new SoapMessageDispatcher();
-		messageDispatcher.setApplicationContext(applicationContext);
-		messageDispatcher.setEndpointMappings(Collections.singletonList(mapping));
+		messageDispatcher.setApplicationContext(this.applicationContext);
+		messageDispatcher.setEndpointMappings(Collections.singletonList(this.mapping));
 		messageDispatcher.setEndpointAdapters(Collections.singletonList(adapter));
 
 		messageDispatcher.receive(messageContext);
 
-		MyEndpoint endpoint = applicationContext.getBean("endpoint", MyEndpoint.class);
+		MyEndpoint endpoint = this.applicationContext.getBean("endpoint", MyEndpoint.class);
 		assertThat(endpoint.isDoItInvoked()).isTrue();
 
-		LogAspect aspect = (LogAspect) applicationContext.getBean("logAspect");
+		LogAspect aspect = (LogAspect) this.applicationContext.getBean("logAspect");
 		assertThat(aspect.isLogInvoked()).isTrue();
 	}
 
@@ -142,14 +145,14 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 		private boolean doItInvoked = false;
 
 		public boolean isDoItInvoked() {
-			return doItInvoked;
+			return this.doItInvoked;
 		}
 
 		@PayloadRoot(localPart = "Request", namespace = "http://springframework.org/spring-ws")
 		@Log
 		public void doIt(@RequestPayload Source payload) {
 
-			doItInvoked = true;
+			this.doItInvoked = true;
 			logger.info("In doIt()");
 		}
 

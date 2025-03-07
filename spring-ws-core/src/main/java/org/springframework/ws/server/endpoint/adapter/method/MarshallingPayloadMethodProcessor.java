@@ -84,7 +84,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	 * Returns the marshaller used for transforming objects into XML.
 	 */
 	public Marshaller getMarshaller() {
-		return marshaller;
+		return this.marshaller;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	 * Returns the unmarshaller used for transforming XML into objects.
 	 */
 	public Unmarshaller getUnmarshaller() {
-		return unmarshaller;
+		return this.unmarshaller;
 	}
 
 	/**
@@ -129,8 +129,8 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 
 		WebServiceMessage request = messageContext.getRequest();
 		Object argument = MarshallingUtils.unmarshal(unmarshaller, request);
-		if (logger.isDebugEnabled()) {
-			logger.debug("Unmarshalled payload request to [" + argument + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Unmarshalled payload request to [" + argument + "]");
 		}
 		return argument;
 	}
@@ -158,8 +158,8 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 		Marshaller marshaller = getMarshaller();
 		Assert.state(marshaller != null, "marshaller must not be null");
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Marshalling [" + returnValue + "] to response payload");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Marshalling [" + returnValue + "] to response payload");
 		}
 		WebServiceMessage response = messageContext.getResponse();
 		MarshallingUtils.marshal(marshaller, returnValue, response);

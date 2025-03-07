@@ -50,10 +50,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * directly.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setMessageFactory(WebServiceMessageFactory)
  * @see WebServiceTemplate
  * @see #setMarshaller(Marshaller)
- * @since 1.0.0
  */
 public abstract class WebServiceGatewaySupport implements InitializingBean {
 
@@ -67,7 +67,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	 * default {@code WebServiceTemplate}.
 	 */
 	protected WebServiceGatewaySupport() {
-		webServiceTemplate = new WebServiceTemplate();
+		this.webServiceTemplate = new WebServiceTemplate();
 	}
 
 	/**
@@ -76,57 +76,57 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	 * @param messageFactory the message factory to use
 	 */
 	protected WebServiceGatewaySupport(WebServiceMessageFactory messageFactory) {
-		webServiceTemplate = new WebServiceTemplate(messageFactory);
+		this.webServiceTemplate = new WebServiceTemplate(messageFactory);
 	}
 
 	/** Returns the {@code WebServiceMessageFactory} used by the gateway. */
 	public final WebServiceMessageFactory getMessageFactory() {
-		return webServiceTemplate.getMessageFactory();
+		return this.webServiceTemplate.getMessageFactory();
 	}
 
 	/** Set the {@code WebServiceMessageFactory} to be used by the gateway. */
 	public final void setMessageFactory(WebServiceMessageFactory messageFactory) {
-		webServiceTemplate.setMessageFactory(messageFactory);
+		this.webServiceTemplate.setMessageFactory(messageFactory);
 	}
 
 	/** Returns the default URI used by the gateway. */
 	public final String getDefaultUri() {
-		return webServiceTemplate.getDefaultUri();
+		return this.webServiceTemplate.getDefaultUri();
 	}
 
 	/** Sets the default URI used by the gateway. */
 	public final void setDefaultUri(String uri) {
-		webServiceTemplate.setDefaultUri(uri);
+		this.webServiceTemplate.setDefaultUri(uri);
 	}
 
 	/** Returns the destination provider used by the gateway. */
 	public final DestinationProvider getDestinationProvider() {
-		return webServiceTemplate.getDestinationProvider();
+		return this.webServiceTemplate.getDestinationProvider();
 	}
 
 	/** Set the destination provider URI used by the gateway. */
 	public final void setDestinationProvider(DestinationProvider destinationProvider) {
-		webServiceTemplate.setDestinationProvider(destinationProvider);
+		this.webServiceTemplate.setDestinationProvider(destinationProvider);
 	}
 
 	/** Sets a single {@code WebServiceMessageSender} to be used by the gateway. */
 	public final void setMessageSender(WebServiceMessageSender messageSender) {
-		webServiceTemplate.setMessageSender(messageSender);
+		this.webServiceTemplate.setMessageSender(messageSender);
 	}
 
 	/** Returns the {@code WebServiceMessageSender}s used by the gateway. */
 	public final WebServiceMessageSender[] getMessageSenders() {
-		return webServiceTemplate.getMessageSenders();
+		return this.webServiceTemplate.getMessageSenders();
 	}
 
 	/** Sets multiple {@code WebServiceMessageSender} to be used by the gateway. */
 	public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
-		webServiceTemplate.setMessageSenders(messageSenders);
+		this.webServiceTemplate.setMessageSenders(messageSenders);
 	}
 
 	/** Returns the {@code WebServiceTemplate} for the gateway. */
 	public final WebServiceTemplate getWebServiceTemplate() {
-		return webServiceTemplate;
+		return this.webServiceTemplate;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 
 	/** Returns the {@code Marshaller} used by the gateway. */
 	public final Marshaller getMarshaller() {
-		return webServiceTemplate.getMarshaller();
+		return this.webServiceTemplate.getMarshaller();
 	}
 
 	/**
@@ -156,12 +156,12 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	 * @see WebServiceTemplate#marshalSendAndReceive
 	 */
 	public final void setMarshaller(Marshaller marshaller) {
-		webServiceTemplate.setMarshaller(marshaller);
+		this.webServiceTemplate.setMarshaller(marshaller);
 	}
 
 	/** Returns the {@code Unmarshaller} used by the gateway. */
 	public final Unmarshaller getUnmarshaller() {
-		return webServiceTemplate.getUnmarshaller();
+		return this.webServiceTemplate.getUnmarshaller();
 	}
 
 	/**
@@ -171,22 +171,22 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	 * @see WebServiceTemplate#marshalSendAndReceive
 	 */
 	public final void setUnmarshaller(Unmarshaller unmarshaller) {
-		webServiceTemplate.setUnmarshaller(unmarshaller);
+		this.webServiceTemplate.setUnmarshaller(unmarshaller);
 	}
 
 	/** Returns the {@code ClientInterceptors} used by the template. */
 	public final ClientInterceptor[] getInterceptors() {
-		return webServiceTemplate.getInterceptors();
+		return this.webServiceTemplate.getInterceptors();
 	}
 
 	/** Sets the {@code ClientInterceptors} used by the gateway. */
 	public final void setInterceptors(ClientInterceptor[] interceptors) {
-		webServiceTemplate.setInterceptors(interceptors);
+		this.webServiceTemplate.setInterceptors(interceptors);
 	}
 
 	@Override
 	public final void afterPropertiesSet() throws Exception {
-		webServiceTemplate.afterPropertiesSet();
+		this.webServiceTemplate.afterPropertiesSet();
 		initGateway();
 	}
 

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.support;
 
 /**
@@ -60,7 +61,7 @@ public abstract class WebUtils {
 		}
 		int begin = urlPath.lastIndexOf('/', end) + 1;
 		int paramIndex = urlPath.indexOf(';', begin);
-		end = (paramIndex != -1 && paramIndex < end ? paramIndex : end);
+		end = (paramIndex != -1 && paramIndex < end) ? paramIndex : end;
 		return urlPath.substring(begin, end);
 	}
 

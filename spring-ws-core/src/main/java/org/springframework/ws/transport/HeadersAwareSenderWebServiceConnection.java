@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.transport;
 
 import java.io.IOException;
 import java.util.Iterator;
 
 /**
+ * Specialization of {@link WebServiceConnection} that is able to manage headers.
+ *
  * @author Greg Turnquist
  * @since 2.3
  */

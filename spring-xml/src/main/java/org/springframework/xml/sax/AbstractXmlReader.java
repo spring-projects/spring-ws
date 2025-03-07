@@ -30,11 +30,11 @@ import org.xml.sax.ext.LexicalHandler;
  * defined in {@link XMLReader}, and does not recognize any features
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #setContentHandler(org.xml.sax.ContentHandler)
  * @see #setDTDHandler(org.xml.sax.DTDHandler)
  * @see #setEntityResolver(org.xml.sax.EntityResolver)
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
- * @since 1.0.0
  */
 public abstract class AbstractXmlReader implements XMLReader {
 
@@ -50,7 +50,7 @@ public abstract class AbstractXmlReader implements XMLReader {
 
 	@Override
 	public ContentHandler getContentHandler() {
-		return contentHandler;
+		return this.contentHandler;
 	}
 
 	@Override
@@ -65,12 +65,12 @@ public abstract class AbstractXmlReader implements XMLReader {
 
 	@Override
 	public DTDHandler getDTDHandler() {
-		return dtdHandler;
+		return this.dtdHandler;
 	}
 
 	@Override
 	public EntityResolver getEntityResolver() {
-		return entityResolver;
+		return this.entityResolver;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public abstract class AbstractXmlReader implements XMLReader {
 
 	@Override
 	public ErrorHandler getErrorHandler() {
-		return errorHandler;
+		return this.errorHandler;
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public abstract class AbstractXmlReader implements XMLReader {
 	}
 
 	protected LexicalHandler getLexicalHandler() {
-		return lexicalHandler;
+		return this.lexicalHandler;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public abstract class AbstractXmlReader implements XMLReader {
 	@Override
 	public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
 		if ("http://xml.org/sax/properties/lexical-handler".equals(name)) {
-			return lexicalHandler;
+			return this.lexicalHandler;
 		}
 		else {
 			throw new SAXNotRecognizedException(name);
@@ -133,7 +133,7 @@ public abstract class AbstractXmlReader implements XMLReader {
 	@Override
 	public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
 		if ("http://xml.org/sax/properties/lexical-handler".equals(name)) {
-			lexicalHandler = (LexicalHandler) value;
+			this.lexicalHandler = (LexicalHandler) value;
 		}
 		else {
 			throw new SAXNotRecognizedException(name);

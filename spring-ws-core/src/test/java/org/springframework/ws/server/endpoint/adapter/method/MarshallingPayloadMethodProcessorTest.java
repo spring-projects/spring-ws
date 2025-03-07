@@ -55,85 +55,85 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		marshaller = createMock("marshaller", GenericMarshaller.class);
-		unmarshaller = createMock("unmarshaller", GenericUnmarshaller.class);
-		processor = new MarshallingPayloadMethodProcessor(marshaller, unmarshaller);
-		supportedParameter = new MethodParameter(getClass().getMethod("method", MyObject.class), 0);
-		supportedReturnType = new MethodParameter(getClass().getMethod("method", MyObject.class), -1);
+		this.marshaller = createMock("marshaller", GenericMarshaller.class);
+		this.unmarshaller = createMock("unmarshaller", GenericUnmarshaller.class);
+		this.processor = new MarshallingPayloadMethodProcessor(this.marshaller, this.unmarshaller);
+		this.supportedParameter = new MethodParameter(getClass().getMethod("method", MyObject.class), 0);
+		this.supportedReturnType = new MethodParameter(getClass().getMethod("method", MyObject.class), -1);
 	}
 
 	@Test
 	public void supportsParameterSupported() {
 
-		expect(unmarshaller.supports(isA(Type.class))).andReturn(true);
+		expect(this.unmarshaller.supports(isA(Type.class))).andReturn(true);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsParameter(supportedParameter)).isTrue();
+		assertThat(this.processor.supportsParameter(this.supportedParameter)).isTrue();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
 	public void supportsParameterUnsupported() {
 
-		expect(unmarshaller.supports(isA(Type.class))).andReturn(false);
+		expect(this.unmarshaller.supports(isA(Type.class))).andReturn(false);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsParameter(supportedParameter)).isFalse();
+		assertThat(this.processor.supportsParameter(this.supportedParameter)).isFalse();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
 	public void supportsParameterNoUnmarshallerSupported() {
 
-		processor = new MarshallingPayloadMethodProcessor();
-		processor.setMarshaller(marshaller);
+		this.processor = new MarshallingPayloadMethodProcessor();
+		this.processor.setMarshaller(this.marshaller);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsParameter(supportedParameter)).isFalse();
+		assertThat(this.processor.supportsParameter(this.supportedParameter)).isFalse();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
 	public void supportsReturnTypeSupported() {
 
-		expect(marshaller.supports(isA(Type.class))).andReturn(true);
+		expect(this.marshaller.supports(isA(Type.class))).andReturn(true);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsReturnType(supportedReturnType)).isTrue();
+		assertThat(this.processor.supportsReturnType(this.supportedReturnType)).isTrue();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
 	public void supportsReturnTypeUnsupported() {
 
-		expect(marshaller.supports(isA(Type.class))).andReturn(false);
+		expect(this.marshaller.supports(isA(Type.class))).andReturn(false);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsReturnType(supportedReturnType)).isFalse();
+		assertThat(this.processor.supportsReturnType(this.supportedReturnType)).isFalse();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
 	public void supportsReturnTypeNoMarshaller() {
 
-		processor = new MarshallingPayloadMethodProcessor();
-		processor.setUnmarshaller(unmarshaller);
+		this.processor = new MarshallingPayloadMethodProcessor();
+		this.processor.setUnmarshaller(this.unmarshaller);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 
-		assertThat(processor.supportsReturnType(supportedReturnType)).isFalse();
+		assertThat(this.processor.supportsReturnType(this.supportedReturnType)).isFalse();
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
@@ -141,16 +141,16 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 
 		MyObject expected = new MyObject();
 
-		expect(unmarshaller.unmarshal(isA(Source.class))).andReturn(expected);
+		expect(this.unmarshaller.unmarshal(isA(Source.class))).andReturn(expected);
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 		MessageContext messageContext = createMockMessageContext();
 
-		Object result = processor.resolveArgument(messageContext, supportedParameter);
+		Object result = this.processor.resolveArgument(messageContext, this.supportedParameter);
 
 		assertThat(result).isEqualTo(expected);
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
@@ -158,14 +158,14 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 
-			processor = new MarshallingPayloadMethodProcessor();
-			processor.setMarshaller(marshaller);
+			this.processor = new MarshallingPayloadMethodProcessor();
+			this.processor.setMarshaller(this.marshaller);
 
-			replay(marshaller, unmarshaller);
+			replay(this.marshaller, this.unmarshaller);
 
 			MessageContext messageContext = createMockMessageContext();
 
-			processor.resolveArgument(messageContext, supportedParameter);
+			this.processor.resolveArgument(messageContext, this.supportedParameter);
 		});
 	}
 
@@ -174,14 +174,14 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 
 		MyObject returnValue = new MyObject();
 
-		marshaller.marshal(eq(returnValue), isA(Result.class));
+		this.marshaller.marshal(eq(returnValue), isA(Result.class));
 
-		replay(marshaller, unmarshaller);
+		replay(this.marshaller, this.unmarshaller);
 		MessageContext messageContext = createMockMessageContext();
 
-		processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
+		this.processor.handleReturnValue(messageContext, this.supportedReturnType, returnValue);
 
-		verify(marshaller, unmarshaller);
+		verify(this.marshaller, this.unmarshaller);
 	}
 
 	@Test
@@ -189,15 +189,15 @@ public class MarshallingPayloadMethodProcessorTest extends AbstractMethodArgumen
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 
-			processor = new MarshallingPayloadMethodProcessor();
-			processor.setUnmarshaller(unmarshaller);
+			this.processor = new MarshallingPayloadMethodProcessor();
+			this.processor.setUnmarshaller(this.unmarshaller);
 
 			MyObject returnValue = new MyObject();
 
-			replay(marshaller, unmarshaller);
+			replay(this.marshaller, this.unmarshaller);
 			MessageContext messageContext = createMockMessageContext();
 
-			processor.handleReturnValue(messageContext, supportedReturnType, returnValue);
+			this.processor.handleReturnValue(messageContext, this.supportedReturnType, returnValue);
 		});
 
 	}

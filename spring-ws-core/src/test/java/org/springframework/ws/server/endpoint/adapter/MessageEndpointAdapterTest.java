@@ -37,13 +37,13 @@ public class MessageEndpointAdapterTest {
 
 	@BeforeEach
 	public void setUp() {
-		adapter = new MessageEndpointAdapter();
-		endpointMock = createMock(MessageEndpoint.class);
+		this.adapter = new MessageEndpointAdapter();
+		this.endpointMock = createMock(MessageEndpoint.class);
 	}
 
 	@Test
 	public void testSupports() {
-		assertThat(adapter.supports(endpointMock)).isTrue();
+		assertThat(this.adapter.supports(this.endpointMock)).isTrue();
 	}
 
 	@Test
@@ -51,13 +51,13 @@ public class MessageEndpointAdapterTest {
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
-		endpointMock.invoke(context);
+		this.endpointMock.invoke(context);
 
-		replay(endpointMock);
+		replay(this.endpointMock);
 
-		adapter.invoke(context, endpointMock);
+		this.adapter.invoke(context, this.endpointMock);
 
-		verify(endpointMock);
+		verify(this.endpointMock);
 	}
 
 }

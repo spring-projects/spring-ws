@@ -57,12 +57,12 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		adapter = new GenericMarshallingMethodEndpointAdapter();
-		marshallerMock = createMock(GenericMarshaller.class);
-		adapter.setMarshaller(marshallerMock);
-		unmarshallerMock = createMock(GenericUnmarshaller.class);
-		adapter.setUnmarshaller(unmarshallerMock);
-		adapter.afterPropertiesSet();
+		this.adapter = new GenericMarshallingMethodEndpointAdapter();
+		this.marshallerMock = createMock(GenericMarshaller.class);
+		this.adapter.setMarshaller(this.marshallerMock);
+		this.unmarshallerMock = createMock(GenericUnmarshaller.class);
+		this.adapter.setUnmarshaller(this.unmarshallerMock);
+		this.adapter.afterPropertiesSet();
 	}
 
 	@Test
@@ -75,17 +75,17 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 
 		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
+		expect(this.unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
 
-		replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		replay(this.marshallerMock, this.unmarshallerMock, messageMock, factoryMock);
 
-		assertThat(noResponseInvoked).isFalse();
+		assertThat(this.noResponseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(messageContext, methodEndpoint);
 
-		assertThat(noResponseInvoked).isTrue();
+		assertThat(this.noResponseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		verify(this.marshallerMock, this.unmarshallerMock, messageMock, factoryMock);
 	}
 
 	@Test
@@ -99,15 +99,15 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
 
-		replay(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		replay(this.marshallerMock, this.unmarshallerMock, messageMock, factoryMock);
 
-		assertThat(noResponseInvoked).isFalse();
+		assertThat(this.noResponseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(messageContext, methodEndpoint);
 
-		assertThat(noResponseInvoked).isTrue();
+		assertThat(this.noResponseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock, messageMock, factoryMock);
+		verify(this.marshallerMock, this.unmarshallerMock, messageMock, factoryMock);
 	}
 
 	@Test
@@ -123,18 +123,18 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 
 		Method response = getClass().getMethod("response", MyGenericType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
-		expect(unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
-		marshallerMock.marshal(isA(MyGenericType.class), isA(Result.class));
+		expect(this.unmarshallerMock.unmarshal(isA(Source.class))).andReturn(new MyGenericType<MyType>());
+		this.marshallerMock.marshal(isA(MyGenericType.class), isA(Result.class));
 
-		replay(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
+		replay(this.marshallerMock, this.unmarshallerMock, requestMock, responseMock, factoryMock);
 
-		assertThat(responseInvoked).isFalse();
+		assertThat(this.responseInvoked).isFalse();
 
-		adapter.invoke(messageContext, methodEndpoint);
+		this.adapter.invoke(messageContext, methodEndpoint);
 
-		assertThat(responseInvoked).isTrue();
+		assertThat(this.responseInvoked).isTrue();
 
-		verify(marshallerMock, unmarshallerMock, requestMock, responseMock, factoryMock);
+		verify(this.marshallerMock, this.unmarshallerMock, requestMock, responseMock, factoryMock);
 	}
 
 	@Test
@@ -142,13 +142,13 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 
 		Method noResponse = getClass().getMethod("noResponse", MyGenericType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
-		expect(unmarshallerMock.supports(noResponse.getGenericParameterTypes()[0])).andReturn(true);
+		expect(this.unmarshallerMock.supports(noResponse.getGenericParameterTypes()[0])).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -157,14 +157,14 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 		Method response = getClass().getMethod("response", MyGenericType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
 
-		expect(unmarshallerMock.supports(response.getGenericParameterTypes()[0])).andReturn(true);
-		expect(marshallerMock.supports(response.getGenericReturnType())).andReturn(true);
+		expect(this.unmarshallerMock.supports(response.getGenericParameterTypes()[0])).andReturn(true);
+		expect(this.marshallerMock.supports(response.getGenericReturnType())).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(methodEndpoint)).isTrue();
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
@@ -172,48 +172,48 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 
 		Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-		expect(unmarshallerMock.supports(unsupported.getGenericParameterTypes()[0])).andReturn(false);
-		expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(true);
+		expect(this.unmarshallerMock.supports(unsupported.getGenericParameterTypes()[0])).andReturn(false);
+		expect(this.marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(true);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	@Test
 	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
-		expect(marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(false);
+		expect(this.marshallerMock.supports(unsupported.getGenericReturnType())).andReturn(false);
 
-		replay(marshallerMock, unmarshallerMock);
+		replay(this.marshallerMock, this.unmarshallerMock);
 
-		assertThat(adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, unsupported))).isFalse();
 
-		verify(marshallerMock, unmarshallerMock);
+		verify(this.marshallerMock, this.unmarshallerMock);
 	}
 
 	public void noResponse(MyGenericType<MyType> type) {
-		noResponseInvoked = true;
+		this.noResponseInvoked = true;
 
 	}
 
 	public MyGenericType<MyType> response(MyGenericType<MyType> type) {
 
-		responseInvoked = true;
+		this.responseInvoked = true;
 		return type;
 	}
 
@@ -224,11 +224,11 @@ public class GenericMarshallingMethodEndpointAdapterTest {
 		return s;
 	}
 
-	private static class MyType {
+	private static final class MyType {
 
 	}
 
-	private static class MyGenericType<T> {
+	private static final class MyGenericType<T> {
 
 	}
 

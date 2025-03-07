@@ -49,28 +49,28 @@ public class SaajSoap12MessageTest extends AbstractSoap12MessageTest {
 	protected SoapMessage createSoapMessage() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-		saajMessage = messageFactory.createMessage();
-		saajMessage.getSOAPHeader().detachNode();
-		return new SaajSoapMessage(saajMessage, true, messageFactory);
+		this.saajMessage = messageFactory.createMessage();
+		this.saajMessage.getSOAPHeader().detachNode();
+		return new SaajSoapMessage(this.saajMessage, true, messageFactory);
 	}
 
 	public void testGetPayloadSource() throws Exception {
 
-		saajMessage.getSOAPBody().addChildElement("child");
-		Source source = soapMessage.getPayloadSource();
+		this.saajMessage.getSOAPBody().addChildElement("child");
+		Source source = this.soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
-		transformer.transform(source, result);
+		this.transformer.transform(source, result);
 
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
 
 	public void testGetPayloadSourceText() throws Exception {
 
-		saajMessage.getSOAPBody().addTextNode(" ");
-		saajMessage.getSOAPBody().addChildElement("child");
-		Source source = soapMessage.getPayloadSource();
+		this.saajMessage.getSOAPBody().addTextNode(" ");
+		this.saajMessage.getSOAPBody().addChildElement("child");
+		Source source = this.soapMessage.getPayloadSource();
 		StringResult result = new StringResult();
-		transformer.transform(source, result);
+		this.transformer.transform(source, result);
 
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
@@ -78,11 +78,11 @@ public class SaajSoap12MessageTest extends AbstractSoap12MessageTest {
 	public void testGetPayloadResult() throws Exception {
 
 		StringSource source = new StringSource("<child/>");
-		Result result = soapMessage.getPayloadResult();
-		transformer.transform(source, result);
+		Result result = this.soapMessage.getPayloadResult();
+		this.transformer.transform(source, result);
 
-		assertThat(saajMessage.getSOAPBody().hasChildNodes()).isTrue();
-		assertThat(saajMessage.getSOAPBody().getFirstChild().getLocalName()).isEqualTo("child");
+		assertThat(this.saajMessage.getSOAPBody().hasChildNodes()).isTrue();
+		assertThat(this.saajMessage.getSOAPBody().getFirstChild().getLocalName()).isEqualTo("child");
 	}
 
 }

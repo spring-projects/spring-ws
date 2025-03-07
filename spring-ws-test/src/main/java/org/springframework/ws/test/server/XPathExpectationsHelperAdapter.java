@@ -32,37 +32,37 @@ class XPathExpectationsHelperAdapter implements ResponseXPathExpectations {
 	private final XPathExpectationsHelper helper;
 
 	XPathExpectationsHelperAdapter(String expression, Map<String, String> namespaces) {
-		helper = new XPathExpectationsHelper(expression, namespaces);
+		this.helper = new XPathExpectationsHelper(expression, namespaces);
 	}
 
 	@Override
 	public ResponseMatcher exists() {
-		return new WebServiceMessageMatcherAdapter(helper.exists());
+		return new WebServiceMessageMatcherAdapter(this.helper.exists());
 	}
 
 	@Override
 	public ResponseMatcher doesNotExist() {
-		return new WebServiceMessageMatcherAdapter(helper.doesNotExist());
+		return new WebServiceMessageMatcherAdapter(this.helper.doesNotExist());
 	}
 
 	@Override
 	public ResponseMatcher evaluatesTo(boolean expectedValue) {
-		return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
+		return new WebServiceMessageMatcherAdapter(this.helper.evaluatesTo(expectedValue));
 	}
 
 	@Override
 	public ResponseMatcher evaluatesTo(int expectedValue) {
-		return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
+		return new WebServiceMessageMatcherAdapter(this.helper.evaluatesTo(expectedValue));
 	}
 
 	@Override
 	public ResponseMatcher evaluatesTo(double expectedValue) {
-		return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
+		return new WebServiceMessageMatcherAdapter(this.helper.evaluatesTo(expectedValue));
 	}
 
 	@Override
 	public ResponseMatcher evaluatesTo(String expectedValue) {
-		return new WebServiceMessageMatcherAdapter(helper.evaluatesTo(expectedValue));
+		return new WebServiceMessageMatcherAdapter(this.helper.evaluatesTo(expectedValue));
 	}
 
 }

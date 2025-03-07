@@ -38,13 +38,14 @@ public class WsdlBeanDefinitionParserTest {
 
 	@BeforeEach
 	public void setUp() {
-		applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
+		this.applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
 	}
 
 	@Test
 	public void staticWsdl() {
 
-		Map<String, SimpleWsdl11Definition> result = applicationContext.getBeansOfType(SimpleWsdl11Definition.class);
+		Map<String, SimpleWsdl11Definition> result = this.applicationContext
+			.getBeansOfType(SimpleWsdl11Definition.class);
 
 		assertThat(result).isNotEmpty();
 
@@ -56,11 +57,11 @@ public class WsdlBeanDefinitionParserTest {
 	@Test
 	public void dynamicWsdl() {
 
-		Map<String, ?> result = applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
+		Map<String, ?> result = this.applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
 
 		assertThat(result).isNotEmpty();
 
-		result = applicationContext.getBeansOfType(CommonsXsdSchemaCollection.class);
+		result = this.applicationContext.getBeansOfType(CommonsXsdSchemaCollection.class);
 
 		assertThat(result).isNotEmpty();
 	}

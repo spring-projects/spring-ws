@@ -62,10 +62,10 @@ public interface HttpTransportConstants extends TransportConstants {
 	/** The "https" URI scheme. */
 	String HTTPS_URI_SCHEME = "https";
 
-	/** The "GET" HTTP method */
+	/** The "GET" HTTP method. */
 	String METHOD_GET = "GET";
 
-	/** The "POST" HTTP method */
+	/** The "POST" HTTP method. */
 	String METHOD_POST = "POST";
 
 }

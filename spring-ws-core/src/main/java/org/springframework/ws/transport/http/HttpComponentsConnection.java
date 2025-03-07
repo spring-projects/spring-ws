@@ -69,17 +69,17 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	public HttpPost getHttpPost() {
-		return httpPost;
+		return this.httpPost;
 	}
 
 	public HttpResponse getHttpResponse() {
-		return httpResponse;
+		return this.httpResponse;
 	}
 
 	@Override
 	public void onClose() throws IOException {
-		if (httpResponse != null && httpResponse.getEntity() != null) {
-			EntityUtils.consume(httpResponse.getEntity());
+		if (this.httpResponse != null && this.httpResponse.getEntity() != null) {
+			EntityUtils.consume(this.httpResponse.getEntity());
 		}
 	}
 
@@ -88,7 +88,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	 */
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return new URI(httpPost.getURI().toString());
+		return new URI(this.httpPost.getURI().toString());
 	}
 
 	/*
@@ -97,28 +97,28 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		requestBuffer = new ByteArrayOutputStream();
+		this.requestBuffer = new ByteArrayOutputStream();
 	}
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
-		httpPost.addHeader(name, value);
+		this.httpPost.addHeader(name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return requestBuffer;
+		return this.requestBuffer;
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray()));
-		requestBuffer = null;
-		if (httpContext != null) {
-			httpResponse = httpClient.execute(httpPost, httpContext);
+		this.httpPost.setEntity(new ByteArrayEntity(this.requestBuffer.toByteArray()));
+		this.requestBuffer = null;
+		if (this.httpContext != null) {
+			this.httpResponse = this.httpClient.execute(this.httpPost, this.httpContext);
 		}
 		else {
-			httpResponse = httpClient.execute(httpPost);
+			this.httpResponse = this.httpClient.execute(this.httpPost);
 		}
 	}
 
@@ -128,17 +128,17 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return httpResponse.getStatusLine().getStatusCode();
+		return this.httpResponse.getStatusLine().getStatusCode();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return httpResponse.getStatusLine().getReasonPhrase();
+		return this.httpResponse.getStatusLine().getReasonPhrase();
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		HttpEntity entity = httpResponse.getEntity();
+		HttpEntity entity = this.httpResponse.getEntity();
 		if (entity != null) {
 			return entity.getContentLength();
 		}
@@ -147,7 +147,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		HttpEntity entity = httpResponse.getEntity();
+		HttpEntity entity = this.httpResponse.getEntity();
 		if (entity != null) {
 			return entity.getContent();
 		}
@@ -156,7 +156,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		Header[] headers = httpResponse.getAllHeaders();
+		Header[] headers = this.httpResponse.getAllHeaders();
 		String[] names = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			names[i] = headers[i].getName();
@@ -166,7 +166,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Header[] headers = httpResponse.getHeaders(name);
+		Header[] headers = this.httpResponse.getHeaders(name);
 		String[] values = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			values[i] = headers[i].getValue();

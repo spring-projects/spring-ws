@@ -59,42 +59,43 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		resolver = new SoapHeaderElementMethodArgumentResolver();
-		messageContext = createSaajMessageContext();
-		SoapMessage message = (SoapMessage) messageContext.getRequest();
+		this.resolver = new SoapHeaderElementMethodArgumentResolver();
+		this.messageContext = createSaajMessageContext();
+		SoapMessage message = (SoapMessage) this.messageContext.getRequest();
 		for (int i = 0; i < 3; i++) {
 			SoapHeaderElement element = message.getSoapHeader().addHeaderElement(HEADER_QNAME);
 			element.setText(HEADER_CONTENT + i);
 		}
-		soapHeaderWithEmptyValue = new MethodParameter(
+		this.soapHeaderWithEmptyValue = new MethodParameter(
 				getClass().getMethod("soapHeaderWithEmptyValue", SoapHeaderElement.class), 0);
-		soapHeaderElementParameter = new MethodParameter(
+		this.soapHeaderElementParameter = new MethodParameter(
 				getClass().getMethod("soapHeaderElement", SoapHeaderElement.class), 0);
-		soapHeaderElementListParameter = new MethodParameter(getClass().getMethod("soapHeaderElementList", List.class),
+		this.soapHeaderElementListParameter = new MethodParameter(
+				getClass().getMethod("soapHeaderElementList", List.class), 0);
+		this.soapHeaderMismatch = new MethodParameter(
+				getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
+		this.soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class),
 				0);
-		soapHeaderMismatch = new MethodParameter(getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class),
-				0);
-		soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class), 0);
 	}
 
 	@Test
 	public void supportsParameter() {
 
-		assertThat(resolver.supportsParameter(soapHeaderElementParameter)).isTrue();
-		assertThat(resolver.supportsParameter(soapHeaderElementListParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.soapHeaderElementParameter)).isTrue();
+		assertThat(this.resolver.supportsParameter(this.soapHeaderElementListParameter)).isTrue();
 	}
 
 	@Test
 	public void failOnEmptyValue() {
 
 		assertThatIllegalArgumentException()
-			.isThrownBy(() -> resolver.resolveArgument(messageContext, soapHeaderWithEmptyValue));
+			.isThrownBy(() -> this.resolver.resolveArgument(this.messageContext, this.soapHeaderWithEmptyValue));
 	}
 
 	@Test
 	public void resolveSoapHeaderElement() throws Exception {
 
-		Object result = resolver.resolveArgument(messageContext, soapHeaderElementParameter);
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderElementParameter);
 
 		assertThat(SoapHeaderElement.class).isAssignableFrom(result.getClass());
 
@@ -108,7 +109,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	@SuppressWarnings("unchecked")
 	public void resolveSoapHeaderElementList() throws Exception {
 
-		Object result = resolver.resolveArgument(messageContext, soapHeaderElementListParameter);
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderElementListParameter);
 
 		assertThat(List.class).isAssignableFrom(result.getClass());
 
@@ -128,7 +129,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	@Test
 	public void resolveSoapHeaderMismatch() throws Exception {
 
-		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatch);
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderMismatch);
 
 		assertThat(result).isNull();
 	}
@@ -136,7 +137,7 @@ public class SoapHeaderElementMethodArgumentResolverTest extends AbstractMethodA
 	@Test
 	public void resolveSoapHeaderMismatchList() throws Exception {
 
-		Object result = resolver.resolveArgument(messageContext, soapHeaderMismatchList);
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderMismatchList);
 
 		assertThat(List.class).isAssignableFrom(result.getClass());
 		assertThat((List<?>) result).isEmpty();

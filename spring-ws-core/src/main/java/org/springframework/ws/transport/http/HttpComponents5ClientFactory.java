@@ -40,9 +40,9 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
  * {@link FactoryBean} to set up a {@link CloseableHttpClient} using HttpComponents
  * HttpClient 5.
  *
- * @see <a href=https://hc.apache.org/httpcomponents-client>HttpComponents</a>
  * @author Lars Uffmann
  * @since 4.0.5
+ * @see <a href=https://hc.apache.org/httpcomponents-client>HttpComponents</a>
  */
 public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpClient> {
 
@@ -162,7 +162,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	void applyMaxConnectionsPerHost(PoolingHttpClientConnectionManager connectionManager) throws URISyntaxException {
 
-		for (Map.Entry<String, String> entry : maxConnectionsPerHost.entrySet()) {
+		for (Map.Entry<String, String> entry : this.maxConnectionsPerHost.entrySet()) {
 
 			URI uri = new URI(entry.getKey());
 			HttpHost host = new HttpHost(uri.getScheme(), uri.getHost(), getPort(uri));
@@ -215,25 +215,25 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 		this.connectionManager = connectionManagerBuilder.build();
 
-		applyMaxConnectionsPerHost(connectionManager);
+		applyMaxConnectionsPerHost(this.connectionManager);
 
 		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
-			.setConnectionRequestTimeout(Timeout.of(connectionTimeout)) //
-			.setResponseTimeout(Timeout.of(readTimeout));
+			.setConnectionRequestTimeout(Timeout.of(this.connectionTimeout)) //
+			.setResponseTimeout(Timeout.of(this.readTimeout));
 
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
 			.setDefaultRequestConfig(requestConfigBuilder.build()) //
-			.setConnectionManager(connectionManager);
+			.setConnectionManager(this.connectionManager);
 
-		if (credentials != null && authScope != null) {
+		if (this.credentials != null && this.authScope != null) {
 
 			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
-			basicCredentialsProvider.setCredentials(authScope, credentials);
+			basicCredentialsProvider.setCredentials(this.authScope, this.credentials);
 			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
 		}
 
 		if (this.clientBuilderCustomizer != null) {
-			clientBuilderCustomizer.customize(httpClientBuilder);
+			this.clientBuilderCustomizer.customize(httpClientBuilder);
 		}
 
 		return httpClientBuilder.build();

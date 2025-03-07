@@ -45,9 +45,9 @@ import org.springframework.ws.transport.WebServiceConnection;
  * {@link HttpClient}.
  *
  * @author Marten Deinum
+ * @since 4.0
  * @see java.net.http.HttpClient
  * @see java.net.http.HttpRequest
- * @since 4.0
  */
 public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
@@ -81,17 +81,17 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return requestBuffer;
+		return this.requestBuffer;
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		return response.headers().map().keySet().iterator();
+		return this.response.headers().map().keySet().iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		return response.headers().allValues(name).iterator();
+		return this.response.headers().allValues(name).iterator();
 	}
 
 	@Override
@@ -102,35 +102,31 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 			return;
 		}
 
-		requestBuilder.header(name, value);
+		this.requestBuilder.header(name, value);
 	}
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return uri;
+		return this.uri;
 	}
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return response != null ? response.statusCode() : 0;
+		return (this.response != null) ? this.response.statusCode() : 0;
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-
 		HttpStatus status = HttpStatus.resolve(getResponseCode());
-
-		return status != null //
-				? status.getReasonPhrase() //
-				: "";
+		return (status != null) ? status.getReasonPhrase() : "";
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
 
-		if (response != null) {
+		if (this.response != null) {
 
-			return response.headers() //
+			return this.response.headers() //
 				.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH) //
 				.orElse(-1);
 		}
@@ -140,23 +136,23 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return response.body();
+		return this.response.body();
 	}
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		requestBuffer = new ByteArrayOutputStream();
+		this.requestBuffer = new ByteArrayOutputStream();
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 
-		byte[] body = requestBuffer.toByteArray();
+		byte[] body = this.requestBuffer.toByteArray();
 
-		request = requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
+		this.request = this.requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
 
 		try {
-			response = httpClient.send(request, BodyHandlers.ofInputStream());
+			this.response = this.httpClient.send(this.request, BodyHandlers.ofInputStream());
 		}
 		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();
@@ -167,8 +163,8 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 	@Override
 	protected void onClose() throws IOException {
 
-		if (response != null) {
-			response.body().close();
+		if (this.response != null) {
+			this.response.body().close();
 		}
 	}
 

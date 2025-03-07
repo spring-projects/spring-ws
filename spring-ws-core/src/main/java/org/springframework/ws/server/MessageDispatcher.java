@@ -75,11 +75,11 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * </ul>
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see EndpointMapping
  * @see EndpointAdapter
  * @see EndpointExceptionResolver
  * @see org.springframework.web.servlet.DispatcherServlet
- * @since 1.0.0
  */
 public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAware, ApplicationContextAware {
 
@@ -120,12 +120,12 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
 	/** Initializes a new instance of the {@code MessageDispatcher}. */
 	public MessageDispatcher() {
-		defaultStrategiesHelper = new DefaultStrategiesHelper(getClass());
+		this.defaultStrategiesHelper = new DefaultStrategiesHelper(getClass());
 	}
 
 	/** Returns the {@code EndpointAdapter}s to use by this {@code MessageDispatcher}. */
 	public List<EndpointAdapter> getEndpointAdapters() {
-		return endpointAdapters;
+		return this.endpointAdapters;
 	}
 
 	/** Sets the {@code EndpointAdapter}s to use by this {@code MessageDispatcher}. */
@@ -138,7 +138,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * {@code MessageDispatcher}.
 	 */
 	public List<EndpointExceptionResolver> getEndpointExceptionResolvers() {
-		return endpointExceptionResolvers;
+		return this.endpointExceptionResolvers;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 
 	/** Returns the {@code EndpointMapping}s to use by this {@code MessageDispatcher}. */
 	public List<EndpointMapping> getEndpointMappings() {
-		return endpointMappings;
+		return this.endpointMappings;
 	}
 
 	/** Sets the {@code EndpointMapping}s to use by this {@code MessageDispatcher}. */
@@ -199,7 +199,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			}
 		}
 		else if (sentMessageTracingLogger.isDebugEnabled()) {
-			sentMessageTracingLogger.debug("MessageDispatcher with name '" + beanName
+			sentMessageTracingLogger.debug("MessageDispatcher with name '" + this.beanName
 					+ "' sends no response for request [" + messageContext.getRequest() + "]");
 		}
 	}
@@ -256,7 +256,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				throw ex;
 			}
 			catch (Exception ex) {
-				Object endpoint = mappedEndpoint != null ? mappedEndpoint.getEndpoint() : null;
+				Object endpoint = (mappedEndpoint != null) ? mappedEndpoint.getEndpoint() : null;
 				processEndpointException(messageContext, endpoint, ex);
 				triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
 			}
@@ -281,14 +281,14 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 		for (EndpointMapping endpointMapping : getEndpointMappings()) {
 			EndpointInvocationChain endpoint = endpointMapping.getEndpoint(messageContext);
 			if (endpoint != null) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Endpoint mapping [" + endpointMapping + "] maps request to endpoint ["
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Endpoint mapping [" + endpointMapping + "] maps request to endpoint ["
 							+ endpoint.getEndpoint() + "]");
 				}
 				return endpoint;
 			}
-			else if (logger.isDebugEnabled()) {
-				logger.debug("Endpoint mapping [" + endpointMapping + "] has no mapping for request");
+			else if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Endpoint mapping [" + endpointMapping + "] has no mapping for request");
 			}
 		}
 		return null;
@@ -301,8 +301,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 */
 	protected EndpointAdapter getEndpointAdapter(Object endpoint) {
 		for (EndpointAdapter endpointAdapter : getEndpointAdapters()) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Testing endpoint adapter [" + endpointAdapter + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Testing endpoint adapter [" + endpointAdapter + "]");
 			}
 			if (endpointAdapter.supports(endpoint)) {
 				return endpointAdapter;
@@ -340,8 +340,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 		if (!CollectionUtils.isEmpty(getEndpointExceptionResolvers())) {
 			for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
 				if (resolver.resolveException(messageContext, endpoint, ex)) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
+					if (this.logger.isDebugEnabled()) {
+						this.logger.debug("Endpoint invocation resulted in exception - responding with Fault", ex);
 					}
 					return;
 				}
@@ -390,7 +390,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * returned {@code false}.
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that successfully completed
-	 * @param ex Exception thrown on handler execution, or {@code null} if none
+	 * @param ex exception thrown on handler execution, or {@code null} if none
 	 * @see EndpointInterceptor#afterCompletion
 	 */
 	private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint, int interceptorIndex,
@@ -406,7 +406,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 						interceptor.afterCompletion(messageContext, mappedEndpoint.getEndpoint(), ex);
 					}
 					catch (Throwable ex2) {
-						logger.error("EndpointInterceptor.afterCompletion threw exception", ex2);
+						this.logger.error("EndpointInterceptor.afterCompletion threw exception", ex2);
 					}
 				}
 			}
@@ -420,18 +420,18 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @see #setEndpointAdapters(java.util.List)
 	 */
 	private void initEndpointAdapters(ApplicationContext applicationContext) throws BeansException {
-		if (endpointAdapters == null) {
+		if (this.endpointAdapters == null) {
 			Map<String, EndpointAdapter> matchingBeans = BeanFactoryUtils
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointAdapter.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointAdapters = new ArrayList<>(matchingBeans.values());
-				endpointAdapters.sort(new OrderComparator());
+				this.endpointAdapters = new ArrayList<>(matchingBeans.values());
+				this.endpointAdapters.sort(new OrderComparator());
 			}
 			else {
-				endpointAdapters = defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class,
+				this.endpointAdapters = this.defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class,
 						applicationContext);
-				if (logger.isDebugEnabled()) {
-					logger.debug("No EndpointAdapters found, using defaults");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("No EndpointAdapters found, using defaults");
 				}
 			}
 		}
@@ -444,18 +444,18 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @see #setEndpointExceptionResolvers(java.util.List)
 	 */
 	private void initEndpointExceptionResolvers(ApplicationContext applicationContext) throws BeansException {
-		if (endpointExceptionResolvers == null) {
+		if (this.endpointExceptionResolvers == null) {
 			Map<String, EndpointExceptionResolver> matchingBeans = BeanFactoryUtils
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointExceptionResolvers = new ArrayList<>(matchingBeans.values());
-				endpointExceptionResolvers.sort(new OrderComparator());
+				this.endpointExceptionResolvers = new ArrayList<>(matchingBeans.values());
+				this.endpointExceptionResolvers.sort(new OrderComparator());
 			}
 			else {
-				endpointExceptionResolvers = defaultStrategiesHelper
+				this.endpointExceptionResolvers = this.defaultStrategiesHelper
 					.getDefaultStrategies(EndpointExceptionResolver.class, applicationContext);
-				if (logger.isDebugEnabled()) {
-					logger.debug("No EndpointExceptionResolvers found, using defaults");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("No EndpointExceptionResolvers found, using defaults");
 				}
 			}
 		}
@@ -468,18 +468,18 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @see #setEndpointMappings(java.util.List)
 	 */
 	private void initEndpointMappings(ApplicationContext applicationContext) throws BeansException {
-		if (endpointMappings == null) {
+		if (this.endpointMappings == null) {
 			Map<String, EndpointMapping> matchingBeans = BeanFactoryUtils
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointMapping.class, true, false);
 			if (!matchingBeans.isEmpty()) {
-				endpointMappings = new ArrayList<>(matchingBeans.values());
-				endpointMappings.sort(new OrderComparator());
+				this.endpointMappings = new ArrayList<>(matchingBeans.values());
+				this.endpointMappings.sort(new OrderComparator());
 			}
 			else {
-				endpointMappings = defaultStrategiesHelper.getDefaultStrategies(EndpointMapping.class,
+				this.endpointMappings = this.defaultStrategiesHelper.getDefaultStrategies(EndpointMapping.class,
 						applicationContext);
-				if (logger.isDebugEnabled()) {
-					logger.debug("No EndpointMappings found, using defaults");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("No EndpointMappings found, using defaults");
 				}
 			}
 		}

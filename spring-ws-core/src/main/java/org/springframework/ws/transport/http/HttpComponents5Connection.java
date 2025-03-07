@@ -75,17 +75,17 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	}
 
 	public HttpPost getHttpPost() {
-		return httpPost;
+		return this.httpPost;
 	}
 
 	public HttpResponse getHttpResponse() {
-		return httpResponse;
+		return this.httpResponse;
 	}
 
 	@Override
 	public void onClose() throws IOException {
 
-		if (httpResponse instanceof ClassicHttpResponse response) {
+		if (this.httpResponse instanceof ClassicHttpResponse response) {
 
 			if (response.getEntity() != null) {
 				EntityUtils.consume(response.getEntity());
@@ -98,7 +98,7 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	 */
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return new URI(httpPost.getUri().toString());
+		return new URI(this.httpPost.getUri().toString());
 	}
 
 	/*
@@ -107,33 +107,33 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		requestBuffer = new ByteArrayOutputStream();
+		this.requestBuffer = new ByteArrayOutputStream();
 	}
 
 	@Override
 	public void addRequestHeader(String name, String value) throws IOException {
-		httpPost.addHeader(name, value);
+		this.httpPost.addHeader(name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return requestBuffer;
+		return this.requestBuffer;
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 
-		String contentType = httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
-		httpPost.setEntity(new ByteArrayEntity(requestBuffer.toByteArray(), ContentType.parse(contentType)));
+		String contentType = this.httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
+		this.httpPost.setEntity(new ByteArrayEntity(this.requestBuffer.toByteArray(), ContentType.parse(contentType)));
 
-		requestBuffer = null;
+		this.requestBuffer = null;
 
-		if (httpContext != null) {
-			httpResponse = httpClient.execute(httpPost, httpContext);
+		if (this.httpContext != null) {
+			this.httpResponse = this.httpClient.execute(this.httpPost, this.httpContext);
 		}
 		else {
-			httpResponse = httpClient.execute(httpPost);
+			this.httpResponse = this.httpClient.execute(this.httpPost);
 		}
 	}
 
@@ -143,18 +143,18 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return httpResponse.getCode();
+		return this.httpResponse.getCode();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return httpResponse.getReasonPhrase();
+		return this.httpResponse.getReasonPhrase();
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
 
-		if (httpResponse instanceof ClassicHttpResponse response) {
+		if (this.httpResponse instanceof ClassicHttpResponse response) {
 
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
@@ -167,7 +167,7 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
 
-		if (httpResponse instanceof ClassicHttpResponse response) {
+		if (this.httpResponse instanceof ClassicHttpResponse response) {
 
 			HttpEntity entity = response.getEntity();
 			if (entity != null) {
@@ -181,7 +181,7 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
 
-		return Arrays.stream(httpResponse.getHeaders()) //
+		return Arrays.stream(this.httpResponse.getHeaders()) //
 			.map(NameValuePair::getName) //
 			.iterator();
 	}
@@ -189,7 +189,7 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 
-		return Arrays.stream(httpResponse.getHeaders(name)) //
+		return Arrays.stream(this.httpResponse.getHeaders(name)) //
 			.map(NameValuePair::getValue) //
 			.iterator();
 	}

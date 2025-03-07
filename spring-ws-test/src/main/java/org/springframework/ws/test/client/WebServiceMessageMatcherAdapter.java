@@ -40,7 +40,7 @@ class WebServiceMessageMatcherAdapter implements RequestMatcher {
 
 	@Override
 	public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
-		adaptee.match(request);
+		this.adaptee.match(request);
 	}
 
 }

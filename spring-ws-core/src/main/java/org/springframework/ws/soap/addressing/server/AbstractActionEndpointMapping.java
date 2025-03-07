@@ -54,7 +54,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
 	/** Returns the suffix to add to request {@code Action}s for reply messages. */
 	public String getOutputActionSuffix() {
-		return outputActionSuffix;
+		return this.outputActionSuffix;
 	}
 
 	/**
@@ -68,7 +68,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 
 	/** Returns the suffix to add to request {@code Action}s for reply fault messages. */
 	public String getFaultActionSuffix() {
-		return faultActionSuffix;
+		return this.faultActionSuffix;
 	}
 
 	/**
@@ -83,8 +83,8 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	@Override
 	protected final Object getEndpointInternal(MessageAddressingProperties map) {
 		URI action = map.getAction();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Looking up endpoint for action [" + action + "]");
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Looking up endpoint for action [" + action + "]");
 		}
 		Object endpoint = lookupEndpoint(action);
 		if (endpoint != null) {
@@ -111,7 +111,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
 	protected Object lookupEndpoint(URI action) {
-		return endpointMap.get(action);
+		return this.endpointMap.get(action);
 	}
 
 	/**
@@ -142,8 +142,8 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 		}
 		else {
 			this.endpointMap.put(action, resolvedEndpoint);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Mapped Action [" + action + "] onto endpoint [" + resolvedEndpoint + "]");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("Mapped Action [" + action + "] onto endpoint [" + resolvedEndpoint + "]");
 			}
 		}
 	}

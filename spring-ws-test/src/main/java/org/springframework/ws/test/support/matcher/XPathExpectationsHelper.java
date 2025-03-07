@@ -26,12 +26,10 @@ import org.w3c.dom.Node;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.transform.TransformerHelper;
 import org.springframework.xml.xpath.XPathExpression;
 import org.springframework.xml.xpath.XPathExpressionFactory;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertEquals;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Helper class for dealing with XPath expectations.
@@ -73,9 +71,10 @@ public class XPathExpectationsHelper {
 		return new WebServiceMessageMatcher() {
 			public void match(WebServiceMessage message) throws IOException, AssertionError {
 				Node payload = transformToNode(message);
-				Node result = expression.evaluateAsNode(payload);
+				Node result = XPathExpectationsHelper.this.expression.evaluateAsNode(payload);
 				if (result == null) {
-					fail("No match for \"" + expressionString + "\" found", "Payload", message.getPayloadSource());
+					AssertionErrors.fail("No match for \"" + XPathExpectationsHelper.this.expressionString + "\" found",
+							"Payload", message.getPayloadSource());
 				}
 			}
 		};
@@ -85,9 +84,10 @@ public class XPathExpectationsHelper {
 		return new WebServiceMessageMatcher() {
 			public void match(WebServiceMessage message) throws IOException, AssertionError {
 				Node payload = transformToNode(message);
-				Node result = expression.evaluateAsNode(payload);
+				Node result = XPathExpectationsHelper.this.expression.evaluateAsNode(payload);
 				if (result != null) {
-					fail("Match for \"" + expressionString + "\" found", "Payload", message.getPayloadSource());
+					AssertionErrors.fail("Match for \"" + XPathExpectationsHelper.this.expressionString + "\" found",
+							"Payload", message.getPayloadSource());
 				}
 			}
 		};
@@ -97,9 +97,10 @@ public class XPathExpectationsHelper {
 		return new WebServiceMessageMatcher() {
 			public void match(WebServiceMessage message) throws IOException, AssertionError {
 				Node payload = transformToNode(message);
-				boolean result = expression.evaluateAsBoolean(payload);
-				assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-						result, "Payload", message.getPayloadSource());
+				boolean result = XPathExpectationsHelper.this.expression.evaluateAsBoolean(payload);
+				AssertionErrors.assertEquals("Evaluation of XPath expression \""
+						+ XPathExpectationsHelper.this.expressionString + "\" failed.", expectedValue, result,
+						"Payload", message.getPayloadSource());
 
 			}
 		};
@@ -113,9 +114,10 @@ public class XPathExpectationsHelper {
 		return new WebServiceMessageMatcher() {
 			public void match(WebServiceMessage message) throws IOException, AssertionError {
 				Node payload = transformToNode(message);
-				double result = expression.evaluateAsNumber(payload);
-				assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-						result, "Payload", message.getPayloadSource());
+				double result = XPathExpectationsHelper.this.expression.evaluateAsNumber(payload);
+				AssertionErrors.assertEquals("Evaluation of XPath expression \""
+						+ XPathExpectationsHelper.this.expressionString + "\" failed.", expectedValue, result,
+						"Payload", message.getPayloadSource());
 
 			}
 		};
@@ -126,9 +128,10 @@ public class XPathExpectationsHelper {
 		return new WebServiceMessageMatcher() {
 			public void match(WebServiceMessage message) throws IOException, AssertionError {
 				Node payload = transformToNode(message);
-				String result = expression.evaluateAsString(payload);
-				assertEquals("Evaluation of XPath expression \"" + expressionString + "\" failed.", expectedValue,
-						result, "Payload", message.getPayloadSource());
+				String result = XPathExpectationsHelper.this.expression.evaluateAsString(payload);
+				AssertionErrors.assertEquals("Evaluation of XPath expression \""
+						+ XPathExpectationsHelper.this.expressionString + "\" failed.", expectedValue, result,
+						"Payload", message.getPayloadSource());
 			}
 		};
 	}
@@ -136,11 +139,11 @@ public class XPathExpectationsHelper {
 	private Node transformToNode(WebServiceMessage request) {
 		DOMResult domResult = new DOMResult();
 		try {
-			transformerHelper.transform(request.getPayloadSource(), domResult);
+			this.transformerHelper.transform(request.getPayloadSource(), domResult);
 			return domResult.getNode();
 		}
 		catch (TransformerException ex) {
-			fail("Could not transform request payload: " + ex.getMessage());
+			AssertionErrors.fail("Could not transform request payload: " + ex.getMessage());
 			return null;
 		}
 	}

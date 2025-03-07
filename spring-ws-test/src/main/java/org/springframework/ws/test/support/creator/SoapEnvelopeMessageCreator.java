@@ -27,10 +27,8 @@ import org.w3c.dom.Document;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Implementation of {@link WebServiceMessageCreator} that creates a request based on a
@@ -57,15 +55,16 @@ public class SoapEnvelopeMessageCreator extends AbstractMessageCreator {
 
 	@Override
 	protected void doWithMessage(WebServiceMessage message) throws IOException {
-		assertTrue("Message created with factory is not a SOAP message", message instanceof SoapMessage);
+		AssertionErrors.assertTrue("Message created with factory is not a SOAP message",
+				message instanceof SoapMessage);
 		SoapMessage soapMessage = (SoapMessage) message;
 		try {
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(soapEnvelope, result);
+			this.transformerHelper.transform(this.soapEnvelope, result);
 			soapMessage.setDocument((Document) result.getNode());
 		}
 		catch (TransformerException ex) {
-			fail("Could not transform request SOAP envelope to message: " + ex.getMessage());
+			AssertionErrors.fail("Could not transform request SOAP envelope to message: " + ex.getMessage());
 		}
 	}
 

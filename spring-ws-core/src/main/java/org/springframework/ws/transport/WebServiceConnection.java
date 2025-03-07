@@ -30,8 +30,8 @@ import org.springframework.ws.WebServiceMessageFactory;
  * A {@code WebServiceConnection} can be obtained using a {@link WebServiceMessageSender}.
  *
  * @author Arjen Poutsma
- * @see WebServiceMessageSender#createConnection(URI)
  * @since 1.0.0
+ * @see WebServiceMessageSender#createConnection(URI)
  */
 public interface WebServiceConnection extends AutoCloseable {
 

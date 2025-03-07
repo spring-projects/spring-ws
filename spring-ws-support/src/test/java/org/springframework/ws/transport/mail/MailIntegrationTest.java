@@ -49,9 +49,9 @@ public class MailIntegrationTest {
 
 		String content = "<root xmlns=\"http://springframework.org/spring-ws\"><child/></root>";
 		StringResult result = new StringResult();
-		webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
+		this.webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
 
-		MimeMessage[] receivedMessages = greenMailBean.getGreenMail().getReceivedMessages();
+		MimeMessage[] receivedMessages = this.greenMailBean.getGreenMail().getReceivedMessages();
 
 		assertThat(receivedMessages).hasSize(1);
 

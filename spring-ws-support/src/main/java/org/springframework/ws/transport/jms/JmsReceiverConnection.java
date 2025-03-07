@@ -98,7 +98,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getRequestMessage() {
-		return requestMessage;
+		return this.requestMessage;
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
 	public Message getResponseMessage() {
-		return responseMessage;
+		return this.responseMessage;
 	}
 
 	/*
@@ -116,7 +116,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public URI getUri() throws URISyntaxException {
 		try {
-			return JmsTransportUtils.toUri(requestMessage.getJMSDestination());
+			return JmsTransportUtils.toUri(this.requestMessage.getJMSDestination());
 		}
 		catch (JMSException ex) {
 			throw new URISyntaxException("", ex.getMessage());
@@ -144,7 +144,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public Iterator<String> getRequestHeaderNames() throws IOException {
 		try {
-			return JmsTransportUtils.getHeaderNames(requestMessage);
+			return JmsTransportUtils.getHeaderNames(this.requestMessage);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property names", ex);
@@ -154,7 +154,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public Iterator<String> getRequestHeaders(String name) throws IOException {
 		try {
-			return JmsTransportUtils.getHeaders(requestMessage, name);
+			return JmsTransportUtils.getHeaders(this.requestMessage, name);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not get property value", ex);
@@ -163,14 +163,14 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected InputStream getRequestInputStream() throws IOException {
-		if (requestMessage instanceof BytesMessage) {
-			return new BytesMessageInputStream((BytesMessage) requestMessage);
+		if (this.requestMessage instanceof BytesMessage) {
+			return new BytesMessageInputStream((BytesMessage) this.requestMessage);
 		}
-		else if (requestMessage instanceof TextMessage) {
-			return new TextMessageInputStream((TextMessage) requestMessage, textMessageEncoding);
+		else if (this.requestMessage instanceof TextMessage) {
+			return new TextMessageInputStream((TextMessage) this.requestMessage, this.textMessageEncoding);
 		}
 		else {
-			throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
+			throw new IllegalStateException("Unknown request message type [" + this.requestMessage + "]");
 		}
 	}
 
@@ -181,20 +181,20 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
 		try {
-			if (requestMessage instanceof BytesMessage) {
-				responseMessage = session.createBytesMessage();
+			if (this.requestMessage instanceof BytesMessage) {
+				this.responseMessage = this.session.createBytesMessage();
 			}
-			else if (requestMessage instanceof TextMessage) {
-				responseMessage = session.createTextMessage();
+			else if (this.requestMessage instanceof TextMessage) {
+				this.responseMessage = this.session.createTextMessage();
 			}
 			else {
-				throw new IllegalStateException("Unknown request message type [" + requestMessage + "]");
+				throw new IllegalStateException("Unknown request message type [" + this.requestMessage + "]");
 			}
-			String correlation = requestMessage.getJMSCorrelationID();
+			String correlation = this.requestMessage.getJMSCorrelationID();
 			if (correlation == null) {
-				correlation = requestMessage.getJMSMessageID();
+				correlation = this.requestMessage.getJMSMessageID();
 			}
-			responseMessage.setJMSCorrelationID(correlation);
+			this.responseMessage.setJMSCorrelationID(correlation);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not create response message", ex);
@@ -204,7 +204,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
 		try {
-			JmsTransportUtils.addHeader(responseMessage, name, value);
+			JmsTransportUtils.addHeader(this.responseMessage, name, value);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException("Could not set property", ex);
@@ -213,14 +213,14 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
-		if (responseMessage instanceof BytesMessage) {
-			return new BytesMessageOutputStream((BytesMessage) responseMessage);
+		if (this.responseMessage instanceof BytesMessage) {
+			return new BytesMessageOutputStream((BytesMessage) this.responseMessage);
 		}
-		else if (responseMessage instanceof TextMessage) {
-			return new TextMessageOutputStream((TextMessage) responseMessage, textMessageEncoding);
+		else if (this.responseMessage instanceof TextMessage) {
+			return new TextMessageOutputStream((TextMessage) this.responseMessage, this.textMessageEncoding);
 		}
 		else {
-			throw new IllegalStateException("Unknown response message type [" + responseMessage + "]");
+			throw new IllegalStateException("Unknown response message type [" + this.responseMessage + "]");
 		}
 	}
 
@@ -228,14 +228,14 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		MessageProducer messageProducer = null;
 		try {
-			if (requestMessage.getJMSReplyTo() != null) {
-				messageProducer = session.createProducer(requestMessage.getJMSReplyTo());
-				messageProducer.setDeliveryMode(requestMessage.getJMSDeliveryMode());
-				messageProducer.setPriority(requestMessage.getJMSPriority());
-				if (postProcessor != null) {
-					responseMessage = postProcessor.postProcessMessage(responseMessage);
+			if (this.requestMessage.getJMSReplyTo() != null) {
+				messageProducer = this.session.createProducer(this.requestMessage.getJMSReplyTo());
+				messageProducer.setDeliveryMode(this.requestMessage.getJMSDeliveryMode());
+				messageProducer.setPriority(this.requestMessage.getJMSPriority());
+				if (this.postProcessor != null) {
+					this.responseMessage = this.postProcessor.postProcessMessage(this.responseMessage);
 				}
-				messageProducer.send(responseMessage);
+				messageProducer.send(this.responseMessage);
 			}
 		}
 		catch (JMSException ex) {

@@ -25,8 +25,8 @@ import javax.xml.transform.stream.StreamResult;
  * resulting string can be retrieved via {@code toString()}.
  *
  * @author Arjen Poutsma
- * @see #toString()
  * @since 1.0.0
+ * @see #toString()
  */
 public class StringResult extends StreamResult {
 

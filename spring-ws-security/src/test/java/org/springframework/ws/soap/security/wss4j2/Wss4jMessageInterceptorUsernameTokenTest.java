@@ -35,7 +35,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTest extends Wss4jTest
 
 	@Override
 	protected void onSetup() {
-		users.setProperty("Bert", "Ernie");
+		this.users.setProperty("Bert", "Ernie");
 	}
 
 	@Test
@@ -171,7 +171,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTest extends Wss4jTest
 			interceptor.setSecurementActions(actions);
 		}
 		SimplePasswordValidationCallbackHandler callbackHandler = new SimplePasswordValidationCallbackHandler();
-		callbackHandler.setUsers(users);
+		callbackHandler.setUsers(this.users);
 		if (digest) {
 			interceptor.setSecurementPasswordType(WSConstants.PW_DIGEST);
 		}

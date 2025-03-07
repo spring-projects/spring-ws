@@ -29,14 +29,14 @@ public class MockWebServiceMessageSenderTest {
 
 	@BeforeEach
 	public void setUp() {
-		sender = new MockWebServiceMessageSender();
+		this.sender = new MockWebServiceMessageSender();
 	}
 
 	@Test
 	public void noMoreExpectedConnections() {
 
 		assertThatExceptionOfType(AssertionError.class)
-			.isThrownBy(() -> sender.createConnection(URI.create("http://localhost")));
+			.isThrownBy(() -> this.sender.createConnection(URI.create("http://localhost")));
 	}
 
 	@Test
@@ -44,8 +44,8 @@ public class MockWebServiceMessageSenderTest {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			sender.expectNewConnection();
-			sender.verifyConnections();
+			this.sender.expectNewConnection();
+			this.sender.verifyConnections();
 		});
 	}
 
@@ -54,10 +54,10 @@ public class MockWebServiceMessageSenderTest {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			sender.expectNewConnection();
-			sender.expectNewConnection();
-			sender.createConnection(URI.create("http://localhost"));
-			sender.verifyConnections();
+			this.sender.expectNewConnection();
+			this.sender.expectNewConnection();
+			this.sender.createConnection(URI.create("http://localhost"));
+			this.sender.verifyConnections();
 		});
 	}
 

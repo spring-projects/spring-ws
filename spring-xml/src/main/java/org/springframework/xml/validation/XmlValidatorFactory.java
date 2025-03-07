@@ -36,8 +36,8 @@ import org.springframework.xml.JaxpVersion;
  * implementations to a custom, SAX-based implementation.
  *
  * @author Arjen Poutsma
- * @see XmlValidator
  * @since 1.0.0
+ * @see XmlValidator
  */
 public abstract class XmlValidatorFactory {
 

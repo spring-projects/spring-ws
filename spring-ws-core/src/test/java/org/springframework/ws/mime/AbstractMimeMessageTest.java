@@ -42,11 +42,11 @@ public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageT
 	@Override
 	protected final WebServiceMessage createWebServiceMessage() throws Exception {
 
-		mimeMessage = createMimeMessage();
-		picture = new ClassPathResource("spring-ws.png", AbstractMimeMessageTest.class);
-		contentId = "spring-ws";
-		contentType = "image/png";
-		return mimeMessage;
+		this.mimeMessage = createMimeMessage();
+		this.picture = new ClassPathResource("spring-ws.png", AbstractMimeMessageTest.class);
+		this.contentId = "spring-ws";
+		this.contentType = "image/png";
+		return this.mimeMessage;
 	}
 
 	protected abstract MimeMessage createMimeMessage() throws Exception;
@@ -54,7 +54,7 @@ public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageT
 	@Test
 	public void testEmptyMessage() {
 
-		Iterator<Attachment> iterator = mimeMessage.getAttachments();
+		Iterator<Attachment> iterator = this.mimeMessage.getAttachments();
 
 		assertThat(iterator.hasNext()).isFalse();
 	}
@@ -62,15 +62,15 @@ public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageT
 	@Test
 	public void testAddAttachment() throws Exception {
 
-		Attachment attachment = mimeMessage.addAttachment(contentId, picture, contentType);
+		Attachment attachment = this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
 		testAttachment(attachment);
 	}
 
 	@Test
 	public void testGetAttachment() throws Exception {
 
-		mimeMessage.addAttachment(contentId, picture, contentType);
-		Attachment attachment = mimeMessage.getAttachment(contentId);
+		this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
+		Attachment attachment = this.mimeMessage.getAttachment(this.contentId);
 
 		assertThat(attachment).isNotNull();
 
@@ -80,8 +80,8 @@ public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageT
 	@Test
 	public void testGetAttachments() throws Exception {
 
-		mimeMessage.addAttachment(contentId, picture, contentType);
-		Iterator<Attachment> iterator = mimeMessage.getAttachments();
+		this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
+		Iterator<Attachment> iterator = this.mimeMessage.getAttachments();
 
 		assertThat(iterator).isNotNull();
 		assertThat(iterator.hasNext()).isTrue();
@@ -94,8 +94,8 @@ public abstract class AbstractMimeMessageTest extends AbstractWebServiceMessageT
 
 	private void testAttachment(Attachment attachment) throws IOException {
 
-		assertThat(attachment.getContentId()).isEqualTo(contentId);
-		assertThat(attachment.getContentType()).isEqualTo(contentType);
+		assertThat(attachment.getContentId()).isEqualTo(this.contentId);
+		assertThat(attachment.getContentType()).isEqualTo(this.contentType);
 		assertThat(attachment.getSize()).isNotEqualTo(0);
 
 		byte[] contents = FileCopyUtils.copyToByteArray(attachment.getInputStream());

@@ -43,11 +43,11 @@ import org.springframework.ws.context.MessageContext;
  * create a response using a {@code XMLEventWriter}.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see #invokeInternal(javax.xml.stream.XMLEventReader,javax.xml.stream.util.XMLEventConsumer,
  * javax.xml.stream.XMLEventFactory)
  * @see XMLEventReader
  * @see XMLEventWriter
- * @since 1.0.0
  * @deprecated as of Spring Web Services 2.0, in favor of annotated endpoints
  */
 @Deprecated
@@ -76,10 +76,10 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
 	/** Returns an {@code XMLEventFactory} to read XML from. */
 	private XMLEventFactory getEventFactory() {
-		if (eventFactory == null) {
-			eventFactory = createXmlEventFactory();
+		if (this.eventFactory == null) {
+			this.eventFactory = createXmlEventFactory();
 		}
-		return eventFactory;
+		return this.eventFactory;
 	}
 
 	private XMLEventReader getEventReader(Source source) throws XMLStreamException, TransformerException {
@@ -151,7 +151,7 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 	 * {@code WebServiceMessage} as soon as any method is called, thus lazily creating the
 	 * response.
 	 */
-	private class ResponseCreatingEventWriter implements XMLEventWriter {
+	private final class ResponseCreatingEventWriter implements XMLEventWriter {
 
 		private XMLEventWriter eventWriter;
 
@@ -159,19 +159,19 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
 		private ByteArrayOutputStream os;
 
-		public ResponseCreatingEventWriter(MessageContext messageContext) {
+		ResponseCreatingEventWriter(MessageContext messageContext) {
 			this.messageContext = messageContext;
 		}
 
 		@Override
 		public NamespaceContext getNamespaceContext() {
-			return eventWriter.getNamespaceContext();
+			return this.eventWriter.getNamespaceContext();
 		}
 
 		@Override
 		public void setNamespaceContext(NamespaceContext context) throws XMLStreamException {
 			createEventWriter();
-			eventWriter.setNamespaceContext(context);
+			this.eventWriter.setNamespaceContext(context);
 		}
 
 		@Override
@@ -185,15 +185,15 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 		@Override
 		public void add(XMLEvent event) throws XMLStreamException {
 			createEventWriter();
-			eventWriter.add(event);
+			this.eventWriter.add(event);
 			if (event.isEndDocument()) {
-				if (os != null) {
-					eventWriter.flush();
+				if (this.os != null) {
+					this.eventWriter.flush();
 					// if we used an output stream cache, we have to transform it to the
 					// response again
 					try {
-						ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-						transform(new StreamSource(is), messageContext.getResponse().getPayloadResult());
+						ByteArrayInputStream is = new ByteArrayInputStream(this.os.toByteArray());
+						transform(new StreamSource(is), this.messageContext.getResponse().getPayloadResult());
 					}
 					catch (TransformerException ex) {
 						throw new XMLStreamException(ex);
@@ -204,45 +204,45 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 
 		@Override
 		public void close() throws XMLStreamException {
-			if (eventWriter != null) {
-				eventWriter.close();
+			if (this.eventWriter != null) {
+				this.eventWriter.close();
 			}
 		}
 
 		@Override
 		public void flush() throws XMLStreamException {
-			if (eventWriter != null) {
-				eventWriter.flush();
+			if (this.eventWriter != null) {
+				this.eventWriter.flush();
 			}
 		}
 
 		@Override
 		public String getPrefix(String uri) throws XMLStreamException {
 			createEventWriter();
-			return eventWriter.getPrefix(uri);
+			return this.eventWriter.getPrefix(uri);
 		}
 
 		@Override
 		public void setDefaultNamespace(String uri) throws XMLStreamException {
 			createEventWriter();
-			eventWriter.setDefaultNamespace(uri);
+			this.eventWriter.setDefaultNamespace(uri);
 		}
 
 		@Override
 		public void setPrefix(String prefix, String uri) throws XMLStreamException {
 			createEventWriter();
-			eventWriter.setPrefix(prefix, uri);
+			this.eventWriter.setPrefix(prefix, uri);
 		}
 
 		private void createEventWriter() throws XMLStreamException {
-			if (eventWriter == null) {
-				WebServiceMessage response = messageContext.getResponse();
-				eventWriter = getEventWriter(response.getPayloadResult());
-				if (eventWriter == null) {
+			if (this.eventWriter == null) {
+				WebServiceMessage response = this.messageContext.getResponse();
+				this.eventWriter = getEventWriter(response.getPayloadResult());
+				if (this.eventWriter == null) {
 					// as a final resort, use a stream, and transform that at
 					// endDocument()
-					os = new ByteArrayOutputStream();
-					eventWriter = getOutputFactory().createXMLEventWriter(os);
+					this.os = new ByteArrayOutputStream();
+					this.eventWriter = getOutputFactory().createXMLEventWriter(this.os);
 				}
 			}
 		}

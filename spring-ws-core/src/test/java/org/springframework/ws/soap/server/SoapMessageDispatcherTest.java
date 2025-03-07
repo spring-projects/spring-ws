@@ -56,8 +56,8 @@ public class SoapMessageDispatcherTest {
 	@BeforeEach
 	public void setUp() {
 
-		interceptorMock = createMock(SoapEndpointInterceptor.class);
-		dispatcher = new SoapMessageDispatcher();
+		this.interceptorMock = createMock(SoapEndpointInterceptor.class);
+		this.dispatcher = new SoapMessageDispatcher();
 	}
 
 	@Test
@@ -71,18 +71,18 @@ public class SoapMessageDispatcherTest {
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock });
+				new SoapEndpointInterceptor[] { this.interceptorMock });
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isTrue();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -96,18 +96,18 @@ public class SoapMessageDispatcherTest {
 		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock });
+				new SoapEndpointInterceptor[] { this.interceptorMock });
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isTrue();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -121,14 +121,14 @@ public class SoapMessageDispatcherTest {
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock });
+				new SoapEndpointInterceptor[] { this.interceptorMock });
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isFalse();
 		assertThat(context.hasResponse()).isTrue();
@@ -144,7 +144,7 @@ public class SoapMessageDispatcherTest {
 			.isEqualTo(SoapMessageDispatcher.DEFAULT_MUST_UNDERSTAND_FAULT_STRING);
 		assertThat(fault.getFaultStringLocale()).isEqualTo(Locale.ENGLISH);
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -158,14 +158,14 @@ public class SoapMessageDispatcherTest {
 		header.setRole(SOAPConstants.URI_SOAP_1_2_ROLE_NEXT);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(false);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock });
+				new SoapEndpointInterceptor[] { this.interceptorMock });
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isFalse();
 		assertThat(context.hasResponse()).isTrue();
@@ -191,7 +191,7 @@ public class SoapMessageDispatcherTest {
 		assertThat(headerElement.getName())
 			.isEqualTo(new QName(SOAPConstants.URI_NS_SOAP_1_2_ENVELOPE, "NotUnderstood"));
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -206,18 +206,18 @@ public class SoapMessageDispatcherTest {
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock }, new String[] { headerActor }, true);
+				new SoapEndpointInterceptor[] { this.interceptorMock }, new String[] { headerActor }, true);
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isTrue();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -232,18 +232,18 @@ public class SoapMessageDispatcherTest {
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		expect(interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
+		expect(this.interceptorMock.understands(isA(SoapHeaderElement.class))).andReturn(true);
 
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock }, new String[] { headerRole }, true);
+				new SoapEndpointInterceptor[] { this.interceptorMock }, new String[] { headerRole }, true);
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isTrue();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -254,16 +254,16 @@ public class SoapMessageDispatcherTest {
 		request.getSOAPHeader().detachNode();
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(),
-				new SoapEndpointInterceptor[] { interceptorMock }, new String[] { "role" }, true);
+				new SoapEndpointInterceptor[] { this.interceptorMock }, new String[] { "role" }, true);
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isTrue();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 	@Test
@@ -277,15 +277,15 @@ public class SoapMessageDispatcherTest {
 		header.setMustUnderstand(true);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(messageFactory);
 		MessageContext context = new DefaultMessageContext(new SaajSoapMessage(request), factory);
-		replay(interceptorMock);
+		replay(this.interceptorMock);
 
 		SoapEndpointInvocationChain chain = new SoapEndpointInvocationChain(new Object(), null);
 
-		boolean result = dispatcher.handleRequest(chain, context);
+		boolean result = this.dispatcher.handleRequest(chain, context);
 
 		assertThat(result).isFalse();
 
-		verify(interceptorMock);
+		verify(this.interceptorMock);
 	}
 
 }

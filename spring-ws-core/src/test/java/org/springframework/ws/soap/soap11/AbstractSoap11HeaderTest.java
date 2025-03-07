@@ -37,19 +37,20 @@ public abstract class AbstractSoap11HeaderTest extends AbstractSoapHeaderTest {
 
 	@Test
 	public void testGetType() {
-		assertThat(soapHeader).isInstanceOf(Soap11Header.class);
+		assertThat(this.soapHeader).isInstanceOf(Soap11Header.class);
 	}
 
 	@Test
 	public void testGetName() {
-		assertThat(soapHeader.getName()).isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Header"));
+		assertThat(this.soapHeader.getName())
+			.isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Header"));
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
-		transformer.transform(soapHeader.getSource(), result);
+		this.transformer.transform(this.soapHeader.getSource(), result);
 
 		XmlAssert.assertThat(result.toString())
 			.and("<SOAP-ENV:Header xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/' />")
@@ -61,15 +62,15 @@ public abstract class AbstractSoap11HeaderTest extends AbstractSoapHeaderTest {
 	public void testExamineHeaderElementsToProcessActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
-		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("role1");
 		qName = new QName(NAMESPACE, "localName2", PREFIX);
-		headerElement = soapHeader.addHeaderElement(qName);
+		headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("role2");
 		qName = new QName(NAMESPACE, "localName3", PREFIX);
-		headerElement = soapHeader.addHeaderElement(qName);
+		headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
-		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
+		Iterator<SoapHeaderElement> iterator = ((Soap11Header) this.soapHeader)
 			.examineHeaderElementsToProcess(new String[] { "role1" });
 
 		assertThat(iterator).isNotNull();
@@ -88,15 +89,15 @@ public abstract class AbstractSoap11HeaderTest extends AbstractSoapHeaderTest {
 	public void testExamineHeaderElementsToProcessNoActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
-		SoapHeaderElement headerElement = soapHeader.addHeaderElement(qName);
+		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("");
 		qName = new QName(NAMESPACE, "localName2", PREFIX);
-		headerElement = soapHeader.addHeaderElement(qName);
+		headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole("role1");
 		qName = new QName(NAMESPACE, "localName3", PREFIX);
-		headerElement = soapHeader.addHeaderElement(qName);
+		headerElement = this.soapHeader.addHeaderElement(qName);
 		headerElement.setActorOrRole(SoapVersion.SOAP_11.getNextActorOrRoleUri());
-		Iterator<SoapHeaderElement> iterator = ((Soap11Header) soapHeader)
+		Iterator<SoapHeaderElement> iterator = ((Soap11Header) this.soapHeader)
 			.examineHeaderElementsToProcess(new String[0]);
 
 		assertThat(iterator).isNotNull();

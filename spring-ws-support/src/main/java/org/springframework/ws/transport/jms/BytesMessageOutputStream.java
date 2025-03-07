@@ -42,7 +42,7 @@ class BytesMessageOutputStream extends OutputStream {
 	@Override
 	public void write(byte[] b) throws IOException {
 		try {
-			message.writeBytes(b);
+			this.message.writeBytes(b);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
@@ -52,7 +52,7 @@ class BytesMessageOutputStream extends OutputStream {
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		try {
-			message.writeBytes(b, off, len);
+			this.message.writeBytes(b, off, len);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException(ex);
@@ -62,7 +62,7 @@ class BytesMessageOutputStream extends OutputStream {
 	@Override
 	public void write(int b) throws IOException {
 		try {
-			message.writeByte((byte) b);
+			this.message.writeByte((byte) b);
 		}
 		catch (JMSException ex) {
 			throw new JmsTransportException(ex);

@@ -30,11 +30,9 @@ import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.test.support.AssertionErrors;
 import org.springframework.ws.test.support.matcher.AbstractSoapMessageMatcher;
 import org.springframework.xml.transform.TransformerHelper;
-
-import static org.springframework.ws.test.support.AssertionErrors.assertTrue;
-import static org.springframework.ws.test.support.AssertionErrors.fail;
 
 /**
  * Matches {@link Source} SOAP envelopes.
@@ -58,7 +56,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 
 		Document actualDocument = soapMessage.getDocument();
-		Document expectedDocument = createDocumentFromSource(expected);
+		Document expectedDocument = createDocumentFromSource(this.expected);
 		Diff diff = DiffBuilder.compare(expectedDocument)
 			.ignoreWhitespace()
 			.withTest(actualDocument)
@@ -66,18 +64,18 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 					DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
 			.checkForSimilar()
 			.build();
-		assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
+		AssertionErrors.assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
 	}
 
 	private Document createDocumentFromSource(Source source) {
 
 		try {
 			DOMResult result = new DOMResult();
-			transformerHelper.transform(source, result);
+			this.transformerHelper.transform(source, result);
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {
-			fail("Could not transform source to DOMResult" + ex.getMessage());
+			AssertionErrors.fail("Could not transform source to DOMResult" + ex.getMessage());
 			return null;
 		}
 	}

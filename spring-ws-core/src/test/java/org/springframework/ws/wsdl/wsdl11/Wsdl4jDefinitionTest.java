@@ -52,21 +52,21 @@ public class Wsdl4jDefinitionTest {
 
 		try (InputStream is = getClass().getResourceAsStream("complete.wsdl")) {
 			Definition wsdl4jDefinition = reader.readWSDL(null, new InputSource(is));
-			definition = new Wsdl4jDefinition(wsdl4jDefinition);
+			this.definition = new Wsdl4jDefinition(wsdl4jDefinition);
 		}
 
-		transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
 	public void testGetSource() throws Exception {
 
-		Source source = definition.getSource();
+		Source source = this.definition.getSource();
 
 		assertThat(source).isNotNull();
 
 		DOMResult result = new DOMResult();
-		transformer.transform(source, result);
+		this.transformer.transform(source, result);
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

@@ -46,7 +46,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	void addRequestMatcher(RequestMatcher requestMatcher) {
 		Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
-		requestMatchers.add(requestMatcher);
+		this.requestMatchers.add(requestMatcher);
 	}
 
 	void setUri(URI uri) {
@@ -72,9 +72,9 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	@Override
 	public void send(WebServiceMessage message) throws IOException {
-		if (!requestMatchers.isEmpty()) {
-			for (RequestMatcher requestMatcher : requestMatchers) {
-				requestMatcher.match(uri, message);
+		if (!this.requestMatchers.isEmpty()) {
+			for (RequestMatcher requestMatcher : this.requestMatchers) {
+				requestMatcher.match(this.uri, message);
 			}
 		}
 		else {
@@ -85,8 +85,8 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	@Override
 	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
-		if (responseCreator != null) {
-			return responseCreator.createResponse(uri, request, messageFactory);
+		if (this.responseCreator != null) {
+			return this.responseCreator.createResponse(this.uri, this.request, messageFactory);
 		}
 		else {
 			return null;
@@ -95,18 +95,18 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	@Override
 	public URI getUri() {
-		return uri;
+		return this.uri;
 	}
 
 	@Override
 	public boolean hasError() throws IOException {
-		return responseCreator instanceof ErrorResponseCreator;
+		return this.responseCreator instanceof ErrorResponseCreator;
 	}
 
 	@Override
 	public String getErrorMessage() throws IOException {
-		if (responseCreator instanceof ErrorResponseCreator) {
-			return ((ErrorResponseCreator) responseCreator).getErrorMessage();
+		if (this.responseCreator instanceof ErrorResponseCreator) {
+			return ((ErrorResponseCreator) this.responseCreator).getErrorMessage();
 		}
 		else {
 			return null;
@@ -115,10 +115,10 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	@Override
 	public void close() throws IOException {
-		requestMatchers.clear();
-		request = null;
-		responseCreator = null;
-		uri = null;
+		this.requestMatchers.clear();
+		this.request = null;
+		this.responseCreator = null;
+		this.uri = null;
 	}
 
 }

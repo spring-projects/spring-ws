@@ -132,9 +132,9 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 */
 	@Override
 	public final boolean handleRequest(MessageContext messageContext, Object endpoint) throws Exception {
-		if (validateRequest) {
+		if (this.validateRequest) {
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
-			if (skipValidationIfNoHeaderPresent
+			if (this.skipValidationIfNoHeaderPresent
 					&& !isSecurityHeaderPresent((SoapMessage) messageContext.getRequest())) {
 				return true;
 			}
@@ -168,7 +168,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	public final boolean handleResponse(MessageContext messageContext, Object endpoint) throws Exception {
 		boolean result = true;
 		try {
-			if (secureResponse) {
+			if (this.secureResponse) {
 				Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
 				Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
 				try {
@@ -220,7 +220,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 */
 	@Override
 	public final boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
-		if (secureRequest) {
+		if (this.secureRequest) {
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 			try {
 				secureMessage((SoapMessage) messageContext.getRequest(), messageContext);
@@ -249,10 +249,10 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 */
 	@Override
 	public final boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
-		if (validateResponse) {
+		if (this.validateResponse) {
 			Assert.isTrue(messageContext.hasResponse(), "MessageContext contains no response");
 			Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse());
-			if (skipValidationIfNoHeaderPresent
+			if (this.skipValidationIfNoHeaderPresent
 					&& !isSecurityHeaderPresent((SoapMessage) messageContext.getResponse())) {
 				return true;
 			}
@@ -292,8 +292,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * default) otherwise
 	 */
 	protected boolean handleSecurementException(WsSecuritySecurementException ex, MessageContext messageContext) {
-		if (logger.isErrorEnabled()) {
-			logger.error("Could not secure response: " + ex.getMessage(), ex);
+		if (this.logger.isErrorEnabled()) {
+			this.logger.error("Could not secure response: " + ex.getMessage(), ex);
 		}
 		return false;
 	}
@@ -309,15 +309,15 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * default) otherwise
 	 */
 	protected boolean handleValidationException(WsSecurityValidationException ex, MessageContext messageContext) {
-		if (logger.isWarnEnabled()) {
-			logger.warn("Could not validate request: " + ex.getMessage());
+		if (this.logger.isWarnEnabled()) {
+			this.logger.warn("Could not validate request: " + ex.getMessage());
 		}
-		if (exceptionResolver != null) {
-			exceptionResolver.resolveException(messageContext, null, ex);
+		if (this.exceptionResolver != null) {
+			this.exceptionResolver.resolveException(messageContext, null, ex);
 		}
 		else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("No exception resolver present, creating basic soap fault");
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("No exception resolver present, creating basic soap fault");
 			}
 			SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
 			response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
@@ -335,8 +335,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * default) otherwise
 	 */
 	protected boolean handleFaultException(WsSecurityFaultException ex, MessageContext messageContext) {
-		if (logger.isWarnEnabled()) {
-			logger.warn("Could not handle request: " + ex.getMessage());
+		if (this.logger.isWarnEnabled()) {
+			this.logger.warn("Could not handle request: " + ex.getMessage());
 		}
 		SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
 		SoapFault fault;

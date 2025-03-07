@@ -36,31 +36,31 @@ public class SoapActionEndpointMappingTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		mapping = new SoapActionEndpointMapping();
-		context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
+		this.mapping = new SoapActionEndpointMapping();
+		this.context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
 	}
 
 	@Test
 	public void testGetLookupKeyForMessage() throws Exception {
 
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
-		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
+		((SoapMessage) this.context.getRequest()).setSoapAction(soapAction);
 
-		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(soapAction);
+		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo(soapAction);
 	}
 
 	@Test
 	public void testGetLookupKeyForMessageQuoted() throws Exception {
 
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
-		((SoapMessage) context.getRequest()).setSoapAction(soapAction);
+		((SoapMessage) this.context.getRequest()).setSoapAction(soapAction);
 
-		assertThat(mapping.getLookupKeyForMessage(context)).isEqualTo(soapAction);
+		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo(soapAction);
 	}
 
 	@Test
 	public void testValidateLookupKey() {
-		assertThat(mapping.validateLookupKey("SoapAction")).isTrue();
+		assertThat(this.mapping.validateLookupKey("SoapAction")).isTrue();
 	}
 
 }

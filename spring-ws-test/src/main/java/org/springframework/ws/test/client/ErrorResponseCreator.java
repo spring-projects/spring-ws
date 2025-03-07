@@ -45,7 +45,7 @@ class ErrorResponseCreator implements ResponseCreator {
 	}
 
 	String getErrorMessage() {
-		return errorMessage;
+		return this.errorMessage;
 	}
 
 }

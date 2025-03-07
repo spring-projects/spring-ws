@@ -34,17 +34,17 @@ public class MailTransportException extends TransportException {
 	public MailTransportException(String msg, MessagingException ex) {
 		super(msg + ": " + ex.getMessage());
 		initCause(ex);
-		messagingException = ex;
+		this.messagingException = ex;
 	}
 
 	public MailTransportException(MessagingException ex) {
 		super(ex.getMessage());
 		initCause(ex);
-		messagingException = ex;
+		this.messagingException = ex;
 	}
 
 	public MessagingException getMessagingException() {
-		return messagingException;
+		return this.messagingException;
 	}
 
 }

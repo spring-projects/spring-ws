@@ -85,14 +85,14 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 		else if (JaxpVersion.isAtLeastJaxp14() && Jaxp14StaxHandler.isStaxSource(parameterType)) {
 			XMLStreamReader streamReader;
 			try {
-				streamReader = inputFactory.createXMLStreamReader(requestPayload);
+				streamReader = this.inputFactory.createXMLStreamReader(requestPayload);
 			}
 			catch (UnsupportedOperationException | XMLStreamException ignored) {
 				streamReader = null;
 			}
 			if (streamReader == null) {
 				ByteArrayInputStream bis = convertToByteArrayInputStream(requestPayload);
-				streamReader = inputFactory.createXMLStreamReader(bis);
+				streamReader = this.inputFactory.createXMLStreamReader(bis);
 			}
 			return Jaxp14StaxHandler.createStaxSource(streamReader, requestPayload.getSystemId());
 		}
@@ -129,7 +129,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 	}
 
 	/** Inner class to avoid a static JAXP 1.4 dependency. */
-	private static class Jaxp14StaxHandler {
+	private static final class Jaxp14StaxHandler {
 
 		private static boolean isStaxSource(Class<?> clazz) {
 			return StAXSource.class.isAssignableFrom(clazz);
@@ -141,7 +141,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 
 	}
 
-	private static class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
+	private static final class SystemIdStreamReaderDelegate extends StreamReaderDelegate {
 
 		private final String systemId;
 
@@ -155,23 +155,23 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 			final Location parentLocation = getParent().getLocation();
 			return new Location() {
 				public int getLineNumber() {
-					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getLineNumber() : -1;
 				}
 
 				public int getColumnNumber() {
-					return parentLocation != null ? parentLocation.getColumnNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getColumnNumber() : -1;
 				}
 
 				public int getCharacterOffset() {
-					return parentLocation != null ? parentLocation.getLineNumber() : -1;
+					return (parentLocation != null) ? parentLocation.getLineNumber() : -1;
 				}
 
 				public String getPublicId() {
-					return parentLocation != null ? parentLocation.getPublicId() : null;
+					return (parentLocation != null) ? parentLocation.getPublicId() : null;
 				}
 
 				public String getSystemId() {
-					return systemId;
+					return SystemIdStreamReaderDelegate.this.systemId;
 				}
 			};
 		}

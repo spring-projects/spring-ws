@@ -41,16 +41,16 @@ public class LastModifiedHelperTest {
 	@BeforeEach
 	public void setUp() throws Exception {
 
-		resource = new ClassPathResource("single.xsd", getClass());
-		expected = resource.lastModified();
+		this.resource = new ClassPathResource("single.xsd", getClass());
+		this.expected = this.resource.lastModified();
 	}
 
 	@Test
 	public void testSaxSource() throws Exception {
 
-		long result = LastModifiedHelper.getLastModified(new ResourceSource(resource));
+		long result = LastModifiedHelper.getLastModified(new ResourceSource(this.resource));
 
-		assertThat(result).isEqualTo(expected);
+		assertThat(result).isEqualTo(this.expected);
 	}
 
 	@Test
@@ -59,18 +59,18 @@ public class LastModifiedHelperTest {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		Document document = documentBuilder.parse(resource.getFile());
+		Document document = documentBuilder.parse(this.resource.getFile());
 		long result = LastModifiedHelper.getLastModified(new DOMSource(document));
 
-		assertThat(result).isEqualTo(expected);
+		assertThat(result).isEqualTo(this.expected);
 	}
 
 	@Test
 	public void testStreamSource() throws Exception {
 
-		long result = LastModifiedHelper.getLastModified(new StreamSource(resource.getFile()));
+		long result = LastModifiedHelper.getLastModified(new StreamSource(this.resource.getFile()));
 
-		assertThat(result).isEqualTo(expected);
+		assertThat(result).isEqualTo(this.expected);
 	}
 
 }

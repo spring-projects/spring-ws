@@ -43,9 +43,9 @@ import org.springframework.ws.soap.soap12.Soap12Header;
  * {@link SoapEndpointInterceptor} objects.
  *
  * @author Arjen Poutsma
+ * @since 1.0.0
  * @see org.springframework.ws.soap.SoapMessage
  * @see SoapEndpointInterceptor
- * @since 1.0.0
  */
 public class SoapMessageDispatcher extends MessageDispatcher {
 
@@ -118,8 +118,8 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 		while (headerIterator.hasNext()) {
 			SoapHeaderElement headerElement = headerIterator.next();
 			QName headerName = headerElement.getName();
-			if (headerElement.getMustUnderstand() && logger.isDebugEnabled()) {
-				logger.debug("Handling MustUnderstand header " + headerName);
+			if (headerElement.getMustUnderstand() && this.logger.isDebugEnabled()) {
+				this.logger.debug("Handling MustUnderstand header " + headerName);
 			}
 			if (headerElement.getMustUnderstand() && !headerUnderstood(mappedEndpoint, headerElement)) {
 				notUnderstoodHeaderNames.add(headerName);
@@ -159,13 +159,13 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 
 	private void createMustUnderstandFault(SoapMessage soapResponse, List<QName> notUnderstoodHeaderNames,
 			String[] actorsOrRoles) {
-		if (logger.isWarnEnabled()) {
-			logger.warn("Could not handle mustUnderstand headers: "
+		if (this.logger.isWarnEnabled()) {
+			this.logger.warn("Could not handle mustUnderstand headers: "
 					+ StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");
 		}
 		SoapBody responseBody = soapResponse.getSoapBody();
-		SoapFault fault = responseBody.addMustUnderstandFault(mustUnderstandFaultString,
-				mustUnderstandFaultStringLocale);
+		SoapFault fault = responseBody.addMustUnderstandFault(this.mustUnderstandFaultString,
+				this.mustUnderstandFaultStringLocale);
 		if (!ObjectUtils.isEmpty(actorsOrRoles)) {
 			fault.setFaultActorOrRole(actorsOrRoles[0]);
 		}

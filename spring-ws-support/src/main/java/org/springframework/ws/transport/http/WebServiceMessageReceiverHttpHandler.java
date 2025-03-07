@@ -51,12 +51,12 @@ public class WebServiceMessageReceiverHttpHandler extends SimpleWebServiceMessag
 	public void handle(HttpExchange httpExchange) throws IOException {
 		if (HttpTransportConstants.METHOD_POST.equals(httpExchange.getRequestMethod())) {
 			HttpExchangeConnection connection = new HttpExchangeConnection(httpExchange);
-			connection.setChunkedEncoding(chunkedEncoding);
+			connection.setChunkedEncoding(this.chunkedEncoding);
 			try {
 				handleConnection(connection);
 			}
 			catch (Exception ex) {
-				logger.error(ex);
+				this.logger.error(ex);
 			}
 		}
 		else {

@@ -35,8 +35,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Arjen Poutsma
  * @author Kazuki Shimizu
- * @see java.net.HttpURLConnection
  * @since 1.0.0
+ * @see java.net.HttpURLConnection
  */
 public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessageSender {
 
@@ -47,8 +47,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 	/**
 	 * Sets the timeout until a connection is established.
 	 * @param connectTimeout the timeout value
-	 * @see URLConnection#setConnectTimeout(int)
 	 * @since 3.0.1
+	 * @see URLConnection#setConnectTimeout(int)
 	 */
 	public void setConnectionTimeout(Duration connectTimeout) {
 		this.connectionTimeout = connectTimeout;
@@ -57,8 +57,8 @@ public class HttpUrlConnectionMessageSender extends AbstractHttpWebServiceMessag
 	/**
 	 * Set the socket read timeout.
 	 * @param readTimeout the timeout value
-	 * @see URLConnection#setReadTimeout(int)
 	 * @since 3.0.1
+	 * @see URLConnection#setReadTimeout(int)
 	 */
 	public void setReadTimeout(Duration readTimeout) {
 		this.readTimeout = readTimeout;

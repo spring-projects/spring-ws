@@ -48,8 +48,8 @@ public class DomPoxMessageTest {
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document document = documentBuilder.newDocument();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
-		transformer = transformerFactory.newTransformer();
-		message = new DomPoxMessage(document, transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
+		this.transformer = transformerFactory.newTransformer();
+		this.message = new DomPoxMessage(document, this.transformer, DomPoxMessageFactory.DEFAULT_CONTENT_TYPE);
 	}
 
 	@Test
@@ -57,9 +57,9 @@ public class DomPoxMessageTest {
 
 		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
 		StringSource source = new StringSource(content);
-		transformer.transform(source, message.getPayloadResult());
+		this.transformer.transform(source, this.message.getPayloadResult());
 		StringResult stringResult = new StringResult();
-		transformer.transform(message.getPayloadSource(), stringResult);
+		this.transformer.transform(this.message.getPayloadSource(), stringResult);
 
 		assertThat(stringResult.toString()).and(content).ignoreWhitespace().areIdentical();
 	}
@@ -68,10 +68,10 @@ public class DomPoxMessageTest {
 	public void testGetPayloadResultTwice() throws Exception {
 
 		String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
-		transformer.transform(new StringSource(content), message.getPayloadResult());
-		transformer.transform(new StringSource(content), message.getPayloadResult());
+		this.transformer.transform(new StringSource(content), this.message.getPayloadResult());
+		this.transformer.transform(new StringSource(content), this.message.getPayloadResult());
 		StringResult stringResult = new StringResult();
-		transformer.transform(message.getPayloadSource(), stringResult);
+		this.transformer.transform(this.message.getPayloadSource(), stringResult);
 
 		assertThat(stringResult.toString()).and(content).ignoreWhitespace().areIdentical();
 	}
@@ -81,9 +81,9 @@ public class DomPoxMessageTest {
 
 		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
 		StringSource source = new StringSource(content);
-		transformer.transform(source, message.getPayloadResult());
+		this.transformer.transform(source, this.message.getPayloadResult());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		message.writeTo(os);
+		this.message.writeTo(os);
 
 		assertThat(os.toString(StandardCharsets.UTF_8)).and(content).ignoreWhitespace().areIdentical();
 	}

@@ -43,8 +43,8 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  * {@link WebServiceConnection}s.
  *
  * @author Arjen Poutsma
- * @see #handleConnection
  * @since 1.0.0
+ * @see #handleConnection
  */
 public abstract class WebServiceMessageReceiverObjectSupport implements InitializingBean {
 
@@ -55,7 +55,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
 	/** Returns the {@code WebServiceMessageFactory}. */
 	public WebServiceMessageFactory getMessageFactory() {
-		return messageFactory;
+		return this.messageFactory;
 	}
 
 	/** Sets the {@code WebServiceMessageFactory}. */
@@ -65,7 +65,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(messageFactory, "messageFactory is required");
+		Assert.notNull(this.messageFactory, "messageFactory is required");
 	}
 
 	/**
@@ -127,11 +127,11 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 	}
 
 	private void logUri(WebServiceConnection connection) {
-		if (logger.isDebugEnabled()) {
+		if (this.logger.isDebugEnabled()) {
 			try {
-				logger.debug("Accepting incoming [" + connection + "] at [" + connection.getUri() + "]");
+				this.logger.debug("Accepting incoming [" + connection + "] at [" + connection.getUri() + "]");
 			}
-			catch (URISyntaxException e) {
+			catch (URISyntaxException ex) {
 				// ignore
 			}
 		}

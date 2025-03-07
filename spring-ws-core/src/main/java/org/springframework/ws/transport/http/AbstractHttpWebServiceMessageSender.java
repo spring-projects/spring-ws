@@ -45,7 +45,7 @@ public abstract class AbstractHttpWebServiceMessageSender implements WebServiceM
 	 * {@code Accept-Encoding} header with {@code gzip} as value.
 	 */
 	public boolean isAcceptGzipEncoding() {
-		return acceptGzipEncoding;
+		return this.acceptGzipEncoding;
 	}
 
 	/**

@@ -95,9 +95,9 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code jms:Queue?messageType=TEXT_MESSAGE}</blockquote>
  *
  * @author Arjen Poutsma
+ * @since 1.5.0
  * @see <a href="https://datatracker.ietf.org/doc/rfc6167">IRI Scheme for Java(tm) Message
  * Service 1.0</a>
- * @since 1.5.0
  */
 public class JmsMessageSender extends JmsDestinationAccessor implements WebServiceMessageSender {
 
@@ -176,12 +176,12 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 					jmsSession, requestDestination, requestMessage);
 			wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
 			wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
-			wsConnection.setReceiveTimeout(receiveTimeout);
+			wsConnection.setReceiveTimeout(this.receiveTimeout);
 			wsConnection.setResponseDestination(resolveResponseDestination(jmsSession, uri));
 			wsConnection.setTimeToLive(JmsTransportUtils.getTimeToLive(uri));
-			wsConnection.setTextMessageEncoding(textMessageEncoding);
+			wsConnection.setTextMessageEncoding(this.textMessageEncoding);
 			wsConnection.setSessionTransacted(isSessionTransacted());
-			wsConnection.setPostProcessor(postProcessor);
+			wsConnection.setPostProcessor(this.postProcessor);
 			return wsConnection;
 		}
 		catch (JMSException ex) {

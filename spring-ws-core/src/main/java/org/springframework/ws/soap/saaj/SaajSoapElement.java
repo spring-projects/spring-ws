@@ -32,6 +32,7 @@ import org.springframework.ws.soap.SoapElement;
  * SAAJ-specific implementation of the {@code SoapElement} interface. Wraps a
  * {@link jakarta.xml.soap.SOAPElement}.
  *
+ * @param <T> the type of the {@link SOAPElement}
  * @author Arjen Poutsma
  * @since 1.0.0
  */
@@ -46,18 +47,18 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 
 	@Override
 	public Source getSource() {
-		return new DOMSource(element);
+		return new DOMSource(this.element);
 	}
 
 	@Override
 	public QName getName() {
-		return element.getElementQName();
+		return this.element.getElementQName();
 	}
 
 	@Override
 	public void addAttribute(QName name, String value) {
 		try {
-			element.addAttribute(name, value);
+			this.element.addAttribute(name, value);
 		}
 		catch (SOAPException ex) {
 			throw new SaajSoapElementException(ex);
@@ -66,24 +67,24 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 
 	@Override
 	public void removeAttribute(QName name) {
-		element.removeAttribute(name);
+		this.element.removeAttribute(name);
 	}
 
 	@Override
 	public String getAttributeValue(QName name) {
-		return element.getAttributeValue(name);
+		return this.element.getAttributeValue(name);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public Iterator<QName> getAllAttributes() {
-		return element.getAllAttributesAsQNames();
+		return this.element.getAllAttributesAsQNames();
 	}
 
 	@Override
 	public void addNamespaceDeclaration(String prefix, String namespaceUri) {
 		try {
-			element.addNamespaceDeclaration(prefix, namespaceUri);
+			this.element.addNamespaceDeclaration(prefix, namespaceUri);
 		}
 		catch (SOAPException ex) {
 			throw new SaajSoapElementException(ex);
@@ -91,7 +92,7 @@ class SaajSoapElement<T extends SOAPElement> implements SoapElement {
 	}
 
 	protected final T getSaajElement() {
-		return element;
+		return this.element;
 	}
 
 }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.springframework.ws.client.support.interceptor;
 
 import org.apache.commons.logging.Log;
@@ -31,7 +32,7 @@ import org.springframework.ws.context.MessageContext;
 public abstract class ClientInterceptorAdapter implements ClientInterceptor {
 
 	/**
-	 * Logger available to subclasses
+	 * Logger available to subclasses.
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 

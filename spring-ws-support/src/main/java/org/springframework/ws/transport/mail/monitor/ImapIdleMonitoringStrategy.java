@@ -48,20 +48,20 @@ public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 		if (searchForNewMessages(folder).length > 0) {
 			return;
 		}
-		if (messageCountListener == null) {
+		if (this.messageCountListener == null) {
 			createMessageCountListener();
 		}
-		folder.addMessageCountListener(messageCountListener);
+		folder.addMessageCountListener(this.messageCountListener);
 		try {
 			imapFolder.idle();
 		}
 		finally {
-			folder.removeMessageCountListener(messageCountListener);
+			folder.removeMessageCountListener(this.messageCountListener);
 		}
 	}
 
 	private void createMessageCountListener() {
-		messageCountListener = new MessageCountAdapter() {
+		this.messageCountListener = new MessageCountAdapter() {
 			@Override
 			public void messagesAdded(MessageCountEvent e) {
 				Message[] messages = e.getMessages();

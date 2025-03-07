@@ -39,7 +39,7 @@ public class EndpointMappingTest {
 
 	@BeforeEach
 	public void setUp() {
-		messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@Test
@@ -49,13 +49,13 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
 			protected Object getEndpointInternal(MessageContext givenRequest) {
-				assertThat(givenRequest).isEqualTo(messageContext);
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
 				return null;
 			}
 		};
 		mapping.setDefaultEndpoint(defaultEndpoint);
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getEndpoint()).isEqualTo(defaultEndpoint);
@@ -68,12 +68,12 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
 			protected Object getEndpointInternal(MessageContext givenRequest) {
-				assertThat(givenRequest).isEqualTo(messageContext);
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
 				return endpoint;
 			}
 		};
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNotNull();
 		assertThat(result.getEndpoint()).isEqualTo(endpoint);
@@ -87,13 +87,13 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
 			protected Object getEndpointInternal(MessageContext givenRequest) {
-				assertThat(givenRequest).isEqualTo(messageContext);
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
 				return endpoint;
 			}
 		};
 
 		mapping.setInterceptors(new EndpointInterceptor[] { interceptor });
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result.getInterceptors()).hasSize(1);
 		assertThat(result.getInterceptors()[0]).isEqualTo(interceptor);
@@ -110,14 +110,14 @@ public class EndpointMappingTest {
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
 			@Override
 			protected Object getEndpointInternal(MessageContext givenRequest) {
-				assertThat(givenRequest).isEqualTo(messageContext);
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
 				return endpoint;
 			}
 		};
 		mapping.setApplicationContext(applicationContext);
 		mapping.setInterceptors(new EndpointInterceptor[] { interceptor });
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result.getInterceptors()).hasSize(2);
 		assertThat(result.getInterceptors()[0]).isEqualTo(interceptor);
@@ -134,13 +134,13 @@ public class EndpointMappingTest {
 
 			@Override
 			protected Object getEndpointInternal(MessageContext message) {
-				assertThat(message).isEqualTo(messageContext);
+				assertThat(message).isEqualTo(EndpointMappingTest.this.messageContext);
 				return "endpoint";
 			}
 		};
 		mapping.setApplicationContext(applicationContext);
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNotNull();
 	}
@@ -155,13 +155,13 @@ public class EndpointMappingTest {
 
 			@Override
 			protected Object getEndpointInternal(MessageContext message) {
-				assertThat(message).isEqualTo(messageContext);
+				assertThat(message).isEqualTo(EndpointMappingTest.this.messageContext);
 				return "noSuchBean";
 			}
 		};
 		mapping.setApplicationContext(applicationContext);
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNull();
 	}
@@ -176,23 +176,23 @@ public class EndpointMappingTest {
 
 			@Override
 			protected Object getEndpointInternal(MessageContext message) {
-				assertThat(message).isEqualTo(messageContext);
+				assertThat(message).isEqualTo(EndpointMappingTest.this.messageContext);
 				return "endpoint";
 			}
 		};
 		mapping.setApplicationContext(applicationContext);
 
-		EndpointInvocationChain result = mapping.getEndpoint(messageContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNotNull();
 
-		result = mapping.getEndpoint(messageContext);
+		result = mapping.getEndpoint(this.messageContext);
 
 		assertThat(result).isNotNull();
 		assertThat(MyEndpoint.constructorCount).isEqualTo(2);
 	}
 
-	private static class MyEndpoint {
+	private static final class MyEndpoint {
 
 		private static int constructorCount;
 
@@ -202,7 +202,7 @@ public class EndpointMappingTest {
 
 	}
 
-	private static class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
+	private static final class MySmartEndpointInterceptor extends DelegatingSmartEndpointInterceptor {
 
 		private MySmartEndpointInterceptor() {
 			super(new EndpointInterceptorAdapter());

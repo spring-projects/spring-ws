@@ -22,8 +22,7 @@ import java.net.URI;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapMessage;
-
-import static org.springframework.ws.test.support.AssertionErrors.fail;
+import org.springframework.ws.test.support.AssertionErrors;
 
 /**
  * Implementation of {@link ResponseCreator} that responds with a SOAP fault.
@@ -36,12 +35,12 @@ abstract class SoapFaultResponseCreator extends AbstractResponseCreator {
 	@Override
 	protected void doWithResponse(URI uri, WebServiceMessage request, WebServiceMessage response) throws IOException {
 		if (!(response instanceof SoapMessage soapResponse)) {
-			fail("Response is not a SOAP message");
+			AssertionErrors.fail("Response is not a SOAP message");
 			return;
 		}
 		SoapBody responseBody = soapResponse.getSoapBody();
 		if (responseBody == null) {
-			fail("SOAP message [" + response + "] does not contain SOAP body");
+			AssertionErrors.fail("SOAP message [" + response + "] does not contain SOAP body");
 		}
 		addSoapFault(responseBody);
 	}

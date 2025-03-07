@@ -43,8 +43,8 @@ import org.springframework.ws.transport.WebServiceConnection;
  *
  * @author Giovanni Cuccu
  * @author Arjen Poutsma
- * @see org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[])
  * @since 1.5.0
+ * @see org.springframework.ws.client.core.WebServiceTemplate#setInterceptors(ClientInterceptor[])
  */
 public interface ClientInterceptor {
 

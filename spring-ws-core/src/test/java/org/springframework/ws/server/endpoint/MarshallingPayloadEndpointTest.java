@@ -67,9 +67,9 @@ public class MarshallingPayloadEndpointTest {
 	public void setUp() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
-		transformer = TransformerFactoryUtils.newInstance().newTransformer();
-		factoryMock = createMock(WebServiceMessageFactory.class);
-		context = new DefaultMessageContext(request, factoryMock);
+		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
+		this.factoryMock = createMock(WebServiceMessageFactory.class);
+		this.context = new DefaultMessageContext(request, this.factoryMock);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class MarshallingPayloadEndpointTest {
 
 				try {
 					StringWriter writer = new StringWriter();
-					transformer.transform(source, new StreamResult(writer));
+					MarshallingPayloadEndpointTest.this.transformer.transform(source, new StreamResult(writer));
 
 					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
 
@@ -104,7 +104,8 @@ public class MarshallingPayloadEndpointTest {
 				assertThat(graph).isEqualTo("result");
 
 				try {
-					transformer.transform(new StreamSource(new StringReader("<result/>")), result);
+					MarshallingPayloadEndpointTest.this.transformer
+						.transform(new StreamSource(new StringReader("<result/>")), result);
 				}
 				catch (TransformerException e) {
 					fail(e.getMessage());
@@ -126,17 +127,17 @@ public class MarshallingPayloadEndpointTest {
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
 
-		expect(factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
+		expect(this.factoryMock.createWebServiceMessage()).andReturn(new MockWebServiceMessage());
 
-		replay(factoryMock);
+		replay(this.factoryMock);
 
-		endpoint.invoke(context);
-		MockWebServiceMessage response = (MockWebServiceMessage) context.getResponse();
+		endpoint.invoke(this.context);
+		MockWebServiceMessage response = (MockWebServiceMessage) this.context.getResponse();
 
 		assertThat(response).isNotNull();
 		XmlAssert.assertThat(response.getPayloadAsString()).and("<result/>").ignoreWhitespace().areIdentical();
 
-		verify(factoryMock);
+		verify(this.factoryMock);
 	}
 
 	@Test
@@ -149,7 +150,7 @@ public class MarshallingPayloadEndpointTest {
 
 				try {
 					StringWriter writer = new StringWriter();
-					transformer.transform(source, new StreamResult(writer));
+					MarshallingPayloadEndpointTest.this.transformer.transform(source, new StreamResult(writer));
 
 					XmlAssert.assertThat(writer.toString()).and("<request/>").ignoreWhitespace().areIdentical();
 
@@ -183,19 +184,19 @@ public class MarshallingPayloadEndpointTest {
 		endpoint.setMarshaller(marshaller);
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
-		replay(factoryMock);
-		endpoint.invoke(context);
+		replay(this.factoryMock);
+		endpoint.invoke(this.context);
 
-		assertThat(context.hasResponse()).isFalse();
+		assertThat(this.context.hasResponse()).isFalse();
 
-		verify(factoryMock);
+		verify(this.factoryMock);
 	}
 
 	@Test
 	public void testInvokeNoRequest() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage((StringBuilder) null);
-		context = new DefaultMessageContext(request, factoryMock);
+		this.context = new DefaultMessageContext(request, this.factoryMock);
 
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
@@ -210,12 +211,12 @@ public class MarshallingPayloadEndpointTest {
 		endpoint.setMarshaller(new SimpleMarshaller());
 		endpoint.setUnmarshaller(new SimpleMarshaller());
 		endpoint.afterPropertiesSet();
-		replay(factoryMock);
-		endpoint.invoke(context);
+		replay(this.factoryMock);
+		endpoint.invoke(this.context);
 
-		assertThat(context.hasResponse()).isFalse();
+		assertThat(this.context.hasResponse()).isFalse();
 
-		verify(factoryMock);
+		verify(this.factoryMock);
 	}
 
 	@Test
@@ -227,13 +228,13 @@ public class MarshallingPayloadEndpointTest {
 		MimeMessage response = createMock("response", MimeMessage.class);
 		Source requestSource = new StringSource("<request/>");
 		expect(request.getPayloadSource()).andReturn(requestSource);
-		expect(factoryMock.createWebServiceMessage()).andReturn(response);
+		expect(this.factoryMock.createWebServiceMessage()).andReturn(response);
 		expect(unmarshaller.unmarshal(eq(requestSource), isA(MimeContainer.class))).andReturn(42L);
 		Result responseResult = new StringResult();
 		expect(response.getPayloadResult()).andReturn(responseResult);
 		marshaller.marshal(eq("result"), eq(responseResult), isA(MimeContainer.class));
 
-		replay(factoryMock, unmarshaller, marshaller, request, response);
+		replay(this.factoryMock, unmarshaller, marshaller, request, response);
 
 		AbstractMarshallingPayloadEndpoint endpoint = new AbstractMarshallingPayloadEndpoint() {
 
@@ -249,15 +250,15 @@ public class MarshallingPayloadEndpointTest {
 		endpoint.setUnmarshaller(unmarshaller);
 		endpoint.afterPropertiesSet();
 
-		context = new DefaultMessageContext(request, factoryMock);
-		endpoint.invoke(context);
+		this.context = new DefaultMessageContext(request, this.factoryMock);
+		endpoint.invoke(this.context);
 
 		assertThat(response).isNotNull();
 
-		verify(factoryMock, unmarshaller, marshaller, request, response);
+		verify(this.factoryMock, unmarshaller, marshaller, request, response);
 	}
 
-	private static class SimpleMarshaller implements Marshaller, Unmarshaller {
+	static class SimpleMarshaller implements Marshaller, Unmarshaller {
 
 		@Override
 		public void marshal(Object graph, Result result) throws XmlMappingException {

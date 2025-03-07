@@ -67,7 +67,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		Assert.notNull(userDetailsService, "userDetailsService is required");
+		Assert.notNull(this.userDetailsService, "userDetailsService is required");
 	}
 
 	/**
@@ -93,8 +93,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
 				principal.getPassword(), user.getAuthorities());
-		if (logger.isDebugEnabled()) {
-			logger.debug("Authentication success: " + authRequest);
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Authentication success: " + authRequest);
 		}
 		authRequest.setDetails(user);
 		SecurityContextHolder.getContext().setAuthentication(authRequest);
@@ -106,19 +106,19 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	}
 
 	private UserDetails loadUserDetails(String username) throws DataAccessException {
-		UserDetails user = userCache.getUserFromCache(username);
+		UserDetails user = this.userCache.getUserFromCache(username);
 
 		if (user == null) {
 			try {
-				user = userDetailsService.loadUserByUsername(username);
+				user = this.userDetailsService.loadUserByUsername(username);
 			}
 			catch (UsernameNotFoundException notFound) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Username '" + username + "' not found");
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Username '" + username + "' not found");
 				}
 				return null;
 			}
-			userCache.putUserInCache(user);
+			this.userCache.putUserInCache(user);
 		}
 		return user;
 	}

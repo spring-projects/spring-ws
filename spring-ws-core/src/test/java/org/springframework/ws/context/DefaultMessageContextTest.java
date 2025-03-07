@@ -40,50 +40,50 @@ public class DefaultMessageContextTest {
 	@BeforeEach
 	public void setUp() {
 
-		factoryMock = createMock(WebServiceMessageFactory.class);
-		request = new MockWebServiceMessage();
-		context = new DefaultMessageContext(request, factoryMock);
+		this.factoryMock = createMock(WebServiceMessageFactory.class);
+		this.request = new MockWebServiceMessage();
+		this.context = new DefaultMessageContext(this.request, this.factoryMock);
 	}
 
 	@Test
 	public void testRequest() {
-		assertThat(context.getRequest()).isEqualTo(request);
+		assertThat(this.context.getRequest()).isEqualTo(this.request);
 	}
 
 	@Test
 	public void testResponse() {
 
 		WebServiceMessage response = new MockWebServiceMessage();
-		expect(factoryMock.createWebServiceMessage()).andReturn(response);
-		replay(factoryMock);
+		expect(this.factoryMock.createWebServiceMessage()).andReturn(response);
+		replay(this.factoryMock);
 
-		WebServiceMessage result = context.getResponse();
+		WebServiceMessage result = this.context.getResponse();
 
 		assertThat(result).isEqualTo(response);
 
-		verify(factoryMock);
+		verify(this.factoryMock);
 	}
 
 	@Test
 	public void testProperties() {
 
-		assertThat(context.getPropertyNames()).hasSize(0);
+		assertThat(this.context.getPropertyNames()).hasSize(0);
 
 		String name = "name";
 
-		assertThat(context.containsProperty(name)).isFalse();
+		assertThat(this.context.containsProperty(name)).isFalse();
 
 		String value = "value";
-		context.setProperty(name, value);
+		this.context.setProperty(name, value);
 
-		assertThat(context.containsProperty(name)).isTrue();
-		assertThat(context.getPropertyNames()).containsExactly(name);
-		assertThat(context.getProperty(name)).isEqualTo(value);
+		assertThat(this.context.containsProperty(name)).isTrue();
+		assertThat(this.context.getPropertyNames()).containsExactly(name);
+		assertThat(this.context.getProperty(name)).isEqualTo(value);
 
-		context.removeProperty(name);
+		this.context.removeProperty(name);
 
-		assertThat(context.containsProperty(name)).isFalse();
-		assertThat(context.getPropertyNames()).isEmpty();
+		assertThat(this.context.containsProperty(name)).isFalse();
+		assertThat(this.context.getPropertyNames()).isEmpty();
 	}
 
 }
