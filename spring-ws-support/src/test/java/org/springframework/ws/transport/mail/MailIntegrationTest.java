@@ -20,7 +20,6 @@ import com.icegreen.greenmail.spring.GreenMailBean;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -43,7 +42,6 @@ public class MailIntegrationTest {
 	@Autowired
 	private WebServiceTemplate webServiceTemplate;
 
-	@Disabled("doesn't run under Spring Framework 6.0.1-SNAPSHOT")
 	@Test
 	public void testMailTransport() throws MessagingException {
 
