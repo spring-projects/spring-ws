@@ -18,22 +18,18 @@ package org.springframework.ws.transport.mail;
 
 import com.icegreen.greenmail.spring.GreenMailBean;
 import com.icegreen.greenmail.util.GreenMailUtil;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("mail-applicationContext.xml")
+@SpringJUnitConfig(locations = "mail-applicationContext.xml")
 public class MailIntegrationTest {
 
 	@Autowired
@@ -43,20 +39,20 @@ public class MailIntegrationTest {
 	private WebServiceTemplate webServiceTemplate;
 
 	@Test
-	public void testMailTransport() throws MessagingException {
-
-		String content = "<root xmlns=\"http://springframework.org/spring-ws\"><child/></root>";
+	public void testMailTransport() {
+		String content = """
+				<root xmlns="http://springframework.org/spring-ws">
+					<child/>
+				</root>""";
 		StringResult result = new StringResult();
 		this.webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-
 		MimeMessage[] receivedMessages = this.greenMailBean.getGreenMail().getReceivedMessages();
-
-		assertThat(receivedMessages).hasSize(1);
-
-		assertThat(GreenMailUtil.getAddressList(receivedMessages[0].getFrom()))
-			.isEqualTo("Spring-WS SOAP Client <client@localhost>");
-		assertThat(GreenMailUtil.getAddressList(receivedMessages[0].getAllRecipients())).isEqualTo("server@localhost");
-		assertThat(GreenMailUtil.getBody(receivedMessages[0])).contains(content);
+		assertThat(receivedMessages).singleElement().satisfies((receivedMessage) -> {
+			assertThat(GreenMailUtil.getAddressList(receivedMessage.getFrom()))
+				.isEqualTo("Spring-WS SOAP Client <client@localhost>");
+			assertThat(GreenMailUtil.getAddressList(receivedMessage.getAllRecipients())).isEqualTo("server@localhost");
+			assertThat(GreenMailUtil.getBody(receivedMessage)).containsIgnoringWhitespaces(content);
+		});
 	}
 
 }
