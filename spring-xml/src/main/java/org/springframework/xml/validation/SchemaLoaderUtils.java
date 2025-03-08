@@ -27,6 +27,7 @@ import org.xml.sax.XMLReader;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
@@ -66,7 +67,7 @@ public abstract class SchemaLoaderUtils {
 		Assert.notEmpty(resources, "No resources given");
 		Assert.hasLength(schemaLanguage, "No schema language provided");
 		Source[] schemaSources = new Source[resources.length];
-		XMLReader xmlReader = XMLReaderFactoryUtils.createXMLReader();
+		XMLReader xmlReader = offlinerXmlReader();
 		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		for (int i = 0; i < resources.length; i++) {
 			Assert.notNull(resources[i], "Resource is null");
@@ -75,6 +76,15 @@ public abstract class SchemaLoaderUtils {
 		}
 		SchemaFactory schemaFactory = SchemaFactoryUtils.newInstance(schemaLanguage);
 		return schemaFactory.newSchema(schemaSources);
+	}
+
+	private static XMLReader offlinerXmlReader() throws SAXException {
+		XMLReader xmlReader = SaxUtils.namespaceAwareXmlReader();
+		xmlReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+		xmlReader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		xmlReader.setFeature("http://xml.org/sax/features/external-general-entities", false);
+		xmlReader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+		return xmlReader;
 	}
 
 	/**

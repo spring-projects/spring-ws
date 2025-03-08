@@ -26,7 +26,6 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -188,9 +187,7 @@ public abstract class AbstractWebServiceMessageTest {
 	}
 
 	private void validateMessage() throws Exception {
-		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
+		XMLReader xmlReader = SaxUtils.namespaceAwareXmlReader();
 		xmlReader.setContentHandler(new DefaultHandler());
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		this.webServiceMessage.writeTo(os);

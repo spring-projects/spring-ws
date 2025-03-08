@@ -20,7 +20,6 @@ import java.io.StringReader;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
@@ -63,9 +63,7 @@ public class DomContentHandlerTest {
 		documentBuilderFactory.setNamespaceAware(true);
 		this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		this.result = this.documentBuilder.newDocument();
-		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		this.xmlReader = parserFactory.newSAXParser().getXMLReader();
+		this.xmlReader = SaxUtils.namespaceAwareXmlReader();
 	}
 
 	@Test

@@ -20,9 +20,14 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 import org.springframework.core.io.Resource;
 
@@ -35,6 +40,22 @@ import org.springframework.core.io.Resource;
 public abstract class SaxUtils {
 
 	private static final Log logger = LogFactory.getLog(SaxUtils.class);
+
+	/**
+	 * Create a default {@link XMLReader} that is
+	 * {@linkplain SAXParserFactory#setNamespaceAware(boolean) namespace aware}.
+	 * @return a new {@link XMLReader}
+	 */
+	public static XMLReader namespaceAwareXmlReader() throws SAXException {
+		try {
+			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+			parserFactory.setNamespaceAware(true);
+			return parserFactory.newSAXParser().getXMLReader();
+		}
+		catch (ParserConfigurationException ex) {
+			throw new IllegalStateException(ex);
+		}
+	}
 
 	/**
 	 * Creates a SAX {@code InputSource} from the given resource. Sets the system

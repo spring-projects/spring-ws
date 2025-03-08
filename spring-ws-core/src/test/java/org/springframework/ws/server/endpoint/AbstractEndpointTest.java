@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -41,6 +40,7 @@ import org.xml.sax.XMLReader;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
 
 @SuppressWarnings("Since15")
 public abstract class AbstractEndpointTest {
@@ -67,9 +67,7 @@ public abstract class AbstractEndpointTest {
 
 	@Test
 	public void testSaxSource() throws Exception {
-		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		XMLReader reader = parserFactory.newSAXParser().getXMLReader();
+		XMLReader reader = SaxUtils.namespaceAwareXmlReader();
 		InputSource inputSource = new InputSource(new StringReader(REQUEST));
 		testSource(new SAXSource(reader, inputSource));
 	}

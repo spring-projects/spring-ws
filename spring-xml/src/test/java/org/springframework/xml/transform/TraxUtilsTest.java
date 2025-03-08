@@ -28,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -57,6 +56,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.XMLInputFactoryUtils;
+import org.springframework.xml.sax.SaxUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
@@ -119,9 +119,7 @@ public class TraxUtilsTest {
 	@Test
 	public void testDoWithSaxSource() throws Exception {
 
-		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		XMLReader reader = parserFactory.newSAXParser().getXMLReader();
+		XMLReader reader = SaxUtils.namespaceAwareXmlReader();
 		InputSource inputSource = new InputSource();
 
 		TraxUtils.SourceCallback mock = createMock(TraxUtils.SourceCallback.class);

@@ -18,8 +18,6 @@ package org.springframework.ws.wsdl.wsdl11;
 
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 
 import org.xml.sax.SAXException;
@@ -29,6 +27,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.WsdlDefinitionException;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
@@ -73,13 +72,11 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 	@Override
 	public Source getSource() {
 		try {
-			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-			parserFactory.setNamespaceAware(true);
-			XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
+			XMLReader xmlReader = SaxUtils.namespaceAwareXmlReader();
 			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 			return new ResourceSource(xmlReader, this.wsdlResource);
 		}
-		catch (SAXException | ParserConfigurationException ex) {
+		catch (SAXException ex) {
 			throw new WsdlDefinitionException("Could not create XMLReader", ex);
 		}
 		catch (IOException ex) {

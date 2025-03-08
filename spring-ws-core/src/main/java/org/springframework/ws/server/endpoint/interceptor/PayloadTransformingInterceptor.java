@@ -19,7 +19,6 @@ package org.springframework.ws.server.endpoint.interceptor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -38,6 +37,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
@@ -139,9 +139,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 			throw new IllegalArgumentException("Setting either 'requestXslt' or 'responseXslt' is required");
 		}
 		TransformerFactory transformerFactory = getTransformerFactory();
-		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
-		parserFactory.setNamespaceAware(true);
-		XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
+		XMLReader xmlReader = SaxUtils.namespaceAwareXmlReader();
 		xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		if (this.requestXslt != null) {
 			Assert.isTrue(this.requestXslt.exists(), "requestXslt \"" + this.requestXslt + "\" does not exit");
