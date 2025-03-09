@@ -25,7 +25,7 @@ jobs:
         with:
           artifact-properties: |
             /**/spring-ws-docs-*.zip::zip.type=docs,zip.name=spring-ws,zip.deployed=false
-          build-name: 'spring-ws-4.0.x'
+          build-name: 'spring-ws-4.1.x'
           folder: 'deployment-repository'
           password: ${{ secrets.ARTIFACTORY_PASSWORD }}
           repository: 'libs-snapshot-local'
