@@ -596,14 +596,6 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Enables the {@code useSingleCertificate} attribute on WS-Security headers on outgoing messages. Default is
-	 * {@code true}.
-	 */
-	public void setUseSingleCertificate(boolean useSingleCertificate) {
-		handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
-	}
-
-	/**
 	 * Set the WS-I Basic Security Profile compliance mode. Default is {@code true}.
 	 */
 	public void setBspCompliant(boolean bspCompliant) {
@@ -621,6 +613,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		this.handler.setOption(WSHandlerConstants.ADD_INCLUSIVE_PREFIXES, addInclusivePrefixes);
 		this.addInclusivePrefixes = addInclusivePrefixes;
+	}
+
+	/**
+	 * Set whether to use a single certificate or a whole certificate chain when
+	 * constructing a {@code BinarySecurityToken} used for direct reference in signature.
+	 * default is {@code true}, meaning that only a single certificate is used.
+	 * @param useSingleCertificate whether to use a single certificate
+	 * @since 4.1.0
+	 * @see WSHandlerConstants#USE_SINGLE_CERTIFICATE
+	 */
+	public void setUseSingleCertificate(boolean useSingleCertificate) {
+		this.handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
 	}
 
 	/**
