@@ -38,15 +38,12 @@ import org.springframework.context.annotation.Import;
  *
  * }</code></pre>
  * <p>
- * Customize the imported configuration by implementing the {@link WsConfigurer} interface
- * or more likely by extending the {@link WsConfigurerAdapter} base class and overriding
- * individual methods:
- *
- * <pre><code class='java'>
+ * Customize the imported configuration by implementing the {@link WsConfigurer}
+ * interface: <pre><code class='java'>
  * &#064;Configuration
  * &#064;EnableWs
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
- * public class MyConfiguration extends WsConfigurerAdapter {
+ * public class MyConfiguration implements WsConfigurer {
  *
  * 	&#064;Override
  * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
@@ -86,7 +83,6 @@ import org.springframework.context.annotation.Import;
  * @author Arjen Poutsma
  * @since 2.2
  * @see WsConfigurer
- * @see WsConfigurerAdapter
  * @see WsConfigurationSupport
  */
 @Retention(RetentionPolicy.RUNTIME)

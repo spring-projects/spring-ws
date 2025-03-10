@@ -100,7 +100,7 @@ public class WsConfigurerAdapterTest {
 
 	@Configuration
 	@EnableWs
-	public static class TestConfig extends WsConfigurerAdapter {
+	public static class TestConfig implements WsConfigurer {
 
 		@Override
 		public void addInterceptors(List<EndpointInterceptor> interceptors) {

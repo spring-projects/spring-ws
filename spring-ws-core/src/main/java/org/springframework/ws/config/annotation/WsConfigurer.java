@@ -27,9 +27,7 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHa
  * Services enabled via {@link EnableWs @EnableWs}.
  * <p>
  * {@code @EnableWs}-annotated configuration classes may implement this interface to be
- * called back and given a chance to customize the default configuration. Consider
- * extending {@link WsConfigurerAdapter}, which provides a stub implementation of all
- * interface methods.
+ * called back and given a chance to customize the default configuration.
  *
  * @author Arjen Poutsma
  * @since 2.2
@@ -40,13 +38,17 @@ public interface WsConfigurer {
 	 * Add {@link EndpointInterceptor}s for pre- and post-processing of endpoint method
 	 * invocations.
 	 */
-	void addInterceptors(List<EndpointInterceptor> interceptors);
+	default void addInterceptors(List<EndpointInterceptor> interceptors) {
+
+	}
 
 	/**
 	 * Add resolvers to support custom endpoint method argument types.
 	 * @param argumentResolvers initially an empty list
 	 */
-	void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers);
+	default void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
+
+	}
 
 	/**
 	 * Add handlers to support custom controller method return value types.
@@ -56,6 +58,8 @@ public interface WsConfigurer {
 	 * RequestMappingHandlerAdapter directly.
 	 * @param returnValueHandlers initially an empty list
 	 */
-	void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers);
+	default void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
+
+	}
 
 }

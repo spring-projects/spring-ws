@@ -28,7 +28,9 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHa
  *
  * @author Arjen Poutsma
  * @since 2.2
+ * @deprecated as of 4.1.0 in favor of implementing {@link WsConfigurer} directly
  */
+@Deprecated(since = "4.1.0", forRemoval = true)
 public class WsConfigurerAdapter implements WsConfigurer {
 
 	/**

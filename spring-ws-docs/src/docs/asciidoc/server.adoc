@@ -617,14 +617,14 @@ public class EchoConfig {
 ----
 ====
 
-To customize the `@EnableWs` configuration, you can implement `WsConfigurer` or, better yet, extend the `WsConfigurerAdapter`:
+To customize the `@EnableWs` configuration, you can implement `WsConfigurer`:
 
 ====
 [source,java]
 ----
 @Configuration
 @EnableWs
-public class MyConfiguration extends WsConfigurerAdapter {
+public class MyConfiguration implements WsConfigurer {
 
   @Override
   public void addInterceptors(List<EndpointInterceptor> interceptors) {
@@ -1067,14 +1067,14 @@ Finally, we define two interceptors that apply when the message has a `http://ww
 Notice how the second interceptor is actually a reference to a bean definition outside the `<interceptors>` element.
 You can use bean references anywhere inside the `<interceptors>` element.
 
-When you use `@Configuration` classes, you can extend from `WsConfigurerAdapter` to add interceptors:
+When you use `@Configuration` classes, you can implement `WsConfigurer` to add interceptors:
 
 ====
 [source,java]
 ----
 @Configuration
 @EnableWs
-public class MyWsConfiguration extends WsConfigurerAdapter {
+public class MyWsConfiguration implements WsConfigurer {
 
   @Override
   public void addInterceptors(List<EndpointInterceptor> interceptors) {
@@ -1119,7 +1119,7 @@ The following example shows how to define the `PayloadLoggingInterceptor` in an 
 
 Both of these interceptors have two properties, `logRequest` and `logResponse`, which can be set to `false` to disable logging for either request or response messages.
 
-You could use the `WsConfigurerAdapter` approach, as described earlier, for the `PayloadLoggingInterceptor` as well.
+You could use the `WsConfigurer` approach, as described earlier, for the `PayloadLoggingInterceptor` as well.
 
 ==== `PayloadValidatingInterceptor`
 
@@ -1152,7 +1152,7 @@ Note that the `PayloadValidatingInterceptor` can also accept multiple schemas by
 ----
 ====
 
-Of course, you could use the `WsConfigurerAdapter` approach, as described earlier, for the `PayloadValidatingInterceptor` as well.
+Of course, you could use the `WsConfigurer` approach, as described earlier, for the `PayloadValidatingInterceptor` as well.
 
 ==== Using `PayloadTransformingInterceptor`
 
@@ -1175,7 +1175,7 @@ In the preceding example, we transform requests by using `/WEB-INF/oldRequests.x
 Note that, since endpoint interceptors are registered at the endpoint-mapping level, you can create an endpoint mapping that applies to the "`old style`" messages and add the interceptor to that mapping.
 Hence, the transformation applies only to these "`old style`" message.
 
-You could use the `WsConfigurerAdapter` approach, as described earlier, for the `PayloadTransformingInterceptor` as well.
+You could use the `WsConfigurer` approach, as described earlier, for the `PayloadTransformingInterceptor` as well.
 
 [[server-endpoint-exception-resolver]]
 == Handling Exceptions

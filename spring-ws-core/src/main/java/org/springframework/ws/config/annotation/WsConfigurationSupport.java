@@ -75,7 +75,6 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  * @since 2.2
  * @see EnableWs
  * @see WsConfigurer
- * @see WsConfigurerAdapter
  */
 public class WsConfigurationSupport {
 
