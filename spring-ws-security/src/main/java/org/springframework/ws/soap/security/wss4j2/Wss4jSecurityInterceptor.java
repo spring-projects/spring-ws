@@ -616,6 +616,18 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Set whether to use a single certificate or a whole certificate chain when
+	 * constructing a {@code BinarySecurityToken} used for direct reference in signature.
+	 * default is {@code true}, meaning that only a single certificate is used.
+	 * @param useSingleCertificate whether to use a single certificate
+	 * @since 4.1.0
+	 * @see WSHandlerConstants#USE_SINGLE_CERTIFICATE
+	 */
+	public void setUseSingleCertificate(boolean useSingleCertificate) {
+		this.handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
+	}
+
+	/**
 	 * Sets whether the RSA 1.5 key transport algorithm is allowed.
 	 */
 	public void setAllowRSA15KeyTransportAlgorithm(boolean allow) {
