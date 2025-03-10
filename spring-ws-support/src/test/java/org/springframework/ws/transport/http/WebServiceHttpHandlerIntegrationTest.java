@@ -18,11 +18,17 @@ package org.springframework.ws.transport.http;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.InputStreamRequestEntity;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.entity.InputStreamEntity;
+import org.assertj.core.api.ThrowingConsumer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -39,90 +45,83 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration("httpserver-applicationContext.xml")
 public class WebServiceHttpHandlerIntegrationTest {
 
-	private HttpClient client;
-
 	@Autowired
 	private int port;
 
-	private String url;
-
-	@BeforeEach
-	public void createHttpClient() {
-
-		this.client = new HttpClient();
-		this.url = "http://localhost:" + this.port + "/service";
-	}
-
 	@Test
-	public void testInvalidMethod() throws IOException {
-
-		GetMethod getMethod = new GetMethod(this.url);
-		this.client.executeMethod(getMethod);
-
-		assertThat(getMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED);
-		assertThat(getMethod.getResponseContentLength()).isEqualTo(0);
+	public void testInvalidMethod() {
+		HttpGet httpRequest = new HttpGet(serviceUrl());
+		execute(httpRequest, response -> {
+			assertThat(response.getCode()).isEqualTo(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED);
+			assertThat(response.containsHeader(HttpHeaders.CONTENT_LENGTH)).isTrue();
+			assertThat(response.getHeader(HttpHeaders.CONTENT_LENGTH).getValue()).isEqualTo("0");
+		});
 	}
 
 	@Test
 	public void testNoResponse() throws IOException {
-
-		PostMethod postMethod = new PostMethod(this.url);
-		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
-				"http://springframework.org/spring-ws/NoResponse");
+		HttpPost httpRequest = new HttpPost(serviceUrl());
+		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/NoResponse");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
-		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
-
-		this.client.executeMethod(postMethod);
-
-		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_ACCEPTED);
-		assertThat(postMethod.getResponseContentLength()).isEqualTo(0);
+		httpRequest.setEntity(new InputStreamEntity(soapRequest.getInputStream(), ContentType.TEXT_XML));
+		execute(httpRequest, response -> {
+			assertThat(response.getCode()).isEqualTo(HttpTransportConstants.STATUS_ACCEPTED);
+			assertThat(response.containsHeader(HttpHeaders.CONTENT_LENGTH)).isTrue();
+			assertThat(response.getHeader(HttpHeaders.CONTENT_LENGTH).getValue()).isEqualTo("0");
+		});
 	}
 
 	@Test
 	public void testResponse() throws IOException {
-
-		PostMethod postMethod = new PostMethod(this.url);
-		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
-				"http://springframework.org/spring-ws/Response");
+		HttpPost httpRequest = new HttpPost(serviceUrl());
+		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Response");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
-		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
-		this.client.executeMethod(postMethod);
-
-		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_OK);
-		assertThat(postMethod.getResponseContentLength()).isGreaterThan(0);
+		httpRequest.setEntity(new InputStreamEntity(soapRequest.getInputStream(), ContentType.TEXT_XML));
+		execute(httpRequest, response -> {
+			assertThat(response.getCode()).isEqualTo(HttpTransportConstants.STATUS_OK);
+			assertThat(response.containsHeader(HttpHeaders.CONTENT_LENGTH)).isTrue();
+			assertThat(response.getHeader(HttpHeaders.CONTENT_LENGTH).getValue()).asInt().isGreaterThan(0);
+		});
 	}
 
 	@Test
 	public void testNoEndpoint() throws IOException {
-
-		PostMethod postMethod = new PostMethod(this.url);
-		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
-				"http://springframework.org/spring-ws/NoEndpoint");
+		HttpPost httpRequest = new HttpPost(serviceUrl());
+		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/NoEndpoint");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
-		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
-
-		this.client.executeMethod(postMethod);
-
-		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_NOT_FOUND);
-		assertThat(postMethod.getResponseContentLength()).isEqualTo(0);
+		httpRequest.setEntity(new InputStreamEntity(soapRequest.getInputStream(), ContentType.TEXT_XML));
+		execute(httpRequest, response -> {
+			assertThat(response.getCode()).isEqualTo(HttpTransportConstants.STATUS_NOT_FOUND);
+			assertThat(response.containsHeader(HttpHeaders.CONTENT_LENGTH)).isTrue();
+			assertThat(response.getHeader(HttpHeaders.CONTENT_LENGTH).getValue()).isEqualTo("0");
+		});
 	}
 
 	@Test
 	public void testFault() throws IOException {
-
-		PostMethod postMethod = new PostMethod(this.url);
-		postMethod.addRequestHeader(HttpTransportConstants.HEADER_CONTENT_TYPE, "text/xml");
-		postMethod.addRequestHeader(TransportConstants.HEADER_SOAP_ACTION,
-				"http://springframework.org/spring-ws/Fault");
+		HttpPost httpRequest = new HttpPost(serviceUrl());
+		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTest.class);
-		postMethod.setRequestEntity(new InputStreamRequestEntity(soapRequest.getInputStream()));
+		httpRequest.setEntity(new InputStreamEntity(soapRequest.getInputStream(), ContentType.TEXT_XML));
+		execute(httpRequest, response -> assertThat(response.getCode())
+			.isEqualTo(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR));
+	}
 
-		this.client.executeMethod(postMethod);
+	private String serviceUrl() {
+		return "http://localhost:%s/service".formatted(this.port);
+	}
 
-		assertThat(postMethod.getStatusCode()).isEqualTo(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
+	private void execute(ClassicHttpRequest request, ThrowingConsumer<ClassicHttpResponse> responseHandler) {
+		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+			HttpClientResponseHandler<Object> rh = httpResponse -> {
+				responseHandler.accept(httpResponse);
+				return null;
+			};
+			httpclient.execute(request, rh);
+		}
+		catch (IOException ex) {
+			throw new IllegalStateException(ex);
+		}
 	}
 
 }
