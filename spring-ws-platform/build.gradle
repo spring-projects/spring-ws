@@ -50,7 +50,6 @@ dependencies {
 		api("org.jdom:jdom2:2.0.6.1")
 		api("org.jvnet.staxex:stax-ex:2.1.0")
 		api("org.mockito:mockito-core:4.11.0")
-		api("org.springframework.hateoas:spring-hateoas:2.1.5")
 		api("org.xmlunit:xmlunit-assertj:2.10.0")
 		api("org.xmlunit:xmlunit-core:2.10.0")
 		api("org.xmlunit:xmlunit-legacy:2.10.0")
