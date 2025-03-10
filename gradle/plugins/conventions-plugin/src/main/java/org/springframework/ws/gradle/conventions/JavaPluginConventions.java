@@ -43,7 +43,6 @@ class JavaPluginConventions {
 	void apply(Project project) {
 		project.getPlugins().apply(SpringJavaFormatPlugin.class);
 		JavaPluginExtension java = project.getExtensions().getByType(JavaPluginExtension.class);
-		configureRepositories(project);
 		enableSourceAndJavadocJars(java);
 		configureSourceAndTargetCompatibility(java);
 		configureDependencyManagement(project);
@@ -53,22 +52,7 @@ class JavaPluginConventions {
 		configureJUnitPlatform(project);
 	}
 
-	private void configureRepositories(Project project) {
-		project.getRepositories().mavenCentral();
-		String version = project.getVersion().toString();
-		if (version.contains("-")) {
-			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Milestones");
-				repository.setUrl("https://repo.spring.io/milestone");
-			});
-		}
-		if (version.endsWith("-SNAPSHOT")) {
-			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Snapshots");
-				repository.setUrl("https://repo.spring.io/snapshot");
-			});
-		}
-	}
+
 
 	private void enableSourceAndJavadocJars(JavaPluginExtension java) {
 		java.withSourcesJar();
