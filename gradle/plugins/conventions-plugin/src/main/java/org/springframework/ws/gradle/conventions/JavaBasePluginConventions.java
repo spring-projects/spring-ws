@@ -30,6 +30,7 @@ import org.gradle.external.javadoc.MinimalJavadocOptions;
 class JavaBasePluginConventions {
 
 	void apply(Project project) {
+		configureRepositories(project);
 		project.getTasks().withType(Javadoc.class).configureEach((javadoc) -> {
 			MinimalJavadocOptions options = javadoc.getOptions();
 			options.quiet();
@@ -38,6 +39,23 @@ class JavaBasePluginConventions {
 				coreOptions.addBooleanOption("Xdoclint:-missing", true);
 			}
 		});
+	}
+
+	private void configureRepositories(Project project) {
+		project.getRepositories().mavenCentral();
+		String version = project.getVersion().toString();
+		if (version.contains("-")) {
+			project.getRepositories().maven((repository) -> {
+				repository.setName("Spring Milestones");
+				repository.setUrl("https://repo.spring.io/milestone");
+			});
+		}
+		if (version.endsWith("-SNAPSHOT")) {
+			project.getRepositories().maven((repository) -> {
+				repository.setName("Spring Snapshots");
+				repository.setUrl("https://repo.spring.io/snapshot");
+			});
+		}
 	}
 
 }
