@@ -461,12 +461,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets the attachment callback handler used for SwA signature/encryption
-     * @param attachmentCallbackHandler
-     */
-    public void setAttachmentCallbackHandler (CallbackHandler attachmentCallbackHandler) {
-        this.attachmentCallbackHandler = attachmentCallbackHandler;
-    }
+	 * Set the {@link CallbackHandler} to use to sign/encrypt attachments.
+	 * @param attachmentCallbackHandler the attachment callback handler
+	 * @since 4.1.0
+	 */
+	public void setAttachmentCallbackHandler(CallbackHandler attachmentCallbackHandler) {
+		this.attachmentCallbackHandler = attachmentCallbackHandler;
+	}
 
 	/**
 	 * Sets the server-side time to live.
@@ -715,12 +716,13 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		requestData.setWssConfig(this.wssConfig);
 
-		requestData.setAttachmentCallbackHandler(attachmentCallbackHandler);
-
 		messageContext.setProperty(WSHandlerConstants.TTL_TIMESTAMP, Integer.toString(this.securementTimeToLive));
 
 		if (this.samlCallbackHandler != null) {
 			messageContext.setProperty(WSHandlerConstants.SAML_CALLBACK_REF, this.samlCallbackHandler);
+		}
+		if (this.attachmentCallbackHandler != null) {
+			requestData.setAttachmentCallbackHandler(this.attachmentCallbackHandler);
 		}
 
 		// allow for qualified password types for .Net interoperability
