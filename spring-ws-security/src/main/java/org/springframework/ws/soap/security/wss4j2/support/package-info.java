@@ -15,6 +15,6 @@
  */
 
 /**
- * Contains support classes for working with WSS4J 2.0.
+ * Contains support classes for working with WSS4J 2.0+.
  */
 package org.springframework.ws.soap.security.wss4j2.support;

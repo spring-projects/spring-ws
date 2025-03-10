@@ -43,6 +43,14 @@ class JavaBasePluginConventions {
 
 	private void configureRepositories(Project project) {
 		project.getRepositories().mavenCentral();
+		project.getRepositories().maven((repository) -> {
+			repository.setName("Shibboleth Releases");
+			repository.setUrl("https://build.shibboleth.net/nexus/content/repositories/releases");
+			repository.content((content) -> {
+				content.includeGroup("org.opensaml");
+				content.includeGroup("net.shibboleth");
+			});
+		});
 		String version = project.getVersion().toString();
 		if (version.contains("-")) {
 			project.getRepositories().maven((repository) -> {
