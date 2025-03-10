@@ -62,12 +62,8 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * <li>It can use any {@link EndpointAdapter}; this allows one to use any endpoint
  * interface or form. Defaults to the {@link MessageEndpointAdapter} and
  * {@link PayloadEndpointAdapter}, for {@link MessageEndpoint} and
- * {@link PayloadEndpoint}, respectively, and the
- * {@link org.springframework.ws.server.endpoint.adapter.MessageMethodEndpointAdapter
- * MessageMethodEndpointAdapter} and
- * {@link org.springframework.ws.server.endpoint.adapter.PayloadMethodEndpointAdapter
- * PayloadMethodEndpointAdapter}. Additional endpoint adapters can be added through the
- * {@link #setEndpointAdapters(List) endpointAdapters} property.</li>
+ * {@link PayloadEndpoint}, respectively. Additional endpoint adapters can be added
+ * through the {@link #setEndpointAdapters(List) endpointAdapters} property.</li>
  * <li>Its exception resolution strategy can be specified via a
  * {@link EndpointExceptionResolver}, for example mapping certain exceptions to SOAP
  * Faults. Default is none. Additional exception resolvers can be added through the
