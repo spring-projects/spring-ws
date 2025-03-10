@@ -199,6 +199,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private CallbackHandler samlCallbackHandler;
 
+	private CallbackHandler attachmentCallbackHandler;
+
 	// Allow RSA 15 to maintain default behavior
 	private boolean allowRSA15KeyTransportAlgorithm = true;
 
@@ -459,6 +461,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Set the {@link CallbackHandler} to use to sign/encrypt attachments.
+	 * @param attachmentCallbackHandler the attachment callback handler
+	 * @since 4.1.0
+	 */
+	public void setAttachmentCallbackHandler(CallbackHandler attachmentCallbackHandler) {
+		this.attachmentCallbackHandler = attachmentCallbackHandler;
+	}
+
+	/**
 	 * Sets the server-side time to live.
 	 */
 	public void setValidationTimeToLive(int validationTimeToLive) {
@@ -709,6 +720,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		if (this.samlCallbackHandler != null) {
 			messageContext.setProperty(WSHandlerConstants.SAML_CALLBACK_REF, this.samlCallbackHandler);
+		}
+		if (this.attachmentCallbackHandler != null) {
+			requestData.setAttachmentCallbackHandler(this.attachmentCallbackHandler);
 		}
 
 		// allow for qualified password types for .Net interoperability
