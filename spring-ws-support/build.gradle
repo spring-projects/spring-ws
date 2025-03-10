@@ -26,13 +26,11 @@ dependencies {
 	testImplementation("com.icegreen:greenmail")
 	testImplementation("com.icegreen:greenmail-junit5")
 	testImplementation("com.icegreen:greenmail-spring")
-	testImplementation("commons-httpclient:commons-httpclient") {
-		exclude(group: "commons-logging", module: "commons-logging")
-	}
 	testImplementation("jakarta.annotation:jakarta.annotation-api")
 	testImplementation("org.apache.activemq:activemq-broker") {
 		exclude(group: "commons-logging", module: "commons-logging")
 	}
+	testImplementation("org.apache.httpcomponents.client5:httpclient5")
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 	testImplementation("org.assertj:assertj-core")
