@@ -17,9 +17,6 @@ dependencies {
 	api("org.springframework:spring-web")
 	api("org.springframework:spring-webmvc")
 
-	optional("commons-httpclient:commons-httpclient") {
-		exclude(group: "commons-logging", module: "commons-logging")
-	}
 	optional("jakarta.mail:jakarta.mail-api")
 	optional("jakarta.servlet:jakarta.servlet-api")
 	optional("org.apache.httpcomponents:httpclient") {

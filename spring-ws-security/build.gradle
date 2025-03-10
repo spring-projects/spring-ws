@@ -22,7 +22,6 @@ dependencies {
 	api("org.springframework.security:spring-security-core")
 
 	optional("com.sun.xml.messaging.saaj:saaj-impl")
-	optional("net.sf.ehcache:ehcache")
 
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")

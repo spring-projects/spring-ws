@@ -168,11 +168,6 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	}
 
 	@Override
-	@Deprecated
-	public final void setFault(boolean fault) {
-	}
-
-	@Override
 	public final void setFaultCode(QName faultCode) throws IOException {
 	}
 

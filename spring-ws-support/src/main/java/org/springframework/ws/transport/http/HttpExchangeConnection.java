@@ -170,17 +170,6 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	@Deprecated
-	public void setFault(boolean fault) throws IOException {
-		if (fault) {
-			this.responseStatusCode = HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR;
-		}
-		else {
-			this.responseStatusCode = HttpTransportConstants.STATUS_OK;
-		}
-	}
-
-	@Override
 	public void setFaultCode(QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {

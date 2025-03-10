@@ -43,17 +43,6 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 	boolean hasFault() throws IOException;
 
 	/**
-	 * Sets whether this connection will send a fault.
-	 * <p>
-	 * Typically implemented by setting an HTTP status code.
-	 * @param fault {@code true} if this will send a fault; {@code false} otherwise.
-	 * @throws IOException in case of I/O errors
-	 * @deprecated In favor of {@link #setFaultCode(QName)}
-	 */
-	@Deprecated
-	void setFault(boolean fault) throws IOException;
-
-	/**
 	 * Sets a specific fault code.
 	 * <p>
 	 * Typically implemented by setting an HTTP status code.

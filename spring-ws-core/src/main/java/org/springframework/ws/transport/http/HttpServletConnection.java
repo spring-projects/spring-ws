@@ -157,18 +157,6 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	@Deprecated
-	public void setFault(boolean fault) throws IOException {
-		if (fault) {
-			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR);
-		}
-		else {
-			getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_OK);
-		}
-		this.statusCodeSet = true;
-	}
-
-	@Override
 	public void setFaultCode(QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
