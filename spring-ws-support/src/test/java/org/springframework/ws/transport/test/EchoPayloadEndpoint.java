@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.support;
+package org.springframework.ws.transport.test;
 
 import javax.xml.transform.Source;
 

@@ -6,7 +6,7 @@
 	<bean id="port"
 		  class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetClass"
-				  value="org.springframework.ws.transport.support.FreePortScanner"/>
+				  value="org.springframework.ws.transport.http.test.FreePortScanner"/>
 		<property name="targetMethod" value="getFreePort"/>
 	</bean>
 

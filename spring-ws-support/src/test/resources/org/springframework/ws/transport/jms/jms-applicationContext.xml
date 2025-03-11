@@ -37,7 +37,7 @@
 		<property name="endpointMappings">
 			<bean class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
 				<property name="defaultEndpoint">
-					<bean class="org.springframework.ws.transport.support.EchoPayloadEndpoint"/>
+					<bean class="org.springframework.ws.transport.test.EchoPayloadEndpoint"/>
 				</property>
 			</bean>
 		</property>
