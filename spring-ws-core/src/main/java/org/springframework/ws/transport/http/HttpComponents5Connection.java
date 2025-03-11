@@ -44,13 +44,15 @@ import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * Implementation of {@link WebServiceConnection} that is based on Apache HttpClient 5.
- * Exposes a {@link HttpPost} and {@link HttpResponse}.
+ * Exposes the {@linkplain #getHttpHost() HTTP host}, {@linkplain #getHttpPost() HTTP
+ * port}, and {@linkplain #getHttpResponse() HTTP response}.
  *
  * @author Alan Stewart
  * @author Barry Pitman
  * @author Arjen Poutsma
  * @author Greg Turnquist
  * @author Lars Uffmann
+ * @author Brian Clozel
  * @since 4.0.5
  */
 public class HttpComponents5Connection extends AbstractHttpSenderConnection {
