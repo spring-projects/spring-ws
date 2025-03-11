@@ -16,7 +16,9 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
@@ -28,6 +30,8 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 
@@ -121,6 +125,39 @@ public abstract class Wss4jMessageInterceptorSignTest extends Wss4jTest {
 		Document document = getDocument(message);
 		assertXpathExists("Absent SignatureConfirmation element",
 				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/ds:Signature", document);
+	}
+
+	@Test
+	public void testValidateCertificateSubjectDnConstraintsShouldMatchSubject() throws Exception {
+		SoapMessage message = createSignedTestSoapMessage();
+		MessageContext messageContext = getSoap11MessageContext(createSignedTestSoapMessage());
+		this.interceptor.secureMessage(message, messageContext);
+
+		this.interceptor.setValidationActions("Signature");
+		this.interceptor.setValidationSubjectDnConstraints(List.of(Pattern.compile(".*")));
+		assertThatCode(() -> this.interceptor.validateMessage(message, messageContext)).doesNotThrowAnyException();
+	}
+
+	@Test
+	public void testValidateCertificateSubjectDnConstraintsShouldFailForNotMatchingSubject() throws Exception {
+		SoapMessage message = createSignedTestSoapMessage();
+		MessageContext messageContext = getSoap11MessageContext(createSignedTestSoapMessage());
+		this.interceptor.secureMessage(message, messageContext);
+
+		this.interceptor.setValidationActions("Signature");
+		this.interceptor.setValidationSubjectDnConstraints(List.of(Pattern.compile("O=Some Other Company")));
+		assertThatExceptionOfType(Wss4jSecurityValidationException.class)
+			.isThrownBy(() -> this.interceptor.validateMessage(message, messageContext))
+			.withMessage("The security token could not be authenticated or authorized");
+	}
+
+	private SoapMessage createSignedTestSoapMessage() throws Exception {
+		this.interceptor.setSecurementActions("Signature");
+		this.interceptor.setSecurementSignatureKeyIdentifier("DirectReference");
+		this.interceptor.setUseSingleCertificate(false);
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("testkey");
+		return loadSoap11Message("empty-soap.xml");
 	}
 
 }

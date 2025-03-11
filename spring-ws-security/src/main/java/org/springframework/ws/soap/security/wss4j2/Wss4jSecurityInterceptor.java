@@ -22,6 +22,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -207,6 +208,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
+
+	private List<Pattern> signatureSubjectDnPatterns = Collections.emptyList();
 
 	/**
 	 * Create a {@link WSSecurityEngine} by default.
@@ -528,6 +531,17 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Certificate constraints which will be applied to the subject DN of the certificate
+	 * used for signature validation, after trust verification of the certificate chain
+	 * associated with the certificate.
+	 * @param patterns a list of regex patterns which will be applied to the subject DN.
+	 * @see ConfigurationConstants#SIG_SUBJECT_CERT_CONSTRAINTS
+	 */
+	public void setValidationSubjectDnConstraints(List<Pattern> patterns) {
+		this.signatureSubjectDnPatterns = patterns;
+	}
+
+	/**
 	 * Whether to enable signatureConfirmation or not. By default, signatureConfirmation
 	 * is enabled.
 	 */
@@ -741,6 +755,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
+		requestData.setSubjectCertConstraints(this.signatureSubjectDnPatterns);
 		return requestData;
 	}
 
@@ -780,6 +795,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
 
+		requestData.setSubjectCertConstraints(this.signatureSubjectDnPatterns);
 		return requestData;
 	}
 
