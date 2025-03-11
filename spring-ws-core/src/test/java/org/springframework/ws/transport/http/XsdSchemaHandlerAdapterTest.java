@@ -30,6 +30,8 @@ import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.util.FileCopyUtils;
@@ -77,6 +79,33 @@ public class XsdSchemaHandlerAdapterTest {
 		this.adapter.handle(this.request, this.response, schema);
 		String expected = new String(FileCopyUtils.copyToByteArray(single.getFile()));
 
+		XmlAssert.assertThat(this.response.getContentAsString()).and(expected).ignoreWhitespace().areIdentical();
+	}
+
+	@Test
+	public void handleGetUpToDate() throws Exception {
+		this.request.setMethod(HttpTransportConstants.METHOD_GET);
+		Resource single = new ClassPathResource("single.xsd", getClass());
+		long lastModified = single.getFile().lastModified();
+		SimpleXsdSchema schema = new SimpleXsdSchema(single);
+		schema.afterPropertiesSet();
+		this.request.addHeader(HttpHeaders.IF_MODIFIED_SINCE, lastModified);
+		this.adapter.handle(this.request, this.response, schema);
+		assertThat(this.response.getStatus()).isEqualTo(HttpStatus.NOT_MODIFIED.value());
+		assertThat(this.response.getContentLength()).isEqualTo(0);
+	}
+
+	@Test
+	public void handleGetNotUpToDate() throws Exception {
+		this.request.setMethod(HttpTransportConstants.METHOD_GET);
+		Resource single = new ClassPathResource("single.xsd", getClass());
+		long lastModified = single.getFile().lastModified();
+		SimpleXsdSchema schema = new SimpleXsdSchema(single);
+		schema.afterPropertiesSet();
+		this.request.addHeader(HttpHeaders.IF_MODIFIED_SINCE, lastModified - 1000);
+		this.adapter.handle(this.request, this.response, schema);
+		assertThat(this.response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		String expected = new String(FileCopyUtils.copyToByteArray(single.getFile()));
 		XmlAssert.assertThat(this.response.getContentAsString()).and(expected).ignoreWhitespace().areIdentical();
 	}
 

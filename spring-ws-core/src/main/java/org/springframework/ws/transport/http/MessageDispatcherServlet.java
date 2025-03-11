@@ -322,20 +322,6 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 		initStrategies(context);
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
-	protected long getLastModified(HttpServletRequest httpServletRequest) {
-		WsdlDefinition definition = getWsdlDefinition(httpServletRequest);
-		if (definition != null) {
-			return this.wsdlDefinitionHandlerAdapter.getLastModified(httpServletRequest, definition);
-		}
-		XsdSchema schema = getXsdSchema(httpServletRequest);
-		if (schema != null) {
-			return this.xsdSchemaHandlerAdapter.getLastModified(httpServletRequest, schema);
-		}
-		return this.messageReceiverHandlerAdapter.getLastModified(httpServletRequest, this.messageReceiver);
-	}
-
 	/** Returns the {@link WebServiceMessageReceiver} used by this servlet. */
 	protected WebServiceMessageReceiver getMessageReceiver() {
 		return this.messageReceiver;

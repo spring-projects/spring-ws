@@ -30,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ws.wsdl.WsdlDefinition;
@@ -151,10 +152,12 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 			throws Exception {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
 			WsdlDefinition definition = (WsdlDefinition) handler;
-
-			Transformer transformer = createTransformer();
 			Source definitionSource = definition.getSource();
-
+			if (new ServletWebRequest(request, response)
+				.checkNotModified(LastModifiedHelper.getLastModified(definitionSource))) {
+				return null;
+			}
+			Transformer transformer = createTransformer();
 			if (this.transformLocations || this.transformSchemaLocations) {
 				DOMResult domResult = new DOMResult();
 				transformer.transform(definitionSource, domResult);

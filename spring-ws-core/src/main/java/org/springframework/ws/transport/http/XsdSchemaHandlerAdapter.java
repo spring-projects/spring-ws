@@ -30,6 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.xml.xpath.XPathExpression;
@@ -98,9 +99,12 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
-			Transformer transformer = createTransformer();
 			Source schemaSource = getSchemaSource((XsdSchema) handler);
-
+			if (new ServletWebRequest(request, response)
+				.checkNotModified(LastModifiedHelper.getLastModified(schemaSource))) {
+				return null;
+			}
+			Transformer transformer = createTransformer();
 			if (this.transformSchemaLocations) {
 				DOMResult domResult = new DOMResult();
 				transformer.transform(schemaSource, domResult);
