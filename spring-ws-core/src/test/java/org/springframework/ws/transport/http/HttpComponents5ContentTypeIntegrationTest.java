@@ -33,9 +33,9 @@ class HttpComponents5ContentTypeIntegrationTest
 			return chain.proceed(request, scope);
 		};
 
-		HttpClient client = HttpClientBuilder.create() //
-			.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor()) //
-			.addExecInterceptorFirst("handler with assertion", testHandler) //
+		HttpClient client = HttpClientBuilder.create()
+			.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor())
+			.addExecInterceptorFirst("handler with assertion", testHandler)
 			.build();
 
 		return new HttpComponents5MessageSender(client);

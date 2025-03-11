@@ -58,9 +58,9 @@ public abstract class AbstractWsAddressingTest {
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
 		XmlAssert.assertThat(resultDocument)
-			.and(expectedDocument) //
-			.ignoreWhitespace() //
-			.ignoreChildNodesOrder() //
+			.and(expectedDocument)
+			.ignoreWhitespace()
+			.ignoreChildNodesOrder()
 			.areSimilar();
 	}
 
@@ -69,10 +69,7 @@ public abstract class AbstractWsAddressingTest {
 		Document expectedDocument = expected.getSaajMessage().getSOAPPart();
 		Document resultDocument = result.getSaajMessage().getSOAPPart();
 
-		XmlAssert.assertThat(resultDocument)
-			.and(expectedDocument) //
-			.ignoreWhitespace() //
-			.areNotSimilar();
+		XmlAssert.assertThat(resultDocument).and(expectedDocument).ignoreWhitespace().areNotSimilar();
 	}
 
 }

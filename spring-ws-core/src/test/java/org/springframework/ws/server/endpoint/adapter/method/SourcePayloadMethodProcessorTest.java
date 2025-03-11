@@ -40,8 +40,7 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
 	@Override
 	protected MethodParameter[] createSupportedParameters() throws NoSuchMethodException {
 
-		return new MethodParameter[] { //
-				new MethodParameter(getClass().getMethod("source", Source.class), 0),
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("source", Source.class), 0),
 				new MethodParameter(getClass().getMethod("dom", DOMSource.class), 0),
 				new MethodParameter(getClass().getMethod("sax", SAXSource.class), 0),
 				new MethodParameter(getClass().getMethod("stream", StreamSource.class), 0),
@@ -51,8 +50,7 @@ public class SourcePayloadMethodProcessorTest extends AbstractPayloadMethodProce
 	@Override
 	protected MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException {
 
-		return new MethodParameter[] { //
-				new MethodParameter(getClass().getMethod("source", Source.class), -1),
+		return new MethodParameter[] { new MethodParameter(getClass().getMethod("source", Source.class), -1),
 				new MethodParameter(getClass().getMethod("dom", DOMSource.class), -1),
 				new MethodParameter(getClass().getMethod("sax", SAXSource.class), -1),
 				new MethodParameter(getClass().getMethod("stream", StreamSource.class), -1),

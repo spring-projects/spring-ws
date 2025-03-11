@@ -67,12 +67,12 @@ public class PayloadDiffMatcher extends DiffMatcher {
 		Document expectedDocument = createDocumentFromSource(this.expected);
 		Document actualDocument = createDocumentFromSource(payload);
 
-		return DiffBuilder.compare(expectedDocument) //
-			.withTest(actualDocument) //
-			.ignoreWhitespace() //
+		return DiffBuilder.compare(expectedDocument)
+			.withTest(actualDocument)
+			.ignoreWhitespace()
 			.withDifferenceEvaluator(
 					DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
-			.checkForSimilar() //
+			.checkForSimilar()
 			.build();
 	}
 

@@ -126,9 +126,7 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 		if (this.response != null) {
 
-			return this.response.headers() //
-				.firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH) //
-				.orElse(-1);
+			return this.response.headers().firstValueAsLong(HttpTransportConstants.HEADER_CONTENT_LENGTH).orElse(-1);
 		}
 
 		return 0;
