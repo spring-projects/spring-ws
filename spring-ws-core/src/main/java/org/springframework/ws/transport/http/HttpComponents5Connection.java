@@ -31,6 +31,7 @@ import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.ByteArrayEntity;
@@ -56,6 +57,8 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	private final HttpClient httpClient;
 
+	private final HttpHost httpHost;
+
 	private final HttpPost httpPost;
 
 	private final HttpContext httpContext;
@@ -64,14 +67,21 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	private ByteArrayOutputStream requestBuffer;
 
-	protected HttpComponents5Connection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
+	protected HttpComponents5Connection(HttpClient httpClient, HttpHost httpHost, HttpPost httpPost,
+			HttpContext httpContext) {
 
 		Assert.notNull(httpClient, "httpClient must not be null");
+		Assert.notNull(httpHost, "httpHost must not be null");
 		Assert.notNull(httpPost, "httpPost must not be null");
 
 		this.httpClient = httpClient;
+		this.httpHost = httpHost;
 		this.httpPost = httpPost;
 		this.httpContext = httpContext;
+	}
+
+	public HttpHost getHttpHost() {
+		return this.httpHost;
 	}
 
 	public HttpPost getHttpPost() {
@@ -84,12 +94,11 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	public void onClose() throws IOException {
-
 		if (this.httpResponse instanceof ClassicHttpResponse response) {
-
 			if (response.getEntity() != null) {
 				EntityUtils.consume(response.getEntity());
 			}
+			response.close();
 		}
 	}
 
@@ -121,20 +130,11 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-
 		String contentType = this.httpPost.getFirstHeader(HttpHeaders.CONTENT_TYPE).getValue();
 		this.httpPost.setEntity(new ByteArrayEntity(this.requestBuffer.toByteArray(), ContentType.parse(contentType)));
-
 		this.requestBuffer = null;
-
-		if (this.httpContext != null) {
-			this.httpResponse = this.httpClient.execute(this.httpPost, this.httpContext);
-		}
-		else {
-			this.httpResponse = this.httpClient.execute(this.httpPost);
-		}
+		this.httpResponse = this.httpClient.executeOpen(this.httpHost, this.httpPost, this.httpContext);
 	}
 
 	/*
