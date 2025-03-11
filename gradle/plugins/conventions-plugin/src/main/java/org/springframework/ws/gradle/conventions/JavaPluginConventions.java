@@ -17,6 +17,7 @@
 package org.springframework.ws.gradle.conventions;
 
 import java.util.Map;
+import java.util.TreeMap;
 
 import io.spring.javaformat.gradle.SpringJavaFormatPlugin;
 import org.gradle.api.JavaVersion;
@@ -79,11 +80,15 @@ class JavaPluginConventions {
 	}
 
 	private void configureJarManifest(Project project) {
-		project.getTasks()
-			.named("jar", Jar.class,
-					(jar) -> jar.manifest((manifest) -> manifest.attributes(Map.of("Build-Jdk-Spec",
-							JAVA_BASELINE.getMajorVersion(), "Built-By", "Spring", "Implementation-Title",
-							project.getDescription(), "Implementation-Version", project.getVersion()))));
+		project.getTasks().named("jar", Jar.class, (jar) -> jar.manifest((manifest) -> {
+			Map<String, Object> attributes = new TreeMap<>();
+			attributes.put("Automatic-Module-Name", project.getName().replace("-", "."));
+			attributes.put("Build-Jdk-Spec", JAVA_BASELINE.getMajorVersion());
+			attributes.put("Built-By", "Spring");
+			attributes.put("Implementation-Title", project.getDescription());
+			attributes.put("Implementation-Version", project.getVersion());
+			manifest.attributes(attributes);
+		}));
 	}
 
 	private void configureToolchain(Project project, JavaPluginExtension java) {
