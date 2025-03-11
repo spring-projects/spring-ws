@@ -181,17 +181,13 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
 
-		return Arrays.stream(this.httpResponse.getHeaders()) //
-			.map(NameValuePair::getName) //
-			.iterator();
+		return Arrays.stream(this.httpResponse.getHeaders()).map(NameValuePair::getName).iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 
-		return Arrays.stream(this.httpResponse.getHeaders(name)) //
-			.map(NameValuePair::getValue) //
-			.iterator();
+		return Arrays.stream(this.httpResponse.getHeaders(name)).map(NameValuePair::getValue).iterator();
 	}
 
 }

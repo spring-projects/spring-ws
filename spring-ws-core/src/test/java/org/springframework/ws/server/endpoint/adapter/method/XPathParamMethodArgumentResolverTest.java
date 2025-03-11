@@ -205,12 +205,9 @@ public class XPathParamMethodArgumentResolverTest {
 	public void unsupported(String s) {
 	}
 
-	public void supportedTypes( //
-			@XPathParam("/root/child") boolean param1, //
-			@XPathParam("/root/child/number") double param2, //
-			@XPathParam("/root/child") Node param3, //
-			@XPathParam("/root/*") NodeList param4, //
-			@XPathParam("/root/child/text") String param5) {
+	public void supportedTypes(@XPathParam("/root/child") boolean param1,
+			@XPathParam("/root/child/number") double param2, @XPathParam("/root/child") Node param3,
+			@XPathParam("/root/*") NodeList param4, @XPathParam("/root/child/text") String param5) {
 	}
 
 	public void convertedType(@XPathParam("/root/child/number") int param) {

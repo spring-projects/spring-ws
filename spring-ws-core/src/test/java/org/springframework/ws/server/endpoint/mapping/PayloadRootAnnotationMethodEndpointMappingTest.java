@@ -156,8 +156,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTest {
 			logger.info("In doIt()");
 		}
 
-		@PayloadRoots({ //
-				@PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
+		@PayloadRoots({ @PayloadRoot(localPart = "Request1", namespace = "http://springframework.org/spring-ws"),
 				@PayloadRoot(localPart = "Request2", namespace = "http://springframework.org/spring-ws") })
 		public void doItMultiple() {
 		}

@@ -218,12 +218,12 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 		applyMaxConnectionsPerHost(this.connectionManager);
 
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom() //
-			.setConnectTimeout(Timeout.of(this.connectionTimeout)) //
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
+			.setConnectTimeout(Timeout.of(this.connectionTimeout))
 			.setResponseTimeout(Timeout.of(this.readTimeout));
 
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create() //
-			.setDefaultRequestConfig(requestConfigBuilder.build()) //
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+			.setDefaultRequestConfig(requestConfigBuilder.build())
 			.setConnectionManager(this.connectionManager);
 
 		if (this.credentials != null && this.authScope != null) {
