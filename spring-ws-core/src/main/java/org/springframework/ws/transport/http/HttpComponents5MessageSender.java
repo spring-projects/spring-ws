@@ -31,6 +31,7 @@ import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.core5.http.EntityDetails;
 import org.apache.hc.core5.http.HttpException;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
@@ -198,9 +199,10 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 					HttpTransportConstants.CONTENT_ENCODING_GZIP);
 		}
 
+		HttpHost httpHost = HttpHost.create(uri);
 		HttpContext httpContext = createContext(uri);
 
-		return new HttpComponents5Connection(getHttpClient(), httpPost, httpContext);
+		return new HttpComponents5Connection(getHttpClient(), httpHost, httpPost, httpContext);
 	}
 
 	/**
