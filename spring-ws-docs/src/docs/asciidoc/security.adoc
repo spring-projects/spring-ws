@@ -729,7 +729,7 @@ WSS4J implements the following standards:
 * Username Token profile V1.0.
 * X.509 Token Profile V1.0.
 
-This interceptor supports messages created by the `SaajSoapMessageFactory`.
+This interceptor supports messages created by the `AxiomSoapMessageFactory` and the `SaajSoapMessageFactory`.
 
 === Configuring `Wss4jSecurityInterceptor`
 

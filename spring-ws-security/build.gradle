@@ -22,6 +22,12 @@ dependencies {
 	api("org.springframework.security:spring-security-core")
 
 	optional("com.sun.xml.messaging.saaj:saaj-impl")
+	optional("org.apache.ws.commons.axiom:axiom-impl") {
+		exclude(group: "commons-logging", module: "commons-logging")
+	}
+	optional("org.apache.ws.commons.axiom:axiom-legacy-attachments") {
+		exclude(group: "commons-logging", module: "commons-logging")
+	}
 
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")

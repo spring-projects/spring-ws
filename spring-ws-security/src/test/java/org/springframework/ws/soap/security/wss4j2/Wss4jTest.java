@@ -26,6 +26,8 @@ import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
+import org.apache.axiom.om.OMXMLBuilderFactory;
+import org.apache.axiom.soap.SOAPModelBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -38,6 +40,9 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
+import org.springframework.ws.soap.axiom.support.AxiomUtils;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
@@ -51,6 +56,8 @@ public abstract class Wss4jTest {
 
 	protected MessageFactory saajSoap12MessageFactory;
 
+	protected final boolean axiomTest = this.getClass().getSimpleName().startsWith("Axiom");
+
 	protected final boolean saajTest = this.getClass().getSimpleName().startsWith("Saaj");
 
 	protected Jaxp13XPathTemplate xpathTemplate = new Jaxp13XPathTemplate();
@@ -58,7 +65,7 @@ public abstract class Wss4jTest {
 	@BeforeEach
 	public final void setUp() throws Exception {
 
-		if (!this.saajTest) {
+		if (!this.axiomTest && !this.saajTest) {
 			throw new IllegalArgumentException("test class name must start with Saaj");
 		}
 
@@ -145,22 +152,57 @@ public abstract class Wss4jTest {
 		}
 	}
 
-	protected Object getMessage(SoapMessage soapMessage) {
+	protected AxiomSoapMessage loadAxiom11Message(String fileName) throws Exception {
 
+		Resource resource = new ClassPathResource(fileName, getClass());
+
+		assertThat(resource.exists()).isTrue();
+
+		try (InputStream is = resource.getInputStream()) {
+
+			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
+			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
+			builder.detach();
+			return new AxiomSoapMessage(soapMessage, "", true, true);
+		}
+	}
+
+	@SuppressWarnings("Since15")
+	protected AxiomSoapMessage loadAxiom12Message(String fileName) throws Exception {
+
+		Resource resource = new ClassPathResource(fileName, getClass());
+
+		assertThat(resource.exists()).isTrue();
+
+		try (InputStream is = resource.getInputStream()) {
+
+			SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(is, null);
+			org.apache.axiom.soap.SOAPMessage soapMessage = builder.getSOAPMessage();
+			builder.detach();
+			return new AxiomSoapMessage(soapMessage, "", true, true);
+		}
+	}
+
+	protected Object getMessage(SoapMessage soapMessage) {
+		if (soapMessage instanceof AxiomSoapMessage) {
+			return ((AxiomSoapMessage) soapMessage).getAxiomMessage();
+
+		}
 		if (soapMessage instanceof SaajSoapMessage) {
 			return ((SaajSoapMessage) soapMessage).getSaajMessage();
 		}
-
 		throw new IllegalArgumentException("Illegal message: " + soapMessage);
 	}
 
 	protected void setMessage(SoapMessage soapMessage, Object message) {
-
+		if (soapMessage instanceof AxiomSoapMessage) {
+			((AxiomSoapMessage) soapMessage).setAxiomMessage((org.apache.axiom.soap.SOAPMessage) message);
+			return;
+		}
 		if (soapMessage instanceof SaajSoapMessage) {
 			((SaajSoapMessage) soapMessage).setSaajMessage((SOAPMessage) message);
 			return;
 		}
-
 		throw new IllegalArgumentException("Illegal message: " + message);
 	}
 
@@ -168,46 +210,54 @@ public abstract class Wss4jTest {
 	}
 
 	protected SoapMessage loadSoap11Message(String fileName) throws Exception {
-
+		if (this.axiomTest) {
+			return loadAxiom11Message(fileName);
+		}
 		if (this.saajTest) {
 			return loadSaaj11Message(fileName);
 		}
-
 		throw new IllegalArgumentException();
 	}
 
 	protected SoapMessage loadSoap12Message(String fileName) throws Exception {
-
+		if (this.axiomTest) {
+			return loadAxiom12Message(fileName);
+		}
 		if (this.saajTest) {
 			return loadSaaj12Message(fileName);
 		}
-
 		throw new IllegalArgumentException();
 	}
 
 	protected SoapMessageFactory getSoap11MessageFactory() {
-
+		if (this.axiomTest) {
+			return new AxiomSoapMessageFactory();
+		}
 		if (this.saajTest) {
 			return new SaajSoapMessageFactory(this.saajSoap11MessageFactory);
 		}
-
 		throw new IllegalArgumentException();
 	}
 
 	protected SoapMessageFactory getSoap12MessageFactory() {
-
 		SoapMessageFactory messageFactory;
-		if (this.saajTest) {
+		if (this.axiomTest) {
+			messageFactory = new AxiomSoapMessageFactory();
+		}
+		else if (this.saajTest) {
 			messageFactory = new SaajSoapMessageFactory(this.saajSoap12MessageFactory);
 		}
-		else
+		else {
 			throw new IllegalArgumentException();
+		}
 		messageFactory.setSoapVersion(SoapVersion.SOAP_12);
 		return messageFactory;
 	}
 
 	protected Document getDocument(SoapMessage message) {
-
+		if (this.axiomTest) {
+			return AxiomUtils.toDocument(((AxiomSoapMessage) message).getAxiomMessage().getSOAPEnvelope());
+		}
 		if (this.saajTest) {
 			return ((SaajSoapMessage) message).getSaajMessage().getSOAPPart();
 		}

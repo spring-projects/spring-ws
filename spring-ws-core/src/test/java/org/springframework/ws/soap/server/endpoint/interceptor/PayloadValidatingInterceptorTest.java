@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Locale;
 
@@ -29,19 +30,26 @@ import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.LocatorImpl;
+import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapVersion;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.springframework.ws.transport.MockTransportInputStream;
+import org.springframework.ws.transport.TransportInputStream;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 import org.springframework.xml.validation.ValidationErrorHandler;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -317,6 +325,30 @@ public class PayloadValidatingInterceptorTest {
 	}
 
 	@Test
+	public void testCreateRequestValidationFaultAxiom() throws Exception {
+		LocatorImpl locator = new LocatorImpl();
+		locator.setLineNumber(0);
+		locator.setColumnNumber(0);
+		SAXParseException[] exceptions = new SAXParseException[] { new SAXParseException("Message 1", locator),
+				new SAXParseException("Message 2", locator), };
+		MessageContext messageContext = new DefaultMessageContext(new AxiomSoapMessageFactory());
+		this.interceptor.handleRequestValidationErrors(messageContext, exceptions);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		messageContext.getResponse().writeTo(os);
+
+		XmlAssert.assertThat(os.toString())
+			.and("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">" + "<soapenv:Header/>"
+					+ "<soapenv:Body>" + "<soapenv:Fault>" + "<faultcode>soapenv:Client</faultcode>"
+					+ "<faultstring xml:lang='en'>Validation error</faultstring>" + "<detail>"
+					+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 1</spring-ws:ValidationError>"
+					+ "<spring-ws:ValidationError xmlns:spring-ws=\"http://springframework.org/spring-ws\">Message 2</spring-ws:ValidationError>"
+					+ "</detail>" + "</soapenv:Fault>" + "</soapenv:Body>" + "</soapenv:Envelope>")
+			.ignoreWhitespace()
+			.areIdentical();
+
+	}
+
+	@Test
 	public void testXsdSchema() throws Exception {
 
 		PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
@@ -333,6 +365,46 @@ public class PayloadValidatingInterceptorTest {
 
 		assertThat(result).isTrue();
 		assertThat(this.context.hasResponse()).isFalse();
+	}
+
+	@Test
+	public void testAxiom() throws Exception {
+
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(true);
+		messageFactory.afterPropertiesSet();
+
+		PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
+		interceptor.setSchema(new ClassPathResource("codexws.xsd", getClass()));
+		interceptor.afterPropertiesSet();
+
+		Resource resource = new ClassPathResource("axiom.xml", getClass());
+		TransportInputStream tis = new MockTransportInputStream(resource.getInputStream());
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		MessageContext context = new DefaultMessageContext(message, messageFactory);
+		boolean result = interceptor.handleRequest(context, null);
+
+		assertThat(result).isTrue();
+	}
+
+	@Test
+	public void testMultipleNamespacesAxiom() throws Exception {
+
+		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
+		messageFactory.setPayloadCaching(true);
+		messageFactory.afterPropertiesSet();
+
+		PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
+		interceptor.setSchema(new ClassPathResource("multipleNamespaces.xsd", getClass()));
+		interceptor.afterPropertiesSet();
+
+		Resource resource = new ClassPathResource("multipleNamespaces.xml", getClass());
+		TransportInputStream tis = new MockTransportInputStream(resource.getInputStream());
+		WebServiceMessage message = messageFactory.createWebServiceMessage(tis);
+		MessageContext context = new DefaultMessageContext(message, messageFactory);
+		boolean result = interceptor.handleRequest(context, null);
+
+		assertThat(result).isTrue();
 	}
 
 	@Test

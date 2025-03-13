@@ -59,7 +59,9 @@ Only when it is necessary to perform SOAP-specific actions (such as adding a hea
 
 Concrete message implementations are created by a `WebServiceMessageFactory`.
 This factory can create an empty message or read a message from an input stream.
-One concrete implementations of `WebServiceMessageFactory` is provided based on SAAJ, the SOAP with Attachments API for Java.
+There are two concrete implementations of `WebServiceMessageFactory`.
+One is based on SAAJ, the SOAP with Attachments API for Java.
+The other is based on Axis 2’s AXIOM (AXis Object Model).
 
 ==== `SaajSoapMessageFactory`
 
@@ -98,14 +100,48 @@ You can wire up a `SaajSoapMessageFactory` as follows:
 ----
 ====
 
-NOTE: SAAJ is based on DOM, the Document Object Model.
+[NOTE]
+====
+SAAJ is based on DOM, the Document Object Model.
 This means that all SOAP messages are stored in memory.
 For larger SOAP messages, this may not be performant.
+In that case, the `AxiomSoapMessageFactory` might be more applicable.
+====
+
+==== `AxiomSoapMessageFactory`
+
+The `AxiomSoapMessageFactory` uses the AXis 2 Object Model (AXIOM) to create `SoapMessage` implementations.
+AXIOM is based on StAX, the Streaming API for XML.
+StAX provides a pull-based mechanism for reading XML messages, which can be more efficient for larger messages.
+
+To increase reading performance on the `AxiomSoapMessageFactory`, you can set the `payloadCaching` property to false (default is true).
+Doing so causes the contents of the SOAP body to be read directly from the socket stream.
+When this setting is enabled, the payload can be read only once.
+This means that you have to make sure that any pre-processing (logging or other work) of the message does not consume it.
+
+You can use the `AxiomSoapMessageFactory` as follows:
+
+====
+[source,xml]
+----
+<bean id="messageFactory" class="org.springframework.ws.soap.axiom.AxiomSoapMessageFactory">
+    <property name="payloadCaching" value="true"/>
+</bean>
+----
+====
+
+In addition to payload caching, AXIOM supports full streaming messages, as defined in the `StreamingWebServiceMessage`.
+This means that you can directly set the payload on the response message, rather than writing it to a DOM tree or buffer.
+
+Full streaming for AXIOM is used when a handler method returns a JAXB2-supported object.
+It automatically sets this marshalled object into the response message and writes it out to the outgoing socket stream when the response is going out.
+
+For more information about full streaming, see {spring-ws-api}/stream/StreamingWebServiceMessage.html[`StreamingWebServiceMessage`] and {spring-ws-api}/stream/StreamingPayload.html[`StreamingPayload`].
 
 [[soap_11_or_12]]
 ==== SOAP 1.1 or 1.2
 
-`SaajSoapMessageFactory` has a `soapVersion` property, where you can inject a `SoapVersion` constant.
+Both the `SaajSoapMessageFactory` and the `AxiomSoapMessageFactory` have a `soapVersion` property, where you can inject a `SoapVersion` constant.
 By default, the version is 1.1, but you can set it to 1.2:
 
 ====
