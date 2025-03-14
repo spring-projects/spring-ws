@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.om.impl.MTOMConstants;
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP11Version;
@@ -37,8 +38,6 @@ import org.apache.axiom.soap.SOAP12Version;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
-import org.apache.axiom.soap.impl.builder.MTOMStAXSOAPModelBuilder;
-import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -281,34 +280,33 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		return contentType.contains(MULTI_PART_RELATED_CONTENT_TYPE);
 	}
 
-	@SuppressWarnings("deprecation")
-	/** Creates an AxiomSoapMessage without attachments. */
+	/**
+	 * Creates an AxiomSoapMessage without attachments.
+	 */
 	private AxiomSoapMessage createAxiomSoapMessage(InputStream inputStream, String contentType, String soapAction)
 			throws XMLStreamException {
-		XMLStreamReader reader = this.inputFactory.createXMLStreamReader(inputStream, getCharSetEncoding(contentType));
-		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
-		SOAPModelBuilder builder = new StAXSOAPModelBuilder(reader, this.soapFactory, envelopeNamespace);
+		SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(inputStream,
+				getCharSetEncoding(contentType));
 		SOAPMessage soapMessage = builder.getSOAPMessage();
 		return new AxiomSoapMessage(soapMessage, soapAction, this.payloadCaching,
 				this.langAttributeOnSoap11FaultString);
 	}
 
-	@SuppressWarnings("deprecation")
-	/** Creates an AxiomSoapMessage with attachments. */
+	/**
+	 * Creates an AxiomSoapMessage with attachments.
+	 */
 	private AxiomSoapMessage createMultiPartAxiomSoapMessage(InputStream inputStream, String contentType,
 			String soapAction) throws XMLStreamException {
 		Attachments attachments = new Attachments(inputStream, contentType, this.attachmentCaching,
 				this.attachmentCacheDir.getAbsolutePath(), Integer.toString(this.attachmentCacheThreshold));
-		XMLStreamReader reader = this.inputFactory.createXMLStreamReader(attachments.getRootPartInputStream(),
-				getCharSetEncoding(attachments.getRootPartContentType()));
+		String charSetEncoding = getCharSetEncoding(attachments.getRootPartContentType());
 		SOAPModelBuilder builder;
-		String envelopeNamespace = getSoapEnvelopeNamespace(contentType);
 		if (MTOMConstants.SWA_TYPE.equals(attachments.getAttachmentSpecType())
 				|| MTOMConstants.SWA_TYPE_12.equals(attachments.getAttachmentSpecType())) {
-			builder = new StAXSOAPModelBuilder(reader, this.soapFactory, envelopeNamespace);
+			builder = OMXMLBuilderFactory.createSOAPModelBuilder(attachments.getRootPartInputStream(), charSetEncoding);
 		}
 		else if (MTOMConstants.MTOM_TYPE.equals(attachments.getAttachmentSpecType())) {
-			builder = new MTOMStAXSOAPModelBuilder(reader, attachments, envelopeNamespace);
+			builder = OMXMLBuilderFactory.createSOAPModelBuilder(attachments.getMultipartBody());
 		}
 		else {
 			throw new AxiomSoapMessageCreationException(
