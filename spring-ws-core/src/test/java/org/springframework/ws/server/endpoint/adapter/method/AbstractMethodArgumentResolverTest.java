@@ -21,11 +21,15 @@ import javax.xml.transform.TransformerException;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.soap.SOAPFactory;
 
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.axiom.AxiomSoapMessage;
+import org.springframework.ws.soap.axiom.AxiomSoapMessageFactory;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
@@ -55,22 +59,21 @@ public class AbstractMethodArgumentResolverTest extends TransformerObjectSupport
 	}
 
 	protected MessageContext createCachingAxiomMessageContext() throws Exception {
-
-		MessageFactory messageFactory = MessageFactory.newInstance();
-		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, true, false);
 		transform(new StringSource(XML), request.getPayloadResult());
-		SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
+		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
 		soapMessageFactory.afterPropertiesSet();
 
 		return new DefaultMessageContext(request, soapMessageFactory);
 	}
 
 	protected MessageContext createNonCachingAxiomMessageContext() throws Exception {
-
-		MessageFactory messageFactory = MessageFactory.newInstance();
-		SaajSoapMessage request = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
+		SOAPFactory axiomFactory = OMAbstractFactory.getSOAP11Factory();
+		AxiomSoapMessage request = new AxiomSoapMessage(axiomFactory, false, false);
 		transform(new StringSource(XML), request.getPayloadResult());
-		SaajSoapMessageFactory soapMessageFactory = new SaajSoapMessageFactory();
+		AxiomSoapMessageFactory soapMessageFactory = new AxiomSoapMessageFactory();
+		soapMessageFactory.setPayloadCaching(false);
 		soapMessageFactory.afterPropertiesSet();
 
 		return new DefaultMessageContext(request, soapMessageFactory);

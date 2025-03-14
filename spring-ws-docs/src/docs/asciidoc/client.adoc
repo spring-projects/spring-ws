@@ -199,7 +199,8 @@ The following example shows how to use the XMPP transport:
 ==== Message factories
 
 In addition to a message sender, the `WebServiceTemplate` requires a web service message factory.
-By default, `SaajSoapMessageFactory` is used.
+There are two message factories for SOAP: `SaajSoapMessageFactory` and `AxiomSoapMessageFactory`.
+If no message factory is specified (by setting the `messageFactory` property), Spring-WS uses the `SaajSoapMessageFactory` by default.
 
 === Sending and Receiving a `WebServiceMessage`
 
