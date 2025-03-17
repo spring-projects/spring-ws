@@ -1,6 +1,7 @@
 plugins {
 	id "java-library"
 	id "maven-publish"
+	id "io.spring.compatibility-test" version "${compatibilityTestPluginVersion}"
 	id "org.springframework.ws.conventions"
 	id "org.springframework.ws.optional-dependencies"
 }
@@ -31,3 +32,11 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.springframework:spring-test")
 }
+
+compatibilityTest {
+	dependency("Spring Security") { springSecurity ->
+		springSecurity.groupId = "org.springframework.security"
+		springSecurity.versions = ["6.2.+", "6.3.+", "6.4.+"]
+	}
+}
+

@@ -1,6 +1,7 @@
 plugins {
 	id "java-library"
 	id "maven-publish"
+	id "io.spring.compatibility-test" version "${compatibilityTestPluginVersion}"
 	id "org.springframework.ws.conventions"
 	id "org.springframework.ws.optional-dependencies"
 }
@@ -57,4 +58,11 @@ dependencies {
 	testImplementation("org.springframework:spring-test")
 	testImplementation("org.springframework:spring-webflux")
 	testImplementation("org.xmlunit:xmlunit-assertj")
+}
+
+compatibilityTest {
+	dependency("Spring Framework") { springFramework ->
+		springFramework.groupId = "org.springframework"
+		springFramework.versions = ["6.0.+", "6.2.+"]
+	}
 }
