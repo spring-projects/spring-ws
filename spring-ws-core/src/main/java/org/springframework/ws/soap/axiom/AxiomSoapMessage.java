@@ -262,46 +262,65 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	@Override
 	public void writeTo(OutputStream outputStream) throws IOException {
 		try {
+			writeTo(outputStream, getOutputFormat());
+		}
+		catch (XMLStreamException | OMException ex) {
+			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
+		}
+	}
 
-			OMOutputFormat outputFormat = getOutputFormat();
-			if (outputStream instanceof TransportOutputStream) {
-				TransportOutputStream transportOutputStream = (TransportOutputStream) outputStream;
-				String contentType = outputFormat.getContentType();
-				if (!(outputFormat.isDoingSWA() || outputFormat.isOptimized())) {
-					String charsetEncoding = this.axiomMessage.getCharsetEncoding();
-					contentType += "; charset=" + charsetEncoding;
-				}
-				SoapVersion version = getVersion();
-				if (SoapVersion.SOAP_11 == version) {
-					transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, this.soapAction);
-					transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
-				}
-				else if (SoapVersion.SOAP_12 == version) {
-					contentType += "; action=" + this.soapAction;
-					transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
-				}
-				transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
-
+	/**
+	 * Writes the entire message to the given output stream using the given
+	 * {@link OMOutputFormat}.
+	 * @param outputStream the stream to write to
+	 * @param outputFormat the {@link OMOutputFormat}
+	 * @since 4.1.0
+	 */
+	protected void writeTo(OutputStream outputStream, OMOutputFormat outputFormat)
+			throws IOException, XMLStreamException {
+		if (outputStream instanceof TransportOutputStream transportOutputStream) {
+			SoapVersion version = getVersion();
+			String contentType = determineContentType(outputFormat, version);
+			if (SoapVersion.SOAP_11 == version) {
+				transportOutputStream.addHeader(TransportConstants.HEADER_SOAP_ACTION, this.soapAction);
+				transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
 			}
-			if (!(outputFormat.isOptimized()) & outputFormat.isDoingSWA()) {
-				writeSwAMessage(outputStream, outputFormat);
+			else if (SoapVersion.SOAP_12 == version) {
+				transportOutputStream.addHeader(TransportConstants.HEADER_ACCEPT, version.getContentType());
+			}
+			transportOutputStream.addHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
+		}
+		if (!(outputFormat.isOptimized()) & outputFormat.isDoingSWA()) {
+			writeSwAMessage(outputStream, outputFormat);
+		}
+		else {
+			if (this.payloadCaching) {
+				this.axiomMessage.serialize(outputStream, outputFormat);
 			}
 			else {
-				if (this.payloadCaching) {
-					this.axiomMessage.serialize(outputStream, outputFormat);
-				}
-				else {
-					this.axiomMessage.serializeAndConsume(outputStream, outputFormat);
-				}
+				this.axiomMessage.serializeAndConsume(outputStream, outputFormat);
 			}
-			outputStream.flush();
 		}
-		catch (XMLStreamException ex) {
-			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
+		outputStream.flush();
+	}
+
+	/**
+	 * Determine the {@value TransportConstants#HEADER_CONTENT_TYPE} header to use.
+	 * @param outputFormat the {@link OMOutputFormat}
+	 * @param soapVersion the {@link SoapVersion}
+	 * @return the content-type to use
+	 * @since 4.1.0
+	 */
+	protected String determineContentType(OMOutputFormat outputFormat, SoapVersion soapVersion) {
+		String contentType = outputFormat.getContentType();
+		if (!(outputFormat.isDoingSWA() || outputFormat.isOptimized())) {
+			String charsetEncoding = this.axiomMessage.getCharsetEncoding();
+			contentType += "; charset=" + charsetEncoding;
 		}
-		catch (OMException ex) {
-			throw new AxiomSoapMessageException("Could not write message to OutputStream: " + ex.getMessage(), ex);
+		if (SoapVersion.SOAP_12 == soapVersion) {
+			contentType += "; action=" + this.soapAction;
 		}
+		return contentType;
 	}
 
 	private OMOutputFormat getOutputFormat() {
