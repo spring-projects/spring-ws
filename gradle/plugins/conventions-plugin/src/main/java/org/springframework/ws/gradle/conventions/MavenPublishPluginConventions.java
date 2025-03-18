@@ -41,13 +41,13 @@ class MavenPublishPluginConventions {
 							(variantStrategy) -> variantStrategy.fromResolutionOf("runtimeClasspath"));
 					strategy.usage("java-runtime", (variantStrategy) -> variantStrategy.fromResolutionResult());
 				});
-				configurePom(publication);
+				configurePom(project, publication);
 			});
 		});
 		project.getPlugins().withType(JavaPlatformPlugin.class).all((javaPlatformPlugin) -> {
 			publishing.getPublications().create("maven", MavenPublication.class, (publication) -> {
 				publication.from(project.getComponents().getByName("javaPlatform"));
-				configurePom(publication);
+				configurePom(project, publication);
 			});
 		});
 	}
@@ -62,10 +62,13 @@ class MavenPublishPluginConventions {
 		}
 	}
 
-	void configurePom(MavenPublication mavenPublication) {
+	void configurePom(Project project, MavenPublication mavenPublication) {
 		String organizationName = "Broadcom Inc.";
 		String organizationUrl = "https://www.spring.io";
 		mavenPublication.pom((pom) -> {
+			pom.getUrl().set("https://spring.io/projects/spring-ws");
+			pom.getName().set(project.provider(project::getName));
+			pom.getDescription().set(project.provider(project::getDescription));
 			pom.developers((developers) -> developers.developer((developer) -> {
 				developer.getName().set("Spring");
 				developer.getEmail().set("ask@spring.io");
