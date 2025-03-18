@@ -22,6 +22,7 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin;
+import org.gradle.api.publish.tasks.GenerateModuleMetadata;
 
 /**
  * Conventions for the {@link MavenPublishPlugin}.
@@ -41,13 +42,13 @@ class MavenPublishPluginConventions {
 							(variantStrategy) -> variantStrategy.fromResolutionOf("runtimeClasspath"));
 					strategy.usage("java-runtime", (variantStrategy) -> variantStrategy.fromResolutionResult());
 				});
-				configurePom(project, publication);
+				configure(project, publication);
 			});
 		});
 		project.getPlugins().withType(JavaPlatformPlugin.class).all((javaPlatformPlugin) -> {
 			publishing.getPublications().create("maven", MavenPublication.class, (publication) -> {
 				publication.from(project.getComponents().getByName("javaPlatform"));
-				configurePom(project, publication);
+				configure(project, publication);
 			});
 		});
 	}
@@ -60,6 +61,11 @@ class MavenPublishPluginConventions {
 				maven.setUrl(deploymentRepository);
 			});
 		}
+	}
+
+	void configure(Project project, MavenPublication mavenPublication) {
+		configurePom(project, mavenPublication);
+		project.getTasks().withType(GenerateModuleMetadata.class, (generate) -> generate.setEnabled(false));
 	}
 
 	void configurePom(Project project, MavenPublication mavenPublication) {
