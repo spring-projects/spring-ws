@@ -17,6 +17,9 @@
 package org.springframework.ws.soap.security.wss4j2;
 
 import org.apache.wss4j.common.crypto.Merlin;
+import org.apache.wss4j.dom.WSConstants;
+import org.apache.wss4j.dom.engine.WSSConfig;
+import org.apache.wss4j.dom.validate.Validator;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
@@ -24,6 +27,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public abstract class Wss4jMessageInterceptorX509Test extends Wss4jTest {
 
@@ -65,6 +73,27 @@ public abstract class Wss4jMessageInterceptorX509Test extends Wss4jTest {
 
 		// lets verify the signature that we've just generated
 		this.interceptor.validateMessage(message, messageContext);
+	}
+
+	@Test
+	void validateSignatureWithWssConfig() throws Exception {
+		this.interceptor.setSecurementPassword("123456");
+		this.interceptor.setSecurementUsername("rsaKey");
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+
+		this.interceptor.setSecurementSignatureKeyIdentifier("DirectReference");
+
+		this.interceptor.secureMessage(message, messageContext);
+		Document document = getDocument(message);
+		assertXpathExists("Absent BinarySecurityToken element",
+				"/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsse:BinarySecurityToken", document);
+		WSSConfig wssConfig = WSSConfig.getNewInstance();
+		Validator validator = mock(Validator.class);
+		wssConfig.setValidator(WSConstants.SIGNATURE, validator);
+		this.interceptor.setWssConfig(wssConfig);
+		this.interceptor.validateMessage(message, messageContext);
+		verify(validator, times(2)).validate(any(), any()); // Also SignatureProcessor
 	}
 
 }

@@ -45,6 +45,7 @@ import org.apache.wss4j.dom.util.WSSecurityUtil;
 import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.SignatureTrustValidator;
 import org.apache.wss4j.dom.validate.TimestampValidator;
+import org.apache.wss4j.dom.validate.Validator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -906,7 +907,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			requestData.setSigVerCrypto(this.validationSignatureCrypto);
 			requestData.setEnableRevocation(this.enableRevocation);
 
-			SignatureTrustValidator validator = new SignatureTrustValidator();
+			Validator validator = (this.wssConfig != null) ? this.wssConfig.getValidator(WSConstants.SIGNATURE) : null;
+			if (validator == null) {
+				validator = new SignatureTrustValidator();
+			}
 			validator.validate(credential, requestData);
 		}
 	}
