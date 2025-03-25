@@ -63,8 +63,8 @@ import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincip
 
 /**
  * A WS-Security endpoint interceptor based on Apache's WSS4J. This interceptor supports
- * messages created by the
- * {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
+ * messages created by {@link org.springframework.ws.soap.axiom.AxiomSoapMessageFactory}
+ * and {@link org.springframework.ws.soap.saaj.SaajSoapMessageFactory}.
  * <p>
  * The validation and securement actions executed by this interceptor are configured via
  * {@code validationActions} and {@code securementActions} properties, respectively.
