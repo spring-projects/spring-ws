@@ -19,45 +19,53 @@ package org.springframework.ws.soap;
 import javax.xml.namespace.QName;
 
 /**
- * Represents the {@code Fault} element in the body of a SOAP message.
+ * Represent the {@code Fault} element in the body of a SOAP message.
  * <p>
- * A fault consists of a {@link #getFaultCode() fault code}, {@link #getFaultActorOrRole
- * fault string/reason}, and {@link #getFaultActorOrRole() role}.
+ * A fault consists of a {@linkplain #getFaultCode() fault code},
+ * {@linkplain #getFaultStringOrReason() fault string/reason}, and
+ * {@link #getFaultActorOrRole() role}.
+ * <p>
+ * A fault also can have a {@link SoapFaultDetail detail}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
  */
 public interface SoapFault extends SoapElement {
 
-	/** Returns the fault code. */
+	/**
+	 * Return the type of fault.
+	 */
 	QName getFaultCode();
 
 	/**
-	 * Returns the fault string or reason. For SOAP 1.1, this returns the fault string.
-	 * For SOAP 1.2, this returns the fault reason for the default locale.
+	 * Return a human-readable information about the nature of the fault. For SOAP 1.1,
+	 * this returns the fault string. For SOAP 1.2, this returns the fault reason for the
+	 * default locale.
 	 */
 	String getFaultStringOrReason();
 
 	/**
-	 * Returns the fault actor or role. For SOAP 1.1, this returns the actor. For SOAP
-	 * 1.2, this returns the role.
+	 * Return the optional fault actor or role. For SOAP 1.1, this returns the URI of the
+	 * SOAP node that generated the fault. For SOAP 1.2, this returns the URI that
+	 * identifies the role in which the node was operating at the point the fault
+	 * occurred.
 	 */
 	String getFaultActorOrRole();
 
 	/**
-	 * Sets the fault actor. For SOAP 1.1, this sets the actor. For SOAP 1.2, this sets
-	 * the role.
+	 * Set the fault actor or role. For SOAP 1.1, this sets the actor. For SOAP 1.2, this
+	 * sets the role.
 	 */
 	void setFaultActorOrRole(String faultActor);
 
 	/**
-	 * Returns the optional detail element for this {@code SoapFault}.
+	 * Return the optional {@linkplain SoapFaultDetail detail element} of this fault.
 	 * @return a fault detail
 	 */
 	SoapFaultDetail getFaultDetail();
 
 	/**
-	 * Creates an optional {@code SoapFaultDetail} object and assigns it to this fault.
+	 * Create a {@link SoapFaultDetail} and assign it to this fault.
 	 * @return the created detail
 	 */
 	SoapFaultDetail addFaultDetail();
