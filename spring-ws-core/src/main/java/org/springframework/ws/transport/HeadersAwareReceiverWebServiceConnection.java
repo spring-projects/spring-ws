@@ -20,23 +20,23 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Interface to define access to header information for certain
- * {@link WebServiceConnection} implementations.
+ * Sub-interface of {@link WebServiceConnection} that is aware of request headers and can
+ * define response headers.
  *
  * @author Greg Turnquist
  * @since 2.3
  */
-public interface HeadersAwareReceiverWebServiceConnection {
+public interface HeadersAwareReceiverWebServiceConnection extends WebServiceConnection {
 
 	/**
-	 * Returns an iteration over all the header names this request contains. Returns an
+	 * Return an iteration over all the header names the request contains. Returns an
 	 * empty {@code Iterator} if there are no headers.
 	 */
 	Iterator<String> getRequestHeaderNames() throws IOException;
 
 	/**
-	 * Returns an iteration over all the string values of the specified header. Returns an
-	 * empty {@code Iterator} if there are no headers of the specified name.
+	 * Return an iteration over all the string values of the specified request header.
+	 * Return an empty {@code Iterator} if there is no header of the specified name.
 	 */
 	Iterator<String> getRequestHeaders(String name) throws IOException;
 
