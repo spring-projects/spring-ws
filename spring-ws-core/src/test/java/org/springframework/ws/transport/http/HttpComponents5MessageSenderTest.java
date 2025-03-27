@@ -25,30 +25,39 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+/**
+ * Tests for {@link HttpComponents5MessageSender}.
+ *
+ * @author Lars Uffmann
+ * @author Stephane Nicoll
+ */
 class HttpComponents5MessageSenderTest {
 
 	@Test
 	void afterPropertiesSetShouldProperlyInitializeHttpClient() throws Exception {
-
 		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender();
 		assertThat(messageSender.getHttpClient()).isNull();
-
-		Duration timeout = Duration.ofSeconds(1);
-		assertThatCode(() -> messageSender.setConnectionTimeout(timeout)).doesNotThrowAnyException();
+		messageSender.setConnectionTimeout(Duration.ofSeconds(1));
 
 		messageSender.afterPropertiesSet();
 		assertThat(messageSender.getHttpClient()).isNotNull();
 	}
 
 	@Test
-	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailable() throws Exception {
-
+	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithConstructor() throws Exception {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender(httpClient);
+		assertThatCode(() -> messageSender.setConnectionTimeout(Duration.ofSeconds(1)))
+			.isInstanceOf(IllegalStateException.class);
+		messageSender.afterPropertiesSet();
+		assertThat(messageSender.getHttpClient()).isSameAs(httpClient);
+	}
 
-		Duration timeout = Duration.ofSeconds(1);
-		assertThatCode(() -> messageSender.setConnectionTimeout(timeout)).isInstanceOf(IllegalStateException.class);
-
+	@Test
+	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithProperty() throws Exception {
+		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender();
+		messageSender.setHttpClient(httpClient);
 		messageSender.afterPropertiesSet();
 		assertThat(messageSender.getHttpClient()).isSameAs(httpClient);
 	}
