@@ -64,16 +64,15 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	private static final String HTTP_CLIENT_ALREADY_SET = "httpClient already set";
 
-	private HttpClient httpClient;
+	private final HttpComponents5ClientFactory clientFactory;
 
-	private HttpComponents5ClientFactory clientFactory;
+	private HttpClient httpClient;
 
 	/**
 	 * Create a new instance of the {@code HttpClientMessageSender} with a default
 	 * {@link HttpClient} that uses a default {@link PoolingHttpClientConnectionManager}.
 	 */
 	public HttpComponents5MessageSender() {
-
 		this.clientFactory = new HttpComponents5ClientFactory();
 		this.clientFactory.setClientBuilderCustomizer(
 				httpClientBuilder -> httpClientBuilder.addRequestInterceptorFirst(new RemoveSoapHeadersInterceptor()));
@@ -90,7 +89,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @param httpClient the HttpClient instance to use for this sender
 	 */
 	public HttpComponents5MessageSender(HttpClient httpClient) {
-
+		this();
 		Assert.notNull(httpClient, "httpClient must not be null");
 		this.httpClient = httpClient;
 	}
@@ -99,11 +98,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
 	 */
 	public void setAuthScope(AuthScope authScope) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setAuthScope(authScope);
 	}
 
@@ -111,11 +108,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * * @see HttpComponents5ClientFactory#setCredentials(Credentials)
 	 */
 	public void setCredentials(Credentials credentials) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setCredentials(credentials);
 	}
 
@@ -128,63 +123,64 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	/**
 	 * Set the {@code HttpClient} used by this message sender.
+	 * <p>
+	 * This effectively disable any customization and does not change the given
+	 * {@code HttpClient} in any way. As such, it does not set timeouts, nor does it
+	 * {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor)
+	 * add} the {@link RemoveSoapHeadersInterceptor}.
+	 * @param httpClient the HttpClient to use
 	 */
 	public void setHttpClient(HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
+	/**
+	 * Set the timeout until a connection is established.
+	 * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
 	 */
 	public void setConnectionTimeout(Duration timeout) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setConnectionTimeout(timeout);
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
+	/**
+	 * Set the socket read timeout for the underlying HttpClient.
+	 * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
 	 */
 	public void setReadTimeout(Duration timeout) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setReadTimeout(timeout);
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
+	/**
+	 * Sets the maximum number of connections allowed for the underlying HttpClient.
+	 * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setMaxTotalConnections(maxTotalConnections);
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
+	/**
+	 * Sets the maximum number of connections per host for the underlying HttpClient.
+	 * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
-
 		if (getHttpClient() != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
-
 		this.clientFactory.setMaxConnectionsPerHost(maxConnectionsPerHost);
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-
-		if (this.clientFactory != null) {
+		if (getHttpClient() == null) {
 			this.httpClient = this.clientFactory.getObject();
 		}
 	}
