@@ -232,6 +232,26 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
+	 * Set a WSS4J option.
+	 * @param key the id of the option as defined in {@link WSHandlerConstants}
+	 * @param value the value of the option
+	 * @since 4.1.0
+	 */
+	public void setOption(String key, String value) {
+		this.handler.setOption(key, value);
+	}
+
+	/**
+	 * Set a WSS4J flag option.
+	 * @param key the id of the option as defined in {@link WSHandlerConstants}
+	 * @param value whether the option is enabled
+	 * @since 4.1.0
+	 */
+	public void setOption(String key, boolean value) {
+		this.handler.setOption(key, value);
+	}
+
+	/**
 	 * The actor name of the {@code wsse:Security} header.
 	 * <p>
 	 * If this parameter is omitted, the actor name is not set.
@@ -240,7 +260,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * standard values.
 	 */
 	public void setSecurementActor(String securementActor) {
-		this.handler.setOption(WSHandlerConstants.ACTOR, securementActor);
+		setOption(WSHandlerConstants.ACTOR, securementActor);
 	}
 
 	public void setSecurementEncryptionCrypto(Crypto securementEncryptionCrypto) {
@@ -256,7 +276,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * only.
 	 */
 	public void setSecurementEncryptionKeyIdentifier(String securementEncryptionKeyIdentifier) {
-		this.handler.setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
+		setOption(WSHandlerConstants.ENC_KEY_ID, securementEncryptionKeyIdentifier);
 	}
 
 	/**
@@ -265,7 +285,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * {@link WSConstants#KEYTRANSPORT_RSAOAEP}.
 	 */
 	public void setSecurementEncryptionKeyTransportAlgorithm(String securementEncryptionKeyTransportAlgorithm) {
-		this.handler.setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
+		setOption(WSHandlerConstants.ENC_KEY_TRANSPORT, securementEncryptionKeyTransportAlgorithm);
 	}
 
 	/**
@@ -282,7 +302,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * it is omitted. Example of a list: <pre><code class="xml">
 	 * &lt;property name="securementEncryptionParts"
 	 *	 value="{Content}{http://example.org/paymentv2}CreditCard;
-	 *			   {Element}{}UserName" /&gt;
+	 *               {Element}{}UserName" /&gt;
 	 * </code></pre> The first entry of the list identifies the element {@code CreditCard}
 	 * in the namespace {@code http://example.org/paymentv2}, and will encrypt its
 	 * content. Be aware that the element name, the namespace identifier, and the
@@ -304,7 +324,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * by default.
 	 */
 	public void setSecurementEncryptionParts(String securementEncryptionParts) {
-		this.handler.setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
+		setOption(WSHandlerConstants.ENCRYPTION_PARTS, securementEncryptionParts);
 	}
 
 	/**
@@ -314,7 +334,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * all of these algorithms are required by the XML Encryption specification.
 	 */
 	public void setSecurementEncryptionSymAlgorithm(String securementEncryptionSymAlgorithm) {
-		this.handler.setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
+		setOption(WSHandlerConstants.ENC_SYM_ALGO, securementEncryptionSymAlgorithm);
 	}
 
 	/**
@@ -338,7 +358,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * a security risk, because the public key of that certificate is used only.
 	 */
 	public void setSecurementEncryptionUser(String securementEncryptionUser) {
-		this.handler.setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
+		setOption(WSHandlerConstants.ENCRYPTION_USER, securementEncryptionUser);
 	}
 
 	public void setSecurementPassword(String securementPassword) {
@@ -354,7 +374,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * The default setting is PW_DIGEST.
 	 */
 	public void setSecurementPasswordType(String securementUsernameTokenPasswordType) {
-		this.handler.setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
+		setOption(WSHandlerConstants.PASSWORD_TYPE, securementUsernameTokenPasswordType);
 	}
 
 	/**
@@ -363,14 +383,14 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @see WSConstants#DSA
 	 */
 	public void setSecurementSignatureAlgorithm(String securementSignatureAlgorithm) {
-		this.handler.setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
+		setOption(WSHandlerConstants.SIG_ALGO, securementSignatureAlgorithm);
 	}
 
 	/**
 	 * Defines which signature digest algorithm to use.
 	 */
 	public void setSecurementSignatureDigestAlgorithm(String digestAlgorithm) {
-		this.handler.setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
+		setOption(WSHandlerConstants.SIG_DIGEST_ALGO, digestAlgorithm);
 	}
 
 	public void setSecurementSignatureCrypto(Crypto securementSignatureCrypto) {
@@ -384,7 +404,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * {@code IssuerSerial} and {@code DirectReference} are valid only.
 	 */
 	public void setSecurementSignatureKeyIdentifier(String securementSignatureKeyIdentifier) {
-		this.handler.setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
+		setOption(WSHandlerConstants.SIG_KEY_ID, securementSignatureKeyIdentifier);
 	}
 
 	/**
@@ -414,7 +434,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * the SOAP namespace identifier can be empty ({@code {}}).
 	 */
 	public void setSecurementSignatureParts(String securementSignatureParts) {
-		this.handler.setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
+		setOption(WSHandlerConstants.SIGNATURE_PARTS, securementSignatureParts);
 	}
 
 	/**
@@ -427,7 +447,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * specified by {@link #setSecurementUsername(String)}.
 	 */
 	public void setSecurementSignatureUser(String securementSignatureUser) {
-		this.handler.setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
+		setOption(WSHandlerConstants.SIGNATURE_USER, securementSignatureUser);
 	}
 
 	/**
@@ -548,7 +568,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setEnableSignatureConfirmation(boolean enableSignatureConfirmation) {
 
-		this.handler.setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
+		setOption(WSHandlerConstants.ENABLE_SIGNATURE_CONFIRMATION, enableSignatureConfirmation);
 		this.enableSignatureConfirmation = enableSignatureConfirmation;
 	}
 
@@ -556,7 +576,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Sets if the generated timestamp header's precision is in milliseconds.
 	 */
 	public void setTimestampPrecisionInMilliseconds(boolean timestampPrecisionInMilliseconds) {
-		this.handler.setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
+		setOption(WSHandlerConstants.TIMESTAMP_PRECISION, timestampPrecisionInMilliseconds);
 	}
 
 	/**
@@ -571,7 +591,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * messages. Default is {@code true}.
 	 */
 	public void setSecurementMustUnderstand(boolean securementMustUnderstand) {
-		this.handler.setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
+		setOption(WSHandlerConstants.MUST_UNDERSTAND, securementMustUnderstand);
 	}
 
 	/**
@@ -579,7 +599,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenNonce(boolean securementUsernameTokenNonce) {
-		this.handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_NONCE, securementUsernameTokenNonce);
+		setOption(ConfigurationConstants.ADD_USERNAMETOKEN_NONCE, securementUsernameTokenNonce);
 	}
 
 	/**
@@ -587,7 +607,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * Default is {@code false}.
 	 */
 	public void setSecurementUsernameTokenCreated(boolean securementUsernameTokenCreated) {
-		this.handler.setOption(ConfigurationConstants.ADD_USERNAMETOKEN_CREATED, securementUsernameTokenCreated);
+		setOption(ConfigurationConstants.ADD_USERNAMETOKEN_CREATED, securementUsernameTokenCreated);
 	}
 
 	/**
@@ -616,7 +636,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setBspCompliant(boolean bspCompliant) {
 
-		this.handler.setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
+		setOption(WSHandlerConstants.IS_BSP_COMPLIANT, bspCompliant);
 		this.bspCompliant = bspCompliant;
 	}
 
@@ -627,7 +647,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public void setAddInclusivePrefixes(boolean addInclusivePrefixes) {
 
-		this.handler.setOption(WSHandlerConstants.ADD_INCLUSIVE_PREFIXES, addInclusivePrefixes);
+		setOption(WSHandlerConstants.ADD_INCLUSIVE_PREFIXES, addInclusivePrefixes);
 		this.addInclusivePrefixes = addInclusivePrefixes;
 	}
 
@@ -640,7 +660,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 * @see WSHandlerConstants#USE_SINGLE_CERTIFICATE
 	 */
 	public void setUseSingleCertificate(boolean useSingleCertificate) {
-		this.handler.setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
+		setOption(WSHandlerConstants.USE_SINGLE_CERTIFICATE, useSingleCertificate);
 	}
 
 	/**
