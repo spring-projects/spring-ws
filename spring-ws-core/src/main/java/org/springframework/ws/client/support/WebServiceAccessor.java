@@ -55,16 +55,16 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 		this.messageFactory = messageFactory;
 	}
 
-	/** Returns the message senders used for sending messages. */
+	/**
+	 * Return the {@link WebServiceMessageSender message senders} to consider for sending
+	 * messages.
+	 */
 	public WebServiceMessageSender[] getMessageSenders() {
 		return this.messageSenders;
 	}
 
 	/**
-	 * Sets the single message sender used for sending messages.
-	 * <p>
-	 * This message sender will be used to resolve an URI to a
-	 * {@link WebServiceConnection}.
+	 * Set the {@linkplain WebServiceMessageSender message sender} to use.
 	 * @see #createConnection(URI)
 	 */
 	public void setMessageSender(WebServiceMessageSender messageSender) {
@@ -73,10 +73,10 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 	}
 
 	/**
-	 * Sets the message senders used for sending messages.
-	 * <p>
-	 * These message senders will be used to resolve an URI to a
-	 * {@link WebServiceConnection}.
+	 * Set the {@linkplain WebServiceMessageSender message senders} to use. The first
+	 * instance that {@linkplain WebServiceMessageSender#supports(URI) supports} a given
+	 * URI is used. This allows for using a singe instance with various transport
+	 * implementations. {@link WebServiceConnection}.
 	 * @see #createConnection(URI)
 	 */
 	public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
