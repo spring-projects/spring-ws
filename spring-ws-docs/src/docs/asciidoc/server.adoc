@@ -1190,7 +1190,40 @@ Rather than expose the innards of your application by giving an exception and st
 Endpoint exception resolvers are automatically picked up by the `MessageDispatcher`, so no explicit configuration is necessary.
 
 Besides implementing the `EndpointExceptionResolver` interface, which is only a matter of implementing the `resolveException(MessageContext, endpoint, Exception)` method, you may also use one of the provided implementations.
+
 The simplest implementation is the `SimpleSoapExceptionResolver`, which creates a SOAP 1.1 Server or SOAP 1.2 Receiver fault and uses the exception message as the fault string.
+You can subclass it to customize the fault, as shown in the following example:
+
+[source,java]
+----
+public class CustomSoapExceptionResolver extends SimpleSoapExceptionResolver {
+
+	private final Transformer transformer;
+
+	public CustomSoapExceptionResolver(Transformer transformer) {
+		this.transformer = transformer;
+	}
+
+	@Override
+	protected void customizeFault(MessageContext messageContext, Object endpoint, Exception exception,
+			SoapFault fault) {
+		SoapFaultDetail faultDetail = fault.addFaultDetail();
+		try {
+			this.transformer.transform(new StringSource("""
+					<ns2:YourCustomException xmlns:ns2="http://serviceendpoint/">
+						<errorCode>Your custom error code</exName>
+						<systemMessage>A system message</exMessage>
+					 </ns2:YourCustomException >
+					"""), faultDetail.getResult());
+		}
+		catch (TransformerException ex) {
+			throw new IllegalArgumentException("Failed to write detail", ex);
+		}
+
+	}
+}
+----
+
 The `SimpleSoapExceptionResolver` is the default, but it can be overridden by explicitly adding another resolver.
 
 === `SoapFaultMappingExceptionResolver`
