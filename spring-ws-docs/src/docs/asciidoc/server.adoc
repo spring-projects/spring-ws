@@ -240,6 +240,22 @@ For instance, if our `Orders.xsd` schema defines the `GetOrdersRequest` and `Get
 
 To use multiple schemas, either by includes or imports, you can put Commons XMLSchema on the class path.
 If Commons XMLSchema is on the class path, the `<dynamic-wsdl>` element follows all XSD imports and includes and inlines them in the WSDL as a single XSD.
+With Java config, you can use `CommonsXsdSchemaCollection` as shown in the following example:
+
+[source,java]
+----
+@Bean
+public DefaultWsdl11Definition ordersWsdlDefinition() throws Exception {
+    DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+    // ... configuration
+    CommonsXsdSchemaCollection schemas = new CommonsXsdSchemaCollection(
+			new ClassPathResource("xsd/order/main.xsd"));
+    schemas.setInline(true);
+    wsdl11Definition.setSchemaCollection(schemas);
+    return wsdl11Definition;
+}
+----
+
 This greatly simplifies the deployment of the schemas, while still making it possible to edit them separately.
 
 [WARNING]
