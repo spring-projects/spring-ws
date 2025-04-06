@@ -25,10 +25,14 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
+import org.springframework.ws.server.SmartEndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.DelegatingSmartEndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test case for {@link AbstractEndpointMapping}.
@@ -122,6 +126,55 @@ public class EndpointMappingTest {
 		assertThat(result.getInterceptors()).hasSize(2);
 		assertThat(result.getInterceptors()[0]).isEqualTo(interceptor);
 		assertThat(result.getInterceptors()[1]).isInstanceOf(MySmartEndpointInterceptor.class);
+	}
+
+	@Test
+	void smartEndpointInterceptorAddedOnlyIfNecessary() throws Exception {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		Object endpoint = new Object();
+		SmartEndpointInterceptor firstInterceptor = mock(SmartEndpointInterceptor.class);
+		given(firstInterceptor.shouldIntercept(this.messageContext, endpoint)).willReturn(false);
+		applicationContext.registerBean("first", SmartEndpointInterceptor.class, () -> firstInterceptor);
+		SmartEndpointInterceptor secondInterceptor = mock(SmartEndpointInterceptor.class);
+		given(secondInterceptor.shouldIntercept(this.messageContext, endpoint)).willReturn(true);
+		applicationContext.registerBean("second", SmartEndpointInterceptor.class, () -> secondInterceptor);
+
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) {
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
+				return endpoint;
+			}
+		};
+		mapping.setApplicationContext(applicationContext);
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
+		assertThat(result).isNotNull();
+		assertThat(result.getInterceptors()).singleElement().isSameAs(secondInterceptor);
+		verify(firstInterceptor).shouldIntercept(this.messageContext, endpoint);
+		verify(secondInterceptor).shouldIntercept(this.messageContext, endpoint);
+	}
+
+	@Test
+	void smartEndpointInterceptorSetAsInterceptorAreHandled() throws Exception {
+		Object endpoint = new Object();
+		SmartEndpointInterceptor firstInterceptor = mock(SmartEndpointInterceptor.class);
+		given(firstInterceptor.shouldIntercept(this.messageContext, endpoint)).willReturn(false);
+		SmartEndpointInterceptor secondInterceptor = mock(SmartEndpointInterceptor.class);
+		given(secondInterceptor.shouldIntercept(this.messageContext, endpoint)).willReturn(true);
+
+		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
+			@Override
+			protected Object getEndpointInternal(MessageContext givenRequest) {
+				assertThat(givenRequest).isEqualTo(EndpointMappingTest.this.messageContext);
+				return endpoint;
+			}
+		};
+		mapping.setInterceptors(new EndpointInterceptor[] { firstInterceptor, secondInterceptor });
+		EndpointInvocationChain result = mapping.getEndpoint(this.messageContext);
+		assertThat(result).isNotNull();
+		assertThat(result.getInterceptors()).singleElement().isSameAs(secondInterceptor);
+		verify(firstInterceptor).shouldIntercept(this.messageContext, endpoint);
+		verify(secondInterceptor).shouldIntercept(this.messageContext, endpoint);
 	}
 
 	@Test

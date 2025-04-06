@@ -112,6 +112,26 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 */
 	@Override
 	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+		Object endpoint = resoleEndpoint(messageContext);
+		if (endpoint == null) {
+			return null;
+		}
+		List<EndpointInterceptor> interceptors = new ArrayList<>();
+		if (this.interceptors != null) {
+			interceptors.addAll(Arrays.stream(this.interceptors)
+				.filter(interceptor -> shouldIntercept(interceptor, messageContext, endpoint))
+				.toList());
+		}
+		if (this.smartInterceptors != null) {
+			interceptors.addAll(Arrays.stream(this.smartInterceptors)
+				.filter(interceptor -> shouldIntercept(interceptor, messageContext, endpoint))
+				.toList());
+		}
+		return createEndpointInvocationChain(messageContext, endpoint,
+				interceptors.toArray(new EndpointInterceptor[0]));
+	}
+
+	private Object resoleEndpoint(MessageContext messageContext) throws Exception {
 		Object endpoint = getEndpointInternal(messageContext);
 		if (endpoint == null) {
 			endpoint = this.defaultEndpoint;
@@ -125,22 +145,14 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 				return null;
 			}
 		}
+		return endpoint;
+	}
 
-		List<EndpointInterceptor> interceptors = new ArrayList<>();
-		if (this.interceptors != null) {
-			interceptors.addAll(Arrays.asList(this.interceptors));
+	private boolean shouldIntercept(EndpointInterceptor interceptor, MessageContext messageContext, Object endpoint) {
+		if (interceptor instanceof SmartEndpointInterceptor smartEndpointInterceptor) {
+			return smartEndpointInterceptor.shouldIntercept(messageContext, endpoint);
 		}
-
-		if (this.smartInterceptors != null) {
-			for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
-				if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
-					interceptors.add(smartInterceptor);
-				}
-			}
-		}
-
-		return createEndpointInvocationChain(messageContext, endpoint,
-				interceptors.toArray(new EndpointInterceptor[0]));
+		return true;
 	}
 
 	/**
