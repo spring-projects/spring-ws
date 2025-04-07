@@ -633,14 +633,14 @@ public class EchoConfig {
 ----
 ====
 
-To customize the `@EnableWs` configuration, you can implement `WsConfigurer` or, better yet, extend the `WsConfigurerAdapter`:
+To customize the `@EnableWs` configuration, you can implement `WsConfigurer` and override individual methods:
 
 ====
 [source,java]
 ----
 @Configuration
 @EnableWs
-public class MyConfiguration extends WsConfigurerAdapter {
+public class EchoConfig extends WsConfigurerAdapter {
 
   @Override
   public void addInterceptors(List<EndpointInterceptor> interceptors) {
@@ -652,7 +652,30 @@ public class MyConfiguration extends WsConfigurerAdapter {
     argumentResolvers.add(new MyArgumentResolver());
   }
 
-  // More overridden methods ...
+}
+----
+====
+
+If `WsConfigurer` does not expose some more advanced setting that needs to be configured, consider removing `@EnableWs`  and extending directly from `WsConfigurationSupport` or `DelegatingWsConfiguration`.
+
+====
+[source,java]
+----
+@Configuration
+public class EchoConfig extends WsConfigurationSupport {
+
+  @Override
+  public void addInterceptors(List<EndpointInterceptor> interceptors) {
+    interceptors.add(new MyInterceptor());
+  }
+
+  @Bean
+  @Override
+  public PayloadRootAnnotationMethodEndpointMapping payloadRootAnnotationMethodEndpointMapping() {
+      // Create or delegate to "super" to create and
+      // customize properties of PayloadRootAnnotationMethodEndpointMapping
+  }
+
 }
 ----
 ====
@@ -942,8 +965,8 @@ The concept of configurable endpoint mappings that can optionally contain interc
 A lot of supporting functionality can be built into custom `EndpointMapping` implementations.
 For example, a custom endpoint mapping could choose an endpoint based not only on the contents of a message but also on a specific SOAP header (or, indeed, multiple SOAP headers).
 
-Most endpoint mappings inherit from the `AbstractEndpointMapping`, which offers an '`interceptors`' property, which is the list of interceptors to use. `EndpointInterceptors` are discussed in <<server-endpoint-interceptor>>.
-Additionally, there is the `defaultEndpoint`, which is the default endpoint to use when this endpoint mapping does not result in a matching endpoint.
+Most endpoint mappings inherit from the `AbstractEndpointMapping`, which offers an '`interceptors`' property, which is the list of interceptors to use.
+`EndpointInterceptors` are discussed in <<server-endpoint-interceptor>>.
 
 As explained in <<server-endpoints>>, the `@Endpoint` style lets you handle multiple requests in one endpoint class.
 This is the responsibility of the `MethodEndpointMapping`.
@@ -956,6 +979,8 @@ Whenever a message comes in with this qualified name for the payload root elemen
 
 Alternatively, the `SoapActionAnnotationMethodEndpointMapping` uses the `@SoapAction` annotation to mark methods with a particular SOAP Action.
 Whenever a message comes in with this `SOAPAction` header, the method is invoked.
+
+`AbstractEndpointMapping` implementations provides a `defaultEndpoint` property that configures the endpoint to use when a configured mapping does not result in a matching endpoint.
 
 [[server-ws-addressing]]
 === WS-Addressing
