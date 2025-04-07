@@ -670,7 +670,7 @@ If you want to use a different scope, such as prototype, see the {spring-framewo
 Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated in the class-level Javadoc.
 
 [[server-atEndpoint-methods]]
-=== `@Endpoint` handling methods
+== `@Endpoint` handling methods
 
 For an endpoint to actually handle incoming XML messages, it needs to have one or more handling methods.
 Handling methods can take wide range of parameters and return types.
@@ -697,7 +697,7 @@ The `order` method takes an `Element` (annotated with `@RequestPayload`) as a pa
 This means that the payload of the message is passed on this method as a DOM element.
 The method has a `void` return type, indicating that no response message is sent.
 
-==== Handling Method Parameters
+=== Handling Method Parameters
 
 The handling method typically has one or more parameters that refer to various parts of the incoming XML message.
 Most commonly, the handling method has a single parameter that maps to the payload of the message, but it can also map to other parts of the request message, such as a SOAP header.
@@ -808,7 +808,7 @@ You can even extend this mechanism to support your own parameter types.
 See the Javadoc of {spring-ws-api}/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and {spring-ws-api}/server/endpoint/adapter/method/MethodArgumentResolver.html[`MethodArgumentResolver`] to see how.
 
 [[server-xpath-param]]
-===== `@XPathParam`
+==== `@XPathParam`
 
 One parameter type needs some extra explanation: `@XPathParam`.
 The idea here is that you annotate one or more method parameters with an XPath expression and that each such annotated parameter is bound to the evaluation of the expression.
@@ -860,7 +860,7 @@ By using the `@XPathParam`, you can bind to all the data types supported by XPat
 
 In addition to this list, you can use any type that can be converted from a `String` by a Spring {spring-framework-docs}/core/validation/convert.html#core-convert-ConversionService-API[conversion service].
 
-==== Handling method return types
+=== Handling method return types
 
 To send a response message, the handling needs to specify a return type.
 If no response message is required, the method can declare a `void` return type.
