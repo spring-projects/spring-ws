@@ -22,65 +22,70 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * Add this annotation to an {@link Configuration @Configuration} class to have the Spring
- * Web Services configuration defined in {@link WsConfigurationSupport} imported. For
- * instance:
+ * Adding this annotation to an {@code @Configuration} class imports the Spring Web
+ * Services configuration from {@link WsConfigurationSupport}, for example:
  *
  * <pre><code class='java'>
  * &#064;Configuration
  * &#064;EnableWs
- * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
- * public class MyWsConfiguration {
+ * &#064;ComponentScan(basePackageClasses = MyConfiguration.class)
+ * public class MyConfiguration {
  *
  * }</code></pre>
  * <p>
- * Customize the imported configuration by implementing the {@link WsConfigurer}
- * interface: <pre><code class='java'>
+ * Customize the imported configuration by implementing the {@link WsConfigurer} interface
+ * and overriding individual methods:
+ *
+ * <pre><code class='java'>
  * &#064;Configuration
  * &#064;EnableWs
- * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
+ * &#064;ComponentScan(basePackageClasses = MyConfiguration.class)
  * public class MyConfiguration implements WsConfigurer {
  *
- * 	&#064;Override
- * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- * 		interceptors.add(new MyInterceptor());
- * 	}
+ *     &#064;Override
+ *     public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ *         interceptors.add(new MyInterceptor());
+ *     }
  *
- * 	&#064;Override
- * 	public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
- * 		argumentResolvers.add(new MyArgumentResolver());
- * 	}
+ *     &#064;Override
+ *     public void addArgumentResolvers(List&lt;MethodArgumentResolver&gt; argumentResolvers) {
+ *         argumentResolvers.add(new MyArgumentResolver());
+ *     }
  *
- * 	// More overridden methods ...
  * }</code></pre>
  * <p>
- * If the customization options of {@link WsConfigurer} do not expose something you need
- * to configure, consider removing the {@code @EnableWs} annotation and extending directly
- * from {@link WsConfigurationSupport} overriding selected {@code @Bean} methods:
+ * <strong>Note:</strong> only one {@code @Configuration} class may have the
+ * {@code @EnableWs} annotation to import the Spring Web Services configuration. There can
+ * however be multiple {@code @Configuration} classes implementing {@code WsConfigurer} in
+ * order to customize the provided configuration.
+ * <p>
+ * If {@link WsConfigurer} does not expose some more advanced setting that needs to be
+ * configured, consider removing the {@code @EnableWs} annotation and extending directly
+ * from {@link WsConfigurationSupport} or {@link DelegatingWsConfiguration}, for example:
  *
  * <pre><code class='java'>
  * &#064;Configuration
  * &#064;ComponentScan(basePackageClasses = { MyConfiguration.class })
  * public class MyConfiguration extends WsConfigurationSupport {
  *
- * 	&#064;Override
- * 	public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
- * 		interceptors.add(new MyInterceptor());
- * 	}
+ *     &#064;Override
+ *     public void addInterceptors(List&lt;EndpointInterceptor&gt; interceptors) {
+ *         interceptors.add(new MyInterceptor());
+ *     }
  *
- * 	&#064;Bean
- * 	&#064;Override
- * 	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
- * 		// Create or delegate to "super" to create and
- * 		// customize properties of DefaultMethodEndpointAdapter
- * 	}
+ *     &#064;Bean
+ *     &#064;Override
+ *     public PayloadRootAnnotationMethodEndpointMapping payloadRootAnnotationMethodEndpointMapping() {
+ *         // Create or delegate to "super" to create and
+ *         // customize properties of PayloadRootAnnotationMethodEndpointMapping
+ *     }
  * }</code></pre>
  *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 2.2
  * @see WsConfigurer
  * @see WsConfigurationSupport
