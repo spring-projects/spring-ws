@@ -92,7 +92,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		return this.response.getHeaders().keySet().iterator();
+		return this.response.getHeaders().headerNames().iterator();
 	}
 
 	@Override
