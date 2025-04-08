@@ -627,8 +627,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			if (!messageContext.hasResponse() && !intercepted) {
 				sendRequest(connection, messageContext.getRequest());
 				if (hasError(connection, messageContext.getRequest())) {
+					Object fallback = handleError(connection, messageContext.getRequest());
 					triggerAfterCompletion(interceptorIndex, messageContext, null);
-					return (T) handleError(connection, messageContext.getRequest());
+					return (T) fallback;
 				}
 				WebServiceMessage response = connection.receive(getMessageFactory());
 				messageContext.setResponse(response);
@@ -637,13 +638,15 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			if (messageContext.hasResponse()) {
 				if (!hasFault(connection, messageContext.getResponse())) {
 					triggerHandleResponse(interceptorIndex, messageContext);
+					T result = responseExtractor.extractData(messageContext.getResponse());
 					triggerAfterCompletion(interceptorIndex, messageContext, null);
-					return responseExtractor.extractData(messageContext.getResponse());
+					return result;
 				}
 				else {
 					triggerHandleFault(interceptorIndex, messageContext);
+					Object fallback = handleFault(connection, messageContext);
 					triggerAfterCompletion(interceptorIndex, messageContext, null);
-					return (T) handleFault(connection, messageContext);
+					return (T) fallback;
 				}
 			}
 			else {
@@ -820,7 +823,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			throws WebServiceClientException {
 		if (this.interceptors != null) {
 			for (int i = interceptorIndex; i >= 0; i--) {
-				this.interceptors[i].afterCompletion(messageContext, ex);
+				try {
+					this.interceptors[i].afterCompletion(messageContext, ex);
+				}
+				catch (Exception interceptorEx) {
+					logger.error("ClientInterceptor.afterCompletion threw exception", ex);
+				}
 			}
 		}
 	}
