@@ -23,22 +23,19 @@ import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class HttpComponents5ContentTypeIntegrationTest
-		extends AbstractHttpWebServiceMessageSenderIntegrationTest<HttpComponents5MessageSender> {
+		extends AbstractHttpWebServiceMessageSenderIntegrationTest<AbstractHttpComponents5MessageSender> {
 
 	@Override
-	protected HttpComponents5MessageSender createMessageSender() {
-
+	protected AbstractHttpComponents5MessageSender createMessageSender() {
 		ExecChainHandler testHandler = (request, scope, chain) -> {
 			assertThat(request.getEntity().getContentType()).isNotBlank();
 			return chain.proceed(request, scope);
 		};
-
 		HttpClient client = HttpClientBuilder.create()
 			.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor())
 			.addExecInterceptorFirst("handler with assertion", testHandler)
 			.build();
-
-		return new HttpComponents5MessageSender(client);
+		return new SimpleHttpComponents5MessageSender(client);
 	}
 
 }

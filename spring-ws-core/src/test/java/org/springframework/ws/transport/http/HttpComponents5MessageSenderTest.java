@@ -44,6 +44,8 @@ class HttpComponents5MessageSenderTest {
 	}
 
 	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
 	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithConstructor() throws Exception {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender(httpClient);
@@ -54,6 +56,8 @@ class HttpComponents5MessageSenderTest {
 	}
 
 	@Test
+	@Deprecated
+	@SuppressWarnings("removal")
 	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithProperty() throws Exception {
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender();

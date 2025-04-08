@@ -38,7 +38,7 @@ You can set one or more message senders by using the `messageSender` or `message
 
 There are three implementations of the `WebServiceMessageSender` interface for sending messages over HTTP.
 The default implementation is the `HttpUrlConnectionMessageSender`, which uses the facilities provided by Java itself.
-The alternatives are either `JdkHttpClientMessageSender` that uses the JDK's `HttpClient`, or `HttpComponents5MessageSender`, which uses the https://hc.apache.org/httpcomponents-client-ga[Apache HttpClient].
+The alternatives are either `JdkHttpClientMessageSender` that uses the JDK's `HttpClient`, or `HttpComponents5MessageSender`/`SimpleHttpComponents5MessageSender`, which use the https://hc.apache.org/httpcomponents-client-ga[Apache HttpClient].
 Use the latter if you need more advanced and easy-to-use functionality (such as authentication, HTTP connection pooling, and so forth).
 
 To use the HTTP transport, either set the `defaultUri` to something like `http://example.com/services` or supply the `uri` parameter for one of the methods.

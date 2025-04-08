@@ -16,40 +16,26 @@
 
 package org.springframework.ws.transport.http;
 
-import java.io.IOException;
-import java.net.URI;
 import java.time.Duration;
 import java.util.Map;
 
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
 import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.classic.methods.HttpPost;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
-import org.apache.hc.core5.http.EntityDetails;
-import org.apache.hc.core5.http.HttpException;
-import org.apache.hc.core5.http.HttpHeaders;
-import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
-import org.apache.hc.core5.http.protocol.HttpContext;
 
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
-import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * {@code WebServiceMessageSender} implementation that uses
- * <a href="http://hc.apache.org/httpcomponents-client">Apache HttpClient</a> to execute
- * POST requests.
+ * {@code AbstractHttpComponents5MessageSender} implementation that configures the
+ * underlying <a href="http://hc.apache.org/httpcomponents-client">Apache HttpClient</a>
+ * that executes POST requests.
  * <p>
- * Allows to use a pre-configured HttpClient instance, potentially with authentication,
- * HTTP connection pooling, etc. Authentication can also be set by injecting a
- * {@link Credentials} instance (such as the
- * {@link org.apache.hc.client5.http.auth.UsernamePasswordCredentials}).
+ * To specify the {@link HttpClient}, consider using
+ * {@link SimpleHttpComponents5MessageSender} instead.
  *
  * @author Alan Stewart
  * @author Barry Pitman
@@ -59,8 +45,7 @@ import org.springframework.ws.transport.WebServiceConnection;
  * @since 4.0.5
  * @see HttpClient
  */
-public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageSender
-		implements InitializingBean, DisposableBean {
+public class HttpComponents5MessageSender extends AbstractHttpComponents5MessageSender implements InitializingBean {
 
 	private static final String HTTP_CLIENT_ALREADY_SET = "httpClient already set";
 
@@ -87,38 +72,41 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor)
 	 * add} the {@link RemoveSoapHeadersInterceptor}.
 	 * @param httpClient the HttpClient instance to use for this sender
+	 * @deprecated as of 4.1.0 in favor of {@link SimpleHttpComponents5MessageSender}
 	 */
+	@Deprecated(since = "4.1.0", forRemoval = true)
 	public HttpComponents5MessageSender(HttpClient httpClient) {
 		this();
 		Assert.notNull(httpClient, "httpClient must not be null");
 		this.httpClient = httpClient;
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
+	@Override
+	public HttpClient getHttpClient() {
+		return this.httpClient;
+	}
+
+	/**
+	 * Set the authentication scope to be used. Only used when the {@code credentials}
+	 * property has been set.
+	 * @see HttpComponents5ClientFactory#setAuthScope(AuthScope)
 	 */
 	public void setAuthScope(AuthScope authScope) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setAuthScope(authScope);
 	}
 
-	/*
-	 * * @see HttpComponents5ClientFactory#setCredentials(Credentials)
+	/**
+	 * Set the credentials to be used. If not set, no authentication is done.
+	 * @see HttpComponents5ClientFactory#setCredentials(Credentials)
 	 */
 	public void setCredentials(Credentials credentials) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setCredentials(credentials);
-	}
-
-	/**
-	 * Returns the {@code HttpClient} used by this message sender.
-	 */
-	public HttpClient getHttpClient() {
-		return this.httpClient;
 	}
 
 	/**
@@ -129,7 +117,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * {@linkplain HttpClientBuilder#addRequestInterceptorFirst(HttpRequestInterceptor)
 	 * add} the {@link RemoveSoapHeadersInterceptor}.
 	 * @param httpClient the HttpClient to use
+	 * @deprecated as of 4.1.0 in favor of {@link SimpleHttpComponents5MessageSender}
 	 */
+	@Deprecated(since = "4.1.0", forRemoval = true)
 	public void setHttpClient(HttpClient httpClient) {
 		this.httpClient = httpClient;
 	}
@@ -139,7 +129,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setConnectionTimeout(Duration)
 	 */
 	public void setConnectionTimeout(Duration timeout) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setConnectionTimeout(timeout);
@@ -150,7 +140,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setReadTimeout(Duration)
 	 */
 	public void setReadTimeout(Duration timeout) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setReadTimeout(timeout);
@@ -161,7 +151,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setMaxTotalConnections(int)
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setMaxTotalConnections(maxTotalConnections);
@@ -172,7 +162,7 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 	 * @see HttpComponents5ClientFactory#setMaxConnectionsPerHost(Map)
 	 */
 	public void setMaxConnectionsPerHost(Map<String, String> maxConnectionsPerHost) {
-		if (getHttpClient() != null) {
+		if (this.httpClient != null) {
 			throw new IllegalStateException(HTTP_CLIENT_ALREADY_SET);
 		}
 		this.clientFactory.setMaxConnectionsPerHost(maxConnectionsPerHost);
@@ -180,66 +170,9 @@ public class HttpComponents5MessageSender extends AbstractHttpWebServiceMessageS
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (getHttpClient() == null) {
+		if (this.httpClient == null) {
 			this.httpClient = this.clientFactory.getObject();
 		}
-	}
-
-	@Override
-	public WebServiceConnection createConnection(URI uri) throws IOException {
-
-		HttpPost httpPost = new HttpPost(uri);
-
-		if (isAcceptGzipEncoding()) {
-			httpPost.addHeader(HttpTransportConstants.HEADER_ACCEPT_ENCODING,
-					HttpTransportConstants.CONTENT_ENCODING_GZIP);
-		}
-
-		HttpHost httpHost = HttpHost.create(uri);
-		HttpContext httpContext = createContext(uri);
-
-		return new HttpComponents5Connection(getHttpClient(), httpHost, httpPost, httpContext);
-	}
-
-	/**
-	 * Template method that allows for creation of an {@link HttpContext} for the given
-	 * uri. Default implementation returns {@code null}.
-	 * @param uri the URI to create the context for
-	 * @return the context, or {@code null}
-	 */
-	protected HttpContext createContext(URI uri) {
-		return null;
-	}
-
-	@Override
-	public void destroy() throws Exception {
-
-		if (getHttpClient() instanceof CloseableHttpClient client) {
-			client.close();
-		}
-	}
-
-	/**
-	 * HttpClient {@link HttpRequestInterceptor} implementation that removes
-	 * {@code Content-Length} and {@code Transfer-Encoding} headers from the request.
-	 * Necessary, because some SAAJ and other SOAP implementations set these headers
-	 * themselves, and HttpClient throws an exception if they have been set.
-	 */
-	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
-
-		@Override
-		public void process(HttpRequest request, EntityDetails entityDetails, HttpContext httpContext)
-				throws HttpException, IOException {
-
-			if (request.containsHeader(HttpHeaders.TRANSFER_ENCODING)) {
-				request.removeHeaders(HttpHeaders.TRANSFER_ENCODING);
-			}
-
-			if (request.containsHeader(HttpHeaders.CONTENT_LENGTH)) {
-				request.removeHeaders(HttpHeaders.CONTENT_LENGTH);
-			}
-		}
-
 	}
 
 }
