@@ -100,12 +100,14 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 		if (this.mappedEndpoints != null && !this.mappedEndpoints.contains(mappedEndpoint)) {
 			return false;
 		}
-		// Log exception, both at debug log level and at warn level, if desired.
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Resolving exception from endpoint [" + endpoint + "]: " + ex);
 		}
-		logException(ex, messageContext);
-		return resolveExceptionInternal(messageContext, endpoint, ex);
+		boolean resolved = resolveExceptionInternal(messageContext, endpoint, ex);
+		if (resolved) {
+			logException(ex, messageContext);
+		}
+		return resolved;
 	}
 
 	/**
