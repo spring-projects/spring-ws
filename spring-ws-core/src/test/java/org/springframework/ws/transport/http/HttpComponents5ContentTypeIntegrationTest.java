@@ -17,8 +17,6 @@
 package org.springframework.ws.transport.http;
 
 import org.apache.hc.client5.http.classic.ExecChainHandler;
-import org.apache.hc.client5.http.classic.HttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -31,11 +29,10 @@ class HttpComponents5ContentTypeIntegrationTest
 			assertThat(request.getEntity().getContentType()).isNotBlank();
 			return chain.proceed(request, scope);
 		};
-		HttpClient client = HttpClientBuilder.create()
-			.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor())
-			.addExecInterceptorFirst("handler with assertion", testHandler)
-			.build();
-		return new SimpleHttpComponents5MessageSender(client);
+		HttpComponents5ClientFactory factory = HttpComponents5ClientFactory.withDefaults();
+		factory.addClientBuilderCustomizer(
+				builder -> builder.addExecInterceptorFirst("handler with assertion", testHandler));
+		return new SimpleHttpComponents5MessageSender(factory.build());
 	}
 
 }

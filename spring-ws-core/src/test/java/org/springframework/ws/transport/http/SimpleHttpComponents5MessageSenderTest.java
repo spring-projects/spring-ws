@@ -51,10 +51,10 @@ class SimpleHttpComponents5MessageSenderTest {
 	}
 
 	@Test
-	void createWithFactory() throws Exception {
+	void createWithFactory() {
 		HttpComponents5ClientFactory factory = new HttpComponents5ClientFactory();
 		HttpClientBuilderCustomizer builderCustomizer = mock(HttpClientBuilderCustomizer.class);
-		factory.setClientBuilderCustomizer(builderCustomizer);
+		factory.addClientBuilderCustomizer(builderCustomizer);
 		new SimpleHttpComponents5MessageSender(factory);
 		verify(builderCustomizer).customize(any());
 	}

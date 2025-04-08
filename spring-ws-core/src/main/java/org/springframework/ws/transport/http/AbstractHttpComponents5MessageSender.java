@@ -22,12 +22,7 @@ import java.net.URI;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.core5.http.EntityDetails;
-import org.apache.hc.core5.http.HttpException;
-import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.HttpRequest;
-import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
 
 import org.springframework.beans.factory.DisposableBean;
@@ -82,29 +77,6 @@ public abstract class AbstractHttpComponents5MessageSender extends AbstractHttpW
 	 */
 	protected HttpContext createContext(URI uri) {
 		return null;
-	}
-
-	/**
-	 * HttpClient {@link HttpRequestInterceptor} implementation that removes
-	 * {@code Content-Length} and {@code Transfer-Encoding} headers from the request.
-	 * Necessary, because some SAAJ and other SOAP implementations set these headers
-	 * themselves, and HttpClient throws an exception if they have been set.
-	 */
-	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
-
-		@Override
-		public void process(HttpRequest request, EntityDetails entityDetails, HttpContext httpContext)
-				throws HttpException, IOException {
-
-			if (request.containsHeader(HttpHeaders.TRANSFER_ENCODING)) {
-				request.removeHeaders(HttpHeaders.TRANSFER_ENCODING);
-			}
-
-			if (request.containsHeader(HttpHeaders.CONTENT_LENGTH)) {
-				request.removeHeaders(HttpHeaders.CONTENT_LENGTH);
-			}
-		}
-
 	}
 
 }

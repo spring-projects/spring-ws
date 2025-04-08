@@ -28,6 +28,7 @@ import org.apache.hc.core5.http.HttpRequestInterceptor;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender.RemoveSoapHeadersInterceptor;
 
 /**
  * {@code AbstractHttpComponents5MessageSender} implementation that configures the
@@ -58,9 +59,7 @@ public class HttpComponents5MessageSender extends AbstractHttpComponents5Message
 	 * {@link HttpClient} that uses a default {@link PoolingHttpClientConnectionManager}.
 	 */
 	public HttpComponents5MessageSender() {
-		this.clientFactory = new HttpComponents5ClientFactory();
-		this.clientFactory.setClientBuilderCustomizer(
-				httpClientBuilder -> httpClientBuilder.addRequestInterceptorFirst(new RemoveSoapHeadersInterceptor()));
+		this.clientFactory = HttpComponents5ClientFactory.withDefaults();
 	}
 
 	/**

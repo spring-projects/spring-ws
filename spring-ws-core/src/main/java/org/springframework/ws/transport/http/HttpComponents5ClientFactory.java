@@ -16,9 +16,11 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.hc.client5.http.HttpRoute;
@@ -30,7 +32,13 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.core5.http.EntityDetails;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.util.Timeout;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -41,6 +49,7 @@ import org.springframework.ws.client.support.interceptor.ClientInterceptor;
  * HttpClient 5.
  *
  * @author Lars Uffmann
+ * @author Stephane Nicoll
  * @since 4.0.5
  * @see <a href=https://hc.apache.org/httpcomponents-client>HttpComponents</a>
  */
@@ -60,6 +69,10 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	private static final Duration DEFAULT_READ_TIMEOUT = Duration.ofSeconds(60);
 
+	private final List<HttpClientBuilderCustomizer> clientBuilderCustomizers = new ArrayList<>();
+
+	private final List<PoolingHttpClientConnectionManagerBuilderCustomizer> connectionManagerBuilderCustomizers = new ArrayList<>();
+
 	private Duration connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
 	private Duration readTimeout = DEFAULT_READ_TIMEOUT;
@@ -74,9 +87,62 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	private PoolingHttpClientConnectionManager connectionManager;
 
-	private HttpClientBuilderCustomizer clientBuilderCustomizer;
+	/**
+	 * Create a new instance with default settings. This configures
+	 * {@link RemoveSoapHeadersInterceptor} as the first interceptor
+	 * @return a factory with default settings
+	 */
+	public static HttpComponents5ClientFactory withDefaults() {
+		HttpComponents5ClientFactory factory = new HttpComponents5ClientFactory();
+		factory.addClientBuilderCustomizer((httpClientBuilder) -> httpClientBuilder
+			.addRequestInterceptorFirst(new RemoveSoapHeadersInterceptor()));
+		return factory;
+	}
 
-	private PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer;
+	/**
+	 * Add a {@link HttpClientBuilderCustomizer} to invoke when creating an
+	 * {@link CloseableHttpClient} managed by this factory.
+	 * @param clientBuilderCustomizer the customizer to invoke
+	 * @since 4.1.0
+	 */
+	public void addClientBuilderCustomizer(HttpClientBuilderCustomizer clientBuilderCustomizer) {
+		this.clientBuilderCustomizers.add(clientBuilderCustomizer);
+	}
+
+	/**
+	 * Add a {@link HttpClientBuilderCustomizer} to invoke when creating an
+	 * {@link CloseableHttpClient} managed by this factory.
+	 * @param clientBuilderCustomizer the customizer to invoke
+	 * @deprecated as of 4.1.0 in favor of
+	 * {@link #addClientBuilderCustomizer(HttpClientBuilderCustomizer)}l
+	 */
+	@Deprecated(since = "4.1.0", forRemoval = true)
+	public void setClientBuilderCustomizer(HttpClientBuilderCustomizer clientBuilderCustomizer) {
+		addClientBuilderCustomizer(clientBuilderCustomizer);
+	}
+
+	/**
+	 * Add a {@link PoolingHttpClientConnectionManagerBuilderCustomizer} to invoke when
+	 * creating an {@link CloseableHttpClient} managed by this factory.
+	 * @param connectionManagerBuilderCustomizer the customizer to invoke
+	 */
+	public void addConnectionManagerBuilderCustomizer(
+			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
+		this.connectionManagerBuilderCustomizers.add(connectionManagerBuilderCustomizer);
+	}
+
+	/**
+	 * Add a {@link PoolingHttpClientConnectionManagerBuilderCustomizer} to invoke when
+	 * creating an {@link CloseableHttpClient} managed by this factory.
+	 * @param connectionManagerBuilderCustomizer the customizer to invoke
+	 * @deprecated as of 4.1.0 in favor of
+	 * {@link #addConnectionManagerBuilderCustomizer(PoolingHttpClientConnectionManagerBuilderCustomizer)}
+	 */
+	@Deprecated(since = "4.1.0", forRemoval = true)
+	public void setConnectionManagerBuilderCustomizer(
+			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
+		addConnectionManagerBuilderCustomizer(connectionManagerBuilderCustomizer);
+	}
 
 	/**
 	 * Sets the credentials to be used. If not set, no authentication is done.
@@ -104,11 +170,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * @param timeout the timeout value
 	 */
 	public void setConnectionTimeout(Duration timeout) {
-
 		if (timeout.isNegative()) {
 			throw new IllegalArgumentException("timeout must be a non-negative value");
 		}
-
 		this.connectionTimeout = timeout;
 	}
 
@@ -118,11 +182,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * @param timeout the timeout value
 	 */
 	public void setReadTimeout(Duration timeout) {
-
 		if (timeout.isNegative()) {
 			throw new IllegalArgumentException("timeout must be a non-negative value");
 		}
-
 		this.readTimeout = timeout;
 	}
 
@@ -132,11 +194,9 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	 * @see PoolingHttpClientConnectionManager
 	 */
 	public void setMaxTotalConnections(int maxTotalConnections) {
-
 		if (maxTotalConnections <= 0) {
 			throw new IllegalArgumentException("maxTotalConnections must be a positive value");
 		}
-
 		this.maxTotalConnections = maxTotalConnections;
 	}
 
@@ -160,11 +220,44 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		this.maxConnectionsPerHost = maxConnectionsPerHost;
 	}
 
-	void applyMaxConnectionsPerHost(PoolingHttpClientConnectionManager connectionManager) throws URISyntaxException {
+	PoolingHttpClientConnectionManager getConnectionManager() {
+		return this.connectionManager;
+	}
 
+	@SuppressWarnings("deprecation")
+	public CloseableHttpClient build() {
+		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder
+			.create();
+		if (this.maxTotalConnections != -1) {
+			connectionManagerBuilder.setMaxConnTotal(this.maxTotalConnections);
+		}
+		this.connectionManagerBuilderCustomizers.forEach(customizer -> customizer.customize(connectionManagerBuilder));
+		this.connectionManager = connectionManagerBuilder.build();
+
+		applyMaxConnectionsPerHost(this.connectionManager);
+
+		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
+			.setConnectTimeout(Timeout.of(this.connectionTimeout))
+			.setResponseTimeout(Timeout.of(this.readTimeout));
+
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+			.setDefaultRequestConfig(requestConfigBuilder.build())
+			.setConnectionManager(this.connectionManager);
+
+		if (this.credentials != null && this.authScope != null) {
+			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
+			basicCredentialsProvider.setCredentials(this.authScope, this.credentials);
+			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
+		}
+
+		this.clientBuilderCustomizers.forEach(customizer -> customizer.customize(httpClientBuilder));
+
+		return httpClientBuilder.build();
+	}
+
+	void applyMaxConnectionsPerHost(PoolingHttpClientConnectionManager connectionManager) {
 		for (Map.Entry<String, String> entry : this.maxConnectionsPerHost.entrySet()) {
-
-			URI uri = new URI(entry.getKey());
+			URI uri = URI.create(entry.getKey());
 			HttpHost host = new HttpHost(uri.getScheme(), uri.getHost(), getPort(uri));
 			final HttpRoute route;
 
@@ -180,9 +273,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	static int getPort(URI uri) {
-
 		if (uri.getPort() == -1) {
-
 			if ("https".equalsIgnoreCase(uri.getScheme())) {
 				return 443;
 			}
@@ -190,7 +281,6 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 				return 80;
 			}
 		}
-
 		return uri.getPort();
 	}
 
@@ -200,44 +290,8 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public CloseableHttpClient getObject() throws Exception {
-
-		PoolingHttpClientConnectionManagerBuilder connectionManagerBuilder = PoolingHttpClientConnectionManagerBuilder
-			.create();
-
-		if (this.maxTotalConnections != -1) {
-			connectionManagerBuilder.setMaxConnTotal(this.maxTotalConnections);
-		}
-
-		if (this.connectionManagerBuilderCustomizer != null) {
-			this.connectionManagerBuilderCustomizer.customize(connectionManagerBuilder);
-		}
-
-		this.connectionManager = connectionManagerBuilder.build();
-
-		applyMaxConnectionsPerHost(this.connectionManager);
-
-		RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
-			.setConnectTimeout(Timeout.of(this.connectionTimeout))
-			.setResponseTimeout(Timeout.of(this.readTimeout));
-
-		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
-			.setDefaultRequestConfig(requestConfigBuilder.build())
-			.setConnectionManager(this.connectionManager);
-
-		if (this.credentials != null && this.authScope != null) {
-
-			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
-			basicCredentialsProvider.setCredentials(this.authScope, this.credentials);
-			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
-		}
-
-		if (this.clientBuilderCustomizer != null) {
-			this.clientBuilderCustomizer.customize(httpClientBuilder);
-		}
-
-		return httpClientBuilder.build();
+		return build();
 	}
 
 	@Override
@@ -245,17 +299,27 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		return CloseableHttpClient.class;
 	}
 
-	PoolingHttpClientConnectionManager getConnectionManager() {
-		return this.connectionManager;
-	}
+	/**
+	 * HttpClient {@link HttpRequestInterceptor} implementation that removes
+	 * {@code Content-Length} and {@code Transfer-Encoding} headers from the request.
+	 * Necessary, because some SAAJ and other SOAP implementations set these headers
+	 * themselves, and HttpClient throws an exception if they have been set.
+	 */
+	public static class RemoveSoapHeadersInterceptor implements HttpRequestInterceptor {
 
-	public void setClientBuilderCustomizer(HttpClientBuilderCustomizer clientBuilderCustomizer) {
-		this.clientBuilderCustomizer = clientBuilderCustomizer;
-	}
+		@Override
+		public void process(HttpRequest request, EntityDetails entityDetails, HttpContext httpContext)
+				throws HttpException, IOException {
 
-	public void setConnectionManagerBuilderCustomizer(
-			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
-		this.connectionManagerBuilderCustomizer = connectionManagerBuilderCustomizer;
+			if (request.containsHeader(HttpHeaders.TRANSFER_ENCODING)) {
+				request.removeHeaders(HttpHeaders.TRANSFER_ENCODING);
+			}
+
+			if (request.containsHeader(HttpHeaders.CONTENT_LENGTH)) {
+				request.removeHeaders(HttpHeaders.CONTENT_LENGTH);
+			}
+		}
+
 	}
 
 	@FunctionalInterface

@@ -53,10 +53,9 @@ public class SimpleHttpComponents5MessageSender extends AbstractHttpComponents5M
 	 * Create a new instance with the state of the given
 	 * {@link HttpComponents5ClientFactory}.
 	 * @param factory the factory to use
-	 * @throws Exception if the client fails to build
 	 */
-	public SimpleHttpComponents5MessageSender(HttpComponents5ClientFactory factory) throws Exception {
-		this(factory.getObject());
+	public SimpleHttpComponents5MessageSender(HttpComponents5ClientFactory factory) {
+		this(factory.build());
 	}
 
 	@Override
