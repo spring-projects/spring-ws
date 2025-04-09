@@ -926,6 +926,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			RequestData requestData = new RequestData();
 			requestData.setSigVerCrypto(this.validationSignatureCrypto);
 			requestData.setEnableRevocation(this.enableRevocation);
+			requestData.setSubjectCertConstraints(this.signatureSubjectDnPatterns);
 
 			Validator validator = (this.wssConfig != null) ? this.wssConfig.getValidator(WSConstants.SIGNATURE) : null;
 			if (validator == null) {
