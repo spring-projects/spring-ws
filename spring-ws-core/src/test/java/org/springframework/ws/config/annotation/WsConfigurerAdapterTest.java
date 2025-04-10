@@ -38,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
+@Deprecated
 public class WsConfigurerAdapterTest {
 
 	private ApplicationContext applicationContext;
@@ -72,9 +73,9 @@ public class WsConfigurerAdapterTest {
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext
 			.getBean(DefaultMethodEndpointAdapter.class);
 
-		List<MethodArgumentResolver> argumentResolvers = endpointAdapter.getCustomMethodArgumentResolvers();
+		List<MethodArgumentResolver> argumentResolvers = endpointAdapter.getMethodArgumentResolvers();
 
-		assertThat(argumentResolvers).hasSize(1);
+		assertThat(argumentResolvers).hasSizeGreaterThan(1);
 		assertThat(argumentResolvers.get(0)).isInstanceOf(MyMethodArgumentResolver.class);
 
 		argumentResolvers = endpointAdapter.getMethodArgumentResolvers();
@@ -88,9 +89,9 @@ public class WsConfigurerAdapterTest {
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext
 			.getBean(DefaultMethodEndpointAdapter.class);
 
-		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getCustomMethodReturnValueHandlers();
+		List<MethodReturnValueHandler> returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
 
-		assertThat(returnValueHandlers).hasSize(1);
+		assertThat(returnValueHandlers).hasSizeGreaterThan(1);
 		assertThat(returnValueHandlers.get(0)).isInstanceOf(MyReturnValueHandler.class);
 
 		returnValueHandlers = endpointAdapter.getMethodReturnValueHandlers();
@@ -109,12 +110,12 @@ public class WsConfigurerAdapterTest {
 
 		@Override
 		public void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
-			argumentResolvers.add(new MyMethodArgumentResolver());
+			argumentResolvers.add(0, new MyMethodArgumentResolver());
 		}
 
 		@Override
 		public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
-			returnValueHandlers.add(new MyReturnValueHandler());
+			returnValueHandlers.add(0, new MyReturnValueHandler());
 		}
 
 	}

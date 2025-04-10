@@ -18,68 +18,126 @@ package org.springframework.ws.config.annotation;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.ws.config.annotation.WsConfigurationSupportTest.CustomArgumentResolverConfig.MyArgumentResolver;
+import org.springframework.ws.config.annotation.WsConfigurationSupportTest.CustomDefaultMethodEndpointAdapterConfig.MyDefaultMethodEndpointAdapter;
+import org.springframework.ws.config.annotation.WsConfigurationSupportTest.CustomInterceptorConfig.MyInterceptor;
+import org.springframework.ws.config.annotation.WsConfigurationSupportTest.CustomReturnValueHandlerConfig.MyReturnValueHandler;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
+import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResolver;
+import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
+import org.springframework.ws.server.endpoint.adapter.method.SourcePayloadMethodProcessor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMapping;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * Tests for {@link WsConfigurationSupport}.
+ *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  */
-public class WsConfigurationSupportTest {
+class WsConfigurationSupportTest {
 
-	private ApplicationContext applicationContext;
+	@Test
+	void interceptors() {
+		try (ConfigurableApplicationContext applicationContext = load(CustomInterceptorConfig.class)) {
+			PayloadRootAnnotationMethodEndpointMapping endpointMapping = applicationContext
+				.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
+			assertThat(endpointMapping.getOrder()).isEqualTo(0);
+			EndpointInterceptor[] interceptors = endpointMapping.getInterceptors();
+			assertThat(interceptors).singleElement().isInstanceOf(MyInterceptor.class);
+		}
+	}
 
-	@BeforeEach
-	public void setUp() {
+	@Test
+	void argumentResolvers() {
+		try (ConfigurableApplicationContext applicationContext = load(CustomArgumentResolverConfig.class)) {
+			DefaultMethodEndpointAdapter bean = applicationContext.getBean(DefaultMethodEndpointAdapter.class);
+			List<MethodArgumentResolver> methodArgumentResolvers = bean.getMethodArgumentResolvers();
+			assertThat(methodArgumentResolvers).hasSizeGreaterThan(1).element(0).isInstanceOf(MyArgumentResolver.class);
+		}
+	}
 
+	@Test
+	void returnValueHandlers() {
+		try (ConfigurableApplicationContext applicationContext = load(CustomReturnValueHandlerConfig.class)) {
+			DefaultMethodEndpointAdapter bean = applicationContext.getBean(DefaultMethodEndpointAdapter.class);
+			List<MethodReturnValueHandler> methodReturnValueHandlers = bean.getMethodReturnValueHandlers();
+			assertThat(methodReturnValueHandlers).hasSizeGreaterThan(1)
+				.element(0)
+				.isInstanceOf(MyReturnValueHandler.class);
+		}
+	}
+
+	@Test
+	void defaultMethodEndpointAdapter() {
+		try (ConfigurableApplicationContext applicationContext = load(CustomDefaultMethodEndpointAdapterConfig.class)) {
+			assertThat(applicationContext.getBean(DefaultMethodEndpointAdapter.class))
+				.isInstanceOf(MyDefaultMethodEndpointAdapter.class);
+		}
+	}
+
+	private ConfigurableApplicationContext load(Class<?>... componentClasses) {
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-		applicationContext.register(TestConfig.class);
+		applicationContext.register(componentClasses);
 		applicationContext.refresh();
-
-		this.applicationContext = applicationContext;
+		return applicationContext;
 	}
 
-	@Test
-	public void interceptors() {
-
-		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
-			.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
-
-		assertThat(endpointMapping.getOrder()).isEqualTo(0);
-
-		EndpointInterceptor[] interceptors = endpointMapping.getInterceptors();
-
-		assertThat(interceptors).hasSize(1);
-		assertThat(interceptors[0]).isInstanceOf(MyInterceptor.class);
-	}
-
-	@Test
-	public void defaultMethodEndpointAdapter() {
-
-		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext
-			.getBean(DefaultMethodEndpointAdapter.class);
-
-		assertThat(endpointAdapter).isNotNull();
-		assertThat(endpointAdapter).isInstanceOf(MyDefaultMethodEndpointAdapter.class);
-	}
-
-	@Configuration
-	public static class TestConfig extends WsConfigurationSupport {
+	@Configuration(proxyBeanMethods = false)
+	static class CustomInterceptorConfig extends WsConfigurationSupport {
 
 		@Override
 		protected void addInterceptors(List<EndpointInterceptor> interceptors) {
 			interceptors.add(new MyInterceptor());
 		}
+
+		static class MyInterceptor extends EndpointInterceptorAdapter {
+
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class CustomArgumentResolverConfig extends WsConfigurationSupport {
+
+		@Override
+		protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
+			assertThat(argumentResolvers).isNotEmpty();
+			argumentResolvers.add(0, new MyArgumentResolver());
+		}
+
+		static class MyArgumentResolver extends SourcePayloadMethodProcessor {
+
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class CustomReturnValueHandlerConfig extends WsConfigurationSupport {
+
+		@Override
+		protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
+			assertThat(returnValueHandlers).isNotEmpty();
+			returnValueHandlers.add(0, new MyReturnValueHandler());
+		}
+
+		static class MyReturnValueHandler extends SourcePayloadMethodProcessor {
+
+		}
+
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class CustomDefaultMethodEndpointAdapterConfig extends WsConfigurationSupport {
 
 		@Bean
 		@Override
@@ -87,13 +145,9 @@ public class WsConfigurationSupportTest {
 			return new MyDefaultMethodEndpointAdapter();
 		}
 
-	}
+		static class MyDefaultMethodEndpointAdapter extends DefaultMethodEndpointAdapter {
 
-	public static class MyInterceptor extends EndpointInterceptorAdapter {
-
-	}
-
-	public static class MyDefaultMethodEndpointAdapter extends DefaultMethodEndpointAdapter {
+		}
 
 	}
 

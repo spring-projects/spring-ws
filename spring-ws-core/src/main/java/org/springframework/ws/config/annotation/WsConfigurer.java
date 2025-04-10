@@ -43,20 +43,18 @@ public interface WsConfigurer {
 	}
 
 	/**
-	 * Add resolvers to support custom endpoint method argument types.
-	 * @param argumentResolvers initially an empty list
+	 * Configure the {@link MethodArgumentResolver}s to use in addition to the ones
+	 * registered by default.
+	 * @param argumentResolvers the list of resolvers; initially the default resolvers
 	 */
 	default void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
 
 	}
 
 	/**
-	 * Add handlers to support custom controller method return value types.
-	 * <p>
-	 * Using this option does not override the built-in support for handling return
-	 * values. To customize the built-in support for handling return values, configure
-	 * RequestMappingHandlerAdapter directly.
-	 * @param returnValueHandlers initially an empty list
+	 * Configure the {@link MethodReturnValueHandler}s to use in addition to the ones
+	 * registered by default.
+	 * @param returnValueHandlers the list of handlers; initially the default handlers
 	 */
 	default void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 

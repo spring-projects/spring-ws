@@ -17,6 +17,7 @@
 package org.springframework.ws.config.annotation;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -141,37 +142,38 @@ public class WsConfigurationSupport {
 	 * annotated endpoint methods. Consider overriding one of these other more
 	 * fine-grained methods:
 	 * <ul>
-	 * <li>{@link #addArgumentResolvers(List)} for adding custom argument resolvers.
-	 * <li>{@link #addReturnValueHandlers(List)} for adding custom return value handlers.
+	 * <li>{@link #addArgumentResolvers(List)} for configuring the argument resolvers.
+	 * <li>{@link #addReturnValueHandlers(List)} for configuring the return value
+	 * handlers.
 	 * </ul>
 	 */
 	@Bean
 	public DefaultMethodEndpointAdapter defaultMethodEndpointAdapter() {
-		List<MethodArgumentResolver> argumentResolvers = new ArrayList<>();
+		DefaultMethodEndpointAdapter adapter = DefaultMethodEndpointAdapter.withDefaults();
+		LinkedList<MethodArgumentResolver> argumentResolvers = new LinkedList<>(adapter.getMethodArgumentResolvers());
 		addArgumentResolvers(argumentResolvers);
+		adapter.setMethodArgumentResolvers(argumentResolvers);
 
-		List<MethodReturnValueHandler> returnValueHandlers = new ArrayList<>();
+		LinkedList<MethodReturnValueHandler> returnValueHandlers = new LinkedList<>(
+				adapter.getMethodReturnValueHandlers());
 		addReturnValueHandlers(returnValueHandlers);
-
-		DefaultMethodEndpointAdapter adapter = new DefaultMethodEndpointAdapter();
-		adapter.setCustomMethodArgumentResolvers(argumentResolvers);
-		adapter.setCustomMethodReturnValueHandlers(returnValueHandlers);
+		adapter.setMethodReturnValueHandlers(returnValueHandlers);
 
 		return adapter;
 	}
 
 	/**
-	 * Add custom {@link MethodArgumentResolver}s to use in addition to the ones
+	 * Configure the {@link MethodArgumentResolver}s to use in addition to the ones
 	 * registered by default.
-	 * @param argumentResolvers the list of custom converters; initially an empty list.
+	 * @param argumentResolvers the list of resolvers; initially the default resolvers
 	 */
 	protected void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
 	}
 
 	/**
-	 * Add custom {@link MethodReturnValueHandler}s in addition to the ones registered by
-	 * default.
-	 * @param returnValueHandlers the list of custom handlers; initially an empty list.
+	 * Configure the {@link MethodReturnValueHandler}s to use in addition to the ones
+	 * registered by default.
+	 * @param returnValueHandlers the list of handlers; initially the default handlers
 	 */
 	protected void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
 	}
