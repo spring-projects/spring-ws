@@ -185,7 +185,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 					errors = this.validator.validate(requestSource);
 				}
 				catch (IOException ex) {
-					throw new WebServiceIOException("Could not validate response: " + ex.getMessage(), ex);
+					throw new WebServiceIOException("Could not validate request: " + ex.getMessage(), ex);
 				}
 				if (!ObjectUtils.isEmpty(errors)) {
 					return handleRequestValidationErrors(messageContext, errors);

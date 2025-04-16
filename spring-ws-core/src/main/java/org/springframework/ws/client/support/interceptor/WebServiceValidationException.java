@@ -41,7 +41,7 @@ public class WebServiceValidationException extends WebServiceClientException {
 	}
 
 	private static String createMessage(SAXParseException[] validationErrors) {
-		StringBuilder builder = new StringBuilder("XML validation error on response: ");
+		StringBuilder builder = new StringBuilder("XML validation error on request: ");
 
 		for (SAXParseException validationError : validationErrors) {
 			builder.append(validationError.getMessage());
@@ -49,7 +49,9 @@ public class WebServiceValidationException extends WebServiceClientException {
 		return builder.toString();
 	}
 
-	/** Returns the validation errors. */
+	/**
+	 * Return the validation errors.
+	 */
 	public SAXParseException[] getValidationErrors() {
 		return this.validationErrors;
 	}
