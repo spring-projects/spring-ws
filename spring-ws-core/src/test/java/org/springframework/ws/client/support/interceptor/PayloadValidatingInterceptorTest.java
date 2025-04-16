@@ -93,7 +93,7 @@ public class PayloadValidatingInterceptorTest {
 
 		assertThatExceptionOfType(WebServiceClientException.class)
 			.isThrownBy(() -> this.interceptor.handleRequest(this.context))
-			.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on request");
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class PayloadValidatingInterceptorTest {
 
 		assertThatExceptionOfType(WebServiceClientException.class)
 			.isThrownBy(() -> this.interceptor.handleRequest(this.context))
-			.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on request");
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class PayloadValidatingInterceptorTest {
 
 		assertThatExceptionOfType(WebServiceClientException.class)
 			.isThrownBy(() -> this.interceptor.handleRequest(this.context))
-			.withMessageContaining("XML validation error on response");
+			.withMessageContaining("XML validation error on request");
 	}
 
 	@Test
