@@ -6,7 +6,7 @@
         http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd">
 
 	<bean id="bridgedMethodEndpoint"
-		  class="org.springframework.ws.server.endpoint.mapping.BridgedMethodRegistrationTest$B"/>
+		  class="org.springframework.ws.server.endpoint.mapping.BridgedMethodRegistrationTests$B"/>
 
 	<sws:annotation-driven/>
 

@@ -1,0 +1,136 @@
+/*
+ * Copyright 2005-2025 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.springframework.ws.server.endpoint.adapter;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.DefaultMessageContext;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MethodEndpoint;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Deprecated
+public class PayloadMethodEndpointAdapterTests {
+
+	private PayloadMethodEndpointAdapter adapter;
+
+	private boolean noResponseInvoked;
+
+	private boolean responseInvoked;
+
+	private MessageContext messageContext;
+
+	@BeforeEach
+	public void setUp() {
+
+		this.adapter = new PayloadMethodEndpointAdapter();
+		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+	}
+
+	@Test
+	public void testSupportedNoResponse() throws NoSuchMethodException {
+
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", DOMSource.class);
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
+	}
+
+	@Test
+	public void testSupportedResponse() throws NoSuchMethodException {
+
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", StreamSource.class);
+		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
+	}
+
+	@Test
+	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+
+		assertThat(this.adapter
+			.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams", Source.class, Source.class)))
+			.isFalse();
+	}
+
+	@Test
+	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
+
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongReturnType", Source.class)))
+			.isFalse();
+	}
+
+	@Test
+	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+
+		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class)))
+			.isFalse();
+	}
+
+	@Test
+	public void testNoResponse() throws Exception {
+
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", DOMSource.class);
+
+		assertThat(this.noResponseInvoked).isFalse();
+
+		this.adapter.invoke(this.messageContext, methodEndpoint);
+
+		assertThat(this.noResponseInvoked).isTrue();
+	}
+
+	@Test
+	public void testResponse() throws Exception {
+
+		WebServiceMessage request = new MockWebServiceMessage("<request/>");
+		this.messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", StreamSource.class);
+
+		assertThat(this.responseInvoked).isFalse();
+
+		this.adapter.invoke(this.messageContext, methodEndpoint);
+
+		assertThat(this.responseInvoked).isTrue();
+	}
+
+	public void noResponse(DOMSource request) {
+		this.noResponseInvoked = true;
+	}
+
+	public Source response(StreamSource request) {
+
+		this.responseInvoked = true;
+		return request;
+	}
+
+	public void unsupportedMultipleParams(Source s1, Source s2) {
+	}
+
+	public Source unsupportedWrongParam(String request) {
+		return null;
+	}
+
+	public String unsupportedWrongReturnType(Source request) {
+		return null;
+	}
+
+}
