@@ -6,4 +6,5 @@
 		<property name="file" value="${config_loc}/checkstyle-suppressions.xml"/>
 	</module>
 	<module name="io.spring.javaformat.checkstyle.SpringChecks"/>
+	<module name="io.spring.javaformat.checkstyle.check.SpringTestFileNameCheck" />
 </module>

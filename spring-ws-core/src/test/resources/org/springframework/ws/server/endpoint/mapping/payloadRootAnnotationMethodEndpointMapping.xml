@@ -6,12 +6,12 @@
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
 
 	<bean id="endpoint"
-		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$MyEndpoint"/>
+		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTests$MyEndpoint"/>
 
 	<aop:aspectj-autoproxy/>
 
 	<bean id="other"
-		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTest$OtherBean"/>
+		  class="org.springframework.ws.server.endpoint.mapping.PayloadRootAnnotationMethodEndpointMappingTests$OtherBean"/>
 
 	<bean id="logAspect"
 		  class="org.springframework.ws.server.endpoint.mapping.LogAspect"/>
