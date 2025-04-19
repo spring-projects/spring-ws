@@ -9,8 +9,8 @@ javaPlatform {
 dependencies {
 	api(platform("org.apache.logging.log4j:log4j-bom:2.24.3"))
 	api(platform("org.apache.activemq:activemq-bom:6.1.6"))
-	api(platform("org.eclipse.jetty:jetty-bom:12.0.16"))
-	api(platform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.16"))
+	api(platform("org.eclipse.jetty:jetty-bom:12.0.19"))
+	api(platform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.19"))
 	api(platform("org.junit:junit-bom:5.11.0"))
 	api(platform("org.slf4j:slf4j-bom:2.0.17"))
 	api(platform("org.springframework:spring-framework-bom:${springFrameworkVersion}"))
