@@ -40,8 +40,10 @@ public class CheckstyleConventions {
 	public void apply(Project project) {
 		project.getPlugins().withType(JavaPlugin.class, (java) -> {
 			project.getPlugins().apply(CheckstylePlugin.class);
-			project.getTasks().withType(Checkstyle.class).forEach(checkstyle -> checkstyle.getMaxHeapSize().set("1g"));
-			project.getTasks().named("checkstyleTest").configure(task -> task.setEnabled(false));
+			project.getTasks()
+				.withType(Checkstyle.class)
+				.forEach((checkstyle) -> checkstyle.getMaxHeapSize().set("1g"));
+			project.getTasks().named("checkstyleTest").configure((task) -> task.setEnabled(false));
 			CheckstyleExtension checkstyle = project.getExtensions().getByType(CheckstyleExtension.class);
 			checkstyle.setToolVersion("10.21.1");
 			checkstyle.getConfigDirectory().set(project.getRootProject().file("src/checkstyle"));
