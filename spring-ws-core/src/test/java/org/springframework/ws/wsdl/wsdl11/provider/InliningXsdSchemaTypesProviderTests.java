@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl.wsdl11.provider;
 
+import java.util.List;
+
 import javax.wsdl.Definition;
 import javax.wsdl.Types;
 import javax.wsdl.extensions.schema.Schema;
@@ -65,9 +67,9 @@ public class InliningXsdSchemaTypesProviderTests {
 		Types types = this.definition.getTypes();
 
 		assertThat(types).isNotNull();
-		assertThat(types.getExtensibilityElements()).hasSize(1);
+		assertThat(getExtensibilityElements(types)).hasSize(1);
 
-		Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
+		Schema wsdlSchema = (Schema) getExtensibilityElements(types).get(0);
 
 		assertThat(wsdlSchema.getElement()).isNotNull();
 	}
@@ -93,15 +95,19 @@ public class InliningXsdSchemaTypesProviderTests {
 		Types types = this.definition.getTypes();
 
 		assertThat(types).isNotNull();
-		assertThat(types.getExtensibilityElements()).hasSize(2);
+		assertThat(getExtensibilityElements(types)).hasSize(2);
 
-		Schema wsdlSchema = (Schema) types.getExtensibilityElements().get(0);
-
-		assertThat(wsdlSchema.getElement()).isNotNull();
-
-		wsdlSchema = (Schema) types.getExtensibilityElements().get(1);
+		Schema wsdlSchema = (Schema) getExtensibilityElements(types).get(0);
 
 		assertThat(wsdlSchema.getElement()).isNotNull();
+
+		wsdlSchema = (Schema) getExtensibilityElements(types).get(1);
+
+		assertThat(wsdlSchema.getElement()).isNotNull();
+	}
+
+	private static List<?> getExtensibilityElements(Types types) {
+		return types.getExtensibilityElements();
 	}
 
 }
