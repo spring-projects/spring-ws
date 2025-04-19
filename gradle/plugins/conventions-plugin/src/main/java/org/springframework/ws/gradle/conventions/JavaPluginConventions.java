@@ -16,6 +16,8 @@
 
 package org.springframework.ws.gradle.conventions;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,6 +31,7 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.bundling.Jar;
+import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.jvm.toolchain.JavaLanguageVersion;
 
@@ -43,6 +46,7 @@ class JavaPluginConventions {
 
 	void apply(Project project) {
 		project.getPlugins().apply(SpringJavaFormatPlugin.class);
+		configureJavaConventions(project);
 		JavaPluginExtension java = project.getExtensions().getByType(JavaPluginExtension.class);
 		enableSourceAndJavadocJars(java);
 		configureSourceAndTargetCompatibility(java);
@@ -53,7 +57,22 @@ class JavaPluginConventions {
 		configureJUnitPlatform(project);
 	}
 
-
+	private void configureJavaConventions(Project project) {
+		project.getTasks().withType(JavaCompile.class, (compile) -> {
+			compile.getOptions().setEncoding("UTF-8");
+			List<String> args = compile.getOptions().getCompilerArgs();
+			if (!args.contains("-parameters")) {
+				args.add("-parameters");
+			}
+			boolean buildWithJava17 = !project.hasProperty("toolchainVersion")
+					&& JavaVersion.current() == JavaVersion.VERSION_17;
+			if (buildWithJava17) {
+				args.addAll(Arrays.asList("-Werror", "-Xlint:unchecked", "-Xlint:deprecation", "-Xlint:rawtypes",
+						"-Xlint:varargs"));
+			}
+		});
+		project.getDependencies().add("compileOnly", "com.google.code.findbugs:jsr305");
+	}
 
 	private void enableSourceAndJavadocJars(JavaPluginExtension java) {
 		java.withSourcesJar();
@@ -111,6 +130,7 @@ class JavaPluginConventions {
 
 	private void configureJUnitPlatform(Project project) {
 		project.getTasks().withType(Test.class).configureEach((task) -> task.useJUnitPlatform());
+		project.getDependencies().add("testImplementation", "org.apiguardian:apiguardian-api");
 		project.getDependencies().add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher");
 	}
 

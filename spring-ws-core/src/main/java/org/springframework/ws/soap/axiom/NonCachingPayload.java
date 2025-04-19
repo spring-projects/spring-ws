@@ -75,6 +75,7 @@ class NonCachingPayload extends AbstractPayload {
 
 		private boolean payloadAdded = false;
 
+		@SuppressWarnings("deprecation")
 		private DelegatingStreamWriter() {
 			try {
 				this.delegate = StAXUtils.createXMLStreamWriter(this.baos);

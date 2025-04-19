@@ -29,6 +29,7 @@ import org.apache.axiom.om.OMContainer;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.w3c.dom.Document;
@@ -49,6 +50,8 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
  */
 @SuppressWarnings("Since15")
 public abstract class AxiomUtils {
+
+	private static final OMOutputFormat DEFAULT_OUTPUT_FORMAT = new OMOutputFormat();
 
 	/**
 	 * Converts a {@code javax.xml.namespace.QName} to a
@@ -116,7 +119,7 @@ public abstract class AxiomUtils {
 			else {
 				ByteArrayOutputStream bos = new ByteArrayOutputStream();
 				envelope.build();
-				envelope.serialize(bos);
+				envelope.serialize(bos, DEFAULT_OUTPUT_FORMAT, true);
 
 				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
 				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();

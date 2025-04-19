@@ -17,6 +17,7 @@ dependencies {
 	api(platform("org.springframework.security:spring-security-bom:6.5.0-SNAPSHOT"))
 	constraints {
 		api("com.fasterxml.woodstox:woodstox-core:6.5.1")
+		api("com.google.code.findbugs:jsr305:3.0.2")
 		api("com.icegreen:greenmail:2.0.1")
 		api("com.icegreen:greenmail-junit5:2.0.1")
 		api("com.icegreen:greenmail-spring:2.0.1")
@@ -42,6 +43,7 @@ dependencies {
 		api("org.apache.ws.commons.axiom:axiom-impl:2.0.0")
 		api("org.apache.ws.commons.axiom:axiom-legacy-attachments:2.0.0")
 		api("org.apache.ws.xmlschema:xmlschema-core:2.3.1")
+		api("org.apiguardian:apiguardian-api:1.1.2")
 		api("org.aspectj:aspectjrt:1.9.22")
 		api("org.aspectj:aspectjweaver:1.9.22")
 		api("org.assertj:assertj-core:3.25.3")

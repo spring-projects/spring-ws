@@ -61,7 +61,7 @@ public class NonCachingPayloadTests {
 		streamWriter.flush();
 
 		StringWriter writer = new StringWriter();
-		this.body.serialize(writer);
+		this.body.serialize(writer, true);
 
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
 				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>"
@@ -85,7 +85,7 @@ public class NonCachingPayloadTests {
 		streamWriter.flush();
 
 		StringWriter writer = new StringWriter();
-		this.body.serialize(writer);
+		this.body.serialize(writer, true);
 
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
 				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child>text</child>"
@@ -107,7 +107,7 @@ public class NonCachingPayloadTests {
 		streamWriter.flush();
 
 		StringWriter writer = new StringWriter();
-		this.body.serialize(writer);
+		this.body.serialize(writer, true);
 
 		String expected = "<soapenv:Body xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>"
 				+ "<root xmlns='http://springframework.org/spring-ws'>" + "<child />" + "</root></soapenv:Body>";

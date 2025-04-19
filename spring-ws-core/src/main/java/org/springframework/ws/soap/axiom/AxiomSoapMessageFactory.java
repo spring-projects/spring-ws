@@ -31,13 +31,10 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.om.impl.MTOMConstants;
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP11Version;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAP12Version;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPModelBuilder;
+import org.apache.axiom.soap.SOAPVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -316,19 +313,6 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 				this.langAttributeOnSoap11FaultString);
 	}
 
-	private String getSoapEnvelopeNamespace(String contentType) {
-		if (contentType.contains(SOAP11Constants.SOAP_11_CONTENT_TYPE)) {
-			return SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI;
-		}
-		else if (contentType.contains(SOAP12Constants.SOAP_12_CONTENT_TYPE)) {
-			return SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI;
-		}
-		else {
-			throw new AxiomSoapMessageCreationException("Unknown content type '" + contentType + "'");
-		}
-
-	}
-
 	/**
 	 * Returns the character set from the given content type. Mostly copied
 	 * @return the character set encoding
@@ -385,10 +369,10 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder("AxiomSoapMessageFactory[");
-		if (this.soapFactory.getSOAPVersion() == SOAP11Version.getSingleton()) {
+		if (this.soapFactory.getSOAPVersion() == SOAPVersion.SOAP11) {
 			builder.append("SOAP 1.1");
 		}
-		else if (this.soapFactory.getSOAPVersion() == SOAP12Version.getSingleton()) {
+		else if (this.soapFactory.getSOAPVersion() == SOAPVersion.SOAP12) {
 			builder.append("SOAP 1.2");
 		}
 		builder.append(',');

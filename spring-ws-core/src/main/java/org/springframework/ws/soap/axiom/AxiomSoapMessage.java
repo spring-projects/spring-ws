@@ -294,12 +294,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 			writeSwAMessage(outputStream, outputFormat);
 		}
 		else {
-			if (this.payloadCaching) {
-				this.axiomMessage.serialize(outputStream, outputFormat);
-			}
-			else {
-				this.axiomMessage.serializeAndConsume(outputStream, outputFormat);
-			}
+			this.axiomMessage.serialize(outputStream, outputFormat, this.payloadCaching);
 		}
 		outputStream.flush();
 	}
@@ -347,11 +342,11 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 			throws XMLStreamException, UnsupportedEncodingException {
 		StringWriter writer = new StringWriter();
 		SOAPEnvelope envelope = this.axiomMessage.getSOAPEnvelope();
-		if (this.payloadCaching) {
-			envelope.serialize(writer, format);
+		try {
+			envelope.serialize(writer, format, this.payloadCaching);
 		}
-		else {
-			envelope.serializeAndConsume(writer, format);
+		catch (IOException ex) {
+			throw new XMLStreamException(ex);
 		}
 
 		try {

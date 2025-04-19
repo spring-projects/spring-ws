@@ -147,7 +147,7 @@ public class AxiomUtilsTests {
 
 		SOAPEnvelope envelope = AxiomUtils.toEnvelope(document);
 		StringWriter writer = new StringWriter();
-		envelope.serialize(writer);
+		envelope.serialize(writer, true);
 		String result = writer.toString();
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();

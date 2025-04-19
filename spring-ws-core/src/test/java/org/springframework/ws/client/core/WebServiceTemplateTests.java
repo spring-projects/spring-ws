@@ -118,7 +118,7 @@ public class WebServiceTemplateTests {
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 		Object extracted = new Object();
 		when(extractorMock.extractData(isA(WebServiceMessage.class))).thenReturn(extracted);
 
@@ -136,7 +136,7 @@ public class WebServiceTemplateTests {
 	@Test
 	public void testSendAndReceiveMessageNoResponse() throws Exception {
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<?> extractorMock = mock(WebServiceMessageExtractor.class);
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
 		when(this.connectionMock.hasError()).thenReturn(false);
@@ -151,7 +151,7 @@ public class WebServiceTemplateTests {
 	@Test
 	public void testSendAndReceiveMessageFault() throws Exception {
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
 		FaultMessageResolver faultMessageResolverMock = mock(FaultMessageResolver.class);
 		this.template.setFaultMessageResolver(faultMessageResolverMock);
@@ -174,7 +174,7 @@ public class WebServiceTemplateTests {
 	@Test
 	public void testSendAndReceiveConnectionError() throws Exception {
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
 		this.template.setFaultMessageResolver(null);
 
@@ -193,7 +193,7 @@ public class WebServiceTemplateTests {
 	@Test
 	public void testSendAndReceiveSourceResponse() throws Exception {
 
-		SourceExtractor extractorMock = mock(SourceExtractor.class);
+		SourceExtractor<Object> extractorMock = mockSourceExtractor();
 		Object extracted = new Object();
 		when(extractorMock.extractData(isA(Source.class))).thenReturn(extracted);
 
@@ -211,7 +211,7 @@ public class WebServiceTemplateTests {
 	@Test
 	public void testSendAndReceiveSourceNoResponse() throws Exception {
 
-		SourceExtractor extractorMock = mock(SourceExtractor.class);
+		SourceExtractor<Object> extractorMock = mockSourceExtractor();
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
 		when(this.connectionMock.hasError()).thenReturn(false);
@@ -330,7 +330,7 @@ public class WebServiceTemplateTests {
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 		Object extracted = new Object();
 		when(extractorMock.extractData(isA(WebServiceMessage.class))).thenReturn(extracted);
 
@@ -361,7 +361,7 @@ public class WebServiceTemplateTests {
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 		Object extracted = new Object();
 		when(extractorMock.extractData(isA(WebServiceMessage.class))).thenReturn(extracted);
 
@@ -390,7 +390,7 @@ public class WebServiceTemplateTests {
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
 		Object result = this.template.doSendAndReceive(messageContext, this.connectionMock, requestCallback,
 				extractorMock);
@@ -415,7 +415,7 @@ public class WebServiceTemplateTests {
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(messageContext.getRequest());
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 		Object extracted = new Object();
 		when(extractorMock.extractData(messageContext.getResponse())).thenReturn(extracted);
 
@@ -585,7 +585,7 @@ public class WebServiceTemplateTests {
 			}
 		});
 
-		WebServiceMessageExtractor extractorMock = mock(WebServiceMessageExtractor.class);
+		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
 		reset(this.connectionMock);
 
@@ -598,6 +598,14 @@ public class WebServiceTemplateTests {
 		Object result = this.template.sendAndReceive(null, extractorMock);
 
 		assertThat(result).isNull();
+	}
+
+	private static WebServiceMessageExtractor<Object> mockWebServiceMessageExtractor() {
+		return mock(WebServiceMessageExtractor.class);
+	}
+
+	private static SourceExtractor<Object> mockSourceExtractor() {
+		return mock(SourceExtractor.class);
 	}
 
 	private static class NoOpClientInterceptor
