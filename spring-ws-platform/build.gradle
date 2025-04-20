@@ -46,7 +46,7 @@ dependencies {
 		api("org.apiguardian:apiguardian-api:1.1.2")
 		api("org.aspectj:aspectjrt:1.9.24")
 		api("org.aspectj:aspectjweaver:1.9.24")
-		api("org.assertj:assertj-core:3.25.3")
+		api("org.assertj:assertj-core:3.27.3")
 		api("org.dom4j:dom4j:2.1.4")
 		api("org.easymock:easymock:4.3")
 		api("org.eclipse.angus:angus-mail:1.1.0")
