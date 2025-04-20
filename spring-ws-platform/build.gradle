@@ -62,6 +62,6 @@ dependencies {
 		api("org.xmlunit:xmlunit-legacy:2.10.0")
 		api("org.xmlunit:xmlunit-placeholders:2.10.0")
 		api("wsdl4j:wsdl4j:1.6.3")
-		api("xom:xom:1.3.7")
+		api("xom:xom:1.3.9")
 	}
 }
