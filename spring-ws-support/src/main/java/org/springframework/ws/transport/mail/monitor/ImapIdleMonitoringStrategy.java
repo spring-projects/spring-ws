@@ -16,13 +16,13 @@
 
 package org.springframework.ws.transport.mail.monitor;
 
-import com.sun.mail.imap.IMAPFolder;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.event.MessageCountAdapter;
 import jakarta.mail.event.MessageCountEvent;
 import jakarta.mail.event.MessageCountListener;
+import org.eclipse.angus.mail.imap.IMAPFolder;
 
 import org.springframework.util.Assert;
 
@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  * command for asynchronous message detection.
  * <p>
  * <b>Note</b> that this implementation is only suitable for use with IMAP servers which
- * support the IDLE command. Additionally, this strategy requires JavaMail version 1.4.1.
+ * support the IDLE command.
  *
  * @author Arjen Poutsma
  * @since 1.5.0

@@ -49,7 +49,7 @@ dependencies {
 		api("org.assertj:assertj-core:3.27.3")
 		api("org.dom4j:dom4j:2.1.4")
 		api("org.easymock:easymock:5.5.0")
-		api("org.eclipse.angus:angus-mail:1.1.0")
+		api("org.eclipse.angus:angus-mail:2.0.3")
 		api("org.glassfish.jaxb:jaxb-runtime:4.0.5")
 		api("org.igniterealtime.smack:smack-extensions:4.3.5")
 		api("org.igniterealtime.smack:smack-java7:4.3.5")
