@@ -60,7 +60,7 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 	}
 
 	@Test
-	public void testGetCharsetEncoding() {
+	void testGetCharsetEncoding() {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 
@@ -72,7 +72,7 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 	}
 
 	@Test
-	public void testRepetitiveReadCaching() throws Exception {
+	void testRepetitiveReadCaching() throws Exception {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(true);
@@ -90,7 +90,7 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 	}
 
 	@Test
-	public void testRepetitiveReadNoCaching() throws Exception {
+	void testRepetitiveReadNoCaching() throws Exception {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);
@@ -118,7 +118,7 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 	 * See http://jira.springframework.org/browse/SWS-502
 	 */
 	@Test
-	public void testSWS502() throws Exception {
+	void testSWS502() throws Exception {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);

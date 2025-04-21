@@ -36,7 +36,7 @@ public abstract class AbstractWsAddressingTests {
 	protected MessageFactory messageFactory;
 
 	@BeforeEach
-	public void createMessageFactory() throws Exception {
+	void createMessageFactory() throws Exception {
 		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 	}
 

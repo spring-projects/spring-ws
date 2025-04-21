@@ -26,17 +26,17 @@ import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CryptoFactoryBeanTests {
+class CryptoFactoryBeanTests {
 
 	private CryptoFactoryBean factoryBean;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.factoryBean = new CryptoFactoryBean();
 	}
 
 	@Test
-	public void testSetConfiguration() throws Exception {
+	void testSetConfiguration() throws Exception {
 
 		Properties configuration = new Properties();
 		configuration.setProperty("org.apache.ws.security.crypto.provider",
@@ -55,7 +55,7 @@ public class CryptoFactoryBeanTests {
 	}
 
 	@Test
-	public void testProperties() throws Exception {
+	void testProperties() throws Exception {
 
 		this.factoryBean.setKeyStoreType("jceks");
 		this.factoryBean.setKeyStorePassword("123456");

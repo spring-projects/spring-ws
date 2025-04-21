@@ -60,7 +60,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateCertificate() throws Exception {
+	void testValidateCertificate() throws Exception {
 
 		SoapMessage message = loadSoap11Message("signed-soap.xml");
 
@@ -75,7 +75,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateCertificateWithSignatureConfirmation() throws Exception {
+	void testValidateCertificateWithSignatureConfirmation() throws Exception {
 
 		SoapMessage message = loadSoap11Message("signed-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);
@@ -92,7 +92,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testSignResponse() throws Exception {
+	void testSignResponse() throws Exception {
 
 		this.interceptor.setSecurementActions("Signature");
 		this.interceptor.setEnableSignatureConfirmation(false);
@@ -111,7 +111,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testSignResponseWithSignatureUser() throws Exception {
+	void testSignResponseWithSignatureUser() throws Exception {
 
 		this.interceptor.setSecurementActions("Signature");
 		this.interceptor.setEnableSignatureConfirmation(false);
@@ -128,7 +128,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateCertificateSubjectDnConstraintsShouldMatchSubject() throws Exception {
+	void testValidateCertificateSubjectDnConstraintsShouldMatchSubject() throws Exception {
 		SoapMessage message = createSignedTestSoapMessage();
 		MessageContext messageContext = getSoap11MessageContext(createSignedTestSoapMessage());
 		this.interceptor.secureMessage(message, messageContext);
@@ -139,7 +139,7 @@ public abstract class Wss4jMessageInterceptorSignTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateCertificateSubjectDnConstraintsShouldFailForNotMatchingSubject() throws Exception {
+	void testValidateCertificateSubjectDnConstraintsShouldFailForNotMatchingSubject() throws Exception {
 		SoapMessage message = createSignedTestSoapMessage();
 		MessageContext messageContext = getSoap11MessageContext(createSignedTestSoapMessage());
 		this.interceptor.secureMessage(message, messageContext);

@@ -40,7 +40,7 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XsdSchemaHandlerAdapterTests {
+class XsdSchemaHandlerAdapterTests {
 
 	private XsdSchemaHandlerAdapter adapter;
 
@@ -49,7 +49,7 @@ public class XsdSchemaHandlerAdapterTests {
 	private MockHttpServletResponse response;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.adapter = new XsdSchemaHandlerAdapter();
 		this.adapter.afterPropertiesSet();
@@ -59,7 +59,7 @@ public class XsdSchemaHandlerAdapterTests {
 
 	@Test
 	@Deprecated
-	public void getLastModified() throws Exception {
+	void getLastModified() throws Exception {
 
 		Resource single = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(single);
@@ -70,7 +70,7 @@ public class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGet() throws Exception {
+	void handleGet() throws Exception {
 
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("single.xsd", getClass());
@@ -83,7 +83,7 @@ public class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGetUpToDate() throws Exception {
+	void handleGetUpToDate() throws Exception {
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("single.xsd", getClass());
 		long lastModified = single.getFile().lastModified();
@@ -96,7 +96,7 @@ public class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGetNotUpToDate() throws Exception {
+	void handleGetNotUpToDate() throws Exception {
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("single.xsd", getClass());
 		long lastModified = single.getFile().lastModified();
@@ -110,7 +110,7 @@ public class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleNonGet() throws Exception {
+	void handleNonGet() throws Exception {
 
 		this.request.setMethod(HttpTransportConstants.METHOD_POST);
 		this.adapter.handle(this.request, this.response, null);
@@ -119,7 +119,7 @@ public class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGetWithTransformLocation() throws Exception {
+	void handleGetWithTransformLocation() throws Exception {
 
 		this.adapter.setTransformSchemaLocations(true);
 

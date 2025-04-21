@@ -39,12 +39,12 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajWss4jMessageInterceptorSignTests extends Wss4jMessageInterceptorSignTests {
+class SaajWss4jMessageInterceptorSignTests extends Wss4jMessageInterceptorSignTests {
 
 	private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 
 	@Test
-	public void testSignAndValidate() throws Exception {
+	void testSignAndValidate() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		this.interceptor.setSecurementActions("Signature");
@@ -85,7 +85,7 @@ public class SaajWss4jMessageInterceptorSignTests extends Wss4jMessageIntercepto
 	}
 
 	@Test
-	public void testSignWithoutInclusivePrefixesAndValidate() throws Exception {
+	void testSignWithoutInclusivePrefixesAndValidate() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		this.interceptor.setSecurementActions("Signature");

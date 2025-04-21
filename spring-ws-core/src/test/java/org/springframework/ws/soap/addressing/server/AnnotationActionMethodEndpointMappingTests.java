@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Arjen Poutsma
  * @author Nate Stoddard
  */
-public class AnnotationActionMethodEndpointMappingTests {
+class AnnotationActionMethodEndpointMappingTests {
 
 	private StaticApplicationContext applicationContext;
 
@@ -54,7 +54,7 @@ public class AnnotationActionMethodEndpointMappingTests {
 	private MessageFactory messageFactory;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 
@@ -69,7 +69,7 @@ public class AnnotationActionMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void mapping() throws Exception {
+	void mapping() throws Exception {
 
 		MessageContext messageContext = createMessageContext();
 

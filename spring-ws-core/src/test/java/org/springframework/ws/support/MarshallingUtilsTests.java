@@ -39,10 +39,10 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class MarshallingUtilsTests {
+class MarshallingUtilsTests {
 
 	@Test
-	public void testUnmarshal() throws Exception {
+	void testUnmarshal() throws Exception {
 
 		Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
 		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
@@ -62,7 +62,7 @@ public class MarshallingUtilsTests {
 	}
 
 	@Test
-	public void testUnmarshalMime() throws Exception {
+	void testUnmarshalMime() throws Exception {
 
 		MimeUnmarshaller unmarshallerMock = createMock(MimeUnmarshaller.class);
 		MimeMessage messageMock = createMock(MimeMessage.class);
@@ -82,7 +82,7 @@ public class MarshallingUtilsTests {
 	}
 
 	@Test
-	public void testUnmarshalNoPayload() throws Exception {
+	void testUnmarshalNoPayload() throws Exception {
 
 		Unmarshaller unmarshallerMock = createMock(Unmarshaller.class);
 		MimeMessage messageMock = createMock(MimeMessage.class);
@@ -99,7 +99,7 @@ public class MarshallingUtilsTests {
 	}
 
 	@Test
-	public void testMarshal() throws Exception {
+	void testMarshal() throws Exception {
 
 		Marshaller marshallerMock = createMock(Marshaller.class);
 		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
@@ -117,7 +117,7 @@ public class MarshallingUtilsTests {
 	}
 
 	@Test
-	public void testMarshalMime() throws Exception {
+	void testMarshalMime() throws Exception {
 
 		MimeMarshaller marshallerMock = createMock(MimeMarshaller.class);
 		MimeMessage messageMock = createMock(MimeMessage.class);

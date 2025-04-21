@@ -37,7 +37,7 @@ import org.springframework.xml.sax.SaxUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DefaultMessagesProviderTests {
+class DefaultMessagesProviderTests {
 
 	private DefaultMessagesProvider provider;
 
@@ -46,7 +46,7 @@ public class DefaultMessagesProviderTests {
 	private DocumentBuilder documentBuilder;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.provider = new DefaultMessagesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
@@ -58,7 +58,7 @@ public class DefaultMessagesProviderTests {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testAddMessages() throws Exception {
+	void testAddMessages() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", definitionNamespace);

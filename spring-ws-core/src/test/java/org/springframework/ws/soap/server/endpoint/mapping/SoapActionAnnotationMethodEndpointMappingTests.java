@@ -38,14 +38,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SoapActionAnnotationMethodEndpointMappingTests {
+class SoapActionAnnotationMethodEndpointMappingTests {
 
 	private SoapActionAnnotationMethodEndpointMapping mapping;
 
 	private StaticApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.applicationContext = new StaticApplicationContext();
 		this.applicationContext.registerSingleton("mapping", SoapActionAnnotationMethodEndpointMapping.class);
@@ -55,7 +55,7 @@ public class SoapActionAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationSingle() throws Exception {
+	void registrationSingle() throws Exception {
 
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction");
@@ -76,7 +76,7 @@ public class SoapActionAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationMultiple() throws Exception {
+	void registrationMultiple() throws Exception {
 
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction1");
@@ -102,7 +102,7 @@ public class SoapActionAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationRepeatable() throws Exception {
+	void registrationRepeatable() throws Exception {
 
 		SoapMessage requestMock = createMock(SoapMessage.class);
 		expect(requestMock.getSoapAction()).andReturn("http://springframework.org/spring-ws/SoapAction3");

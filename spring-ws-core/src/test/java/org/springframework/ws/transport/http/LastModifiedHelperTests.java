@@ -32,21 +32,21 @@ import org.springframework.xml.transform.ResourceSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LastModifiedHelperTests {
+class LastModifiedHelperTests {
 
 	private Resource resource;
 
 	private long expected;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.resource = new ClassPathResource("single.xsd", getClass());
 		this.expected = this.resource.lastModified();
 	}
 
 	@Test
-	public void testSaxSource() throws Exception {
+	void testSaxSource() throws Exception {
 
 		long result = LastModifiedHelper.getLastModified(new ResourceSource(this.resource));
 
@@ -54,7 +54,7 @@ public class LastModifiedHelperTests {
 	}
 
 	@Test
-	public void testDomSource() throws Exception {
+	void testDomSource() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -66,7 +66,7 @@ public class LastModifiedHelperTests {
 	}
 
 	@Test
-	public void testStreamSource() throws Exception {
+	void testStreamSource() throws Exception {
 
 		long result = LastModifiedHelper.getLastModified(new StreamSource(this.resource.getFile()));
 

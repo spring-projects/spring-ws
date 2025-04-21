@@ -19,7 +19,7 @@ package org.springframework.ws.pox.dom;
 import org.springframework.ws.AbstractWebServiceMessageFactoryTests;
 import org.springframework.ws.WebServiceMessageFactory;
 
-public class DomPoxMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
+class DomPoxMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() {

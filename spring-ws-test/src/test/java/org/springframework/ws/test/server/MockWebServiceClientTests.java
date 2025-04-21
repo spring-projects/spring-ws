@@ -24,10 +24,10 @@ import org.springframework.ws.soap.server.SoapMessageDispatcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MockWebServiceClientTests {
+class MockWebServiceClientTests {
 
 	@Test
-	public void createServerApplicationContext() {
+	void createServerApplicationContext() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("messageDispatcher", SoapMessageDispatcher.class);
@@ -40,7 +40,7 @@ public class MockWebServiceClientTests {
 	}
 
 	@Test
-	public void createServerApplicationContextDefaults() {
+	void createServerApplicationContextDefaults() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.refresh();

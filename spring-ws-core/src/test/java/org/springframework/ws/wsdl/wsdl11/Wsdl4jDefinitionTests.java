@@ -38,14 +38,14 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Wsdl4jDefinitionTests {
+class Wsdl4jDefinitionTests {
 
 	private Wsdl4jDefinition definition;
 
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		WSDLFactory factory = WSDLFactory.newInstance();
 		WSDLReader reader = factory.newWSDLReader();
@@ -59,7 +59,7 @@ public class Wsdl4jDefinitionTests {
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		Source source = this.definition.getSource();
 

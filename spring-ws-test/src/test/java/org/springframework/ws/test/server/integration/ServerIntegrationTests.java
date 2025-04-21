@@ -37,7 +37,7 @@ import static org.springframework.ws.test.server.ResponseMatchers.payload;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("integration-test.xml")
-public class ServerIntegrationTests {
+class ServerIntegrationTests {
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -45,12 +45,12 @@ public class ServerIntegrationTests {
 	private MockWebServiceClient mockClient;
 
 	@BeforeEach
-	public void createClient() {
+	void createClient() {
 		this.mockClient = MockWebServiceClient.createClient(this.applicationContext);
 	}
 
 	@Test
-	public void basic() {
+	void basic() {
 
 		Source requestPayload = new StringSource("<customerCountRequest xmlns='http://springframework.org/spring-ws'>"
 				+ "<customerName>John Doe</customerName>" + "</customerCountRequest>");

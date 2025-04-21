@@ -41,10 +41,10 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PayloadRootUtilsTests {
+class PayloadRootUtilsTests {
 
 	@Test
-	public void testGetQNameForDomSource() throws Exception {
+	void testGetQNameForDomSource() throws Exception {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -61,7 +61,7 @@ public class PayloadRootUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForStaxSourceStreamReader() throws Exception {
+	void testGetQNameForStaxSourceStreamReader() throws Exception {
 
 		String contents = "<prefix:localname xmlns:prefix='namespace'/>";
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
@@ -76,7 +76,7 @@ public class PayloadRootUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForStaxSourceEventReader() throws Exception {
+	void testGetQNameForStaxSourceEventReader() throws Exception {
 
 		String contents = "<prefix:localname xmlns:prefix='namespace'/>";
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
@@ -91,7 +91,7 @@ public class PayloadRootUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForStreamSource() throws Exception {
+	void testGetQNameForStreamSource() throws Exception {
 		String contents = "<prefix:localname xmlns:prefix='namespace'/>";
 		Source source = new StreamSource(new StringReader(contents));
 		QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactoryUtils.newInstance());
@@ -103,7 +103,7 @@ public class PayloadRootUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForSaxSource() throws Exception {
+	void testGetQNameForSaxSource() throws Exception {
 		String contents = "<prefix:localname xmlns:prefix='namespace'/>";
 		Source source = new SAXSource(new InputSource(new StringReader(contents)));
 		QName qName = PayloadRootUtils.getPayloadRootQName(source, TransformerFactoryUtils.newInstance());
@@ -115,7 +115,7 @@ public class PayloadRootUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForNullSource() throws Exception {
+	void testGetQNameForNullSource() throws Exception {
 
 		QName qName = PayloadRootUtils.getPayloadRootQName(null, TransformerFactoryUtils.newInstance());
 

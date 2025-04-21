@@ -34,18 +34,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests {
 
 	@Test
-	public void testGetType() {
+	void testGetType() {
 		assertThat(this.soapHeader).isInstanceOf(Soap12Header.class);
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertThat(this.soapHeader.getName())
 			.isEqualTo(new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Header"));
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
 		this.transformer.transform(this.soapHeader.getSource(), result);
@@ -57,7 +57,7 @@ public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testAddNotUnderstood() throws Exception {
+	void testAddNotUnderstood() throws Exception {
 
 		Soap12Header soap12Header = (Soap12Header) this.soapHeader;
 		QName headerName = new QName("http://www.springframework.org", "NotUnderstood", "spring-ws");
@@ -74,7 +74,7 @@ public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testAddUpgrade() throws Exception {
+	void testAddUpgrade() throws Exception {
 
 		String[] supportedUris = new String[] { "http://schemas.xmlsoap.org/soap/envelope/",
 				"http://www.w3.org/2003/05/soap-envelope" };
@@ -96,7 +96,7 @@ public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessActors() {
+	void testExamineHeaderElementsToProcessActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
@@ -123,7 +123,7 @@ public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessNoActors() {
+	void testExamineHeaderElementsToProcessNoActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
@@ -150,7 +150,7 @@ public abstract class AbstractSoap12HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessUltimateDestination() {
+	void testExamineHeaderElementsToProcessUltimateDestination() {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);

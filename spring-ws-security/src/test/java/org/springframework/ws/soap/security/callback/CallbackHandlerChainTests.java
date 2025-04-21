@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class CallbackHandlerChainTests {
+class CallbackHandlerChainTests {
 
 	private CallbackHandler supported = callbacks -> {
 	};
@@ -37,14 +37,14 @@ public class CallbackHandlerChainTests {
 	};
 
 	@Test
-	public void testSupported() throws Exception {
+	void testSupported() throws Exception {
 
 		CallbackHandlerChain chain = new CallbackHandlerChain(new CallbackHandler[] { this.supported });
 		chain.handle(new Callback[] { this.callback });
 	}
 
 	@Test
-	public void testUnsupportedSupported() throws Exception {
+	void testUnsupportedSupported() throws Exception {
 
 		CallbackHandlerChain chain = new CallbackHandlerChain(
 				new CallbackHandler[] { this.unsupported, this.supported });
@@ -52,7 +52,7 @@ public class CallbackHandlerChainTests {
 	}
 
 	@Test
-	public void testUnsupported() {
+	void testUnsupported() {
 
 		assertThatExceptionOfType(UnsupportedCallbackException.class).isThrownBy(() -> {
 

@@ -27,10 +27,10 @@ import org.springframework.core.io.Resource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class SchemaLoaderUtilsTests {
+class SchemaLoaderUtilsTests {
 
 	@Test
-	public void testLoadSchema() throws Exception {
+	void testLoadSchema() throws Exception {
 
 		Resource resource = new ClassPathResource("schema.xsd", getClass());
 		Schema schema = SchemaLoaderUtils.loadSchema(resource, XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -40,7 +40,7 @@ public class SchemaLoaderUtilsTests {
 	}
 
 	@Test
-	public void testLoadNonExistantSchema() {
+	void testLoadNonExistantSchema() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 			Resource nonExistent = new ClassPathResource("bla");
@@ -49,14 +49,14 @@ public class SchemaLoaderUtilsTests {
 	}
 
 	@Test
-	public void testLoadNullSchema() {
+	void testLoadNullSchema() {
 
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> SchemaLoaderUtils.loadSchema((Resource) null, XMLConstants.W3C_XML_SCHEMA_NS_URI));
 	}
 
 	@Test
-	public void testLoadMultipleSchemas() throws Exception {
+	void testLoadMultipleSchemas() throws Exception {
 
 		Resource envelope = new ClassPathResource("envelope.xsd", getClass());
 		Resource encoding = new ClassPathResource("encoding.xsd", getClass());

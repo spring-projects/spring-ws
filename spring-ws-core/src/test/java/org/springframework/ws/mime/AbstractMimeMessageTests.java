@@ -52,7 +52,7 @@ public abstract class AbstractMimeMessageTests extends AbstractWebServiceMessage
 	protected abstract MimeMessage createMimeMessage() throws Exception;
 
 	@Test
-	public void testEmptyMessage() {
+	void testEmptyMessage() {
 
 		Iterator<Attachment> iterator = this.mimeMessage.getAttachments();
 
@@ -60,14 +60,14 @@ public abstract class AbstractMimeMessageTests extends AbstractWebServiceMessage
 	}
 
 	@Test
-	public void testAddAttachment() throws Exception {
+	void testAddAttachment() throws Exception {
 
 		Attachment attachment = this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
 		testAttachment(attachment);
 	}
 
 	@Test
-	public void testGetAttachment() throws Exception {
+	void testGetAttachment() throws Exception {
 
 		this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
 		Attachment attachment = this.mimeMessage.getAttachment(this.contentId);
@@ -78,7 +78,7 @@ public abstract class AbstractMimeMessageTests extends AbstractWebServiceMessage
 	}
 
 	@Test
-	public void testGetAttachments() throws Exception {
+	void testGetAttachments() throws Exception {
 
 		this.mimeMessage.addAttachment(this.contentId, this.picture, this.contentType);
 		Iterator<Attachment> iterator = this.mimeMessage.getAttachments();

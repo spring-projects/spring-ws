@@ -84,7 +84,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	private Logger logger = LogManager.getLogger();
 
 	@BeforeAll
-	public static void startJetty() throws Exception {
+	static void startJetty() throws Exception {
 
 		int port = FreePortScanner.getFreePort();
 		baseUrl = "http://localhost:" + port;
@@ -116,7 +116,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@AfterAll
-	public static void stopJetty() throws Exception {
+	static void stopJetty() throws Exception {
 
 		if (jettyServer.isRunning()) {
 			jettyServer.stop();
@@ -124,16 +124,16 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@BeforeEach
-	public void createWebServiceTemplate() throws Exception {
+	void createWebServiceTemplate() throws Exception {
 
 		this.template = new WebServiceTemplate(createMessageFactory());
 		this.template.setMessageSender(new HttpComponentsMessageSender());
 	}
 
-	public abstract SoapMessageFactory createMessageFactory() throws Exception;
+	protected abstract SoapMessageFactory createMessageFactory() throws Exception;
 
 	@Test
-	public void sendSourceAndReceiveToResult() {
+	void sendSourceAndReceiveToResult() {
 
 		this.logger.info(">>> Test case");
 
@@ -146,7 +146,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void sendSourceAndReceiveToResultNoResponse() {
+	void sendSourceAndReceiveToResultNoResponse() {
 
 		boolean b = this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
 				new StringSource(this.messagePayload), new StringResult());
@@ -155,7 +155,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
+	void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
 
 		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
@@ -209,7 +209,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
+	void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
 
 		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
@@ -245,7 +245,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void notFound() {
+	void notFound() {
 
 		assertThatExceptionOfType(WebServiceTransportException.class)
 			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
@@ -253,7 +253,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void fault() {
+	void fault() {
 
 		Result result = new StringResult();
 
@@ -262,7 +262,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void faultNonCompliant() {
+	void faultNonCompliant() {
 
 		Result result = new StringResult();
 		this.template.setCheckConnectionForFault(false);
@@ -274,7 +274,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void attachment() {
+	void attachment() {
 
 		this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(this.messagePayload),
 				message -> {
@@ -311,7 +311,7 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 
 		private int sc = -1;
 
-		public void setSc(int sc) {
+		void setSc(int sc) {
 			this.sc = sc;
 		}
 

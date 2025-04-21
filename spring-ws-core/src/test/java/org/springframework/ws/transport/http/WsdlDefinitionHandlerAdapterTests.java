@@ -47,7 +47,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class WsdlDefinitionHandlerAdapterTests {
+class WsdlDefinitionHandlerAdapterTests {
 
 	private WsdlDefinitionHandlerAdapter adapter;
 
@@ -58,7 +58,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	private MockHttpServletResponse response;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.adapter = new WsdlDefinitionHandlerAdapter();
 		this.definitionMock = createMock(WsdlDefinition.class);
@@ -68,7 +68,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGet() throws Exception {
+	void handleGet() throws Exception {
 
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		String definition = "<definition xmlns='http://schemas.xmlsoap.org/wsdl/'/>";
@@ -84,7 +84,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGetUpToDate() throws Exception {
+	void handleGetUpToDate() throws Exception {
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("echo-input.wsdl", getClass());
 		long lastModified = single.getFile().lastModified();
@@ -97,7 +97,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleGetNotUpToDate() throws Exception {
+	void handleGetNotUpToDate() throws Exception {
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
 		Resource single = new ClassPathResource("echo-input.wsdl", getClass());
 		long lastModified = single.getFile().lastModified();
@@ -111,7 +111,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleNonGet() throws Exception {
+	void handleNonGet() throws Exception {
 
 		this.request.setMethod(HttpTransportConstants.METHOD_POST);
 
@@ -125,7 +125,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void transformLocations() throws Exception {
+	void transformLocations() throws Exception {
 
 		this.adapter.setTransformLocations(true);
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
@@ -152,7 +152,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void transformLocationFullUrl() throws Exception {
+	void transformLocationFullUrl() throws Exception {
 
 		this.request.setScheme("http");
 		this.request.setServerName("example.com");
@@ -169,7 +169,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void transformLocationEmptyContextFullUrl() throws Exception {
+	void transformLocationEmptyContextFullUrl() throws Exception {
 
 		this.request.setScheme("http");
 		this.request.setServerName("example.com");
@@ -185,7 +185,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void transformLocationRelativeUrl() throws Exception {
+	void transformLocationRelativeUrl() throws Exception {
 
 		this.request.setScheme("http");
 		this.request.setServerName("example.com");
@@ -202,7 +202,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void transformLocationEmptyContextRelativeUrl() throws Exception {
+	void transformLocationEmptyContextRelativeUrl() throws Exception {
 
 		this.request.setScheme("http");
 		this.request.setServerName("example.com");
@@ -218,7 +218,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
+	void handleSimpleWsdl11DefinitionWithoutTransformLocations() throws Exception {
 
 		this.adapter.setTransformLocations(false);
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
@@ -248,7 +248,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
+	void handleSimpleWsdl11DefinitionWithTransformLocation() throws Exception {
 
 		this.adapter.setTransformLocations(true);
 		this.adapter.setTransformSchemaLocations(true);
@@ -280,7 +280,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handlesForwardedHeadersInRequest() {
+	void handlesForwardedHeadersInRequest() {
 
 		// given
 		this.request.setScheme("http");
@@ -301,7 +301,7 @@ public class WsdlDefinitionHandlerAdapterTests {
 	}
 
 	@Test
-	public void handlesNoForwardedHeadersInRequest() {
+	void handlesNoForwardedHeadersInRequest() {
 
 		// given
 		this.request.setScheme("http");

@@ -28,17 +28,17 @@ import org.springframework.ws.context.MessageContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class PayloadRootQNameEndpointMappingTests {
+class PayloadRootQNameEndpointMappingTests {
 
 	private PayloadRootQNameEndpointMapping mapping;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.mapping = new PayloadRootQNameEndpointMapping();
 	}
 
 	@Test
-	public void testResolveQNames() throws Exception {
+	void testResolveQNames() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<root/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -50,7 +50,7 @@ public class PayloadRootQNameEndpointMappingTests {
 	}
 
 	@Test
-	public void testGetQNameNameNamespace() throws Exception {
+	void testGetQNameNameNamespace() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<prefix:localname xmlns:prefix=\"namespace\"/>");
 		MessageContext context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());

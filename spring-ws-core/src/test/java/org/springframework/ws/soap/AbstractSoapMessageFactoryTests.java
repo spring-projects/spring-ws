@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public abstract class AbstractSoapMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
 
 	@Test
-	public void testCreateEmptySoapMessage() {
+	void testCreateEmptySoapMessage() {
 
 		WebServiceMessage message = this.messageFactory.createWebServiceMessage();
 
@@ -36,22 +36,22 @@ public abstract class AbstractSoapMessageFactoryTests extends AbstractWebService
 	}
 
 	@Test
-	public void testCreateSoapMessageIllFormedXml() {
+	void testCreateSoapMessageIllFormedXml() {
 		assertThatExceptionOfType(InvalidXmlException.class).isThrownBy(this::doTestCreateSoapMessageIllFormedXml);
 	}
 
-	public abstract void doTestCreateSoapMessageIllFormedXml() throws Exception;
+	protected abstract void doTestCreateSoapMessageIllFormedXml() throws Exception;
 
 	@Test
-	public abstract void testCreateSoapMessageNoAttachment() throws Exception;
+	protected abstract void testCreateSoapMessageNoAttachment() throws Exception;
 
 	@Test
-	public abstract void testCreateSoapMessageSwA() throws Exception;
+	protected abstract void testCreateSoapMessageSwA() throws Exception;
 
 	@Test
-	public abstract void testCreateSoapMessageMtom() throws Exception;
+	protected abstract void testCreateSoapMessageMtom() throws Exception;
 
 	@Test
-	public abstract void testCreateSoapMessageMissingContentType() throws Exception;
+	protected abstract void testCreateSoapMessageMissingContentType() throws Exception;
 
 }

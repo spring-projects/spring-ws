@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Arjen Poutsma
  */
 @SuppressWarnings("Since15")
-public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
+class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
 
 	private StaxPayloadMethodArgumentResolver resolver;
 
@@ -47,7 +47,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	private MethodParameter invalidParameter;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.resolver = new StaxPayloadMethodArgumentResolver();
 		this.streamParameter = new MethodParameter(getClass().getMethod("streamReader", XMLStreamReader.class), 0);
@@ -56,7 +56,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 
 		assertThat(this.resolver.supportsParameter(this.streamParameter)).isTrue();
 		assertThat(this.resolver.supportsParameter(this.eventParameter)).isTrue();
@@ -64,7 +64,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveStreamReaderSaaj() throws Exception {
+	void resolveStreamReaderSaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 
@@ -74,7 +74,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveStreamReaderAxiomCaching() throws Exception {
+	void resolveStreamReaderAxiomCaching() throws Exception {
 
 		MessageContext messageContext = createCachingAxiomMessageContext();
 
@@ -84,7 +84,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveStreamReaderAxiomNonCaching() throws Exception {
+	void resolveStreamReaderAxiomNonCaching() throws Exception {
 
 		MessageContext messageContext = createNonCachingAxiomMessageContext();
 
@@ -94,7 +94,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveStreamReaderStream() throws Exception {
+	void resolveStreamReaderStream() throws Exception {
 
 		MessageContext messageContext = createMockMessageContext();
 
@@ -104,7 +104,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveEventReaderSaaj() throws Exception {
+	void resolveEventReaderSaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 
@@ -114,7 +114,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveEventReaderAxiomCaching() throws Exception {
+	void resolveEventReaderAxiomCaching() throws Exception {
 
 		MessageContext messageContext = createCachingAxiomMessageContext();
 
@@ -124,7 +124,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveEventReaderAxiomNonCaching() throws Exception {
+	void resolveEventReaderAxiomNonCaching() throws Exception {
 
 		MessageContext messageContext = createNonCachingAxiomMessageContext();
 
@@ -134,7 +134,7 @@ public class StaxPayloadMethodArgumentResolverTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveEventReaderStream() throws Exception {
+	void resolveEventReaderStream() throws Exception {
 
 		MessageContext messageContext = createMockMessageContext();
 

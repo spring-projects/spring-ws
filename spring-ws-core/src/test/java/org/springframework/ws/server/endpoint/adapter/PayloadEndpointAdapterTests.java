@@ -42,26 +42,26 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class PayloadEndpointAdapterTests {
+class PayloadEndpointAdapterTests {
 
 	private PayloadEndpointAdapter adapter;
 
 	private PayloadEndpoint endpointMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.adapter = new PayloadEndpointAdapter();
 		this.endpointMock = createMock(PayloadEndpoint.class);
 	}
 
 	@Test
-	public void testSupports() {
+	void testSupports() {
 		assertThat(this.adapter.supports(this.endpointMock)).isTrue();
 	}
 
 	@Test
-	public void testInvoke() throws Exception {
+	void testInvoke() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
 		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
@@ -86,7 +86,7 @@ public class PayloadEndpointAdapterTests {
 	}
 
 	@Test
-	public void testInvokeNoResponse() throws Exception {
+	void testInvokeNoResponse() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());

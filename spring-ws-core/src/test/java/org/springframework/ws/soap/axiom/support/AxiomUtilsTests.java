@@ -44,12 +44,12 @@ import org.springframework.xml.sax.SaxUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AxiomUtilsTests {
+class AxiomUtilsTests {
 
 	private OMElement element;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		OMFactory factory = OMAbstractFactory.getOMFactory();
 		OMNamespace namespace = factory.createOMNamespace("http://www.springframework.org", "prefix");
@@ -57,7 +57,7 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToNamespaceDeclared() {
+	void testToNamespaceDeclared() {
 
 		QName qName = new QName(this.element.getNamespace().getNamespaceURI(), "localPart");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, this.element);
@@ -67,7 +67,7 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToNamespaceUndeclared() {
+	void testToNamespaceUndeclared() {
 
 		QName qName = new QName("http://www.example.com", "localPart");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, this.element);
@@ -78,7 +78,7 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToNamespacePrefixDeclared() {
+	void testToNamespacePrefixDeclared() {
 
 		QName qName = new QName(this.element.getNamespace().getNamespaceURI(), "localPart", "prefix");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, this.element);
@@ -89,7 +89,7 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToNamespacePrefixUndeclared() {
+	void testToNamespacePrefixUndeclared() {
 
 		QName qName = new QName("http://www.example.com", "localPart", "otherPrefix");
 		OMNamespace namespace = AxiomUtils.toNamespace(qName, this.element);
@@ -100,14 +100,14 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToLanguage() {
+	void testToLanguage() {
 
 		assertThat(AxiomUtils.toLanguage(Locale.CANADA_FRENCH)).isEqualTo("fr-CA");
 		assertThat(AxiomUtils.toLanguage(Locale.ENGLISH)).isEqualTo("en");
 	}
 
 	@Test
-	public void testToLocale() {
+	void testToLocale() {
 
 		assertThat(AxiomUtils.toLocale("fr-CA")).isEqualTo(Locale.CANADA_FRENCH);
 		assertThat(AxiomUtils.toLocale("en")).isEqualTo(Locale.ENGLISH);
@@ -115,7 +115,7 @@ public class AxiomUtilsTests {
 
 	@Test
 	@SuppressWarnings("Since15")
-	public void testToDocument() throws Exception {
+	void testToDocument() throws Exception {
 
 		Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 
@@ -133,7 +133,7 @@ public class AxiomUtilsTests {
 	}
 
 	@Test
-	public void testToEnvelope() throws Exception {
+	void testToEnvelope() throws Exception {
 
 		Resource resource = new ClassPathResource("org/springframework/ws/soap/soap11/soap11.xml");
 

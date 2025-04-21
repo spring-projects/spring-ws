@@ -16,6 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-public class SaajWss4jMessageInterceptorTimestampTests extends Wss4jMessageInterceptorTimestampTests {
+class SaajWss4jMessageInterceptorTimestampTests extends Wss4jMessageInterceptorTimestampTests {
 
 }

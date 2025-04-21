@@ -39,7 +39,7 @@ import org.springframework.xml.xsd.XsdSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class CommonsXsdSchemaCollectionTests {
+class CommonsXsdSchemaCollectionTests {
 
 	private CommonsXsdSchemaCollection collection;
 
@@ -48,7 +48,7 @@ public class CommonsXsdSchemaCollectionTests {
 	private DocumentBuilder documentBuilder;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.collection = new CommonsXsdSchemaCollection();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
@@ -59,7 +59,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testSingle() throws Exception {
+	void testSingle() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(resource);
@@ -69,7 +69,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testInlineComplex() throws Exception {
+	void testInlineComplex() throws Exception {
 
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(a);
@@ -97,7 +97,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testCircular() throws Exception {
+	void testCircular() throws Exception {
 
 		Resource resource = new ClassPathResource("circular-1.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(resource);
@@ -109,8 +109,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-
-	public void testXmlNamespace() throws Exception {
+	void testXmlNamespace() throws Exception {
 		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(resource);
 		this.collection.setInline(true);
@@ -121,7 +120,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testCreateValidator() throws Exception {
+	void testCreateValidator() throws Exception {
 
 		Resource a = new ClassPathResource("A.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(a);
@@ -134,7 +133,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testInvalidSchema() {
+	void testInvalidSchema() {
 
 		Resource invalid = new ClassPathResource("invalid.xsd", AbstractXsdSchemaTests.class);
 		this.collection.setXsds(invalid);
@@ -144,7 +143,7 @@ public class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
-	public void testIncludesAndImports() throws Exception {
+	void testIncludesAndImports() throws Exception {
 
 		Resource hr = new ClassPathResource("hr.xsd", getClass());
 		this.collection.setXsds(hr);

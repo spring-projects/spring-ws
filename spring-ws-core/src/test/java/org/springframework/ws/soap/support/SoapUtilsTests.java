@@ -20,10 +20,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SoapUtilsTests {
+class SoapUtilsTests {
 
 	@Test
-	public void testExtractActionFromContentType() {
+	void testExtractActionFromContentType() {
 
 		String soapAction = "http://springframework.org/spring-ws/Action";
 
@@ -49,7 +49,7 @@ public class SoapUtilsTests {
 	}
 
 	@Test
-	public void testEscapeAction() {
+	void testEscapeAction() {
 
 		String result = SoapUtils.escapeAction("action");
 
@@ -70,7 +70,7 @@ public class SoapUtilsTests {
 	}
 
 	@Test
-	public void testSetActionInContentType() {
+	void testSetActionInContentType() {
 
 		String soapAction = "http://springframework.org/spring-ws/Action";
 		String contentType = "application/soap+xml";

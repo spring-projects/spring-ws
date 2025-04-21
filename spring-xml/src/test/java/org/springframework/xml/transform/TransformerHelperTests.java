@@ -27,21 +27,21 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.mock;
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class TransformerHelperTests {
+class TransformerHelperTests {
 
 	private TransformerHelper helper;
 
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.helper = new TransformerHelper();
 		this.transformer = mock(Transformer.class);
 	}
 
 	@Test
-	public void defaultTransformerFactory() throws TransformerException {
+	void defaultTransformerFactory() throws TransformerException {
 
 		String xml = "<root xmlns='http://springframework.org/spring-ws'><child>text</child></root>";
 		Source source = new StringSource(xml);

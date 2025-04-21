@@ -47,21 +47,21 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SoapMessageDispatcherTests {
+class SoapMessageDispatcherTests {
 
 	private SoapMessageDispatcher dispatcher;
 
 	private SoapEndpointInterceptor interceptorMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.interceptorMock = createMock(SoapEndpointInterceptor.class);
 		this.dispatcher = new SoapMessageDispatcher();
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersUnderstoodSoap11() throws Exception {
+	void testProcessMustUnderstandHeadersUnderstoodSoap11() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -86,7 +86,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersUnderstoodSoap12() throws Exception {
+	void testProcessMustUnderstandHeadersUnderstoodSoap12() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -111,7 +111,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersNotUnderstoodSoap11() throws Exception {
+	void testProcessMustUnderstandHeadersNotUnderstoodSoap11() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -148,7 +148,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersNotUnderstoodSoap12() throws Exception {
+	void testProcessMustUnderstandHeadersNotUnderstoodSoap12() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -195,7 +195,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersForActorSoap11() throws Exception {
+	void testProcessMustUnderstandHeadersForActorSoap11() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -221,7 +221,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersForRoleSoap12() throws Exception {
+	void testProcessMustUnderstandHeadersForRoleSoap12() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -247,7 +247,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessNoHeader() throws Exception {
+	void testProcessNoHeader() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();
@@ -267,7 +267,7 @@ public class SoapMessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessMustUnderstandHeadersNoInterceptors() throws Exception {
+	void testProcessMustUnderstandHeadersNoInterceptors() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage request = messageFactory.createMessage();

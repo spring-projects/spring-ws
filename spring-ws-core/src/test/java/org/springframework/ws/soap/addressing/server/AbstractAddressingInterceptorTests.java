@@ -49,7 +49,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	protected MessageIdStrategy strategyMock;
 
 	@BeforeEach
-	public void createMocks() throws Exception {
+	void createMocks() throws Exception {
 
 		this.strategyMock = createMock(MessageIdStrategy.class);
 		expect(this.strategyMock.isDuplicate(isA(URI.class))).andReturn(false).anyTimes();
@@ -60,7 +60,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testUnderstands() throws Exception {
+	void testUnderstands() throws Exception {
 
 		SaajSoapMessage validRequest = loadSaajMessage(getTestPath() + "/valid.xml");
 		Iterator<SoapHeaderElement> iterator = validRequest.getSoapHeader().examineAllHeaderElements();
@@ -76,7 +76,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testValidRequest() throws Exception {
+	void testValidRequest() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/valid.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -92,7 +92,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testNoMessageId() throws Exception {
+	void testNoMessageId() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-message-id.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -112,7 +112,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testNoReplyTo() throws Exception {
+	void testNoReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-reply-to.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -134,7 +134,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testAnonymousReplyTo() throws Exception {
+	void testAnonymousReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-anonymous.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -155,7 +155,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testNoneReplyTo() throws Exception {
+	protected void testNoneReplyTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-none.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -169,7 +169,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testFaultTo() throws Exception {
+	void testFaultTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
@@ -193,7 +193,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 	}
 
 	@Test
-	public void testOutOfBandReplyTo() throws Exception {
+	void testOutOfBandReplyTo() throws Exception {
 
 		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
 

@@ -53,7 +53,7 @@ public abstract class AbstractActionCallbackTests extends AbstractWsAddressingTe
 	private WebServiceConnection connectionMock;
 
 	@BeforeEach
-	public void createMocks() {
+	void createMocks() {
 
 		this.strategyMock = createMock(MessageIdStrategy.class);
 
@@ -64,12 +64,12 @@ public abstract class AbstractActionCallbackTests extends AbstractWsAddressingTe
 	}
 
 	@AfterEach
-	public void clearContext() {
+	void clearContext() {
 		TransportContextHolder.setTransportContext(null);
 	}
 
 	@Test
-	public void testValid() throws Exception {
+	void testValid() throws Exception {
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI to = new URI("mailto:fabrikam@example.com");
@@ -91,7 +91,7 @@ public abstract class AbstractActionCallbackTests extends AbstractWsAddressingTe
 	}
 
 	@Test
-	public void testDefaults() throws Exception {
+	void testDefaults() throws Exception {
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");
@@ -116,7 +116,7 @@ public abstract class AbstractActionCallbackTests extends AbstractWsAddressingTe
 	}
 
 	@Test
-	public void testNotInitializeTo() throws Exception {
+	void testNotInitializeTo() throws Exception {
 
 		URI action = new URI("http://example.com/fabrikam/mail/Delete");
 		URI connectionUri = new URI("mailto:fabrikam@example.com");

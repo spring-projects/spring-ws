@@ -51,7 +51,7 @@ public abstract class AbstractPayloadMethodProcessorTests extends AbstractMethod
 	protected abstract MethodParameter[] createSupportedReturnTypes() throws NoSuchMethodException;
 
 	@Test
-	public void supportsParameter() throws NoSuchMethodException {
+	void supportsParameter() throws NoSuchMethodException {
 
 		for (MethodParameter supportedParameter : this.supportedParameters) {
 			assertThat(this.processor.supportsParameter(supportedParameter)).isTrue();
@@ -64,7 +64,7 @@ public abstract class AbstractPayloadMethodProcessorTests extends AbstractMethod
 	}
 
 	@Test
-	public void supportsReturnType() throws NoSuchMethodException {
+	void supportsReturnType() throws NoSuchMethodException {
 
 		for (MethodParameter supportedReturnType : this.supportedReturnTypes) {
 			assertThat(this.processor.supportsReturnType(supportedReturnType)).isTrue();
@@ -77,22 +77,22 @@ public abstract class AbstractPayloadMethodProcessorTests extends AbstractMethod
 	}
 
 	@Test
-	public void saajArgument() throws Exception {
+	void saajArgument() throws Exception {
 		testResolveArgument(createSaajMessageContext());
 	}
 
 	@Test
-	public void mockArgument() throws Exception {
+	void mockArgument() throws Exception {
 		testResolveArgument(createMockMessageContext());
 	}
 
 	@Test
-	public void axiomCachingArgument() throws Exception {
+	void axiomCachingArgument() throws Exception {
 		testResolveArgument(createCachingAxiomMessageContext());
 	}
 
 	@Test
-	public void axiomNonCachingArgument() throws Exception {
+	void axiomNonCachingArgument() throws Exception {
 		testResolveArgument(createNonCachingAxiomMessageContext());
 	}
 
@@ -111,22 +111,22 @@ public abstract class AbstractPayloadMethodProcessorTests extends AbstractMethod
 	}
 
 	@Test
-	public void saajReturnValue() throws Exception {
+	void saajReturnValue() throws Exception {
 		testHandleReturnValue(createSaajMessageContext());
 	}
 
 	@Test
-	public void mockReturnValue() throws Exception {
+	void mockReturnValue() throws Exception {
 		testHandleReturnValue(createMockMessageContext());
 	}
 
 	@Test
-	public void axiomCachingReturnValue() throws Exception {
+	void axiomCachingReturnValue() throws Exception {
 		testHandleReturnValue(createCachingAxiomMessageContext());
 	}
 
 	@Test
-	public void axiomNonCachingReturnValue() throws Exception {
+	void axiomNonCachingReturnValue() throws Exception {
 		testHandleReturnValue(createNonCachingAxiomMessageContext());
 	}
 

@@ -32,14 +32,14 @@ import org.springframework.ws.transport.TransportConstants;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoapActionCallbackTests {
+class SaajSoapActionCallbackTests {
 
 	private SaajSoapMessageFactory saaj11Factory = new SaajSoapMessageFactory();
 
 	private SaajSoapMessageFactory saaj12Factory = new SaajSoapMessageFactory();
 
 	@BeforeEach
-	public void init() throws SOAPException {
+	void init() throws SOAPException {
 
 		MessageFactory messageFactory11 = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 
@@ -54,7 +54,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void noSoapAction11ShouldProduceEmptySoapActionHeader() {
+	void noSoapAction11ShouldProduceEmptySoapActionHeader() {
 
 		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		String[] soapActionHeaders = message.getSaajMessage()
@@ -65,7 +65,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void soapAction11ShouldProduceSoapActionHeader() throws IOException {
+	void soapAction11ShouldProduceSoapActionHeader() throws IOException {
 
 		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback("testAction");
@@ -78,7 +78,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void emptySoapAction11() throws IOException {
+	void emptySoapAction11() throws IOException {
 
 		SaajSoapMessage message = this.saaj11Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback(null);
@@ -91,7 +91,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void noSoapAction12() {
+	void noSoapAction12() {
 
 		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		String[] soapActionHeaders = message.getSaajMessage()
@@ -102,7 +102,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void soapAction12ShouldProduceNoSoapActionHeader() throws IOException {
+	void soapAction12ShouldProduceNoSoapActionHeader() throws IOException {
 
 		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback("testAction");
@@ -119,7 +119,7 @@ public class SaajSoapActionCallbackTests {
 	}
 
 	@Test
-	public void emptySoapAction12ShouldProduceNoSoapActionHeader() throws IOException {
+	void emptySoapAction12ShouldProduceNoSoapActionHeader() throws IOException {
 
 		SaajSoapMessage message = this.saaj12Factory.createWebServiceMessage();
 		SoapActionCallback callback = new SoapActionCallback(null);

@@ -24,7 +24,7 @@ import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTests;
 import org.springframework.xml.transform.StringSource;
 
-public class AxiomSoap12BodyTests extends AbstractSoap12BodyTests {
+class AxiomSoap12BodyTests extends AbstractSoap12BodyTests {
 
 	@Override
 	protected SoapBody createSoapBody() {
@@ -35,7 +35,7 @@ public class AxiomSoap12BodyTests extends AbstractSoap12BodyTests {
 	}
 
 	@Test
-	public void testPayloadNoCaching() throws Exception {
+	void testPayloadNoCaching() throws Exception {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		messageFactory.setPayloadCaching(false);

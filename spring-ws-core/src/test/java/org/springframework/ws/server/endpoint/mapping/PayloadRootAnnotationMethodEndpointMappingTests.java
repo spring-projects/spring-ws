@@ -49,7 +49,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("payloadRootAnnotationMethodEndpointMapping.xml")
-public class PayloadRootAnnotationMethodEndpointMappingTests {
+class PayloadRootAnnotationMethodEndpointMappingTests {
 
 	@Autowired
 	private PayloadRootAnnotationMethodEndpointMapping mapping;
@@ -58,7 +58,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTests {
 	private ApplicationContext applicationContext;
 
 	@Test
-	public void registrationSingle() throws NoSuchMethodException {
+	void registrationSingle() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));
@@ -72,7 +72,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationMultiple() throws NoSuchMethodException {
+	void registrationMultiple() throws NoSuchMethodException {
 
 		Method doItMultiple = MyEndpoint.class.getMethod("doItMultiple");
 		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItMultiple);
@@ -90,7 +90,7 @@ public class PayloadRootAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationRepeatable() throws NoSuchMethodException {
+	void registrationRepeatable() throws NoSuchMethodException {
 
 		Method doItMultiple = MyEndpoint.class.getMethod("doItRepeatable");
 		MethodEndpoint expected = new MethodEndpoint("endpoint", this.applicationContext, doItMultiple);
@@ -108,12 +108,12 @@ public class PayloadRootAnnotationMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void registrationInvalid() {
+	void registrationInvalid() {
 		assertThat(this.mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Invalid"))).isNull();
 	}
 
 	@Test
-	public void invoke() throws Exception {
+	void invoke() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage request = messageFactory.createMessage();

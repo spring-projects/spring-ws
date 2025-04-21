@@ -27,12 +27,12 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 
-public class UriMatcherTests {
+class UriMatcherTests {
 
 	private static final URI GOOD_URI = URI.create("http://localhost");
 
 	@Test
-	public void match() {
+	void match() {
 
 		WebServiceMessage message = createMock(WebServiceMessage.class);
 
@@ -45,7 +45,7 @@ public class UriMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

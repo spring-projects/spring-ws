@@ -18,6 +18,8 @@ package org.springframework.ws.soap.addressing.server;
 
 import java.net.URI;
 
+import org.junit.jupiter.api.Test;
+
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
@@ -31,7 +33,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class AddressingInterceptor10Tests extends AbstractAddressingInterceptorTests {
+class AddressingInterceptor10Tests extends AbstractAddressingInterceptorTests {
 
 	@Override
 	protected AddressingVersion getVersion() {
@@ -43,7 +45,8 @@ public class AddressingInterceptor10Tests extends AbstractAddressingInterceptorT
 		return "10";
 	}
 
-	public void testNoTo() throws Exception {
+	@Test
+	void testNoTo() throws Exception {
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-to.xml");
 		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));

@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Andreas Veithen
  */
-public class AbstractHttpSenderConnectionTests {
+class AbstractHttpSenderConnectionTests {
 
 	/**
 	 * Tests that {@link AbstractHttpSenderConnection} doesn't consume the response stream
@@ -72,12 +72,12 @@ public class AbstractHttpSenderConnectionTests {
 	}
 
 	@Test
-	public void testSupportsStreamingWithChunkingEnabled() throws Exception {
+	void testSupportsStreamingWithChunkingEnabled() throws Exception {
 		testSupportsStreaming(true);
 	}
 
 	@Test
-	public void testSupportsStreamingWithChunkingDisabled() throws Exception {
+	void testSupportsStreamingWithChunkingDisabled() throws Exception {
 		testSupportsStreaming(false);
 	}
 

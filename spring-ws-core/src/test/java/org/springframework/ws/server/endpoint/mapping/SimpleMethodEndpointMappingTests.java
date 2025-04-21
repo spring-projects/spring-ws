@@ -26,12 +26,12 @@ import org.springframework.ws.context.MessageContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleMethodEndpointMappingTests {
+class SimpleMethodEndpointMappingTests {
 
 	private SimpleMethodEndpointMapping mapping;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.mapping = new SimpleMethodEndpointMapping();
 		this.mapping.setMethodPrefix("prefix");
@@ -44,14 +44,14 @@ public class SimpleMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void testRegistration() {
+	void testRegistration() {
 
 		assertThat(this.mapping.lookupEndpoint("MyRequest")).isNotNull();
 		assertThat(this.mapping.lookupEndpoint("request")).isNull();
 	}
 
 	@Test
-	public void testGetLookupKeyForMessageNoNamespace() throws Exception {
+	void testGetLookupKeyForMessageNoNamespace() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<MyRequest/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -60,7 +60,7 @@ public class SimpleMethodEndpointMappingTests {
 	}
 
 	@Test
-	public void testGetLookupKeyForMessageNamespace() throws Exception {
+	void testGetLookupKeyForMessageNamespace() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<MyRequest xmlns='http://springframework.org/spring-ws/' />");

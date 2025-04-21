@@ -35,12 +35,12 @@ public abstract class AbstractMessageEndpointTests extends AbstractEndpointTests
 	private MessageEndpoint endpoint;
 
 	@BeforeEach
-	public void createEndpoint() throws Exception {
+	void createEndpoint() {
 		this.endpoint = createResponseEndpoint();
 	}
 
 	@Test
-	public void testNoResponse() throws Exception {
+	void testNoResponse() throws Exception {
 
 		this.endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
@@ -53,7 +53,7 @@ public abstract class AbstractMessageEndpointTests extends AbstractEndpointTests
 	}
 
 	@Test
-	public void testNoRequestPayload() throws Exception {
+	void testNoRequestPayload() throws Exception {
 
 		this.endpoint = createNoRequestPayloadEndpoint();
 

@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TrustManagersFactoryBeanTests {
+class TrustManagersFactoryBeanTests {
 
 	@Test
-	public void defaults() throws Exception {
+	void defaults() throws Exception {
 
 		TrustManagersFactoryBean factoryBean = new TrustManagersFactoryBean();
 		factoryBean.afterPropertiesSet();
@@ -36,7 +36,7 @@ public class TrustManagersFactoryBeanTests {
 	}
 
 	@Test
-	public void algorithm() throws Exception {
+	void algorithm() throws Exception {
 
 		TrustManagersFactoryBean factoryBean = new TrustManagersFactoryBean();
 		factoryBean.setAlgorithm("PKIX");

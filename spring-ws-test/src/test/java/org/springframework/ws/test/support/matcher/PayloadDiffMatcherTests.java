@@ -31,10 +31,10 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 @Deprecated
-public class PayloadDiffMatcherTests {
+class PayloadDiffMatcherTests {
 
 	@Test
-	public void match() {
+	void match() {
 
 		String xml = "<element xmlns='http://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -48,7 +48,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -64,7 +64,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void noPayload() {
+	void noPayload() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

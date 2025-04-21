@@ -56,7 +56,7 @@ public abstract class AbstractEndpointTests {
 	protected static final String RESPONSE = "<" + RESPONSE_ELEMENT + " xmlns=\"" + NAMESPACE_URI + "\"/>";
 
 	@Test
-	public void testDomSource() throws Exception {
+	void testDomSource() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -66,14 +66,14 @@ public abstract class AbstractEndpointTests {
 	}
 
 	@Test
-	public void testSaxSource() throws Exception {
+	void testSaxSource() throws Exception {
 		XMLReader reader = SaxUtils.namespaceAwareXmlReader();
 		InputSource inputSource = new InputSource(new StringReader(REQUEST));
 		testSource(new SAXSource(reader, inputSource));
 	}
 
 	@Test
-	public void testStaxSourceEventReader() throws Exception {
+	void testStaxSourceEventReader() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader(REQUEST));
@@ -81,7 +81,7 @@ public abstract class AbstractEndpointTests {
 	}
 
 	@Test
-	public void testStaxSourceStreamReader() throws Exception {
+	void testStaxSourceStreamReader() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader(REQUEST));
@@ -89,14 +89,14 @@ public abstract class AbstractEndpointTests {
 	}
 
 	@Test
-	public void testStreamSourceInputStream() throws Exception {
+	void testStreamSourceInputStream() throws Exception {
 
 		InputStream is = new ByteArrayInputStream(REQUEST.getBytes(StandardCharsets.UTF_8));
 		testSource(new StreamSource(is));
 	}
 
 	@Test
-	public void testStreamSourceReader() throws Exception {
+	void testStreamSourceReader() throws Exception {
 
 		Reader reader = new StringReader(REQUEST);
 		testSource(new StreamSource(reader));

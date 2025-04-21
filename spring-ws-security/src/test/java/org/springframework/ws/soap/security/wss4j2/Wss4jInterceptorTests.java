@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.fail;
 public abstract class Wss4jInterceptorTests extends Wss4jTests {
 
 	@Test
-	public void testHandleRequest() throws Exception {
+	void testHandleRequest() throws Exception {
 
 		SoapMessage request = loadSoap11Message("empty-soap.xml");
 		final Object requestMessage = getMessage(request);
@@ -63,7 +63,7 @@ public abstract class Wss4jInterceptorTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testHandleResponse() throws Exception {
+	void testHandleResponse() throws Exception {
 
 		SoapMessage securedResponse = loadSoap11Message("empty-soap.xml");
 		final Object securedResponseMessage = getMessage(securedResponse);
@@ -93,7 +93,7 @@ public abstract class Wss4jInterceptorTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testHandleCustomSecurityEngine() {
+	void testHandleCustomSecurityEngine() {
 
 		WSSecurityEngine engine = new WSSecurityEngine();
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);

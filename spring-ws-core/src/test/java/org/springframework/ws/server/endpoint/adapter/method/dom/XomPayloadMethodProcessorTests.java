@@ -26,7 +26,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XomPayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
+class XomPayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
 
 	@Override
 	protected AbstractPayloadSourceMethodProcessor createProcessor() {

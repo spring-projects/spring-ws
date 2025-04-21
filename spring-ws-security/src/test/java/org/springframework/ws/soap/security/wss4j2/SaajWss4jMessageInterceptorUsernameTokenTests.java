@@ -16,6 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-public class SaajWss4jMessageInterceptorUsernameTokenTests extends Wss4jMessageInterceptorUsernameTokenTests {
+class SaajWss4jMessageInterceptorUsernameTokenTests extends Wss4jMessageInterceptorUsernameTokenTests {
 
 }

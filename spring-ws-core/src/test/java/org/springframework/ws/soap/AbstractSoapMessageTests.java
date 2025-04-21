@@ -64,7 +64,7 @@ public abstract class AbstractSoapMessageTests extends AbstractMimeMessageTests 
 	protected abstract SoapMessage createSoapMessage() throws Exception;
 
 	@Test
-	public void testValidate() throws Exception {
+	void testValidate() throws Exception {
 
 		XmlValidator validator = XmlValidatorFactory.createValidator(getSoapSchemas(),
 				XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -76,7 +76,7 @@ public abstract class AbstractSoapMessageTests extends AbstractMimeMessageTests 
 	}
 
 	@Test
-	public void testSoapAction() {
+	void testSoapAction() {
 
 		assertThat(this.soapMessage.getSoapAction()).isEqualTo("\"\"");
 
@@ -86,7 +86,7 @@ public abstract class AbstractSoapMessageTests extends AbstractMimeMessageTests 
 	}
 
 	@Test
-	public void testCharsetAttribute() throws Exception {
+	void testCharsetAttribute() throws Exception {
 
 		MockTransportOutputStream outputStream = new MockTransportOutputStream(new ByteArrayOutputStream());
 		this.soapMessage.writeTo(outputStream);
@@ -107,7 +107,7 @@ public abstract class AbstractSoapMessageTests extends AbstractMimeMessageTests 
 	}
 
 	@Test
-	public void testSetStreamingPayload() throws Exception {
+	void testSetStreamingPayload() throws Exception {
 
 		if (!(this.soapMessage instanceof StreamingWebServiceMessage streamingMessage)) {
 			return;
@@ -144,21 +144,21 @@ public abstract class AbstractSoapMessageTests extends AbstractMimeMessageTests 
 	protected abstract Resource[] getSoapSchemas();
 
 	@Test
-	public abstract void testGetVersion();
+	protected abstract void testGetVersion();
 
 	@Test
-	public abstract void testWriteToTransportOutputStream() throws Exception;
+	protected abstract void testWriteToTransportOutputStream() throws Exception;
 
 	@Test
-	public abstract void testWriteToTransportResponseAttachment() throws Exception;
+	protected abstract void testWriteToTransportResponseAttachment() throws Exception;
 
 	@Test
-	public abstract void testToDocument() throws Exception;
+	protected abstract void testToDocument() throws Exception;
 
 	@Test
-	public abstract void testSetLiveDocument() throws Exception;
+	protected abstract void testSetLiveDocument() throws Exception;
 
 	@Test
-	public abstract void testSetOtherDocument() throws Exception;
+	protected abstract void testSetOtherDocument() throws Exception;
 
 }

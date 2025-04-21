@@ -16,6 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
-public class SaajWss4jMessageInterceptorSoapActionTests extends Wss4jMessageInterceptorSoapActionTests {
+class SaajWss4jMessageInterceptorSoapActionTests extends Wss4jMessageInterceptorSoapActionTests {
 
 }

@@ -45,7 +45,7 @@ import static org.easymock.EasyMock.verify;
 /**
  * @author Arjen Poutsma
  */
-public class DefaultMethodEndpointAdapterTests {
+class DefaultMethodEndpointAdapterTests {
 
 	private DefaultMethodEndpointAdapter adapter;
 
@@ -66,7 +66,7 @@ public class DefaultMethodEndpointAdapterTests {
 	private String supportedArgument;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.adapter = new DefaultMethodEndpointAdapter();
 		this.argumentResolver1 = createMock("stringResolver", MethodArgumentResolver.class);
@@ -81,7 +81,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void initDefaultStrategies() throws Exception {
+	void initDefaultStrategies() throws Exception {
 
 		this.adapter = new DefaultMethodEndpointAdapter();
 		this.adapter.setBeanClassLoader(DefaultMethodEndpointAdapterTests.class.getClassLoader());
@@ -92,7 +92,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void supportsSupported() {
+	void supportsSupported() {
 
 		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
 		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
@@ -109,7 +109,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void supportsUnsupportedParameter() {
+	void supportsUnsupportedParameter() {
 
 		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(false);
 		expect(this.argumentResolver2.supportsParameter(isA(MethodParameter.class))).andReturn(false);
@@ -123,7 +123,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void supportsUnsupportedReturnType() {
+	void supportsUnsupportedReturnType() {
 
 		expect(this.argumentResolver1.supportsParameter(isA(MethodParameter.class))).andReturn(true);
 		expect(this.returnValueHandler.supportsReturnType(isA(MethodParameter.class))).andReturn(false);
@@ -138,7 +138,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void invokeSupported() throws Exception {
+	void invokeSupported() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 
@@ -166,7 +166,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void invokeNullReturnValue() throws Exception {
+	void invokeNullReturnValue() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -189,7 +189,7 @@ public class DefaultMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void invokeException() throws Exception {
+	void invokeException() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<root xmlns='http://springframework.org'/>");
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());

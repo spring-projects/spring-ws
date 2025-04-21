@@ -59,7 +59,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
-public class WebServiceTemplateTests {
+class WebServiceTemplateTests {
 
 	private WebServiceTemplate template;
 
@@ -68,7 +68,7 @@ public class WebServiceTemplateTests {
 	private MockWebServiceMessageFactory messageFactory;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.messageFactory = new MockWebServiceMessageFactory();
 		this.template = new WebServiceTemplate(this.messageFactory);
@@ -94,7 +94,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testMarshalAndSendNoMarshallerSet() throws Exception {
+	void testMarshalAndSendNoMarshallerSet() throws Exception {
 
 		this.connectionMock.close();
 
@@ -104,7 +104,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testMarshalAndSendNoUnmarshallerSet() throws Exception {
+	void testMarshalAndSendNoUnmarshallerSet() throws Exception {
 
 		this.connectionMock.close();
 
@@ -113,7 +113,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveMessageResponse() throws Exception {
+	void testSendAndReceiveMessageResponse() throws Exception {
 
 		WebServiceMessageCallback requestCallback = mock(WebServiceMessageCallback.class);
 		requestCallback.doWithMessage(isA(WebServiceMessage.class));
@@ -134,7 +134,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveMessageNoResponse() throws Exception {
+	void testSendAndReceiveMessageNoResponse() throws Exception {
 
 		WebServiceMessageExtractor<?> extractorMock = mock(WebServiceMessageExtractor.class);
 
@@ -149,7 +149,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveMessageFault() throws Exception {
+	void testSendAndReceiveMessageFault() throws Exception {
 
 		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
@@ -172,7 +172,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveConnectionError() throws Exception {
+	void testSendAndReceiveConnectionError() throws Exception {
 
 		WebServiceMessageExtractor<Object> extractorMock = mockWebServiceMessageExtractor();
 
@@ -191,7 +191,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveSourceResponse() throws Exception {
+	void testSendAndReceiveSourceResponse() throws Exception {
 
 		SourceExtractor<Object> extractorMock = mockSourceExtractor();
 		Object extracted = new Object();
@@ -209,7 +209,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveSourceNoResponse() throws Exception {
+	void testSendAndReceiveSourceNoResponse() throws Exception {
 
 		SourceExtractor<Object> extractorMock = mockSourceExtractor();
 
@@ -224,7 +224,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveResultResponse() throws Exception {
+	void testSendAndReceiveResultResponse() throws Exception {
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
 		when(this.connectionMock.hasError()).thenReturn(false);
@@ -239,7 +239,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveResultNoResponse() throws Exception {
+	void testSendAndReceiveResultNoResponse() throws Exception {
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
 		when(this.connectionMock.hasError()).thenReturn(false);
@@ -253,7 +253,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveResultNoResponsePayload() throws Exception {
+	void testSendAndReceiveResultNoResponsePayload() throws Exception {
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
 		when(this.connectionMock.hasError()).thenReturn(false);
@@ -270,7 +270,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveMarshalResponse() throws Exception {
+	void testSendAndReceiveMarshalResponse() throws Exception {
 
 		Marshaller marshallerMock = mock(Marshaller.class);
 		this.template.setMarshaller(marshallerMock);
@@ -293,7 +293,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveMarshalNoResponse() throws Exception {
+	void testSendAndReceiveMarshalNoResponse() throws Exception {
 
 		Marshaller marshallerMock = mock(Marshaller.class);
 		this.template.setMarshaller(marshallerMock);
@@ -310,7 +310,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testSendAndReceiveCustomUri() throws Exception {
+	void testSendAndReceiveCustomUri() throws Exception {
 
 		final URI customUri = new URI("http://www.springframework.org/spring-ws/custom");
 		this.template.setMessageSender(new WebServiceMessageSender() {
@@ -346,7 +346,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testInterceptors() throws Exception {
+	void testInterceptors() throws Exception {
 
 		ClientInterceptor interceptorMock1 = mock(ClientInterceptor.class);
 		ClientInterceptor interceptorMock2 = mock(ClientInterceptor.class);
@@ -377,7 +377,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testInterceptorsInterceptedNoResponse() throws Exception {
+	void testInterceptorsInterceptedNoResponse() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(this.messageFactory);
 
@@ -399,7 +399,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testInterceptorsInterceptedCreateResponse() throws Exception {
+	void testInterceptorsInterceptedCreateResponse() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(this.messageFactory);
 		// force creation of response
@@ -563,7 +563,7 @@ public class WebServiceTemplateTests {
 	}
 
 	@Test
-	public void testDestinationResolver() throws Exception {
+	void testDestinationResolver() throws Exception {
 
 		DestinationProvider providerMock = mock(DestinationProvider.class);
 		this.template.setDestinationProvider(providerMock);

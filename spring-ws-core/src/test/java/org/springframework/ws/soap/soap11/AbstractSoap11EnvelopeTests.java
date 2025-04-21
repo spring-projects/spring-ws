@@ -30,13 +30,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractSoap11EnvelopeTests extends AbstractSoapEnvelopeTests {
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertThat(this.soapEnvelope.getName())
 			.isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Envelope"));
 	}
 
 	@Test
-	public void testGetContent() throws Exception {
+	void testGetContent() throws Exception {
 
 		StringResult result = new StringResult();
 		this.transformer.transform(this.soapEnvelope.getSource(), result);

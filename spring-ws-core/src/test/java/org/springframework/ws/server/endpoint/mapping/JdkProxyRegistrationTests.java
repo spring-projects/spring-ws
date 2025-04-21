@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jdk-proxy-registration.xml")
-public class JdkProxyRegistrationTests {
+class JdkProxyRegistrationTests {
 
 	@Autowired
 	private PayloadRootAnnotationMethodEndpointMapping mapping;
@@ -46,7 +46,7 @@ public class JdkProxyRegistrationTests {
 	private ApplicationContext applicationContext;
 
 	@Test
-	public void registration() throws NoSuchMethodException {
+	void registration() throws NoSuchMethodException {
 
 		MethodEndpoint jdkProxy = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));

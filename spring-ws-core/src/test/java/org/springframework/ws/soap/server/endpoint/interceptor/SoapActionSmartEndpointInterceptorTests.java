@@ -29,7 +29,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class SoapActionSmartEndpointInterceptorTests {
+class SoapActionSmartEndpointInterceptorTests {
 
 	private EndpointInterceptor delegate;
 
@@ -38,7 +38,7 @@ public class SoapActionSmartEndpointInterceptorTests {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.delegate = new EndpointInterceptorAdapter();
 
@@ -52,13 +52,13 @@ public class SoapActionSmartEndpointInterceptorTests {
 	}
 
 	@Test
-	public void neitherNamespaceNorLocalPart() {
+	void neitherNamespaceNorLocalPart() {
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> new SoapActionSmartEndpointInterceptor(this.delegate, null));
 	}
 
 	@Test
-	public void shouldInterceptMatch() {
+	void shouldInterceptMatch() {
 
 		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
 				this.soapAction);
@@ -69,7 +69,7 @@ public class SoapActionSmartEndpointInterceptorTests {
 	}
 
 	@Test
-	public void shouldInterceptNonMatch() {
+	void shouldInterceptNonMatch() {
 
 		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
 				"http://springframework.org/other");

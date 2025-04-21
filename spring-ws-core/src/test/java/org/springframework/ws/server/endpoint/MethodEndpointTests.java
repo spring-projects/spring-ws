@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MethodEndpointTests {
+class MethodEndpointTests {
 
 	private MethodEndpoint endpoint;
 
@@ -32,7 +32,7 @@ public class MethodEndpointTests {
 	private Method method;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.myMethodInvoked = false;
 		this.method = getClass().getMethod("myMethod", String.class);
@@ -40,14 +40,14 @@ public class MethodEndpointTests {
 	}
 
 	@Test
-	public void testGetters() {
+	void testGetters() {
 
 		assertThat(this.endpoint.getBean()).isEqualTo(this);
 		assertThat(this.endpoint.getMethod()).isEqualTo(this.method);
 	}
 
 	@Test
-	public void testInvoke() throws Exception {
+	void testInvoke() throws Exception {
 
 		assertThat(this.myMethodInvoked).isFalse();
 
@@ -57,27 +57,27 @@ public class MethodEndpointTests {
 	}
 
 	@Test
-	public void testEquals() throws Exception {
+	void testEquals() throws Exception {
 
 		assertThat(this.endpoint).isEqualTo(new MethodEndpoint(this, this.method));
 
-		Method otherMethod = getClass().getMethod("testEquals");
+		Method otherMethod = getClass().getDeclaredMethod("testEquals");
 
 		assertThat(new MethodEndpoint(this, otherMethod).equals(this.endpoint)).isFalse();
 	}
 
 	@Test
-	public void testHashCode() throws Exception {
+	void testHashCode() throws Exception {
 
 		assertThat(this.endpoint.hashCode()).isEqualTo(new MethodEndpoint(this, this.method).hashCode());
 
-		Method otherMethod = getClass().getMethod("testEquals");
+		Method otherMethod = getClass().getDeclaredMethod("testEquals");
 
 		assertThat(new MethodEndpoint(this, otherMethod).hashCode() == this.endpoint.hashCode()).isFalse();
 	}
 
 	@Test
-	public void testToString() {
+	void testToString() {
 		assertThat(this.endpoint.toString()).isNotNull();
 	}
 

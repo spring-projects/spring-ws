@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ErrorResponseCreatorTests {
+class ErrorResponseCreatorTests {
 
 	@Test
-	public void callback() throws IOException {
+	void callback() throws IOException {
 
 		String errorMessage = "Error message";
 		ErrorResponseCreator callback = new ErrorResponseCreator(errorMessage);

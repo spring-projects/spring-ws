@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-sender-applicationContext.xml")
-public class JmsMessageSenderIntegrationTests {
+class JmsMessageSenderIntegrationTests {
 
 	@Autowired
 	private JmsMessageSender messageSender;
@@ -56,12 +56,12 @@ public class JmsMessageSenderIntegrationTests {
 	private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
 	@BeforeEach
-	public void createMessageFactory() throws Exception {
+	void createMessageFactory() throws Exception {
 		this.messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 	}
 
 	@Test
-	public void testSendAndReceiveQueueBytesMessageTemporaryQueue() throws Exception {
+	void testSendAndReceiveQueueBytesMessageTemporaryQueue() throws Exception {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
 
@@ -99,7 +99,7 @@ public class JmsMessageSenderIntegrationTests {
 	}
 
 	@Test
-	public void testSendAndReceiveQueueBytesMessagePermanentQueue() throws Exception {
+	void testSendAndReceiveQueueBytesMessagePermanentQueue() throws Exception {
 
 		String responseQueueName = "SenderResponseQueue";
 		URI uri = new URI("jms:SenderRequestQueue?replyToName=" + responseQueueName + "&deliveryMode=NON_PERSISTENT");
@@ -139,7 +139,7 @@ public class JmsMessageSenderIntegrationTests {
 	}
 
 	@Test
-	public void testSendAndReceiveQueueTextMessage() throws Exception {
+	void testSendAndReceiveQueueTextMessage() throws Exception {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT&messageType=TEXT_MESSAGE");
 
@@ -177,7 +177,7 @@ public class JmsMessageSenderIntegrationTests {
 	}
 
 	@Test
-	public void testSendNoResponse() throws Exception {
+	void testSendNoResponse() throws Exception {
 
 		URI uri = new URI("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT");
 
@@ -200,7 +200,7 @@ public class JmsMessageSenderIntegrationTests {
 	}
 
 	@Test
-	public void testPostProcessor() throws Exception {
+	void testPostProcessor() throws Exception {
 
 		MessagePostProcessor processor = message -> {
 

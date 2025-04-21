@@ -44,7 +44,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JaxbElementPayloadMethodProcessorTests {
+class JaxbElementPayloadMethodProcessorTests {
 
 	private JaxbElementPayloadMethodProcessor processor;
 
@@ -55,7 +55,7 @@ public class JaxbElementPayloadMethodProcessorTests {
 	private MethodParameter stringReturnType;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.processor = new JaxbElementPayloadMethodProcessor();
 		this.supportedParameter = new MethodParameter(getClass().getMethod("supported", JAXBElement.class), 0);
@@ -64,17 +64,17 @@ public class JaxbElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 		assertThat(this.processor.supportsParameter(this.supportedParameter)).isTrue();
 	}
 
 	@Test
-	public void supportsReturnType() {
+	void supportsReturnType() {
 		assertThat(this.processor.supportsReturnType(this.supportedReturnType)).isTrue();
 	}
 
 	@Test
-	public void resolveArgument() throws JAXBException {
+	void resolveArgument() throws JAXBException {
 
 		WebServiceMessage request = new MockWebServiceMessage(
 				"<myType xmlns='http://springframework.org'><string>Foo</string></myType>");
@@ -90,7 +90,7 @@ public class JaxbElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleReturnValue() throws Exception {
+	void handleReturnValue() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
@@ -111,7 +111,7 @@ public class JaxbElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleReturnValueString() throws Exception {
+	void handleReturnValueString() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
@@ -131,7 +131,7 @@ public class JaxbElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleNullReturnValue() throws Exception {
+	void handleNullReturnValue() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
@@ -141,7 +141,7 @@ public class JaxbElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleReturnValueAxiom() throws Exception {
+	void handleReturnValueAxiom() throws Exception {
 
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
 		MessageContext messageContext = new DefaultMessageContext(messageFactory);

@@ -66,7 +66,7 @@ public abstract class AbstractValidatorFactoryTests {
 	protected abstract XmlValidator createValidator(Resource[] schemaResources, String schemaLanguage) throws Exception;
 
 	@Test
-	public void testHandleValidMessageStream() throws Exception {
+	void testHandleValidMessageStream() throws Exception {
 
 		SAXParseException[] errors = this.validator.validate(new StreamSource(this.validInputStream));
 
@@ -74,7 +74,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testValidateTwice() throws Exception {
+	void testValidateTwice() throws Exception {
 
 		this.validator.validate(new StreamSource(this.validInputStream));
 		this.validInputStream = AbstractValidatorFactoryTests.class.getResourceAsStream("validDocument.xml");
@@ -82,7 +82,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testHandleInvalidMessageStream() throws Exception {
+	void testHandleInvalidMessageStream() throws Exception {
 
 		SAXParseException[] errors = this.validator.validate(new StreamSource(this.invalidInputStream));
 
@@ -90,7 +90,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testHandleValidMessageSax() throws Exception {
+	void testHandleValidMessageSax() throws Exception {
 
 		SAXParseException[] errors = this.validator.validate(new SAXSource(new InputSource(this.validInputStream)));
 
@@ -98,7 +98,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testHandleInvalidMessageSax() throws Exception {
+	void testHandleInvalidMessageSax() throws Exception {
 
 		SAXParseException[] errors = this.validator.validate(new SAXSource(new InputSource(this.invalidInputStream)));
 
@@ -106,7 +106,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testHandleValidMessageDom() throws Exception {
+	void testHandleValidMessageDom() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -117,7 +117,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testHandleInvalidMessageDom() throws Exception {
+	void testHandleInvalidMessageDom() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -128,7 +128,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void testMultipleSchemasValidMessage() throws Exception {
+	void testMultipleSchemasValidMessage() throws Exception {
 
 		Resource[] schemaResources = new Resource[] {
 				new ClassPathResource("multipleSchemas1.xsd", AbstractValidatorFactoryTests.class),
@@ -150,7 +150,7 @@ public abstract class AbstractValidatorFactoryTests {
 	}
 
 	@Test
-	public void customErrorHandler() throws Exception {
+	void customErrorHandler() throws Exception {
 
 		ValidationErrorHandler myHandler = new ValidationErrorHandler() {
 			public SAXParseException[] getErrors() {

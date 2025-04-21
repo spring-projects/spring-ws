@@ -24,10 +24,10 @@ import org.springframework.context.support.StaticApplicationContext;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class MockStrategiesHelperTests {
+class MockStrategiesHelperTests {
 
 	@Test
-	public void none() {
+	void none() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
@@ -37,7 +37,7 @@ public class MockStrategiesHelperTests {
 	}
 
 	@Test
-	public void one() {
+	void one() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("myBean", MyBean.class);
@@ -47,7 +47,7 @@ public class MockStrategiesHelperTests {
 	}
 
 	@Test
-	public void many() {
+	void many() {
 
 		assertThatExceptionOfType(BeanInitializationException.class).isThrownBy(() -> {
 
@@ -61,7 +61,7 @@ public class MockStrategiesHelperTests {
 	}
 
 	@Test
-	public void noneWithDefault() {
+	void noneWithDefault() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 

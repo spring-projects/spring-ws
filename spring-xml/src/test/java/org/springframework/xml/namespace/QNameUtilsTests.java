@@ -28,17 +28,17 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QNameUtilsTests {
+class QNameUtilsTests {
 
 	@Test
-	public void testValidQNames() {
+	void testValidQNames() {
 
 		assertThat(QNameUtils.validateQName("{namespace}local")).isTrue();
 		assertThat(QNameUtils.validateQName("local")).isTrue();
 	}
 
 	@Test
-	public void testInvalidQNames() {
+	void testInvalidQNames() {
 
 		assertThat(QNameUtils.validateQName(null)).isFalse();
 		assertThat(QNameUtils.validateQName("")).isFalse();
@@ -47,7 +47,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForNodeNoNamespace() throws Exception {
+	void testGetQNameForNodeNoNamespace() throws Exception {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -62,7 +62,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForNodeNoPrefix() throws Exception {
+	void testGetQNameForNodeNoPrefix() throws Exception {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -77,7 +77,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testGetQNameForNode() throws Exception {
+	void testGetQNameForNode() throws Exception {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -92,7 +92,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testToQualifiedNamePrefix() {
+	void testToQualifiedNamePrefix() {
 
 		QName qName = new QName("namespace", "localName", "prefix");
 		String result = QNameUtils.toQualifiedName(qName);
@@ -101,7 +101,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testToQualifiedNameNoPrefix() {
+	void testToQualifiedNameNoPrefix() {
 
 		QName qName = new QName("localName");
 		String result = QNameUtils.toQualifiedName(qName);
@@ -110,7 +110,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testToQNamePrefix() {
+	void testToQNamePrefix() {
 
 		QName result = QNameUtils.toQName("namespace", "prefix:localName");
 
@@ -120,7 +120,7 @@ public class QNameUtilsTests {
 	}
 
 	@Test
-	public void testToQNameNoPrefix() {
+	void testToQNameNoPrefix() {
 
 		QName result = QNameUtils.toQName("namespace", "localName");
 

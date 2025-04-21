@@ -23,17 +23,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UuidMessageIdStrategyTests {
+class UuidMessageIdStrategyTests {
 
 	private MessageIdStrategy strategy;
 
 	@BeforeEach
-	public final void setUp() {
+	final void setUp() {
 		this.strategy = new UuidMessageIdStrategy();
 	}
 
 	@Test
-	public void testStrategy() {
+	void testStrategy() {
 
 		URI messageId1 = this.strategy.newMessageId(null);
 

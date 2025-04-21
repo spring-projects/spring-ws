@@ -30,7 +30,7 @@ import org.springframework.ws.soap.SoapFaultDetail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("Since15")
-public class AxiomSoapFaultDetailTests {
+class AxiomSoapFaultDetailTests {
 
 	private static final String FAILING_FAULT = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
 			+ "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
@@ -53,7 +53,7 @@ public class AxiomSoapFaultDetailTests {
 	private AxiomSoapMessage succeedingMessage;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		SOAPModelBuilder builder = OMXMLBuilderFactory.createSOAPModelBuilder(new StringReader(FAILING_FAULT));
 		SOAPMessage soapMessage = builder.getSOAPMessage();
@@ -68,7 +68,7 @@ public class AxiomSoapFaultDetailTests {
 	}
 
 	@Test
-	public void testGetDetailEntriesWorksWithWhitespaceNodes() {
+	void testGetDetailEntriesWorksWithWhitespaceNodes() {
 
 		SoapFault fault = this.failingMessage.getSoapBody().getFault();
 
@@ -83,7 +83,7 @@ public class AxiomSoapFaultDetailTests {
 	}
 
 	@Test
-	public void testGetDetailEntriesWorksWithoutWhitespaceNodes() {
+	void testGetDetailEntriesWorksWithoutWhitespaceNodes() {
 
 		SoapFault fault = this.succeedingMessage.getSoapBody().getFault();
 

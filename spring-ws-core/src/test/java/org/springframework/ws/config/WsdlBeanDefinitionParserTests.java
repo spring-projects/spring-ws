@@ -32,17 +32,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class WsdlBeanDefinitionParserTests {
+class WsdlBeanDefinitionParserTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.applicationContext = new ClassPathXmlApplicationContext("wsdlBeanDefinitionParserTest.xml", getClass());
 	}
 
 	@Test
-	public void staticWsdl() {
+	void staticWsdl() {
 
 		Map<String, SimpleWsdl11Definition> result = this.applicationContext
 			.getBeansOfType(SimpleWsdl11Definition.class);
@@ -55,7 +55,7 @@ public class WsdlBeanDefinitionParserTests {
 	}
 
 	@Test
-	public void dynamicWsdl() {
+	void dynamicWsdl() {
 
 		Map<String, ?> result = this.applicationContext.getBeansOfType(DefaultWsdl11Definition.class);
 

@@ -72,7 +72,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testThatToStringReturnsOriginalXpathExpression() {
+	void testThatToStringReturnsOriginalXpathExpression() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", this.namespaces);
 
@@ -80,7 +80,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanInvalidNamespaces() {
+	void testEvaluateAsBooleanInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", this.namespaces);
 		boolean result = expression.evaluateAsBoolean(this.namespacesDocument);
@@ -89,7 +89,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanInvalidNoNamespaces() {
+	void testEvaluateAsBooleanInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		boolean result = expression.evaluateAsBoolean(this.noNamespacesDocument);
@@ -98,7 +98,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanNamespaces() {
+	void testEvaluateAsBooleanNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:boolean/text()",
 				this.namespaces);
@@ -108,7 +108,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsBooleanNoNamespaces() {
+	void testEvaluateAsBooleanNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/boolean/text()");
 		boolean result = expression.evaluateAsBoolean(this.noNamespacesDocument);
@@ -117,7 +117,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleInvalidNamespaces() {
+	void testEvaluateAsDoubleInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", this.namespaces);
 		double result = expression.evaluateAsNumber(this.noNamespacesDocument);
@@ -126,7 +126,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleInvalidNoNamespaces() {
+	void testEvaluateAsDoubleInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		double result = expression.evaluateAsNumber(this.noNamespacesDocument);
@@ -135,7 +135,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleNamespaces() {
+	void testEvaluateAsDoubleNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:number/text()",
 				this.namespaces);
@@ -145,7 +145,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsDoubleNoNamespaces() {
+	void testEvaluateAsDoubleNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/number/text()");
 		double result = expression.evaluateAsNumber(this.noNamespacesDocument);
@@ -154,7 +154,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeInvalidNamespaces() {
+	void testEvaluateAsNodeInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", this.namespaces);
 		Node result = expression.evaluateAsNode(this.namespacesDocument);
@@ -163,7 +163,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeInvalidNoNamespaces() {
+	void testEvaluateAsNodeInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		Node result = expression.evaluateAsNode(this.noNamespacesDocument);
@@ -172,7 +172,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeNamespaces() {
+	void testEvaluateAsNodeNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child", this.namespaces);
 		Node result = expression.evaluateAsNode(this.namespacesDocument);
@@ -182,7 +182,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeNoNamespaces() {
+	void testEvaluateAsNodeNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child");
 		Node result = expression.evaluateAsNode(this.noNamespacesDocument);
@@ -192,7 +192,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeListNamespaces() {
+	void testEvaluateAsNodeListNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/*", this.namespaces);
 		List<Node> results = expression.evaluateAsNodeList(this.namespacesDocument);
@@ -202,7 +202,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsNodeListNoNamespaces() {
+	void testEvaluateAsNodeListNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/*");
 		List<Node> results = expression.evaluateAsNodeList(this.noNamespacesDocument);
@@ -212,7 +212,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsStringInvalidNamespaces() {
+	void testEvaluateAsStringInvalidNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:otherchild", this.namespaces);
 		String result = expression.evaluateAsString(this.namespacesDocument);
@@ -221,7 +221,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsStringInvalidNoNamespaces() {
+	void testEvaluateAsStringInvalidNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/otherchild");
 		String result = expression.evaluateAsString(this.noNamespacesDocument);
@@ -230,7 +230,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsStringNamespaces() {
+	void testEvaluateAsStringNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/prefix1:root/prefix2:child/prefix2:text/text()",
 				this.namespaces);
@@ -240,7 +240,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsStringNoNamespaces() {
+	void testEvaluateAsStringNoNamespaces() {
 
 		XPathExpression expression = createXPathExpression("/root/child/text/text()");
 		String result = expression.evaluateAsString(this.noNamespacesDocument);
@@ -249,7 +249,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluateAsObject() {
+	void testEvaluateAsObject() {
 
 		XPathExpression expression = createXPathExpression("/root/child");
 		String result = expression.evaluateAsObject(this.noNamespacesDocument, new NodeMapper<>() {
@@ -263,7 +263,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testEvaluate() throws Exception {
+	void testEvaluate() throws Exception {
 
 		XPathExpression expression = createXPathExpression("/root/child/*");
 		List<String> results = expression.evaluate(this.noNamespacesDocument, new NodeMapper<>() {
@@ -277,7 +277,7 @@ public abstract class AbstractXPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testInvalidExpression() {
+	void testInvalidExpression() {
 		assertThatExceptionOfType(XPathParseException.class).isThrownBy(() -> createXPathExpression("\\"));
 	}
 

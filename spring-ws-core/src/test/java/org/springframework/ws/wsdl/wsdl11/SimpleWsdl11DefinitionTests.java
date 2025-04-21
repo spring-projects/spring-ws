@@ -23,12 +23,12 @@ import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleWsdl11DefinitionTests {
+class SimpleWsdl11DefinitionTests {
 
 	private SimpleWsdl11Definition definition;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.definition = new SimpleWsdl11Definition();
 		this.definition.setWsdl(new ClassPathResource("complete.wsdl", getClass()));
@@ -36,7 +36,7 @@ public class SimpleWsdl11DefinitionTests {
 	}
 
 	@Test
-	public void testGetSource() {
+	void testGetSource() {
 		assertThat(this.definition.getSource()).isNotNull();
 	}
 

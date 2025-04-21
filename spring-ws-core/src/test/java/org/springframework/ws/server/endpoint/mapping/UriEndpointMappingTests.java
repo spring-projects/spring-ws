@@ -35,26 +35,26 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class UriEndpointMappingTests {
+class UriEndpointMappingTests {
 
 	private UriEndpointMapping mapping;
 
 	private MessageContext context;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.mapping = new UriEndpointMapping();
 		this.context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@AfterEach
-	public void clearContext() {
+	void clearContext() {
 		TransportContextHolder.setTransportContext(null);
 	}
 
 	@Test
-	public void getLookupKeyForMessage() throws Exception {
+	void getLookupKeyForMessage() throws Exception {
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 		TransportContextHolder.setTransportContext(new DefaultTransportContext(connectionMock));
@@ -70,7 +70,7 @@ public class UriEndpointMappingTests {
 	}
 
 	@Test
-	public void getLookupKeyForMessagePath() throws Exception {
+	void getLookupKeyForMessagePath() throws Exception {
 
 		this.mapping.setUsePath(true);
 
@@ -88,7 +88,7 @@ public class UriEndpointMappingTests {
 	}
 
 	@Test
-	public void testValidateLookupKey() {
+	void testValidateLookupKey() {
 
 		assertThat(this.mapping.validateLookupKey("http://example.com/services")).isTrue();
 		assertThat(this.mapping.validateLookupKey("some string")).isFalse();

@@ -21,17 +21,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XPathExpressionFactoryBeanTests {
+class XPathExpressionFactoryBeanTests {
 
 	private XPathExpressionFactoryBean factoryBean;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.factoryBean = new XPathExpressionFactoryBean();
 	}
 
 	@Test
-	public void testFactoryBean() throws Exception {
+	void testFactoryBean() throws Exception {
 
 		this.factoryBean.setExpression("/root");
 		this.factoryBean.afterPropertiesSet();

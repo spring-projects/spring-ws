@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPMessage;
+import org.junit.jupiter.api.Test;
 import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.ws.soap.SoapMessage;
@@ -31,7 +32,7 @@ import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
+class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 
 	@Override
 	protected String getNS() {
@@ -54,7 +55,8 @@ public class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 		return new SaajSoapMessage(this.saajMessage, true, messageFactory);
 	}
 
-	public void testGetPayloadSource() throws Exception {
+	@Test
+	void testGetPayloadSource() throws Exception {
 
 		this.saajMessage.getSOAPBody().addChildElement("child");
 		Source source = this.soapMessage.getPayloadSource();
@@ -64,7 +66,8 @@ public class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
 
-	public void testGetPayloadSourceText() throws Exception {
+	@Test
+	void testGetPayloadSourceText() throws Exception {
 
 		this.saajMessage.getSOAPBody().addTextNode(" ");
 		this.saajMessage.getSOAPBody().addChildElement("child");
@@ -75,7 +78,8 @@ public class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 		XmlAssert.assertThat(result.toString()).and("<child/>").ignoreWhitespace().areIdentical();
 	}
 
-	public void testGetPayloadResult() throws Exception {
+	@Test
+	void testGetPayloadResult() throws Exception {
 
 		StringSource source = new StringSource("<child/>");
 		Result result = this.soapMessage.getPayloadResult();

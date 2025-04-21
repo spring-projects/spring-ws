@@ -31,7 +31,7 @@ import static org.easymock.EasyMock.verify;
 /**
  * @author Arjen Poutsma
  */
-public class WebServiceMessageMatcherAdapterTests {
+class WebServiceMessageMatcherAdapterTests {
 
 	private WebServiceMessage message;
 
@@ -40,7 +40,7 @@ public class WebServiceMessageMatcherAdapterTests {
 	private WebServiceMessageMatcherAdapter adapter;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.message = createMock(WebServiceMessage.class);
 		this.adaptee = createMock(WebServiceMessageMatcher.class);
@@ -48,7 +48,7 @@ public class WebServiceMessageMatcherAdapterTests {
 	}
 
 	@Test
-	public void match() throws IOException {
+	void match() throws IOException {
 
 		this.adaptee.match(this.message);
 

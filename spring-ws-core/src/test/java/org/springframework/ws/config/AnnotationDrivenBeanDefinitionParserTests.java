@@ -53,18 +53,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class AnnotationDrivenBeanDefinitionParserTests {
+class AnnotationDrivenBeanDefinitionParserTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.applicationContext = new ClassPathXmlApplicationContext("annotationDrivenBeanDefinitionParserTest.xml",
 				getClass());
 	}
 
 	@Test
-	public void endpointMappings() {
+	void endpointMappings() {
 
 		Map<String, EndpointMapping> result = this.applicationContext.getBeansOfType(EndpointMapping.class);
 
@@ -75,7 +75,7 @@ public class AnnotationDrivenBeanDefinitionParserTests {
 	}
 
 	@Test
-	public void endpointAdapters() {
+	void endpointAdapters() {
 
 		Map<String, EndpointAdapter> result = this.applicationContext.getBeansOfType(EndpointAdapter.class);
 
@@ -104,7 +104,7 @@ public class AnnotationDrivenBeanDefinitionParserTests {
 	}
 
 	@Test
-	public void endpointExceptionResolver() {
+	void endpointExceptionResolver() {
 
 		Map<String, EndpointExceptionResolver> result = this.applicationContext
 			.getBeansOfType(EndpointExceptionResolver.class);

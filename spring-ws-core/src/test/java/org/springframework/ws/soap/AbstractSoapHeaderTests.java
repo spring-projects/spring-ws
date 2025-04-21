@@ -46,7 +46,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	protected abstract SoapHeader createSoapHeader() throws Exception;
 
 	@Test
-	public void testAddHeaderElement() throws Exception {
+	void testAddHeaderElement() throws Exception {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
@@ -66,7 +66,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testRemoveHeaderElement() {
+	void testRemoveHeaderElement() {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
 		this.soapHeader.removeHeaderElement(qName);
@@ -78,7 +78,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testExamineAllHeaderElement() throws Exception {
+	void testExamineAllHeaderElement() throws Exception {
 
 		QName qName = new QName(NAMESPACE, "localName", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
@@ -108,7 +108,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testExamineHeaderElementWithName() {
+	void testExamineHeaderElementWithName() {
 
 		QName name1 = new QName(NAMESPACE, "name1", PREFIX);
 		QName name2 = new QName(NAMESPACE, "name2", PREFIX);
@@ -126,7 +126,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testExamineMustUnderstandHeaderElements() {
+	void testExamineMustUnderstandHeaderElements() {
 
 		QName qName1 = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement1 = this.soapHeader.addHeaderElement(qName1);
@@ -150,7 +150,7 @@ public abstract class AbstractSoapHeaderTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testGetResult() throws Exception {
+	protected void testGetResult() throws Exception {
 
 		String content = "<spring:localName xmlns:spring='http://www.springframework.org'><spring:content/></spring:localName>";
 		this.transformer.transform(new StringSource(content), this.soapHeader.getResult());

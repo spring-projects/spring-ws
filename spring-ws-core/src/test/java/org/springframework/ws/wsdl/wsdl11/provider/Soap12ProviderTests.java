@@ -45,14 +45,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Soap12ProviderTests {
+class Soap12ProviderTests {
 
 	private Soap12Provider provider;
 
 	private Definition definition;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.provider = new Soap12Provider();
 		WSDLFactory factory = WSDLFactory.newInstance();
@@ -61,7 +61,7 @@ public class Soap12ProviderTests {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testPopulateBinding() throws Exception {
+	void testPopulateBinding() throws Exception {
 		String namespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", namespace);
 		this.definition.setTargetNamespace(namespace);

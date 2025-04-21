@@ -37,7 +37,7 @@ import org.springframework.xml.sax.SaxUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SuffixBasedMessagesProviderTests {
+class SuffixBasedMessagesProviderTests {
 
 	private SuffixBasedMessagesProvider provider;
 
@@ -46,7 +46,7 @@ public class SuffixBasedMessagesProviderTests {
 	private DocumentBuilder documentBuilder;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.provider = new SuffixBasedMessagesProvider();
 		this.provider.setFaultSuffix("Foo");
@@ -59,7 +59,7 @@ public class SuffixBasedMessagesProviderTests {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testAddMessages() throws Exception {
+	void testAddMessages() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", definitionNamespace);

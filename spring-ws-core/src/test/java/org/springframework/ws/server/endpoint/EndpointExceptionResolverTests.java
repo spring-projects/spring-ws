@@ -31,14 +31,14 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
  */
-public class EndpointExceptionResolverTests {
+class EndpointExceptionResolverTests {
 
 	private MethodEndpoint methodEndpoint;
 
 	private AbstractEndpointExceptionResolver exceptionResolver;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.exceptionResolver = new AbstractEndpointExceptionResolver() {
 
@@ -53,7 +53,7 @@ public class EndpointExceptionResolverTests {
 	}
 
 	@Test
-	public void testMatchMethodEndpoint() {
+	void testMatchMethodEndpoint() {
 
 		boolean matched = this.exceptionResolver.resolveException(null, this.methodEndpoint, null);
 

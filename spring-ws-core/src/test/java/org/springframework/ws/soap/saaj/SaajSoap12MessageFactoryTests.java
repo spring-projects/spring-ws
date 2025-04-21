@@ -22,7 +22,7 @@ import jakarta.xml.soap.SOAPConstants;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.soap.soap12.AbstractSoap12MessageFactoryTests;
 
-public class SaajSoap12MessageFactoryTests extends AbstractSoap12MessageFactoryTests {
+class SaajSoap12MessageFactoryTests extends AbstractSoap12MessageFactoryTests {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {

@@ -23,7 +23,7 @@ import jakarta.xml.soap.SOAPMessage;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.soap12.AbstractSoap12BodyTests;
 
-public class SaajSoap12BodyTests extends AbstractSoap12BodyTests {
+class SaajSoap12BodyTests extends AbstractSoap12BodyTests {
 
 	@Override
 	protected SoapBody createSoapBody() throws Exception {

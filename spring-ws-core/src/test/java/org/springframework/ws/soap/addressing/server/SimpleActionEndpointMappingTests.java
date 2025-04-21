@@ -35,14 +35,14 @@ import org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidating
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SimpleActionEndpointMappingTests extends AbstractWsAddressingTests {
+class SimpleActionEndpointMappingTests extends AbstractWsAddressingTests {
 
 	private SimpleActionEndpointMapping mapping;
 
 	private Endpoint1 endpoint1;
 
 	@BeforeEach
-	public void createMappings() throws Exception {
+	void createMappings() throws Exception {
 
 		this.mapping = new SimpleActionEndpointMapping();
 
@@ -61,7 +61,7 @@ public class SimpleActionEndpointMappingTests extends AbstractWsAddressingTests 
 	}
 
 	@Test
-	public void testMatch() throws Exception {
+	void testMatch() throws Exception {
 
 		SaajSoapMessage message = loadSaajMessage("200408/valid.xml");
 		MessageContext messageContext = new DefaultMessageContext(message,
@@ -81,7 +81,7 @@ public class SimpleActionEndpointMappingTests extends AbstractWsAddressingTests 
 	}
 
 	@Test
-	public void testNoMatch() throws Exception {
+	void testNoMatch() throws Exception {
 
 		SaajSoapMessage message = loadSaajMessage("200408/response-no-message-id.xml");
 		MessageContext messageContext = new DefaultMessageContext(message,

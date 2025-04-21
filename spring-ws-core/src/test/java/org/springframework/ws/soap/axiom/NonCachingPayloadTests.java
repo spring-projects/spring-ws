@@ -31,14 +31,14 @@ import org.springframework.util.xml.StaxUtils;
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 @SuppressWarnings("Since15")
-public class NonCachingPayloadTests {
+class NonCachingPayloadTests {
 
 	private Payload payload;
 
 	private SOAPBody body;
 
 	@BeforeEach
-	public final void setUp() {
+	final void setUp() {
 
 		SOAPFactory soapFactory = OMAbstractFactory.getSOAP11Factory();
 		this.body = soapFactory.createSOAPBody();
@@ -46,7 +46,7 @@ public class NonCachingPayloadTests {
 	}
 
 	@Test
-	public void testDelegatingStreamWriter() throws Exception {
+	void testDelegatingStreamWriter() throws Exception {
 
 		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(this.payload.getResult());
 
@@ -71,7 +71,7 @@ public class NonCachingPayloadTests {
 	}
 
 	@Test
-	public void testDelegatingStreamWriterWriteEndDocument() throws Exception {
+	void testDelegatingStreamWriterWriteEndDocument() throws Exception {
 
 		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(this.payload.getResult());
 
@@ -95,7 +95,7 @@ public class NonCachingPayloadTests {
 	}
 
 	@Test
-	public void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
+	void testDelegatingStreamWriterWriteEmptyElement() throws Exception {
 		XMLStreamWriter streamWriter = StaxUtils.getXMLStreamWriter(this.payload.getResult());
 
 		String namespace = "http://springframework.org/spring-ws";

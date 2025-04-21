@@ -39,17 +39,17 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SoapFaultMappingExceptionResolverTests {
+class SoapFaultMappingExceptionResolverTests {
 
 	private SoapFaultMappingExceptionResolver resolver;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.resolver = new SoapFaultMappingExceptionResolver();
 	}
 
 	@Test
-	public void testGetDepth() {
+	void testGetDepth() {
 
 		assertThat(this.resolver.getDepth("java.lang.Exception", new Exception())).isEqualTo(0);
 		assertThat(this.resolver.getDepth("java.lang.Exception", new IllegalArgumentException())).isEqualTo(2);
@@ -57,7 +57,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionClientSoap11() throws Exception {
+	void testResolveExceptionClientSoap11() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "SERVER, Server error");
@@ -86,7 +86,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionSenderSoap12() throws Exception {
+	void testResolveExceptionSenderSoap12() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "RECEIVER, Receiver error, en");
@@ -115,7 +115,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionServerSoap11() throws Exception {
+	void testResolveExceptionServerSoap11() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "CLIENT, Client error");
@@ -144,7 +144,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionReceiverSoap12() throws Exception {
+	void testResolveExceptionReceiverSoap12() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(Exception.class.getName(), "SENDER, Sender error");
@@ -173,7 +173,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionDefault() throws Exception {
+	void testResolveExceptionDefault() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(SoapMessageException.class.getName(), "SERVER,Server error");
@@ -219,7 +219,7 @@ public class SoapFaultMappingExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveNoMessageException() throws Exception {
+	void testResolveNoMessageException() throws Exception {
 
 		Properties mappings = new Properties();
 		mappings.setProperty(IOException.class.getName(), "SERVER");

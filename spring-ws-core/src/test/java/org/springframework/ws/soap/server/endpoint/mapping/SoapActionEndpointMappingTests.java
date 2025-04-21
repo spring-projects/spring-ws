@@ -27,21 +27,21 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SoapActionEndpointMappingTests {
+class SoapActionEndpointMappingTests {
 
 	private SoapActionEndpointMapping mapping;
 
 	private MessageContext context;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.mapping = new SoapActionEndpointMapping();
 		this.context = new DefaultMessageContext(new SaajSoapMessageFactory(MessageFactory.newInstance()));
 	}
 
 	@Test
-	public void testGetLookupKeyForMessage() throws Exception {
+	void testGetLookupKeyForMessage() throws Exception {
 
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
 		((SoapMessage) this.context.getRequest()).setSoapAction(soapAction);
@@ -50,7 +50,7 @@ public class SoapActionEndpointMappingTests {
 	}
 
 	@Test
-	public void testGetLookupKeyForMessageQuoted() throws Exception {
+	void testGetLookupKeyForMessageQuoted() throws Exception {
 
 		String soapAction = "http://springframework.org/spring-ws/SoapAction";
 		((SoapMessage) this.context.getRequest()).setSoapAction(soapAction);
@@ -59,7 +59,7 @@ public class SoapActionEndpointMappingTests {
 	}
 
 	@Test
-	public void testValidateLookupKey() {
+	void testValidateLookupKey() {
 		assertThat(this.mapping.validateLookupKey("SoapAction")).isTrue();
 	}
 

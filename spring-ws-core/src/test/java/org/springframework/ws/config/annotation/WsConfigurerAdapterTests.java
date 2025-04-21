@@ -39,12 +39,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author Arjen Poutsma
  */
 @Deprecated
-public class WsConfigurerAdapterTests {
+class WsConfigurerAdapterTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
@@ -54,7 +54,7 @@ public class WsConfigurerAdapterTests {
 	}
 
 	@Test
-	public void interceptors() {
+	void interceptors() {
 
 		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 			.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
@@ -68,7 +68,7 @@ public class WsConfigurerAdapterTests {
 	}
 
 	@Test
-	public void argumentResolvers() {
+	void argumentResolvers() {
 
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext
 			.getBean(DefaultMethodEndpointAdapter.class);
@@ -84,7 +84,7 @@ public class WsConfigurerAdapterTests {
 	}
 
 	@Test
-	public void returnValueHandlers() {
+	void returnValueHandlers() {
 
 		DefaultMethodEndpointAdapter endpointAdapter = this.applicationContext
 			.getBean(DefaultMethodEndpointAdapter.class);

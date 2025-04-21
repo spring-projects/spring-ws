@@ -53,7 +53,7 @@ public abstract class AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testSingle() throws Exception {
+	void testSingle() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema single = createSchema(resource);
@@ -70,7 +70,7 @@ public abstract class AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testIncludes() throws Exception {
+	void testIncludes() throws Exception {
 
 		Resource resource = new ClassPathResource("including.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema including = createSchema(resource);
@@ -87,7 +87,7 @@ public abstract class AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testImports() throws Exception {
+	void testImports() throws Exception {
 
 		Resource resource = new ClassPathResource("importing.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema importing = createSchema(resource);
@@ -105,7 +105,7 @@ public abstract class AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testXmlNamespace() throws Exception {
+	void testXmlNamespace() throws Exception {
 
 		Resource resource = new ClassPathResource("xmlNamespace.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema importing = createSchema(resource);
@@ -122,7 +122,7 @@ public abstract class AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testCreateValidator() throws Exception {
+	void testCreateValidator() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema single = createSchema(resource);

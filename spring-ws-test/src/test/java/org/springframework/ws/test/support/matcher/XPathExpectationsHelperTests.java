@@ -32,10 +32,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class XPathExpectationsHelperTests {
+class XPathExpectationsHelperTests {
 
 	@Test
-	public void existsMatch() throws IOException, AssertionError {
+	void existsMatch() throws IOException, AssertionError {
 
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//b");
 		WebServiceMessageMatcher matcher = helper.exists();
@@ -53,7 +53,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void existsNonMatch() throws AssertionError {
+	void existsNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -72,7 +72,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void doesNotExistMatch() throws IOException, AssertionError {
+	void doesNotExistMatch() throws IOException, AssertionError {
 
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//c");
 		WebServiceMessageMatcher matcher = helper.doesNotExist();
@@ -90,7 +90,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void doesNotExistNonMatch() throws AssertionError {
+	void doesNotExistNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -109,7 +109,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToTrueMatch() throws IOException, AssertionError {
+	void evaluatesToTrueMatch() throws IOException, AssertionError {
 
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//b=1");
 		WebServiceMessageMatcher matcher = helper.evaluatesTo(true);
@@ -127,7 +127,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToTrueNonMatch() throws AssertionError {
+	void evaluatesToTrueNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -146,7 +146,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToFalseMatch() throws IOException, AssertionError {
+	void evaluatesToFalseMatch() throws IOException, AssertionError {
 
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//b!=1");
 		WebServiceMessageMatcher matcher = helper.evaluatesTo(false);
@@ -164,7 +164,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToFalseNonMatch() throws AssertionError {
+	void evaluatesToFalseNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -183,7 +183,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToIntegerMatch() throws IOException, AssertionError {
+	void evaluatesToIntegerMatch() throws IOException, AssertionError {
 
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//b");
 		WebServiceMessageMatcher matcher = helper.evaluatesTo(1);
@@ -201,7 +201,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void evaluatesToIntegerNonMatch() throws AssertionError {
+	void evaluatesToIntegerNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -220,7 +220,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void existsWithNamespacesMatch() throws IOException, AssertionError {
+	void existsWithNamespacesMatch() throws IOException, AssertionError {
 
 		Map<String, String> ns = Collections.singletonMap("x", "http://example.org");
 		XPathExpectationsHelper helper = new XPathExpectationsHelper("//x:b", ns);
@@ -240,7 +240,7 @@ public class XPathExpectationsHelperTests {
 	}
 
 	@Test
-	public void existsWithNamespacesNonMatch() throws AssertionError {
+	void existsWithNamespacesNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

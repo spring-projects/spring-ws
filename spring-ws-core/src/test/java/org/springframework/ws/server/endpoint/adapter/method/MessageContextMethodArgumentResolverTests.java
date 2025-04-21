@@ -26,26 +26,26 @@ import org.springframework.ws.context.MessageContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageContextMethodArgumentResolverTests {
+class MessageContextMethodArgumentResolverTests {
 
 	private MessageContextMethodArgumentResolver resolver;
 
 	private MethodParameter supported;
 
 	@BeforeEach
-	public void setUp() throws NoSuchMethodException {
+	void setUp() throws NoSuchMethodException {
 
 		this.resolver = new MessageContextMethodArgumentResolver();
 		this.supported = new MethodParameter(getClass().getMethod("supported", MessageContext.class), 0);
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 		assertThat(this.resolver.supportsParameter(this.supported)).isTrue();
 	}
 
 	@Test
-	public void resolveArgument() throws Exception {
+	void resolveArgument() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 

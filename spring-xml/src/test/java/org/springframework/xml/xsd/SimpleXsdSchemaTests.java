@@ -22,7 +22,7 @@ import org.springframework.core.io.Resource;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class SimpleXsdSchemaTests extends AbstractXsdSchemaTests {
+class SimpleXsdSchemaTests extends AbstractXsdSchemaTests {
 
 	@Override
 	protected XsdSchema createSchema(Resource resource) throws Exception {
@@ -34,7 +34,7 @@ public class SimpleXsdSchemaTests extends AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testBareXsdSchema() {
+	void testBareXsdSchema() {
 		assertThatIllegalArgumentException().isThrownBy(() -> new SimpleXsdSchema().toString());
 	}
 

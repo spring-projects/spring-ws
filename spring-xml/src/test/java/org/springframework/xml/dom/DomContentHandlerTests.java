@@ -33,7 +33,7 @@ import org.springframework.xml.sax.SaxUtils;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class DomContentHandlerTests {
+class DomContentHandlerTests {
 
 	private static final String XML_1 = "<?xml version='1.0' encoding='UTF-8'?>" + "<?pi content?>"
 			+ "<root xmlns='namespace'>"
@@ -57,7 +57,7 @@ public class DomContentHandlerTests {
 	private DocumentBuilder documentBuilder;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -67,7 +67,7 @@ public class DomContentHandlerTests {
 	}
 
 	@Test
-	public void testContentHandlerDocumentNamespacePrefixes() throws Exception {
+	void testContentHandlerDocumentNamespacePrefixes() throws Exception {
 
 		this.xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
 		this.handler = new DomContentHandler(this.result);
@@ -79,7 +79,7 @@ public class DomContentHandlerTests {
 	}
 
 	@Test
-	public void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
+	void testContentHandlerDocumentNoNamespacePrefixes() throws Exception {
 
 		this.handler = new DomContentHandler(this.result);
 		this.expected = this.documentBuilder.parse(new InputSource(new StringReader(XML_1)));
@@ -90,7 +90,7 @@ public class DomContentHandlerTests {
 	}
 
 	@Test
-	public void testContentHandlerElement() throws Exception {
+	void testContentHandlerElement() throws Exception {
 
 		Element rootElement = this.result.createElementNS("namespace", "root");
 		this.result.appendChild(rootElement);

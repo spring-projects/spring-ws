@@ -130,12 +130,12 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSupports() {
+	void testSupports() {
 		assertThat(this.messageSender.supports(this.connectionUri)).isTrue();
 	}
 
 	@Test
-	public void testSendAndReceiveResponse() throws Exception {
+	void testSendAndReceiveResponse() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponse(true);
@@ -143,12 +143,12 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSendAndReceiveNoResponse() throws Exception {
+	void testSendAndReceiveNoResponse() throws Exception {
 		validateNonResponse(new MyServlet());
 	}
 
 	@Test
-	public void testSendAndReceiveNoResponseAccepted() throws Exception {
+	void testSendAndReceiveNoResponseAccepted() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponseStatus(HttpServletResponse.SC_ACCEPTED);
@@ -156,7 +156,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSendAndReceiveCompressed() throws Exception {
+	void testSendAndReceiveCompressed() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponse(true);
@@ -165,7 +165,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSendAndReceiveInvalidContentSize() throws Exception {
+	void testSendAndReceiveInvalidContentSize() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponse(true);
@@ -174,7 +174,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSendAndReceiveCompressedInvalidContentSize() throws Exception {
+	void testSendAndReceiveCompressedInvalidContentSize() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponse(true);
@@ -184,7 +184,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 	}
 
 	@Test
-	public void testSendAndReceiveFault() throws Exception {
+	void testSendAndReceiveFault() throws Exception {
 
 		MyServlet servlet = new MyServlet();
 		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

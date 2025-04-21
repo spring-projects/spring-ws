@@ -37,7 +37,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajContentHandlerTests {
+class SaajContentHandlerTests {
 
 	private SaajContentHandler handler;
 
@@ -46,7 +46,7 @@ public class SaajContentHandlerTests {
 	private SOAPEnvelope envelope;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage message = messageFactory.createMessage();
@@ -56,7 +56,7 @@ public class SaajContentHandlerTests {
 	}
 
 	@Test
-	public void testHandler() throws Exception {
+	void testHandler() throws Exception {
 
 		String content = "<Root xmlns='http://springframework.org/spring-ws/1' "
 				+ "xmlns:child='http://springframework.org/spring-ws/2'>"

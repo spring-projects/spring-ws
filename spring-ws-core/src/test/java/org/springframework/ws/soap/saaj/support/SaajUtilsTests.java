@@ -41,17 +41,17 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class SaajUtilsTests {
+class SaajUtilsTests {
 
 	private MessageFactory messageFactory;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		this.messageFactory = MessageFactory.newInstance();
 	}
 
 	@Test
-	public void testToName() throws Exception {
+	void testToName() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("localPart");
@@ -65,7 +65,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testToNameNamespace() throws Exception {
+	void testToNameNamespace() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("namespace", "localPart");
@@ -80,7 +80,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testToNameNamespacePrefix() throws Exception {
+	void testToNameNamespacePrefix() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		QName qName = new QName("namespace", "localPart", "prefix");
@@ -94,7 +94,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testToQName() throws Exception {
+	void testToQName() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, null);
@@ -107,7 +107,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testToQNameNamespace() throws Exception {
+	void testToQNameNamespace() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", null, "namespace");
@@ -120,7 +120,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testToQNamePrefixNamespace() throws Exception {
+	void testToQNamePrefixNamespace() throws Exception {
 
 		SOAPMessage message = this.messageFactory.createMessage();
 		Name name = message.getSOAPPart().getEnvelope().createName("localPart", "prefix", "namespace");
@@ -133,7 +133,7 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testLoadMessage() throws Exception {
+	void testLoadMessage() throws Exception {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		factory.setNamespaceAware(true);
@@ -146,12 +146,12 @@ public class SaajUtilsTests {
 	}
 
 	@Test
-	public void testGetSaajVersion() {
+	void testGetSaajVersion() {
 		assertThat(SaajUtils.getSaajVersion()).isEqualTo(SaajUtils.SAAJ_13);
 	}
 
 	@Test
-	public void testGetSaajVersionInvalidEnvelope() {
+	void testGetSaajVersionInvalidEnvelope() {
 
 		assertThatExceptionOfType(SOAPException.class).isThrownBy(() -> {
 

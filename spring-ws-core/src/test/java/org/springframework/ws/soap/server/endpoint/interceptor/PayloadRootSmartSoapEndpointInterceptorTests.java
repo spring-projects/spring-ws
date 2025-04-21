@@ -29,7 +29,7 @@ import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAda
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class PayloadRootSmartSoapEndpointInterceptorTests {
+class PayloadRootSmartSoapEndpointInterceptorTests {
 
 	private EndpointInterceptor delegate;
 
@@ -40,7 +40,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTests {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.delegate = new EndpointInterceptorAdapter();
 
@@ -53,14 +53,14 @@ public class PayloadRootSmartSoapEndpointInterceptorTests {
 	}
 
 	@Test
-	public void neitherNamespaceNorLocalPart() {
+	void neitherNamespaceNorLocalPart() {
 
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> new PayloadRootSmartSoapEndpointInterceptor(this.delegate, null, null));
 	}
 
 	@Test
-	public void shouldInterceptFullMatch() {
+	void shouldInterceptFullMatch() {
 
 		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(this.delegate,
 				this.namespaceUri, this.localPart);
@@ -71,7 +71,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTests {
 	}
 
 	@Test
-	public void shouldInterceptFullNonMatch() {
+	void shouldInterceptFullNonMatch() {
 
 		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(this.delegate,
 				"http://springframework.org/other", this.localPart);
@@ -82,7 +82,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTests {
 	}
 
 	@Test
-	public void shouldInterceptNamespaceUriMatch() {
+	void shouldInterceptNamespaceUriMatch() {
 
 		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(this.delegate,
 				this.namespaceUri, null);
@@ -93,7 +93,7 @@ public class PayloadRootSmartSoapEndpointInterceptorTests {
 	}
 
 	@Test
-	public void shouldInterceptNamespaceUriNonMatch() {
+	void shouldInterceptNamespaceUriNonMatch() {
 
 		PayloadRootSmartSoapEndpointInterceptor interceptor = new PayloadRootSmartSoapEndpointInterceptor(this.delegate,
 				"http://springframework.org/other", null);

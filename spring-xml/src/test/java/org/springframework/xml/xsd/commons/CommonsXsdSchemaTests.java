@@ -32,7 +32,7 @@ import org.springframework.xml.xsd.XsdSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommonsXsdSchemaTests extends AbstractXsdSchemaTests {
+class CommonsXsdSchemaTests extends AbstractXsdSchemaTests {
 
 	@Override
 	protected XsdSchema createSchema(Resource resource) throws Exception {
@@ -44,7 +44,7 @@ public class CommonsXsdSchemaTests extends AbstractXsdSchemaTests {
 	}
 
 	@Test
-	public void testXmime() throws Exception {
+	void testXmime() throws Exception {
 
 		Resource resource = new ClassPathResource("xmime.xsd", AbstractXsdSchemaTests.class);
 		XsdSchema schema = createSchema(resource);

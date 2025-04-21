@@ -27,10 +27,10 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.ws.test.client.ResponseCreators.withError;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
-public class MockSenderConnectionTests {
+class MockSenderConnectionTests {
 
 	@Test
-	public void error() throws IOException {
+	void error() throws IOException {
 
 		String testErrorMessage = "Test Error Message";
 		MockSenderConnection connection = new MockSenderConnection();
@@ -41,7 +41,7 @@ public class MockSenderConnectionTests {
 	}
 
 	@Test
-	public void normal() throws IOException {
+	void normal() throws IOException {
 
 		MockSenderConnection connection = new MockSenderConnection();
 		connection.andRespond(withPayload(new StringSource("<response/>")));
@@ -51,7 +51,7 @@ public class MockSenderConnectionTests {
 	}
 
 	@Test
-	public void noRequestMatchers() {
+	void noRequestMatchers() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
