@@ -32,7 +32,7 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DomPayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
+class DomPayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
 
 	@Override
 	protected AbstractPayloadSourceMethodProcessor createProcessor() {

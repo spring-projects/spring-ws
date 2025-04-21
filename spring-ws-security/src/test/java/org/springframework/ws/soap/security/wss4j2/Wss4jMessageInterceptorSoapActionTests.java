@@ -54,7 +54,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testPreserveSoapActionOnValidation() throws Exception {
+	void testPreserveSoapActionOnValidation() throws Exception {
 
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
 		message.setSoapAction(SOAP_ACTION);
@@ -66,7 +66,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testPreserveSoap12ActionOnValidation() throws Exception {
+	void testPreserveSoap12ActionOnValidation() throws Exception {
 		SoapMessage message = loadSoap12Message("usernameTokenPlainText-soap12.xml");
 		message.setSoapAction(SOAP_ACTION);
 		WebServiceMessageFactory messageFactory = getSoap12MessageFactory();
@@ -78,7 +78,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testPreserveSoapActionOnSecurement() throws Exception {
+	void testPreserveSoapActionOnSecurement() throws Exception {
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		message.setSoapAction(SOAP_ACTION);
 		this.interceptor.setSecurementUsername("Bert");
@@ -91,7 +91,7 @@ public abstract class Wss4jMessageInterceptorSoapActionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testPreserveSoap12ActionOnSecurement() throws Exception {
+	void testPreserveSoap12ActionOnSecurement() throws Exception {
 		SoapMessage message = loadSoap12Message("empty-soap12.xml");
 		message.setSoapAction(SOAP_ACTION);
 		this.interceptor.setSecurementUsername("Bert");

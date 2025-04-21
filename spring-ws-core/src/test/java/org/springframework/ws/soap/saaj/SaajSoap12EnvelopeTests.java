@@ -23,7 +23,7 @@ import jakarta.xml.soap.SOAPMessage;
 import org.springframework.ws.soap.SoapEnvelope;
 import org.springframework.ws.soap.soap12.AbstractSoap12EnvelopeTests;
 
-public class SaajSoap12EnvelopeTests extends AbstractSoap12EnvelopeTests {
+class SaajSoap12EnvelopeTests extends AbstractSoap12EnvelopeTests {
 
 	@Override
 	protected SoapEnvelope createSoapEnvelope() throws Exception {

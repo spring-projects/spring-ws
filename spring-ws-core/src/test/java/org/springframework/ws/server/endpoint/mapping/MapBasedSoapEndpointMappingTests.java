@@ -30,10 +30,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Test case for AbstractMapBasedEndpointMapping.
  */
-public class MapBasedSoapEndpointMappingTests {
+class MapBasedSoapEndpointMappingTests {
 
 	@Test
-	public void testBeanNames() throws Exception {
+	void testBeanNames() throws Exception {
 
 		StaticApplicationContext context = new StaticApplicationContext();
 		context.registerSingleton("endpointMapping", MyMapBasedEndpointMapping.class);
@@ -60,7 +60,7 @@ public class MapBasedSoapEndpointMappingTests {
 	}
 
 	@Test
-	public void testDisabledBeanNames() throws Exception {
+	void testDisabledBeanNames() throws Exception {
 
 		StaticApplicationContext context = new StaticApplicationContext();
 		context.registerSingleton("endpoint", Object.class);
@@ -75,7 +75,7 @@ public class MapBasedSoapEndpointMappingTests {
 	}
 
 	@Test
-	public void testEndpointMap() throws Exception {
+	void testEndpointMap() throws Exception {
 
 		Map<String, Object> endpointMap = new TreeMap<>();
 		Object endpoint1 = new Object();
@@ -108,11 +108,11 @@ public class MapBasedSoapEndpointMappingTests {
 
 		private String[] validKeys = new String[0];
 
-		public void setKey(String key) {
+		void setKey(String key) {
 			this.key = key;
 		}
 
-		public void setValidKeys(String[] validKeys) {
+		void setValidKeys(String[] validKeys) {
 
 			this.validKeys = validKeys;
 			Arrays.sort(this.validKeys);

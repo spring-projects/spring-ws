@@ -46,14 +46,14 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MessageDispatcherServletTests {
+class MessageDispatcherServletTests {
 
 	private ServletConfig config;
 
 	private MessageDispatcherServlet servlet;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.config = new MockServletConfig(new MockServletContext(), "spring-ws");
 		this.servlet = new MessageDispatcherServlet();
@@ -69,7 +69,7 @@ public class MessageDispatcherServletTests {
 	}
 
 	@Test
-	public void testDefaultStrategies() throws ServletException {
+	void testDefaultStrategies() throws ServletException {
 
 		this.servlet.setContextClass(StaticWebApplicationContext.class);
 		this.servlet.init(this.config);
@@ -79,7 +79,7 @@ public class MessageDispatcherServletTests {
 	}
 
 	@Test
-	public void testDetectedStrategies() throws ServletException {
+	void testDetectedStrategies() throws ServletException {
 
 		this.servlet.setContextClass(DetectWebApplicationContext.class);
 		this.servlet.init(this.config);
@@ -92,7 +92,7 @@ public class MessageDispatcherServletTests {
 	}
 
 	@Test
-	public void testDetectWsdlDefinitions() throws Exception {
+	void testDetectWsdlDefinitions() throws Exception {
 
 		this.servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
 		this.servlet.init(this.config);

@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpUrlConnectionMessageSenderIntegrationTests
+class HttpUrlConnectionMessageSenderIntegrationTests
 		extends AbstractHttpWebServiceMessageSenderIntegrationTests<HttpUrlConnectionMessageSender> {
 
 	@Override
@@ -31,7 +31,7 @@ public class HttpUrlConnectionMessageSenderIntegrationTests
 	}
 
 	@Test
-	public void testSetTimeout() throws Exception {
+	void testSetTimeout() throws Exception {
 
 		this.messageSender.setConnectionTimeout(Duration.ofSeconds(3));
 		this.messageSender.setReadTimeout(Duration.ofSeconds(5));

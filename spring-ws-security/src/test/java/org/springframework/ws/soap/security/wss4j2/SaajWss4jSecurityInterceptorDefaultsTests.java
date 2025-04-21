@@ -38,12 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 
-public class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
+class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 
 	private static final String PAYLOAD = "<tru:StockSymbol xmlns:tru=\"http://fabrikam123.com/payloads\">QQQ</tru:StockSymbol>";
 
 	@Test
-	public void testThatTheDefaultValueForAddInclusivePrefixesMatchesWss4JDefaultValue() {
+	void testThatTheDefaultValueForAddInclusivePrefixesMatchesWss4JDefaultValue() {
 
 		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
 		RequestData requestData = new RequestData();
@@ -54,7 +54,7 @@ public class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingDefaults()
+	void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingDefaults()
 			throws TransformerException, SOAPException {
 
 		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();
@@ -74,7 +74,7 @@ public class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingNotUsingInclusivePrefixes()
+	void testThatInitializeValidationRequestDataSetsInclusivePrefixesUsingNotUsingInclusivePrefixes()
 			throws TransformerException, SOAPException {
 
 		Wss4jSecurityInterceptor subject = new Wss4jSecurityInterceptor();

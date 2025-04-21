@@ -87,7 +87,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testDomPayload() throws Exception {
+	void testDomPayload() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -105,7 +105,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testEventReaderPayload() throws Exception {
+	void testEventReaderPayload() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(this.payload.getInputStream());
@@ -124,7 +124,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testReaderPayload() throws Exception {
+	void testReaderPayload() throws Exception {
 
 		Reader reader = new InputStreamReader(this.payload.getInputStream(), StandardCharsets.UTF_8);
 		StreamSource streamSource = new StreamSource(reader, this.payload.getURL().toString());
@@ -137,7 +137,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testSaxPayload() throws Exception {
+	void testSaxPayload() throws Exception {
 
 		SAXSource saxSource = new SAXSource(SaxUtils.createInputSource(this.payload));
 		this.transformer.transform(saxSource, this.webServiceMessage.getPayloadResult());
@@ -150,7 +150,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testStreamPayload() throws Exception {
+	void testStreamPayload() throws Exception {
 
 		StreamSource streamSource = new StreamSource(this.payload.getInputStream(), this.payload.getURL().toString());
 		this.transformer.transform(streamSource, this.webServiceMessage.getPayloadResult());
@@ -168,7 +168,7 @@ public abstract class AbstractWebServiceMessageTests {
 	}
 
 	@Test
-	public void testStreamReaderPayload() throws Exception {
+	void testStreamReaderPayload() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(this.payload.getInputStream());

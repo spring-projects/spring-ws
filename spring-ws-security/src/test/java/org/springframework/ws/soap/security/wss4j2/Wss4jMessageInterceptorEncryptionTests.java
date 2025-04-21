@@ -61,7 +61,7 @@ public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testDecryptRequest() throws Exception {
+	void testDecryptRequest() throws Exception {
 
 		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -75,7 +75,7 @@ public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests 
 	}
 
 	@Test
-	public void testEncryptResponse() throws Exception {
+	void testEncryptResponse() throws Exception {
 
 		SoapMessage message = loadSoap11Message("empty-soap.xml");
 		MessageContext messageContext = getSoap11MessageContext(message);

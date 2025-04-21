@@ -39,7 +39,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testValidateUsernameTokenPlainText() throws Exception {
+	void testValidateUsernameTokenPlainText() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
@@ -49,7 +49,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testValidateUsernameTokenDigest() throws Exception {
+	void testValidateUsernameTokenDigest() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("UsernameToken");
@@ -68,7 +68,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testValidateUsernameTokenWithQualifiedType() throws Exception {
+	void testValidateUsernameTokenWithQualifiedType() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextQualifiedType-soap.xml");
@@ -79,7 +79,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testAddUsernameTokenPlainText() throws Exception {
+	void testAddUsernameTokenPlainText() throws Exception {
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, false);
 		interceptor.setSecurementUsername("Bert");
 		interceptor.setSecurementPassword("Ernie");
@@ -93,7 +93,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testAddUsernameTokenPlainTextContextCredentialsOverride() throws Exception {
+	void testAddUsernameTokenPlainTextContextCredentialsOverride() throws Exception {
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, false);
 		interceptor.setSecurementUsername("Bert");
 		interceptor.setSecurementPassword("Ernie");
@@ -109,7 +109,7 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 	}
 
 	@Test
-	public void testAddUsernameTokenDigest() throws Exception {
+	void testAddUsernameTokenDigest() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", false, true);
 		interceptor.setSecurementUsername("Bert");

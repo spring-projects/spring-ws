@@ -52,14 +52,14 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class DomPoxWebServiceTemplateIntegrationTests {
+class DomPoxWebServiceTemplateIntegrationTests {
 
 	private static Server jettyServer;
 
 	private static String baseUrl;
 
 	@BeforeAll
-	public static void startJetty() throws Exception {
+	static void startJetty() throws Exception {
 
 		int port = FreePortScanner.getFreePort();
 		baseUrl = "http://localhost:" + port;
@@ -84,7 +84,7 @@ public class DomPoxWebServiceTemplateIntegrationTests {
 	}
 
 	@AfterAll
-	public static void stopJetty() throws Exception {
+	static void stopJetty() throws Exception {
 
 		if (jettyServer.isRunning()) {
 			jettyServer.stop();
@@ -92,7 +92,7 @@ public class DomPoxWebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void domPox() {
+	void domPox() {
 
 		WebServiceTemplate template = new WebServiceTemplate(new DomPoxMessageFactory());
 		template.setMessageSender(new HttpComponentsMessageSender());

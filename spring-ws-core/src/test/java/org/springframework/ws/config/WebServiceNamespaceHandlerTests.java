@@ -28,17 +28,17 @@ import org.springframework.ws.server.endpoint.adapter.MarshallingMethodEndpointA
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class WebServiceNamespaceHandlerTests {
+class WebServiceNamespaceHandlerTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 		this.applicationContext = new ClassPathXmlApplicationContext("webServiceNamespaceHandlerTest.xml", getClass());
 	}
 
 	@Test
-	public void testMarshallingMethods() throws Exception {
+	void testMarshallingMethods() throws Exception {
 
 		Map<String, MarshallingMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(MarshallingMethodEndpointAdapter.class);

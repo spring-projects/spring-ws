@@ -30,13 +30,13 @@ import static org.xmlunit.assertj.XmlAssert.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-applicationContext.xml")
-public class JmsIntegrationTests {
+class JmsIntegrationTests {
 
 	@Autowired
 	private WebServiceTemplate webServiceTemplate;
 
 	@Test
-	public void testTemporaryQueue() {
+	void testTemporaryQueue() {
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();
 		this.webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
@@ -44,7 +44,7 @@ public class JmsIntegrationTests {
 	}
 
 	@Test
-	public void testPermanentQueue() {
+	void testPermanentQueue() {
 		String url = "jms:RequestQueue?deliveryMode=NON_PERSISTENT;replyToName=ResponseQueue";
 		String content = "<root xmlns='http://springframework.org/spring-ws'><child/></root>";
 		StringResult result = new StringResult();

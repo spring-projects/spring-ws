@@ -49,7 +49,7 @@ import org.springframework.xml.xsd.SimpleXsdSchema;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class PayloadValidatingInterceptorTests {
+class PayloadValidatingInterceptorTests {
 
 	private PayloadValidatingInterceptor interceptor;
 
@@ -76,7 +76,7 @@ public class PayloadValidatingInterceptorTests {
 	private static final String SCHEMA2 = "schema2.xsd";
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.interceptor = new PayloadValidatingInterceptor();
 		this.interceptor.setSchema(new ClassPathResource(SCHEMA, getClass()));
@@ -90,7 +90,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleInvalidRequestSoap11() throws Exception {
+	void testHandleInvalidRequestSoap11() throws Exception {
 
 		SoapMessage invalidMessage = this.soap11Factory.createWebServiceMessage();
 		InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
@@ -115,7 +115,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleInvalidRequestSoap12() throws Exception {
+	void testHandleInvalidRequestSoap12() throws Exception {
 
 		SoapMessage invalidMessage = this.soap12Factory.createWebServiceMessage();
 		InputStream inputStream = getClass().getResourceAsStream(INVALID_MESSAGE);
@@ -140,7 +140,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleInvalidRequestOverridenProperties() throws Exception {
+	void testHandleInvalidRequestOverridenProperties() throws Exception {
 
 		String faultString = "fout";
 		Locale locale = new Locale("nl");
@@ -171,7 +171,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandlerInvalidRequest() throws Exception {
+	void testHandlerInvalidRequest() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		request.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
@@ -182,7 +182,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleValidRequest() throws Exception {
+	void testHandleValidRequest() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		request.setPayload(new ClassPathResource(VALID_MESSAGE, getClass()));
@@ -194,7 +194,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleInvalidResponse() throws Exception {
+	void testHandleInvalidResponse() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		this.context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -206,7 +206,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleValidResponse() throws Exception {
+	void testHandleValidResponse() throws Exception {
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		this.context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		MockWebServiceMessage response = (MockWebServiceMessage) this.context.getResponse();
@@ -217,7 +217,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testNamespacesInType() throws Exception {
+	void testNamespacesInType() throws Exception {
 
 		// Make sure we use Xerces for this testcase: the JAXP implementation used
 		// internally by JDK 1.5 has a bug
@@ -249,7 +249,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testNonExistingSchema() {
+	void testNonExistingSchema() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 
@@ -259,7 +259,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandlerInvalidRequestMultipleSchemas() throws Exception {
+	void testHandlerInvalidRequestMultipleSchemas() throws Exception {
 
 		this.interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
@@ -272,7 +272,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleValidRequestMultipleSchemas() throws Exception {
+	void testHandleValidRequestMultipleSchemas() throws Exception {
 
 		this.interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
@@ -287,7 +287,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleInvalidResponseMultipleSchemas() throws Exception {
+	void testHandleInvalidResponseMultipleSchemas() throws Exception {
 
 		this.interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
@@ -302,7 +302,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleValidResponseMultipleSchemas() throws Exception {
+	void testHandleValidResponseMultipleSchemas() throws Exception {
 
 		this.interceptor.setSchemas(new ClassPathResource(PRODUCT_SCHEMA, getClass()),
 				new ClassPathResource(SIZE_SCHEMA, getClass()));
@@ -317,7 +317,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void testXsdSchema() throws Exception {
+	void testXsdSchema() throws Exception {
 
 		PayloadValidatingInterceptor interceptor = new PayloadValidatingInterceptor();
 		SimpleXsdSchema schema = new SimpleXsdSchema(new ClassPathResource(SCHEMA, getClass()));
@@ -336,7 +336,7 @@ public class PayloadValidatingInterceptorTests {
 	}
 
 	@Test
-	public void customErrorHandler() throws Exception {
+	void customErrorHandler() throws Exception {
 
 		ValidationErrorHandler errorHandler = new ValidationErrorHandler() {
 			public SAXParseException[] getErrors() {

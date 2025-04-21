@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractSoap11MessageFactoryTests extends AbstractSoapMessageFactoryTests {
 
 	@Test
-	public void testCreateEmptySoap11Message() {
+	void testCreateEmptySoap11Message() {
 
 		WebServiceMessage message = this.messageFactory.createWebServiceMessage();
 
@@ -138,7 +138,7 @@ public abstract class AbstractSoap11MessageFactoryTests extends AbstractSoapMess
 	}
 
 	@Test
-	public void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
+	void testCreateSoapMessageMtomWeirdStartInfo() throws Exception {
 
 		InputStream is = AbstractSoap11MessageFactoryTests.class.getResourceAsStream("soap11-mtom.bin");
 		Map<String, String> headers = new HashMap<>();
@@ -163,7 +163,7 @@ public abstract class AbstractSoap11MessageFactoryTests extends AbstractSoapMess
 	}
 
 	@Test
-	public void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
+	void testCreateSoapMessageUtf8ByteOrderMark() throws Exception {
 
 		InputStream is = AbstractSoap11MessageFactoryTests.class.getResourceAsStream("soap11-utf8-bom.xml");
 		Map<String, String> headers = new HashMap<>();
@@ -176,7 +176,7 @@ public abstract class AbstractSoap11MessageFactoryTests extends AbstractSoapMess
 	}
 
 	@Test
-	public void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
+	void testCreateSoapMessageUtf16BigEndianByteOrderMark() throws Exception {
 
 		InputStream is = AbstractSoap11MessageFactoryTests.class.getResourceAsStream("soap11-utf16-be-bom.xml");
 		Map<String, String> headers = new HashMap<>();
@@ -189,7 +189,7 @@ public abstract class AbstractSoap11MessageFactoryTests extends AbstractSoapMess
 	}
 
 	@Test
-	public void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
+	void testCreateSoapMessageUtf16LittleEndianByteOrderMark() throws Exception {
 
 		InputStream is = AbstractSoap11MessageFactoryTests.class.getResourceAsStream("soap11-utf16-le-bom.xml");
 		Map<String, String> headers = new HashMap<>();

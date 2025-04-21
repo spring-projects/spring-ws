@@ -48,7 +48,7 @@ public abstract class Wss4jMessageInterceptorX509Tests extends Wss4jTests {
 	}
 
 	@Test
-	public void testAddCertificate() throws Exception {
+	void testAddCertificate() throws Exception {
 
 		this.interceptor.setSecurementPassword("123456");
 		this.interceptor.setSecurementUsername("rsaKey");

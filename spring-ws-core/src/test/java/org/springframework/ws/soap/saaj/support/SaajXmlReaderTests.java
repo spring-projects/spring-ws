@@ -33,7 +33,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class SaajXmlReaderTests {
+class SaajXmlReaderTests {
 
 	private SaajXmlReader saajReader;
 
@@ -42,7 +42,7 @@ public class SaajXmlReaderTests {
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		this.message = messageFactory.createMessage();
@@ -52,7 +52,7 @@ public class SaajXmlReaderTests {
 	}
 
 	@Test
-	public void testNamespacesPrefixes() throws Exception {
+	void testNamespacesPrefixes() throws Exception {
 
 		this.saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
 		this.saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);
@@ -66,7 +66,7 @@ public class SaajXmlReaderTests {
 	}
 
 	@Test
-	public void testNamespacesNoPrefixes() throws Exception {
+	void testNamespacesNoPrefixes() throws Exception {
 
 		this.saajReader.setFeature("http://xml.org/sax/features/namespaces", true);
 		this.saajReader.setFeature("http://xml.org/sax/features/namespace-prefixes", false);

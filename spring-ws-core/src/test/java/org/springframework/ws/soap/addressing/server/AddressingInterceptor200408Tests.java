@@ -19,7 +19,7 @@ package org.springframework.ws.soap.addressing.server;
 import org.springframework.ws.soap.addressing.version.Addressing200408;
 import org.springframework.ws.soap.addressing.version.AddressingVersion;
 
-public class AddressingInterceptor200408Tests extends AbstractAddressingInterceptorTests {
+class AddressingInterceptor200408Tests extends AbstractAddressingInterceptorTests {
 
 	@Override
 	protected AddressingVersion getVersion() {

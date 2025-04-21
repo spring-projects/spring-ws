@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIOException;
 
-public class ExceptionResponseCreatorTests {
+class ExceptionResponseCreatorTests {
 
 	@Test
-	public void ioException() {
+	void ioException() {
 
 		assertThatIOException().isThrownBy(() -> {
 
@@ -36,7 +36,7 @@ public class ExceptionResponseCreatorTests {
 	}
 
 	@Test
-	public void runtimeException() {
+	void runtimeException() {
 
 		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
 

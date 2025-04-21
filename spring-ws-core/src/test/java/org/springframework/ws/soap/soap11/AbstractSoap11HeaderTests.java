@@ -36,18 +36,18 @@ public abstract class AbstractSoap11HeaderTests extends AbstractSoapHeaderTests 
 	private static final String PREFIX = "spring";
 
 	@Test
-	public void testGetType() {
+	void testGetType() {
 		assertThat(this.soapHeader).isInstanceOf(Soap11Header.class);
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertThat(this.soapHeader.getName())
 			.isEqualTo(new QName(SoapVersion.SOAP_11.getEnvelopeNamespaceUri(), "Header"));
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
 		this.transformer.transform(this.soapHeader.getSource(), result);
@@ -59,7 +59,7 @@ public abstract class AbstractSoap11HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessActors() {
+	void testExamineHeaderElementsToProcessActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);
@@ -86,7 +86,7 @@ public abstract class AbstractSoap11HeaderTests extends AbstractSoapHeaderTests 
 	}
 
 	@Test
-	public void testExamineHeaderElementsToProcessNoActors() {
+	void testExamineHeaderElementsToProcessNoActors() {
 
 		QName qName = new QName(NAMESPACE, "localName1", PREFIX);
 		SoapHeaderElement headerElement = this.soapHeader.addHeaderElement(qName);

@@ -32,10 +32,10 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 @Deprecated
-public class SoapEnvelopeDiffMatcherTests {
+class SoapEnvelopeDiffMatcherTests {
 
 	@Test
-	public void match() throws Exception {
+	void match() throws Exception {
 
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
@@ -58,7 +58,7 @@ public class SoapEnvelopeDiffMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

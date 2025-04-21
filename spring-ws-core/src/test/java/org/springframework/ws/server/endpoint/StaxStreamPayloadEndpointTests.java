@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see AbstractStaxStreamPayloadEndpoint
  */
 @Deprecated
-public class StaxStreamPayloadEndpointTests extends AbstractMessageEndpointTests {
+class StaxStreamPayloadEndpointTests extends AbstractMessageEndpointTests {
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {
@@ -103,7 +103,7 @@ public class StaxStreamPayloadEndpointTests extends AbstractMessageEndpointTests
 	}
 
 	@Test
-	public void testSaajResponse() throws Exception {
+	void testSaajResponse() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		MessageFactory messageFactory = MessageFactory.newInstance();
@@ -125,7 +125,7 @@ public class StaxStreamPayloadEndpointTests extends AbstractMessageEndpointTests
 	}
 
 	@Test
-	public void testAxiomResponse() throws Exception {
+	void testAxiomResponse() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		MessageFactory messageFactory = MessageFactory.newInstance();
@@ -147,7 +147,7 @@ public class StaxStreamPayloadEndpointTests extends AbstractMessageEndpointTests
 	}
 
 	@Test
-	public void testAxiomNoResponse() throws Exception {
+	void testAxiomNoResponse() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		MessageFactory messageFactory = MessageFactory.newInstance();

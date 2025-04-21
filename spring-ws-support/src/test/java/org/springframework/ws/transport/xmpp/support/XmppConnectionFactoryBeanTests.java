@@ -24,22 +24,22 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 /**
  * @author Arjen Poutsma
  */
-public class XmppConnectionFactoryBeanTests {
+class XmppConnectionFactoryBeanTests {
 
 	private XmppConnectionFactoryBean factoryBean;
 
 	@BeforeEach
-	public void createFactoryBean() {
+	void createFactoryBean() {
 		this.factoryBean = new XmppConnectionFactoryBean();
 	}
 
 	@Test
-	public void noHost() {
+	void noHost() {
 		assertThatIllegalArgumentException().isThrownBy(() -> this.factoryBean.afterPropertiesSet());
 	}
 
 	@Test
-	public void noUsername() {
+	void noUsername() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 
@@ -49,7 +49,7 @@ public class XmppConnectionFactoryBeanTests {
 	}
 
 	@Test
-	public void wrongPort() {
+	void wrongPort() {
 		assertThatIllegalArgumentException().isThrownBy(() -> this.factoryBean.setPort(-10));
 	}
 

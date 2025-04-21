@@ -36,7 +36,7 @@ import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
+class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
 
 	private SOAPMessage saajMessage;
 
@@ -61,7 +61,7 @@ public class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
 	}
 
 	@Test
-	public void testGetPayloadSource() throws Exception {
+	void testGetPayloadSource() throws Exception {
 
 		this.saajMessage.getSOAPPart().getEnvelope().getBody().addChildElement("child");
 		Source source = this.soapMessage.getPayloadSource();
@@ -72,7 +72,7 @@ public class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
 	}
 
 	@Test
-	public void testGetPayloadSourceText() throws Exception {
+	void testGetPayloadSourceText() throws Exception {
 
 		SOAPBody body = this.saajMessage.getSOAPPart().getEnvelope().getBody();
 		body.addTextNode(" ");
@@ -85,7 +85,7 @@ public class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
 	}
 
 	@Test
-	public void testGetPayloadResult() throws Exception {
+	void testGetPayloadResult() throws Exception {
 
 		StringSource source = new StringSource("<child/>");
 		Result result = this.soapMessage.getPayloadResult();

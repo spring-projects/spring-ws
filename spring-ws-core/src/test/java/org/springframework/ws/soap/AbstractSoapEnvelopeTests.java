@@ -34,7 +34,7 @@ public abstract class AbstractSoapEnvelopeTests extends AbstractSoapElementTests
 	protected abstract SoapEnvelope createSoapEnvelope() throws Exception;
 
 	@Test
-	public void testGetHeader() {
+	void testGetHeader() {
 
 		SoapHeader header = this.soapEnvelope.getHeader();
 
@@ -42,7 +42,7 @@ public abstract class AbstractSoapEnvelopeTests extends AbstractSoapElementTests
 	}
 
 	@Test
-	public void testGetBody() {
+	void testGetBody() {
 
 		SoapBody body = this.soapEnvelope.getBody();
 

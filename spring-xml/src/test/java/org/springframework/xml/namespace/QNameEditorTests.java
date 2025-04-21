@@ -23,32 +23,32 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class QNameEditorTests {
+class QNameEditorTests {
 
 	private QNameEditor editor;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.editor = new QNameEditor();
 	}
 
 	@Test
-	public void testNamespaceLocalPartPrefix() {
+	void testNamespaceLocalPartPrefix() {
 
 		QName qname = new QName("namespace", "localpart", "prefix");
 		doTest(qname);
 	}
 
 	@Test
-	public void testNamespaceLocalPart() {
+	void testNamespaceLocalPart() {
 
 		QName qname = new QName("namespace", "localpart");
 		doTest(qname);
 	}
 
 	@Test
-	public void testLocalPart() {
+	void testLocalPart() {
 
 		QName qname = new QName("localpart");
 		doTest(qname);

@@ -32,7 +32,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SchemaValidatingMatcherTests {
+class SchemaValidatingMatcherTests {
 
 	private Resource schema;
 
@@ -43,7 +43,7 @@ public class SchemaValidatingMatcherTests {
 	private WebServiceMessage message;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.message = createMock(WebServiceMessage.class);
 		this.schema = new ClassPathResource("schemaValidatingMatcherTest.xsd", SchemaValidatingMatcherTests.class);
@@ -52,7 +52,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void singleSchemaMatch() throws IOException, AssertionError {
+	void singleSchemaMatch() throws IOException, AssertionError {
 
 		expect(this.message.getPayloadSource()).andReturn(new StringSource(
 				"<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
@@ -67,7 +67,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void singleSchemaNonMatch() throws AssertionError {
+	void singleSchemaNonMatch() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -87,7 +87,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void multipleSchemaMatch() throws IOException, AssertionError {
+	void multipleSchemaMatch() throws IOException, AssertionError {
 
 		expect(this.message.getPayloadSource()).andReturn(new StringSource(
 				"<test xmlns=\"http://www.example.org/schema\"><number>0</number><text>text</text></test>"));
@@ -102,7 +102,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void multipleSchemaNotOk() throws AssertionError {
+	void multipleSchemaNotOk() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -122,7 +122,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void multipleSchemaDifferentOrderNotOk() throws AssertionError {
+	void multipleSchemaDifferentOrderNotOk() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -142,7 +142,7 @@ public class SchemaValidatingMatcherTests {
 	}
 
 	@Test
-	public void xmlValidatorNotOk() throws AssertionError {
+	void xmlValidatorNotOk() throws AssertionError {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

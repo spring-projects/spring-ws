@@ -28,14 +28,14 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SuffixBasedPortTypesProviderTests {
+class SuffixBasedPortTypesProviderTests {
 
 	private SuffixBasedPortTypesProvider provider;
 
 	private Definition definition;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.provider = new SuffixBasedPortTypesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
@@ -44,7 +44,7 @@ public class SuffixBasedPortTypesProviderTests {
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void testAddPortTypes() throws Exception {
+	void testAddPortTypes() throws Exception {
 
 		String namespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", namespace);

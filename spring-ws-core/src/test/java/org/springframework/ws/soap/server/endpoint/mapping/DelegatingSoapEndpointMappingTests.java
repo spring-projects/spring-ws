@@ -32,14 +32,14 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class DelegatingSoapEndpointMappingTests {
+class DelegatingSoapEndpointMappingTests {
 
 	private DelegatingSoapEndpointMapping endpointMapping;
 
 	private EndpointMapping mock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.endpointMapping = new DelegatingSoapEndpointMapping();
 		this.mock = createMock(EndpointMapping.class);
@@ -47,7 +47,7 @@ public class DelegatingSoapEndpointMappingTests {
 	}
 
 	@Test
-	public void testGetEndpointMapping() throws Exception {
+	void testGetEndpointMapping() throws Exception {
 
 		String role = "http://www.springframework.org/spring-ws/role";
 		this.endpointMapping.setActorOrRole(role);

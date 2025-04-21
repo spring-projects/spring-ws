@@ -35,7 +35,7 @@ import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Namespaces(@Namespace(prefix = "tns", uri = "http://springframework.org/spring-ws"))
-public class XPathParamMethodArgumentResolverTests {
+class XPathParamMethodArgumentResolverTests {
 
 	private static final String CONTENTS = "<root><child><text>text</text><number>42</number></child></root>";
 
@@ -60,7 +60,7 @@ public class XPathParamMethodArgumentResolverTests {
 	private MethodParameter namespaceClassParameter;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.resolver = new XPathParamMethodArgumentResolver();
 		Method supportedTypes = getClass().getMethod("supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
@@ -77,7 +77,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 
 		assertThat(this.resolver.supportsParameter(this.booleanParameter)).isTrue();
 		assertThat(this.resolver.supportsParameter(this.doubleParameter)).isTrue();
@@ -89,7 +89,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveBoolean() throws Exception {
+	void resolveBoolean() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -104,7 +104,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveDouble() throws Exception {
+	void resolveDouble() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -119,7 +119,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveNode() throws Exception {
+	void resolveNode() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -134,7 +134,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveNodeList() throws Exception {
+	void resolveNodeList() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -150,7 +150,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveString() throws Exception {
+	void resolveString() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -165,7 +165,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveConvertedType() throws Exception {
+	void resolveConvertedType() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(CONTENTS);
 		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -177,7 +177,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveNamespacesMethod() throws Exception {
+	void resolveNamespacesMethod() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");
@@ -190,7 +190,7 @@ public class XPathParamMethodArgumentResolverTests {
 	}
 
 	@Test
-	public void resolveNamespacesClass() throws Exception {
+	void resolveNamespacesClass() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage(
 				"<root xmlns=\"http://springframework.org/spring-ws\">text</root>");

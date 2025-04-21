@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
+class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
 
 	private SoapMethodArgumentResolver resolver;
 
@@ -45,7 +45,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	private MethodParameter soapHeaderParameter;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.resolver = new SoapMethodArgumentResolver();
 		this.soapMessageParameter = new MethodParameter(getClass().getMethod("soapMessage", SoapMessage.class), 0);
@@ -55,7 +55,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 
 		assertThat(this.resolver.supportsParameter(this.soapMessageParameter)).isTrue();
 		assertThat(this.resolver.supportsParameter(this.soapEnvelopeParameter)).isTrue();
@@ -64,7 +64,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	}
 
 	@Test
-	public void resolveSoapMessageSaaj() throws Exception {
+	void resolveSoapMessageSaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 		Object result = this.resolver.resolveArgument(messageContext, this.soapMessageParameter);
@@ -73,7 +73,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	}
 
 	@Test
-	public void resolveSoapEnvelopeSaaj() throws Exception {
+	void resolveSoapEnvelopeSaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 		Object result = this.resolver.resolveArgument(messageContext, this.soapEnvelopeParameter);
@@ -82,7 +82,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	}
 
 	@Test
-	public void resolveSoapBodySaaj() throws Exception {
+	void resolveSoapBodySaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 		Object result = this.resolver.resolveArgument(messageContext, this.soapBodyParameter);
@@ -91,7 +91,7 @@ public class SoapMethodArgumentResolverTests extends AbstractMethodArgumentResol
 	}
 
 	@Test
-	public void resolveSoapHeaderSaaj() throws Exception {
+	void resolveSoapHeaderSaaj() throws Exception {
 
 		MessageContext messageContext = createSaajMessageContext();
 		Object result = this.resolver.resolveArgument(messageContext, this.soapHeaderParameter);

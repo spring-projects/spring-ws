@@ -43,7 +43,7 @@ import static org.easymock.EasyMock.verify;
 /**
  * @author tareq
  */
-public class SpringSecurityPasswordValidationCallbackHandlerTests {
+class SpringSecurityPasswordValidationCallbackHandlerTests {
 
 	private SpringSecurityPasswordValidationCallbackHandler callbackHandler;
 
@@ -56,7 +56,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTests {
 	private UserDetails user;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		// add clearContext() at the beginning of each method in case {@code
 		// SecurityContextHolder} isn't clean
 		SecurityContextHolder.clearContext();
@@ -73,7 +73,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	public void testHandleUsernameToken() throws Exception {
+	void testHandleUsernameToken() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
@@ -90,7 +90,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	public void testHandleUsernameTokenUserNotFound() throws Exception {
+	void testHandleUsernameTokenUserNotFound() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
@@ -108,7 +108,7 @@ public class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	public void testHandleUsernameTokenPrincipal() throws Exception {
+	void testHandleUsernameTokenPrincipal() throws Exception {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);

@@ -45,7 +45,7 @@ public abstract class AbstractSoapBodyTests extends AbstractSoapElementTests {
 	protected abstract SoapBody createSoapBody() throws Exception;
 
 	@Test
-	public void testPayload() throws Exception {
+	void testPayload() throws Exception {
 
 		String payload = "<payload xmlns='http://www.springframework.org' />";
 		this.transformer.transform(new StringSource(payload), this.soapBody.getPayloadResult());
@@ -54,7 +54,7 @@ public abstract class AbstractSoapBodyTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testGetPayloadResultTwice() throws Exception {
+	void testGetPayloadResultTwice() throws Exception {
 
 		String payload = "<payload xmlns='http://www.springframework.org' />";
 		this.transformer.transform(new StringSource(payload), this.soapBody.getPayloadResult());
@@ -68,12 +68,12 @@ public abstract class AbstractSoapBodyTests extends AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testNoFault() {
+	void testNoFault() {
 		assertThat(this.soapBody.hasFault()).isFalse();
 	}
 
 	@Test
-	public void testAddFaultWithExistingPayload() throws Exception {
+	void testAddFaultWithExistingPayload() throws Exception {
 
 		StringSource contents = new StringSource("<payload xmlns='http://www.springframework.org' />");
 		this.transformer.transform(contents, this.soapBody.getPayloadResult());

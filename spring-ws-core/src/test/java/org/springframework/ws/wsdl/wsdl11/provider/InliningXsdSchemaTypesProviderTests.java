@@ -33,14 +33,14 @@ import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InliningXsdSchemaTypesProviderTests {
+class InliningXsdSchemaTypesProviderTests {
 
 	private InliningXsdSchemaTypesProvider provider;
 
 	private Definition definition;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.provider = new InliningXsdSchemaTypesProvider();
 		WSDLFactory factory = WSDLFactory.newInstance();
@@ -48,7 +48,7 @@ public class InliningXsdSchemaTypesProviderTests {
 	}
 
 	@Test
-	public void testSingle() throws Exception {
+	void testSingle() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", definitionNamespace);
@@ -75,7 +75,7 @@ public class InliningXsdSchemaTypesProviderTests {
 	}
 
 	@Test
-	public void testComplex() throws Exception {
+	void testComplex() throws Exception {
 
 		String definitionNamespace = "http://springframework.org/spring-ws";
 		this.definition.addNamespace("tns", definitionNamespace);

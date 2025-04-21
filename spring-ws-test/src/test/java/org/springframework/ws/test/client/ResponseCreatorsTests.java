@@ -41,21 +41,21 @@ import org.springframework.xml.transform.TransformerHelper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResponseCreatorsTests {
+class ResponseCreatorsTests {
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
 	private SaajSoapMessageFactory messageFactory;
 
 	@BeforeEach
-	public void createMessageFactory() {
+	void createMessageFactory() {
 
 		this.messageFactory = new SaajSoapMessageFactory();
 		this.messageFactory.afterPropertiesSet();
 	}
 
 	@Test
-	public void withPayloadSource() throws Exception {
+	void withPayloadSource() throws Exception {
 
 		String payload = "<payload xmlns='http://springframework.org'/>";
 		ResponseCreator responseCreator = ResponseCreators.withPayload(new StringSource(payload));
@@ -66,7 +66,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withPayloadResource() throws Exception {
+	void withPayloadResource() throws Exception {
 
 		String payload = "<payload xmlns='http://springframework.org'/>";
 		ResponseCreator responseCreator = ResponseCreators
@@ -78,7 +78,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withSoapEnvelopeSource() throws Exception {
+	void withSoapEnvelopeSource() throws Exception {
 
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
@@ -97,7 +97,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withSoapEnvelopeResource() throws Exception {
+	void withSoapEnvelopeResource() throws Exception {
 
 		StringBuilder xmlBuilder = new StringBuilder();
 		xmlBuilder.append("<?xml version='1.0'?>");
@@ -117,7 +117,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withIOException() {
+	void withIOException() {
 
 		IOException expected = new IOException("Foo");
 		ResponseCreator responseCreator = ResponseCreators.withException(expected);
@@ -131,7 +131,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withRuntimeException() throws Exception {
+	void withRuntimeException() throws Exception {
 
 		RuntimeException expected = new RuntimeException("Foo");
 		ResponseCreator responseCreator = ResponseCreators.withException(expected);
@@ -145,7 +145,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withMustUnderstandFault() throws Exception {
+	void withMustUnderstandFault() throws Exception {
 
 		String faultString = "Foo";
 		ResponseCreator responseCreator = ResponseCreators.withMustUnderstandFault(faultString, Locale.ENGLISH);
@@ -154,7 +154,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withClientOrSenderFault() throws Exception {
+	void withClientOrSenderFault() throws Exception {
 
 		String faultString = "Foo";
 		ResponseCreator responseCreator = ResponseCreators.withClientOrSenderFault(faultString, Locale.ENGLISH);
@@ -163,7 +163,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withServerOrReceiverFault() throws Exception {
+	void withServerOrReceiverFault() throws Exception {
 
 		String faultString = "Foo";
 		ResponseCreator responseCreator = ResponseCreators.withServerOrReceiverFault(faultString, Locale.ENGLISH);
@@ -172,7 +172,7 @@ public class ResponseCreatorsTests {
 	}
 
 	@Test
-	public void withVersionMismatchFault() throws Exception {
+	void withVersionMismatchFault() throws Exception {
 
 		String faultString = "Foo";
 		ResponseCreator responseCreator = ResponseCreators.withVersionMismatchFault(faultString, Locale.ENGLISH);

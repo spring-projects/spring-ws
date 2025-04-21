@@ -35,7 +35,7 @@ import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class DefaultWsdl11DefinitionTests {
+class DefaultWsdl11DefinitionTests {
 
 	private DefaultWsdl11Definition definition;
 
@@ -44,7 +44,7 @@ public class DefaultWsdl11DefinitionTests {
 	private DocumentBuilder documentBuilder;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.definition = new DefaultWsdl11Definition();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
@@ -55,7 +55,7 @@ public class DefaultWsdl11DefinitionTests {
 	}
 
 	@Test
-	public void testSingle() throws Exception {
+	void testSingle() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
@@ -78,7 +78,7 @@ public class DefaultWsdl11DefinitionTests {
 	}
 
 	@Test
-	public void testInclude() throws Exception {
+	void testInclude() throws Exception {
 
 		ClassPathResource resource = new ClassPathResource("including.xsd", getClass());
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
@@ -101,7 +101,7 @@ public class DefaultWsdl11DefinitionTests {
 	}
 
 	@Test
-	public void testImport() throws Exception {
+	void testImport() throws Exception {
 
 		ClassPathResource resource = new ClassPathResource("importing.xsd", getClass());
 		CommonsXsdSchemaCollection schemaCollection = new CommonsXsdSchemaCollection(resource);
@@ -124,7 +124,7 @@ public class DefaultWsdl11DefinitionTests {
 	}
 
 	@Test
-	public void testSoap11And12() throws Exception {
+	void testSoap11And12() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", getClass());
 		SimpleXsdSchema schema = new SimpleXsdSchema(resource);

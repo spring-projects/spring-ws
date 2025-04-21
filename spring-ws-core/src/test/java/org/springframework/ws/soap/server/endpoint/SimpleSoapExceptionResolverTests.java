@@ -34,7 +34,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SimpleSoapExceptionResolverTests {
+class SimpleSoapExceptionResolverTests {
 
 	private SimpleSoapExceptionResolver exceptionResolver;
 
@@ -47,7 +47,7 @@ public class SimpleSoapExceptionResolverTests {
 	private WebServiceMessageFactory factoryMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.exceptionResolver = new SimpleSoapExceptionResolver();
 		this.factoryMock = createMock(WebServiceMessageFactory.class);
@@ -57,7 +57,7 @@ public class SimpleSoapExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionInternal() {
+	void testResolveExceptionInternal() {
 
 		Exception exception = new Exception("message");
 		expect(this.factoryMock.createWebServiceMessage()).andReturn(this.messageMock);

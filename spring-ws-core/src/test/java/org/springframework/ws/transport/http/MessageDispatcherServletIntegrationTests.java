@@ -43,7 +43,7 @@ import static org.xmlunit.assertj.XmlAssert.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class MessageDispatcherServletIntegrationTests {
+class MessageDispatcherServletIntegrationTests {
 
 	private static Server jettyServer;
 
@@ -54,7 +54,7 @@ public class MessageDispatcherServletIntegrationTests {
 	private SOAPConnectionFactory connectionFactory;
 
 	@BeforeEach
-	public void startJetty() throws Exception {
+	void startJetty() throws Exception {
 
 		int port = FreePortScanner.getFreePort();
 		url = "http://localhost:" + port;
@@ -80,14 +80,14 @@ public class MessageDispatcherServletIntegrationTests {
 	}
 
 	@BeforeEach
-	public void setUpSaaj() throws SOAPException {
+	void setUpSaaj() throws SOAPException {
 
 		this.messageFactory = MessageFactory.newInstance();
 		this.connectionFactory = SOAPConnectionFactory.newInstance();
 	}
 
 	@AfterEach
-	public void stopJetty() throws Exception {
+	void stopJetty() throws Exception {
 
 		if (jettyServer.isRunning()) {
 			jettyServer.stop();
@@ -95,7 +95,7 @@ public class MessageDispatcherServletIntegrationTests {
 	}
 
 	@Test
-	public void echo() throws SOAPException {
+	void echo() throws SOAPException {
 
 		SOAPMessage request = this.messageFactory.createMessage();
 		SOAPElement element = request.getSOAPBody()

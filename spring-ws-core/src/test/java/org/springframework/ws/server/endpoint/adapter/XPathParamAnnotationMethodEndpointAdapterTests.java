@@ -49,7 +49,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 @Deprecated
-public class XPathParamAnnotationMethodEndpointAdapterTests {
+class XPathParamAnnotationMethodEndpointAdapterTests {
 
 	private static final String CONTENTS = "<root><child><text>text</text><number>42.0</number></child></root>";
 
@@ -62,14 +62,14 @@ public class XPathParamAnnotationMethodEndpointAdapterTests {
 	private boolean namespacesInvoked;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.adapter = new XPathParamAnnotationMethodEndpointAdapter();
 		this.adapter.afterPropertiesSet();
 	}
 
 	@Test
-	public void testUnsupportedInvalidParam() throws NoSuchMethodException {
+	void testUnsupportedInvalidParam() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParamType", Integer.TYPE);
 
@@ -77,21 +77,21 @@ public class XPathParamAnnotationMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedInvalidReturnType() throws NoSuchMethodException {
+	void testUnsupportedInvalidReturnType() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidReturnType", String.class);
 		assertThat(this.adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
-	public void testUnsupportedInvalidParams() throws NoSuchMethodException {
+	void testUnsupportedInvalidParams() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "unsupportedInvalidParams", String.class, String.class);
 		assertThat(this.adapter.supports(endpoint)).isFalse();
 	}
 
 	@Test
-	public void testSupportedTypes() throws NoSuchMethodException {
+	void testSupportedTypes() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedTypes", Boolean.TYPE, Double.TYPE, Node.class,
 				NodeList.class, String.class);
@@ -99,28 +99,28 @@ public class XPathParamAnnotationMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testSupportsStringSource() throws NoSuchMethodException {
+	void testSupportsStringSource() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedStringSource", String.class);
 		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
-	public void testSupportsSource() throws NoSuchMethodException {
+	void testSupportsSource() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedSource", String.class);
 		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
-	public void testSupportsVoid() throws NoSuchMethodException {
+	void testSupportsVoid() throws NoSuchMethodException {
 
 		MethodEndpoint endpoint = new MethodEndpoint(this, "supportedVoid", String.class);
 		assertThat(this.adapter.supports(endpoint)).isTrue();
 	}
 
 	@Test
-	public void testInvokeTypes() throws Exception {
+	void testInvokeTypes() throws Exception {
 
 		WebServiceMessage messageMock = createMock(WebServiceMessage.class);
 		expect(messageMock.getPayloadSource()).andReturn(new StringSource(CONTENTS));
@@ -138,7 +138,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testInvokeSource() throws Exception {
+	void testInvokeSource() throws Exception {
 
 		WebServiceMessage requestMock = createMock(WebServiceMessage.class);
 		WebServiceMessage responseMock = createMock(WebServiceMessage.class);
@@ -158,7 +158,7 @@ public class XPathParamAnnotationMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testInvokeVoidDom() throws Exception {
+	void testInvokeVoidDom() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

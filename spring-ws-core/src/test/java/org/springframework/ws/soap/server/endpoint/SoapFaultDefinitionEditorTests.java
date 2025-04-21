@@ -25,17 +25,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SoapFaultDefinitionEditorTests {
+class SoapFaultDefinitionEditorTests {
 
 	private SoapFaultDefinitionEditor editor;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.editor = new SoapFaultDefinitionEditor();
 	}
 
 	@Test
-	public void testSetAsTextNoLocale() {
+	void testSetAsTextNoLocale() {
 
 		this.editor.setAsText("Server, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
@@ -47,7 +47,7 @@ public class SoapFaultDefinitionEditorTests {
 	}
 
 	@Test
-	public void testSetAsTextLocale() {
+	void testSetAsTextLocale() {
 
 		this.editor.setAsText("Server, Server error, nl");
 		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
@@ -59,7 +59,7 @@ public class SoapFaultDefinitionEditorTests {
 	}
 
 	@Test
-	public void testSetAsTextSender() {
+	void testSetAsTextSender() {
 
 		this.editor.setAsText("SENDER, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
@@ -70,7 +70,7 @@ public class SoapFaultDefinitionEditorTests {
 	}
 
 	@Test
-	public void testSetAsTextReceiver() {
+	void testSetAsTextReceiver() {
 
 		this.editor.setAsText("RECEIVER, Server error");
 		SoapFaultDefinition definition = (SoapFaultDefinition) this.editor.getValue();
@@ -81,12 +81,12 @@ public class SoapFaultDefinitionEditorTests {
 	}
 
 	@Test
-	public void testSetAsTextIllegalArgument() {
+	void testSetAsTextIllegalArgument() {
 		this.editor.setAsText("SOAP-ENV:Server");
 	}
 
 	@Test
-	public void testSetAsTextEmpty() {
+	void testSetAsTextEmpty() {
 
 		this.editor.setAsText("");
 

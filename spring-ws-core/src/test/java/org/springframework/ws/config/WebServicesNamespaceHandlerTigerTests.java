@@ -29,18 +29,18 @@ import org.springframework.ws.server.endpoint.adapter.XPathParamAnnotationMethod
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class WebServicesNamespaceHandlerTigerTests {
+class WebServicesNamespaceHandlerTigerTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.applicationContext = new ClassPathXmlApplicationContext("webServicesNamespaceHandlerTest-tiger.xml",
 				getClass());
 	}
 
 	@Test
-	public void testMarshallingEndpoints() {
+	void testMarshallingEndpoints() {
 
 		Map<String, GenericMarshallingMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(GenericMarshallingMethodEndpointAdapter.class);
@@ -49,7 +49,7 @@ public class WebServicesNamespaceHandlerTigerTests {
 	}
 
 	@Test
-	public void testXpathEndpoints() {
+	void testXpathEndpoints() {
 
 		Map<String, XPathParamAnnotationMethodEndpointAdapter> result = this.applicationContext
 			.getBeansOfType(XPathParamAnnotationMethodEndpointAdapter.class);

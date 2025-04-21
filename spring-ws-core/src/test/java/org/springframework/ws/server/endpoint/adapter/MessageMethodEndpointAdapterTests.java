@@ -27,7 +27,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class MessageMethodEndpointAdapterTests {
+class MessageMethodEndpointAdapterTests {
 
 	private MessageMethodEndpointAdapter adapter;
 
@@ -36,20 +36,20 @@ public class MessageMethodEndpointAdapterTests {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.adapter = new MessageMethodEndpointAdapter();
 		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@Test
-	public void testSupported() throws NoSuchMethodException {
+	void testSupported() throws NoSuchMethodException {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
 		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
-	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+	void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
 		assertThat(this.adapter.supportsInternal(
 				new MethodEndpoint(this, "unsupportedMultipleParams", MessageContext.class, MessageContext.class)))
@@ -57,14 +57,14 @@ public class MessageMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+	void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
 		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class)))
 			.isFalse();
 	}
 
 	@Test
-	public void testInvokeSupported() throws Exception {
+	void testInvokeSupported() throws Exception {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "supported", MessageContext.class);
 

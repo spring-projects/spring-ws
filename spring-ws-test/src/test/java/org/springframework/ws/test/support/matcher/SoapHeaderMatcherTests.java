@@ -30,21 +30,21 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.easymock.EasyMock.createMock;
 
-public class SoapHeaderMatcherTests {
+class SoapHeaderMatcherTests {
 
 	private SoapHeaderMatcher matcher;
 
 	private QName expectedHeaderName;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.expectedHeaderName = new QName("http://example.com", "header");
 		this.matcher = new SoapHeaderMatcher(this.expectedHeaderName);
 	}
 
 	@Test
-	public void match() throws Exception {
+	void match() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage saajMessage = messageFactory.createMessage();
@@ -55,7 +55,7 @@ public class SoapHeaderMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -68,7 +68,7 @@ public class SoapHeaderMatcherTests {
 	}
 
 	@Test
-	public void nonSoap() {
+	void nonSoap() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

@@ -29,7 +29,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class DefaultMessageContextTests {
+class DefaultMessageContextTests {
 
 	private DefaultMessageContext context;
 
@@ -38,7 +38,7 @@ public class DefaultMessageContextTests {
 	private WebServiceMessage request;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.factoryMock = createMock(WebServiceMessageFactory.class);
 		this.request = new MockWebServiceMessage();
@@ -46,12 +46,12 @@ public class DefaultMessageContextTests {
 	}
 
 	@Test
-	public void testRequest() {
+	void testRequest() {
 		assertThat(this.context.getRequest()).isEqualTo(this.request);
 	}
 
 	@Test
-	public void testResponse() {
+	void testResponse() {
 
 		WebServiceMessage response = new MockWebServiceMessage();
 		expect(this.factoryMock.createWebServiceMessage()).andReturn(response);
@@ -65,7 +65,7 @@ public class DefaultMessageContextTests {
 	}
 
 	@Test
-	public void testProperties() {
+	void testProperties() {
 
 		assertThat(this.context.getPropertyNames()).hasSize(0);
 

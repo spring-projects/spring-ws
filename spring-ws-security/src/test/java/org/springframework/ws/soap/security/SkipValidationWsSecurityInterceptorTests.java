@@ -36,7 +36,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class SkipValidationWsSecurityInterceptorTests {
+class SkipValidationWsSecurityInterceptorTests {
 
 	private MessageFactory messageFactory;
 
@@ -45,7 +45,7 @@ public class SkipValidationWsSecurityInterceptorTests {
 	private SaajSoapMessageFactory soapMessageFactory;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.messageFactory = MessageFactory.newInstance();
 		this.soapMessageFactory = new SaajSoapMessageFactory(this.messageFactory);
@@ -70,17 +70,17 @@ public class SkipValidationWsSecurityInterceptorTests {
 	}
 
 	@Test
-	public void testSkipValidationOnNoHeader() throws Exception {
+	void testSkipValidationOnNoHeader() throws Exception {
 		doTestSkipValidation("noHeader-soap.xml");
 	}
 
 	@Test
-	public void testSkipValidationOnEmptyHeader() throws Exception {
+	void testSkipValidationOnEmptyHeader() throws Exception {
 		doTestSkipValidation("emptyHeader-soap.xml");
 	}
 
 	@Test
-	public void testSkipValidationOnNoSecurityHeader() throws Exception {
+	void testSkipValidationOnNoSecurityHeader() throws Exception {
 		doTestSkipValidation("noSecurityHeader-soap.xml");
 	}
 

@@ -30,10 +30,10 @@ import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEn
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class InterceptorsBeanDefinitionParserTests {
+class InterceptorsBeanDefinitionParserTests {
 
 	@Test
-	public void namespace() {
+	void namespace() {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserTest.xml", getClass());
@@ -51,7 +51,7 @@ public class InterceptorsBeanDefinitionParserTests {
 	}
 
 	@Test
-	public void ordering() {
+	void ordering() {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserOrderTest.xml", getClass());
@@ -71,7 +71,7 @@ public class InterceptorsBeanDefinitionParserTests {
 	}
 
 	@Test
-	public void injection() {
+	void injection() {
 
 		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(
 				"interceptorsBeanDefinitionParserInjectionTest.xml", getClass());

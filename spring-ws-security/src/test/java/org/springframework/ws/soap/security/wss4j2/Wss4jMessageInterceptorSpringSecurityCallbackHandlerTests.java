@@ -57,7 +57,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 	}
 
 	@Test
-	public void testValidateUsernameTokenPlainText() throws Exception {
+	void testValidateUsernameTokenPlainText() throws Exception {
 
 		EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
@@ -74,7 +74,7 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 	}
 
 	@Test
-	public void testValidateUsernameTokenDigest() throws Exception {
+	void testValidateUsernameTokenDigest() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("UsernameToken");

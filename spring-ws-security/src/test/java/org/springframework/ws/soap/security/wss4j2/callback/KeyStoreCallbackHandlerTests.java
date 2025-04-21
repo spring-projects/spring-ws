@@ -27,14 +27,14 @@ import org.springframework.ws.soap.security.support.KeyStoreFactoryBean;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class KeyStoreCallbackHandlerTests {
+class KeyStoreCallbackHandlerTests {
 
 	private KeyStoreCallbackHandler callbackHandler;
 
 	private WSPasswordCallback callback;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.callbackHandler = new KeyStoreCallbackHandler();
 		this.callback = new WSPasswordCallback("secretkey", WSPasswordCallback.SECRET_KEY);
@@ -50,7 +50,7 @@ public class KeyStoreCallbackHandlerTests {
 	}
 
 	@Test
-	public void testHandleKeyName() throws Exception {
+	void testHandleKeyName() throws Exception {
 
 		this.callbackHandler.handleInternal(this.callback);
 

@@ -37,17 +37,17 @@ import static org.mockito.Mockito.verify;
 /**
  * Test case for {@link AbstractEndpointMapping}.
  */
-public class EndpointMappingTests {
+class EndpointMappingTests {
 
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@Test
-	public void defaultEndpoint() throws Exception {
+	void defaultEndpoint() throws Exception {
 
 		Object defaultEndpoint = new Object();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
@@ -66,7 +66,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void endpoint() throws Exception {
+	void endpoint() throws Exception {
 
 		final Object endpoint = new Object();
 		AbstractEndpointMapping mapping = new AbstractEndpointMapping() {
@@ -84,7 +84,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void endpointInterceptors() throws Exception {
+	void endpointInterceptors() throws Exception {
 
 		final Object endpoint = new Object();
 		EndpointInterceptor interceptor = new EndpointInterceptorAdapter();
@@ -104,7 +104,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void smartEndpointInterceptors() throws Exception {
+	void smartEndpointInterceptors() throws Exception {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("smartInterceptor", MySmartEndpointInterceptor.class);
@@ -178,7 +178,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void endpointBeanName() throws Exception {
+	void endpointBeanName() throws Exception {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("endpoint", Object.class);
@@ -199,7 +199,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void endpointInvalidBeanName() throws Exception {
+	void endpointInvalidBeanName() throws Exception {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("endpoint", Object.class);
@@ -220,7 +220,7 @@ public class EndpointMappingTests {
 	}
 
 	@Test
-	public void endpointPrototype() throws Exception {
+	void endpointPrototype() throws Exception {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerPrototype("endpoint", MyEndpoint.class);

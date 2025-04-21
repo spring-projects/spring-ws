@@ -36,17 +36,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 
 	@Test
-	public void testGetType() {
+	void testGetType() {
 		assertThat(this.soapBody).isInstanceOf(Soap11Body.class);
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertThat(this.soapBody.getName()).isEqualTo(SoapVersion.SOAP_11.getBodyName());
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
 		this.transformer.transform(this.soapBody.getSource(), result);
@@ -58,7 +58,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddMustUnderstandFault() throws Exception {
+	void testAddMustUnderstandFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addMustUnderstandFault("SOAP Must Understand Error", null);
 
@@ -70,7 +70,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddClientFault() throws Exception {
+	void testAddClientFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addClientOrSenderFault("faultString", null);
 
@@ -81,7 +81,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddServerFault() throws Exception {
+	void testAddServerFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", null);
 
@@ -92,7 +92,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFault() throws Exception {
+	void testAddFault() throws Exception {
 
 		QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
 		String faultString = "faultString";
@@ -116,7 +116,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultNoPrefix() {
+	void testAddFaultNoPrefix() {
 
 		QName faultCode = new QName("http://www.springframework.org", "fault");
 		String faultString = "faultString";
@@ -136,7 +136,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultWithDetail() throws Exception {
+	void testAddFaultWithDetail() throws Exception {
 
 		QName faultCode = new QName("http://www.springframework.org", "fault", "spring");
 		String faultString = "faultString";
@@ -161,7 +161,7 @@ public abstract class AbstractSoap11BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultWithDetailResult() throws Exception {
+	void testAddFaultWithDetailResult() throws Exception {
 
 		SoapFault fault = ((Soap11Body) this.soapBody).addFault(new QName("namespace", "localPart", "prefix"), "Fault",
 				null);

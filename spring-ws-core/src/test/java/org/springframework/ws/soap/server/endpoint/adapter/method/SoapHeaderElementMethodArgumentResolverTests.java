@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 /**
  * @author Tareq Abedrabbo
  */
-public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
+class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
 
 	private static final QName HEADER_QNAME = new QName(NAMESPACE_URI, "header");
 
@@ -57,7 +57,7 @@ public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethod
 	private MethodParameter soapHeaderMismatchList;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.resolver = new SoapHeaderElementMethodArgumentResolver();
 		this.messageContext = createSaajMessageContext();
@@ -79,21 +79,21 @@ public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethod
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 
 		assertThat(this.resolver.supportsParameter(this.soapHeaderElementParameter)).isTrue();
 		assertThat(this.resolver.supportsParameter(this.soapHeaderElementListParameter)).isTrue();
 	}
 
 	@Test
-	public void failOnEmptyValue() {
+	void failOnEmptyValue() {
 
 		assertThatIllegalArgumentException()
 			.isThrownBy(() -> this.resolver.resolveArgument(this.messageContext, this.soapHeaderWithEmptyValue));
 	}
 
 	@Test
-	public void resolveSoapHeaderElement() throws Exception {
+	void resolveSoapHeaderElement() throws Exception {
 
 		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderElementParameter);
 
@@ -107,7 +107,7 @@ public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethod
 
 	@Test
 	@SuppressWarnings("unchecked")
-	public void resolveSoapHeaderElementList() throws Exception {
+	void resolveSoapHeaderElementList() throws Exception {
 
 		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderElementListParameter);
 
@@ -127,7 +127,7 @@ public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethod
 	}
 
 	@Test
-	public void resolveSoapHeaderMismatch() throws Exception {
+	void resolveSoapHeaderMismatch() throws Exception {
 
 		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderMismatch);
 
@@ -135,7 +135,7 @@ public class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethod
 	}
 
 	@Test
-	public void resolveSoapHeaderMismatchList() throws Exception {
+	void resolveSoapHeaderMismatchList() throws Exception {
 
 		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderMismatchList);
 

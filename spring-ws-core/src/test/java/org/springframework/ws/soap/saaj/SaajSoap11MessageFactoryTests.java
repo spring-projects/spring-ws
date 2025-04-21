@@ -33,7 +33,7 @@ import org.springframework.ws.soap.soap11.AbstractSoap11MessageFactoryTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
+class SaajSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
 
 	@Override
 	protected WebServiceMessageFactory createMessageFactory() throws Exception {
@@ -43,7 +43,7 @@ public class SaajSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryT
 	}
 
 	@Test
-	public void properties() throws IOException {
+	void properties() throws IOException {
 
 		Map<String, ?> properties = Collections.singletonMap(SOAPMessage.WRITE_XML_DECLARATION, "true");
 		((SaajSoapMessageFactory) this.messageFactory).setMessageProperties(properties);

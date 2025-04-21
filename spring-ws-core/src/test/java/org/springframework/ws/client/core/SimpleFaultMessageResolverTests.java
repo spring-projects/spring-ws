@@ -28,17 +28,17 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SimpleFaultMessageResolverTests {
+class SimpleFaultMessageResolverTests {
 
 	private SimpleFaultMessageResolver resolver;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.resolver = new SimpleFaultMessageResolver();
 	}
 
 	@Test
-	public void testResolveFault() {
+	void testResolveFault() {
 
 		FaultAwareWebServiceMessage messageMock = createMock(FaultAwareWebServiceMessage.class);
 		String message = "message";

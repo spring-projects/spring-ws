@@ -44,7 +44,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class PayloadTransformingInterceptorTests {
+class PayloadTransformingInterceptorTests {
 
 	private PayloadTransformingInterceptor interceptor;
 
@@ -57,7 +57,7 @@ public class PayloadTransformingInterceptorTests {
 	private Resource xslt;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.interceptor = new PayloadTransformingInterceptor();
 		TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
@@ -68,7 +68,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleRequest() throws Exception {
+	void testHandleRequest() throws Exception {
 
 		this.interceptor.setRequestXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -86,7 +86,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleRequestNoXslt() throws Exception {
+	void testHandleRequestNoXslt() throws Exception {
 
 		this.interceptor.setResponseXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -103,7 +103,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleResponse() throws Exception {
+	void testHandleResponse() throws Exception {
 
 		this.interceptor.setResponseXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -123,7 +123,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testHandleResponseNoXslt() throws Exception {
+	void testHandleResponseNoXslt() throws Exception {
 
 		this.interceptor.setRequestXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -143,7 +143,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testSaaj() throws Exception {
+	void testSaaj() throws Exception {
 
 		this.interceptor.setRequestXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -164,7 +164,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testPox() throws Exception {
+	void testPox() throws Exception {
 
 		this.interceptor.setRequestXslt(this.xslt);
 		this.interceptor.afterPropertiesSet();
@@ -185,7 +185,7 @@ public class PayloadTransformingInterceptorTests {
 	}
 
 	@Test
-	public void testNoStylesheetsSet() {
+	void testNoStylesheetsSet() {
 		assertThatIllegalArgumentException().isThrownBy(() -> this.interceptor.afterPropertiesSet());
 	}
 

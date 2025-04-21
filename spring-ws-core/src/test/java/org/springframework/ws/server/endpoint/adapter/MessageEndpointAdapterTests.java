@@ -29,25 +29,25 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class MessageEndpointAdapterTests {
+class MessageEndpointAdapterTests {
 
 	private MessageEndpointAdapter adapter;
 
 	private MessageEndpoint endpointMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.adapter = new MessageEndpointAdapter();
 		this.endpointMock = createMock(MessageEndpoint.class);
 	}
 
 	@Test
-	public void testSupports() {
+	void testSupports() {
 		assertThat(this.adapter.supports(this.endpointMock)).isTrue();
 	}
 
 	@Test
-	public void testInvoke() throws Exception {
+	void testInvoke() throws Exception {
 
 		MessageContext context = new DefaultMessageContext(new MockWebServiceMessageFactory());
 

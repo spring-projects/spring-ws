@@ -43,13 +43,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("httpserver-applicationContext.xml")
-public class WebServiceHttpHandlerIntegrationTests {
+class WebServiceHttpHandlerIntegrationTests {
 
 	@Autowired
 	private int port;
 
 	@Test
-	public void testInvalidMethod() {
+	void testInvalidMethod() {
 		HttpGet httpRequest = new HttpGet(serviceUrl());
 		execute(httpRequest, response -> {
 			assertThat(response.getCode()).isEqualTo(HttpTransportConstants.STATUS_METHOD_NOT_ALLOWED);
@@ -59,7 +59,7 @@ public class WebServiceHttpHandlerIntegrationTests {
 	}
 
 	@Test
-	public void testNoResponse() throws IOException {
+	void testNoResponse() throws IOException {
 		HttpPost httpRequest = new HttpPost(serviceUrl());
 		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/NoResponse");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTests.class);
@@ -72,7 +72,7 @@ public class WebServiceHttpHandlerIntegrationTests {
 	}
 
 	@Test
-	public void testResponse() throws IOException {
+	void testResponse() throws IOException {
 		HttpPost httpRequest = new HttpPost(serviceUrl());
 		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Response");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTests.class);
@@ -85,7 +85,7 @@ public class WebServiceHttpHandlerIntegrationTests {
 	}
 
 	@Test
-	public void testNoEndpoint() throws IOException {
+	void testNoEndpoint() throws IOException {
 		HttpPost httpRequest = new HttpPost(serviceUrl());
 		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/NoEndpoint");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTests.class);
@@ -98,7 +98,7 @@ public class WebServiceHttpHandlerIntegrationTests {
 	}
 
 	@Test
-	public void testFault() throws IOException {
+	void testFault() throws IOException {
 		HttpPost httpRequest = new HttpPost(serviceUrl());
 		httpRequest.addHeader(TransportConstants.HEADER_SOAP_ACTION, "http://springframework.org/spring-ws/Fault");
 		Resource soapRequest = new ClassPathResource("soapRequest.xml", WebServiceHttpHandlerIntegrationTests.class);

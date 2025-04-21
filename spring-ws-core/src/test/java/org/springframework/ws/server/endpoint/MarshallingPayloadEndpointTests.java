@@ -55,7 +55,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 @Deprecated
-public class MarshallingPayloadEndpointTests {
+class MarshallingPayloadEndpointTests {
 
 	private Transformer transformer;
 
@@ -64,7 +64,7 @@ public class MarshallingPayloadEndpointTests {
 	private WebServiceMessageFactory factoryMock;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage("<request/>");
 		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
@@ -73,7 +73,7 @@ public class MarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testInvoke() throws Exception {
+	void testInvoke() throws Exception {
 
 		Unmarshaller unmarshaller = new SimpleMarshaller() {
 
@@ -141,7 +141,7 @@ public class MarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testInvokeNullResponse() throws Exception {
+	void testInvokeNullResponse() throws Exception {
 
 		Unmarshaller unmarshaller = new SimpleMarshaller() {
 
@@ -193,7 +193,7 @@ public class MarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testInvokeNoRequest() throws Exception {
+	void testInvokeNoRequest() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage((StringBuilder) null);
 		this.context = new DefaultMessageContext(request, this.factoryMock);
@@ -220,7 +220,7 @@ public class MarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testInvokeMimeMarshaller() throws Exception {
+	void testInvokeMimeMarshaller() throws Exception {
 
 		MimeUnmarshaller unmarshaller = createMock(MimeUnmarshaller.class);
 		MimeMarshaller marshaller = createMock(MimeMarshaller.class);

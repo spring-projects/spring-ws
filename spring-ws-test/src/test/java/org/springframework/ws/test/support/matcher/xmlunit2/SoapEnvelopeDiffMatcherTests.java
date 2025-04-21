@@ -34,10 +34,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class SoapEnvelopeDiffMatcherTests {
+class SoapEnvelopeDiffMatcherTests {
 
 	@Test
-	public void match() throws Exception {
+	void match() throws Exception {
 
 		String xml = "<?xml version='1.0'?>" + "<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>"
 				+ "<soap:Header><header xmlns='http://example.com'/></soap:Header>"
@@ -56,7 +56,7 @@ public class SoapEnvelopeDiffMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -82,7 +82,7 @@ public class SoapEnvelopeDiffMatcherTests {
 	}
 
 	@Test
-	public void matchWithXmlIgnore() throws TransformerException, IOException {
+	void matchWithXmlIgnore() throws TransformerException, IOException {
 		String xml = """
 				<?xml version='1.0'?>
 				<soap:Envelope xmlns:soap='http://www.w3.org/2003/05/soap-envelope'>

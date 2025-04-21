@@ -26,17 +26,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XmlRootElementEndpointMappingTests {
+class XmlRootElementEndpointMappingTests {
 
 	private XmlRootElementEndpointMapping mapping;
 
 	@BeforeEach
-	public void createMapping() {
+	void createMapping() {
 		this.mapping = new XmlRootElementEndpointMapping();
 	}
 
 	@Test
-	public void rootElement() throws NoSuchMethodException {
+	void rootElement() throws NoSuchMethodException {
 
 		Method rootElement = getClass().getMethod("rootElement", MyRootElement.class);
 		QName name = this.mapping.getLookupKeyForMethod(rootElement);

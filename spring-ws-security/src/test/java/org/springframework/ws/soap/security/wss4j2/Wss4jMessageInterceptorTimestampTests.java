@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 public abstract class Wss4jMessageInterceptorTimestampTests extends Wss4jTests {
 
 	@Test
-	public void testAddTimestamp() throws Exception {
+	void testAddTimestamp() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("Timestamp");
@@ -48,7 +48,7 @@ public abstract class Wss4jMessageInterceptorTimestampTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateTimestamp() throws Exception {
+	void testValidateTimestamp() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setValidationActions("Timestamp");
@@ -63,7 +63,7 @@ public abstract class Wss4jMessageInterceptorTimestampTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateTimestampWithExpiredTtl() {
+	void testValidateTimestampWithExpiredTtl() {
 
 		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
 
@@ -77,7 +77,7 @@ public abstract class Wss4jMessageInterceptorTimestampTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateTimestampWithExpiredTtlCustomTtl() {
+	void testValidateTimestampWithExpiredTtlCustomTtl() {
 
 		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
 
@@ -93,7 +93,7 @@ public abstract class Wss4jMessageInterceptorTimestampTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testSecureTimestampWithCustomTtl() throws Exception {
+	void testSecureTimestampWithCustomTtl() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("Timestamp");

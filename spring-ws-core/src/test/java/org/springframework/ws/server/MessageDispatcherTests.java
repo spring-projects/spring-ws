@@ -41,7 +41,7 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class MessageDispatcherTests {
+class MessageDispatcherTests {
 
 	private MessageDispatcher dispatcher;
 
@@ -50,7 +50,7 @@ public class MessageDispatcherTests {
 	private WebServiceMessageFactory factoryMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.dispatcher = new MessageDispatcher();
 		this.factoryMock = createMock(WebServiceMessageFactory.class);
@@ -58,7 +58,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testGetEndpoint() throws Exception {
+	void testGetEndpoint() throws Exception {
 
 		EndpointMapping mappingMock = createMock(EndpointMapping.class);
 		this.dispatcher.setEndpointMappings(Collections.singletonList(mappingMock));
@@ -77,7 +77,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testGetEndpointAdapterSupportedEndpoint() {
+	void testGetEndpointAdapterSupportedEndpoint() {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -95,7 +95,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testGetEndpointAdapterUnsupportedEndpoint() {
+	void testGetEndpointAdapterUnsupportedEndpoint() {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -111,7 +111,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testResolveException() throws Exception {
+	void testResolveException() throws Exception {
 
 		final Exception ex = new Exception();
 
@@ -144,7 +144,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testProcessUnsupportedEndpointException() {
+	void testProcessUnsupportedEndpointException() {
 
 		EndpointExceptionResolver resolverMock = createMock(EndpointExceptionResolver.class);
 		this.dispatcher.setEndpointExceptionResolvers(Collections.singletonList(resolverMock));
@@ -167,7 +167,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testNormalFlow() throws Exception {
+	void testNormalFlow() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -208,7 +208,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testFlowNoResponse() throws Exception {
+	void testFlowNoResponse() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -241,7 +241,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testInterceptedRequestFlow() throws Exception {
+	void testInterceptedRequestFlow() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -275,7 +275,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testInterceptedResponseFlow() throws Exception {
+	void testInterceptedResponseFlow() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -310,7 +310,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testResolveExceptionsWithInterceptors() throws Exception {
+	void testResolveExceptionsWithInterceptors() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -359,7 +359,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testFaultFlow() throws Exception {
+	void testFaultFlow() throws Exception {
 
 		EndpointAdapter adapterMock = createMock(EndpointAdapter.class);
 		this.dispatcher.setEndpointAdapters(Collections.singletonList(adapterMock));
@@ -395,7 +395,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testNoEndpointFound() {
+	void testNoEndpointFound() {
 
 		this.dispatcher.setEndpointMappings(Collections.emptyList());
 
@@ -404,7 +404,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testDetectStrategies() {
+	void testDetectStrategies() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 
@@ -426,7 +426,7 @@ public class MessageDispatcherTests {
 	}
 
 	@Test
-	public void testDefaultStrategies() {
+	void testDefaultStrategies() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		this.dispatcher.setApplicationContext(applicationContext);

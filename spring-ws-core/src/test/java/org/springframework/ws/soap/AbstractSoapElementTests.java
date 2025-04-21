@@ -46,7 +46,7 @@ public abstract class AbstractSoapElementTests {
 	protected abstract SoapElement createSoapElement() throws Exception;
 
 	@Test
-	public void testAttributes() {
+	void testAttributes() {
 
 		QName name = new QName("http://springframework.org/spring-ws", "attribute");
 		String value = "value";
@@ -60,7 +60,7 @@ public abstract class AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testAddNamespaceDeclaration() {
+	void testAddNamespaceDeclaration() {
 
 		String prefix = "p";
 		String namespace = "http://springframework.org/spring-ws";
@@ -68,7 +68,7 @@ public abstract class AbstractSoapElementTests {
 	}
 
 	@Test
-	public void testAddDefaultNamespaceDeclaration() {
+	void testAddDefaultNamespaceDeclaration() {
 
 		String prefix = "";
 		String namespace = "http://springframework.org/spring-ws";

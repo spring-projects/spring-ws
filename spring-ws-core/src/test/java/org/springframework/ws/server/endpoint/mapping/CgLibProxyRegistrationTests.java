@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("cglib-proxy-registration.xml")
-public class CgLibProxyRegistrationTests {
+class CgLibProxyRegistrationTests {
 
 	@Autowired
 	private PayloadRootAnnotationMethodEndpointMapping mapping;
@@ -46,7 +46,7 @@ public class CgLibProxyRegistrationTests {
 	private ApplicationContext applicationContext;
 
 	@Test
-	public void registration() throws NoSuchMethodException {
+	void registration() throws NoSuchMethodException {
 
 		MethodEndpoint cglibProxy = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));

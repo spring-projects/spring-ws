@@ -40,7 +40,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 @Deprecated
-public class MarshallingMethodEndpointAdapterTests {
+class MarshallingMethodEndpointAdapterTests {
 
 	private MarshallingMethodEndpointAdapter adapter;
 
@@ -55,7 +55,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	private boolean responseInvoked;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.adapter = new MarshallingMethodEndpointAdapter();
 		this.marshallerMock = createMock(Marshaller.class);
@@ -68,7 +68,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testNoResponse() throws Exception {
+	void testNoResponse() throws Exception {
 
 		Method noResponse = getClass().getMethod("noResponse", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
@@ -86,7 +86,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testNoRequestPayload() throws Exception {
+	void testNoRequestPayload() throws Exception {
 
 		MockWebServiceMessage request = new MockWebServiceMessage();
 		this.messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
@@ -104,7 +104,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testResponse() throws Exception {
+	void testResponse() throws Exception {
 
 		Method response = getClass().getMethod("response", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
@@ -123,7 +123,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testSupportedNoResponse() throws NoSuchMethodException {
+	void testSupportedNoResponse() throws NoSuchMethodException {
 
 		Method noResponse = getClass().getMethod("noResponse", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, noResponse);
@@ -137,7 +137,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testSupportedResponse() throws NoSuchMethodException {
+	void testSupportedResponse() throws NoSuchMethodException {
 
 		Method response = getClass().getMethod("response", MyType.class);
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, response);
@@ -152,7 +152,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+	void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedMultipleParams", String.class, String.class);
 
@@ -164,7 +164,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+	void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
 		expect(this.unmarshallerMock.supports(String.class)).andReturn(false);
@@ -178,7 +178,7 @@ public class MarshallingMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
+	void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
 
 		Method unsupported = getClass().getMethod("unsupportedWrongParam", String.class);
 		expect(this.marshallerMock.supports(String.class)).andReturn(false);

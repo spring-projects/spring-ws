@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see AbstractStaxEventPayloadEndpoint
  */
 @Deprecated
-public class StaxEventPayloadEndpointTests extends AbstractMessageEndpointTests {
+class StaxEventPayloadEndpointTests extends AbstractMessageEndpointTests {
 
 	@Override
 	protected MessageEndpoint createNoResponseEndpoint() {

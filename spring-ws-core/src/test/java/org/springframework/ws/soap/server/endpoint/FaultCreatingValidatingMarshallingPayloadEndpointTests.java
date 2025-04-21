@@ -46,14 +46,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @Deprecated
-public class FaultCreatingValidatingMarshallingPayloadEndpointTests {
+class FaultCreatingValidatingMarshallingPayloadEndpointTests {
 
 	private MessageContext messageContext;
 
 	private ResourceBundleMessageSource messageSource;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.messageSource = new ResourceBundleMessageSource();
 		this.messageSource.setBasename("org.springframework.ws.soap.server.endpoint.messages");
@@ -65,7 +65,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testValidationIncorrect() throws Exception {
+	void testValidationIncorrect() throws Exception {
 
 		Person p = new Person("", -1);
 		PersonMarshaller marshaller = new PersonMarshaller(p);
@@ -120,7 +120,7 @@ public class FaultCreatingValidatingMarshallingPayloadEndpointTests {
 	}
 
 	@Test
-	public void testValidationCorrect() throws Exception {
+	void testValidationCorrect() throws Exception {
 
 		Person p = new Person("John", 42);
 		PersonMarshaller marshaller = new PersonMarshaller(p);

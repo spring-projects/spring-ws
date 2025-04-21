@@ -32,10 +32,10 @@ import org.springframework.core.io.Resource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class DefaultStrategiesHelperTests {
+class DefaultStrategiesHelperTests {
 
 	@Test
-	public void testGetDefaultStrategies() {
+	void testGetDefaultStrategies() {
 
 		Properties strategies = new Properties();
 		strategies.put(Strategy.class.getName(),
@@ -61,7 +61,7 @@ public class DefaultStrategiesHelperTests {
 	}
 
 	@Test
-	public void testGetDefaultStrategy() {
+	void testGetDefaultStrategy() {
 
 		Properties strategies = new Properties();
 		strategies.put(Strategy.class.getName(), StrategyImpl.class.getName());
@@ -79,7 +79,7 @@ public class DefaultStrategiesHelperTests {
 	}
 
 	@Test
-	public void testGetDefaultStrategyMoreThanOne() {
+	void testGetDefaultStrategyMoreThanOne() {
 
 		Properties strategies = new Properties();
 		strategies.put(Strategy.class.getName(),
@@ -95,7 +95,7 @@ public class DefaultStrategiesHelperTests {
 	}
 
 	@Test
-	public void testResourceConstructor() {
+	void testResourceConstructor() {
 
 		Resource resource = new ClassPathResource("strategies.properties", getClass());
 		new DefaultStrategiesHelper(resource);

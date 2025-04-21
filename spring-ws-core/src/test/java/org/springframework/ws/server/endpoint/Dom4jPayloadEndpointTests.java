@@ -22,7 +22,7 @@ import org.dom4j.Element;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class Dom4jPayloadEndpointTests extends AbstractPayloadEndpointTests {
+class Dom4jPayloadEndpointTests extends AbstractPayloadEndpointTests {
 
 	@Override
 	protected PayloadEndpoint createResponseEndpoint() {

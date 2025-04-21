@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class XPathExpressionFactoryTests {
+class XPathExpressionFactoryTests {
 
 	@Test
-	public void testCreateXPathExpression() {
+	void testCreateXPathExpression() {
 
 		XPathExpression expression = XPathExpressionFactory.createXPathExpression("/root");
 
@@ -32,7 +32,7 @@ public class XPathExpressionFactoryTests {
 	}
 
 	@Test
-	public void testCreateEmptyXPathExpression() {
+	void testCreateEmptyXPathExpression() {
 		assertThatIllegalArgumentException().isThrownBy(() -> XPathExpressionFactory.createXPathExpression(""));
 	}
 

@@ -37,17 +37,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 
 	@Test
-	public void testGetType() {
+	void testGetType() {
 		assertThat(this.soapBody).isInstanceOf(Soap12Body.class);
 	}
 
 	@Test
-	public void testGetName() {
+	void testGetName() {
 		assertThat(this.soapBody.getName()).isEqualTo(new QName(SoapVersion.SOAP_12.getEnvelopeNamespaceUri(), "Body"));
 	}
 
 	@Test
-	public void testGetSource() throws Exception {
+	void testGetSource() throws Exception {
 
 		StringResult result = new StringResult();
 		this.transformer.transform(this.soapBody.getSource(), result);
@@ -59,7 +59,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddMustUnderstandFault() throws Exception {
+	void testAddMustUnderstandFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addMustUnderstandFault("SOAP Must Understand Error", Locale.ENGLISH);
 
@@ -80,7 +80,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddSenderFault() throws Exception {
+	void testAddSenderFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addClientOrSenderFault("faultString", Locale.ENGLISH);
 
@@ -100,7 +100,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddReceiverFault() throws Exception {
+	void testAddReceiverFault() throws Exception {
 
 		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 
@@ -120,7 +120,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultWithDetail() throws Exception {
+	void testAddFaultWithDetail() throws Exception {
 
 		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		SoapFaultDetail detail = fault.addFaultDetail();
@@ -143,7 +143,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultWithDetailResult() throws Exception {
+	void testAddFaultWithDetailResult() throws Exception {
 
 		SoapFault fault = this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		SoapFaultDetail detail = fault.addFaultDetail();
@@ -164,7 +164,7 @@ public abstract class AbstractSoap12BodyTests extends AbstractSoapBodyTests {
 	}
 
 	@Test
-	public void testAddFaultWithSubcode() throws Exception {
+	void testAddFaultWithSubcode() throws Exception {
 
 		Soap12Fault fault = (Soap12Fault) this.soapBody.addServerOrReceiverFault("faultString", Locale.ENGLISH);
 		QName subcode1 = new QName("http://www.springframework.org", "Subcode1", "spring-ws");

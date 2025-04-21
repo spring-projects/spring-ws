@@ -22,7 +22,7 @@ import org.jdom2.Namespace;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class JDomPayloadEndpointTests extends AbstractPayloadEndpointTests {
+class JDomPayloadEndpointTests extends AbstractPayloadEndpointTests {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() throws Exception {

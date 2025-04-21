@@ -24,10 +24,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MailTransportUtilsTests {
+class MailTransportUtilsTests {
 
 	@Test
-	public void testToPasswordProtectedString() {
+	void testToPasswordProtectedString() {
 
 		URLName name = new URLName("imap://john:secret@imap.example.com/INBOX");
 		String result = MailTransportUtils.toPasswordProtectedString(name);
@@ -36,7 +36,7 @@ public class MailTransportUtilsTests {
 	}
 
 	@Test
-	public void testGetTo() throws Exception {
+	void testGetTo() throws Exception {
 
 		URI uri = new URI("mailto:infobot@example.com?subject=current-issue");
 		InternetAddress to = MailTransportUtils.getTo(uri);
@@ -50,7 +50,7 @@ public class MailTransportUtilsTests {
 	}
 
 	@Test
-	public void testGetSubject() throws Exception {
+	void testGetSubject() throws Exception {
 
 		URI uri = new URI("mailto:infobot@example.com?subject=current-issue");
 		String subject = MailTransportUtils.getSubject(uri);

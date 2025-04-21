@@ -25,10 +25,10 @@ import org.w3c.dom.Element;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringSourceTests {
+class StringSourceTests {
 
 	@Test
-	public void testStringSource() throws TransformerException {
+	void testStringSource() throws TransformerException {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		String content = "<prefix:content xmlns:prefix='namespace'/>";

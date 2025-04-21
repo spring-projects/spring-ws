@@ -36,14 +36,14 @@ public abstract class AbstractPayloadEndpointTests extends AbstractEndpointTests
 	private Transformer transformer;
 
 	@BeforeEach
-	public void createEndpoint() throws Exception {
+	void createEndpoint() throws Exception {
 
 		this.endpoint = createResponseEndpoint();
 		this.transformer = TransformerFactoryUtils.newInstance().newTransformer();
 	}
 
 	@Test
-	public void testNoResponse() throws Exception {
+	void testNoResponse() throws Exception {
 
 		this.endpoint = createNoResponseEndpoint();
 		StringSource requestSource = new StringSource(REQUEST);
@@ -53,7 +53,7 @@ public abstract class AbstractPayloadEndpointTests extends AbstractEndpointTests
 	}
 
 	@Test
-	public void testNoRequest() throws Exception {
+	void testNoRequest() throws Exception {
 
 		this.endpoint = createNoRequestEndpoint();
 		Source resultSource = this.endpoint.invoke(null);

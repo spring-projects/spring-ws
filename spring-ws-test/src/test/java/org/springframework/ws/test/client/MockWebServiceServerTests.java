@@ -64,14 +64,14 @@ import static org.springframework.ws.test.client.ResponseCreators.withClientOrSe
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 import static org.springframework.ws.test.client.ResponseCreators.withSoapEnvelope;
 
-public class MockWebServiceServerTests {
+class MockWebServiceServerTests {
 
 	private WebServiceTemplate template;
 
 	private MockWebServiceServer server;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.template = new WebServiceTemplate();
 		this.template.setDefaultUri("http://example.com");
@@ -80,7 +80,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void createServerWebServiceTemplate() {
+	void createServerWebServiceTemplate() {
 
 		WebServiceTemplate template = new WebServiceTemplate();
 
@@ -90,7 +90,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void createServerGatewaySupport() {
+	void createServerGatewaySupport() {
 
 		MyClient client = new MyClient();
 
@@ -100,7 +100,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void createServerApplicationContextWebServiceTemplate() {
+	void createServerApplicationContextWebServiceTemplate() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("webServiceTemplate", WebServiceTemplate.class);
@@ -112,7 +112,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void createServerApplicationContextWebServiceGatewaySupport() {
+	void createServerApplicationContextWebServiceGatewaySupport() {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		applicationContext.registerSingleton("myClient", MyClient.class);
@@ -123,7 +123,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void createServerApplicationContextEmpty() {
+	void createServerApplicationContextEmpty() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> {
 
@@ -136,7 +136,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void mocks() throws Exception {
+	void mocks() throws Exception {
 
 		URI uri = URI.create("http://example.com");
 
@@ -161,7 +161,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void payloadMatch() {
+	void payloadMatch() {
 
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
@@ -175,7 +175,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void payloadNonMatch() {
+	void payloadNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -190,7 +190,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void soapHeaderMatch() {
+	void soapHeaderMatch() {
 
 		final QName soapHeaderName = new QName("http://example.com", "mySoapHeader");
 
@@ -205,7 +205,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void soapHeaderNonMatch() {
+	void soapHeaderNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -219,7 +219,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void connectionMatch() {
+	void connectionMatch() {
 
 		String uri = "http://example.com";
 		this.server.expect(connectionTo(uri));
@@ -229,7 +229,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void connectionNonMatch() {
+	void connectionNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -243,7 +243,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void unexpectedConnection() {
+	void unexpectedConnection() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -258,7 +258,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void xsdMatch() throws Exception {
+	void xsdMatch() throws Exception {
 
 		Resource schema = new ByteArrayResource(
 				"<schema xmlns=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"http://example.com\" elementFormDefault=\"qualified\"><element name=\"request\"/></schema>"
@@ -272,7 +272,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void xsdNonMatch() {
+	void xsdNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -289,7 +289,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void xpathExistsMatch() {
+	void xpathExistsMatch() {
 
 		final Map<String, String> ns = Collections.singletonMap("ns", "http://example.com");
 
@@ -300,7 +300,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void xpathExistsNonMatch() {
+	void xpathExistsNonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -314,7 +314,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void anythingMatch() {
+	void anythingMatch() {
 
 		Source request = new StringSource("<request xmlns='http://example.com'/>");
 		Source response = new StringSource("<response xmlns='http://example.com'/>");
@@ -330,7 +330,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void recordWhenReplay() {
+	void recordWhenReplay() {
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 
@@ -350,7 +350,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void soapEnvelopeMatch() {
+	void soapEnvelopeMatch() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
 		marshaller.setClassesToBeBound(EnvelopeMatcherRequest.class, EnvelopeMatcherResponse.class);
 
@@ -387,7 +387,7 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void verifyFailure() {
+	void verifyFailure() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -397,12 +397,12 @@ public class MockWebServiceServerTests {
 	}
 
 	@Test
-	public void verifyOnly() {
+	void verifyOnly() {
 		this.server.verify();
 	}
 
 	@Test
-	public void fault() {
+	void fault() {
 
 		assertThatExceptionOfType(SoapFaultClientException.class).isThrownBy(() -> {
 

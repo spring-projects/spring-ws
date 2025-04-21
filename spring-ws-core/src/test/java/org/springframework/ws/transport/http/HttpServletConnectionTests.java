@@ -41,7 +41,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HttpServletConnectionTests {
+class HttpServletConnectionTests {
 
 	private HttpServletConnection connection;
 
@@ -63,7 +63,7 @@ public class HttpServletConnectionTests {
 	private TransformerFactory transformerFactory;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.httpServletRequest = new MockHttpServletRequest();
 		this.httpServletResponse = new MockHttpServletResponse();
@@ -74,7 +74,7 @@ public class HttpServletConnectionTests {
 	}
 
 	@Test
-	public void receive() throws Exception {
+	void receive() throws Exception {
 
 		byte[] bytes = SOAP_CONTENT.getBytes(StandardCharsets.UTF_8);
 		this.httpServletRequest.addHeader("Content-Type", "text/xml");
@@ -100,7 +100,7 @@ public class HttpServletConnectionTests {
 	}
 
 	@Test
-	public void send() throws Exception {
+	void send() throws Exception {
 
 		SaajSoapMessage message = this.messageFactory.createWebServiceMessage();
 		SOAPMessage saajMessage = message.getSaajMessage();
@@ -119,7 +119,7 @@ public class HttpServletConnectionTests {
 	}
 
 	@Test
-	public void faultCodes() throws IOException {
+	void faultCodes() throws IOException {
 
 		this.connection.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
 		assertThat(this.httpServletResponse.getStatus()).isEqualTo(500);

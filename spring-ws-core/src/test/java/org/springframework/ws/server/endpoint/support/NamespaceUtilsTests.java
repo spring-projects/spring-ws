@@ -29,10 +29,10 @@ import org.springframework.ws.server.endpoint.annotation.Namespaces;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Namespaces({ @Namespace(prefix = "prefix1", uri = "class1"), @Namespace(uri = "class2") })
-public class NamespaceUtilsTests {
+class NamespaceUtilsTests {
 
 	@Test
-	public void getNamespaceContextMethod() throws NoSuchMethodException {
+	void getNamespaceContextMethod() throws NoSuchMethodException {
 
 		Method method = getClass().getMethod("method");
 		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
@@ -43,9 +43,9 @@ public class NamespaceUtilsTests {
 	}
 
 	@Test
-	public void getNamespaceContextClass() throws NoSuchMethodException {
+	void getNamespaceContextClass() throws NoSuchMethodException {
 
-		Method method = getClass().getMethod("getNamespaceContextClass");
+		Method method = getClass().getDeclaredMethod("getNamespaceContextClass");
 		NamespaceContext namespaceContext = NamespaceUtils.getNamespaceContext(method);
 
 		assertThat(namespaceContext.getNamespaceURI("prefix1")).isEqualTo("class1");

@@ -123,7 +123,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	 * basically reset the command map
 	 */
 	@BeforeEach
-	public void removeXmlDataContentHandler() throws SOAPException {
+	void removeXmlDataContentHandler() throws SOAPException {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage message = messageFactory.createMessage();
@@ -132,16 +132,16 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@BeforeEach
-	public void createWebServiceTemplate() throws Exception {
+	void createWebServiceTemplate() throws Exception {
 
 		this.template = new WebServiceTemplate(createMessageFactory());
 		this.template.setMessageSender(new HttpComponentsMessageSender());
 	}
 
-	public abstract SoapMessageFactory createMessageFactory() throws Exception;
+	protected abstract SoapMessageFactory createMessageFactory() throws Exception;
 
 	@Test
-	public void sendSourceAndReceiveToResult() {
+	void sendSourceAndReceiveToResult() {
 
 		StringResult result = new StringResult();
 		boolean b = this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/echo",
@@ -152,7 +152,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void sendSourceAndReceiveToResultNoResponse() {
+	void sendSourceAndReceiveToResultNoResponse() {
 
 		boolean b = this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/noResponse",
 				new StringSource(this.messagePayload), new StringResult());
@@ -160,7 +160,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
+	void marshalSendAndReceiveResponse() throws TransformerConfigurationException {
 
 		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
@@ -214,7 +214,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
+	void marshalSendAndReceiveNoResponse() throws TransformerConfigurationException {
 
 		final Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		final Object requestObject = new Object();
@@ -250,7 +250,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void notFound() {
+	void notFound() {
 
 		assertThatExceptionOfType(WebServiceTransportException.class)
 			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/notfound",
@@ -258,7 +258,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void receiverFault() {
+	void receiverFault() {
 
 		Result result = new StringResult();
 
@@ -268,7 +268,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void senderFault() {
+	void senderFault() {
 
 		Result result = new StringResult();
 
@@ -278,7 +278,7 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 	}
 
 	@Test
-	public void attachment() {
+	void attachment() {
 
 		this.template.sendSourceAndReceiveToResult(baseUrl + "/soap/attachment", new StringSource(this.messagePayload),
 				message -> {

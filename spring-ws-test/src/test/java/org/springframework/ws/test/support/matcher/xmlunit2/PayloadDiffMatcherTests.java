@@ -29,10 +29,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class PayloadDiffMatcherTests {
+class PayloadDiffMatcherTests {
 
 	@Test
-	public void match() {
+	void match() {
 
 		var xml = "<element xmlns='http://example.com'/>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -47,7 +47,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void matchWithXmlIgnore() {
+	void matchWithXmlIgnore() {
 
 		var xml = "<element xmlns='http://example.com'>%s</element>";
 		WebServiceMessage message = createMock(WebServiceMessage.class);
@@ -62,7 +62,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void matchIgnoringWhitespace() {
+	void matchIgnoringWhitespace() {
 
 		var xml = "<response><success>true</success></response>";
 		var xmlWithAdditionalWhitespace = "<response> <success>true</success> </response>";
@@ -78,7 +78,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void nonMatch() {
+	void nonMatch() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -95,7 +95,7 @@ public class PayloadDiffMatcherTests {
 	}
 
 	@Test
-	public void noPayload() {
+	void noPayload() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

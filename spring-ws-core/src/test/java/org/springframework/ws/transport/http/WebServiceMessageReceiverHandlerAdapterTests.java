@@ -41,7 +41,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class WebServiceMessageReceiverHandlerAdapterTests {
+class WebServiceMessageReceiverHandlerAdapterTests {
 
 	private static final String REQUEST = """
 			 <SOAP-ENV:Envelope
@@ -67,7 +67,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	private FaultAwareWebServiceMessage requestMock;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.adapter = new WebServiceMessageReceiverHandlerAdapter();
 		this.httpRequest = new MockHttpServletRequest();
@@ -79,7 +79,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandleNonPost() throws Exception {
+	void testHandleNonPost() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_GET);
 		replayMockControls();
@@ -93,7 +93,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandlePostNoResponse() throws Exception {
+	void testHandlePostNoResponse() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
 		this.httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
@@ -113,7 +113,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandlePostResponse() throws Exception {
+	void testHandlePostResponse() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
 		this.httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
@@ -135,7 +135,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandlePostFault() throws Exception {
+	void testHandlePostFault() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
 		this.httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
@@ -157,7 +157,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandleNotFound() throws Exception {
+	void testHandleNotFound() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
 		this.httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));
@@ -178,7 +178,7 @@ public class WebServiceMessageReceiverHandlerAdapterTests {
 	}
 
 	@Test
-	public void testHandleInvalidXml() throws Exception {
+	void testHandleInvalidXml() throws Exception {
 
 		this.httpRequest.setMethod(HttpTransportConstants.METHOD_POST);
 		this.httpRequest.setContent(REQUEST.getBytes(StandardCharsets.UTF_8));

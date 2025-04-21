@@ -40,17 +40,17 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SoapFaultAnnotationExceptionResolverTests {
+class SoapFaultAnnotationExceptionResolverTests {
 
 	private SoapFaultAnnotationExceptionResolver resolver;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.resolver = new SoapFaultAnnotationExceptionResolver();
 	}
 
 	@Test
-	public void testResolveExceptionClientSoap11() throws Exception {
+	void testResolveExceptionClientSoap11() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
@@ -73,7 +73,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionSenderSoap12() throws Exception {
+	void testResolveExceptionSenderSoap12() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
@@ -96,7 +96,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionServerSoap11() throws Exception {
+	void testResolveExceptionServerSoap11() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
@@ -119,7 +119,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionReceiverSoap12() throws Exception {
+	void testResolveExceptionReceiverSoap12() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SOAPMessage message = saajFactory.createMessage();
@@ -143,7 +143,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionDefault() throws Exception {
+	void testResolveExceptionDefault() throws Exception {
 
 		SoapFaultDefinition defaultFault = new SoapFaultDefinition();
 		defaultFault.setFaultCode(SoapFaultDefinition.CLIENT);
@@ -170,7 +170,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionCustom() throws Exception {
+	void testResolveExceptionCustom() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
@@ -193,7 +193,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionInheritance() throws Exception {
+	void testResolveExceptionInheritance() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);
@@ -216,7 +216,7 @@ public class SoapFaultAnnotationExceptionResolverTests {
 	}
 
 	@Test
-	public void testResolveExceptionExceptionMessage() throws Exception {
+	void testResolveExceptionExceptionMessage() throws Exception {
 
 		MessageFactory saajFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SoapMessageFactory factory = new SaajSoapMessageFactory(saajFactory);

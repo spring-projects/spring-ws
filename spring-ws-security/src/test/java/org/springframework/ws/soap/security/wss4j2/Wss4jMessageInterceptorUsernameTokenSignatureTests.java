@@ -25,7 +25,7 @@ import org.springframework.ws.soap.SoapMessage;
 public abstract class Wss4jMessageInterceptorUsernameTokenSignatureTests extends Wss4jTests {
 
 	@Test
-	public void testAddUsernameTokenSignature() throws Exception {
+	void testAddUsernameTokenSignature() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("UsernameToken");

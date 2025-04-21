@@ -19,6 +19,6 @@ package org.springframework.ws.soap.security.wss4j2;
 /**
  * @author tareq
  */
-public class SaajWss4jMessageInterceptorX509Tests extends Wss4jMessageInterceptorX509Tests {
+class SaajWss4jMessageInterceptorX509Tests extends Wss4jMessageInterceptorX509Tests {
 
 }

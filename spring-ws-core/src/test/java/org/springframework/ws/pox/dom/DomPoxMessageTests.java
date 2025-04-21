@@ -35,14 +35,14 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class DomPoxMessageTests {
+class DomPoxMessageTests {
 
 	private DomPoxMessage message;
 
 	private Transformer transformer;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -53,7 +53,7 @@ public class DomPoxMessageTests {
 	}
 
 	@Test
-	public void testGetPayload() throws Exception {
+	void testGetPayload() throws Exception {
 
 		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
 		StringSource source = new StringSource(content);
@@ -65,7 +65,7 @@ public class DomPoxMessageTests {
 	}
 
 	@Test
-	public void testGetPayloadResultTwice() throws Exception {
+	void testGetPayloadResultTwice() throws Exception {
 
 		String content = "<element xmlns=\"http://www.springframework.org/spring-ws\" />";
 		this.transformer.transform(new StringSource(content), this.message.getPayloadResult());
@@ -77,7 +77,7 @@ public class DomPoxMessageTests {
 	}
 
 	@Test
-	public void testWriteTo() throws Exception {
+	void testWriteTo() throws Exception {
 
 		String content = "<root xmlns='http://www.springframework.org/spring-ws'>" + "<child/></root>";
 		StringSource source = new StringSource(content);

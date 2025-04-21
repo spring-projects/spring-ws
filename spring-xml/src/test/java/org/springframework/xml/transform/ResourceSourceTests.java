@@ -26,10 +26,10 @@ import org.springframework.core.io.ClassPathResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResourceSourceTests {
+class ResourceSourceTests {
 
 	@Test
-	public void testStringSource() throws Exception {
+	void testStringSource() throws Exception {
 
 		Transformer transformer = TransformerFactoryUtils.newInstance().newTransformer();
 		DOMResult result = new DOMResult();

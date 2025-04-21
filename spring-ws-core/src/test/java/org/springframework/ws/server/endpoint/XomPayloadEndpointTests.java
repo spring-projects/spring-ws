@@ -21,7 +21,7 @@ import nu.xom.Element;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class XomPayloadEndpointTests extends AbstractPayloadEndpointTests {
+class XomPayloadEndpointTests extends AbstractPayloadEndpointTests {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() {
@@ -67,13 +67,13 @@ public class XomPayloadEndpointTests extends AbstractPayloadEndpointTests {
 	}
 
 	@Override
-	public void testStaxSourceEventReader() {
-		// overriden, because XOM doesn't not support it
+	void testStaxSourceEventReader() {
+		// overridden, because XOM doesn't not support it
 	}
 
 	@Override
-	public void testStaxSourceStreamReader() {
-		// overriden, because XOM doesn't not support it
+	void testStaxSourceStreamReader() {
+		// overridden, because XOM doesn't not support it
 	}
 
 }

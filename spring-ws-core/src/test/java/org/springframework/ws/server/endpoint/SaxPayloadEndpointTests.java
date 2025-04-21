@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @Deprecated
-public class SaxPayloadEndpointTests extends AbstractPayloadEndpointTests {
+class SaxPayloadEndpointTests extends AbstractPayloadEndpointTests {
 
 	@Override
 	protected PayloadEndpoint createNoResponseEndpoint() {

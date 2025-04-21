@@ -46,7 +46,7 @@ import org.springframework.ws.transport.support.FreePortScanner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("deprecation")
-public class HttpComponentsMessageSenderIntegrationTests
+class HttpComponentsMessageSenderIntegrationTests
 		extends AbstractHttpWebServiceMessageSenderIntegrationTests<HttpComponentsMessageSender> {
 
 	@Override
@@ -55,7 +55,7 @@ public class HttpComponentsMessageSenderIntegrationTests
 	}
 
 	@Test
-	public void testMaxConnections() throws URISyntaxException {
+	void testMaxConnections() throws URISyntaxException {
 
 		final String url1 = "https://www.example.com";
 		URI uri1 = new URI(url1);
@@ -104,7 +104,7 @@ public class HttpComponentsMessageSenderIntegrationTests
 	}
 
 	@Test
-	public void testContextClose() throws Exception {
+	void testContextClose() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		int port = FreePortScanner.getFreePort();

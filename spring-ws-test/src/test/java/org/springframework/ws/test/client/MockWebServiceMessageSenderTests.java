@@ -23,24 +23,24 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class MockWebServiceMessageSenderTests {
+class MockWebServiceMessageSenderTests {
 
 	private MockWebServiceMessageSender sender;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.sender = new MockWebServiceMessageSender();
 	}
 
 	@Test
-	public void noMoreExpectedConnections() {
+	void noMoreExpectedConnections() {
 
 		assertThatExceptionOfType(AssertionError.class)
 			.isThrownBy(() -> this.sender.createConnection(URI.create("http://localhost")));
 	}
 
 	@Test
-	public void verify() {
+	void verify() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
@@ -50,7 +50,7 @@ public class MockWebServiceMessageSenderTests {
 	}
 
 	@Test
-	public void verifyMoteThanOne() {
+	void verifyMoteThanOne() {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 

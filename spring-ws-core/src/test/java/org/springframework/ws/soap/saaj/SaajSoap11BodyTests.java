@@ -29,7 +29,7 @@ import org.springframework.ws.soap.soap11.AbstractSoap11BodyTests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaajSoap11BodyTests extends AbstractSoap11BodyTests {
+class SaajSoap11BodyTests extends AbstractSoap11BodyTests {
 
 	@Override
 	protected SoapBody createSoapBody() throws Exception {
@@ -41,7 +41,7 @@ public class SaajSoap11BodyTests extends AbstractSoap11BodyTests {
 	}
 
 	@Test
-	public void testLangAttributeOnSoap11FaultString() throws Exception {
+	void testLangAttributeOnSoap11FaultString() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 		SOAPMessage saajMessage = messageFactory.createMessage();

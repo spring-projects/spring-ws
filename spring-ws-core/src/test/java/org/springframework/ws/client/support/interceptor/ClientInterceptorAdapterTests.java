@@ -29,10 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Greg Turnquist
  */
-public class ClientInterceptorAdapterTests {
+class ClientInterceptorAdapterTests {
 
 	@Test
-	public void handleEmptyInterceptor() {
+	void handleEmptyInterceptor() {
 
 		ClientInterceptor interceptor = new ClientInterceptorAdapter() {
 		};
@@ -45,7 +45,7 @@ public class ClientInterceptorAdapterTests {
 	}
 
 	@Test
-	public void handleTestAdapter() {
+	void handleTestAdapter() {
 		TestClientInterceptorAdapter interceptor = new TestClientInterceptorAdapter(new ArrayList<>());
 
 		assertThat(interceptor.handleRequest(null)).isFalse();

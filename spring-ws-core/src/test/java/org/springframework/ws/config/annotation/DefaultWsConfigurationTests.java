@@ -35,12 +35,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Arjen Poutsma
  */
-public class DefaultWsConfigurationTests {
+class DefaultWsConfigurationTests {
 
 	private ApplicationContext applicationContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
 		applicationContext.register(TestConfig.class);
@@ -50,7 +50,7 @@ public class DefaultWsConfigurationTests {
 	}
 
 	@Test
-	public void payloadRootAnnotationMethodEndpointMapping() {
+	void payloadRootAnnotationMethodEndpointMapping() {
 
 		PayloadRootAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 			.getBean(PayloadRootAnnotationMethodEndpointMapping.class);
@@ -59,7 +59,7 @@ public class DefaultWsConfigurationTests {
 	}
 
 	@Test
-	public void soapActionAnnotationMethodEndpointMapping() {
+	void soapActionAnnotationMethodEndpointMapping() {
 
 		SoapActionAnnotationMethodEndpointMapping endpointMapping = this.applicationContext
 			.getBean(SoapActionAnnotationMethodEndpointMapping.class);
@@ -68,7 +68,7 @@ public class DefaultWsConfigurationTests {
 	}
 
 	@Test
-	public void annotationActionEndpointMapping() {
+	void annotationActionEndpointMapping() {
 
 		AnnotationActionEndpointMapping endpointMapping = this.applicationContext
 			.getBean(AnnotationActionEndpointMapping.class);
@@ -77,7 +77,7 @@ public class DefaultWsConfigurationTests {
 	}
 
 	@Test
-	public void defaultMethodEndpointAdapter() {
+	void defaultMethodEndpointAdapter() {
 
 		DefaultMethodEndpointAdapter adapter = this.applicationContext.getBean(DefaultMethodEndpointAdapter.class);
 

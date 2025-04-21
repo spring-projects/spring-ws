@@ -47,7 +47,7 @@ import org.springframework.xml.sax.AbstractXmlReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XmlRootElementPayloadMethodProcessorTests {
+class XmlRootElementPayloadMethodProcessorTests {
 
 	private XmlRootElementPayloadMethodProcessor processor;
 
@@ -58,7 +58,7 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	private MethodParameter rootElementReturnType;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.processor = new XmlRootElementPayloadMethodProcessor();
 		this.rootElementParameter = new MethodParameter(getClass().getMethod("rootElement", MyRootElement.class), 0);
@@ -67,20 +67,20 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void supportsParameter() {
+	void supportsParameter() {
 
 		assertThat(this.processor.supportsParameter(this.rootElementParameter)).isTrue();
 		assertThat(this.processor.supportsParameter(this.typeParameter)).isTrue();
 	}
 
 	@Test
-	public void supportsReturnType() {
+	void supportsReturnType() {
 
 		assertThat(this.processor.supportsReturnType(this.rootElementReturnType)).isTrue();
 	}
 
 	@Test
-	public void resolveArgumentRootElement() throws JAXBException {
+	void resolveArgumentRootElement() throws JAXBException {
 
 		WebServiceMessage request = new MockWebServiceMessage(
 				"<root xmlns='http://springframework.org'><string>Foo</string></root>");
@@ -96,7 +96,7 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void resolveArgumentType() throws JAXBException {
+	void resolveArgumentType() throws JAXBException {
 
 		WebServiceMessage request = new MockWebServiceMessage(
 				"<type xmlns='http://springframework.org'><string>Foo</string></type>");
@@ -112,7 +112,7 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void resolveArgumentFromCustomSAXSource() throws JAXBException {
+	void resolveArgumentFromCustomSAXSource() throws JAXBException {
 
 		// Create a custom SAXSource that generates an appropriate sequence of events.
 		XMLReader xmlReader = new AbstractXmlReader() {
@@ -179,7 +179,7 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleReturnValue() throws Exception {
+	void handleReturnValue() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 
@@ -198,7 +198,7 @@ public class XmlRootElementPayloadMethodProcessorTests {
 	}
 
 	@Test
-	public void handleNullReturnValue() throws Exception {
+	void handleNullReturnValue() throws Exception {
 
 		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 

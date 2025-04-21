@@ -33,7 +33,7 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Deprecated
-public class PayloadMethodEndpointAdapterTests {
+class PayloadMethodEndpointAdapterTests {
 
 	private PayloadMethodEndpointAdapter adapter;
 
@@ -44,28 +44,28 @@ public class PayloadMethodEndpointAdapterTests {
 	private MessageContext messageContext;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.adapter = new PayloadMethodEndpointAdapter();
 		this.messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
 	}
 
 	@Test
-	public void testSupportedNoResponse() throws NoSuchMethodException {
+	void testSupportedNoResponse() throws NoSuchMethodException {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", DOMSource.class);
 		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
-	public void testSupportedResponse() throws NoSuchMethodException {
+	void testSupportedResponse() throws NoSuchMethodException {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "response", StreamSource.class);
 		assertThat(this.adapter.supportsInternal(methodEndpoint)).isTrue();
 	}
 
 	@Test
-	public void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
+	void testUnsupportedMethodMultipleParams() throws NoSuchMethodException {
 
 		assertThat(this.adapter
 			.supportsInternal(new MethodEndpoint(this, "unsupportedMultipleParams", Source.class, Source.class)))
@@ -73,21 +73,21 @@ public class PayloadMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
+	void testUnsupportedMethodWrongReturnType() throws NoSuchMethodException {
 
 		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongReturnType", Source.class)))
 			.isFalse();
 	}
 
 	@Test
-	public void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
+	void testUnsupportedMethodWrongParam() throws NoSuchMethodException {
 
 		assertThat(this.adapter.supportsInternal(new MethodEndpoint(this, "unsupportedWrongParam", String.class)))
 			.isFalse();
 	}
 
 	@Test
-	public void testNoResponse() throws Exception {
+	void testNoResponse() throws Exception {
 
 		MethodEndpoint methodEndpoint = new MethodEndpoint(this, "noResponse", DOMSource.class);
 
@@ -99,7 +99,7 @@ public class PayloadMethodEndpointAdapterTests {
 	}
 
 	@Test
-	public void testResponse() throws Exception {
+	void testResponse() throws Exception {
 
 		WebServiceMessage request = new MockWebServiceMessage("<request/>");
 		this.messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());

@@ -27,10 +27,10 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-public class StringResultTests {
+class StringResultTests {
 
 	@Test
-	public void testStringResult() throws Exception {
+	void testStringResult() throws Exception {
 
 		Document document = DocumentBuilderFactoryUtils.newInstance().newDocumentBuilder().newDocument();
 		Element element = document.createElementNS("namespace", "prefix:localName");

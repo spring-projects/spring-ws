@@ -66,7 +66,7 @@ public abstract class Wss4jMessageInterceptorSamlTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testAddSAML() throws Exception {
+	void testAddSAML() throws Exception {
 
 		this.interceptor.setSecurementPassword("123456");
 		this.interceptor.setSecurementUsername("rsaKey");

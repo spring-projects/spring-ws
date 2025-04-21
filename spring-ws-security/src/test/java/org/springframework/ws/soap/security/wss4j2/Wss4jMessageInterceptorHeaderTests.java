@@ -71,7 +71,7 @@ public abstract class Wss4jMessageInterceptorHeaderTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateUsernameTokenPlainText() throws Exception {
+	void testValidateUsernameTokenPlainText() throws Exception {
 
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -98,7 +98,7 @@ public abstract class Wss4jMessageInterceptorHeaderTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testValidateUsernameTokenPlainTextButKeepSecurityHeader() throws Exception {
+	void testValidateUsernameTokenPlainTextButKeepSecurityHeader() throws Exception {
 
 		SoapMessage message = loadSoap11Message("usernameTokenPlainTextWithHeaders-soap.xml");
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
@@ -126,7 +126,7 @@ public abstract class Wss4jMessageInterceptorHeaderTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testEmptySecurityHeader() {
+	void testEmptySecurityHeader() {
 
 		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
 
@@ -137,7 +137,7 @@ public abstract class Wss4jMessageInterceptorHeaderTests extends Wss4jTests {
 	}
 
 	@Test
-	public void testPreserveCustomHeaders() throws Exception {
+	void testPreserveCustomHeaders() throws Exception {
 
 		this.interceptor.setSecurementActions("UsernameToken");
 		this.interceptor.setSecurementUsername("Bert");

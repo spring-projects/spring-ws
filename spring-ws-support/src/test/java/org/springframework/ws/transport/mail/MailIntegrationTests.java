@@ -30,7 +30,7 @@ import org.springframework.xml.transform.StringSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringJUnitConfig(locations = "mail-applicationContext.xml")
-public class MailIntegrationTests {
+class MailIntegrationTests {
 
 	@Autowired
 	private GreenMailBean greenMailBean;
@@ -39,7 +39,7 @@ public class MailIntegrationTests {
 	private WebServiceTemplate webServiceTemplate;
 
 	@Test
-	public void testMailTransport() {
+	void testMailTransport() {
 		String content = """
 				<root xmlns="http://springframework.org/spring-ws">
 					<child/>

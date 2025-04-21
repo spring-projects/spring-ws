@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("jms-receiver-applicationContext.xml")
-public class WebServiceMessageListenerIntegrationTests {
+class WebServiceMessageListenerIntegrationTests {
 
 	private static final String CONTENT = """
 			<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>\
@@ -58,7 +58,7 @@ public class WebServiceMessageListenerIntegrationTests {
 	private Topic requestTopic;
 
 	@Test
-	public void testReceiveQueueBytesMessage() {
+	void testReceiveQueueBytesMessage() {
 
 		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
 
@@ -75,7 +75,7 @@ public class WebServiceMessageListenerIntegrationTests {
 	}
 
 	@Test
-	public void testReceiveQueueTextMessage() {
+	void testReceiveQueueTextMessage() {
 
 		this.jmsTemplate.send(this.requestQueue, session -> {
 
@@ -90,7 +90,7 @@ public class WebServiceMessageListenerIntegrationTests {
 	}
 
 	@Test
-	public void testReceiveTopic() throws Exception {
+	void testReceiveTopic() throws Exception {
 
 		final byte[] b = CONTENT.getBytes(StandardCharsets.UTF_8);
 

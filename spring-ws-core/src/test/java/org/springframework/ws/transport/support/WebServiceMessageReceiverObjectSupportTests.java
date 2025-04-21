@@ -35,7 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class WebServiceMessageReceiverObjectSupportTests {
+class WebServiceMessageReceiverObjectSupportTests {
 
 	private WebServiceMessageReceiverObjectSupport receiverSupport;
 
@@ -46,7 +46,7 @@ public class WebServiceMessageReceiverObjectSupportTests {
 	private MockWebServiceMessage request;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 
 		this.receiverSupport = new MyReceiverSupport();
 		this.messageFactory = new MockWebServiceMessageFactory();
@@ -56,7 +56,7 @@ public class WebServiceMessageReceiverObjectSupportTests {
 	}
 
 	@Test
-	public void handleConnectionResponse() throws Exception {
+	void handleConnectionResponse() throws Exception {
 
 		when(this.connectionMock.receive(this.messageFactory)).thenReturn(this.request);
 
@@ -79,7 +79,7 @@ public class WebServiceMessageReceiverObjectSupportTests {
 	}
 
 	@Test
-	public void handleConnectionFaultResponse() throws Exception {
+	void handleConnectionFaultResponse() throws Exception {
 
 		final QName faultCode = SoapVersion.SOAP_11.getClientOrSenderFaultName();
 
@@ -105,7 +105,7 @@ public class WebServiceMessageReceiverObjectSupportTests {
 	}
 
 	@Test
-	public void handleConnectionNoResponse() throws Exception {
+	void handleConnectionNoResponse() throws Exception {
 
 		when(this.connectionMock.receive(this.messageFactory)).thenReturn(this.request);
 		this.connectionMock.close();

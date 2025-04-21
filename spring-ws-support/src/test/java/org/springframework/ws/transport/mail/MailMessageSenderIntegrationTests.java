@@ -38,7 +38,7 @@ import org.springframework.ws.transport.WebServiceConnection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MailMessageSenderIntegrationTests {
+class MailMessageSenderIntegrationTests {
 
 	private MailMessageSender messageSender;
 
@@ -49,7 +49,7 @@ public class MailMessageSenderIntegrationTests {
 	private GreenMailBean greenMailBean;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.greenMailBean = new GreenMailBean();
 		this.greenMailBean.setAutostart(true);
@@ -74,7 +74,7 @@ public class MailMessageSenderIntegrationTests {
 
 	@Disabled
 	@Test
-	public void testSendAndReceiveQueueNoResponse() throws Exception {
+	void testSendAndReceiveQueueNoResponse() throws Exception {
 
 		URI mailTo = new URI("mailto:server@localhost?subject=SOAP%20Test");
 

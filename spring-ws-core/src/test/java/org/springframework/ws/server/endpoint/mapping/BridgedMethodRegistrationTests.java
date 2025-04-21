@@ -35,7 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("bridged-method-registration.xml")
-public class BridgedMethodRegistrationTests {
+class BridgedMethodRegistrationTests {
 
 	@Autowired
 	private PayloadRootAnnotationMethodEndpointMapping mapping;
@@ -44,7 +44,7 @@ public class BridgedMethodRegistrationTests {
 	private ApplicationContext applicationContext;
 
 	@Test
-	public void registration() throws NoSuchMethodException {
+	void registration() throws NoSuchMethodException {
 
 		MethodEndpoint bridgedMethod = this.mapping
 			.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Request"));

@@ -26,17 +26,17 @@ import org.springframework.ws.context.MessageContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class XPathPayloadEndpointMappingTests {
+class XPathPayloadEndpointMappingTests {
 
 	private XPathPayloadEndpointMapping mapping;
 
 	@BeforeEach
-	public void setUp() {
+	void setUp() {
 		this.mapping = new XPathPayloadEndpointMapping();
 	}
 
 	@Test
-	public void testGetLookupKeyForMessage() throws Exception {
+	void testGetLookupKeyForMessage() throws Exception {
 
 		this.mapping.setExpression("/root/text()");
 		this.mapping.afterPropertiesSet();

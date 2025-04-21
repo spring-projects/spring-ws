@@ -64,10 +64,10 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class TraxUtilsTests {
+class TraxUtilsTests {
 
 	@Test
-	public void testGetDocument() throws Exception {
+	void testGetDocument() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -83,7 +83,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithDomSource() throws Exception {
+	void testDoWithDomSource() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -100,7 +100,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithDomResult() throws Exception {
+	void testDoWithDomResult() throws Exception {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -117,7 +117,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithSaxSource() throws Exception {
+	void testDoWithSaxSource() throws Exception {
 
 		XMLReader reader = SaxUtils.namespaceAwareXmlReader();
 		InputSource inputSource = new InputSource();
@@ -133,7 +133,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithSaxResult() throws Exception {
+	void testDoWithSaxResult() throws Exception {
 
 		ContentHandler contentHandler = new DefaultHandler();
 		LexicalHandler lexicalHandler = new DefaultHandler2();
@@ -151,7 +151,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStaxSourceEventReader() throws Exception {
+	void testDoWithStaxSourceEventReader() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLEventReader eventReader = inputFactory.createXMLEventReader(new StringReader("<element/>"));
@@ -167,7 +167,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStaxResultEventWriter() throws Exception {
+	void testDoWithStaxResultEventWriter() throws Exception {
 
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLEventWriter eventWriter = outputFactory.createXMLEventWriter(new StringWriter());
@@ -183,7 +183,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStaxSourceStreamReader() throws Exception {
+	void testDoWithStaxSourceStreamReader() throws Exception {
 
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		XMLStreamReader streamReader = inputFactory.createXMLStreamReader(new StringReader("<element/>"));
@@ -199,7 +199,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStaxResultStreamWriter() throws Exception {
+	void testDoWithStaxResultStreamWriter() throws Exception {
 
 		XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 		XMLStreamWriter streamWriter = outputFactory.createXMLStreamWriter(new StringWriter());
@@ -215,7 +215,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStreamSourceInputStream() throws Exception {
+	void testDoWithStreamSourceInputStream() throws Exception {
 
 		byte[] xml = "<element/>".getBytes(StandardCharsets.UTF_8);
 		InputStream inputStream = new ByteArrayInputStream(xml);
@@ -231,7 +231,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStreamResultOutputStream() throws Exception {
+	void testDoWithStreamResultOutputStream() throws Exception {
 
 		OutputStream outputStream = new ByteArrayOutputStream();
 
@@ -246,7 +246,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStreamSourceReader() throws Exception {
+	void testDoWithStreamSourceReader() throws Exception {
 
 		String xml = "<element/>";
 		Reader reader = new StringReader(xml);
@@ -262,7 +262,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithStreamResultWriter() throws Exception {
+	void testDoWithStreamResultWriter() throws Exception {
 
 		Writer writer = new StringWriter();
 
@@ -277,7 +277,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithSystemIdSource() throws Exception {
+	void testDoWithSystemIdSource() throws Exception {
 
 		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
@@ -292,7 +292,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithSystemIdResult() throws Exception {
+	void testDoWithSystemIdResult() throws Exception {
 
 		String systemId = "http://www.springframework.org/dtd/spring-beans.dtd";
 
@@ -307,7 +307,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithInvalidSource() throws Exception {
+	void testDoWithInvalidSource() throws Exception {
 
 		Source source = new Source() {
 
@@ -323,7 +323,7 @@ public class TraxUtilsTests {
 	}
 
 	@Test
-	public void testDoWithInvalidResult() throws Exception {
+	void testDoWithInvalidResult() throws Exception {
 		Result result = new Result() {
 
 			public void setSystemId(String systemId) {

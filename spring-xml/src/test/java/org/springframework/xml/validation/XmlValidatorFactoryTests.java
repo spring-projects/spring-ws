@@ -31,10 +31,10 @@ import org.springframework.core.io.Resource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
-public class XmlValidatorFactoryTests {
+class XmlValidatorFactoryTests {
 
 	@Test
-	public void testCreateValidator() throws Exception {
+	void testCreateValidator() throws Exception {
 
 		Resource resource = new ClassPathResource("schema.xsd", AbstractValidatorFactoryTests.class);
 		XmlValidator validator = XmlValidatorFactory.createValidator(resource, XmlValidatorFactory.SCHEMA_W3C_XML);
@@ -43,14 +43,14 @@ public class XmlValidatorFactoryTests {
 	}
 
 	@Test
-	public void testNonExistentResource() {
+	void testNonExistentResource() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
 			.createValidator(new NonExistentResource(), XmlValidatorFactory.SCHEMA_W3C_XML));
 	}
 
 	@Test
-	public void testInvalidSchemaLanguage() {
+	void testInvalidSchemaLanguage() {
 
 		assertThatIllegalArgumentException().isThrownBy(() -> XmlValidatorFactory
 			.createValidator(new ClassPathResource("schema.xsd", AbstractValidatorFactoryTests.class), "bla"));

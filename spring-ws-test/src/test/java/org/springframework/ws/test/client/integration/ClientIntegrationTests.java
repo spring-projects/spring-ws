@@ -40,7 +40,7 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration("integration-test.xml")
-public class ClientIntegrationTests {
+class ClientIntegrationTests {
 
 	@Autowired
 	private CustomerClient client;
@@ -48,12 +48,12 @@ public class ClientIntegrationTests {
 	private MockWebServiceServer mockServer;
 
 	@BeforeEach
-	public void createServer() {
+	void createServer() {
 		this.mockServer = MockWebServiceServer.createServer(this.client);
 	}
 
 	@Test
-	public void basic() {
+	void basic() {
 
 		Source expectedRequestPayload = new StringSource(
 				"<customerCountRequest xmlns='http://springframework.org/spring-ws'>"

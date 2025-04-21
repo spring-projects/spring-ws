@@ -23,10 +23,10 @@ import org.springframework.core.io.Resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SaxUtilsTests {
+class SaxUtilsTests {
 
 	@Test
-	public void testGetSystemId() {
+	void testGetSystemId() {
 
 		Resource resource = new FileSystemResource("/path with spaces/file with spaces.txt");
 		String systemId = SaxUtils.getSystemId(resource);

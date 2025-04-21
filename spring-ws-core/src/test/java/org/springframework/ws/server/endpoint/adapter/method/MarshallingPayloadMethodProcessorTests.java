@@ -40,7 +40,7 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgumentResolverTests {
+class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgumentResolverTests {
 
 	private MarshallingPayloadMethodProcessor processor;
 
@@ -53,7 +53,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	private MethodParameter supportedReturnType;
 
 	@BeforeEach
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		this.marshaller = createMock("marshaller", GenericMarshaller.class);
 		this.unmarshaller = createMock("unmarshaller", GenericUnmarshaller.class);
@@ -63,7 +63,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsParameterSupported() {
+	void supportsParameterSupported() {
 
 		expect(this.unmarshaller.supports(isA(Type.class))).andReturn(true);
 
@@ -75,7 +75,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsParameterUnsupported() {
+	void supportsParameterUnsupported() {
 
 		expect(this.unmarshaller.supports(isA(Type.class))).andReturn(false);
 
@@ -87,7 +87,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsParameterNoUnmarshallerSupported() {
+	void supportsParameterNoUnmarshallerSupported() {
 
 		this.processor = new MarshallingPayloadMethodProcessor();
 		this.processor.setMarshaller(this.marshaller);
@@ -100,7 +100,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsReturnTypeSupported() {
+	void supportsReturnTypeSupported() {
 
 		expect(this.marshaller.supports(isA(Type.class))).andReturn(true);
 
@@ -112,7 +112,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsReturnTypeUnsupported() {
+	void supportsReturnTypeUnsupported() {
 
 		expect(this.marshaller.supports(isA(Type.class))).andReturn(false);
 
@@ -124,7 +124,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void supportsReturnTypeNoMarshaller() {
+	void supportsReturnTypeNoMarshaller() {
 
 		this.processor = new MarshallingPayloadMethodProcessor();
 		this.processor.setUnmarshaller(this.unmarshaller);
@@ -137,7 +137,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveArgument() throws Exception {
+	void resolveArgument() throws Exception {
 
 		MyObject expected = new MyObject();
 
@@ -154,7 +154,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void resolveArgumentNoUnmarshaller() {
+	void resolveArgumentNoUnmarshaller() {
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 
@@ -170,7 +170,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void handleReturnValue() throws Exception {
+	void handleReturnValue() throws Exception {
 
 		MyObject returnValue = new MyObject();
 
@@ -185,7 +185,7 @@ public class MarshallingPayloadMethodProcessorTests extends AbstractMethodArgume
 	}
 
 	@Test
-	public void handleReturnValueNoMarshaller() {
+	void handleReturnValueNoMarshaller() {
 
 		assertThatIllegalStateException().isThrownBy(() -> {
 

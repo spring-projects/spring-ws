@@ -40,7 +40,7 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.support.FreePortScanner;
 
 @Deprecated
-public class CommonsHttpMessageSenderIntegrationTests
+class CommonsHttpMessageSenderIntegrationTests
 		extends AbstractHttpWebServiceMessageSenderIntegrationTests<CommonsHttpMessageSender> {
 
 	@Override
@@ -49,7 +49,7 @@ public class CommonsHttpMessageSenderIntegrationTests
 	}
 
 	@Test
-	public void testMaxConnections() throws URIException {
+	void testMaxConnections() throws URIException {
 
 		CommonsHttpMessageSender messageSender = new CommonsHttpMessageSender();
 		messageSender.setMaxTotalConnections(2);
@@ -62,7 +62,7 @@ public class CommonsHttpMessageSenderIntegrationTests
 	}
 
 	@Test
-	public void testContextClose() throws Exception {
+	void testContextClose() throws Exception {
 
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		int port = FreePortScanner.getFreePort();

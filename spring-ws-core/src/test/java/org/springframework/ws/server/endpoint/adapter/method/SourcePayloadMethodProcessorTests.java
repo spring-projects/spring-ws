@@ -30,7 +30,7 @@ import org.springframework.xml.transform.StringSource;
 /**
  * @author Arjen Poutsma
  */
-public class SourcePayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
+class SourcePayloadMethodProcessorTests extends AbstractPayloadMethodProcessorTests {
 
 	@Override
 	protected AbstractPayloadSourceMethodProcessor createProcessor() {
