@@ -1,4 +1,4 @@
-= Spring Web Services image:https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml/badge.svg?branch=main["Build Status", link="https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml?query=branch%3Amain"] image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?&search.rootProjectNames=Spring%20WS&search.rootProjectNames=spring-ws"]
+= Spring Web Services image:https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml/badge.svg?branch=4.1.x["Build Status", link="https://github.com/spring-projects/spring-ws/actions/workflows/build-and-deploy-snapshot.yml?query=branch%3A4.1.x"] image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?&search.rootProjectNames=Spring%20WS&search.rootProjectNames=spring-ws"]
 
 :docs: https://docs.spring.io/spring-ws/docs/4.1.x
 :github: https://github.com/spring-projects/spring-ws
