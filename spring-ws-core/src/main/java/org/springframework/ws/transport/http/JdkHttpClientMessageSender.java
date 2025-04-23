@@ -21,8 +21,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.time.Duration;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceConnection;
 

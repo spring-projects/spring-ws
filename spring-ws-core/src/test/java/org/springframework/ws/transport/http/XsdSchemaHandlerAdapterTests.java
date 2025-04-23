@@ -58,18 +58,6 @@ class XsdSchemaHandlerAdapterTests {
 	}
 
 	@Test
-	@Deprecated
-	void getLastModified() throws Exception {
-
-		Resource single = new ClassPathResource("single.xsd", getClass());
-		SimpleXsdSchema schema = new SimpleXsdSchema(single);
-		schema.afterPropertiesSet();
-		long lastModified = single.getFile().lastModified();
-
-		assertThat(this.adapter.getLastModified(null, schema)).isEqualTo(lastModified);
-	}
-
-	@Test
 	void handleGet() throws Exception {
 
 		this.request.setMethod(HttpTransportConstants.METHOD_GET);
