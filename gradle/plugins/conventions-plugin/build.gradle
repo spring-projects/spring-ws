@@ -15,6 +15,7 @@ dependencies {
 	checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:${javaFormatVersion}")
 
 	implementation("com.github.ben-manes:gradle-versions-plugin:$gradleVersionsPluginVersion")
+	implementation("io.spring.gradle.nullability:nullability-plugin:$nullabilityPluginVersion")
 	implementation("io.spring.javaformat:spring-javaformat-gradle-plugin:$javaFormatVersion")
 
 	testImplementation("org.junit.jupiter:junit-jupiter")

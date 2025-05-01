@@ -8,4 +8,6 @@
 	<suppress files="." checks="SpringMethodVisibility"/>
 
 	<suppress files=".+TransportConstants\.java" checks="InterfaceIsType"/>
+	<!-- Ignore this check for @Nullable annotations -->
+	<suppress files="[\\/]src[\\/]main[\\/]java[\\/]" checks="AnnotationLocation" />
 </suppressions>
