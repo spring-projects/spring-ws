@@ -46,7 +46,8 @@ We like to know the Spring Web Services version, operating system, and JVM versi
 
 == Building from Source
 
-You don't need to build from source to use Spring Web Services (binaries in https://repo.spring.io[repo.spring.io]), but if you want to try out the latest and greatest, Spring Web Services can be built and published to your local Maven cache using the https://docs.gradle.org/current/userguide/gradle_wrapper.html[Gradle wrapper].
+You don't need to build from source to use Spring Web Services (binaries in https://repo.spring.io[repo.spring.io]).
+If you want to try out the latest and greatest, Spring Web Services can be built and published to your local Maven cache using the https://docs.gradle.org/current/userguide/gradle_wrapper.html[Gradle wrapper].
 You also need JDK 17.
 
 [source,shell]
@@ -54,7 +55,7 @@ You also need JDK 17.
 $ ./gradlew publishToMavenLocal
 ----
 
-This will build all of the jars and documentation and publish them to your local Maven cache.
+This will build all the jars and documentation and publish them to your local Maven cache.
 It won't run any of the tests.
 If you want to build everything, use the `build` task:
 
