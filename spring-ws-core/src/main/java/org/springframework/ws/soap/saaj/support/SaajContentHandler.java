@@ -46,7 +46,7 @@ public class SaajContentHandler implements ContentHandler {
 
 	private final SOAPEnvelope envelope;
 
-	private Map<String, String> namespaces = new LinkedHashMap<>();
+	private final Map<String, String> namespaces = new LinkedHashMap<>();
 
 	/**
 	 * Constructs a new instance of the {@code SaajContentHandler} that creates children

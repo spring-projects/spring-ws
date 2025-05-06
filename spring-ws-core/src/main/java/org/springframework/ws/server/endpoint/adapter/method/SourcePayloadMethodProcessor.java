@@ -47,7 +47,7 @@ import org.springframework.xml.XMLInputFactoryUtils;
  */
 public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-	private XMLInputFactory inputFactory = createXmlInputFactory();
+	private final XMLInputFactory inputFactory = createXmlInputFactory();
 
 	// MethodArgumentResolver
 

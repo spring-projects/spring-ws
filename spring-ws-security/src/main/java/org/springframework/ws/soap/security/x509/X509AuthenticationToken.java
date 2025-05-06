@@ -41,7 +41,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 
 	private Object principal;
 
-	private X509Certificate credentials;
+	private final X509Certificate credentials;
 
 	// ~ Constructors
 	// ===================================================================================================

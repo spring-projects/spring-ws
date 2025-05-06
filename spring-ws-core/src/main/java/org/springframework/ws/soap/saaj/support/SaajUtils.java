@@ -62,7 +62,7 @@ public abstract class SaajUtils {
 	 */
 	public static final int SAAJ_13 = 2;
 
-	private static int saajVersion = SAAJ_13;
+	private static final int saajVersion = SAAJ_13;
 
 	/**
 	 * Gets the SAAJ version. Returns {@link #SAAJ_13} as of Spring-WS 2.2.

@@ -43,7 +43,7 @@ import org.springframework.ws.context.MessageContext;
 class Wss4jHandler extends WSHandler {
 
 	/** Keys are constants from {@link ConfigurationConstants}; values are strings. */
-	private Properties options = new Properties();
+	private final Properties options = new Properties();
 
 	private String securementPassword;
 

@@ -44,7 +44,7 @@ import org.springframework.util.Assert;
  */
 public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean {
 
-	private Properties configuration = new Properties();
+	private final Properties configuration = new Properties();
 
 	private Crypto crypto;
 

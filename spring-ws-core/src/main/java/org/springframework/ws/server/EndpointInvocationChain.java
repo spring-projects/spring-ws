@@ -26,7 +26,7 @@ package org.springframework.ws.server;
  */
 public class EndpointInvocationChain {
 
-	private Object endpoint;
+	private final Object endpoint;
 
 	private EndpointInterceptor[] interceptors;
 

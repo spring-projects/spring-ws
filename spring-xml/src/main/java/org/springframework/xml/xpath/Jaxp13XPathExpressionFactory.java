@@ -42,7 +42,7 @@ import org.springframework.xml.namespace.SimpleNamespaceContext;
  */
 abstract class Jaxp13XPathExpressionFactory {
 
-	private static XPathFactory xpathFactory = XPathFactory.newInstance();
+	private static final XPathFactory xpathFactory = XPathFactory.newInstance();
 
 	/**
 	 * Creates a JAXP 1.3 {@code XPathExpression} from the given string expression.
