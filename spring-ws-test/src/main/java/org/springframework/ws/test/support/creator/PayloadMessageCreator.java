@@ -37,7 +37,7 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 
 	private final Source payload;
 
-	private TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 
 	/**
 	 * Creates a new instance of the {@code PayloadMessageCreator} with the given payload

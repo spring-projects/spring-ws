@@ -64,7 +64,7 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public abstract class AbstractAddressingVersion extends TransformerObjectSupport implements AddressingVersion {
 
-	private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
+	private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 
 	private final XPathExpression toExpression;
 

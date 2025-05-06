@@ -58,7 +58,7 @@ abstract class Jaxp15ValidatorFactory {
 
 	private static final class Jaxp15Validator implements XmlValidator {
 
-		private Schema schema;
+		private final Schema schema;
 
 		Jaxp15Validator(Schema schema) {
 			this.schema = schema;
@@ -113,7 +113,7 @@ abstract class Jaxp15ValidatorFactory {
 	 */
 	private static final class DefaultValidationErrorHandler implements ValidationErrorHandler {
 
-		private List<SAXParseException> errors = new ArrayList<>();
+		private final List<SAXParseException> errors = new ArrayList<>();
 
 		@Override
 		public SAXParseException[] getErrors() {

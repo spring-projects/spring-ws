@@ -153,9 +153,9 @@ public abstract class AbstractStaxEventPayloadEndpoint extends AbstractStaxPaylo
 	 */
 	private final class ResponseCreatingEventWriter implements XMLEventWriter {
 
-		private XMLEventWriter eventWriter;
+		private final MessageContext messageContext;
 
-		private MessageContext messageContext;
+		private XMLEventWriter eventWriter;
 
 		private ByteArrayOutputStream os;
 

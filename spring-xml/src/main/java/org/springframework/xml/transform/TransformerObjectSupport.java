@@ -43,7 +43,7 @@ public abstract class TransformerObjectSupport {
 	 */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private TransformerHelper transformerHelper = new TransformerHelper();
+	private final TransformerHelper transformerHelper = new TransformerHelper();
 
 	/**
 	 * Specify the {@code TransformerFactory} class to use.

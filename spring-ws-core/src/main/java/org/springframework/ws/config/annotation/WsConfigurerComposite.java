@@ -34,7 +34,7 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHa
 @Deprecated(since = "4.0.12", forRemoval = true)
 public class WsConfigurerComposite implements WsConfigurer {
 
-	private List<WsConfigurer> delegates = new ArrayList<>();
+	private final List<WsConfigurer> delegates = new ArrayList<>();
 
 	public void addWsConfigurers(List<WsConfigurer> configurers) {
 		if (configurers != null) {

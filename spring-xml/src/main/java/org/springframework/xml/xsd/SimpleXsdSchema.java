@@ -50,7 +50,7 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  */
 public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
-	private static DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
+	private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 
 	private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 

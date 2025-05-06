@@ -128,7 +128,7 @@ public abstract class AbstractStaxStreamPayloadEndpoint extends AbstractStaxPayl
 	 */
 	private final class ResponseCreatingStreamWriter implements XMLStreamWriter {
 
-		private MessageContext messageContext;
+		private final MessageContext messageContext;
 
 		private XMLStreamWriter streamWriter;
 
