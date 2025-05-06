@@ -51,9 +51,9 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
 	private final WebServiceMessageSender[] messageSenders;
 
-	private URI replyAction;
+	private final URI replyAction;
 
-	private URI faultAction;
+	private final URI faultAction;
 
 	AddressingEndpointInterceptor(AddressingVersion version, MessageIdStrategy messageIdStrategy,
 			WebServiceMessageSender[] messageSenders, URI replyAction, URI faultAction) {

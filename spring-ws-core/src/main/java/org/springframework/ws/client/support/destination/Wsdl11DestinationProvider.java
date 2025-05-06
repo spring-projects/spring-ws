@@ -58,9 +58,9 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	 */
 	public static final String DEFAULT_WSDL_LOCATION_EXPRESSION = "/wsdl:definitions/wsdl:service/wsdl:port/soap:address/@location";
 
-	private static TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
+	private static final TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
-	private Map<String, String> expressionNamespaces = new HashMap<>();
+	private final Map<String, String> expressionNamespaces = new HashMap<>();
 
 	private XPathExpression locationXPathExpression;
 

@@ -45,7 +45,7 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	/** The default content type for the POX messages. */
 	public static final String DEFAULT_CONTENT_TYPE = "application/xml";
 
-	private DocumentBuilderFactory documentBuilderFactory;
+	private final DocumentBuilderFactory documentBuilderFactory;
 
 	private String contentType = DEFAULT_CONTENT_TYPE;
 

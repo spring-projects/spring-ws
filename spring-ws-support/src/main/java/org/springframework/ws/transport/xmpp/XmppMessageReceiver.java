@@ -55,7 +55,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
 	private WebServicePacketListener packetListener;
 
-	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
+	private final String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
 	public XmppMessageReceiver() {
 	}

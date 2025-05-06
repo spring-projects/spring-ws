@@ -49,7 +49,7 @@ import org.springframework.xml.DocumentBuilderFactoryUtils;
  */
 public class XomPayloadMethodProcessor extends AbstractPayloadSourceMethodProcessor {
 
-	private DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
+	private final DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
 
 	@Override
 	protected boolean supportsRequestPayloadParameter(MethodParameter parameter) {
