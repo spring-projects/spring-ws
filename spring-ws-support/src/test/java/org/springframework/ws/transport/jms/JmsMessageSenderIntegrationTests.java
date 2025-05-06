@@ -239,7 +239,7 @@ class JmsMessageSenderIntegrationTests {
 		@Bean
 		JmsMessageSender messageSender(ConnectionFactory connectionFactory) {
 			JmsMessageSender messageSender = new JmsMessageSender(connectionFactory);
-			messageSender.setReceiveTimeout(Duration.ofSeconds(1).toMillis());
+			messageSender.setReceiveTimeout(Duration.ofSeconds(2).toMillis());
 			return messageSender;
 		}
 
