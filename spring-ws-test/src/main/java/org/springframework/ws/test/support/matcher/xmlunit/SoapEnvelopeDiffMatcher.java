@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.test.support.matcher.xmlunit2;
+package org.springframework.ws.test.support.matcher.xmlunit;
 
 import java.io.IOException;
 

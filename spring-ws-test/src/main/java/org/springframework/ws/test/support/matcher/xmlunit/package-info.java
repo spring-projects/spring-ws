@@ -17,4 +17,4 @@
 /**
  * Matcher support for XMLUnit.
  */
-package org.springframework.ws.test.support.matcher.xmlunit2;
+package org.springframework.ws.test.support.matcher.xmlunit;

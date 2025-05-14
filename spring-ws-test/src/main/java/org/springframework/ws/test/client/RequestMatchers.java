@@ -27,8 +27,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.test.support.matcher.SchemaValidatingMatcher;
 import org.springframework.ws.test.support.matcher.SoapHeaderMatcher;
-import org.springframework.ws.test.support.matcher.xmlunit2.PayloadDiffMatcher;
-import org.springframework.ws.test.support.matcher.xmlunit2.SoapEnvelopeDiffMatcher;
+import org.springframework.ws.test.support.matcher.xmlunit.PayloadDiffMatcher;
+import org.springframework.ws.test.support.matcher.xmlunit.SoapEnvelopeDiffMatcher;
 import org.springframework.xml.transform.ResourceSource;
 
 /**
