@@ -33,38 +33,6 @@ import org.springframework.util.StringUtils;
 public abstract class QNameUtils {
 
 	/**
-	 * Creates a new {@code QName} with the given parameters. Sets the prefix if possible,
-	 * i.e. if the {@code QName(String, String, String)} constructor can be found. If this
-	 * constructor is not available (as is the case on older implementations of JAX-RPC),
-	 * the prefix is ignored.
-	 * @param namespaceUri namespace URI of the {@code QName}
-	 * @param localPart local part of the {@code QName}
-	 * @param prefix prefix of the {@code QName}. May be ignored.
-	 * @return the created {@code QName}
-	 * @deprecated in favor of {@link QName#QName(String, String, String)}
-	 * @see QName#QName(String,String,String)
-	 */
-	@Deprecated
-	public static QName createQName(String namespaceUri, String localPart, String prefix) {
-		return new QName(namespaceUri, localPart, prefix);
-	}
-
-	/**
-	 * Returns the prefix of the given {@code QName}. Returns the prefix if available,
-	 * i.e. if the {@code QName.getPrefix()} method can be found. If this method is not
-	 * available (as is the case on older implementations of JAX-RPC), an empty string is
-	 * returned.
-	 * @param qName the {@code QName} to return the prefix from
-	 * @return the prefix, if available, or an empty string
-	 * @deprecated in favor of {@link QName#getPrefix()}
-	 * @see javax.xml.namespace.QName#getPrefix()
-	 */
-	@Deprecated
-	public static String getPrefix(QName qName) {
-		return qName.getPrefix();
-	}
-
-	/**
 	 * Validates the given String as a QName.
 	 * @param text the qualified name
 	 * @return {@code true} if valid, {@code false} otherwise

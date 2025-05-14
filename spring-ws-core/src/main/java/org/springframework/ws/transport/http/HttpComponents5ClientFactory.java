@@ -110,18 +110,6 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	}
 
 	/**
-	 * Add a {@link HttpClientBuilderCustomizer} to invoke when creating an
-	 * {@link CloseableHttpClient} managed by this factory.
-	 * @param clientBuilderCustomizer the customizer to invoke
-	 * @deprecated as of 4.1.0 in favor of
-	 * {@link #addClientBuilderCustomizer(HttpClientBuilderCustomizer)}l
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public void setClientBuilderCustomizer(HttpClientBuilderCustomizer clientBuilderCustomizer) {
-		addClientBuilderCustomizer(clientBuilderCustomizer);
-	}
-
-	/**
 	 * Add a {@link PoolingHttpClientConnectionManagerBuilderCustomizer} to invoke when
 	 * creating an {@link CloseableHttpClient} managed by this factory.
 	 * @param connectionManagerBuilderCustomizer the customizer to invoke
@@ -129,19 +117,6 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 	public void addConnectionManagerBuilderCustomizer(
 			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
 		this.connectionManagerBuilderCustomizers.add(connectionManagerBuilderCustomizer);
-	}
-
-	/**
-	 * Add a {@link PoolingHttpClientConnectionManagerBuilderCustomizer} to invoke when
-	 * creating an {@link CloseableHttpClient} managed by this factory.
-	 * @param connectionManagerBuilderCustomizer the customizer to invoke
-	 * @deprecated as of 4.1.0 in favor of
-	 * {@link #addConnectionManagerBuilderCustomizer(PoolingHttpClientConnectionManagerBuilderCustomizer)}
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public void setConnectionManagerBuilderCustomizer(
-			PoolingHttpClientConnectionManagerBuilderCustomizer connectionManagerBuilderCustomizer) {
-		addConnectionManagerBuilderCustomizer(connectionManagerBuilderCustomizer);
 	}
 
 	/**

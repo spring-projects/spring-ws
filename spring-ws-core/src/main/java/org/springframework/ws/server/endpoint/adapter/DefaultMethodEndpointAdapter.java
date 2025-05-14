@@ -68,11 +68,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	private List<MethodArgumentResolver> methodArgumentResolvers;
 
-	private List<MethodArgumentResolver> customMethodArgumentResolvers;
-
 	private List<MethodReturnValueHandler> methodReturnValueHandlers;
-
-	private List<MethodReturnValueHandler> customMethodReturnValueHandlers;
 
 	private ClassLoader classLoader;
 
@@ -101,27 +97,6 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	}
 
 	/**
-	 * Returns the custom argument resolvers.
-	 * @deprecated as of 4.1.0 with no replacement
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public List<MethodArgumentResolver> getCustomMethodArgumentResolvers() {
-		return this.customMethodArgumentResolvers;
-	}
-
-	/**
-	 * Sets the custom handlers for method arguments. Custom handlers are ordered after
-	 * built-in ones. To override the built-in support for return value handling use
-	 * {@link #setMethodArgumentResolvers(List)}.
-	 * @deprecated as of 4.1.0 in favor of setting a single list
-	 * @see #withDefaults()
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public void setCustomMethodArgumentResolvers(List<MethodArgumentResolver> customMethodArgumentResolvers) {
-		this.customMethodArgumentResolvers = customMethodArgumentResolvers;
-	}
-
-	/**
 	 * Returns the list of {@code MethodReturnValueHandler}s to use.
 	 */
 	public List<MethodReturnValueHandler> getMethodReturnValueHandlers() {
@@ -133,27 +108,6 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 */
 	public void setMethodReturnValueHandlers(List<MethodReturnValueHandler> methodReturnValueHandlers) {
 		this.methodReturnValueHandlers = methodReturnValueHandlers;
-	}
-
-	/**
-	 * Returns the custom return value handlers.
-	 * @deprecated as of 4.1.0 with no replacement
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public List<MethodReturnValueHandler> getCustomMethodReturnValueHandlers() {
-		return this.customMethodReturnValueHandlers;
-	}
-
-	/**
-	 * Sets the handlers for custom return value types. Custom handlers are ordered after
-	 * built-in ones. To override the built-in support for return value handling use
-	 * {@link #setMethodReturnValueHandlers(List)}.
-	 * @deprecated as of 4.1.0 in favor of setting a single list
-	 * @see #withDefaults()
-	 */
-	@Deprecated(since = "4.1.0", forRemoval = true)
-	public void setCustomMethodReturnValueHandlers(List<MethodReturnValueHandler> customMethodReturnValueHandlers) {
-		this.customMethodReturnValueHandlers = customMethodReturnValueHandlers;
 	}
 
 	private ClassLoader getClassLoader() {
@@ -204,9 +158,6 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("No MethodArgumentResolvers set, using defaults: " + methodArgumentResolvers);
 			}
-			if (getCustomMethodArgumentResolvers() != null) {
-				methodArgumentResolvers.addAll(getCustomMethodArgumentResolvers());
-			}
 			setMethodArgumentResolvers(methodArgumentResolvers);
 		}
 	}
@@ -247,9 +198,6 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 			}
 			if (this.logger.isDebugEnabled()) {
 				this.logger.debug("No MethodReturnValueHandlers set, using defaults: " + methodReturnValueHandlers);
-			}
-			if (getCustomMethodReturnValueHandlers() != null) {
-				methodReturnValueHandlers.addAll(getCustomMethodReturnValueHandlers());
 			}
 			setMethodReturnValueHandlers(methodReturnValueHandlers);
 		}

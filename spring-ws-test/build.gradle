@@ -11,7 +11,6 @@ dependencies {
 	api(project(":spring-xml"))
 	api("org.springframework:spring-context")
 	api("org.xmlunit:xmlunit-core")
-	api("org.xmlunit:xmlunit-legacy")
 	api("org.xmlunit:xmlunit-placeholders")
 
 	testImplementation("org.apache.logging.log4j:log4j-core")

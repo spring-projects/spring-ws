@@ -42,13 +42,6 @@ public class DelegatingWsConfiguration extends WsConfigurationSupport {
 
 	private WsConfigurers configurers = new WsConfigurers(Collections.emptyList());
 
-	@Deprecated(since = "4.0.12", forRemoval = true)
-	public void setConfigurers(List<WsConfigurer> configurers) {
-		if (configurers != null && !configurers.isEmpty()) {
-			this.configurers = new WsConfigurers(configurers);
-		}
-	}
-
 	@Autowired
 	public void setConfigurers(ObjectProvider<WsConfigurer> configurers) {
 		this.configurers = new WsConfigurers(configurers);

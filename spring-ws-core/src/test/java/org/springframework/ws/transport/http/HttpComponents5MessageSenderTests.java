@@ -18,12 +18,9 @@ package org.springframework.ws.transport.http;
 
 import java.time.Duration;
 
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
 /**
  * Tests for {@link HttpComponents5MessageSender}.
@@ -41,29 +38,6 @@ class HttpComponents5MessageSenderTests {
 
 		messageSender.afterPropertiesSet();
 		assertThat(messageSender.getHttpClient()).isNotNull();
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithConstructor() throws Exception {
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender(httpClient);
-		assertThatCode(() -> messageSender.setConnectionTimeout(Duration.ofSeconds(1)))
-			.isInstanceOf(IllegalStateException.class);
-		messageSender.afterPropertiesSet();
-		assertThat(messageSender.getHttpClient()).isSameAs(httpClient);
-	}
-
-	@Test
-	@Deprecated
-	@SuppressWarnings("removal")
-	void afterPropertiesSetShouldUseAlreadyProvidedHttpClientIfAvailableWithProperty() throws Exception {
-		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender();
-		messageSender.setHttpClient(httpClient);
-		messageSender.afterPropertiesSet();
-		assertThat(messageSender.getHttpClient()).isSameAs(httpClient);
 	}
 
 }
