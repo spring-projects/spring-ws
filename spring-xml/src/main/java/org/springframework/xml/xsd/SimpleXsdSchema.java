@@ -23,7 +23,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,6 +33,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
+import org.springframework.xml.transform.ResourceSource;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 
@@ -58,7 +58,7 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	private Resource xsdResource;
 
-	private Element schemaElement;
+	private String targetNamespace;
 
 	static {
 		documentBuilderFactory.setNamespaceAware(true);
@@ -95,20 +95,25 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	@Override
 	public String getTargetNamespace() {
-
-		Assert.notNull(this.schemaElement,
-				"schemaElement must not be null! Did you run afterPropertiesSet() or register this as a Spring bean?");
-
-		return this.schemaElement.getAttribute("targetNamespace");
+		Assert.state(this.targetNamespace != null,
+				() -> "'targetNamespace' cannot be accessed before afterPropertiesSet() has been called on this instance");
+		return this.targetNamespace;
 	}
 
 	@Override
 	public Source getSource() {
-		return new DOMSource(this.schemaElement);
+		Assert.state(this.xsdResource != null, () -> "Source cannot be created from a null XSD resource");
+		try {
+			return new ResourceSource(this.xsdResource);
+		}
+		catch (IOException ex) {
+			throw new XsdSchemaException(ex.getMessage(), ex);
+		}
 	}
 
 	@Override
 	public XmlValidator createValidator() {
+		Assert.state(this.xsdResource != null, () -> "XmlValidator cannot be created from a null XSD resource");
 		try {
 			return XmlValidatorFactory.createValidator(this.xsdResource, XmlValidatorFactory.SCHEMA_W3C_XML);
 		}
@@ -127,13 +132,15 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	private void loadSchema(DocumentBuilder documentBuilder) throws SAXException, IOException {
 		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(this.xsdResource));
-		this.schemaElement = schemaDocument.getDocumentElement();
-		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(this.schemaElement.getLocalName()), this.xsdResource
-				+ " has invalid root element : [" + this.schemaElement.getLocalName() + "] instead of [schema]");
-		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(this.schemaElement.getNamespaceURI()),
-				this.xsdResource + " has invalid root element: [" + this.schemaElement.getNamespaceURI()
-						+ "] instead of [" + SCHEMA_NAME.getNamespaceURI() + "]");
-		Assert.hasText(getTargetNamespace(), this.xsdResource + " has no targetNamespace");
+		Element schemaElement = schemaDocument.getDocumentElement();
+		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()), this.xsdResource
+				+ " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
+		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()),
+				this.xsdResource + " has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of ["
+						+ SCHEMA_NAME.getNamespaceURI() + "]");
+		String targetNamespace = schemaElement.getAttribute("targetNamespace");
+		Assert.hasText(targetNamespace, this.xsdResource + " has no targetNamespace");
+		this.targetNamespace = targetNamespace;
 	}
 
 	public String toString() {

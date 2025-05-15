@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.core.io.Resource;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 class SimpleXsdSchemaTests extends AbstractXsdSchemaTests {
 
@@ -35,7 +35,7 @@ class SimpleXsdSchemaTests extends AbstractXsdSchemaTests {
 
 	@Test
 	void testBareXsdSchema() {
-		assertThatIllegalArgumentException().isThrownBy(() -> new SimpleXsdSchema().toString());
+		assertThatIllegalStateException().isThrownBy(() -> new SimpleXsdSchema().toString());
 	}
 
 }
