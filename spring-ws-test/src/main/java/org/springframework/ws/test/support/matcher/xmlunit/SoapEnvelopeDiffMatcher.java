@@ -75,8 +75,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 			return (Document) result.getNode();
 		}
 		catch (TransformerException ex) {
-			AssertionErrors.fail("Could not transform source to DOMResult" + ex.getMessage());
-			return null;
+			throw new AssertionError("Could not transform source to DOMResult" + ex.getMessage());
 		}
 	}
 

@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.WebServiceMessageSender;
 
@@ -38,7 +40,7 @@ public class MockWebServiceMessageSender implements WebServiceMessageSender {
 
 	private final List<MockSenderConnection> expectedConnections = new LinkedList<>();
 
-	private Iterator<MockSenderConnection> connectionIterator;
+	private @Nullable Iterator<MockSenderConnection> connectionIterator;
 
 	@Override
 	public MockSenderConnection createConnection(URI uri) throws IOException {

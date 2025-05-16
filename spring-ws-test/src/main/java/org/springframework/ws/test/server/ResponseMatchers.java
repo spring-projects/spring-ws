@@ -23,6 +23,8 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -160,7 +162,7 @@ public abstract class ResponseMatchers {
 	 * {@code null} the fault string or reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addMustUnderstandFault(String, Locale)
 	 */
-	public static ResponseMatcher mustUnderstandFault(String faultStringOrReason) {
+	public static ResponseMatcher mustUnderstandFault(@Nullable String faultStringOrReason) {
 		return new SoapFaultResponseMatcher(faultStringOrReason) {
 			@Override
 			protected QName getExpectedFaultCode(SoapVersion version) {
@@ -184,7 +186,7 @@ public abstract class ResponseMatchers {
 	 * {@code null} the fault string or reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
-	public static ResponseMatcher clientOrSenderFault(String faultStringOrReason) {
+	public static ResponseMatcher clientOrSenderFault(@Nullable String faultStringOrReason) {
 		return new SoapFaultResponseMatcher(faultStringOrReason) {
 			@Override
 			protected QName getExpectedFaultCode(SoapVersion version) {
@@ -209,7 +211,7 @@ public abstract class ResponseMatchers {
 	 * {@code null} the fault string or reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
-	public static ResponseMatcher serverOrReceiverFault(String faultStringOrReason) {
+	public static ResponseMatcher serverOrReceiverFault(@Nullable String faultStringOrReason) {
 		return new SoapFaultResponseMatcher(faultStringOrReason) {
 			@Override
 			protected QName getExpectedFaultCode(SoapVersion version) {
@@ -233,7 +235,7 @@ public abstract class ResponseMatchers {
 	 * {@code null} the fault string or reason text will not be verified
 	 * @see org.springframework.ws.soap.SoapBody#addClientOrSenderFault(String, Locale)
 	 */
-	public static ResponseMatcher versionMismatchFault(String faultStringOrReason) {
+	public static ResponseMatcher versionMismatchFault(@Nullable String faultStringOrReason) {
 		return new SoapFaultResponseMatcher(faultStringOrReason) {
 			@Override
 			protected QName getExpectedFaultCode(SoapVersion version) {

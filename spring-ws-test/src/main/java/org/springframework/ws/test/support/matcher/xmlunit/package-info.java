@@ -17,4 +17,7 @@
 /**
  * Matcher support for XMLUnit.
  */
+@NullMarked
 package org.springframework.ws.test.support.matcher.xmlunit;
+
+import org.jspecify.annotations.NullMarked;
