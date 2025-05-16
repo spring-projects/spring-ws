@@ -18,4 +18,7 @@
  * Provides an abstraction over XSD XML schemas. Contains the {@code XsdSchema} and
  * related interfaces.
  */
+@NullMarked
 package org.springframework.xml.xsd;
+
+import org.jspecify.annotations.NullMarked;

@@ -16,6 +16,7 @@
 
 package org.springframework.xml.xpath;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
@@ -42,6 +43,6 @@ public interface NodeMapper<T> {
 	 * @return object for the current node
 	 * @throws DOMException in case of DOM errors
 	 */
-	T mapNode(Node node, int nodeNum) throws DOMException;
+	@Nullable T mapNode(Node node, int nodeNum) throws DOMException;
 
 }

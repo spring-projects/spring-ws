@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -61,7 +62,7 @@ public abstract class XPathExpressionFactory {
 	 * @throws IllegalStateException if neither JAXP 1.3+, or Jaxen are available
 	 * @throws XPathParseException if the given expression cannot be parsed
 	 */
-	public static XPathExpression createXPathExpression(String expression, Map<String, String> namespaces)
+	public static XPathExpression createXPathExpression(String expression, @Nullable Map<String, String> namespaces)
 			throws IllegalStateException, XPathParseException {
 		Assert.hasLength(expression, "expression is empty");
 		if (namespaces == null) {

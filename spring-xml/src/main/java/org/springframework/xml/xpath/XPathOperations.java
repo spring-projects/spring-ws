@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 
 /**
@@ -65,7 +66,7 @@ public interface XPathOperations {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	Node evaluateAsNode(String expression, Source context) throws XPathException;
+	@Nullable Node evaluateAsNode(String expression, Source context) throws XPathException;
 
 	/**
 	 * Evaluates the given expression as a list of {@link Node} objects. Returns the
@@ -108,7 +109,7 @@ public interface XPathOperations {
 	 * @see <a href="http://www.w3.org/TR/xpath/#function-string">XPath specification -
 	 * string() function</a>
 	 */
-	String evaluateAsString(String expression, Source context) throws XPathException;
+	@Nullable String evaluateAsString(String expression, Source context) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, mapping a single {@link Node} result to a Java
@@ -120,7 +121,7 @@ public interface XPathOperations {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	<T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
+	<T> @Nullable T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, mapping each result {@link Node} objects to a Java

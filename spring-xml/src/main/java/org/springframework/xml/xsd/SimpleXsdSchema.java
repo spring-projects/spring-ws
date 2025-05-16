@@ -24,6 +24,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -56,9 +57,9 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 
 	private static final QName SCHEMA_NAME = new QName(SCHEMA_NAMESPACE, "schema", "xsd");
 
-	private Resource xsdResource;
+	private @Nullable Resource xsdResource;
 
-	private String targetNamespace;
+	private @Nullable String targetNamespace;
 
 	static {
 		documentBuilderFactory.setNamespaceAware(true);
@@ -127,20 +128,21 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 		Assert.notNull(this.xsdResource, "'xsd' is required");
 		Assert.isTrue(this.xsdResource.exists(), "xsd '" + this.xsdResource + "' does not exist");
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-		loadSchema(documentBuilder);
+		this.targetNamespace = loadSchema(documentBuilder, this.xsdResource);
 	}
 
-	private void loadSchema(DocumentBuilder documentBuilder) throws SAXException, IOException {
-		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(this.xsdResource));
+	private static String loadSchema(DocumentBuilder documentBuilder, Resource resource)
+			throws SAXException, IOException {
+		Document schemaDocument = documentBuilder.parse(SaxUtils.createInputSource(resource));
 		Element schemaElement = schemaDocument.getDocumentElement();
-		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()), this.xsdResource
-				+ " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
+		Assert.isTrue(SCHEMA_NAME.getLocalPart().equals(schemaElement.getLocalName()),
+				resource + " has invalid root element : [" + schemaElement.getLocalName() + "] instead of [schema]");
 		Assert.isTrue(SCHEMA_NAME.getNamespaceURI().equals(schemaElement.getNamespaceURI()),
-				this.xsdResource + " has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of ["
+				resource + " has invalid root element: [" + schemaElement.getNamespaceURI() + "] instead of ["
 						+ SCHEMA_NAME.getNamespaceURI() + "]");
 		String targetNamespace = schemaElement.getAttribute("targetNamespace");
-		Assert.hasText(targetNamespace, this.xsdResource + " has no targetNamespace");
-		this.targetNamespace = targetNamespace;
+		Assert.hasText(targetNamespace, resource + " has no targetNamespace");
+		return targetNamespace;
 	}
 
 	public String toString() {

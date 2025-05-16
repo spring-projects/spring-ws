@@ -18,6 +18,7 @@ package org.springframework.xml.xpath;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 
 /**
@@ -58,7 +59,7 @@ public interface XPathExpression {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	Node evaluateAsNode(Node node) throws XPathException;
+	@Nullable Node evaluateAsNode(Node node) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, and returns all {@link Node} objects that conform
@@ -98,7 +99,7 @@ public interface XPathExpression {
 	 * @see <a href="http://www.w3.org/TR/xpath/#function-string">XPath specification -
 	 * string() function</a>
 	 */
-	String evaluateAsString(Node node) throws XPathException;
+	@Nullable String evaluateAsString(Node node) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, mapping a single {@link Node} result to a Java
@@ -109,7 +110,7 @@ public interface XPathExpression {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	<T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException;
+	<T> @Nullable T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, mapping each result {@link Node} objects to a Java

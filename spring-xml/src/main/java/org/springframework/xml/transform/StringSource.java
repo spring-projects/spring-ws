@@ -22,6 +22,8 @@ import java.io.StringReader;
 
 import javax.xml.transform.stream.StreamSource;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -64,7 +66,7 @@ public class StringSource extends StreamSource {
 	 * @return {@code null}
 	 */
 	@Override
-	public InputStream getInputStream() {
+	public @Nullable InputStream getInputStream() {
 		return null;
 	}
 

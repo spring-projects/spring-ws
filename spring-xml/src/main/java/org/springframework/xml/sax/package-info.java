@@ -18,4 +18,7 @@
  * Provides classes that help with SAX: the Simple API for XML. Mostly for internal use by
  * the framework.
  */
+@NullMarked
 package org.springframework.xml.sax;
+
+import org.jspecify.annotations.NullMarked;

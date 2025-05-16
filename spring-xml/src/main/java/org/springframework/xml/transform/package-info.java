@@ -18,4 +18,7 @@
  * Provides classes that help with XML transformations. Mostly for internal use by the
  * framework.
  */
+@NullMarked
 package org.springframework.xml.transform;
+
+import org.jspecify.annotations.NullMarked;

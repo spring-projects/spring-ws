@@ -36,6 +36,7 @@ import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
@@ -59,7 +60,7 @@ public abstract class TraxUtils {
 	 * @param source the DOM source
 	 * @return the document
 	 */
-	public static Document getDocument(DOMSource source) {
+	public static @Nullable Document getDocument(DOMSource source) {
 		Node node = source.getNode();
 		if (node instanceof Document) {
 			return (Document) node;

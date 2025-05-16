@@ -26,6 +26,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -153,18 +154,13 @@ abstract class Jaxp13XPathExpressionFactory {
 		}
 
 		@Override
-		public <T> T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
+		public <T> @Nullable T evaluateAsObject(Node node, NodeMapper<T> nodeMapper) throws XPathException {
 			Node result = (Node) evaluate(node, XPathConstants.NODE);
-			if (result != null) {
-				try {
-					return nodeMapper.mapNode(result, 0);
-				}
-				catch (DOMException ex) {
-					throw new XPathException("Mapping resulted in DOMException", ex);
-				}
+			try {
+				return nodeMapper.mapNode(result, 0);
 			}
-			else {
-				return null;
+			catch (DOMException ex) {
+				throw new XPathException("Mapping resulted in DOMException", ex);
 			}
 		}
 

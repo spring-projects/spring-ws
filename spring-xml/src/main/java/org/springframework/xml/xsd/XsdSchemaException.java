@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xsd;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.xml.XmlException;
 
 /**
@@ -32,7 +34,7 @@ public class XsdSchemaException extends XmlException {
 		super(message);
 	}
 
-	public XsdSchemaException(String message, Throwable throwable) {
+	public XsdSchemaException(@Nullable String message, Throwable throwable) {
 		super(message, throwable);
 	}
 

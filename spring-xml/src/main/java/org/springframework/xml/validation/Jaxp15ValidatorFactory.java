@@ -27,6 +27,7 @@ import javax.xml.validation.Validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
@@ -70,7 +71,8 @@ abstract class Jaxp15ValidatorFactory {
 		}
 
 		@Override
-		public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
+		public SAXParseException[] validate(Source source, @Nullable ValidationErrorHandler errorHandler)
+				throws IOException {
 			if (errorHandler == null) {
 				errorHandler = new DefaultValidationErrorHandler();
 			}

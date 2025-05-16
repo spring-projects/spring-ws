@@ -18,4 +18,7 @@
  * Provides XPathTemplate implementations, and various classes for XPath evaluation using
  * JAXP 1.3, and Jaxen.
  */
+@NullMarked
 package org.springframework.xml.xpath;
+
+import org.jspecify.annotations.NullMarked;

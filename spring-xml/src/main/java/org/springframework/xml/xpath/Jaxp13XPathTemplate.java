@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
@@ -34,6 +35,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -81,16 +83,18 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	}
 
 	@Override
-	public Node evaluateAsNode(String expression, Source context) throws XPathException {
+	public @Nullable Node evaluateAsNode(String expression, Source context) throws XPathException {
 		return (Node) evaluate(expression, context, XPathConstants.NODE);
 	}
 
 	@Override
 	public List<Node> evaluateAsNodeList(String expression, Source context) throws XPathException {
 		NodeList result = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-		List<Node> nodes = new ArrayList<>(result.getLength());
-		for (int i = 0; i < result.getLength(); i++) {
-			nodes.add(result.item(i));
+		List<Node> nodes = new ArrayList<>();
+		if (result != null) {
+			for (int i = 0; i < result.getLength(); i++) {
+				nodes.add(result.item(i));
+			}
 		}
 		return nodes;
 	}
@@ -102,46 +106,45 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	}
 
 	@Override
-	public String evaluateAsString(String expression, Source context) throws XPathException {
+	public @Nullable String evaluateAsString(String expression, Source context) throws XPathException {
 		return (String) evaluate(expression, context, XPathConstants.STRING);
 	}
 
 	@Override
-	public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+	public <T> @Nullable T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper)
+			throws XPathException {
 		Node node = evaluateAsNode(expression, context);
-		if (node != null) {
-			try {
-				return nodeMapper.mapNode(node, 0);
-			}
-			catch (DOMException ex) {
-				throw new XPathException("Mapping resulted in DOMException", ex);
-			}
+		try {
+			return (node != null) ? nodeMapper.mapNode(node, 0) : null;
 		}
-		else {
-			return null;
+		catch (DOMException ex) {
+			throw new XPathException("Mapping resulted in DOMException", ex);
 		}
 	}
 
 	@Override
 	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
 		NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-		List<T> results = new ArrayList<>(nodes.getLength());
-		for (int i = 0; i < nodes.getLength(); i++) {
-			try {
-				results.add(nodeMapper.mapNode(nodes.item(i), i));
-			}
-			catch (DOMException ex) {
-				throw new XPathException("Mapping resulted in DOMException", ex);
+		List<T> results = new ArrayList<>();
+		if (nodes != null) {
+			for (int i = 0; i < nodes.getLength(); i++) {
+				try {
+					results.add(nodeMapper.mapNode(nodes.item(i), i));
+				}
+				catch (DOMException ex) {
+					throw new XPathException("Mapping resulted in DOMException", ex);
+				}
 			}
 		}
 		return results;
 	}
 
-	private Object evaluate(String expression, Source context, QName returnType) throws XPathException {
+	private @Nullable Object evaluate(String expression, Source context, QName returnType) throws XPathException {
 		XPath xpath = createXPath();
-		if (getNamespaces() != null && !getNamespaces().isEmpty()) {
+		Map<String, String> namespaces = getNamespaces();
+		if (!namespaces.isEmpty()) {
 			SimpleNamespaceContext namespaceContext = new SimpleNamespaceContext();
-			namespaceContext.setBindings(getNamespaces());
+			namespaceContext.setBindings(namespaces);
 			xpath.setNamespaceContext(namespaceContext);
 		}
 		try {
@@ -174,7 +177,7 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 
 		private final TransformerHelper transformerHelper = new TransformerHelper();
 
-		private Object result;
+		private @Nullable Object result;
 
 		private EvaluationCallback(XPath xpath, String expression, QName returnType) {
 			this.xpath = xpath;

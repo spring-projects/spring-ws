@@ -18,4 +18,7 @@
  * Contains a implementation of the {@code XsdSchema} interfaces that uses Apache
  * WS-Commons XML Schema.
  */
+@NullMarked
 package org.springframework.xml.xsd.commons;
+
+import org.jspecify.annotations.NullMarked;

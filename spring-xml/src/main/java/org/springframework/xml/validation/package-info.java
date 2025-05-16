@@ -18,4 +18,7 @@
  * Provides classes for XML validation in JAXP 1.0 and JAXP 1.3. Mostly for internal use
  * by the framework.
  */
+@NullMarked
 package org.springframework.xml.validation;
+
+import org.jspecify.annotations.NullMarked;

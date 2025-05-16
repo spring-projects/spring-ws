@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -91,7 +92,7 @@ public abstract class SchemaLoaderUtils {
 	 * Retrieves the URL from the given resource as System ID. Returns {@code null} if it
 	 * cannot be opened.
 	 */
-	public static String getSystemId(Resource resource) {
+	public static @Nullable String getSystemId(Resource resource) {
 		try {
 			return resource.getURL().toString();
 		}

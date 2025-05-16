@@ -18,4 +18,7 @@
  * Provides classes that help with XML Namespace processing. Mostly for internal use by
  * the framework.
  */
+@NullMarked
 package org.springframework.xml.namespace;
+
+import org.jspecify.annotations.NullMarked;
