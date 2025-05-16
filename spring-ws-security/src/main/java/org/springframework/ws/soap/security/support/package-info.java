@@ -17,4 +17,7 @@
 /**
  * Contains support classes for handling WS-Security messages.
  */
+@NullMarked
 package org.springframework.ws.soap.security.support;
+
+import org.jspecify.annotations.NullMarked;

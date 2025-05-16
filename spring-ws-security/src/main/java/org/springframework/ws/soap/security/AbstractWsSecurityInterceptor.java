@@ -18,11 +18,13 @@ package org.springframework.ws.soap.security;
 
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
@@ -69,7 +71,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 
 	private boolean skipValidationIfNoHeaderPresent = false;
 
-	private EndpointExceptionResolver exceptionResolver;
+	private @Nullable EndpointExceptionResolver exceptionResolver;
 
 	/**
 	 * Indicates whether server-side incoming request are to be validated. Defaults to
@@ -197,7 +199,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 		cleanUp();
 	}
 
@@ -279,7 +281,8 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+	public void afterCompletion(MessageContext messageContext, @Nullable Exception ex)
+			throws WebServiceClientException {
 		cleanUp();
 	}
 
@@ -320,7 +323,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 				this.logger.debug("No exception resolver present, creating basic soap fault");
 			}
 			SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-			response.addClientOrSenderFault(ex.getMessage(), Locale.ENGLISH);
+			response.addClientOrSenderFault(Objects.requireNonNull(ex.getMessage()), Locale.ENGLISH);
 		}
 		return false;
 	}

@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Exception indicating that something went wrong during the validation of a message.
  * <p>
@@ -33,7 +35,7 @@ public abstract class WsSecurityValidationException extends WsSecurityException 
 		super(msg);
 	}
 
-	public WsSecurityValidationException(String msg, Throwable ex) {
+	public WsSecurityValidationException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 

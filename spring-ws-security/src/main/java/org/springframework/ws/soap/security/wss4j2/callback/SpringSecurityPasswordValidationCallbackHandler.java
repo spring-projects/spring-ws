@@ -17,11 +17,13 @@
 package org.springframework.ws.soap.security.wss4j2.callback;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
@@ -53,7 +55,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 
 	private UserCache userCache = new NullUserCache();
 
-	private UserDetailsService userDetailsService;
+	private @Nullable UserDetailsService userDetailsService;
 
 	/** Sets the users cache. Not required, but can benefit performance. */
 	public void setUserCache(UserCache userCache) {
@@ -92,7 +94,7 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
 		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
-				principal.getPassword(), user.getAuthorities());
+				principal.getPassword(), (user != null) ? user.getAuthorities() : null);
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Authentication success: " + authRequest);
 		}
@@ -105,12 +107,12 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		SecurityContextHolder.clearContext();
 	}
 
-	private UserDetails loadUserDetails(String username) throws DataAccessException {
+	private @Nullable UserDetails loadUserDetails(String username) throws DataAccessException {
 		UserDetails user = this.userCache.getUserFromCache(username);
 
 		if (user == null) {
 			try {
-				user = this.userDetailsService.loadUserByUsername(username);
+				user = Objects.requireNonNull(this.userDetailsService).loadUserByUsername(username);
 			}
 			catch (UsernameNotFoundException notFound) {
 				if (this.logger.isDebugEnabled()) {

@@ -50,10 +50,12 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
+	@SuppressWarnings("NullAway.Init")
 	private Pattern subjectDNPattern;
 
 	private String subjectDNRegex = "CN=(.*?),";
 
+	@SuppressWarnings("NullAway.Init")
 	private UserDetailsService userDetailsService;
 
 	// ~ Methods

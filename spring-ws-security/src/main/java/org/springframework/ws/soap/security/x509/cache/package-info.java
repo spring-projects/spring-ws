@@ -17,4 +17,7 @@
 /**
  * Caching support for X.509 client certificates.
  */
+@NullMarked
 package org.springframework.ws.soap.security.x509.cache;
+
+import org.jspecify.annotations.NullMarked;

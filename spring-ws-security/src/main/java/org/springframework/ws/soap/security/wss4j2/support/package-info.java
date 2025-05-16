@@ -17,4 +17,7 @@
 /**
  * Contains support classes for working with WSS4J 2.0+.
  */
+@NullMarked
 package org.springframework.ws.soap.security.wss4j2.support;
+
+import org.jspecify.annotations.NullMarked;

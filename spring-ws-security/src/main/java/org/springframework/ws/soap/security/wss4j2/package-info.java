@@ -18,4 +18,7 @@
  * Contains classes for using the <a href="http://ws.apache.org/wss4j/">Apache WSS4J
  * 2.0+</a> WS-Security implementation within Spring-WS.
  */
+@NullMarked
 package org.springframework.ws.soap.security.wss4j2;
+
+import org.jspecify.annotations.NullMarked;

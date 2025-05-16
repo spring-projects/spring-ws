@@ -23,10 +23,12 @@ import java.security.KeyStore;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,22 +47,22 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 
 	private static final Log logger = LogFactory.getLog(KeyStoreFactoryBean.class);
 
-	private KeyStore keyStore;
+	private @Nullable KeyStore keyStore;
 
-	private String type;
+	private @Nullable String type;
 
-	private String provider;
+	private @Nullable String provider;
 
-	private Resource location;
+	private @Nullable Resource location;
 
-	private char[] password;
+	private char @Nullable [] password;
 
 	/**
 	 * Sets the location of the key store to use. If this is not set, a new, empty key
 	 * store will be used.
 	 * @see KeyStore#load(java.io.InputStream,char[])
 	 */
-	public void setLocation(Resource location) {
+	public void setLocation(@Nullable Resource location) {
 		this.location = location;
 	}
 
@@ -68,7 +70,7 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 	 * Sets the password to use for integrity checking. If this property is not set, then
 	 * integrity checking is not performed.
 	 */
-	public void setPassword(String password) {
+	public void setPassword(@Nullable String password) {
 		if (password != null) {
 			this.password = password.toCharArray();
 		}
@@ -86,12 +88,13 @@ public class KeyStoreFactoryBean implements FactoryBean<KeyStore>, InitializingB
 	 * used.
 	 * @see KeyStore#getDefaultType()
 	 */
-	public void setType(String type) {
+	public void setType(@Nullable String type) {
 		this.type = type;
 	}
 
 	@Override
 	public KeyStore getObject() {
+		Assert.state(this.keyStore != null, "KeyStore has not been initialized");
 		return this.keyStore;
 	}
 

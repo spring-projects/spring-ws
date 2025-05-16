@@ -21,6 +21,8 @@ import java.security.KeyStore;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
@@ -37,13 +39,13 @@ import org.springframework.util.StringUtils;
  */
 public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, InitializingBean {
 
-	private TrustManager[] trustManagers;
+	private TrustManager @Nullable [] trustManagers;
 
-	private KeyStore keyStore;
+	private @Nullable KeyStore keyStore;
 
-	private String algorithm;
+	private @Nullable String algorithm;
 
-	private String provider;
+	private @Nullable String provider;
 
 	/**
 	 * Sets the provider of the trust manager to use. If this is not set, the default is
@@ -71,7 +73,7 @@ public class TrustManagersFactoryBean implements FactoryBean<TrustManager[]>, In
 	}
 
 	@Override
-	public TrustManager[] getObject() throws Exception {
+	public TrustManager @Nullable [] getObject() throws Exception {
 		return this.trustManagers;
 	}
 

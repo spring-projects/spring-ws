@@ -22,6 +22,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import javax.security.auth.callback.Callback;
@@ -46,6 +47,7 @@ import org.apache.wss4j.dom.validate.Credential;
 import org.apache.wss4j.dom.validate.SignatureTrustValidator;
 import org.apache.wss4j.dom.validate.TimestampValidator;
 import org.apache.wss4j.dom.validate.Validator;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -54,6 +56,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.AbstractWsSecurityInterceptor;
 import org.springframework.ws.soap.security.WsSecuritySecurementException;
@@ -160,21 +163,21 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
-	private String securementActions;
+	private @Nullable String securementActions;
 
-	private String securementUsername;
+	private @Nullable String securementUsername;
 
-	private CallbackHandler validationCallbackHandler;
+	private @Nullable CallbackHandler validationCallbackHandler;
 
-	private String validationActions;
+	private @Nullable String validationActions;
 
-	private List<Integer> validationActionsVector;
+	private List<Integer> validationActionsVector = Collections.emptyList();
 
-	private String validationActor;
+	private @Nullable String validationActor;
 
-	private Crypto validationDecryptionCrypto;
+	private @Nullable Crypto validationDecryptionCrypto;
 
-	private Crypto validationSignatureCrypto;
+	private @Nullable Crypto validationSignatureCrypto;
 
 	private boolean timestampStrict = true;
 
@@ -186,7 +189,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private int futureTimeToLive = 60;
 
-	private WSSConfig wssConfig;
+	private @Nullable WSSConfig wssConfig;
 
 	private final Wss4jHandler handler = new Wss4jHandler();
 
@@ -200,9 +203,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private boolean securementUseDerivedKey;
 
-	private CallbackHandler samlCallbackHandler;
+	private @Nullable CallbackHandler samlCallbackHandler;
 
-	private CallbackHandler attachmentCallbackHandler;
+	private @Nullable CallbackHandler attachmentCallbackHandler;
 
 	// Allow RSA 15 to maintain default behavior
 	private boolean allowRSA15KeyTransportAlgorithm = true;
@@ -871,7 +874,10 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		soapMessage.setDocument(envelopeAsDocument);
 
 		if (this.getRemoveSecurityHeader()) {
-			soapMessage.getEnvelope().getHeader().removeHeaderElement(WS_SECURITY_NAME);
+			SoapHeader header = soapMessage.getEnvelope().getHeader();
+			if (header != null) {
+				header.removeHeaderElement(WS_SECURITY_NAME);
+			}
 		}
 	}
 
@@ -973,7 +979,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 			if (principal instanceof WSUsernameTokenPrincipalImpl usernameTokenPrincipal) {
 				UsernameTokenPrincipalCallback callback = new UsernameTokenPrincipalCallback(usernameTokenPrincipal);
 				try {
-					this.validationCallbackHandler.handle(new Callback[] { callback });
+					Objects.requireNonNull(this.validationCallbackHandler).handle(new Callback[] { callback });
 				}
 				catch (IOException ex) {
 					this.logger.warn("Principal callback resulted in IOException", ex);
