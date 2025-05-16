@@ -23,6 +23,7 @@ import jakarta.mail.event.MessageCountAdapter;
 import jakarta.mail.event.MessageCountEvent;
 import jakarta.mail.event.MessageCountListener;
 import org.eclipse.angus.mail.imap.IMAPFolder;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 
@@ -38,7 +39,7 @@ import org.springframework.util.Assert;
  */
 public class ImapIdleMonitoringStrategy extends AbstractMonitoringStrategy {
 
-	private MessageCountListener messageCountListener;
+	private @Nullable MessageCountListener messageCountListener;
 
 	@Override
 	protected void waitForNewMessages(Folder folder) throws MessagingException, InterruptedException {

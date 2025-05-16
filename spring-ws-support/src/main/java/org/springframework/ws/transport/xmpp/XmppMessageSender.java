@@ -18,9 +18,11 @@ package org.springframework.ws.transport.xmpp;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 import java.util.UUID;
 
 import org.jivesoftware.smack.XMPPConnection;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -58,7 +60,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 
 	private String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
-	private XMPPConnection connection;
+	private @Nullable XMPPConnection connection;
 
 	/**
 	 * Sets the {@code XMPPConnection}. Setting this property is required.
@@ -93,7 +95,7 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		String to = XmppTransportUtils.getTo(uri);
 		String thread = createThread();
-		XmppSenderConnection connection = new XmppSenderConnection(this.connection, to, thread);
+		XmppSenderConnection connection = new XmppSenderConnection(Objects.requireNonNull(this.connection), to, thread);
 		connection.setReceiveTimeout(this.receiveTimeout);
 		connection.setMessageEncoding(this.messageEncoding);
 		return connection;

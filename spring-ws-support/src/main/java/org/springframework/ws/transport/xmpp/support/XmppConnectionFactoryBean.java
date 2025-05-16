@@ -17,11 +17,13 @@
 package org.springframework.ws.transport.xmpp.support;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jspecify.annotations.Nullable;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
@@ -43,19 +45,19 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	private static final int DEFAULT_PORT = 5222;
 
-	private XMPPTCPConnection connection;
+	private @Nullable XMPPTCPConnection connection;
 
-	private String host;
+	private @Nullable String host;
 
 	private int port = DEFAULT_PORT;
 
-	private String serviceName;
+	private @Nullable String serviceName;
 
-	private String username;
+	private @Nullable String username;
 
-	private String password;
+	private @Nullable String password;
 
-	private String resource;
+	private @Nullable String resource;
 
 	/** Sets the server host to connect to. */
 	public void setHost(String host) {
@@ -91,6 +93,7 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	@Override
 	public void afterPropertiesSet() throws XMPPException, IOException, SmackException {
+		Assert.hasText(this.host, "'host' must not be empty");
 		XMPPTCPConnectionConfiguration configuration = createConnectionConfiguration(this.host, this.port,
 				this.serviceName);
 		Assert.notNull(configuration, "'configuration' must not be null");
@@ -114,12 +117,12 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 
 	@Override
 	public void destroy() {
-		this.connection.disconnect();
+		Objects.requireNonNull(this.connection).disconnect();
 	}
 
 	@Override
 	public XMPPTCPConnection getObject() {
-		return this.connection;
+		return Objects.requireNonNull(this.connection);
 	}
 
 	@Override
@@ -138,8 +141,8 @@ public class XmppConnectionFactoryBean implements FactoryBean<XMPPTCPConnection>
 	 * @param port the port to connect to
 	 * @param serviceName the name of the service to connect to. May be {@code null}
 	 */
-	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port, String serviceName)
-			throws XmppStringprepException {
+	protected XMPPTCPConnectionConfiguration createConnectionConfiguration(String host, int port,
+			@Nullable String serviceName) throws XmppStringprepException {
 		Assert.hasText(host, "'host' must not be empty");
 		if (StringUtils.hasText(serviceName)) {
 			return XMPPTCPConnectionConfiguration.builder()

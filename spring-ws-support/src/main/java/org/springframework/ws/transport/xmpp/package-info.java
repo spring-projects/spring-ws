@@ -17,4 +17,7 @@
 /**
  * Package providing support for handling messages via XMPP.
  */
+@NullMarked
 package org.springframework.ws.transport.xmpp;
+
+import org.jspecify.annotations.NullMarked;

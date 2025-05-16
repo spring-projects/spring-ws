@@ -32,6 +32,7 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import jakarta.jms.Queue;
 import jakarta.jms.Topic;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.transport.jms.JmsTransportConstants;
 
@@ -100,7 +101,7 @@ public abstract class JmsTransportUtils {
 	 * @param destination the destination
 	 * @return a jms URI
 	 */
-	public static URI toUri(Destination destination) throws URISyntaxException, JMSException {
+	public static @Nullable URI toUri(@Nullable Destination destination) throws URISyntaxException, JMSException {
 		if (destination == null) {
 			return null;
 		}
@@ -118,7 +119,7 @@ public abstract class JmsTransportUtils {
 	}
 
 	/** Returns the destination name of the given URI. */
-	public static String getDestinationName(URI uri) {
+	public static @Nullable String getDestinationName(URI uri) {
 		return getStringParameter(DESTINATION_NAME_PATTERN, uri);
 	}
 
@@ -215,11 +216,11 @@ public abstract class JmsTransportUtils {
 	 * Returns the reply-to name of the given URI.
 	 * @see Message#setJMSReplyTo(Destination)
 	 */
-	public static String getReplyToName(URI uri) {
+	public static @Nullable String getReplyToName(URI uri) {
 		return getStringParameter(REPLY_TO_NAME_PATTERN, uri);
 	}
 
-	private static String getStringParameter(Pattern pattern, URI uri) {
+	private static @Nullable String getStringParameter(Pattern pattern, URI uri) {
 		Matcher matcher = pattern.matcher(uri.getSchemeSpecificPart());
 		if (matcher.find() && matcher.groupCount() == 1) {
 			return matcher.group(1);

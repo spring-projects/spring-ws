@@ -29,6 +29,7 @@ import jakarta.jms.Message;
 import jakarta.jms.MessageProducer;
 import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
@@ -57,11 +58,11 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
 	private final Session session;
 
-	private Message responseMessage;
+	private @Nullable Message responseMessage;
 
-	private String textMessageEncoding;
+	private @Nullable String textMessageEncoding;
 
-	private MessagePostProcessor postProcessor;
+	private @Nullable MessagePostProcessor postProcessor;
 
 	private JmsReceiverConnection(Message requestMessage, Session session) {
 		Assert.notNull(requestMessage, "requestMessage must not be null");
@@ -89,7 +90,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 		this.textMessageEncoding = encoding;
 	}
 
-	void setPostProcessor(MessagePostProcessor postProcessor) {
+	void setPostProcessor(@Nullable MessagePostProcessor postProcessor) {
 		this.postProcessor = postProcessor;
 	}
 
@@ -105,7 +106,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 * Returns the response message, if any, for this connection. Returns either a
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
-	public Message getResponseMessage() {
+	public @Nullable Message getResponseMessage() {
 		return this.responseMessage;
 	}
 
@@ -114,7 +115,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	public URI getUri() throws URISyntaxException {
+	public @Nullable URI getUri() throws URISyntaxException {
 		try {
 			return JmsTransportUtils.toUri(this.requestMessage.getJMSDestination());
 		}
@@ -128,7 +129,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		return null;
 	}
 
@@ -167,6 +168,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 			return new BytesMessageInputStream((BytesMessage) this.requestMessage);
 		}
 		else if (this.requestMessage instanceof TextMessage) {
+			Assert.notNull(this.textMessageEncoding, "MessageEncoding for TextMessage is required");
 			return new TextMessageInputStream((TextMessage) this.requestMessage, this.textMessageEncoding);
 		}
 		else {
@@ -181,15 +183,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
 		try {
-			if (this.requestMessage instanceof BytesMessage) {
-				this.responseMessage = this.session.createBytesMessage();
-			}
-			else if (this.requestMessage instanceof TextMessage) {
-				this.responseMessage = this.session.createTextMessage();
-			}
-			else {
-				throw new IllegalStateException("Unknown request message type [" + this.requestMessage + "]");
-			}
+			this.responseMessage = createResponseMessage();
 			String correlation = this.requestMessage.getJMSCorrelationID();
 			if (correlation == null) {
 				correlation = this.requestMessage.getJMSMessageID();
@@ -201,8 +195,21 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 		}
 	}
 
+	private Message createResponseMessage() throws JMSException {
+		if (this.requestMessage instanceof BytesMessage) {
+			return this.session.createBytesMessage();
+		}
+		else if (this.requestMessage instanceof TextMessage) {
+			return this.session.createTextMessage();
+		}
+		else {
+			throw new IllegalStateException("Unknown request message type [" + this.requestMessage + "]");
+		}
+	}
+
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
+		Assert.state(this.responseMessage != null, "Response message is not available");
 		try {
 			JmsTransportUtils.addHeader(this.responseMessage, name, value);
 		}
@@ -217,6 +224,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 			return new BytesMessageOutputStream((BytesMessage) this.responseMessage);
 		}
 		else if (this.responseMessage instanceof TextMessage) {
+			Assert.notNull(this.textMessageEncoding, "MessageEncoding for TextMessage is required");
 			return new TextMessageOutputStream((TextMessage) this.responseMessage, this.textMessageEncoding);
 		}
 		else {
@@ -226,6 +234,7 @@ public class JmsReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		Assert.state(this.responseMessage != null, "Response message is not available");
 		MessageProducer messageProducer = null;
 		try {
 			if (this.requestMessage.getJMSReplyTo() != null) {

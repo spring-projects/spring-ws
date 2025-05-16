@@ -39,6 +39,7 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.URLName;
 import jakarta.mail.internet.InternetAddress;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -62,15 +63,15 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 	private final Session session;
 
-	private Message responseMessage;
+	private @Nullable Message responseMessage;
 
-	private ByteArrayOutputStream responseBuffer;
+	private @Nullable ByteArrayOutputStream responseBuffer;
 
-	private String responseContentType;
+	private @Nullable String responseContentType;
 
-	private URLName transportUri;
+	private @Nullable URLName transportUri;
 
-	private InternetAddress from;
+	private @Nullable InternetAddress from;
 
 	/** Constructs a new Mail connection with the given parameters. */
 	protected MailReceiverConnection(Message requestMessage, Session session) {
@@ -87,6 +88,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 	/** Returns the response message, if any, for this connection. */
 	public Message getResponseMessage() {
+		Assert.notNull(this.responseMessage, "ResponseMessage is not available");
 		return this.responseMessage;
 	}
 
@@ -125,7 +127,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		return null;
 	}
 
@@ -178,7 +180,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
 		try {
-			this.responseMessage.addHeader(name, value);
+			getResponseMessage().addHeader(name, value);
 			if (TransportConstants.HEADER_CONTENT_TYPE.equals(name)) {
 				this.responseContentType = value;
 			}
@@ -190,6 +192,7 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
+		Assert.state(this.responseBuffer != null, "onSendBeforeWrite has not been called");
 		return this.responseBuffer;
 	}
 
@@ -213,9 +216,12 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		Transport transport = null;
+		Assert.state(this.responseMessage != null, "onSendAfterWrite has not been called");
+		Assert.state(this.responseBuffer != null, "onSendAfterWrite has not been called");
+		Assert.notNull(this.transportUri, "'transportUri' must not be null");
 		try {
 			this.responseMessage.setDataHandler(new DataHandler(
-					new ByteArrayDataSource(this.responseContentType, this.responseBuffer.toByteArray())));
+					new ByteArrayDataSource(this.responseBuffer.toByteArray(), this.responseContentType)));
 			transport = this.session.getTransport(this.transportUri);
 			transport.connect();
 			this.responseMessage.saveChanges();
@@ -235,9 +241,9 @@ public class MailReceiverConnection extends AbstractReceiverConnection {
 
 		private final byte[] data;
 
-		ByteArrayDataSource(String contentType, byte[] data) {
+		ByteArrayDataSource(byte[] data, @Nullable String contentType) {
 			this.data = data;
-			this.contentType = contentType;
+			this.contentType = (contentType != null) ? contentType : "application/octet-stream";
 		}
 
 		@Override

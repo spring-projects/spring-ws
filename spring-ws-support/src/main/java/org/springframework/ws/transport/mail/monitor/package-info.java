@@ -18,4 +18,7 @@
  * Provides the MonitoringStrategy interface and implementations. Used for monitoring a
  * JavaMail Folder for new email messages.
  */
+@NullMarked
 package org.springframework.ws.transport.mail.monitor;
+
+import org.jspecify.annotations.NullMarked;
