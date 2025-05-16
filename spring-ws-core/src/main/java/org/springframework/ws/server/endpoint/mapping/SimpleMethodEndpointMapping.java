@@ -22,6 +22,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -42,7 +44,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  *
  *	  public Source handleMyMessage(Source source) {
  *		 ...
- *	  }
+ *      }
  * }
  * </pre>
  *
@@ -61,15 +63,16 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 	/** Default method suffix. */
 	public static final String DEFAULT_METHOD_SUFFIX = "";
 
-	private Object[] endpoints;
+	private Object @Nullable [] endpoints;
 
 	private String methodPrefix = DEFAULT_METHOD_PREFIX;
 
 	private String methodSuffix = DEFAULT_METHOD_SUFFIX;
 
-	private TransformerFactory transformerFactory;
+	private final TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	public Object[] getEndpoints() {
+		Assert.notEmpty(this.endpoints, "'endpoints' is required");
 		return this.endpoints;
 	}
 
@@ -111,8 +114,6 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
 	@Override
 	public final void afterPropertiesSet() throws Exception {
-		Assert.notEmpty(getEndpoints(), "'endpoints' is required");
-		this.transformerFactory = TransformerFactoryUtils.newInstance();
 		for (int i = 0; i < getEndpoints().length; i++) {
 			registerMethods(getEndpoints()[i]);
 		}
@@ -120,7 +121,7 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
 	/** Returns the name of the given method, with the prefix and suffix stripped off. */
 	@Override
-	protected String getLookupKeyForMethod(Method method) {
+	protected @Nullable String getLookupKeyForMethod(Method method) {
 		String methodName = method.getName();
 		String prefix = getMethodPrefix();
 		String suffix = getMethodSuffix();
@@ -134,10 +135,10 @@ public class SimpleMethodEndpointMapping extends AbstractMethodEndpointMapping<S
 
 	/** Returns the local part of the payload root element of the request. */
 	@Override
-	protected String getLookupKeyForMessage(MessageContext messageContext) throws TransformerException {
+	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws TransformerException {
 		WebServiceMessage request = messageContext.getRequest();
 		QName rootQName = PayloadRootUtils.getPayloadRootQName(request.getPayloadSource(), this.transformerFactory);
-		return rootQName.getLocalPart();
+		return (rootQName != null) ? rootQName.getLocalPart() : null;
 	}
 
 }

@@ -17,4 +17,7 @@
 /**
  * Contains abstractions over various versions of the WS-Addressing specification.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing.version;
+
+import org.jspecify.annotations.NullMarked;

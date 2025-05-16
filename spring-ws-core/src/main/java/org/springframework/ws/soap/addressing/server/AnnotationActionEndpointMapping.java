@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
@@ -72,7 +74,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	 * the {@link Action} annotation value.
 	 */
 	@Override
-	protected URI getActionForMethod(Method method) {
+	protected @Nullable URI getActionForMethod(Method method) {
 		Action action = method.getAnnotation(Action.class);
 		if (action != null && StringUtils.hasText(action.value())) {
 			try {
@@ -96,7 +98,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	 * @return the endpoint address; or {@code null} to ignore the destination property
 	 */
 	@Override
-	protected URI getEndpointAddress(Object endpoint) {
+	protected @Nullable URI getEndpointAddress(Object endpoint) {
 		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
 		Class<?> endpointClass = methodEndpoint.getMethod().getDeclaringClass();
 		Address address = AnnotationUtils.findAnnotation(endpointClass, Address.class);
@@ -109,7 +111,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	}
 
 	@Override
-	protected URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
+	protected @Nullable URI getResponseAction(Object endpoint, MessageAddressingProperties map) {
 		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
 		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
 		if (action != null && StringUtils.hasText(action.output())) {
@@ -121,7 +123,7 @@ public class AnnotationActionEndpointMapping extends AbstractActionMethodEndpoin
 	}
 
 	@Override
-	protected URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
+	protected @Nullable URI getFaultAction(Object endpoint, MessageAddressingProperties map) {
 		MethodEndpoint methodEndpoint = (MethodEndpoint) endpoint;
 		Action action = methodEndpoint.getMethod().getAnnotation(Action.class);
 		if (action != null && StringUtils.hasText(action.fault())) {

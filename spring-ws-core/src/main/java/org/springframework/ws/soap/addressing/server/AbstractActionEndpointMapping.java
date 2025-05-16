@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeansException;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.addressing.core.MessageAddressingProperties;
@@ -81,7 +83,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	}
 
 	@Override
-	protected final Object getEndpointInternal(MessageAddressingProperties map) {
+	protected final @Nullable Object getEndpointInternal(MessageAddressingProperties map) {
 		URI action = map.getAction();
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Looking up endpoint for action [" + action + "]");
@@ -103,14 +105,14 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	 * @param endpoint the endpoint to return the address for
 	 * @return the endpoint address; or {@code null} to ignore the destination property
 	 */
-	protected abstract URI getEndpointAddress(Object endpoint);
+	protected abstract @Nullable URI getEndpointAddress(Object endpoint);
 
 	/**
 	 * Looks up an endpoint instance for the given action. All keys are tried in order.
 	 * @param action the action URI
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
-	protected Object lookupEndpoint(URI action) {
+	protected @Nullable Object lookupEndpoint(@Nullable URI action) {
 		return this.endpointMap.get(action);
 	}
 
@@ -149,7 +151,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	}
 
 	@Override
-	protected URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
+	protected @Nullable URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap) {
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
 			return URI.create(requestAction + getOutputActionSuffix());
@@ -160,7 +162,7 @@ public abstract class AbstractActionEndpointMapping extends AbstractAddressingEn
 	}
 
 	@Override
-	protected URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
+	protected @Nullable URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap) {
 		URI requestAction = requestMap.getAction();
 		if (requestAction != null) {
 			return URI.create(requestAction + getFaultActionSuffix());

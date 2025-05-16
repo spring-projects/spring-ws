@@ -23,6 +23,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPElement;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
@@ -41,7 +42,7 @@ abstract class SaajSoapBody extends SaajSoapElement<SOAPBody> implements SoapBod
 	}
 
 	@Override
-	public Source getPayloadSource() {
+	public @Nullable Source getPayloadSource() {
 		SOAPElement bodyElement = SaajUtils.getFirstBodyElement(getSaajBody());
 		return (bodyElement != null) ? new DOMSource(bodyElement) : null;
 	}

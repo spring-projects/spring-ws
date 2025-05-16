@@ -17,4 +17,7 @@
 /**
  * Annotations for Spring-WS SOAP endpoints.
  */
+@NullMarked
 package org.springframework.ws.soap.server.endpoint.annotation;
+
+import org.jspecify.annotations.NullMarked;

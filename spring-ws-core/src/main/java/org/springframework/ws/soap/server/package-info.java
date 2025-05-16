@@ -17,4 +17,7 @@
 /**
  * Contains classes for SOAP-specific server-side Spring-WS support.
  */
+@NullMarked
 package org.springframework.ws.soap.server;
+
+import org.jspecify.annotations.NullMarked;

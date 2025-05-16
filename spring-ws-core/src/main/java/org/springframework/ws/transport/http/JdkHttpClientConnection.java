@@ -34,6 +34,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -62,11 +63,9 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	private final Builder requestBuilder;
 
-	private HttpRequest request;
+	private @Nullable ByteArrayOutputStream requestBuffer;
 
-	private ByteArrayOutputStream requestBuffer;
-
-	private HttpResponse<InputStream> response;
+	private @Nullable HttpResponse<InputStream> response;
 
 	protected JdkHttpClientConnection(HttpClient httpClient, URI uri, Duration requestTimeout) {
 
@@ -79,19 +78,25 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 		this.requestBuilder = HttpRequest.newBuilder(uri).timeout(requestTimeout);
 	}
 
+	protected HttpResponse<InputStream> getResponse() {
+		Assert.notNull(this.response, "HttpResponse is not available");
+		return this.response;
+	}
+
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
+		Assert.notNull(this.requestBuffer, "Request OutputStream is not available");
 		return this.requestBuffer;
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		return this.response.headers().map().keySet().iterator();
+		return getResponse().headers().map().keySet().iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		return this.response.headers().allValues(name).iterator();
+		return getResponse().headers().allValues(name).iterator();
 	}
 
 	@Override
@@ -134,7 +139,7 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return this.response.body();
+		return getResponse().body();
 	}
 
 	@Override
@@ -144,13 +149,12 @@ public class JdkHttpClientConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-
+		Assert.state(this.requestBuffer != null, "onSendBeforeWrite has not been called");
 		byte[] body = this.requestBuffer.toByteArray();
 
-		this.request = this.requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
-
+		HttpRequest request = this.requestBuilder.POST(BodyPublishers.ofByteArray(body)).build();
 		try {
-			this.response = this.httpClient.send(this.request, BodyHandlers.ofInputStream());
+			this.response = this.httpClient.send(request, BodyHandlers.ofInputStream());
 		}
 		catch (InterruptedException ex) {
 			Thread.currentThread().interrupt();

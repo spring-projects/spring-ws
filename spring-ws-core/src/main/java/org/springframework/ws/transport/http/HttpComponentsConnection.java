@@ -33,6 +33,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -54,13 +55,13 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	private final HttpPost httpPost;
 
-	private final HttpContext httpContext;
+	private final @Nullable HttpContext httpContext;
 
-	private HttpResponse httpResponse;
+	private @Nullable HttpResponse httpResponse;
 
-	private ByteArrayOutputStream requestBuffer;
+	private @Nullable ByteArrayOutputStream requestBuffer;
 
-	protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost, HttpContext httpContext) {
+	protected HttpComponentsConnection(HttpClient httpClient, HttpPost httpPost, @Nullable HttpContext httpContext) {
 		Assert.notNull(httpClient, "httpClient must not be null");
 		Assert.notNull(httpPost, "httpPost must not be null");
 		this.httpClient = httpClient;
@@ -73,6 +74,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 	}
 
 	public HttpResponse getHttpResponse() {
+		Assert.notNull(this.httpResponse, "HttpResponse is not available");
 		return this.httpResponse;
 	}
 
@@ -107,11 +109,13 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
+		Assert.notNull(this.requestBuffer, "Request OutputStream is not available");
 		return this.requestBuffer;
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
+		Assert.state(this.requestBuffer != null, "onSendBeforeWrite has not been called");
 		this.httpPost.setEntity(new ByteArrayEntity(this.requestBuffer.toByteArray()));
 		this.requestBuffer = null;
 		if (this.httpContext != null) {
@@ -128,17 +132,17 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return this.httpResponse.getStatusLine().getStatusCode();
+		return getHttpResponse().getStatusLine().getStatusCode();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return this.httpResponse.getStatusLine().getReasonPhrase();
+		return getHttpResponse().getStatusLine().getReasonPhrase();
 	}
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		HttpEntity entity = this.httpResponse.getEntity();
+		HttpEntity entity = getHttpResponse().getEntity();
 		if (entity != null) {
 			return entity.getContentLength();
 		}
@@ -147,7 +151,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		HttpEntity entity = this.httpResponse.getEntity();
+		HttpEntity entity = getHttpResponse().getEntity();
 		if (entity != null) {
 			return entity.getContent();
 		}
@@ -156,7 +160,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		Header[] headers = this.httpResponse.getAllHeaders();
+		Header[] headers = getHttpResponse().getAllHeaders();
 		String[] names = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			names[i] = headers[i].getName();
@@ -166,7 +170,7 @@ public class HttpComponentsConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		Header[] headers = this.httpResponse.getHeaders(name);
+		Header[] headers = getHttpResponse().getHeaders(name);
 		String[] values = new String[headers.length];
 		for (int i = 0; i < headers.length; i++) {
 			values[i] = headers[i].getValue();

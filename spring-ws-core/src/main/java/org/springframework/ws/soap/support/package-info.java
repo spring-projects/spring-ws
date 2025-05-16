@@ -17,4 +17,7 @@
 /**
  * Classes supporting the org.springframework.ws.soap package.
  */
+@NullMarked
 package org.springframework.ws.soap.support;
+
+import org.jspecify.annotations.NullMarked;

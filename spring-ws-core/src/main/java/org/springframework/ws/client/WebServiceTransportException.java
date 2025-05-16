@@ -16,6 +16,8 @@
 
 package org.springframework.ws.client;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.transport.TransportException;
 
 /**
@@ -31,7 +33,7 @@ public class WebServiceTransportException extends WebServiceIOException {
 	 * Create a new instance of the {@code WebServiceTransportException} class.
 	 * @param msg the detail message
 	 */
-	public WebServiceTransportException(String msg) {
+	public WebServiceTransportException(@Nullable String msg) {
 		super(msg);
 	}
 

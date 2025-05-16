@@ -18,6 +18,7 @@ package org.springframework.ws.client.core.support;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.oxm.Marshaller;
@@ -90,7 +91,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	}
 
 	/** Returns the default URI used by the gateway. */
-	public final String getDefaultUri() {
+	public final @Nullable String getDefaultUri() {
 		return this.webServiceTemplate.getDefaultUri();
 	}
 
@@ -100,7 +101,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	}
 
 	/** Returns the destination provider used by the gateway. */
-	public final DestinationProvider getDestinationProvider() {
+	public final @Nullable DestinationProvider getDestinationProvider() {
 		return this.webServiceTemplate.getDestinationProvider();
 	}
 
@@ -145,7 +146,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	}
 
 	/** Returns the {@code Marshaller} used by the gateway. */
-	public final Marshaller getMarshaller() {
+	public final @Nullable Marshaller getMarshaller() {
 		return this.webServiceTemplate.getMarshaller();
 	}
 
@@ -160,7 +161,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	}
 
 	/** Returns the {@code Unmarshaller} used by the gateway. */
-	public final Unmarshaller getUnmarshaller() {
+	public final @Nullable Unmarshaller getUnmarshaller() {
 		return this.webServiceTemplate.getUnmarshaller();
 	}
 
@@ -175,7 +176,7 @@ public abstract class WebServiceGatewaySupport implements InitializingBean {
 	}
 
 	/** Returns the {@code ClientInterceptors} used by the template. */
-	public final ClientInterceptor[] getInterceptors() {
+	public final ClientInterceptor @Nullable [] getInterceptors() {
 		return this.webServiceTemplate.getInterceptors();
 	}
 

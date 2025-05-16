@@ -27,6 +27,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.util.xml.StaxUtils;
 import org.springframework.ws.context.MessageContext;
@@ -57,7 +59,7 @@ public class StaxPayloadMethodArgumentResolver extends TransformerObjectSupport 
 	}
 
 	@Override
-	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
+	public @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
 			throws TransformerException, XMLStreamException {
 		Source source = messageContext.getRequest().getPayloadSource();
 		if (source == null) {

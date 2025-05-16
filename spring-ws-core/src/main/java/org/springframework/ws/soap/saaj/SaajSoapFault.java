@@ -21,6 +21,7 @@ import javax.xml.namespace.QName;
 import jakarta.xml.soap.Detail;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPFault;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -48,7 +49,7 @@ abstract class SaajSoapFault extends SaajSoapElement<SOAPFault> implements SoapF
 	}
 
 	@Override
-	public SoapFaultDetail getFaultDetail() {
+	public @Nullable SoapFaultDetail getFaultDetail() {
 		Detail saajDetail = getSaajFault().getDetail();
 		return (saajDetail != null) ? new SaajSoapFaultDetail(saajDetail) : null;
 	}

@@ -35,6 +35,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -55,12 +56,12 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private String bindingSuffix;
+	private @Nullable String bindingSuffix;
 
-	private String serviceName;
+	private @Nullable String serviceName;
 
 	/** Returns the service name. */
-	public String getServiceName() {
+	public @Nullable String getServiceName() {
 		return this.serviceName;
 	}
 
@@ -72,7 +73,7 @@ public class DefaultConcretePartProvider implements BindingsProvider, ServicesPr
 	}
 
 	/** Returns the suffix to append to the port type name to obtain the binding name. */
-	public String getBindingSuffix() {
+	public @Nullable String getBindingSuffix() {
 		return this.bindingSuffix;
 	}
 

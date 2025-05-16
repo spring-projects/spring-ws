@@ -23,6 +23,7 @@ import javax.wsdl.xml.WSDLWriter;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.util.Assert;
@@ -42,7 +43,7 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 
-	private Definition definition;
+	private @Nullable Definition definition;
 
 	/** WSDL4J is not thread safe, hence the need for a monitor. */
 	private final Object monitor = new Object();
@@ -63,7 +64,7 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 	}
 
 	/** Returns the WSDL4J {@code Definition}. */
-	public Definition getDefinition() {
+	public @Nullable Definition getDefinition() {
 		synchronized (this.monitor) {
 			return this.definition;
 		}

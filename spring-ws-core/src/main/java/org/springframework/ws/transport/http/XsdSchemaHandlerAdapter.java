@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -65,6 +66,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 
 	private String schemaLocationExpression = DEFAULT_SCHEMA_LOCATION_EXPRESSION;
 
+	@SuppressWarnings("NullAway.Init")
 	private XPathExpression schemaLocationXPathExpression;
 
 	private boolean transformSchemaLocations = false;
@@ -89,7 +91,7 @@ public class XsdSchemaHandlerAdapter extends LocationTransformerObjectSupport
 	}
 
 	@Override
-	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+	public @Nullable ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
 			Source schemaSource = getSchemaSource((XsdSchema) handler);

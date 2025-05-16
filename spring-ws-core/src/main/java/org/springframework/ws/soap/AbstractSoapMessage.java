@@ -20,6 +20,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.mime.AbstractMimeMessage;
 
 /**
@@ -31,7 +33,7 @@ import org.springframework.ws.mime.AbstractMimeMessage;
  */
 public abstract class AbstractSoapMessage extends AbstractMimeMessage implements SoapMessage {
 
-	private SoapVersion version;
+	private @Nullable SoapVersion version;
 
 	/** Returns {@code getEnvelope().getBody()}. */
 	@Override
@@ -41,13 +43,13 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 
 	/** Returns {@code getEnvelope().getHeader()}. */
 	@Override
-	public final SoapHeader getSoapHeader() {
+	public final @Nullable SoapHeader getSoapHeader() {
 		return getEnvelope().getHeader();
 	}
 
 	/** Returns {@code getSoapBody().getPayloadSource()}. */
 	@Override
-	public final Source getPayloadSource() {
+	public final @Nullable Source getPayloadSource() {
 		return getSoapBody().getPayloadSource();
 	}
 
@@ -65,8 +67,8 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 
 	/** Returns {@code getSoapBody().getFault().getFaultCode()}. */
 	@Override
-	public final QName getFaultCode() {
-		if (hasFault()) {
+	public final @Nullable QName getFaultCode() {
+		if (hasFault() && getSoapBody().getFault() != null) {
 			return getSoapBody().getFault().getFaultCode();
 		}
 		else {
@@ -76,8 +78,8 @@ public abstract class AbstractSoapMessage extends AbstractMimeMessage implements
 
 	/** Returns {@code getSoapBody().getFault().getFaultStringOrReason()}. */
 	@Override
-	public final String getFaultReason() {
-		if (hasFault()) {
+	public final @Nullable String getFaultReason() {
+		if (hasFault() && getSoapBody().getFault() != null) {
 			return getSoapBody().getFault().getFaultStringOrReason();
 		}
 		else {

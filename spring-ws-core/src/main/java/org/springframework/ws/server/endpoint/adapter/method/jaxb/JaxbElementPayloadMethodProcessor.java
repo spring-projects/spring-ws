@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
@@ -45,7 +46,7 @@ public class JaxbElementPayloadMethodProcessor extends AbstractJaxb2PayloadMetho
 	}
 
 	@Override
-	public JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
+	public @Nullable JAXBElement<?> resolveArgument(MessageContext messageContext, MethodParameter parameter)
 			throws JAXBException {
 		ParameterizedType parameterizedType = (ParameterizedType) parameter.getGenericParameterType();
 		Class<?> clazz = (Class<?>) parameterizedType.getActualTypeArguments()[0];

@@ -19,6 +19,8 @@ package org.springframework.ws.soap.addressing.server;
 import java.lang.reflect.Method;
 import java.net.URI;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.aop.support.AopUtils;
 import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
@@ -57,7 +59,7 @@ public abstract class AbstractActionMethodEndpointMapping extends AbstractAction
 	}
 
 	/** Returns the action value for the specified method. */
-	protected abstract URI getActionForMethod(Method method);
+	protected abstract @Nullable URI getActionForMethod(Method method);
 
 	/**
 	 * Return the class or interface to use for method reflection.

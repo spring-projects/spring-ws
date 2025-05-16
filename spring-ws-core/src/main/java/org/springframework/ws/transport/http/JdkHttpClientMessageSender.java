@@ -44,7 +44,7 @@ public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSen
 
 	private static final Duration DEFAULT_REQUEST_TIMEOUT = Duration.ofSeconds(60);
 
-	private HttpClient httpClient;
+	private @Nullable HttpClient httpClient;
 
 	private Duration connectionTimeout = DEFAULT_CONNECTION_TIMEOUT;
 
@@ -63,17 +63,17 @@ public class JdkHttpClientMessageSender extends AbstractHttpWebServiceMessageSen
 		this.httpClient = httpClient;
 	}
 
-	public void setConnectionTimeout(@Nullable Duration connectionTimeout) {
+	public void setConnectionTimeout(Duration connectionTimeout) {
 		this.connectionTimeout = connectionTimeout;
 	}
 
-	public void setRequestTimeout(@Nullable Duration requestTimeout) {
+	public void setRequestTimeout(Duration requestTimeout) {
 		this.requestTimeout = requestTimeout;
 	}
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
-
+		Assert.state(this.httpClient != null, "HttpClient is not available");
 		JdkHttpClientConnection connection = new JdkHttpClientConnection(this.httpClient, uri, this.requestTimeout);
 
 		if (isAcceptGzipEncoding()) {

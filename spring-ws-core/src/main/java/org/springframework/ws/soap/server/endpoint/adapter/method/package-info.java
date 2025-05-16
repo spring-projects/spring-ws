@@ -17,4 +17,7 @@
 /**
  * Method argument resolvers for SOAP headers.
  */
+@NullMarked
 package org.springframework.ws.soap.server.endpoint.adapter.method;
+
+import org.jspecify.annotations.NullMarked;

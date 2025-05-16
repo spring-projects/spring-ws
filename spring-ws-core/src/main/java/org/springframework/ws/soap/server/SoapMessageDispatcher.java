@@ -23,6 +23,8 @@ import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -100,7 +102,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 	}
 
 	private boolean handleHeaders(EndpointInvocationChain mappedEndpoint, MessageContext messageContext,
-			String[] actorsOrRoles, boolean isUltimateReceiver) {
+			String @Nullable [] actorsOrRoles, boolean isUltimateReceiver) {
 		SoapMessage soapRequest = (SoapMessage) messageContext.getRequest();
 		SoapHeader soapHeader = soapRequest.getSoapHeader();
 		if (soapHeader == null) {
@@ -158,7 +160,7 @@ public class SoapMessageDispatcher extends MessageDispatcher {
 	}
 
 	private void createMustUnderstandFault(SoapMessage soapResponse, List<QName> notUnderstoodHeaderNames,
-			String[] actorsOrRoles) {
+			String @Nullable [] actorsOrRoles) {
 		if (this.logger.isWarnEnabled()) {
 			this.logger.warn("Could not handle mustUnderstand headers: "
 					+ StringUtils.collectionToCommaDelimitedString(notUnderstoodHeaderNames) + ". Returning fault");

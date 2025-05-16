@@ -17,4 +17,7 @@
 /**
  * Contains core classes for SOAP-specific client-side Spring-WS support.
  */
+@NullMarked
 package org.springframework.ws.soap.client.core;
+
+import org.jspecify.annotations.NullMarked;

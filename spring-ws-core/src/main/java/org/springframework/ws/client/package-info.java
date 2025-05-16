@@ -18,4 +18,7 @@
  * Contains classes for client-side Spring-WS support, allowing for Spring-style Web
  * service access.
  */
+@NullMarked
 package org.springframework.ws.client;
+
+import org.jspecify.annotations.NullMarked;

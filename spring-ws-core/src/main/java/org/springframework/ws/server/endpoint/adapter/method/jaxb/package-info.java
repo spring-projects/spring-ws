@@ -18,4 +18,7 @@
  * Provides JAXB2-based implementations of the {@code MethodArgumentResolver} and
  * {@code MethodReturnValueHandler} interfaces.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
+
+import org.jspecify.annotations.NullMarked;

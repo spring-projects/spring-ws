@@ -16,6 +16,8 @@
 
 package org.springframework.ws.client.support.interceptor;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeader;
@@ -102,6 +104,6 @@ public interface ClientInterceptor {
 	 * @throws WebServiceClientException in case of errors
 	 * @since 2.2
 	 */
-	void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException;
+	void afterCompletion(MessageContext messageContext, @Nullable Exception ex) throws WebServiceClientException;
 
 }

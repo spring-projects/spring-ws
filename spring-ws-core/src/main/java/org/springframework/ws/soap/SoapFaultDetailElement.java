@@ -18,6 +18,8 @@ package org.springframework.ws.soap;
 
 import javax.xml.transform.Result;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents the content for an individual SOAP detail entry in a SOAP Message. All
  * {@code SoapFaultDetailElement}s are contained in a {@code SoapDetail}.
@@ -35,6 +37,6 @@ public interface SoapFaultDetailElement extends SoapElement {
 	Result getResult();
 
 	/** Adds a new text node to this element. */
-	void addText(String text);
+	void addText(@Nullable String text);
 
 }

@@ -20,6 +20,7 @@ import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Abstract base class for {@link DestinationProvider} implementations that cache
@@ -36,7 +37,7 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private URI cachedUri;
+	private @Nullable URI cachedUri;
 
 	private boolean cache = true;
 
@@ -50,7 +51,7 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 	}
 
 	@Override
-	public final URI getDestination() {
+	public final @Nullable URI getDestination() {
 		if (this.cache) {
 			if (this.cachedUri == null) {
 				this.cachedUri = lookupDestination();
@@ -69,6 +70,6 @@ public abstract class AbstractCachingDestinationProvider implements DestinationP
 	 * called once.
 	 * @return the destination URI
 	 */
-	protected abstract URI lookupDestination();
+	protected abstract @Nullable URI lookupDestination();
 
 }

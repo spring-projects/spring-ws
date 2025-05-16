@@ -17,4 +17,7 @@
 /**
  * Provides miscellaneous endpoints {@code EndpointInterceptor} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.interceptor;
+
+import org.jspecify.annotations.NullMarked;

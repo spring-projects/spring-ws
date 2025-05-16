@@ -17,4 +17,7 @@
 /**
  * Provides miscellaneous {@code EndpointAdapter} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.adapter;
+
+import org.jspecify.annotations.NullMarked;

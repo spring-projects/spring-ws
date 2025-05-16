@@ -18,6 +18,8 @@ package org.springframework.ws.soap;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represent the {@code Fault} element in the body of a SOAP message.
  * <p>
@@ -42,7 +44,7 @@ public interface SoapFault extends SoapElement {
 	 * this returns the fault string. For SOAP 1.2, this returns the fault reason for the
 	 * default locale.
 	 */
-	String getFaultStringOrReason();
+	@Nullable String getFaultStringOrReason();
 
 	/**
 	 * Return the optional fault actor or role. For SOAP 1.1, this returns the URI of the
@@ -50,7 +52,7 @@ public interface SoapFault extends SoapElement {
 	 * identifies the role in which the node was operating at the point the fault
 	 * occurred.
 	 */
-	String getFaultActorOrRole();
+	@Nullable String getFaultActorOrRole();
 
 	/**
 	 * Set the fault actor or role. For SOAP 1.1, this sets the actor. For SOAP 1.2, this
@@ -62,7 +64,7 @@ public interface SoapFault extends SoapElement {
 	 * Return the optional {@linkplain SoapFaultDetail detail element} of this fault.
 	 * @return a fault detail
 	 */
-	SoapFaultDetail getFaultDetail();
+	@Nullable SoapFaultDetail getFaultDetail();
 
 	/**
 	 * Create a {@link SoapFaultDetail} and assign it to this fault.

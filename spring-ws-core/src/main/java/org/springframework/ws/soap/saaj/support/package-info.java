@@ -17,4 +17,7 @@
 /**
  * Support classes for working with the SOAP with Attachments API for Java (SAAJ).
  */
+@NullMarked
 package org.springframework.ws.soap.saaj.support;
+
+import org.jspecify.annotations.NullMarked;

@@ -18,6 +18,8 @@ package org.springframework.ws.server.endpoint.interceptor;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
 
@@ -37,7 +39,7 @@ import org.springframework.ws.server.endpoint.AbstractLoggingInterceptor;
 public class PayloadLoggingInterceptor extends AbstractLoggingInterceptor {
 
 	@Override
-	protected Source getSource(WebServiceMessage message) {
+	protected @Nullable Source getSource(WebServiceMessage message) {
 		return message.getPayloadSource();
 	}
 

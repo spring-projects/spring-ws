@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 
 import jakarta.activation.DataHandler;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
@@ -54,7 +55,7 @@ public abstract class MarshallingUtils {
 	 * @return the unmarshalled object
 	 * @throws IOException in case of I/O errors
 	 */
-	public static Object unmarshal(Unmarshaller unmarshaller, WebServiceMessage message) throws IOException {
+	public static @Nullable Object unmarshal(Unmarshaller unmarshaller, WebServiceMessage message) throws IOException {
 		Source payload = message.getPayloadSource();
 		if (payload == null) {
 			return null;
@@ -110,7 +111,7 @@ public abstract class MarshallingUtils {
 		}
 
 		@Override
-		public DataHandler getAttachment(String contentId) {
+		public @Nullable DataHandler getAttachment(String contentId) {
 			Attachment attachment = this.mimeMessage.getAttachment(contentId);
 			return (attachment != null) ? attachment.getDataHandler() : null;
 		}

@@ -18,4 +18,7 @@
  * Provides {@code EndpointAdapter}, {@code EndpointMapping}, and
  * {@code EndpointExceptionResolver} implementations for SOAP.
  */
+@NullMarked
 package org.springframework.ws.soap.server.endpoint;
+
+import org.jspecify.annotations.NullMarked;

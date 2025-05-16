@@ -21,6 +21,8 @@ import java.util.Locale;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -45,7 +47,7 @@ public interface SoapBody extends SoapElement {
 	 * @return the message contents
 	 * @see WebServiceMessage#getPayloadSource()
 	 */
-	Source getPayloadSource();
+	@Nullable Source getPayloadSource();
 
 	/**
 	 * Returns a {@code Result} that represents the contents of the body.
@@ -112,6 +114,6 @@ public interface SoapBody extends SoapElement {
 	 * Returns the {@code SoapFault} of this body.
 	 * @return the {@code SoapFault}, or {@code null} if none is present
 	 */
-	SoapFault getFault();
+	@Nullable SoapFault getFault();
 
 }

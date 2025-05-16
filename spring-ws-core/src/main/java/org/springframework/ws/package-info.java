@@ -17,4 +17,7 @@
 /**
  * Provides the core functionality of the Spring Web Services framework.
  */
+@NullMarked
 package org.springframework.ws;
+
+import org.jspecify.annotations.NullMarked;

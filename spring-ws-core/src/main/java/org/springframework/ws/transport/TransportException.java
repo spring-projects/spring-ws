@@ -18,6 +18,8 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Abstract base class for exceptions related to the transport layer.
  *
@@ -27,7 +29,7 @@ import java.io.IOException;
 @SuppressWarnings("serial")
 public abstract class TransportException extends IOException {
 
-	protected TransportException(String msg) {
+	protected TransportException(@Nullable String msg) {
 		super(msg);
 	}
 

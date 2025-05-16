@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -40,7 +42,7 @@ import org.springframework.ws.soap.soap12.Soap12Fault;
  */
 public abstract class AbstractSoapFaultDefinitionExceptionResolver extends AbstractEndpointExceptionResolver {
 
-	private SoapFaultDefinition defaultFault;
+	private @Nullable SoapFaultDefinition defaultFault;
 
 	/**
 	 * Set the default fault. This fault will be returned if no specific mapping was
@@ -58,10 +60,11 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 	 * @param ex the exception to be handled
 	 * @return the definition mapped to the exception, or {@code null} if none is found.
 	 */
-	protected abstract SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex);
+	protected abstract @Nullable SoapFaultDefinition getFaultDefinition(@Nullable Object endpoint, Exception ex);
 
 	@Override
-	protected final boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
+	protected final boolean resolveExceptionInternal(MessageContext messageContext, @Nullable Object endpoint,
+			Exception ex) {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse(),
 				"AbstractSoapFaultDefinitionExceptionResolver requires a SoapMessage");
 
@@ -102,9 +105,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 				throw new IllegalStateException("This class only supports SOAP 1.1 and SOAP 1.2.");
 			}
 		}
-		if (fault != null) {
-			customizeFault(endpoint, ex, fault);
-		}
+		customizeFault(endpoint, ex, fault);
 		return true;
 	}
 
@@ -119,7 +120,7 @@ public abstract class AbstractSoapFaultDefinitionExceptionResolver extends Abstr
 	 * @param ex the exception to be handled
 	 * @param fault the created fault
 	 */
-	protected void customizeFault(Object endpoint, Exception ex, SoapFault fault) {
+	protected void customizeFault(@Nullable Object endpoint, Exception ex, SoapFault fault) {
 	}
 
 }

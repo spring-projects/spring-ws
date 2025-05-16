@@ -29,6 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.XMLReader;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -61,13 +62,13 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
 	private static final Log logger = LogFactory.getLog(PayloadTransformingInterceptor.class);
 
-	private Resource requestXslt;
+	private @Nullable Resource requestXslt;
 
-	private Resource responseXslt;
+	private @Nullable Resource responseXslt;
 
-	private Templates requestTemplates;
+	private @Nullable Templates requestTemplates;
 
-	private Templates responseTemplates;
+	private @Nullable Templates responseTemplates;
 
 	/** Sets the XSLT stylesheet to use for transforming incoming request. */
 	public void setRequestXslt(Resource requestXslt) {
@@ -130,7 +131,7 @@ public class PayloadTransformingInterceptor extends TransformerObjectSupport
 
 	/** Does nothing by default. */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 	}
 
 	@Override

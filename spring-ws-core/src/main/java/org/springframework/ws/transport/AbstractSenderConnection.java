@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Abstract base class for {@link WebServiceConnection} implementations used for sending
  * requests.
@@ -32,9 +34,9 @@ import java.util.Iterator;
 public abstract class AbstractSenderConnection extends AbstractWebServiceConnection
 		implements HeadersAwareSenderWebServiceConnection {
 
-	private TransportOutputStream requestOutputStream;
+	private @Nullable TransportOutputStream requestOutputStream;
 
-	private TransportInputStream responseInputStream;
+	private @Nullable TransportInputStream responseInputStream;
 
 	@Override
 	protected final TransportOutputStream createTransportOutputStream() throws IOException {
@@ -45,7 +47,7 @@ public abstract class AbstractSenderConnection extends AbstractWebServiceConnect
 	}
 
 	@Override
-	protected final TransportInputStream createTransportInputStream() throws IOException {
+	protected final @Nullable TransportInputStream createTransportInputStream() throws IOException {
 		if (hasResponse()) {
 			if (this.responseInputStream == null) {
 				this.responseInputStream = new ResponseTransportInputStream();

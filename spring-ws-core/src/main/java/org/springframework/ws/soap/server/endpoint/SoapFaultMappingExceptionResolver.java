@@ -20,6 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -55,7 +57,7 @@ public class SoapFaultMappingExceptionResolver extends AbstractSoapFaultDefiniti
 	}
 
 	@Override
-	protected SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
+	protected @Nullable SoapFaultDefinition getFaultDefinition(@Nullable Object endpoint, Exception ex) {
 		if (!CollectionUtils.isEmpty(this.exceptionMappings)) {
 			String definitionText = null;
 			int deepest = Integer.MAX_VALUE;

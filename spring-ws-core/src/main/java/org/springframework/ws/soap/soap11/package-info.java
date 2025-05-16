@@ -17,4 +17,7 @@
 /**
  * Contains interfaces specific to SOAP 1.1.
  */
+@NullMarked
 package org.springframework.ws.soap.soap11;
+
+import org.jspecify.annotations.NullMarked;

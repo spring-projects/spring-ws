@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.server;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 
@@ -31,7 +33,7 @@ import org.springframework.ws.server.EndpointInvocationChain;
  */
 public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 
-	private String[] actorsOrRoles;
+	private String @Nullable [] actorsOrRoles;
 
 	private boolean isUltimateReceiver = true;
 
@@ -48,7 +50,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * @param endpoint the endpoint object to invoke
 	 * @param interceptors the array of interceptors to apply
 	 */
-	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors) {
+	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor @Nullable [] interceptors) {
 		super(endpoint, interceptors);
 	}
 
@@ -60,8 +62,8 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * @param isUltimateReceiver whether this chain fullfils the SOAP 1.2 Ultimate
 	 * receiver role
 	 */
-	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors, String[] actorsOrRoles,
-			boolean isUltimateReceiver) {
+	public SoapEndpointInvocationChain(Object endpoint, EndpointInterceptor @Nullable [] interceptors,
+			String @Nullable [] actorsOrRoles, boolean isUltimateReceiver) {
 		super(endpoint, interceptors);
 		this.actorsOrRoles = actorsOrRoles;
 		this.isUltimateReceiver = isUltimateReceiver;
@@ -72,7 +74,7 @@ public class SoapEndpointInvocationChain extends EndpointInvocationChain {
 	 * this chain and its contained interceptors and endpoint.
 	 * @return a string array of URIs for SOAP actors/roles
 	 */
-	public String[] getActorsOrRoles() {
+	public String @Nullable [] getActorsOrRoles() {
 		return this.actorsOrRoles;
 	}
 

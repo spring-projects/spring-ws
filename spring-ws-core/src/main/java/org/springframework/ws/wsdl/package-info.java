@@ -18,4 +18,7 @@
  * Provides the WSDL functionality of the Spring Web Services framework. Contains the
  * WsdlDefinition and related interfaces.
  */
+@NullMarked
 package org.springframework.ws.wsdl;
+
+import org.jspecify.annotations.NullMarked;

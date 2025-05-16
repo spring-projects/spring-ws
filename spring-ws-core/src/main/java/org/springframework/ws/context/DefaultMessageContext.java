@@ -19,6 +19,8 @@ package org.springframework.ws.context;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -35,7 +37,7 @@ public class DefaultMessageContext extends AbstractMessageContext {
 
 	private final WebServiceMessage request;
 
-	private WebServiceMessage response;
+	private @Nullable WebServiceMessage response;
 
 	/**
 	 * Construct a new, empty instance of the {@code DefaultMessageContext} with the given
@@ -75,7 +77,7 @@ public class DefaultMessageContext extends AbstractMessageContext {
 	}
 
 	@Override
-	public void setResponse(WebServiceMessage response) {
+	public void setResponse(@Nullable WebServiceMessage response) {
 		checkForResponse();
 		this.response = response;
 	}

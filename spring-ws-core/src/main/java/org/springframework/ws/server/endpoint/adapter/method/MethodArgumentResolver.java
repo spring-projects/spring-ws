@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
@@ -48,6 +50,6 @@ public interface MethodArgumentResolver {
 	 * @return the resolved argument. May be {@code null}.
 	 * @throws Exception in case of errors
 	 */
-	Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception;
+	@Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception;
 
 }

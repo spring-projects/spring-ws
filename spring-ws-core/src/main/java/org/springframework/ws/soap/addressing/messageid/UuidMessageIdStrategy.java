@@ -19,6 +19,8 @@ package org.springframework.ws.soap.addressing.messageid;
 import java.net.URI;
 import java.util.UUID;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapMessage;
 
 /**
@@ -39,7 +41,7 @@ public class UuidMessageIdStrategy implements MessageIdStrategy {
 
 	/** Returns {@code false}. */
 	@Override
-	public boolean isDuplicate(URI messageId) {
+	public boolean isDuplicate(@Nullable URI messageId) {
 		return false;
 	}
 

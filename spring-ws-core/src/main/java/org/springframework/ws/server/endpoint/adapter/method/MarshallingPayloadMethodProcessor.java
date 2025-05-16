@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.oxm.GenericMarshaller;
 import org.springframework.oxm.GenericUnmarshaller;
@@ -35,9 +37,9 @@ import org.springframework.ws.support.MarshallingUtils;
  */
 public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProcessor {
 
-	private Marshaller marshaller;
+	private @Nullable Marshaller marshaller;
 
-	private Unmarshaller unmarshaller;
+	private @Nullable Unmarshaller unmarshaller;
 
 	/**
 	 * Creates a new {@code MarshallingPayloadMethodProcessor}. The {@link Marshaller} and
@@ -83,7 +85,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	/**
 	 * Returns the marshaller used for transforming objects into XML.
 	 */
-	public Marshaller getMarshaller() {
+	public @Nullable Marshaller getMarshaller() {
 		return this.marshaller;
 	}
 
@@ -97,7 +99,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	/**
 	 * Returns the unmarshaller used for transforming XML into objects.
 	 */
-	public Unmarshaller getUnmarshaller() {
+	public @Nullable Unmarshaller getUnmarshaller() {
 		return this.unmarshaller;
 	}
 
@@ -123,7 +125,7 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	}
 
 	@Override
-	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
+	public @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
 		Unmarshaller unmarshaller = getUnmarshaller();
 		Assert.state(unmarshaller != null, "unmarshaller must not be null");
 
@@ -150,8 +152,8 @@ public class MarshallingPayloadMethodProcessor extends AbstractPayloadMethodProc
 	}
 
 	@Override
-	public void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-			throws Exception {
+	public void handleReturnValue(MessageContext messageContext, MethodParameter returnType,
+			@Nullable Object returnValue) throws Exception {
 		if (returnValue == null) {
 			return;
 		}

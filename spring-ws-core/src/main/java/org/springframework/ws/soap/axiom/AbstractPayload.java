@@ -24,6 +24,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.xml.StaxUtils;
@@ -49,7 +50,7 @@ abstract class AbstractPayload extends Payload {
 	}
 
 	@Override
-	public final Source getSource() {
+	public final @Nullable Source getSource() {
 		try {
 			OMElement payloadElement = getPayloadElement();
 			if (payloadElement != null) {
@@ -83,7 +84,7 @@ abstract class AbstractPayload extends Payload {
 		return this.axiomBody;
 	}
 
-	protected OMElement getPayloadElement() throws OMException {
+	protected @Nullable OMElement getPayloadElement() throws OMException {
 		return getAxiomBody().getFirstElement();
 	}
 

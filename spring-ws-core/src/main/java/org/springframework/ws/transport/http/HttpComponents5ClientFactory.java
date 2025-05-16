@@ -40,6 +40,7 @@ import org.apache.hc.core5.http.HttpRequest;
 import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.util.Timeout;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -81,11 +82,11 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 
 	private AuthScope authScope = ANY;
 
-	private Credentials credentials = null;
+	private @Nullable Credentials credentials = null;
 
 	private Map<String, String> maxConnectionsPerHost = Map.of();
 
-	private PoolingHttpClientConnectionManager connectionManager;
+	private @Nullable PoolingHttpClientConnectionManager connectionManager;
 
 	/**
 	 * Create a new instance with default settings. This configures
@@ -195,7 +196,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 		this.maxConnectionsPerHost = maxConnectionsPerHost;
 	}
 
-	PoolingHttpClientConnectionManager getConnectionManager() {
+	@Nullable PoolingHttpClientConnectionManager getConnectionManager() {
 		return this.connectionManager;
 	}
 
@@ -219,7 +220,7 @@ public class HttpComponents5ClientFactory implements FactoryBean<CloseableHttpCl
 			.setDefaultRequestConfig(requestConfigBuilder.build())
 			.setConnectionManager(this.connectionManager);
 
-		if (this.credentials != null && this.authScope != null) {
+		if (this.credentials != null) {
 			BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
 			basicCredentialsProvider.setCredentials(this.authScope, this.credentials);
 			httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);

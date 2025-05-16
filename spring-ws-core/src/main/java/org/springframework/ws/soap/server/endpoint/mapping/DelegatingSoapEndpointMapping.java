@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
@@ -44,9 +46,9 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  */
 public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndpointMapping {
 
-	private EndpointMapping delegate;
+	private @Nullable EndpointMapping delegate;
 
-	private String[] actorsOrRoles;
+	private String @Nullable [] actorsOrRoles;
 
 	private boolean isUltimateReceiver = true;
 
@@ -78,7 +80,8 @@ public class DelegatingSoapEndpointMapping implements InitializingBean, SoapEndp
 	 * @see #setActorsOrRoles(String[])
 	 */
 	@Override
-	public EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+	public @Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+		Assert.notNull(this.delegate, "delegate must not be null");
 		EndpointInvocationChain delegateChain = this.delegate.getEndpoint(messageContext);
 		if (delegateChain != null) {
 			return new SoapEndpointInvocationChain(delegateChain.getEndpoint(), delegateChain.getInterceptors(),

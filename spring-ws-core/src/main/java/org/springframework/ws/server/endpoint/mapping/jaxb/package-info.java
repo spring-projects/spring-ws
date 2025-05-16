@@ -17,4 +17,7 @@
 /**
  * Provides JAXB2-based {@code EndpointMapping} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.mapping.jaxb;
+
+import org.jspecify.annotations.NullMarked;

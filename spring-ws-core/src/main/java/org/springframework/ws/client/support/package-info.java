@@ -18,4 +18,7 @@
  * Classes supporting the org.springframework.ws.client.core package. Contains a base
  * class for WebServiceTemplate usage.
  */
+@NullMarked
 package org.springframework.ws.client.support;
+
+import org.jspecify.annotations.NullMarked;

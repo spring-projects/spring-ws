@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Abstract base class for {@link WebServiceConnection} implementations used for receiving
  * requests.
@@ -32,9 +34,9 @@ import java.util.Iterator;
 public abstract class AbstractReceiverConnection extends AbstractWebServiceConnection
 		implements HeadersAwareReceiverWebServiceConnection {
 
-	private TransportInputStream requestInputStream;
+	private @Nullable TransportInputStream requestInputStream;
 
-	private TransportOutputStream responseOutputStream;
+	private @Nullable TransportOutputStream responseOutputStream;
 
 	@Override
 	protected final TransportInputStream createTransportInputStream() throws IOException {

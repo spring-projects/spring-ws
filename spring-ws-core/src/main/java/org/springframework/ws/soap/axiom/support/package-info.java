@@ -17,4 +17,7 @@
 /**
  * Support classes for working with the AXis Object Model (AXIOM).
  */
+@NullMarked
 package org.springframework.ws.soap.axiom.support;
+
+import org.jspecify.annotations.NullMarked;

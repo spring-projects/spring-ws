@@ -17,4 +17,7 @@
 /**
  * Provides miscellaneous endpoints {@code EndpointMapping} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.mapping;
+
+import org.jspecify.annotations.NullMarked;

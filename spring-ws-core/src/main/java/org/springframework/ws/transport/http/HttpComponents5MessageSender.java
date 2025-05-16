@@ -23,8 +23,10 @@ import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 
 /**
  * {@code AbstractHttpComponents5MessageSender} implementation that configures the
@@ -46,7 +48,7 @@ public class HttpComponents5MessageSender extends AbstractHttpComponents5Message
 
 	private final HttpComponents5ClientFactory clientFactory;
 
-	private HttpClient httpClient;
+	private @Nullable HttpClient httpClient;
 
 	/**
 	 * Create a new instance of the {@code HttpClientMessageSender} with a default
@@ -58,6 +60,7 @@ public class HttpComponents5MessageSender extends AbstractHttpComponents5Message
 
 	@Override
 	public HttpClient getHttpClient() {
+		Assert.notNull(this.httpClient, "'httpClient' must not be null");
 		return this.httpClient;
 	}
 

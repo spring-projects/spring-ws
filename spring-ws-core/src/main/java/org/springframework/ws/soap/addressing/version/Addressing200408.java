@@ -20,6 +20,8 @@ import java.net.URI;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.addressing.core.EndpointReference;
@@ -97,17 +99,17 @@ public class Addressing200408 extends AbstractAddressingVersion {
 	}
 
 	@Override
-	protected URI getDefaultTo() {
+	protected @Nullable URI getDefaultTo() {
 		return null;
 	}
 
 	@Override
-	protected final EndpointReference getDefaultReplyTo(EndpointReference from) {
+	protected final @Nullable EndpointReference getDefaultReplyTo(@Nullable EndpointReference from) {
 		return from;
 	}
 
 	@Override
-	protected final URI getNone() {
+	protected final @Nullable URI getNone() {
 		return null;
 	}
 

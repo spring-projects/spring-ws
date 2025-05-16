@@ -44,6 +44,7 @@ import jakarta.xml.bind.JAXBIntrospector;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.UnmarshallerHandler;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
@@ -79,8 +80,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	private final ConcurrentMap<Class<?>, JAXBContext> jaxbContexts = new ConcurrentHashMap<>();
 
 	@Override
-	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-			throws Exception {
+	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType,
+			@Nullable Object returnValue) throws Exception {
 		if (returnValue != null) {
 			handleReturnValueInternal(messageContext, returnType, returnValue);
 		}
@@ -130,7 +131,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	 * @return the unmarshalled object, or {@code null} if the request has no payload
 	 * @throws JAXBException in case of JAXB2 errors
 	 */
-	protected final Object unmarshalFromRequestPayload(MessageContext messageContext, Class<?> clazz)
+	protected final @Nullable Object unmarshalFromRequestPayload(MessageContext messageContext, Class<?> clazz)
 			throws JAXBException {
 		Source requestPayload = getRequestPayload(messageContext);
 		if (requestPayload == null) {
@@ -156,8 +157,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 	 * @return the unmarshalled element, or {@code null} if the request has no payload
 	 * @throws JAXBException in case of JAXB2 errors
 	 */
-	protected final <T> JAXBElement<T> unmarshalElementFromRequestPayload(MessageContext messageContext, Class<T> clazz)
-			throws JAXBException {
+	protected final <T> @Nullable JAXBElement<T> unmarshalElementFromRequestPayload(MessageContext messageContext,
+			Class<T> clazz) throws JAXBException {
 		Source requestPayload = getRequestPayload(messageContext);
 		if (requestPayload == null) {
 			return null;
@@ -175,9 +176,8 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		}
 	}
 
-	private Source getRequestPayload(MessageContext messageContext) {
-		WebServiceMessage request = messageContext.getRequest();
-		return (request != null) ? request.getPayloadSource() : null;
+	private @Nullable Source getRequestPayload(MessageContext messageContext) {
+		return messageContext.getRequest().getPayloadSource();
 	}
 
 	private JAXBException convertToJaxbException(Exception ex) {
@@ -237,7 +237,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		private final Unmarshaller unmarshaller;
 
-		private Object result;
+		private @Nullable Object result;
 
 		Jaxb2SourceCallback(Class<?> clazz) throws JAXBException {
 			this.unmarshaller = createUnmarshaller(clazz);
@@ -307,7 +307,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		private final Class<T> declaredType;
 
-		private JAXBElement<T> result;
+		private @Nullable JAXBElement<T> result;
 
 		JaxbElementSourceCallback(Class<T> declaredType) throws JAXBException {
 			this.unmarshaller = createUnmarshaller(declaredType);

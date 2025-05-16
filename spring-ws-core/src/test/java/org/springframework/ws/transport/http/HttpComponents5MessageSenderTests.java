@@ -33,7 +33,7 @@ class HttpComponents5MessageSenderTests {
 	@Test
 	void afterPropertiesSetShouldProperlyInitializeHttpClient() throws Exception {
 		HttpComponents5MessageSender messageSender = new HttpComponents5MessageSender();
-		assertThat(messageSender.getHttpClient()).isNull();
+		assertThat(messageSender).hasFieldOrPropertyWithValue("httpClient", null);
 		messageSender.setConnectionTimeout(Duration.ofSeconds(1));
 
 		messageSender.afterPropertiesSet();

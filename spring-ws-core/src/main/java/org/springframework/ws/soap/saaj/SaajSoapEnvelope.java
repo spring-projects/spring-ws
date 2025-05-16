@@ -20,6 +20,7 @@ import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPHeader;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
@@ -35,9 +36,9 @@ import org.springframework.ws.soap.SoapVersion;
  */
 class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnvelope {
 
-	private SaajSoapBody body;
+	private @Nullable SaajSoapBody body;
 
-	private SaajSoapHeader header;
+	private @Nullable SaajSoapHeader header;
 
 	private final boolean langAttributeOnSoap11FaultString;
 
@@ -71,7 +72,7 @@ class SaajSoapEnvelope extends SaajSoapElement<SOAPEnvelope> implements SoapEnve
 	}
 
 	@Override
-	public SoapHeader getHeader() {
+	public @Nullable SoapHeader getHeader() {
 		if (this.header == null) {
 			try {
 				SOAPHeader saajHeader = getSaajEnvelope().getHeader();

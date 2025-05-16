@@ -33,6 +33,7 @@ import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.DOMImplementationLS;
@@ -65,11 +66,11 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 
 	private static final String CONTENT_TYPE_XOP = "application/xop+xml";
 
-	private final MessageFactory messageFactory;
+	private final @Nullable MessageFactory messageFactory;
 
 	private SOAPMessage saajMessage;
 
-	private SoapEnvelope envelope;
+	private @Nullable SoapEnvelope envelope;
 
 	private final boolean langAttributeOnSoap11FaultString;
 
@@ -108,7 +109,7 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	 * @param messageFactory the message factory
 	 */
 	public SaajSoapMessage(SOAPMessage soapMessage, boolean langAttributeOnSoap11FaultString,
-			MessageFactory messageFactory) {
+			@Nullable MessageFactory messageFactory) {
 		Assert.notNull(soapMessage, "soapMessage must not be null");
 		this.saajMessage = soapMessage;
 		this.langAttributeOnSoap11FaultString = langAttributeOnSoap11FaultString;
@@ -311,15 +312,13 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<Attachment> getAttachments() throws AttachmentException {
 		Iterator<AttachmentPart> iterator = getSaajMessage().getAttachments();
 		return new SaajAttachmentIterator(iterator);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Attachment getAttachment(String contentId) {
+	public @Nullable Attachment getAttachment(String contentId) {
 		Assert.hasLength(contentId, "contentId must not be empty");
 		MimeHeaders mimeHeaders = new MimeHeaders();
 		mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_ID, contentId);

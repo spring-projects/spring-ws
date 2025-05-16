@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapFault;
 
 /**
@@ -50,6 +52,6 @@ public interface FaultAwareWebServiceConnection extends WebServiceConnection {
 	 * fault.
 	 * @throws IOException in case of I/O errors
 	 */
-	void setFaultCode(QName faultCode) throws IOException;
+	void setFaultCode(@Nullable QName faultCode) throws IOException;
 
 }

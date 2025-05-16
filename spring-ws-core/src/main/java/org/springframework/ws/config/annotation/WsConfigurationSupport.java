@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -79,7 +81,7 @@ import org.springframework.ws.soap.server.endpoint.mapping.SoapActionAnnotationM
  */
 public class WsConfigurationSupport {
 
-	private List<EndpointInterceptor> interceptors;
+	private @Nullable List<EndpointInterceptor> interceptors;
 
 	/**
 	 * Returns a {@link PayloadRootAnnotationMethodEndpointMapping} ordered at 0 for

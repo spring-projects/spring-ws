@@ -17,4 +17,7 @@
 /**
  * Provides a contribution strategy for WSDL definitions.
  */
+@NullMarked
 package org.springframework.ws.wsdl.wsdl11.provider;
+
+import org.jspecify.annotations.NullMarked;

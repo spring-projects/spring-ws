@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Properties;
 
 import jakarta.servlet.ServletContext;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -121,7 +122,7 @@ public class DefaultStrategiesHelper {
 	 * @throws BeansException if initialization failed
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> List<T> getDefaultStrategies(Class<T> strategyInterface, ApplicationContext applicationContext)
+	public <T> List<T> getDefaultStrategies(Class<T> strategyInterface, @Nullable ApplicationContext applicationContext)
 			throws BeanInitializationException {
 		String key = strategyInterface.getName();
 		try {
@@ -155,13 +156,13 @@ public class DefaultStrategiesHelper {
 	}
 
 	/** Instantiates the given bean, simulating the standard bean life cycle. */
-	private <T> T instantiateBean(Class<T> clazz, ApplicationContext applicationContext) {
+	private <T> T instantiateBean(Class<T> clazz, @Nullable ApplicationContext applicationContext) {
 		T strategy = BeanUtils.instantiateClass(clazz);
 		if (strategy instanceof BeanNameAware beanNameAware) {
 			beanNameAware.setBeanName(clazz.getName());
 		}
 		if (applicationContext != null) {
-			if (strategy instanceof BeanClassLoaderAware) {
+			if (strategy instanceof BeanClassLoaderAware && applicationContext.getClassLoader() != null) {
 				((BeanClassLoaderAware) strategy).setBeanClassLoader(applicationContext.getClassLoader());
 			}
 			if (strategy instanceof BeanFactoryAware) {
@@ -181,7 +182,9 @@ public class DefaultStrategiesHelper {
 			}
 			if (applicationContext instanceof WebApplicationContext && strategy instanceof ServletContextAware) {
 				ServletContext servletContext = ((WebApplicationContext) applicationContext).getServletContext();
-				((ServletContextAware) strategy).setServletContext(servletContext);
+				if (servletContext != null) {
+					((ServletContextAware) strategy).setServletContext(servletContext);
+				}
 			}
 		}
 		if (strategy instanceof InitializingBean initializingBean) {
@@ -217,7 +220,7 @@ public class DefaultStrategiesHelper {
 	 * @return the corresponding strategy object
 	 * @throws BeansException if initialization failed
 	 */
-	public <T> T getDefaultStrategy(Class<T> strategyInterface, ApplicationContext applicationContext)
+	public <T> T getDefaultStrategy(Class<T> strategyInterface, @Nullable ApplicationContext applicationContext)
 			throws BeanInitializationException {
 		List<T> result = getDefaultStrategies(strategyInterface, applicationContext);
 		if (result.size() != 1) {

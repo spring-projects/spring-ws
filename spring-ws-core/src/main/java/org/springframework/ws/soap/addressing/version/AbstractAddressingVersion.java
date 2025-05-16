@@ -34,10 +34,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeader;
@@ -80,9 +82,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
 	private final XPathExpression addressExpression;
 
-	private final XPathExpression referencePropertiesExpression;
+	private final @Nullable XPathExpression referencePropertiesExpression;
 
-	private final XPathExpression referenceParametersExpression;
+	private final @Nullable XPathExpression referenceParametersExpression;
 
 	protected AbstractAddressingVersion() {
 		Map<String, String> namespaces = new HashMap<>();
@@ -144,7 +146,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		return new MessageAddressingProperties(to, from, replyTo, faultTo, action, messageId);
 	}
 
-	private URI getUri(Node node, XPathExpression expression) {
+	private @Nullable URI getUri(Node node, XPathExpression expression) {
 		String messageId = expression.evaluateAsString(node);
 		if (!StringUtils.hasLength(messageId)) {
 			return null;
@@ -158,7 +160,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	private Element getSoapHeaderElement(SoapMessage message) {
-		Source source = message.getSoapHeader().getSource();
+		SoapHeader soapHeader = message.getSoapHeader();
+		Assert.notNull(soapHeader, "'soapHeader' must not be null");
+		Source source = soapHeader.getSource();
 		if (source instanceof DOMSource domSource) {
 			if (domSource.getNode() != null && domSource.getNode().getNodeType() == Node.ELEMENT_NODE) {
 				return (Element) domSource.getNode();
@@ -176,7 +180,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	/** Given a ReplyTo, FaultTo, or From node, returns an endpoint reference. */
-	private EndpointReference getEndpointReference(Node node) {
+	private @Nullable EndpointReference getEndpointReference(@Nullable Node node) {
 		if (node == null) {
 			return null;
 		}
@@ -193,7 +197,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
 	@Override
 	public void addAddressingHeaders(SoapMessage message, MessageAddressingProperties map) {
-		SoapHeader header = message.getSoapHeader();
+		SoapHeader header = getSoapHeader(message);
 		header.addNamespaceDeclaration(getNamespacePrefix(), getNamespaceUri());
 		// To
 		if (map.getTo() != null) {
@@ -217,7 +221,9 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 		}
 		// Action
 		SoapHeaderElement action = header.addHeaderElement(getActionName());
-		action.setText(map.getAction().toString());
+		if (map.getAction() != null) {
+			action.setText((map.getAction().toString()));
+		}
 		// MessageID
 		if (map.getMessageId() != null) {
 			SoapHeaderElement messageId = header.addHeaderElement(getMessageIdName());
@@ -238,8 +244,8 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	/** Adds ReplyTo, FaultTo, or From EPR to the given header Element. */
-	protected void addEndpointReference(SoapHeaderElement headerElement, EndpointReference epr) {
-		if (epr == null || epr.getAddress() == null) {
+	protected void addEndpointReference(SoapHeaderElement headerElement, @Nullable EndpointReference epr) {
+		if (epr == null) {
 			return;
 		}
 		try {
@@ -282,18 +288,18 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	@Override
-	public final SoapFault addInvalidAddressingHeaderFault(SoapMessage message) {
+	public final @Nullable SoapFault addInvalidAddressingHeaderFault(SoapMessage message) {
 		return addAddressingFault(message, getInvalidAddressingHeaderFaultSubcode(),
 				getInvalidAddressingHeaderFaultReason());
 	}
 
 	@Override
-	public final SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message) {
+	public final @Nullable SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message) {
 		return addAddressingFault(message, getMessageAddressingHeaderRequiredFaultSubcode(),
 				getMessageAddressingHeaderRequiredFaultReason());
 	}
 
-	private SoapFault addAddressingFault(SoapMessage message, QName subcode, String reason) {
+	private @Nullable SoapFault addAddressingFault(SoapMessage message, QName subcode, String reason) {
 		if (message.getSoapBody() instanceof Soap11Body soapBody) {
 			return soapBody.addFault(subcode, reason, Locale.ENGLISH);
 		}
@@ -379,7 +385,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	 * reference. Returns {@code null} when reference properties are not supported by this
 	 * version of the spec.
 	 */
-	protected QName getReferencePropertiesName() {
+	protected @Nullable QName getReferencePropertiesName() {
 		return new QName(getNamespaceUri(), "ReferenceProperties", getNamespacePrefix());
 	}
 
@@ -388,7 +394,7 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	 * reference. Returns {@code null} when reference parameters are not supported by this
 	 * version of the spec.
 	 */
-	protected QName getReferenceParametersName() {
+	protected @Nullable QName getReferenceParametersName() {
 		return new QName(getNamespaceUri(), "ReferenceParameters", getNamespacePrefix());
 	}
 
@@ -402,23 +408,23 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 	}
 
 	/** Returns the default To URI. */
-	protected abstract URI getDefaultTo();
+	protected abstract @Nullable URI getDefaultTo();
 
 	/**
 	 * Returns the default ReplyTo EPR. Can be based on the From EPR, or the anonymous
 	 * URI.
 	 */
-	protected abstract EndpointReference getDefaultReplyTo(EndpointReference from);
+	protected abstract @Nullable EndpointReference getDefaultReplyTo(@Nullable EndpointReference from);
 
 	/*
 	 * Address URIs
 	 */
 
 	/** Returns the anonymous URI. */
-	protected abstract URI getAnonymous();
+	protected abstract @Nullable URI getAnonymous();
 
 	/** Returns the none URI, or {@code null} if the spec does not define it. */
-	protected abstract URI getNone();
+	protected abstract @Nullable URI getNone();
 
 	/*
 	 * Faults
@@ -441,5 +447,11 @@ public abstract class AbstractAddressingVersion extends TransformerObjectSupport
 
 	/** Returns the reason of the fault that indicates that a header is invalid. */
 	protected abstract String getInvalidAddressingHeaderFaultReason();
+
+	private static SoapHeader getSoapHeader(SoapMessage message) {
+		SoapHeader soapHeader = message.getSoapHeader();
+		Assert.notNull(soapHeader, "'soapHeader' must not be null");
+		return soapHeader;
+	}
 
 }

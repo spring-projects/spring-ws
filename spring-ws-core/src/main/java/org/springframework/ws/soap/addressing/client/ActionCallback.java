@@ -22,6 +22,8 @@ import java.net.URISyntaxException;
 
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.WebServiceMessageCallback;
@@ -58,17 +60,17 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	private final URI action;
 
-	private final URI to;
+	private @Nullable final URI to;
 
 	private boolean shouldInitializeTo;
 
 	private MessageIdStrategy messageIdStrategy;
 
-	private EndpointReference from;
+	private @Nullable EndpointReference from;
 
-	private EndpointReference replyTo;
+	private @Nullable EndpointReference replyTo;
 
-	private EndpointReference faultTo;
+	private @Nullable EndpointReference faultTo;
 
 	/**
 	 * Create a new {@code ActionCallback} with the given {@code Action}.
@@ -118,7 +120,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * @param version the WS-Addressing version to use
 	 * @param to the value of the destination property
 	 */
-	public ActionCallback(URI action, AddressingVersion version, URI to) {
+	public ActionCallback(URI action, AddressingVersion version, @Nullable URI to) {
 		Assert.notNull(action, "'action' must not be null");
 		Assert.notNull(version, "'version' must not be null");
 		this.action = action;
@@ -165,7 +167,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Returns the {@code From}.
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFrom()
 	 */
-	public EndpointReference getFrom() {
+	public @Nullable EndpointReference getFrom() {
 		return this.from;
 	}
 
@@ -181,7 +183,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Returns the {@code ReplyTo}.
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getReplyTo()
 	 */
-	public EndpointReference getReplyTo() {
+	public @Nullable EndpointReference getReplyTo() {
 		return this.replyTo;
 	}
 
@@ -197,7 +199,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * Returns the {@code FaultTo}.
 	 * @see org.springframework.ws.soap.addressing.core.MessageAddressingProperties#getFaultTo()
 	 */
-	public EndpointReference getFaultTo() {
+	public @Nullable EndpointReference getFaultTo() {
 		return this.faultTo;
 	}
 
@@ -216,7 +218,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 	 * {@link org.springframework.ws.transport.WebServiceConnection#getUri() connection
 	 * URI} if no destination was set.
 	 */
-	protected URI getTo() {
+	protected @Nullable URI getTo() {
 		if (this.to == null && (isToHeaderRequired() || this.shouldInitializeTo)) {
 			TransportContext transportContext = TransportContextHolder.getTransportContext();
 			if (transportContext != null && transportContext.getConnection() != null) {

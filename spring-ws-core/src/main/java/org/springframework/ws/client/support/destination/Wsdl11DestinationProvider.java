@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.core.io.Resource;
@@ -64,7 +65,7 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 
 	private XPathExpression locationXPathExpression;
 
-	private Resource wsdlResource;
+	private @Nullable Resource wsdlResource;
 
 	public Wsdl11DestinationProvider() {
 		this.expressionNamespaces.put("wsdl", "http://schemas.xmlsoap.org/wsdl/");
@@ -120,7 +121,8 @@ public class Wsdl11DestinationProvider extends AbstractCachingDestinationProvide
 	}
 
 	@Override
-	protected URI lookupDestination() {
+	protected @Nullable URI lookupDestination() {
+		Assert.notNull(this.wsdlResource, "'wsdlResource' must not be null");
 		try {
 			DOMResult result = new DOMResult();
 			Transformer transformer = transformerFactory.newTransformer();

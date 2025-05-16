@@ -16,6 +16,7 @@
 
 package org.springframework.ws.soap;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.ws.FaultAwareWebServiceMessage;
@@ -64,7 +65,7 @@ public interface SoapMessage extends MimeMessage, FaultAwareWebServiceMessage {
 	 * method for {@code getEnvelope().getHeader()}.
 	 * @see SoapEnvelope#getHeader()
 	 */
-	SoapHeader getSoapHeader() throws SoapHeaderException;
+	@Nullable SoapHeader getSoapHeader() throws SoapHeaderException;
 
 	/**
 	 * Returns the SOAP version of this message. This can be either SOAP 1.1 or SOAP 1.2.

@@ -18,6 +18,8 @@ package org.springframework.ws.soap.soap11;
 
 import java.util.Locale;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapFault;
 
 /**
@@ -30,6 +32,6 @@ import org.springframework.ws.soap.SoapFault;
 public interface Soap11Fault extends SoapFault {
 
 	/** Returns the locale of the fault string. */
-	Locale getFaultStringLocale();
+	@Nullable Locale getFaultStringLocale();
 
 }

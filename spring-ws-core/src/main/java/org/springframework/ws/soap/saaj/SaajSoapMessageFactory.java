@@ -31,9 +31,11 @@ import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXParseException;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -67,13 +69,14 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	private static final Log logger = LogFactory.getLog(SaajSoapMessageFactory.class);
 
-	private MessageFactory messageFactory;
+	private @Nullable MessageFactory messageFactory;
 
+	@SuppressWarnings("NullAway.Init")
 	private String messageFactoryProtocol;
 
 	private boolean langAttributeOnSoap11FaultString = true;
 
-	private Map<String, ?> messageProperties;
+	private @Nullable Map<String, ?> messageProperties;
 
 	/** Default, empty constructor. */
 	public SaajSoapMessageFactory() {
@@ -86,6 +89,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	/** Returns the SAAJ {@code MessageFactory} used. */
 	public MessageFactory getMessageFactory() {
+		Assert.state(this.messageFactory != null, "'messageFactory' is required");
 		return this.messageFactory;
 	}
 
@@ -138,51 +142,55 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	@Override
 	public void afterPropertiesSet() {
 		if (this.messageFactory == null) {
-			try {
-				if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
-					if (!StringUtils.hasLength(this.messageFactoryProtocol)) {
-						this.messageFactoryProtocol = SOAPConstants.SOAP_1_1_PROTOCOL;
-					}
-					if (logger.isInfoEnabled()) {
-						logger.info("Creating SAAJ 1.3 MessageFactory with " + this.messageFactoryProtocol);
-					}
-					this.messageFactory = MessageFactory.newInstance(this.messageFactoryProtocol);
-				}
-				else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
-					logger.info("Creating SAAJ 1.2 MessageFactory");
-					this.messageFactory = MessageFactory.newInstance();
-				}
-				else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
-					logger.info("Creating SAAJ 1.1 MessageFactory");
-					this.messageFactory = MessageFactory.newInstance();
-				}
-				else {
-					throw new IllegalStateException(
-							"SaajSoapMessageFactory requires SAAJ 1.1, which was not found on the classpath");
-				}
-			}
-			catch (NoSuchMethodError ex) {
-				throw new SoapMessageCreationException(
-						"Could not create SAAJ MessageFactory. Is the version of the SAAJ specification interfaces ["
-								+ SaajUtils.getSaajVersionString()
-								+ "] the same as the version supported by the application server?",
-						ex);
-			}
-			catch (SOAPException ex) {
-				throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
-			}
+			this.messageFactory = initializeMessageFactory();
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Using MessageFactory class [" + this.messageFactory.getClass().getName() + "]");
 		}
 	}
 
+	private MessageFactory initializeMessageFactory() {
+		try {
+			if (SaajUtils.getSaajVersion() >= SaajUtils.SAAJ_13) {
+				if (!StringUtils.hasLength(this.messageFactoryProtocol)) {
+					this.messageFactoryProtocol = SOAPConstants.SOAP_1_1_PROTOCOL;
+				}
+				if (logger.isInfoEnabled()) {
+					logger.info("Creating SAAJ 1.3 MessageFactory with " + this.messageFactoryProtocol);
+				}
+				return MessageFactory.newInstance(this.messageFactoryProtocol);
+			}
+			else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_12) {
+				logger.info("Creating SAAJ 1.2 MessageFactory");
+				return MessageFactory.newInstance();
+			}
+			else if (SaajUtils.getSaajVersion() == SaajUtils.SAAJ_11) {
+				logger.info("Creating SAAJ 1.1 MessageFactory");
+				return MessageFactory.newInstance();
+			}
+			else {
+				throw new IllegalStateException(
+						"SaajSoapMessageFactory requires SAAJ 1.1, which was not found on the classpath");
+			}
+		}
+		catch (NoSuchMethodError ex) {
+			throw new SoapMessageCreationException(
+					"Could not create SAAJ MessageFactory. Is the version of the SAAJ specification interfaces ["
+							+ SaajUtils.getSaajVersionString()
+							+ "] the same as the version supported by the application server?",
+					ex);
+		}
+		catch (SOAPException ex) {
+			throw new SoapMessageCreationException("Could not create SAAJ MessageFactory: " + ex.getMessage(), ex);
+		}
+	}
+
 	@Override
 	public SaajSoapMessage createWebServiceMessage() {
 		try {
-			SOAPMessage saajMessage = this.messageFactory.createMessage();
+			SOAPMessage saajMessage = getMessageFactory().createMessage();
 			postProcess(saajMessage);
-			return new SaajSoapMessage(saajMessage, this.langAttributeOnSoap11FaultString, this.messageFactory);
+			return new SaajSoapMessage(saajMessage, this.langAttributeOnSoap11FaultString, getMessageFactory());
 		}
 		catch (SOAPException ex) {
 			throw new SoapMessageCreationException("Could not create empty message: " + ex.getMessage(), ex);
@@ -194,7 +202,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 		MimeHeaders mimeHeaders = parseMimeHeaders(inputStream);
 		try {
 			inputStream = checkForUtf8ByteOrderMark(inputStream);
-			SOAPMessage saajMessage = this.messageFactory.createMessage(mimeHeaders, inputStream);
+			SOAPMessage saajMessage = getMessageFactory().createMessage(mimeHeaders, inputStream);
 			saajMessage.getSOAPPart().getEnvelope();
 			postProcess(saajMessage);
 			return new SaajSoapMessage(saajMessage, this.langAttributeOnSoap11FaultString, this.messageFactory);
@@ -209,7 +217,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 				contentType = contentType.replace("startinfo", "start-info");
 				mimeHeaders.setHeader(TransportConstants.HEADER_CONTENT_TYPE, contentType);
 				try {
-					SOAPMessage saajMessage = this.messageFactory.createMessage(mimeHeaders, inputStream);
+					SOAPMessage saajMessage = getMessageFactory().createMessage(mimeHeaders, inputStream);
 					postProcess(saajMessage);
 					return new SaajSoapMessage(saajMessage, this.langAttributeOnSoap11FaultString);
 				}
@@ -228,7 +236,7 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 		}
 	}
 
-	private SAXParseException getSAXParseException(Throwable ex) {
+	private @Nullable SAXParseException getSAXParseException(Throwable ex) {
 		if (ex instanceof SAXParseException) {
 			return (SAXParseException) ex;
 		}

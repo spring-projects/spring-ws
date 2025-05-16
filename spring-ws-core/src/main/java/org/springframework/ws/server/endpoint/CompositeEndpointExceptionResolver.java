@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointExceptionResolver;
 
@@ -35,7 +37,7 @@ public class CompositeEndpointExceptionResolver implements EndpointExceptionReso
 	}
 
 	@Override
-	public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
+	public final boolean resolveException(MessageContext messageContext, @Nullable Object endpoint, Exception ex) {
 		AbstractEndpointExceptionResolver currentResolver = null;
 		for (AbstractEndpointExceptionResolver resolver : this.resolvers) {
 			currentResolver = resolver;
@@ -44,7 +46,7 @@ public class CompositeEndpointExceptionResolver implements EndpointExceptionReso
 			}
 		}
 		if (currentResolver != null) {
-			currentResolver.logException(ex, messageContext);
+			currentResolver.logException(messageContext, ex);
 		}
 		return false;
 	}

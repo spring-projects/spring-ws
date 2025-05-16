@@ -17,4 +17,7 @@
 /**
  * Contains the TransportRequest and TransportResponse interfaces.
  */
+@NullMarked
 package org.springframework.ws.transport;
+
+import org.jspecify.annotations.NullMarked;

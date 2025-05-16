@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.xml.soap.SOAPConstants;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.AbstractReceiverConnection;
@@ -87,7 +88,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		return null;
 	}
 
@@ -157,7 +158,7 @@ public class HttpServletConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	public void setFaultCode(QName faultCode) throws IOException {
+	public void setFaultCode(@Nullable QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
 				getHttpServletResponse().setStatus(HttpTransportConstants.STATUS_BAD_REQUEST);

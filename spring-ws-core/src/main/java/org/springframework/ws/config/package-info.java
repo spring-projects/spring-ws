@@ -17,4 +17,7 @@
 /**
  * Provide a namespace handler for the Spring Web Services namespace.
  */
+@NullMarked
 package org.springframework.ws.config;
+
+import org.jspecify.annotations.NullMarked;

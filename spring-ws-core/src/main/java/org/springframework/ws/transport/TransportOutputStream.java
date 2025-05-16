@@ -19,6 +19,8 @@ package org.springframework.ws.transport;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -32,7 +34,7 @@ import org.springframework.util.Assert;
  */
 public abstract class TransportOutputStream extends OutputStream {
 
-	private OutputStream outputStream;
+	private @Nullable OutputStream outputStream;
 
 	protected TransportOutputStream() {
 	}

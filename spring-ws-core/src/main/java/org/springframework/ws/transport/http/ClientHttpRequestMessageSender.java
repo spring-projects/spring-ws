@@ -43,7 +43,7 @@ public class ClientHttpRequestMessageSender extends AbstractHttpWebServiceMessag
 	}
 
 	public ClientHttpRequestMessageSender(ClientHttpRequestFactory requestFactory) {
-		setRequestFactory(requestFactory);
+		this.requestFactory = requestFactory;
 	}
 
 	public ClientHttpRequestFactory getRequestFactory() {

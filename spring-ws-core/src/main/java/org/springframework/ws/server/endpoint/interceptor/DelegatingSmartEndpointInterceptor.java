@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -92,7 +94,8 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex)
+			throws Exception {
 		getDelegate().afterCompletion(messageContext, endpoint, ex);
 	}
 

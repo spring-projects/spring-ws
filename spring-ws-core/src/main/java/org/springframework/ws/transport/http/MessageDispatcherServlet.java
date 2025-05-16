@@ -16,10 +16,12 @@
 
 package org.springframework.ws.transport.http;
 
+import java.util.Collections;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -112,27 +114,31 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	private String messageReceiverHandlerAdapterBeanName = DEFAULT_MESSAGE_RECEIVER_HANDLER_ADAPTER_BEAN_NAME;
 
 	/** The {@link WebServiceMessageReceiverHandlerAdapter} used by this servlet. */
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter;
 
 	private String wsdlDefinitionHandlerAdapterBeanName = DEFAULT_WSDL_DEFINITION_HANDLER_ADAPTER_BEAN_NAME;
 
 	/** The {@link WsdlDefinitionHandlerAdapter} used by this servlet. */
+	@SuppressWarnings("NullAway.Init")
 	private WsdlDefinitionHandlerAdapter wsdlDefinitionHandlerAdapter;
 
 	private String xsdSchemaHandlerAdapterBeanName = DEFAULT_XSD_SCHEMA_HANDLER_ADAPTER_BEAN_NAME;
 
 	/** The {@link XsdSchemaHandlerAdapter} used by this servlet. */
+	@SuppressWarnings("NullAway.Init")
 	private XsdSchemaHandlerAdapter xsdSchemaHandlerAdapter;
 
 	private String messageReceiverBeanName = DEFAULT_MESSAGE_RECEIVER_BEAN_NAME;
 
 	/** The {@link WebServiceMessageReceiver} used by this servlet. */
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageReceiver messageReceiver;
 
 	/** Keys are bean names, values are {@link WsdlDefinition WsdlDefinitions}. */
-	private Map<String, WsdlDefinition> wsdlDefinitions;
+	private Map<String, WsdlDefinition> wsdlDefinitions = Collections.emptyMap();
 
-	private Map<String, XsdSchema> xsdSchemas;
+	private Map<String, XsdSchema> xsdSchemas = Collections.emptyMap();
 
 	private boolean transformWsdlLocations = false;
 
@@ -142,7 +148,8 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * Public constructor, necessary for some Web application servers.
 	 */
 	public MessageDispatcherServlet() {
-		this(null);
+		super();
+		this.defaultStrategiesHelper = new DefaultStrategiesHelper(MessageDispatcherServlet.class);
 	}
 
 	/**
@@ -337,7 +344,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * @param request the {@code HttpServletRequest}
 	 * @return a definition, or {@code null}
 	 */
-	protected WsdlDefinition getWsdlDefinition(HttpServletRequest request) {
+	protected @Nullable WsdlDefinition getWsdlDefinition(HttpServletRequest request) {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())
 				&& request.getRequestURI().endsWith(WSDL_SUFFIX_NAME)) {
 			String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
@@ -358,7 +365,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	 * @param request the {@code HttpServletRequest}
 	 * @return a schema, or {@code null}
 	 */
-	protected XsdSchema getXsdSchema(HttpServletRequest request) {
+	protected @Nullable XsdSchema getXsdSchema(HttpServletRequest request) {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())
 				&& request.getRequestURI().endsWith(XSD_SUFFIX_NAME)) {
 			String fileName = WebUtils.extractFilenameFromUrlPath(request.getRequestURI());
@@ -459,7 +466,7 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 		catch (NoSuchBeanDefinitionException ex) {
 			this.messageReceiver = this.defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageReceiver.class,
 					context);
-			if (this.messageReceiver instanceof BeanNameAware) {
+			if (this.messageReceiver instanceof BeanNameAware && getServletName() != null) {
 				((BeanNameAware) this.messageReceiver).setBeanName(getServletName());
 			}
 			if (this.logger.isDebugEnabled()) {

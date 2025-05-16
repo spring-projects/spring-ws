@@ -17,4 +17,7 @@
 /**
  * Provides WS-Addressing implementation classes.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing;
+
+import org.jspecify.annotations.NullMarked;

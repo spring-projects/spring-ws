@@ -16,7 +16,11 @@
 
 package org.springframework.ws.soap.server.endpoint;
 
+import java.util.Locale;
+
 import javax.xml.namespace.QName;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.server.endpoint.annotation.FaultCode;
@@ -32,7 +36,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapFault;
 public class SoapFaultAnnotationExceptionResolver extends AbstractSoapFaultDefinitionExceptionResolver {
 
 	@Override
-	protected final SoapFaultDefinition getFaultDefinition(Object endpoint, Exception ex) {
+	protected final @Nullable SoapFaultDefinition getFaultDefinition(@Nullable Object endpoint, Exception ex) {
 		SoapFault faultAnnotation = ex.getClass().getAnnotation(SoapFault.class);
 		if (faultAnnotation != null) {
 			SoapFaultDefinition definition = new SoapFaultDefinition();
@@ -43,7 +47,10 @@ public class SoapFaultAnnotationExceptionResolver extends AbstractSoapFaultDefin
 				definition.setFaultCode(QName.valueOf(faultAnnotation.customFaultCode()));
 			}
 			definition.setFaultStringOrReason(faultAnnotation.faultStringOrReason());
-			definition.setLocale(StringUtils.parseLocaleString(faultAnnotation.locale()));
+			Locale locale = StringUtils.parseLocaleString(faultAnnotation.locale());
+			if (locale != null) {
+				definition.setLocale(locale);
+			}
 			return definition;
 		}
 		else {

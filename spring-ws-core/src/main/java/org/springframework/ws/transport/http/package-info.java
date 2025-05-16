@@ -20,4 +20,7 @@
  * access, and the {@code HttpUrlConnectionMessageSender} and
  * {@code CommonsHttpMessageSender} for client-side access.
  */
+@NullMarked
 package org.springframework.ws.transport.http;
+
+import org.jspecify.annotations.NullMarked;

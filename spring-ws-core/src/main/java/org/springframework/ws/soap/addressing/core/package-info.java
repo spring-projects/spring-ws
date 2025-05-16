@@ -18,4 +18,7 @@
  * Core package for WS-Addressing support. Contains the {@code EndpointReference} and
  * {@code MessageAddressingProperties} classes.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing.core;
+
+import org.jspecify.annotations.NullMarked;

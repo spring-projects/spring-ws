@@ -18,4 +18,7 @@
  * SOAP with Attachments API for Java (SAAJ) support for Spring-WS soap message
  * infrastructure.
  */
+@NullMarked
 package org.springframework.ws.soap.saaj;
+
+import org.jspecify.annotations.NullMarked;

@@ -29,6 +29,7 @@ import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultCode;
 import org.apache.axiom.soap.SOAPFaultReason;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -123,7 +124,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 		faultCode.setText(code);
 	}
 
-	private SOAPFault addStandardFault(String localName, String faultString, Locale locale) {
+	private SOAPFault addStandardFault(String localName, String faultString, @Nullable Locale locale) {
 		Assert.notNull(faultString, "No faultString given");
 		try {
 			AxiomUtils.removeContents(getAxiomBody());
@@ -151,7 +152,7 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 	}
 
 	@Override
-	public Soap11Fault getFault() {
+	public @Nullable Soap11Fault getFault() {
 		SOAPFault axiomFault = getAxiomBody().getFault();
 		return (axiomFault != null) ? new AxiomSoap11Fault(axiomFault, getAxiomFactory()) : null;
 	}

@@ -17,4 +17,7 @@
 /**
  * Provides the {@code DestinationProvider} interface.
  */
+@NullMarked
 package org.springframework.ws.client.support.destination;
+
+import org.jspecify.annotations.NullMarked;

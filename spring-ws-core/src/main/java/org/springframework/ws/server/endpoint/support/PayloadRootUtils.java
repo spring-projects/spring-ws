@@ -30,11 +30,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import org.springframework.lang.Contract;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerHelper;
 import org.springframework.xml.transform.TraxUtils;
@@ -57,12 +59,13 @@ public abstract class PayloadRootUtils {
 	 * not a {@code DOMSource}
 	 * @return the root element, or {@code null} if {@code source} is {@code null}
 	 */
-	public static QName getPayloadRootQName(Source source, TransformerFactory transformerFactory)
+	@Contract("!null, _ -> !null")
+	public static @Nullable QName getPayloadRootQName(@Nullable Source source, TransformerFactory transformerFactory)
 			throws TransformerException {
 		return getPayloadRootQName(source, new TransformerHelper(transformerFactory));
 	}
 
-	public static QName getPayloadRootQName(Source source, TransformerHelper transformerHelper)
+	public static @Nullable QName getPayloadRootQName(@Nullable Source source, TransformerHelper transformerHelper)
 			throws TransformerException {
 		if (source == null) {
 			return null;
@@ -91,7 +94,7 @@ public abstract class PayloadRootUtils {
 
 	private static final class PayloadRootSourceCallback implements TraxUtils.SourceCallback {
 
-		private QName result;
+		private @Nullable QName result;
 
 		@Override
 		public void domSource(Node node) throws Exception {

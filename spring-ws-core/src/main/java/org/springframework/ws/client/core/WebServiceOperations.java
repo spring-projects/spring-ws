@@ -19,6 +19,8 @@ package org.springframework.ws.client.core;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.client.WebServiceClientException;
 
@@ -46,8 +48,8 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendAndReceive(WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
-			throws WebServiceClientException;
+	<T> @Nullable T sendAndReceive(WebServiceMessageCallback requestCallback,
+			WebServiceMessageExtractor<T> responseExtractor) throws WebServiceClientException;
 
 	/**
 	 * Sends a web service message that can be manipulated with the given callback,
@@ -61,7 +63,7 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendAndReceive(String uri, WebServiceMessageCallback requestCallback,
+	<T> @Nullable T sendAndReceive(String uri, WebServiceMessageCallback requestCallback,
 			WebServiceMessageExtractor<T> responseExtractor) throws WebServiceClientException;
 
 	/**
@@ -112,7 +114,7 @@ public interface WebServiceOperations {
 	 * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	Object marshalSendAndReceive(Object requestPayload) throws XmlMappingException, WebServiceClientException;
+	@Nullable Object marshalSendAndReceive(Object requestPayload) throws XmlMappingException, WebServiceClientException;
 
 	/**
 	 * Sends a web service message that contains the given payload, marshalled by the
@@ -128,7 +130,7 @@ public interface WebServiceOperations {
 	 * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	Object marshalSendAndReceive(String uri, Object requestPayload)
+	@Nullable Object marshalSendAndReceive(String uri, Object requestPayload)
 			throws XmlMappingException, WebServiceClientException;
 
 	/**
@@ -148,7 +150,7 @@ public interface WebServiceOperations {
 	 * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	Object marshalSendAndReceive(Object requestPayload, WebServiceMessageCallback requestCallback)
+	@Nullable Object marshalSendAndReceive(Object requestPayload, @Nullable WebServiceMessageCallback requestCallback)
 			throws XmlMappingException, WebServiceClientException;
 
 	/**
@@ -167,8 +169,8 @@ public interface WebServiceOperations {
 	 * @see WebServiceTemplate#setMarshaller(org.springframework.oxm.Marshaller)
 	 * @see WebServiceTemplate#setUnmarshaller(org.springframework.oxm.Unmarshaller)
 	 */
-	Object marshalSendAndReceive(String uri, Object requestPayload, WebServiceMessageCallback requestCallback)
-			throws XmlMappingException, WebServiceClientException;
+	@Nullable Object marshalSendAndReceive(String uri, @Nullable Object requestPayload,
+			@Nullable WebServiceMessageCallback requestCallback) throws XmlMappingException, WebServiceClientException;
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// Convenience methods for sending Sources
@@ -185,7 +187,7 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendSourceAndReceive(Source requestPayload, SourceExtractor<T> responseExtractor)
+	<T> @Nullable T sendSourceAndReceive(Source requestPayload, SourceExtractor<T> responseExtractor)
 			throws WebServiceClientException;
 
 	/**
@@ -198,7 +200,7 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendSourceAndReceive(String uri, Source requestPayload, SourceExtractor<T> responseExtractor)
+	<T> @Nullable T sendSourceAndReceive(String uri, Source requestPayload, SourceExtractor<T> responseExtractor)
 			throws WebServiceClientException;
 
 	/**
@@ -216,7 +218,7 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendSourceAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback,
+	<T> @Nullable T sendSourceAndReceive(Source requestPayload, WebServiceMessageCallback requestCallback,
 			SourceExtractor<T> responseExtractor) throws WebServiceClientException;
 
 	/**
@@ -233,8 +235,9 @@ public interface WebServiceOperations {
 	 * @throws WebServiceClientException if there is a problem sending or receiving the
 	 * message
 	 */
-	<T> T sendSourceAndReceive(String uri, Source requestPayload, WebServiceMessageCallback requestCallback,
-			SourceExtractor<T> responseExtractor) throws WebServiceClientException;
+	<T> @Nullable T sendSourceAndReceive(String uri, Source requestPayload,
+			@Nullable WebServiceMessageCallback requestCallback, SourceExtractor<T> responseExtractor)
+			throws WebServiceClientException;
 
 	// -----------------------------------------------------------------------------------------------------------------
 	// Convenience methods for sending Sources and receiving to Results

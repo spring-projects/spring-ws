@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.InitializingBean;
@@ -66,11 +68,13 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	private static final String SOAP_HEADER_ELEMENT_ARGUMENT_RESOLVER_CLASS_NAME = "org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver";
 
+	@SuppressWarnings("NullAway.Init")
 	private List<MethodArgumentResolver> methodArgumentResolvers;
 
+	@SuppressWarnings("NullAway.Init")
 	private List<MethodReturnValueHandler> methodReturnValueHandlers;
 
-	private ClassLoader classLoader;
+	private @Nullable ClassLoader classLoader;
 
 	/**
 	 * Create a new instance with default method argument and return value resolvers.
@@ -247,7 +251,7 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 
 	@Override
 	protected final void invokeInternal(MessageContext messageContext, MethodEndpoint methodEndpoint) throws Exception {
-		Object[] args = getMethodArguments(messageContext, methodEndpoint);
+		@Nullable Object[] args = getMethodArguments(messageContext, methodEndpoint);
 
 		if (this.logger.isTraceEnabled()) {
 			this.logger.trace("Invoking [" + methodEndpoint + "] with arguments " + Arrays.asList(args));
@@ -276,10 +280,10 @@ public class DefaultMethodEndpointAdapter extends AbstractMethodEndpointAdapter
 	 * @return the arguments
 	 * @throws Exception in case of errors
 	 */
-	protected Object[] getMethodArguments(MessageContext messageContext, MethodEndpoint methodEndpoint)
+	protected @Nullable Object[] getMethodArguments(MessageContext messageContext, MethodEndpoint methodEndpoint)
 			throws Exception {
 		MethodParameter[] parameters = methodEndpoint.getMethodParameters();
-		Object[] args = new Object[parameters.length];
+		@Nullable Object[] args = new Object[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
 			for (MethodArgumentResolver methodArgumentResolver : this.methodArgumentResolvers) {
 				if (methodArgumentResolver.supportsParameter(parameters[i])) {

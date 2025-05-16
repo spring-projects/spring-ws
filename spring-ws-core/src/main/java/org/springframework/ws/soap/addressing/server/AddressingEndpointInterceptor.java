@@ -21,7 +21,9 @@ import java.net.URI;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.lang.Contract;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -51,12 +53,12 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 
 	private final WebServiceMessageSender[] messageSenders;
 
-	private final URI replyAction;
+	private final @Nullable URI replyAction;
 
-	private final URI faultAction;
+	private final @Nullable URI faultAction;
 
 	AddressingEndpointInterceptor(AddressingVersion version, MessageIdStrategy messageIdStrategy,
-			WebServiceMessageSender[] messageSenders, URI replyAction, URI faultAction) {
+			WebServiceMessageSender[] messageSenders, @Nullable URI replyAction, @Nullable URI faultAction) {
 		Assert.notNull(version, "version must not be null");
 		Assert.notNull(messageIdStrategy, "messageIdStrategy must not be null");
 		Assert.notNull(messageSenders, "'messageSenders' must not be null");
@@ -116,7 +118,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		}
 	}
 
-	private boolean handleNoneAddress(MessageContext messageContext, EndpointReference replyEpr) {
+	@Contract("_, null -> true")
+	private boolean handleNoneAddress(MessageContext messageContext, @Nullable EndpointReference replyEpr) {
 		if (replyEpr == null || this.version.hasNoneAddress(replyEpr)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
@@ -173,7 +176,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 	}
 
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 	}
 
 	@Override

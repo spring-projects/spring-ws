@@ -18,6 +18,8 @@ package org.springframework.ws.client;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Exception thrown whenever an I/O error occurs on the client-side.
  *
@@ -31,7 +33,7 @@ public class WebServiceIOException extends WebServiceClientException {
 	 * Create a new instance of the {@code WebServiceIOException} class.
 	 * @param msg the detail message
 	 */
-	public WebServiceIOException(String msg) {
+	public WebServiceIOException(@Nullable String msg) {
 		super(msg);
 	}
 

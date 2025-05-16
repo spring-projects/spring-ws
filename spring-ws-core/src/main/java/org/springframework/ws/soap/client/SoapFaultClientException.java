@@ -18,6 +18,8 @@ package org.springframework.ws.soap.client;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.client.WebServiceFaultException;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
@@ -32,7 +34,7 @@ import org.springframework.ws.soap.SoapMessage;
 @SuppressWarnings("serial")
 public class SoapFaultClientException extends WebServiceFaultException {
 
-	private final SoapFault soapFault;
+	private final @Nullable SoapFault soapFault;
 
 	/**
 	 * Create a new instance of the {@code SoapFaultClientException} class.
@@ -41,16 +43,16 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	public SoapFaultClientException(SoapMessage faultMessage) {
 		super(faultMessage);
 		SoapBody body = faultMessage.getSoapBody();
-		this.soapFault = (body != null) ? body.getFault() : null;
+		this.soapFault = body.getFault();
 	}
 
 	/** Returns the {@link SoapFault}. */
-	public SoapFault getSoapFault() {
+	public @Nullable SoapFault getSoapFault() {
 		return this.soapFault;
 	}
 
 	/** Returns the fault code. */
-	public QName getFaultCode() {
+	public @Nullable QName getFaultCode() {
 		return (this.soapFault != null) ? this.soapFault.getFaultCode() : null;
 	}
 
@@ -60,7 +62,7 @@ public class SoapFaultClientException extends WebServiceFaultException {
 	 * <p>
 	 * Note that this message returns the same as {@link #getMessage()}.
 	 */
-	public String getFaultStringOrReason() {
+	public @Nullable String getFaultStringOrReason() {
 		return (this.soapFault != null) ? this.soapFault.getFaultStringOrReason() : null;
 	}
 

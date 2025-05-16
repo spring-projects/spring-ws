@@ -30,6 +30,7 @@ import javax.xml.namespace.QName;
 
 import com.sun.net.httpserver.HttpExchange;
 import jakarta.xml.soap.SOAPConstants;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
@@ -52,7 +53,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 
 	private final HttpExchange httpExchange;
 
-	private ByteArrayOutputStream responseBuffer;
+	private @Nullable ByteArrayOutputStream responseBuffer;
 
 	private int responseStatusCode = HttpTransportConstants.STATUS_ACCEPTED;
 
@@ -93,7 +94,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		return null;
 	}
 
@@ -143,6 +144,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		if (!this.chunkedEncoding) {
+			Assert.state(this.responseBuffer != null, "responseBuffer has not been initialized");
 			byte[] buf = this.responseBuffer.toByteArray();
 			this.httpExchange.sendResponseHeaders(this.responseStatusCode, buf.length);
 			OutputStream responseBody = this.httpExchange.getResponseBody();
@@ -170,7 +172,7 @@ public class HttpExchangeConnection extends AbstractReceiverConnection
 	}
 
 	@Override
-	public void setFaultCode(QName faultCode) throws IOException {
+	public void setFaultCode(@Nullable QName faultCode) throws IOException {
 		if (faultCode != null) {
 			if (SOAPConstants.SOAP_SENDER_FAULT.equals(faultCode)) {
 				this.responseStatusCode = HttpTransportConstants.STATUS_BAD_REQUEST;

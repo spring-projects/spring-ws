@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.server.endpoint.mapping;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -54,7 +56,7 @@ import org.springframework.ws.soap.server.SoapEndpointMapping;
  */
 public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping implements SoapEndpointMapping {
 
-	private String[] actorsOrRoles;
+	private String @Nullable [] actorsOrRoles;
 
 	private boolean isUltimateReceiver = true;
 
@@ -91,7 +93,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	}
 
 	@Override
-	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		if (messageContext.getRequest() instanceof SoapMessage request) {
 			String soapAction = request.getSoapAction();
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'

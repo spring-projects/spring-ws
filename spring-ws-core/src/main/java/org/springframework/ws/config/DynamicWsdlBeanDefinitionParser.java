@@ -18,6 +18,7 @@ package org.springframework.ws.config;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -98,7 +99,7 @@ class DynamicWsdlBeanDefinitionParser extends AbstractBeanDefinitionParser {
 		}
 	}
 
-	private RootBeanDefinition createBeanDefinition(Class<?> beanClass, Object source) {
+	private RootBeanDefinition createBeanDefinition(Class<?> beanClass, @Nullable Object source) {
 		RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
 		beanDefinition.setSource(source);
 		beanDefinition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);

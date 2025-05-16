@@ -30,6 +30,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -166,7 +167,7 @@ public class SourcePayloadMethodProcessor extends AbstractPayloadSourceMethodPro
 					return (parentLocation != null) ? parentLocation.getLineNumber() : -1;
 				}
 
-				public String getPublicId() {
+				public @Nullable String getPublicId() {
 					return (parentLocation != null) ? parentLocation.getPublicId() : null;
 				}
 

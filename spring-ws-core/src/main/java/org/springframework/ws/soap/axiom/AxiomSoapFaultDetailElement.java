@@ -21,6 +21,7 @@ import javax.xml.transform.Result;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.soap.SOAPFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
@@ -48,7 +49,7 @@ class AxiomSoapFaultDetailElement extends AxiomSoapElement implements SoapFaultD
 	}
 
 	@Override
-	public void addText(String text) {
+	public void addText(@Nullable String text) {
 		try {
 			getAxiomElement().setText(text);
 		}

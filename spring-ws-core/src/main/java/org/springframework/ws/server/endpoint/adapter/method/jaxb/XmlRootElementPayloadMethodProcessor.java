@@ -20,6 +20,7 @@ import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
@@ -46,7 +47,8 @@ public class XmlRootElementPayloadMethodProcessor extends AbstractJaxb2PayloadMe
 	}
 
 	@Override
-	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws JAXBException {
+	public @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
+			throws JAXBException {
 		Class<?> parameterType = parameter.getParameterType();
 
 		if (parameterType.isAnnotationPresent(XmlRootElement.class)) {

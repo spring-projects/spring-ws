@@ -42,6 +42,7 @@ public class WsdlDefinitionHttpHandler extends TransformerObjectSupport implemen
 
 	private static final String CONTENT_TYPE = "text/xml";
 
+	@SuppressWarnings("NullAway.Init")
 	private WsdlDefinition definition;
 
 	public WsdlDefinitionHttpHandler() {

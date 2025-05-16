@@ -20,6 +20,8 @@ import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.wsdl11.provider.BindingsProvider;
@@ -62,19 +64,19 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	/** The prefix used to register the target namespace in the WSDL. */
 	public static final String TARGET_NAMESPACE_PREFIX = "tns";
 
-	private ImportsProvider importsProvider;
+	private @Nullable ImportsProvider importsProvider;
 
-	private TypesProvider typesProvider;
+	private @Nullable TypesProvider typesProvider;
 
-	private MessagesProvider messagesProvider;
+	private @Nullable MessagesProvider messagesProvider;
 
-	private PortTypesProvider portTypesProvider;
+	private @Nullable PortTypesProvider portTypesProvider;
 
-	private BindingsProvider bindingsProvider;
+	private @Nullable BindingsProvider bindingsProvider;
 
-	private ServicesProvider servicesProvider;
+	private @Nullable ServicesProvider servicesProvider;
 
-	private String targetNamespace;
+	private @Nullable String targetNamespace;
 
 	/**
 	 * Returns the {@link ImportsProvider} for this definition.
@@ -82,7 +84,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Default is {@code null}, indicating that no {@code &lt;import&gt;} will be created
 	 * @return the import provider; or {@code null}
 	 */
-	public ImportsProvider getImportsProvider() {
+	public @Nullable ImportsProvider getImportsProvider() {
 		return this.importsProvider;
 	}
 
@@ -102,7 +104,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * Defaults to {@code null}, indicating that no {@code &lt;types&gt;} will be created
 	 * @return the types provider; or {@code null}
 	 */
-	public TypesProvider getTypesProvider() {
+	public @Nullable TypesProvider getTypesProvider() {
 		return this.typesProvider;
 	}
 
@@ -123,7 +125,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * created
 	 * @return the messages provider; or {@code null}
 	 */
-	public MessagesProvider getMessagesProvider() {
+	public @Nullable MessagesProvider getMessagesProvider() {
 		return this.messagesProvider;
 	}
 
@@ -145,7 +147,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * created
 	 * @return the port types provider; or {@code null}
 	 */
-	public PortTypesProvider getPortTypesProvider() {
+	public @Nullable PortTypesProvider getPortTypesProvider() {
 		return this.portTypesProvider;
 	}
 
@@ -167,7 +169,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * created
 	 * @return the binding provider; or {@code null}
 	 */
-	public BindingsProvider getBindingsProvider() {
+	public @Nullable BindingsProvider getBindingsProvider() {
 		return this.bindingsProvider;
 	}
 
@@ -189,7 +191,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * created
 	 * @return the services provider; or {@code null}
 	 */
-	public ServicesProvider getServicesProvider() {
+	public @Nullable ServicesProvider getServicesProvider() {
 		return this.servicesProvider;
 	}
 
@@ -209,7 +211,7 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 * @return the target namespace
 	 * @see javax.wsdl.Definition#getTargetNamespace()
 	 */
-	public String getTargetNamespace() {
+	public @Nullable String getTargetNamespace() {
 		return this.targetNamespace;
 	}
 
@@ -224,11 +226,11 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 
 	@Override
 	public void afterPropertiesSet() throws WSDLException {
-		Assert.notNull(getTargetNamespace(), "'targetNamespace' is required");
+		Assert.notNull(this.targetNamespace, "'targetNamespace' is required");
 		WSDLFactory wsdlFactory = WSDLFactory.newInstance();
 		Definition definition = wsdlFactory.newDefinition();
 		definition.setTargetNamespace(getTargetNamespace());
-		definition.addNamespace(TARGET_NAMESPACE_PREFIX, getTargetNamespace());
+		definition.addNamespace(TARGET_NAMESPACE_PREFIX, this.targetNamespace);
 		if (this.importsProvider != null) {
 			this.importsProvider.addImports(definition);
 		}

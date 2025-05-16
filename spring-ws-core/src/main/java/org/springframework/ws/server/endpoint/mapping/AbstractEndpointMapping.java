@@ -21,8 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
@@ -44,18 +47,18 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 
 	private int order = Integer.MAX_VALUE; // default: same as non-Ordered
 
-	private Object defaultEndpoint;
+	private @Nullable Object defaultEndpoint;
 
-	private EndpointInterceptor[] interceptors;
+	private EndpointInterceptor @Nullable [] interceptors;
 
-	private SmartEndpointInterceptor[] smartInterceptors;
+	private SmartEndpointInterceptor @Nullable [] smartInterceptors;
 
 	/**
 	 * Returns the endpoint interceptors to apply to all endpoints mapped by this endpoint
 	 * mapping.
 	 * @return array of endpoint interceptors, or {@code null} if none
 	 */
-	public EndpointInterceptor[] getInterceptors() {
+	public EndpointInterceptor @Nullable [] getInterceptors() {
 		return this.interceptors;
 	}
 
@@ -98,7 +101,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 */
 	protected void initInterceptors() {
 		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
-			.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
+			.beansOfTypeIncludingAncestors(obtainApplicationContext(), SmartEndpointInterceptor.class, true, false);
 		if (!smartInterceptors.isEmpty()) {
 			this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
 		}
@@ -111,7 +114,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * @see #getEndpointInternal(org.springframework.ws.context.MessageContext)
 	 */
 	@Override
-	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+	public final @Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
 		Object endpoint = resoleEndpoint(messageContext);
 		if (endpoint == null) {
 			return null;
@@ -131,7 +134,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 				interceptors.toArray(new EndpointInterceptor[0]));
 	}
 
-	private Object resoleEndpoint(MessageContext messageContext) throws Exception {
+	private @Nullable Object resoleEndpoint(MessageContext messageContext) throws Exception {
 		Object endpoint = getEndpointInternal(messageContext);
 		if (endpoint == null) {
 			endpoint = this.defaultEndpoint;
@@ -141,9 +144,6 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 		}
 		if (endpoint instanceof String endpointName) {
 			endpoint = resolveStringEndpoint(endpointName);
-			if (endpoint == null) {
-				return null;
-			}
 		}
 		return endpoint;
 	}
@@ -173,7 +173,7 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * Returns the default endpoint for this endpoint mapping.
 	 * @return the default endpoint mapping, or null if none
 	 */
-	protected final Object getDefaultEndpoint() {
+	protected final @Nullable Object getDefaultEndpoint() {
 		return this.defaultEndpoint;
 	}
 
@@ -194,9 +194,10 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * @param endpointName the endpoint name
 	 * @return the resolved endpoint, or {@code null} if the name could not be resolved
 	 */
-	protected Object resolveStringEndpoint(String endpointName) {
-		if (getApplicationContext().containsBean(endpointName)) {
-			return getApplicationContext().getBean(endpointName);
+	protected @Nullable Object resolveStringEndpoint(String endpointName) {
+		ApplicationContext applicationContext = obtainApplicationContext();
+		if (applicationContext.containsBean(endpointName)) {
+			return applicationContext.getBean(endpointName);
 		}
 		else {
 			return null;
@@ -214,6 +215,6 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 	 * @return the looked up endpoint instance, or null
 	 * @throws Exception if there is an error
 	 */
-	protected abstract Object getEndpointInternal(MessageContext messageContext) throws Exception;
+	protected abstract @Nullable Object getEndpointInternal(MessageContext messageContext) throws Exception;
 
 }

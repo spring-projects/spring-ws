@@ -18,4 +18,7 @@
  * Core package of the Spring-WS client-side support. Provides a WebServiceTemplate class
  * and various callback interfaces.
  */
+@NullMarked
 package org.springframework.ws.client.core;
+
+import org.jspecify.annotations.NullMarked;

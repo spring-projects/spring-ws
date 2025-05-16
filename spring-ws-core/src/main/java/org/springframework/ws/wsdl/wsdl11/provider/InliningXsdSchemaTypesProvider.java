@@ -26,6 +26,7 @@ import javax.xml.transform.dom.DOMResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -50,7 +51,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 	/** The prefix used to register the schema namespace in the WSDL. */
 	public static final String SCHEMA_PREFIX = "sch";
 
-	private XsdSchemaCollection schemaCollection;
+	private @Nullable XsdSchemaCollection schemaCollection;
 
 	/**
 	 * Sets the single XSD schema to inline. Either this property, or
@@ -71,6 +72,7 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 
 	/** Returns the XSD schema collection to inline. */
 	public XsdSchemaCollection getSchemaCollection() {
+		Assert.notNull(this.schemaCollection, "setting 'schema' or 'schemaCollection' is required");
 		return this.schemaCollection;
 	}
 
@@ -84,9 +86,8 @@ public class InliningXsdSchemaTypesProvider extends TransformerObjectSupport imp
 
 	@Override
 	public void addTypes(Definition definition) throws WSDLException {
-		Assert.notNull(getSchemaCollection(), "setting 'schema' or 'schemaCollection' is required");
 		Types types = definition.createTypes();
-		XsdSchema[] schemas = this.schemaCollection.getXsdSchemas();
+		XsdSchema[] schemas = getSchemaCollection().getXsdSchemas();
 		for (int i = 0; i < schemas.length; i++) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Inlining " + schemas[i]);

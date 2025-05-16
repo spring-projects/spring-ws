@@ -17,4 +17,7 @@
 /**
  * Provides standard endpoint, and {@code EndpointAdapter} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint;
+
+import org.jspecify.annotations.NullMarked;

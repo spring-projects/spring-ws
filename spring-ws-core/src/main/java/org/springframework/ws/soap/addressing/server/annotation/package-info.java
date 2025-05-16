@@ -17,4 +17,7 @@
 /**
  * Annotations for server-side WS-Addressing support.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing.server.annotation;
+
+import org.jspecify.annotations.NullMarked;

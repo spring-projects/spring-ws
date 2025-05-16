@@ -20,6 +20,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -55,7 +57,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
 public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<String>
 		implements SoapEndpointMapping {
 
-	private String[] actorsOrRoles;
+	private String @Nullable [] actorsOrRoles;
 
 	private boolean isUltimateReceiver = true;
 
@@ -92,7 +94,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	}
 
 	@Override
-	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		if (messageContext.getRequest() instanceof SoapMessage request) {
 			String soapAction = request.getSoapAction();
 			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
@@ -109,7 +111,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	}
 
 	@Override
-	protected String getLookupKeyForMethod(Method method) {
+	protected @Nullable String getLookupKeyForMethod(Method method) {
 		SoapAction soapAction = AnnotationUtils.findAnnotation(method, SoapAction.class);
 		return (soapAction != null) ? soapAction.value() : null;
 	}

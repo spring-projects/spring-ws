@@ -20,6 +20,8 @@ import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFaultException;
 
@@ -44,7 +46,7 @@ public interface Soap12Body extends SoapBody {
 	Soap12Fault addDataEncodingUnknownFault(QName[] subcodes, String reason, Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap12Fault getFault();
+	@Nullable Soap12Fault getFault();
 
 	@Override
 	Soap12Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;

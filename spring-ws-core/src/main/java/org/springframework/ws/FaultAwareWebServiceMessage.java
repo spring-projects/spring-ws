@@ -18,6 +18,8 @@ package org.springframework.ws;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Sub-interface of {@link WebServiceMessage} that can contain special Fault messages.
  * Fault messages (such as {@link org.springframework.ws.soap.SoapFault} SOAP Faults)
@@ -39,7 +41,7 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 	/**
 	 * Returns the fault code, if any.
 	 */
-	QName getFaultCode();
+	@Nullable QName getFaultCode();
 
 	/**
 	 * Returns the fault reason message.
@@ -47,6 +49,6 @@ public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 	 * present.
 	 * @see #hasFault()
 	 */
-	String getFaultReason();
+	@Nullable String getFaultReason();
 
 }

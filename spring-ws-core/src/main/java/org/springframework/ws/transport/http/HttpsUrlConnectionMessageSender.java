@@ -30,6 +30,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -50,17 +52,17 @@ public class HttpsUrlConnectionMessageSender extends HttpUrlConnectionMessageSen
 
 	private String sslProtocol = DEFAULT_SSL_PROTOCOL;
 
-	private String sslProvider;
+	private @Nullable String sslProvider;
 
-	private KeyManager[] keyManagers;
+	private KeyManager @Nullable [] keyManagers;
 
-	private TrustManager[] trustManagers;
+	private TrustManager @Nullable [] trustManagers;
 
-	private HostnameVerifier hostnameVerifier;
+	private @Nullable HostnameVerifier hostnameVerifier;
 
-	private SecureRandom rnd;
+	private @Nullable SecureRandom rnd;
 
-	private SSLSocketFactory sslSocketFactory;
+	private @Nullable SSLSocketFactory sslSocketFactory;
 
 	/**
 	 * Sets the SSL protocol to use. Default is {@code ssl}.

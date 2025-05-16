@@ -17,4 +17,7 @@
 /**
  * Streaming support.
  */
+@NullMarked
 package org.springframework.ws.stream;
+
+import org.jspecify.annotations.NullMarked;

@@ -18,6 +18,8 @@ package org.springframework.ws.soap.server.endpoint;
 
 import java.util.Locale;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -60,7 +62,8 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 	}
 
 	@Override
-	protected final boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex) {
+	protected final boolean resolveExceptionInternal(MessageContext messageContext, @Nullable Object endpoint,
+			Exception ex) {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getResponse(),
 				"SimpleSoapExceptionResolver requires a SoapMessage");
 		SoapMessage response = (SoapMessage) messageContext.getResponse();
@@ -74,14 +77,15 @@ public class SimpleSoapExceptionResolver extends AbstractEndpointExceptionResolv
 	/**
 	 * Empty template method to allow subclasses an opportunity to customize the given
 	 * {@link SoapFault}. Called from
-	 * {@link #resolveExceptionInternal(MessageContext,Object,Exception)}.
+	 * {@link AbstractEndpointExceptionResolver#resolveExceptionInternal(MessageContext, Object, Exception)}.
 	 * @param messageContext current message context
 	 * @param endpoint the executed endpoint, or {@code null} if none chosen at the time
 	 * of the exception
 	 * @param ex the exception that got thrown during endpoint execution
 	 * @param fault the SOAP fault to be customized.
 	 */
-	protected void customizeFault(MessageContext messageContext, Object endpoint, Exception ex, SoapFault fault) {
+	protected void customizeFault(MessageContext messageContext, @Nullable Object endpoint, Exception ex,
+			SoapFault fault) {
 	}
 
 }

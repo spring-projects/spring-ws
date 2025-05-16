@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.support;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
@@ -33,9 +35,10 @@ public abstract class AbstractAsyncStandaloneMessageReceiver extends AbstractSta
 	/** Default thread name prefix. */
 	public final String DEFAULT_THREAD_NAME_PREFIX = ClassUtils.getShortName(getClass()) + "-";
 
+	@SuppressWarnings("NullAway.Init")
 	private TaskExecutor taskExecutor;
 
-	private String beanName;
+	private @Nullable String beanName;
 
 	/**
 	 * Set the Spring {@link TaskExecutor} to use for running the listener threads.

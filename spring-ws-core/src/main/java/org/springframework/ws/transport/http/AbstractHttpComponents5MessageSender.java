@@ -24,6 +24,7 @@ import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.protocol.HttpContext;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -75,7 +76,7 @@ public abstract class AbstractHttpComponents5MessageSender extends AbstractHttpW
 	 * @param uri the URI to create the context for
 	 * @return the context, or {@code null}
 	 */
-	protected HttpContext createContext(URI uri) {
+	protected @Nullable HttpContext createContext(URI uri) {
 		return null;
 	}
 

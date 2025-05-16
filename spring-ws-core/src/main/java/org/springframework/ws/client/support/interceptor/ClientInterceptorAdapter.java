@@ -18,6 +18,7 @@ package org.springframework.ws.client.support.interceptor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.context.MessageContext;
@@ -55,7 +56,8 @@ public abstract class ClientInterceptorAdapter implements ClientInterceptor {
 	 * Does nothing by default.
 	 */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+	public void afterCompletion(MessageContext messageContext, @Nullable Exception ex)
+			throws WebServiceClientException {
 
 	}
 

@@ -33,7 +33,9 @@ import org.apache.axiom.om.ds.BlobOMDataSource;
 import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.util.xml.StaxUtils;
 
 /**
@@ -67,7 +69,7 @@ class NonCachingPayload extends AbstractPayload {
 
 		private final XMLStreamWriter delegate;
 
-		private QName name;
+		private @Nullable QName name;
 
 		private String encoding = "UTF-8";
 
@@ -138,6 +140,7 @@ class NonCachingPayload extends AbstractPayload {
 			if (this.elementDepth <= 0 && !this.payloadAdded) {
 				this.delegate.flush();
 				if (this.baos.size() > 0) {
+					Assert.notNull(this.name, "name is required");
 					byte[] buf = this.baos.toByteArray();
 					OMDataSource dataSource = new BlobOMDataSource(Blobs.createBlob(buf), this.encoding);
 					OMNamespace namespace = getAxiomFactory().createOMNamespace(this.name.getNamespaceURI(),

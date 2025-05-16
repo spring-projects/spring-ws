@@ -19,6 +19,8 @@ package org.springframework.ws.server.endpoint.mapping;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -87,17 +89,14 @@ public class UriEndpointMapping extends AbstractMapBasedEndpointMapping {
 	}
 
 	@Override
-	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		TransportContext transportContext = TransportContextHolder.getTransportContext();
 		if (transportContext != null) {
 			WebServiceConnection connection = transportContext.getConnection();
 			if (connection != null) {
 				URI connectionUri = connection.getUri();
-				if (this.usePath) {
-					return connectionUri.getPath();
-				}
-				else {
-					return connectionUri.toString();
+				if (connectionUri != null) {
+					return (this.usePath ? connectionUri.getPath() : connectionUri.toString());
 				}
 			}
 		}

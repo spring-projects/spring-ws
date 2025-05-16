@@ -20,7 +20,9 @@ import java.lang.annotation.Annotation;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.Assert;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 
 /**
@@ -61,15 +63,17 @@ public abstract class AbstractAnnotationMethodEndpointMapping<T> extends Abstrac
 	@Override
 	protected void initApplicationContext() throws BeansException {
 		super.initApplicationContext();
+		ApplicationContext applicationContext = getApplicationContext();
+		Assert.notNull(applicationContext, "No ApplicationContext found");
 		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("Looking for endpoints in application context: " + getApplicationContext());
+			this.logger.debug("Looking for endpoints in application context: " + applicationContext);
 		}
 		String[] beanNames = (this.detectEndpointsInAncestorContexts
-				? BeanFactoryUtils.beanNamesForTypeIncludingAncestors(getApplicationContext(), Object.class)
-				: getApplicationContext().getBeanNamesForType(Object.class));
+				? BeanFactoryUtils.beanNamesForTypeIncludingAncestors(applicationContext, Object.class)
+				: applicationContext.getBeanNamesForType(Object.class));
 
 		for (String beanName : beanNames) {
-			Class<?> endpointClass = getApplicationContext().getType(beanName);
+			Class<?> endpointClass = applicationContext.getType(beanName);
 			if (endpointClass != null
 					&& AnnotationUtils.findAnnotation(endpointClass, getEndpointAnnotationType()) != null) {
 				registerMethods(beanName);

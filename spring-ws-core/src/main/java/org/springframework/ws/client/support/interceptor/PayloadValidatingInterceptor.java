@@ -18,6 +18,8 @@ package org.springframework.ws.client.support.interceptor;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -49,7 +51,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
 	 * validate anything
 	 */
 	@Override
-	protected Source getValidationRequestSource(WebServiceMessage request) {
+	protected @Nullable Source getValidationRequestSource(WebServiceMessage request) {
 		return request.getPayloadSource();
 	}
 
@@ -60,7 +62,7 @@ public class PayloadValidatingInterceptor extends AbstractValidatingInterceptor 
 	 * validate anything
 	 */
 	@Override
-	protected Source getValidationResponseSource(WebServiceMessage response) {
+	protected @Nullable Source getValidationResponseSource(WebServiceMessage response) {
 		return response.getPayloadSource();
 	}
 

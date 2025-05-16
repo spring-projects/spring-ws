@@ -19,6 +19,8 @@ package org.springframework.ws.soap.axiom;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Defines the contract for payloads in Axiom.
  *
@@ -31,7 +33,7 @@ abstract class Payload {
 	 * Returns the source of the payload.
 	 * @return the source of the payload
 	 */
-	public abstract Source getSource();
+	public abstract @Nullable Source getSource();
 
 	/**
 	 * Returns the result of the payload.

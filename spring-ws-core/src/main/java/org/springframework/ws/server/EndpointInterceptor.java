@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 
 /**
@@ -125,6 +127,6 @@ public interface EndpointInterceptor {
 	 * @throws Exception in case of errors
 	 * @since 2.0.2
 	 */
-	void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) throws Exception;
+	void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) throws Exception;
 
 }
