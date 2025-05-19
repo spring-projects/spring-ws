@@ -26,11 +26,14 @@ import jakarta.jms.BytesMessage;
 import jakarta.jms.ConnectionFactory;
 import jakarta.jms.JMSException;
 import jakarta.jms.Message;
+import jakarta.jms.QueueBrowser;
+import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
 import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPException;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.jms.core.BrowserCallback;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.support.MessageBuilder;
@@ -59,6 +64,9 @@ class JmsMessageSenderIntegrationTests {
 	private static final String SOAP_ACTION = "\"http://springframework.org/DoIt\"";
 
 	private static final MessageFactory messageFactory = createMessageFactory();
+
+	@Autowired
+	private ConnectionFactory connectionFactory;
 
 	@Autowired
 	private JmsMessageSender messageSender;
@@ -100,6 +108,7 @@ class JmsMessageSenderIntegrationTests {
 				assertNonEmptyByteMessage(message);
 				return createEmptySoapMessage();
 			});
+			waitForReply(responseQueueName);
 
 			SoapMessage response = (SoapMessage) connection.receive(new SaajSoapMessageFactory(messageFactory));
 			assertThat(response).isNotNull();
@@ -203,6 +212,18 @@ class JmsMessageSenderIntegrationTests {
 		}
 	}
 
+	private void waitForReply(String destinationName) {
+		JmsTemplate jmsTemplate = new JmsTemplate(this.connectionFactory);
+		Awaitility.await()
+			.atMost(Duration.ofSeconds(3))
+			.until(() -> jmsTemplate.browse(destinationName, new BrowserCallback<Boolean>() {
+				@Override
+				public Boolean doInJms(Session session, QueueBrowser browser) throws JMSException {
+					return browser.getEnumeration().hasMoreElements();
+				}
+			}));
+	}
+
 	static class TestJmsListener {
 
 		private ThrowingFunction<jakarta.jms.Message, Object> messageHandler;
@@ -239,7 +260,7 @@ class JmsMessageSenderIntegrationTests {
 		@Bean
 		JmsMessageSender messageSender(ConnectionFactory connectionFactory) {
 			JmsMessageSender messageSender = new JmsMessageSender(connectionFactory);
-			messageSender.setReceiveTimeout(Duration.ofSeconds(2).toMillis());
+			messageSender.setReceiveTimeout(Duration.ofSeconds(1).toMillis());
 			return messageSender;
 		}
 
