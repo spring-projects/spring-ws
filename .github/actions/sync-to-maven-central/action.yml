@@ -24,7 +24,7 @@ runs:
       shell: bash
       run: jf rt download --spec ${{ format('{0}/artifacts.spec', github.action_path) }} --spec-vars 'buildName=${{ format('spring-ws-{0}', inputs.spring-ws-version) }};buildNumber=${{ github.run_number }}'
     - name: Sync
-      uses: spring-io/nexus-sync-action@2a9ee2f355857fc296ff13bc144d96a75ff75a56
+      uses: spring-io/nexus-sync-action@476a41fc5497ba0a3ad6aa179b685486fc62730a # v0.1.1
       with:
         token: ${{ inputs.central-token-password }}
         token-name: ${{ inputs.central-token-username }}
