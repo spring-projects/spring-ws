@@ -5,12 +5,18 @@ plugins {
 }
 
 repositories {
+	gradlePluginPortal()
 	mavenCentral()
 }
 
 dependencies {
+	api(platform("org.junit:junit-bom:${junitVersion}"))
 	checkstyle("com.puppycrawl.tools:checkstyle:${checkstyle.toolVersion}")
 	checkstyle("io.spring.javaformat:spring-javaformat-checkstyle:${javaFormatVersion}")
+
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.assertj:assertj-core:${assertJVersion}")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 gradlePlugin {
@@ -23,5 +29,10 @@ gradlePlugin {
 }
 
 dependencies {
+	implementation("com.github.ben-manes:gradle-versions-plugin:$gradleVersionsPluginVersion")
 	implementation("io.spring.javaformat:spring-javaformat-gradle-plugin:$javaFormatVersion")
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
 }
