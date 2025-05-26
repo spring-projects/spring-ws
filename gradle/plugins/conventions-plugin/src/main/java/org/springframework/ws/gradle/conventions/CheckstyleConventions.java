@@ -45,7 +45,7 @@ public class CheckstyleConventions {
 				.forEach((checkstyle) -> checkstyle.getMaxHeapSize().set("1g"));
 			project.getTasks().named("checkstyleTest").configure((task) -> task.setEnabled(false));
 			CheckstyleExtension checkstyle = project.getExtensions().getByType(CheckstyleExtension.class);
-			checkstyle.setToolVersion("10.21.1");
+			checkstyle.setToolVersion("10.24.0");
 			checkstyle.getConfigDirectory().set(project.getRootProject().file("src/checkstyle"));
 			String version = SpringJavaFormatPlugin.class.getPackage().getImplementationVersion();
 			DependencySet checkstyleDependencies = project.getConfigurations()
