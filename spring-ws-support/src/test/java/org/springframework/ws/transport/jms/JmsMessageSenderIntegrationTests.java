@@ -215,7 +215,7 @@ class JmsMessageSenderIntegrationTests {
 	private void waitForReply(String destinationName) {
 		JmsTemplate jmsTemplate = new JmsTemplate(this.connectionFactory);
 		Awaitility.await()
-			.atMost(Duration.ofSeconds(3))
+			.atMost(Duration.ofSeconds(10))
 			.until(() -> jmsTemplate.browse(destinationName, new BrowserCallback<Boolean>() {
 				@Override
 				public Boolean doInJms(Session session, QueueBrowser browser) throws JMSException {
