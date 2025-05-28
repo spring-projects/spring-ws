@@ -51,6 +51,7 @@ class JavaPluginConventions {
 		enableSourceAndJavadocJars(java);
 		configureSourceAndTargetCompatibility(java);
 		configureDependencyManagement(project);
+		configureVersionUpgradePolicy(project);
 		configureJarManifest(project);
 		configureToolchain(project, java);
 		configureJavadocClasspath(project, java);
@@ -96,6 +97,10 @@ class JavaPluginConventions {
 		DependencyHandler dependencies = project.getDependencies();
 		dependencyManagement.getDependencies()
 			.add(dependencies.enforcedPlatform(dependencies.project(Map.of("path", ":spring-ws-platform"))));
+	}
+
+	private void configureVersionUpgradePolicy(Project project) {
+		new VersionUpgradePluginConventions().apply(project);
 	}
 
 	private void configureJarManifest(Project project) {
