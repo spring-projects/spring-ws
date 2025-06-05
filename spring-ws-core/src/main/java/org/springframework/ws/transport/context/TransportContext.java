@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.context;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
@@ -31,6 +33,6 @@ import org.springframework.ws.transport.WebServiceConnection;
 public interface TransportContext {
 
 	/** Returns the current {@code WebServiceConnection}. */
-	WebServiceConnection getConnection();
+	@Nullable WebServiceConnection getConnection();
 
 }

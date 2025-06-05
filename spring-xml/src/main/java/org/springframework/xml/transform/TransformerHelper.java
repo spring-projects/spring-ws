@@ -23,6 +23,8 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -34,9 +36,9 @@ import org.springframework.util.Assert;
  */
 public class TransformerHelper {
 
-	private volatile TransformerFactory transformerFactory;
+	private volatile @Nullable TransformerFactory transformerFactory;
 
-	private Class<? extends TransformerFactory> transformerFactoryClass;
+	private @Nullable Class<? extends TransformerFactory> transformerFactoryClass;
 
 	/**
 	 * Initializes a new instance of the {@code TransformerHelper}.
@@ -81,7 +83,8 @@ public class TransformerHelper {
 	 * @see #setTransformerFactoryClass
 	 * @see #getTransformerFactory()
 	 */
-	protected TransformerFactory newTransformerFactory(Class<? extends TransformerFactory> transformerFactoryClass) {
+	protected TransformerFactory newTransformerFactory(
+			@Nullable Class<? extends TransformerFactory> transformerFactoryClass) {
 		if (transformerFactoryClass != null) {
 			return TransformerFactoryUtils.newInstance(transformerFactoryClass);
 		}

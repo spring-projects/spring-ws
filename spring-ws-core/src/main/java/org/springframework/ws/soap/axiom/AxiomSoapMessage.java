@@ -40,6 +40,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPMessage;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.util.Assert;
@@ -76,13 +77,13 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 
 	private final boolean payloadCaching;
 
-	private AxiomSoapEnvelope envelope;
+	private @Nullable AxiomSoapEnvelope envelope;
 
 	private String soapAction;
 
 	private final boolean langAttributeOnSoap11FaultString;
 
-	private OMOutputFormat outputFormat;
+	private @Nullable OMOutputFormat outputFormat;
 
 	/**
 	 * Create a new, empty {@code AxiomSoapMessage}.
@@ -237,7 +238,7 @@ public class AxiomSoapMessage extends AbstractSoapMessage implements StreamingWe
 	}
 
 	@Override
-	public Attachment getAttachment(String contentId) {
+	public @Nullable Attachment getAttachment(String contentId) {
 		Assert.hasLength(contentId, "contentId must not be empty");
 		if (contentId.startsWith("<") && contentId.endsWith(">")) {
 			contentId = contentId.substring(1, contentId.length() - 1);

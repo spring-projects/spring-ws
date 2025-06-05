@@ -17,4 +17,7 @@
 /**
  * X.509 client-certificate authentication support.
  */
+@NullMarked
 package org.springframework.ws.soap.security.x509;
+
+import org.jspecify.annotations.NullMarked;

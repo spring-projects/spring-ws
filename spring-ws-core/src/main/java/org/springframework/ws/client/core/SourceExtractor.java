@@ -21,6 +21,8 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Callback interface for extracting a result object from a
  * {@link javax.xml.transform.Source} instance.
@@ -49,6 +51,6 @@ public interface SourceExtractor<T> {
 	 * typically be stateful in the latter case)
 	 * @throws IOException in case of I/O errors
 	 */
-	T extractData(Source source) throws IOException, TransformerException;
+	@Nullable T extractData(@Nullable Source source) throws IOException, TransformerException;
 
 }

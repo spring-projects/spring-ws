@@ -16,6 +16,8 @@
 
 package org.springframework.ws;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.NestedRuntimeException;
 
 /**
@@ -31,7 +33,7 @@ public abstract class WebServiceException extends NestedRuntimeException {
 	 * Create a new instance of the {@code WebServiceException} class.
 	 * @param msg the detail message
 	 */
-	public WebServiceException(String msg) {
+	public WebServiceException(@Nullable String msg) {
 		super(msg);
 	}
 
@@ -40,7 +42,7 @@ public abstract class WebServiceException extends NestedRuntimeException {
 	 * @param msg the detail message
 	 * @param ex the root {@link Throwable exception}
 	 */
-	public WebServiceException(String msg, Throwable ex) {
+	public WebServiceException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 

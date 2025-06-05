@@ -18,6 +18,7 @@ package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.xml.sax.SAXParseException;
 
@@ -57,7 +58,7 @@ public class SchemaValidatingMatcher implements WebServiceMessageMatcher {
 
 	@Override
 	public void match(WebServiceMessage message) throws IOException, AssertionError {
-		SAXParseException[] exceptions = this.xmlValidator.validate(message.getPayloadSource());
+		SAXParseException[] exceptions = this.xmlValidator.validate(Objects.requireNonNull(message.getPayloadSource()));
 		if (!ObjectUtils.isEmpty(exceptions)) {
 			AssertionErrors.fail("XML is not valid: " + Arrays.toString(exceptions), "Payload",
 					message.getPayloadSource());

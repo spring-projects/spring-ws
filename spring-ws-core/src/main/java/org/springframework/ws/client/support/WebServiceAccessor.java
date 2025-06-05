@@ -41,8 +41,10 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public abstract class WebServiceAccessor extends TransformerObjectSupport implements InitializingBean {
 
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageFactory messageFactory;
 
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageSender[] messageSenders;
 
 	/** Returns the message factory used for creating messages. */

@@ -18,6 +18,7 @@ package org.springframework.xml.xpath;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -26,6 +27,7 @@ import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -118,7 +120,8 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 	}
 
 	@Override
-	public <T> T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+	public <T> @Nullable T evaluateAsObject(String expression, Source context, NodeMapper<T> nodeMapper)
+			throws XPathException {
 		try {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
@@ -172,8 +175,9 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 
 	private XPath createXPath(String expression) throws JaxenException {
 		XPath xpath = new DOMXPath(expression);
-		if (getNamespaces() != null && !getNamespaces().isEmpty()) {
-			xpath.setNamespaceContext(new SimpleNamespaceContext(getNamespaces()));
+		Map<String, String> namespaces = getNamespaces();
+		if (!namespaces.isEmpty()) {
+			xpath.setNamespaceContext(new SimpleNamespaceContext(namespaces));
 		}
 		return xpath;
 	}

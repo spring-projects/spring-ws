@@ -18,6 +18,10 @@ package org.springframework.ws.test.support;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.lang.Contract;
+
 /**
  * JUnit independent assertion class.
  *
@@ -34,7 +38,8 @@ public abstract class AssertionErrors {
 	 * Fails a test with the given message.
 	 * @param message the message
 	 */
-	public static void fail(String message) {
+	@Contract("_ -> fail")
+	public static void fail(@Nullable String message) {
 		throw new AssertionError(message);
 	}
 
@@ -43,7 +48,7 @@ public abstract class AssertionErrors {
 	 * @param message the message
 	 * @param source the source
 	 */
-	public static void fail(String message, String sourceLabel, Source source) {
+	public static void fail(String message, @Nullable String sourceLabel, @Nullable Source source) {
 		if (source != null) {
 			throw new SourceAssertionError(message, sourceLabel, source);
 		}
@@ -68,7 +73,8 @@ public abstract class AssertionErrors {
 	 * @param message the message
 	 * @param condition the condition to test for
 	 */
-	public static void assertTrue(String message, boolean condition, String sourceLabel, Source source) {
+	public static void assertTrue(String message, boolean condition, @Nullable String sourceLabel,
+			@Nullable Source source) {
 		if (!condition) {
 			fail(message, sourceLabel, source);
 		}
@@ -81,7 +87,7 @@ public abstract class AssertionErrors {
 	 * @param expected the expected value
 	 * @param actual the actual value
 	 */
-	public static void assertEquals(String message, Object expected, Object actual) {
+	public static void assertEquals(String message, @Nullable Object expected, @Nullable Object actual) {
 		assertEquals(message, expected, actual, null, null);
 	}
 
@@ -93,7 +99,8 @@ public abstract class AssertionErrors {
 	 * @param actual the actual value
 	 * @param source the source
 	 */
-	public static void assertEquals(String message, Object expected, Object actual, String sourceLabel, Source source) {
+	public static void assertEquals(String message, @Nullable Object expected, @Nullable Object actual,
+			@Nullable String sourceLabel, @Nullable Source source) {
 		if (expected == null && actual == null) {
 			return;
 		}

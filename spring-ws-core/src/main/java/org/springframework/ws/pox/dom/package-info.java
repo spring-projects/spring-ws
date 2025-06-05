@@ -17,4 +17,7 @@
 /**
  * Contains an implementation of the POX interfaces that is based on DOM.
  */
+@NullMarked
 package org.springframework.ws.pox.dom;
+
+import org.jspecify.annotations.NullMarked;

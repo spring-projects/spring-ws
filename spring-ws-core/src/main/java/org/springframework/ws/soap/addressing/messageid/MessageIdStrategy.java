@@ -18,6 +18,8 @@ package org.springframework.ws.soap.addressing.messageid;
 
 import java.net.URI;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapMessage;
 
 /**
@@ -34,7 +36,7 @@ public interface MessageIdStrategy {
 	 * @param messageId the message id
 	 * @return {@code true} if a duplicate; {@code false} otherwise
 	 */
-	boolean isDuplicate(URI messageId);
+	boolean isDuplicate(@Nullable URI messageId);
 
 	/**
 	 * Returns a new WS-Addressing {@code MessageID} for the given {@link SoapMessage}.

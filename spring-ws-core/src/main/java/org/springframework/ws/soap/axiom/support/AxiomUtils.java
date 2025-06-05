@@ -32,6 +32,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -91,7 +92,7 @@ public abstract class AxiomUtils {
 	 * @param language the language string
 	 * @return the locale
 	 */
-	public static Locale toLocale(String language) {
+	public static @Nullable Locale toLocale(String language) {
 		language = language.replace('-', '_');
 		return StringUtils.parseLocaleString(language);
 	}

@@ -25,6 +25,8 @@ import java.util.Map;
 
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -84,7 +86,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
 public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport
 		implements SoapEndpointMapping, ApplicationContextAware, InitializingBean, Ordered {
 
-	private String[] actorsOrRoles;
+	private String @Nullable [] actorsOrRoles;
 
 	private boolean isUltimateReceiver = true;
 
@@ -100,22 +102,17 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	private SmartEndpointInterceptor[] smartInterceptors = new SmartEndpointInterceptor[0];
 
-	private ApplicationContext applicationContext;
+	private @Nullable ApplicationContext applicationContext;
 
 	private int order = Integer.MAX_VALUE; // default: same as non-Ordered
 
-	/** Protected constructor. Initializes the default settings. */
-	protected AbstractAddressingEndpointMapping() {
-		initDefaultStrategies();
-	}
-
 	/**
-	 * Initializes the default implementation for this mapping's strategies: the
+	 * Create a new instance with the default strategies, that is the
 	 * {@link org.springframework.ws.soap.addressing.version.Addressing200408} and
 	 * {@link org.springframework.ws.soap.addressing.version.Addressing10} versions of the
 	 * specification, and the {@link UuidMessageIdStrategy}.
 	 */
-	protected void initDefaultStrategies() {
+	protected AbstractAddressingEndpointMapping() {
 		this.versions = new AddressingVersion[] { new Addressing200408(), new Addressing10() };
 		this.messageIdStrategy = new UuidMessageIdStrategy();
 	}
@@ -138,6 +135,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	public ApplicationContext getApplicationContext() {
+		Assert.state(this.applicationContext != null, "No ApplicationContext set");
 		return this.applicationContext;
 	}
 
@@ -243,17 +241,16 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		if (this.logger.isInfoEnabled()) {
 			this.logger.info("Supporting " + Arrays.asList(this.versions));
 		}
-		if (getApplicationContext() != null) {
-			Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
-				.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
-			if (!smartInterceptors.isEmpty()) {
-				this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
-			}
+		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
+			.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
+		if (!smartInterceptors.isEmpty()) {
+			this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
 		}
 	}
 
 	@Override
-	public final EndpointInvocationChain getEndpoint(MessageContext messageContext) throws TransformerException {
+	public final @Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext)
+			throws TransformerException {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		SoapMessage request = (SoapMessage) messageContext.getRequest();
 		for (AddressingVersion version : this.versions) {
@@ -262,9 +259,6 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 					this.logger.debug("Request [" + request + "] uses [" + version + "]");
 				}
 				MessageAddressingProperties requestMap = version.getMessageAddressingProperties(request);
-				if (requestMap == null) {
-					return null;
-				}
 				Object endpoint = getEndpointInternal(requestMap);
 				if (endpoint == null) {
 					return null;
@@ -294,11 +288,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		interceptors.add(addressingInterceptor);
 		interceptors.addAll(Arrays.asList(this.postInterceptors));
 
-		if (this.smartInterceptors != null) {
-			for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
-				if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
-					interceptors.add(smartInterceptor);
-				}
+		for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
+			if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
+				interceptors.add(smartInterceptor);
 			}
 		}
 
@@ -346,7 +338,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * @param map the message addressing properties
 	 * @return the endpoint, or {@code null}
 	 */
-	protected abstract Object getEndpointInternal(MessageAddressingProperties map);
+	protected abstract @Nullable Object getEndpointInternal(MessageAddressingProperties map);
 
 	/**
 	 * Provides the WS-Addressing Action for response messages, given the endpoint, and
@@ -355,7 +347,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * @param requestMap the MAP for the request
 	 * @return the response Action
 	 */
-	protected abstract URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap);
+	protected abstract @Nullable URI getResponseAction(Object endpoint, MessageAddressingProperties requestMap);
 
 	/**
 	 * Provides the WS-Addressing Action for response fault messages, given the endpoint,
@@ -364,6 +356,6 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * @param requestMap the MAP for the request
 	 * @return the response Action
 	 */
-	protected abstract URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap);
+	protected abstract @Nullable URI getFaultAction(Object endpoint, MessageAddressingProperties requestMap);
 
 }

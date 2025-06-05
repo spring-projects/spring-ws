@@ -20,6 +20,8 @@ import java.io.Serial;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -39,7 +41,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private Object principal;
+	private @Nullable Object principal;
 
 	private final X509Certificate credentials;
 
@@ -82,7 +84,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 	}
 
 	@Override
-	public Object getPrincipal() {
+	public @Nullable Object getPrincipal() {
 		return this.principal;
 	}
 

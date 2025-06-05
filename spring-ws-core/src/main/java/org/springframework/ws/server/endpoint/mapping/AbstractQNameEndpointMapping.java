@@ -18,6 +18,8 @@ package org.springframework.ws.server.endpoint.mapping;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.namespace.QNameUtils;
 
@@ -31,7 +33,7 @@ import org.springframework.xml.namespace.QNameUtils;
 public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpointMapping {
 
 	@Override
-	protected final String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected final @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		QName qName = resolveQName(messageContext);
 		return (qName != null) ? qName.toString() : null;
 	}
@@ -40,7 +42,7 @@ public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpo
 	 * Template method that resolves the qualified names from the given SOAP message.
 	 * @return an array of qualified names that serve as registration keys
 	 */
-	protected abstract QName resolveQName(MessageContext messageContext) throws Exception;
+	protected abstract @Nullable QName resolveQName(MessageContext messageContext) throws Exception;
 
 	@Override
 	protected boolean validateLookupKey(String key) {

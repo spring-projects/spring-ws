@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanCreationException;
@@ -65,7 +66,7 @@ public class MockStrategiesHelper {
 	 * @return the bean, or {@code null} if no bean of the given type can be found
 	 * @throws BeanInitializationException if there is more than 1 beans of the given type
 	 */
-	public <T> T getStrategy(Class<T> type) {
+	public <T> @Nullable T getStrategy(Class<T> type) {
 		Assert.notNull(type, "'type' must not be null");
 		Map<String, T> map = this.applicationContext.getBeansOfType(type);
 		if (map.isEmpty()) {

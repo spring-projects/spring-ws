@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 
 /**
@@ -35,6 +37,6 @@ public interface EndpointExceptionResolver {
 	 * @param ex the exception that got thrown during endpoint execution
 	 * @return {@code true} if resolved; {@code false} otherwise
 	 */
-	boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex);
+	boolean resolveException(MessageContext messageContext, @Nullable Object endpoint, Exception ex);
 
 }

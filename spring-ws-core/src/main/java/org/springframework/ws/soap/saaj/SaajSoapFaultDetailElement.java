@@ -21,6 +21,7 @@ import javax.xml.transform.dom.DOMResult;
 
 import jakarta.xml.soap.DetailEntry;
 import jakarta.xml.soap.SOAPException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapFaultDetailElement;
 
@@ -43,7 +44,7 @@ class SaajSoapFaultDetailElement extends SaajSoapElement<DetailEntry> implements
 	}
 
 	@Override
-	public void addText(String text) {
+	public void addText(@Nullable String text) {
 		try {
 			getSaajDetailEntry().addTextNode(text);
 		}

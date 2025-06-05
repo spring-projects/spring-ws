@@ -21,6 +21,8 @@ import java.util.Locale;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapFault;
 
 /**
@@ -46,7 +48,7 @@ public interface Soap12Fault extends SoapFault {
 	void addFaultSubcode(QName subcode);
 
 	/** Returns the fault node. Optional. */
-	String getFaultNode();
+	@Nullable String getFaultNode();
 
 	/** Sets the fault node. */
 	void setFaultNode(String uri);
@@ -55,6 +57,6 @@ public interface Soap12Fault extends SoapFault {
 	void setFaultReasonText(Locale locale, String text);
 
 	/** Returns the reason associated with the given language. */
-	String getFaultReasonText(Locale locale);
+	@Nullable String getFaultReasonText(Locale locale);
 
 }

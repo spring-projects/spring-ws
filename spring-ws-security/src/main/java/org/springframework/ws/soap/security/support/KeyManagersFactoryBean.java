@@ -21,6 +21,8 @@ import java.security.KeyStore;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
@@ -38,21 +40,21 @@ import org.springframework.util.StringUtils;
  */
 public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, InitializingBean {
 
-	private KeyManager[] keyManagers;
+	private KeyManager @Nullable [] keyManagers;
 
-	private KeyStore keyStore;
+	private @Nullable KeyStore keyStore;
 
-	private String algorithm;
+	private @Nullable String algorithm;
 
-	private String provider;
+	private @Nullable String provider;
 
-	private char[] password;
+	private char @Nullable [] password;
 
 	/**
 	 * Sets the password to use for integrity checking. If this property is not set, then
 	 * integrity checking is not performed.
 	 */
-	public void setPassword(String password) {
+	public void setPassword(@Nullable String password) {
 		if (password != null) {
 			this.password = password.toCharArray();
 		}
@@ -84,7 +86,7 @@ public class KeyManagersFactoryBean implements FactoryBean<KeyManager[]>, Initia
 	}
 
 	@Override
-	public KeyManager[] getObject() throws Exception {
+	public KeyManager @Nullable [] getObject() throws Exception {
 		return this.keyManagers;
 	}
 

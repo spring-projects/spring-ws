@@ -17,4 +17,7 @@
 /**
  * JDK 1.5+ annotations for Spring-WS endpoints.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.annotation;
+
+import org.jspecify.annotations.NullMarked;

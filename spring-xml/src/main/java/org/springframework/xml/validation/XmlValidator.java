@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -56,6 +57,6 @@ public interface XmlValidator {
 	 * @throws IOException if the {@code source} cannot be read
 	 * @throws XmlValidationException if the {@code source} cannot be validated
 	 */
-	SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException;
+	SAXParseException[] validate(Source source, @Nullable ValidationErrorHandler errorHandler) throws IOException;
 
 }

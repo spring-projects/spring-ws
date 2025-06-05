@@ -18,4 +18,7 @@
  * Provides miscellaneous endpoints {@code EndpointMapping} implementations for SOAP
  * purposes.
  */
+@NullMarked
 package org.springframework.ws.soap.server.endpoint.mapping;
+
+import org.jspecify.annotations.NullMarked;

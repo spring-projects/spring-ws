@@ -20,6 +20,8 @@ import java.io.IOException;
 
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -50,6 +52,6 @@ public interface WebServiceMessageExtractor<T> {
 	 * @throws IOException in case of I/O errors
 	 * @throws TransformerException in case of transformation errors
 	 */
-	T extractData(WebServiceMessage message) throws IOException, TransformerException;
+	@Nullable T extractData(WebServiceMessage message) throws IOException, TransformerException;
 
 }

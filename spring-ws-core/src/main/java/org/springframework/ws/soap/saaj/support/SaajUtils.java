@@ -30,6 +30,7 @@ import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -136,6 +137,7 @@ public abstract class SaajUtils {
 	public static Name toName(QName qName, SOAPElement resolveElement) throws SOAPException {
 		String qNamePrefix = qName.getPrefix();
 		SOAPEnvelope envelope = getEnvelope(resolveElement);
+		Assert.notNull(envelope, "SOAPEnvelope must not be null");
 		if (StringUtils.hasLength(qName.getNamespaceURI()) && StringUtils.hasLength(qNamePrefix)) {
 			return envelope.createName(qName.getLocalPart(), qNamePrefix, qName.getNamespaceURI());
 		}
@@ -201,7 +203,7 @@ public abstract class SaajUtils {
 	 * @param element the element to return the envelope from
 	 * @return the envelope, or {@code null} if not found
 	 */
-	public static SOAPEnvelope getEnvelope(SOAPElement element) {
+	public static @Nullable SOAPEnvelope getEnvelope(SOAPElement element) {
 		Assert.notNull(element, "Element should not be null");
 		do {
 			if (element instanceof SOAPEnvelope) {
@@ -216,7 +218,7 @@ public abstract class SaajUtils {
 	/**
 	 * Returns the first child element of the given body.
 	 */
-	public static SOAPElement getFirstBodyElement(SOAPBody body) {
+	public static @Nullable SOAPElement getFirstBodyElement(SOAPBody body) {
 		for (Iterator<?> iterator = body.getChildElements(); iterator.hasNext();) {
 			Object child = iterator.next();
 			if (child instanceof SOAPElement) {

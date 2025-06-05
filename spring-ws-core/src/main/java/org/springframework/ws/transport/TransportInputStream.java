@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -34,7 +36,7 @@ import org.springframework.util.Assert;
  */
 public abstract class TransportInputStream extends InputStream {
 
-	private InputStream inputStream;
+	private @Nullable InputStream inputStream;
 
 	protected TransportInputStream() {
 	}

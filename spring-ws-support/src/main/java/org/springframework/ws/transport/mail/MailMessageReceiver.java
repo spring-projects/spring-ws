@@ -16,6 +16,7 @@
 
 package org.springframework.ws.transport.mail;
 
+import java.util.Objects;
 import java.util.Properties;
 
 import jakarta.mail.Folder;
@@ -27,6 +28,7 @@ import jakarta.mail.Store;
 import jakarta.mail.URLName;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.scheduling.SchedulingAwareRunnable;
 import org.springframework.util.Assert;
@@ -58,17 +60,20 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 
 	private Session session = Session.getInstance(new Properties(), null);
 
+	@SuppressWarnings("NullAway.Init")
 	private URLName storeUri;
 
+	@SuppressWarnings("NullAway.Init")
 	private URLName transportUri;
 
-	private Folder folder;
-
-	private Store store;
-
-	private InternetAddress from;
-
+	@SuppressWarnings("NullAway.Init")
 	private MonitoringStrategy monitoringStrategy;
+
+	private @Nullable Folder folder;
+
+	private @Nullable Store store;
+
+	private @Nullable InternetAddress from;
 
 	/** Sets the from address to use when sending response messages. */
 	public void setFrom(String from) throws AddressException {
@@ -201,7 +206,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 		if (this.folder != null && this.folder.isOpen()) {
 			return;
 		}
-		this.folder = this.store.getFolder(this.storeUri);
+		this.folder = Objects.requireNonNull(this.store).getFolder(this.storeUri);
 		if (this.folder == null || !this.folder.exists()) {
 			throw new IllegalStateException("No default folder to receive from");
 		}
@@ -228,7 +233,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 				while (isRunning()) {
 					try {
 						Message[] messages = MailMessageReceiver.this.monitoringStrategy
-							.monitor(MailMessageReceiver.this.folder);
+							.monitor(Objects.requireNonNull(MailMessageReceiver.this.folder));
 						for (Message message : messages) {
 							MessageHandler handler = new MessageHandler(message);
 							execute(handler);
@@ -274,7 +279,7 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 			MailReceiverConnection connection = new MailReceiverConnection(this.message,
 					MailMessageReceiver.this.session);
 			connection.setTransportUri(MailMessageReceiver.this.transportUri);
-			connection.setFrom(MailMessageReceiver.this.from);
+			connection.setFrom(Objects.requireNonNull(MailMessageReceiver.this.from));
 			try {
 				handleConnection(connection);
 			}

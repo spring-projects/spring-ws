@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Exception indicating that something went wrong during the securement of a message.
  * <p>
@@ -33,7 +35,7 @@ public abstract class WsSecuritySecurementException extends WsSecurityException 
 		super(msg);
 	}
 
-	public WsSecuritySecurementException(String msg, Throwable ex) {
+	public WsSecuritySecurementException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 

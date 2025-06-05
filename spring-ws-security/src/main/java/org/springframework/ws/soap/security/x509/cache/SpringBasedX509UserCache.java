@@ -20,6 +20,7 @@ import java.security.cert.X509Certificate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.Cache;
@@ -40,6 +41,7 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 
 	private static final Log logger = LogFactory.getLog(SpringBasedX509UserCache.class);
 
+	@SuppressWarnings("NullAway.Init")
 	private Cache cache;
 
 	@Override
@@ -48,13 +50,13 @@ public class SpringBasedX509UserCache implements X509UserCache, InitializingBean
 	}
 
 	@Override
-	public UserDetails getUserFromCache(X509Certificate userCert) {
+	public @Nullable UserDetails getUserFromCache(X509Certificate userCert) {
 
 		if (logger.isDebugEnabled()) {
 
 			String subjectDN = "unknown";
 
-			if ((userCert != null) && (userCert.getSubjectX500Principal() != null)) {
+			if (userCert.getSubjectX500Principal() != null) {
 				subjectDN = userCert.getSubjectX500Principal().toString();
 			}
 

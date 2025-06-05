@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 import jakarta.xml.soap.SOAPBody;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPFault;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapVersion;
@@ -46,7 +47,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 	}
 
 	@Override
-	public Soap11Fault getFault() {
+	public @Nullable Soap11Fault getFault() {
 		SOAPFault fault = getSaajBody().getFault();
 		return (fault != null) ? new SaajSoap11Fault(fault) : null;
 	}

@@ -22,10 +22,12 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -48,9 +50,9 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	private final Message requestMessage;
 
-	private Message responseMessage;
+	private @Nullable Message responseMessage;
 
-	private String messageEncoding;
+	private String messageEncoding = XmppMessageReceiver.DEFAULT_MESSAGE_ENCODING;
 
 	public XmppReceiverConnection(XMPPConnection connection, Message requestMessage) {
 		Assert.notNull(connection, "'connection' must not be null");
@@ -65,7 +67,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	/** Returns the response message, if any, for this connection. */
-	public Message getResponseMessage() {
+	public @Nullable Message getResponseMessage() {
 		return this.responseMessage;
 	}
 
@@ -96,7 +98,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	}
 
 	@Override
-	public String getErrorMessage() {
+	public @Nullable String getErrorMessage() {
 		return XmppTransportUtils.getErrorMessage(this.responseMessage);
 	}
 
@@ -132,12 +134,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	public void addResponseHeader(String name, String value) throws IOException {
-		XmppTransportUtils.addHeader(this.responseMessage, name, value);
+		XmppTransportUtils.addHeader(Objects.requireNonNull(this.responseMessage), name, value);
 	}
 
 	@Override
 	protected OutputStream getResponseOutputStream() throws IOException {
-		return new MessageOutputStream(this.responseMessage, this.messageEncoding);
+		return new MessageOutputStream(Objects.requireNonNull(this.responseMessage), this.messageEncoding);
 	}
 
 	@Override

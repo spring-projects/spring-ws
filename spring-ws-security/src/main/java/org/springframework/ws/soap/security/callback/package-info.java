@@ -17,4 +17,7 @@
 /**
  * Contains generic {@code CallbackHandler} implementations.
  */
+@NullMarked
 package org.springframework.ws.soap.security.callback;
+
+import org.jspecify.annotations.NullMarked;

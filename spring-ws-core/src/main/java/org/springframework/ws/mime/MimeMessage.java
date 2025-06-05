@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Iterator;
 
 import jakarta.activation.DataHandler;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.ws.WebServiceMessage;
@@ -58,7 +59,7 @@ public interface MimeMessage extends WebServiceMessage {
 	 * be found
 	 * @throws AttachmentException in case of errors
 	 */
-	Attachment getAttachment(String contentId) throws AttachmentException;
+	@Nullable Attachment getAttachment(String contentId) throws AttachmentException;
 
 	/**
 	 * Returns an {@code Iterator} over all {@link Attachment} objects that are part of

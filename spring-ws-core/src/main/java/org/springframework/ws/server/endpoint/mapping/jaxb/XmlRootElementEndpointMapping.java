@@ -25,6 +25,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.JAXBIntrospector;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
@@ -64,7 +65,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 	}
 
 	@Override
-	protected QName getLookupKeyForMethod(Method method) {
+	protected @Nullable QName getLookupKeyForMethod(Method method) {
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			MethodParameter methodParameter = new MethodParameter(method, i);
@@ -80,7 +81,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 		return null;
 	}
 
-	private QName handleRootElement(Class<?> parameterType) {
+	private @Nullable QName handleRootElement(Class<?> parameterType) {
 		try {
 			Object param = parameterType.getDeclaredConstructor().newInstance();
 			QName result = getElementName(parameterType, param);
@@ -94,7 +95,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 		return null;
 	}
 
-	private QName getElementName(Class<?> parameterType, Object param) {
+	private @Nullable QName getElementName(Class<?> parameterType, Object param) {
 		try {
 			JAXBContext context = JAXBContext.newInstance(parameterType);
 			JAXBIntrospector introspector = context.createJAXBIntrospector();
@@ -106,7 +107,7 @@ public class XmlRootElementEndpointMapping extends AbstractAnnotationMethodEndpo
 	}
 
 	@Override
-	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(),
 				this.transformerHelper);
 	}

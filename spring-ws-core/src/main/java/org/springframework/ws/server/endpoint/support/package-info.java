@@ -18,4 +18,7 @@
  * Provides helper classes for {@code EndpointAdapter}, {@code EndpointInterceptor}, and
  * {@code EndpointMapping} implementations.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.support;
+
+import org.jspecify.annotations.NullMarked;

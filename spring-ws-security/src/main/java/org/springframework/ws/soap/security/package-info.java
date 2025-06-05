@@ -18,4 +18,7 @@
  * Provides WS-Security implementation classes. Contains the
  * {@code AbstractWsSecurityInterceptor} and exceptions.
  */
+@NullMarked
 package org.springframework.ws.soap.security;
+
+import org.jspecify.annotations.NullMarked;

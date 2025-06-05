@@ -18,4 +18,7 @@
  * Provides DOM-based implementations of the {@code MethodArgumentResolver} and
  * {@code MethodReturnValueHandler} interfaces.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.adapter.method.dom;
+
+import org.jspecify.annotations.NullMarked;

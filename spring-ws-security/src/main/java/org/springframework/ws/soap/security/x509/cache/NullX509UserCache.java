@@ -18,6 +18,8 @@ package org.springframework.ws.soap.security.x509.cache;
 
 import java.security.cert.X509Certificate;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -34,7 +36,7 @@ public class NullX509UserCache implements X509UserCache {
 	// ========================================================================================================
 
 	@Override
-	public UserDetails getUserFromCache(X509Certificate certificate) {
+	public @Nullable UserDetails getUserFromCache(X509Certificate certificate) {
 		return null;
 	}
 

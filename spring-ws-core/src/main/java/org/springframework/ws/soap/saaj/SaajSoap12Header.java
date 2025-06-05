@@ -26,6 +26,7 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPHeader;
 import jakarta.xml.soap.SOAPHeaderElement;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -69,9 +70,8 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateDestination)
-			throws SoapHeaderException {
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String @Nullable [] roles,
+			boolean isUltimateDestination) throws SoapHeaderException {
 		List<SOAPHeaderElement> result = new ArrayList<>();
 		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
 		while (iterator.hasNext()) {
@@ -85,7 +85,7 @@ class SaajSoap12Header extends SaajSoapHeader implements Soap12Header {
 
 	}
 
-	private boolean shouldProcess(String headerRole, String[] roles, boolean isUltimateDestination) {
+	private boolean shouldProcess(String headerRole, String @Nullable [] roles, boolean isUltimateDestination) {
 		if (!StringUtils.hasLength(headerRole)) {
 			return true;
 		}

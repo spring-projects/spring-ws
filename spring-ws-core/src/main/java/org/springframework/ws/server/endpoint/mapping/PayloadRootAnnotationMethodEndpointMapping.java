@@ -23,6 +23,8 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
@@ -54,11 +56,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  */
 public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotationMethodEndpointMapping<QName> {
 
-	private static TransformerFactory transformerFactory;
-
-	static {
-		setTransformerFactory(TransformerFactoryUtils.newInstance());
-	}
+	private static TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	/**
 	 * Override the default {@link TransformerFactory}.
@@ -69,7 +67,7 @@ public class PayloadRootAnnotationMethodEndpointMapping extends AbstractAnnotati
 	}
 
 	@Override
-	protected QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable QName getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 	}
 

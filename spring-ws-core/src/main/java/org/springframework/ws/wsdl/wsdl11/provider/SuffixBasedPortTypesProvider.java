@@ -18,6 +18,8 @@ package org.springframework.ws.wsdl.wsdl11.provider;
 
 import javax.wsdl.Message;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -95,7 +97,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 	}
 
 	@Override
-	protected String getOperationName(Message message) {
+	protected @Nullable String getOperationName(Message message) {
 		String messageName = getMessageName(message);
 		if (messageName != null) {
 			if (messageName.endsWith(getRequestSuffix())) {
@@ -156,7 +158,7 @@ public class SuffixBasedPortTypesProvider extends AbstractPortTypesProvider {
 		return messageName != null && messageName.endsWith(getFaultSuffix());
 	}
 
-	private String getMessageName(Message message) {
+	private @Nullable String getMessageName(Message message) {
 		return message.getQName().getLocalPart();
 	}
 

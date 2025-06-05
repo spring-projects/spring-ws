@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
@@ -41,9 +42,9 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 
 	private int order = Integer.MAX_VALUE; // default: same as non-Ordered
 
-	private Set<?> mappedEndpoints;
+	private @Nullable Set<?> mappedEndpoints;
 
-	private Log warnLogger;
+	private @Nullable Log warnLogger;
 
 	/**
 	 * Specify the set of endpoints that this exception resolver should map.
@@ -94,7 +95,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	 * @see #resolveExceptionInternal(MessageContext, Object, Exception)
 	 */
 	@Override
-	public final boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
+	public final boolean resolveException(MessageContext messageContext, @Nullable Object endpoint, Exception ex) {
 		Object mappedEndpoint = (endpoint instanceof MethodEndpoint methodEndpoint) ? methodEndpoint.getBean()
 				: endpoint;
 		if (this.mappedEndpoints != null && !this.mappedEndpoints.contains(mappedEndpoint)) {
@@ -105,7 +106,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 		}
 		boolean resolved = resolveExceptionInternal(messageContext, endpoint, ex);
 		if (resolved) {
-			logException(ex, messageContext);
+			logException(messageContext, ex);
 		}
 		return resolved;
 	}
@@ -116,39 +117,40 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	 * <p>
 	 * Calls {@link #buildLogMessage} in order to determine the concrete message to log.
 	 * Always passes the full exception to the logger.
-	 * @param ex the exception that got thrown during handler execution
 	 * @param messageContext current message context request
+	 * @param ex the exception that got thrown during handler execution
 	 * @see #setWarnLogCategory
 	 * @see #buildLogMessage
 	 * @see org.apache.commons.logging.Log#warn(Object, Throwable)
 	 */
-	protected void logException(Exception ex, MessageContext messageContext) {
+	protected void logException(MessageContext messageContext, Exception ex) {
 		if (this.warnLogger != null && this.warnLogger.isWarnEnabled()) {
-			this.warnLogger.warn(buildLogMessage(ex, messageContext), ex);
+			this.warnLogger.warn(buildLogMessage(messageContext, ex), ex);
 		}
 	}
 
 	/**
 	 * Build a log message for the given exception, occured during processing the given
 	 * message context.
-	 * @param ex the exception that got thrown during handler execution
 	 * @param messageContext the message context
+	 * @param ex the exception that got thrown during handler execution
 	 * @return the log message to use
 	 */
-	protected String buildLogMessage(Exception ex, MessageContext messageContext) {
+	protected String buildLogMessage(MessageContext messageContext, Exception ex) {
 		return "Endpoint execution resulted in exception";
 	}
 
 	/**
 	 * Template method for resolving exceptions that is called by
-	 * {@link #resolveException}.
+	 * {@link EndpointExceptionResolver#resolveException}.
 	 * @param messageContext current message context
 	 * @param endpoint the executed endpoint, or {@code null} if none chosen at the time
 	 * of the exception
 	 * @param ex the exception that got thrown during endpoint execution
 	 * @return {@code true} if resolved; {@code false} otherwise
-	 * @see #resolveException(MessageContext, Object, Exception)
+	 * @see EndpointExceptionResolver#resolveException(MessageContext, Object, Exception)
 	 */
-	protected abstract boolean resolveExceptionInternal(MessageContext messageContext, Object endpoint, Exception ex);
+	protected abstract boolean resolveExceptionInternal(MessageContext messageContext, @Nullable Object endpoint,
+			Exception ex);
 
 }

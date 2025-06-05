@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents the {@code Envelope} element in a SOAP message. The header contains the
  * optional {@code SoapHeader} and {@code SoapBody}.
@@ -30,7 +32,7 @@ public interface SoapEnvelope extends SoapElement {
 	 * @return the {@code SoapHeader}, or {@code null}
 	 * @throws SoapHeaderException if the header cannot be returned
 	 */
-	SoapHeader getHeader() throws SoapHeaderException;
+	@Nullable SoapHeader getHeader() throws SoapHeaderException;
 
 	/**
 	 * Returns the {@code SoapBody}.

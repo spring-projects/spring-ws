@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.transport.xmpp.XmppTransportConstants;
@@ -49,11 +50,11 @@ public abstract class XmppTransportUtils {
 		return uri.getSchemeSpecificPart();
 	}
 
-	public static boolean hasError(Message message) {
+	public static boolean hasError(@Nullable Message message) {
 		return message != null && Message.Type.error.equals(message.getType());
 	}
 
-	public static String getErrorMessage(Message message) {
+	public static @Nullable String getErrorMessage(@Nullable Message message) {
 		if (message == null || !Message.Type.error.equals(message.getType())) {
 			return null;
 		}

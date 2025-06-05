@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
@@ -41,7 +42,7 @@ import org.springframework.xml.transform.ResourceSource;
  */
 public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
 
-	private Resource wsdlResource;
+	private @Nullable Resource wsdlResource;
 
 	/**
 	 * Create a new instance of the {@link SimpleWsdl11Definition} class.
@@ -71,6 +72,7 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 
 	@Override
 	public Source getSource() {
+		Assert.notNull(this.wsdlResource, "wsdl is required");
 		try {
 			XMLReader xmlReader = SaxUtils.namespaceAwareXmlReader();
 			xmlReader.setFeature("http://xml.org/sax/features/namespace-prefixes", true);

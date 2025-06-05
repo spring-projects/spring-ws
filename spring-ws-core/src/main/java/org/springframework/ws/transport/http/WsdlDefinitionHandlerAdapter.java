@@ -27,9 +27,11 @@ import javax.xml.transform.stream.StreamResult;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
@@ -95,9 +97,9 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 
 	private String schemaLocationExpression = DEFAULT_SCHEMA_LOCATION_EXPRESSION;
 
-	private XPathExpression locationXPathExpression;
+	private @Nullable XPathExpression locationXPathExpression;
 
-	private XPathExpression schemaLocationXPathExpression;
+	private @Nullable XPathExpression schemaLocationXPathExpression;
 
 	private boolean transformLocations = false;
 
@@ -141,7 +143,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	}
 
 	@Override
-	public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+	public @Nullable ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		if (HttpTransportConstants.METHOD_GET.equals(request.getMethod())) {
 			WsdlDefinition definition = (WsdlDefinition) handler;
@@ -199,6 +201,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
+		Assert.notNull(this.locationXPathExpression, "locationXPathExpression is required");
 		transformLocations(this.locationXPathExpression, definitionDocument, request);
 	}
 
@@ -215,6 +218,7 @@ public class WsdlDefinitionHandlerAdapter extends LocationTransformerObjectSuppo
 	 * @see #transformLocation(String,jakarta.servlet.http.HttpServletRequest)
 	 */
 	protected void transformSchemaLocations(Document definitionDocument, HttpServletRequest request) throws Exception {
+		Assert.notNull(this.schemaLocationXPathExpression, "schemaLocationXPathExpression is required");
 		transformLocations(this.schemaLocationXPathExpression, definitionDocument, request);
 	}
 

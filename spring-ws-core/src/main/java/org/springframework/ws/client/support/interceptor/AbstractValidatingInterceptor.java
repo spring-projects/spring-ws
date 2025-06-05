@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXParseException;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -56,12 +57,14 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	private String schemaLanguage = XmlValidatorFactory.SCHEMA_W3C_XML;
 
+	@SuppressWarnings("NullAway.Init")
 	private Resource[] schemas;
 
 	private boolean validateRequest = true;
 
 	private boolean validateResponse = false;
 
+	@SuppressWarnings("NullAway.Init")
 	private XmlValidator validator;
 
 	public String getSchemaLanguage() {
@@ -275,7 +278,8 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	/** Does nothing by default. */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Exception ex) throws WebServiceClientException {
+	public void afterCompletion(MessageContext messageContext, @Nullable Exception ex)
+			throws WebServiceClientException {
 	}
 
 	/**
@@ -285,7 +289,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * @return the part of the message that is to validated, or {@code null} not to
 	 * validate anything
 	 */
-	protected abstract Source getValidationRequestSource(WebServiceMessage request);
+	protected abstract @Nullable Source getValidationRequestSource(WebServiceMessage request);
 
 	/**
 	 * Abstract template method that returns the part of the response message that is to
@@ -294,6 +298,6 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * @return the part of the message that is to validated, or {@code null} not to
 	 * validate anything
 	 */
-	protected abstract Source getValidationResponseSource(WebServiceMessage response);
+	protected abstract @Nullable Source getValidationResponseSource(WebServiceMessage response);
 
 }

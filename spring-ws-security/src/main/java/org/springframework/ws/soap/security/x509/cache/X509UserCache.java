@@ -18,6 +18,8 @@ package org.springframework.ws.soap.security.x509.cache;
 
 import java.security.cert.X509Certificate;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
@@ -39,7 +41,7 @@ public interface X509UserCache {
 	// ~ Methods
 	// ========================================================================================================
 
-	UserDetails getUserFromCache(X509Certificate userCertificate);
+	@Nullable UserDetails getUserFromCache(X509Certificate userCertificate);
 
 	void putUserInCache(X509Certificate key, UserDetails user);
 

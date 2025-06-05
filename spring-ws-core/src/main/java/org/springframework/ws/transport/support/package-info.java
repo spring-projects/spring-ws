@@ -17,4 +17,7 @@
 /**
  * Classes supporting the org.springframework.ws.transport package.
  */
+@NullMarked
 package org.springframework.ws.transport.support;
+
+import org.jspecify.annotations.NullMarked;

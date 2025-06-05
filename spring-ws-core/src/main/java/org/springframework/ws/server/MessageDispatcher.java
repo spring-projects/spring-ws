@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -103,15 +104,19 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	private final DefaultStrategiesHelper defaultStrategiesHelper;
 
 	/** The registered bean name for this dispatcher. */
+	@SuppressWarnings("NullAway.Init")
 	private String beanName;
 
 	/** List of EndpointAdapters used in this dispatcher. */
+	@SuppressWarnings("NullAway.Init")
 	private List<EndpointAdapter> endpointAdapters;
 
 	/** List of EndpointExceptionResolvers used in this dispatcher. */
+	@SuppressWarnings("NullAway.Init")
 	private List<EndpointExceptionResolver> endpointExceptionResolvers;
 
 	/** List of EndpointMappings used in this dispatcher. */
+	@SuppressWarnings("NullAway.Init")
 	private List<EndpointMapping> endpointMappings;
 
 	/** Initializes a new instance of the {@code MessageDispatcher}. */
@@ -231,8 +236,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 						EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
 						interceptorIndex = i;
 						if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
-							triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
-							triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
+							triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
+							triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, null);
 							return;
 						}
 					}
@@ -242,7 +247,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
 
 				// Apply handleResponse methods of registered interceptors
-				triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+				triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
 			}
 			catch (NoEndpointFoundException ex) {
 				// No triggering of interceptors if no endpoint is found
@@ -254,16 +259,16 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			catch (Exception ex) {
 				Object endpoint = (mappedEndpoint != null) ? mappedEndpoint.getEndpoint() : null;
 				processEndpointException(messageContext, endpoint, ex);
-				triggerHandleResponse(mappedEndpoint, interceptorIndex, messageContext);
+				triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
 			}
-			triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, null);
+			triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, null);
 		}
 		catch (NoEndpointFoundException ex) {
 			throw ex;
 		}
 		catch (Exception ex) {
 			// Trigger after-completion for thrown exception.
-			triggerAfterCompletion(mappedEndpoint, interceptorIndex, messageContext, ex);
+			triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, ex);
 			throw ex;
 		}
 	}
@@ -273,7 +278,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @return the {@code EndpointInvocationChain}, or {@code null} if no endpoint could
 	 * be found.
 	 */
-	protected EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
+	protected @Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception {
 		for (EndpointMapping endpointMapping : getEndpointMappings()) {
 			EndpointInvocationChain endpoint = endpointMapping.getEndpoint(messageContext);
 			if (endpoint != null) {
@@ -331,7 +336,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @param ex the exception that got thrown during handler execution
 	 * @throws Exception if no suitable resolver is found
 	 */
-	protected void processEndpointException(MessageContext messageContext, Object endpoint, Exception ex)
+	protected void processEndpointException(MessageContext messageContext, @Nullable Object endpoint, Exception ex)
 			throws Exception {
 		if (!CollectionUtils.isEmpty(getEndpointExceptionResolvers())) {
 			for (EndpointExceptionResolver resolver : getEndpointExceptionResolvers()) {
@@ -351,14 +356,14 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * Trigger handleResponse or handleFault on the mapped EndpointInterceptors. Will just
 	 * invoke said method on all interceptors whose handleRequest invocation returned
 	 * {@code true}, in addition to the last interceptor who returned {@code false}.
+	 * @param messageContext the message context, whose request and response are filled
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
 	 * @param interceptorIndex index of last interceptor that was called
-	 * @param messageContext the message context, whose request and response are filled
-	 * @see EndpointInterceptor#handleResponse(MessageContext,Object)
+	 * @see EndpointInterceptor#handleResponse(MessageContext, Object)
 	 * @see EndpointInterceptor#handleFault(MessageContext, Object)
 	 */
-	private void triggerHandleResponse(EndpointInvocationChain mappedEndpoint, int interceptorIndex,
-			MessageContext messageContext) throws Exception {
+	private void triggerHandleResponse(MessageContext messageContext, @Nullable EndpointInvocationChain mappedEndpoint,
+			int interceptorIndex) throws Exception {
 		if (mappedEndpoint != null && messageContext.hasResponse()
 				&& !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
 			boolean hasFault = false;
@@ -389,8 +394,8 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * @param ex exception thrown on handler execution, or {@code null} if none
 	 * @see EndpointInterceptor#afterCompletion
 	 */
-	private void triggerAfterCompletion(EndpointInvocationChain mappedEndpoint, int interceptorIndex,
-			MessageContext messageContext, Exception ex) throws Exception {
+	private void triggerAfterCompletion(MessageContext messageContext, @Nullable EndpointInvocationChain mappedEndpoint,
+			int interceptorIndex, @Nullable Exception ex) throws Exception {
 
 		// Apply afterCompletion methods of registered interceptors.
 		if (mappedEndpoint != null) {

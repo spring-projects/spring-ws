@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents a protocol-agnostic XML message.
  * <p>
@@ -41,7 +43,7 @@ public interface WebServiceMessage {
 	 * single time.
 	 * @return the message contents
 	 */
-	Source getPayloadSource();
+	@Nullable Source getPayloadSource();
 
 	/**
 	 * Returns the contents of the message as a {@link Result}.

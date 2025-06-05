@@ -17,4 +17,7 @@
 /**
  * Provides the {@code ClientInterceptor} interface, and validating interceptors.
  */
+@NullMarked
 package org.springframework.ws.client.support.interceptor;
+
+import org.jspecify.annotations.NullMarked;

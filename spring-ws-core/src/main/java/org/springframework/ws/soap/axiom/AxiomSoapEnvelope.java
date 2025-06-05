@@ -23,6 +23,7 @@ import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapEnvelope;
@@ -38,9 +39,9 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 
 	boolean payloadCaching;
 
-	private AxiomSoapBody body;
-
 	private final boolean langAttributeOnSoap11FaultString;
+
+	private @Nullable AxiomSoapBody body;
 
 	AxiomSoapEnvelope(SOAPEnvelope axiomEnvelope, SOAPFactory axiomFactory, boolean payloadCaching,
 			boolean langAttributeOnSoap11FaultString) {
@@ -50,7 +51,7 @@ class AxiomSoapEnvelope extends AxiomSoapElement implements SoapEnvelope {
 	}
 
 	@Override
-	public SoapHeader getHeader() {
+	public @Nullable SoapHeader getHeader() {
 		try {
 			if (getAxiomEnvelope().getHeader() == null) {
 				return null;

@@ -38,6 +38,8 @@ import javax.wsdl.extensions.soap.SOAPFault;
 import javax.wsdl.extensions.soap.SOAPOperation;
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 
 /**
@@ -67,7 +69,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 
 	private Properties soapActions = new Properties();
 
-	private String locationUri;
+	private @Nullable String locationUri;
 
 	/**
 	 * Constructs a new version of the {@link Soap11Provider}.
@@ -123,7 +125,7 @@ public class Soap11Provider extends DefaultConcretePartProvider {
 	}
 
 	/** Returns the value used for the SOAP Address location attribute value. */
-	public String getLocationUri() {
+	public @Nullable String getLocationUri() {
 		return this.locationUri;
 	}
 

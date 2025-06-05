@@ -22,6 +22,7 @@ import java.util.Properties;
 import org.apache.wss4j.common.crypto.Crypto;
 import org.apache.wss4j.common.crypto.CryptoFactory;
 import org.apache.wss4j.common.crypto.Merlin;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -46,7 +47,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 
 	private final Properties configuration = new Properties();
 
-	private Crypto crypto;
+	private @Nullable Crypto crypto;
 
 	private static final String CRYPTO_PROVIDER_PROPERTY = "org.apache.wss4j.crypto.provider";
 
@@ -179,7 +180,7 @@ public class CryptoFactoryBean implements FactoryBean<Crypto>, InitializingBean 
 	}
 
 	@Override
-	public Crypto getObject() throws Exception {
+	public @Nullable Crypto getObject() throws Exception {
 		return this.crypto;
 	}
 

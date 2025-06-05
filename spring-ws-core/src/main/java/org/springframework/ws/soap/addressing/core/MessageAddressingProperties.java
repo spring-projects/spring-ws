@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 
 /**
@@ -41,19 +42,19 @@ public final class MessageAddressingProperties implements Serializable {
 	@Serial
 	private static final long serialVersionUID = -6980663311446506672L;
 
-	private final URI to;
+	private final @Nullable URI to;
 
-	private final EndpointReference from;
+	private final @Nullable EndpointReference from;
 
-	private final EndpointReference replyTo;
+	private final @Nullable EndpointReference replyTo;
 
-	private final EndpointReference faultTo;
+	private final @Nullable EndpointReference faultTo;
 
-	private final URI action;
+	private final @Nullable URI action;
 
-	private final URI messageId;
+	private final @Nullable URI messageId;
 
-	private final URI relatesTo;
+	private final @Nullable URI relatesTo;
 
 	private final List<Node> referenceProperties;
 
@@ -68,8 +69,9 @@ public final class MessageAddressingProperties implements Serializable {
 	 * @param action the value of the action property
 	 * @param messageId the value of the message id property
 	 */
-	public MessageAddressingProperties(URI to, EndpointReference from, EndpointReference replyTo,
-			EndpointReference faultTo, URI action, URI messageId) {
+	public MessageAddressingProperties(@Nullable URI to, @Nullable EndpointReference from,
+			@Nullable EndpointReference replyTo, @Nullable EndpointReference faultTo, @Nullable URI action,
+			@Nullable URI messageId) {
 		this.to = to;
 		this.from = from;
 		this.replyTo = replyTo;
@@ -89,7 +91,8 @@ public final class MessageAddressingProperties implements Serializable {
 	 * @param messageId the value of the message id property
 	 * @param relatesTo the value of the relates to property
 	 */
-	private MessageAddressingProperties(EndpointReference epr, URI action, URI messageId, URI relatesTo) {
+	private MessageAddressingProperties(EndpointReference epr, @Nullable URI action, URI messageId,
+			@Nullable URI relatesTo) {
 		this.to = epr.getAddress();
 		this.action = action;
 		this.messageId = messageId;
@@ -102,37 +105,37 @@ public final class MessageAddressingProperties implements Serializable {
 	}
 
 	/** Returns the value of the destination property. */
-	public URI getTo() {
+	public @Nullable URI getTo() {
 		return this.to;
 	}
 
 	/** Returns the value of the source endpoint property. */
-	public EndpointReference getFrom() {
+	public @Nullable EndpointReference getFrom() {
 		return this.from;
 	}
 
 	/** Returns the value of the reply endpoint property. */
-	public EndpointReference getReplyTo() {
+	public @Nullable EndpointReference getReplyTo() {
 		return this.replyTo;
 	}
 
 	/** Returns the value of the fault endpoint property. */
-	public EndpointReference getFaultTo() {
+	public @Nullable EndpointReference getFaultTo() {
 		return this.faultTo;
 	}
 
 	/** Returns the value of the action property. */
-	public URI getAction() {
+	public @Nullable URI getAction() {
 		return this.action;
 	}
 
 	/** Returns the value of the message id property. */
-	public URI getMessageId() {
+	public @Nullable URI getMessageId() {
 		return this.messageId;
 	}
 
 	/** Returns the value of the relationship property. */
-	public URI getRelatesTo() {
+	public @Nullable URI getRelatesTo() {
 		return this.relatesTo;
 	}
 
@@ -156,7 +159,7 @@ public final class MessageAddressingProperties implements Serializable {
 	 * @param epr the endpoint reference to create a reply to
 	 * @param action the action
 	 */
-	public MessageAddressingProperties getReplyProperties(EndpointReference epr, URI action, URI messageId) {
+	public MessageAddressingProperties getReplyProperties(EndpointReference epr, @Nullable URI action, URI messageId) {
 		return new MessageAddressingProperties(epr, action, messageId, this.messageId);
 	}
 

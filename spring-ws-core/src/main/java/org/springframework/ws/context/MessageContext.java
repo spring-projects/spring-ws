@@ -19,6 +19,8 @@ package org.springframework.ws.context;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.EndpointInterceptor;
 
@@ -61,7 +63,7 @@ public interface MessageContext {
 	 * @throws IllegalStateException if a response has already been created
 	 * @since 1.5.0
 	 */
-	void setResponse(WebServiceMessage response);
+	void setResponse(@Nullable WebServiceMessage response);
 
 	/**
 	 * Removes the response message, if any.
@@ -91,7 +93,7 @@ public interface MessageContext {
 	 * @param name name of the property whose value is to be retrieved
 	 * @return value of the property
 	 */
-	Object getProperty(String name);
+	@Nullable Object getProperty(String name);
 
 	/**
 	 * Removes a property from the {@code MessageContext}.

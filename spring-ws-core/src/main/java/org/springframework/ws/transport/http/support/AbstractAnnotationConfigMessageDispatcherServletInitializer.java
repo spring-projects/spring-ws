@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.http.support;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.WebApplicationInitializer;
@@ -48,7 +50,7 @@ public abstract class AbstractAnnotationConfigMessageDispatcherServletInitialize
 	 * Returns {@code null} if {@link #getRootConfigClasses()} returns {@code null}.
 	 */
 	@Override
-	protected WebApplicationContext createRootApplicationContext() {
+	protected @Nullable WebApplicationContext createRootApplicationContext() {
 		Class<?>[] configClasses = getRootConfigClasses();
 		if (!ObjectUtils.isEmpty(configClasses)) {
 			AnnotationConfigWebApplicationContext rootAppContext = new AnnotationConfigWebApplicationContext();

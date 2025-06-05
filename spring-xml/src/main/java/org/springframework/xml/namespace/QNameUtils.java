@@ -18,6 +18,7 @@ package org.springframework.xml.namespace;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 
 import org.springframework.util.Assert;
@@ -37,7 +38,7 @@ public abstract class QNameUtils {
 	 * @param text the qualified name
 	 * @return {@code true} if valid, {@code false} otherwise
 	 */
-	public static boolean validateQName(String text) {
+	public static boolean validateQName(@Nullable String text) {
 		if (!StringUtils.hasLength(text)) {
 			return false;
 		}

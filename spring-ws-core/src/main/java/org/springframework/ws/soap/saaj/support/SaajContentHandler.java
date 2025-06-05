@@ -23,6 +23,7 @@ import jakarta.xml.soap.Name;
 import jakarta.xml.soap.SOAPElement;
 import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -59,7 +60,9 @@ public class SaajContentHandler implements ContentHandler {
 			this.envelope = (SOAPEnvelope) element;
 		}
 		else {
-			this.envelope = SaajUtils.getEnvelope(element);
+			SOAPEnvelope elementEnvelope = SaajUtils.getEnvelope(element);
+			Assert.notNull(elementEnvelope, "Could not determine SOAP envelope from " + element);
+			this.envelope = elementEnvelope;
 		}
 		this.element = element;
 	}
@@ -163,7 +166,7 @@ public class SaajContentHandler implements ContentHandler {
 	public void skippedEntity(String name) throws SAXException {
 	}
 
-	private String getPrefix(String qName) {
+	private @Nullable String getPrefix(String qName) {
 		int idx = qName.indexOf(':');
 		if (idx != -1) {
 			return qName.substring(0, idx);

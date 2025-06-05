@@ -34,6 +34,7 @@ import jakarta.jms.MessageProducer;
 import jakarta.jms.Session;
 import jakarta.jms.TemporaryQueue;
 import jakarta.jms.TextMessage;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
@@ -64,9 +65,9 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
 	private Message requestMessage;
 
-	private Destination responseDestination;
+	private @Nullable Destination responseDestination;
 
-	private Message responseMessage;
+	private @Nullable Message responseMessage;
 
 	private long receiveTimeout;
 
@@ -76,9 +77,9 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 
 	private int priority;
 
-	private String textMessageEncoding;
+	private @Nullable String textMessageEncoding;
 
-	private MessagePostProcessor postProcessor;
+	private @Nullable MessagePostProcessor postProcessor;
 
 	private boolean sessionTransacted = false;
 
@@ -111,7 +112,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 * Returns the response message, if any, for this connection. Returns either a
 	 * {@link BytesMessage} or a {@link TextMessage}.
 	 */
-	public Message getResponseMessage() {
+	public @Nullable Message getResponseMessage() {
 		return this.responseMessage;
 	}
 
@@ -119,7 +120,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 * Package-friendly setters
 	 */
 
-	void setResponseDestination(Destination responseDestination) {
+	void setResponseDestination(@Nullable Destination responseDestination) {
 		this.responseDestination = responseDestination;
 	}
 
@@ -143,7 +144,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		this.textMessageEncoding = textMessageEncoding;
 	}
 
-	void setPostProcessor(MessagePostProcessor postProcessor) {
+	void setPostProcessor(@Nullable MessagePostProcessor postProcessor) {
 		this.postProcessor = postProcessor;
 	}
 
@@ -156,7 +157,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	 */
 
 	@Override
-	public URI getUri() throws URISyntaxException {
+	public @Nullable URI getUri() throws URISyntaxException {
 		try {
 			return JmsTransportUtils.toUri(this.requestDestination);
 		}
@@ -175,7 +176,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		return null;
 	}
 
@@ -199,6 +200,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 			return new BytesMessageOutputStream((BytesMessage) this.requestMessage);
 		}
 		else if (this.requestMessage instanceof TextMessage) {
+			Assert.notNull(this.textMessageEncoding, "MessageEncoding for TextMessage is required");
 			return new TextMessageOutputStream((TextMessage) this.requestMessage, this.textMessageEncoding);
 		}
 		else {
@@ -277,9 +279,10 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 		}
 		finally {
 			JmsUtils.closeMessageConsumer(messageConsumer);
-			if (this.temporaryResponseQueueCreated) {
+			if (this.temporaryResponseQueueCreated
+					&& this.responseDestination instanceof TemporaryQueue temporaryQueue) {
 				try {
-					((TemporaryQueue) this.responseDestination).delete();
+					temporaryQueue.delete();
 				}
 				catch (JMSException ex) {
 					// ignore
@@ -296,6 +299,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
 		try {
+			Assert.state(this.responseMessage != null, "ResponseMessage is required");
 			return JmsTransportUtils.getHeaderNames(this.responseMessage);
 		}
 		catch (JMSException ex) {
@@ -306,6 +310,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 		try {
+			Assert.state(this.responseMessage != null, "ResponseMessage is required");
 			return JmsTransportUtils.getHeaders(this.responseMessage, name);
 		}
 		catch (JMSException ex) {
@@ -319,6 +324,7 @@ public class JmsSenderConnection extends AbstractSenderConnection {
 			return new BytesMessageInputStream((BytesMessage) this.responseMessage);
 		}
 		else if (this.responseMessage instanceof TextMessage) {
+			Assert.notNull(this.textMessageEncoding, "MessageEncoding for TextMessage is required");
 			return new TextMessageInputStream((TextMessage) this.responseMessage, this.textMessageEncoding);
 		}
 		else {

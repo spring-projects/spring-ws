@@ -17,4 +17,7 @@
 /**
  * Contains classes for server-side Spring-WS support.
  */
+@NullMarked
 package org.springframework.ws.server;
+
+import org.jspecify.annotations.NullMarked;

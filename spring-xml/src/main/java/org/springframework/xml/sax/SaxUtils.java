@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -76,7 +77,7 @@ public abstract class SaxUtils {
 	 * Retrieves the URL from the given resource as System ID. Returns {@code null} if it
 	 * cannot be opened.
 	 */
-	public static String getSystemId(Resource resource) {
+	public static @Nullable String getSystemId(Resource resource) {
 		try {
 			return new URI(resource.getURL().toExternalForm()).toString();
 		}

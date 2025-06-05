@@ -22,6 +22,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerHelper;
 
@@ -36,9 +38,9 @@ import org.springframework.xml.transform.TransformerHelper;
 @SuppressWarnings("serial")
 public class SourceAssertionError extends AssertionError {
 
-	private final String sourceLabel;
+	private final @Nullable String sourceLabel;
 
-	private final Source source;
+	private final @Nullable Source source;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
 
@@ -46,7 +48,7 @@ public class SourceAssertionError extends AssertionError {
 	 * Creates a new instance of the {@code SourceAssertionError} class with the given
 	 * parameters.
 	 */
-	public SourceAssertionError(String detailMessage, String sourceLabel, Source source) {
+	public SourceAssertionError(String detailMessage, @Nullable String sourceLabel, @Nullable Source source) {
 		super(detailMessage);
 		this.sourceLabel = sourceLabel;
 		this.source = source;
@@ -56,7 +58,7 @@ public class SourceAssertionError extends AssertionError {
 	 * Returns the source context of this error.
 	 * @return the source
 	 */
-	public Source getSource() {
+	public @Nullable Source getSource() {
 		return this.source;
 	}
 
@@ -76,7 +78,7 @@ public class SourceAssertionError extends AssertionError {
 		return builder.toString();
 	}
 
-	private String getSourceString() {
+	private @Nullable String getSourceString() {
 		if (this.source != null) {
 			try {
 				StringResult result = new StringResult();

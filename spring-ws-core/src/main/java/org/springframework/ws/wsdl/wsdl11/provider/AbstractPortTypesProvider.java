@@ -31,8 +31,10 @@ import javax.xml.namespace.QName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -48,10 +50,10 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	private String portTypeName;
+	private @Nullable String portTypeName;
 
 	/** Returns the port type name used for this definition. */
-	public String getPortTypeName() {
+	public @Nullable String getPortTypeName() {
 		return this.portTypeName;
 	}
 
@@ -116,24 +118,26 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 			Operation operation = definition.createOperation();
 			operation.setName(operationName);
 			List<Message> messages = operations.get(operationName);
-			for (Message message : messages) {
-				if (isInputMessage(message)) {
-					Input input = definition.createInput();
-					input.setMessage(message);
-					populateInput(definition, input);
-					operation.setInput(input);
-				}
-				else if (isOutputMessage(message)) {
-					Output output = definition.createOutput();
-					output.setMessage(message);
-					populateOutput(definition, output);
-					operation.setOutput(output);
-				}
-				else if (isFaultMessage(message)) {
-					Fault fault = definition.createFault();
-					fault.setMessage(message);
-					populateFault(definition, fault);
-					operation.addFault(fault);
+			if (!CollectionUtils.isEmpty(messages)) {
+				for (Message message : messages) {
+					if (isInputMessage(message)) {
+						Input input = definition.createInput();
+						input.setMessage(message);
+						populateInput(definition, input);
+						operation.setInput(input);
+					}
+					else if (isOutputMessage(message)) {
+						Output output = definition.createOutput();
+						output.setMessage(message);
+						populateOutput(definition, output);
+						operation.setOutput(output);
+					}
+					else if (isFaultMessage(message)) {
+						Fault fault = definition.createFault();
+						fault.setMessage(message);
+						populateFault(definition, fault);
+						operation.addFault(fault);
+					}
 				}
 			}
 			operation.setStyle(getOperationType(operation));
@@ -153,7 +157,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 * @param message the WSDL4J {@code Message}
 	 * @return the operation name; or {@code null}
 	 */
-	protected abstract String getOperationName(Message message);
+	protected abstract @Nullable String getOperationName(Message message);
 
 	/**
 	 * Indicates whether the given name name should be included as {@link Input} message
@@ -224,7 +228,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 * @param operation the WSDL4J {@code Operation}
 	 * @return the operation type for the operation
 	 */
-	protected OperationType getOperationType(Operation operation) {
+	protected @Nullable OperationType getOperationType(Operation operation) {
 
 		if (operation.getInput() != null && operation.getOutput() != null) {
 			return OperationType.REQUEST_RESPONSE;

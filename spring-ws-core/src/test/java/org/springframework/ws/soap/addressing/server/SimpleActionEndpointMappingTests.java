@@ -23,6 +23,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -57,6 +58,7 @@ class SimpleActionEndpointMappingTests extends AbstractWsAddressingTests {
 		this.mapping.setPostInterceptors(new EndpointInterceptor[] { new PayloadValidatingInterceptor() });
 		this.mapping.setAddress(new URI("mailto:fabrikam@example.com"));
 		this.mapping.setActionMap(map);
+		this.mapping.setApplicationContext(new StaticApplicationContext());
 		this.mapping.afterPropertiesSet();
 	}
 

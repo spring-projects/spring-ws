@@ -22,10 +22,12 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.util.Objects;
 
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ext.WSPasswordCallback;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.ws.soap.security.support.KeyStoreUtils;
@@ -43,10 +45,11 @@ import org.springframework.ws.soap.security.support.KeyStoreUtils;
  */
 public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler implements InitializingBean {
 
-	private String privateKeyPassword;
+	private @Nullable String privateKeyPassword;
 
-	private char[] symmetricKeyPassword;
+	private char @Nullable [] symmetricKeyPassword;
 
+	@SuppressWarnings("NullAway.Init")
 	private KeyStore keyStore;
 
 	/**
@@ -75,7 +78,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 
 		try {
 			key = this.keyStore.getKey(id, (this.symmetricKeyPassword != null) ? this.symmetricKeyPassword
-					: this.privateKeyPassword.toCharArray());
+					: Objects.requireNonNull(this.privateKeyPassword).toCharArray());
 		}
 		catch (UnrecoverableKeyException | KeyStoreException | NoSuchAlgorithmException ex) {
 			throw new IOException("Could not get key", ex);
@@ -93,7 +96,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 	 * Sets the password used to retrieve private keys from the keystore. This property is
 	 * required for decryption based on private keys, and signing.
 	 */
-	public void setPrivateKeyPassword(String privateKeyPassword) {
+	public void setPrivateKeyPassword(@Nullable String privateKeyPassword) {
 		if (privateKeyPassword != null) {
 			this.privateKeyPassword = privateKeyPassword;
 		}
@@ -104,7 +107,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 	 * property is not set, it defaults to the private key password.
 	 * @see #setPrivateKeyPassword(String)
 	 */
-	public void setSymmetricKeyPassword(String symmetricKeyPassword) {
+	public void setSymmetricKeyPassword(@Nullable String symmetricKeyPassword) {
 		if (symmetricKeyPassword != null) {
 			this.symmetricKeyPassword = symmetricKeyPassword.toCharArray();
 		}
@@ -116,7 +119,7 @@ public class KeyStoreCallbackHandler extends AbstractWsPasswordCallbackHandler i
 			loadDefaultKeyStore();
 		}
 		if (this.symmetricKeyPassword == null) {
-			this.symmetricKeyPassword = this.privateKeyPassword.toCharArray();
+			this.symmetricKeyPassword = Objects.requireNonNull(this.privateKeyPassword).toCharArray();
 		}
 	}
 

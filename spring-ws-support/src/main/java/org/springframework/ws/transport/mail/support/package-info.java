@@ -17,4 +17,7 @@
 /**
  * Classes supporting the org.springframework.ws.transport.mail package.
  */
+@NullMarked
 package org.springframework.ws.transport.mail.support;
+
+import org.jspecify.annotations.NullMarked;

@@ -25,6 +25,7 @@ import jakarta.mail.URLName;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -83,11 +84,11 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 
 	private Session session = Session.getInstance(new Properties(), null);
 
-	private URLName storeUri;
+	private @Nullable URLName storeUri;
 
-	private URLName transportUri;
+	private @Nullable URLName transportUri;
 
-	private InternetAddress from;
+	private @Nullable InternetAddress from;
 
 	/**
 	 * Sets the from address to use when sending request messages.
@@ -163,7 +164,10 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
+		Assert.notNull(this.transportUri, "'transportUri' is required");
+		Assert.notNull(this.storeUri, "'storeUri' is required");
 		InternetAddress to = MailTransportUtils.getTo(uri);
+		Assert.notNull(to, "No TO address found for '" + uri + "'");
 		MailSenderConnection connection = new MailSenderConnection(this.session, this.transportUri, this.storeUri, to,
 				this.receiveSleepTime);
 		if (this.from != null) {

@@ -23,6 +23,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.InitializingBean;
@@ -64,13 +65,15 @@ import org.springframework.xml.xpath.XPathExpressionFactory;
  */
 public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping implements InitializingBean {
 
+	@SuppressWarnings("NullAway.Init")
 	private String expressionString;
 
+	@SuppressWarnings("NullAway.Init")
 	private XPathExpression expression;
 
-	private Map<String, String> namespaces;
+	private @Nullable Map<String, String> namespaces;
 
-	private TransformerFactory transformerFactory;
+	private final TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	/** Sets the XPath expression to be used. */
 	public void setExpression(String expression) {
@@ -94,11 +97,10 @@ public class XPathPayloadEndpointMapping extends AbstractMapBasedEndpointMapping
 		else {
 			this.expression = XPathExpressionFactory.createXPathExpression(this.expressionString, this.namespaces);
 		}
-		this.transformerFactory = TransformerFactoryUtils.newInstance();
 	}
 
 	@Override
-	protected String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
+	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		Element payloadElement = getMessagePayloadElement(messageContext.getRequest());
 		return this.expression.evaluateAsString(payloadElement);
 	}

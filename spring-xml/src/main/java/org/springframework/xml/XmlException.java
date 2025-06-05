@@ -16,6 +16,8 @@
 
 package org.springframework.xml;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.NestedRuntimeException;
 
 /**
@@ -42,7 +44,7 @@ public abstract class XmlException extends NestedRuntimeException {
 	 * @param message the detail message
 	 * @param throwable the wrapped exception
 	 */
-	protected XmlException(String message, Throwable throwable) {
+	protected XmlException(@Nullable String message, Throwable throwable) {
 		super(message, throwable);
 	}
 

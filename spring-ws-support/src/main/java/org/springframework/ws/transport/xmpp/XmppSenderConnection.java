@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaCollector;
@@ -32,6 +33,7 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
+import org.jspecify.annotations.Nullable;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
@@ -56,9 +58,9 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	private final XMPPConnection connection;
 
-	private Message responseMessage;
+	private @Nullable Message responseMessage;
 
-	private String messageEncoding;
+	private String messageEncoding = XmppMessageReceiver.DEFAULT_MESSAGE_ENCODING;
 
 	private long receiveTimeout;
 
@@ -82,7 +84,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	}
 
 	/** Returns the response message, if any, for this connection. */
-	public Message getResponseMessage() {
+	public @Nullable Message getResponseMessage() {
 		return this.responseMessage;
 	}
 
@@ -117,7 +119,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	}
 
 	@Override
-	public String getErrorMessage() {
+	public @Nullable String getErrorMessage() {
 		return XmppTransportUtils.getErrorMessage(this.responseMessage);
 	}
 
@@ -185,17 +187,17 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() {
-		return XmppTransportUtils.getHeaderNames(this.responseMessage);
+		return XmppTransportUtils.getHeaderNames(Objects.requireNonNull(this.responseMessage));
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		return XmppTransportUtils.getHeaders(this.responseMessage, name);
+		return XmppTransportUtils.getHeaders(Objects.requireNonNull(this.responseMessage), name);
 	}
 
 	@Override
 	protected InputStream getResponseInputStream() throws IOException {
-		return new MessageInputStream(this.responseMessage, this.messageEncoding);
+		return new MessageInputStream(Objects.requireNonNull(this.responseMessage), this.messageEncoding);
 	}
 
 }

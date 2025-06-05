@@ -17,4 +17,7 @@
 /**
  * AXis Object Model (AXIOM) support for Spring-WS soap message infrastructure.
  */
+@NullMarked
 package org.springframework.ws.soap.axiom;
+
+import org.jspecify.annotations.NullMarked;

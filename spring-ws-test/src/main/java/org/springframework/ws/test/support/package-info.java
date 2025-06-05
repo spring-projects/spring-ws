@@ -19,4 +19,7 @@
  * {@link org.springframework.ws.test.client} and
  * {@link org.springframework.ws.test.server} packages.
  */
+@NullMarked
 package org.springframework.ws.test.support;
+
+import org.jspecify.annotations.NullMarked;

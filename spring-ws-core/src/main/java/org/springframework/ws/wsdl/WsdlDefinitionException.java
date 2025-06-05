@@ -16,6 +16,8 @@
 
 package org.springframework.ws.wsdl;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceException;
 
 /**
@@ -31,7 +33,7 @@ public class WsdlDefinitionException extends WebServiceException {
 		super(reason);
 	}
 
-	public WsdlDefinitionException(String reason, Throwable throwable) {
+	public WsdlDefinitionException(@Nullable String reason, Throwable throwable) {
 		super(reason, throwable);
 	}
 

@@ -32,6 +32,7 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 public abstract class SimpleWebServiceMessageReceiverObjectSupport extends WebServiceMessageReceiverObjectSupport
 		implements InitializingBean {
 
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageReceiver messageReceiver;
 
 	/**

@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -38,11 +41,11 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	private final List<RequestMatcher> requestMatchers = new LinkedList<>();
 
-	private URI uri;
+	private @Nullable URI uri;
 
-	private WebServiceMessage request;
+	private @Nullable WebServiceMessage request;
 
-	private ResponseCreator responseCreator;
+	private @Nullable ResponseCreator responseCreator;
 
 	void addRequestMatcher(RequestMatcher requestMatcher) {
 		Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
@@ -74,7 +77,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	public void send(WebServiceMessage message) throws IOException {
 		if (!this.requestMatchers.isEmpty()) {
 			for (RequestMatcher requestMatcher : this.requestMatchers) {
-				requestMatcher.match(this.uri, message);
+				requestMatcher.match(Objects.requireNonNull(this.uri), message);
 			}
 		}
 		else {
@@ -84,9 +87,10 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	}
 
 	@Override
-	public WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+	public @Nullable WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		if (this.responseCreator != null) {
-			return this.responseCreator.createResponse(this.uri, this.request, messageFactory);
+			return this.responseCreator.createResponse(Objects.requireNonNull(this.uri),
+					Objects.requireNonNull(this.request), messageFactory);
 		}
 		else {
 			return null;
@@ -94,7 +98,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	}
 
 	@Override
-	public URI getUri() {
+	public @Nullable URI getUri() {
 		return this.uri;
 	}
 
@@ -104,7 +108,7 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	}
 
 	@Override
-	public String getErrorMessage() throws IOException {
+	public @Nullable String getErrorMessage() throws IOException {
 		if (this.responseCreator instanceof ErrorResponseCreator) {
 			return ((ErrorResponseCreator) this.responseCreator).getErrorMessage();
 		}

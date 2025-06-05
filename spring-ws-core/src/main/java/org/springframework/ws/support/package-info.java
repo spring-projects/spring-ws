@@ -17,4 +17,7 @@
 /**
  * Provides general helper classes for Spring Web Services.
  */
+@NullMarked
 package org.springframework.ws.support;
+
+import org.jspecify.annotations.NullMarked;

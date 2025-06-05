@@ -17,4 +17,7 @@
 /**
  * Abstraction for determining the current TransportInputStream and TransportOutputStream.
  */
+@NullMarked
 package org.springframework.ws.transport.context;
+
+import org.jspecify.annotations.NullMarked;

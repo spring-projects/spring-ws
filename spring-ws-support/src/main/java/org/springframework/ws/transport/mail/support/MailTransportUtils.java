@@ -29,6 +29,7 @@ import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.mail.MailTransportConstants;
@@ -50,7 +51,7 @@ public abstract class MailTransportUtils {
 	private MailTransportUtils() {
 	}
 
-	public static InternetAddress getTo(URI uri) {
+	public static @Nullable InternetAddress getTo(URI uri) {
 		Matcher matcher = TO_PATTERN.matcher(uri.getSchemeSpecificPart());
 		if (matcher.find()) {
 			for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -68,7 +69,7 @@ public abstract class MailTransportUtils {
 		return null;
 	}
 
-	public static String getSubject(URI uri) {
+	public static @Nullable String getSubject(URI uri) {
 		Matcher matcher = SUBJECT_PATTERN.matcher(uri.getSchemeSpecificPart());
 		if (matcher.find()) {
 			return matcher.group(1);
@@ -83,7 +84,7 @@ public abstract class MailTransportUtils {
 	 * @see jakarta.mail.Transport
 	 * @see jakarta.mail.Store
 	 */
-	public static void closeService(Service service) {
+	public static void closeService(@Nullable Service service) {
 		if (service != null) {
 			try {
 				service.close();
@@ -110,7 +111,7 @@ public abstract class MailTransportUtils {
 	 * @param folder the JavaMail Folder to close (may be {@code null})
 	 * @param expunge whether all deleted messages should be expunged from the folder
 	 */
-	public static void closeFolder(Folder folder, boolean expunge) {
+	public static void closeFolder(@Nullable Folder folder, boolean expunge) {
 		if (folder != null && folder.isOpen()) {
 			try {
 				folder.close(expunge);
@@ -172,7 +173,7 @@ public abstract class MailTransportUtils {
 	 * @param subject the subject, may be {@code null}
 	 * @return a mailto URI
 	 */
-	public static URI toUri(InternetAddress to, String subject) throws URISyntaxException {
+	public static URI toUri(InternetAddress to, @Nullable String subject) throws URISyntaxException {
 		if (StringUtils.hasLength(subject)) {
 			return new URI(MailTransportConstants.MAIL_URI_SCHEME, to.getAddress() + "?subject=" + subject, null);
 		}

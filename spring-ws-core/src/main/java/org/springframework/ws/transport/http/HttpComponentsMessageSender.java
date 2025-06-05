@@ -34,6 +34,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -66,7 +67,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 
 	private HttpClient httpClient;
 
-	private Credentials credentials;
+	private @Nullable Credentials credentials;
 
 	private AuthScope authScope = AuthScope.ANY;
 
@@ -248,7 +249,7 @@ public class HttpComponentsMessageSender extends AbstractHttpWebServiceMessageSe
 	 * @param uri the URI to create the context for
 	 * @return the context, or {@code null}
 	 */
-	protected HttpContext createContext(URI uri) {
+	protected @Nullable HttpContext createContext(URI uri) {
 		return null;
 	}
 

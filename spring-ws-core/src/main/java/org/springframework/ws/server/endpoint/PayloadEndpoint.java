@@ -18,6 +18,8 @@ package org.springframework.ws.server.endpoint;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Defines the basic contract for Web Services interested in just the message payload.
  * <p>
@@ -37,6 +39,6 @@ public interface PayloadEndpoint {
 	 * response
 	 * @throws Exception if an exception occurs
 	 */
-	Source invoke(Source request) throws Exception;
+	@Nullable Source invoke(@Nullable Source request) throws Exception;
 
 }

@@ -26,7 +26,9 @@ import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jspecify.annotations.Nullable;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.transport.support.AbstractStandaloneMessageReceiver;
 
 /**
@@ -51,9 +53,9 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	 */
 	public static final String DEFAULT_MESSAGE_ENCODING = "UTF-8";
 
-	private XMPPTCPConnection connection;
+	private @Nullable XMPPTCPConnection connection;
 
-	private WebServicePacketListener packetListener;
+	private @Nullable WebServicePacketListener packetListener;
 
 	private final String messageEncoding = DEFAULT_MESSAGE_ENCODING;
 
@@ -65,11 +67,16 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 		this.connection = connection;
 	}
 
+	private XMPPTCPConnection getConnection() {
+		Assert.state(this.connection != null, "Connection is required");
+		return this.connection;
+	}
+
 	@Override
 	protected void onActivate() throws XMPPException, IOException, SmackException {
-		if (!this.connection.isConnected()) {
+		if (!getConnection().isConnected()) {
 			try {
-				this.connection.connect();
+				getConnection().connect();
 			}
 			catch (InterruptedException ex) {
 				throw new IOException(ex);
@@ -80,29 +87,29 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 	@Override
 	protected void onStart() {
 		if (this.logger.isInfoEnabled()) {
-			this.logger.info("Starting XMPP receiver [" + this.connection.getUser() + "]");
+			this.logger.info("Starting XMPP receiver [" + getConnection().getUser() + "]");
 		}
 		this.packetListener = new WebServicePacketListener();
 		StanzaFilter packetFilter = new StanzaTypeFilter(Message.class);
-		this.connection.addAsyncStanzaListener(this.packetListener, packetFilter);
+		getConnection().addAsyncStanzaListener(this.packetListener, packetFilter);
 	}
 
 	@Override
 	protected void onStop() {
 		if (this.logger.isInfoEnabled()) {
-			this.logger.info("Stopping XMPP receiver [" + this.connection.getUser() + "]");
+			this.logger.info("Stopping XMPP receiver [" + getConnection().getUser() + "]");
 		}
-		this.connection.removeAsyncStanzaListener(this.packetListener);
+		getConnection().removeAsyncStanzaListener(this.packetListener);
 		this.packetListener = null;
 	}
 
 	@Override
 	protected void onShutdown() {
 		if (this.logger.isInfoEnabled()) {
-			this.logger.info("Shutting down XMPP receiver [" + this.connection.getUser() + "]");
+			this.logger.info("Shutting down XMPP receiver [" + getConnection().getUser() + "]");
 		}
-		if (this.connection.isConnected()) {
-			this.connection.disconnect();
+		if (getConnection().isConnected()) {
+			getConnection().disconnect();
 		}
 	}
 
@@ -113,8 +120,7 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 			XmppMessageReceiver.this.logger.info("Received " + packet);
 			if (packet instanceof Message message) {
 				try {
-					XmppReceiverConnection wsConnection = new XmppReceiverConnection(
-							XmppMessageReceiver.this.connection, message);
+					XmppReceiverConnection wsConnection = new XmppReceiverConnection(getConnection(), message);
 					wsConnection.setMessageEncoding(XmppMessageReceiver.this.messageEncoding);
 					handleConnection(wsConnection);
 				}

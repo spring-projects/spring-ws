@@ -17,4 +17,7 @@
 /**
  * Server-side WS-Addressing support, in the form of {@code EndpointMappings}.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing.server;
+
+import org.jspecify.annotations.NullMarked;

@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.addressing.version;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
@@ -99,13 +101,13 @@ public interface AddressingVersion {
 	 * @see <a href="http://www.w3.org/TR/ws-addr-soap/#invalidmapfault">Invalid
 	 * Addressing Header</a>
 	 */
-	SoapFault addInvalidAddressingHeaderFault(SoapMessage message);
+	@Nullable SoapFault addInvalidAddressingHeaderFault(SoapMessage message);
 
 	/**
 	 * Adds a Message Addressing Header Required fault to the given message.
 	 * @see <a href="http://www.w3.org/TR/ws-addr-soap/#missingmapfault">Message
 	 * Addressing Header Required</a>
 	 */
-	SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message);
+	@Nullable SoapFault addMessageAddressingHeaderRequiredFault(SoapMessage message);
 
 }

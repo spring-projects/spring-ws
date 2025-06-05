@@ -19,4 +19,7 @@
  * the {@link org.springframework.ws.test.server.MockWebServiceClient}, and various
  * related test interfaces.
  */
+@NullMarked
 package org.springframework.ws.test.server;
+
+import org.jspecify.annotations.NullMarked;

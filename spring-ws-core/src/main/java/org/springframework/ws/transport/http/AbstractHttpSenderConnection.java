@@ -24,6 +24,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.AbstractSenderConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
@@ -43,13 +45,13 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	/**
 	 * Cached result of {@code hasResponse}.
 	 */
-	private Boolean hasResponse;
+	private @Nullable Boolean hasResponse;
 
 	/**
 	 * The raw response input stream to use instead of calling
 	 * {@link #getRawResponseInputStream()}.
 	 */
-	private PushbackInputStream rawResponseInputStream;
+	private @Nullable PushbackInputStream rawResponseInputStream;
 
 	@Override
 	public final boolean hasError() throws IOException {
@@ -168,7 +170,7 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	}
 
 	@Override
-	public final void setFaultCode(QName faultCode) throws IOException {
+	public final void setFaultCode(@Nullable QName faultCode) throws IOException {
 	}
 
 }

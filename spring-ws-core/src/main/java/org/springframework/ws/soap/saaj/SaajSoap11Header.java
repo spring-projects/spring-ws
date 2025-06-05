@@ -23,6 +23,7 @@ import java.util.List;
 import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPHeader;
 import jakarta.xml.soap.SOAPHeaderElement;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -43,8 +44,7 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) {
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String @Nullable [] actors) {
 		List<SOAPHeaderElement> result = new ArrayList<>();
 		Iterator<SOAPHeaderElement> iterator = getSaajHeader().examineAllHeaderElements();
 		while (iterator.hasNext()) {
@@ -57,7 +57,7 @@ class SaajSoap11Header extends SaajSoapHeader implements Soap11Header {
 		return new SaajSoapHeaderElementIterator(result.iterator());
 	}
 
-	private boolean shouldProcess(String headerActor, String[] actors) {
+	private boolean shouldProcess(String headerActor, String @Nullable [] actors) {
 		if (!StringUtils.hasLength(headerActor)) {
 			return true;
 		}

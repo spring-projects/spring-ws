@@ -31,6 +31,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.beans.BeanInstantiationException;
@@ -54,7 +55,7 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	private final XmlSchema schema;
 
-	private final XmlSchemaCollection collection;
+	private final @Nullable XmlSchemaCollection collection;
 
 	/**
 	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified
@@ -74,7 +75,7 @@ public class CommonsXsdSchema implements XsdSchema {
 	 * {@code null}
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
 	 */
-	protected CommonsXsdSchema(XmlSchema schema, XmlSchemaCollection collection) {
+	protected CommonsXsdSchema(XmlSchema schema, @Nullable XmlSchemaCollection collection) {
 		Assert.notNull(schema, "'schema' must not be null");
 		this.schema = schema;
 		this.collection = collection;

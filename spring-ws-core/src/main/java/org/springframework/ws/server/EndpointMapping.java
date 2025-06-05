@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 
 /**
@@ -57,6 +59,6 @@ public interface EndpointMapping {
 	 * interceptors, or {@code null} if no mapping is found
 	 * @throws Exception if there is an internal error
 	 */
-	EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception;
+	@Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext) throws Exception;
 
 }

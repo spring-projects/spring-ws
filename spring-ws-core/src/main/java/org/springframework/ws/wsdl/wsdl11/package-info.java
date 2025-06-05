@@ -17,4 +17,7 @@
 /**
  * Contains interfaces and classes specific to WSDL 1.1.
  */
+@NullMarked
 package org.springframework.ws.wsdl.wsdl11;
+
+import org.jspecify.annotations.NullMarked;

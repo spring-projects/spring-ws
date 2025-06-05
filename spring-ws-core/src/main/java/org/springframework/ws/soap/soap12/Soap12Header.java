@@ -20,6 +20,8 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -60,7 +62,7 @@ public interface Soap12Header extends SoapHeader {
 	 * @throws SoapHeaderException if the headers cannot be returned
 	 * @see SoapHeaderElement
 	 */
-	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] roles, boolean isUltimateReceiver)
+	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String @Nullable [] roles, boolean isUltimateReceiver)
 			throws SoapHeaderException;
 
 }

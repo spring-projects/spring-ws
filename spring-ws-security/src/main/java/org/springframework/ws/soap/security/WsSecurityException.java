@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceException;
 
 /**
@@ -32,7 +34,7 @@ public abstract class WsSecurityException extends WebServiceException {
 		super(msg);
 	}
 
-	public WsSecurityException(String msg, Throwable ex) {
+	public WsSecurityException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 

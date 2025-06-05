@@ -93,7 +93,7 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 
 		@Override
 		public String getName() {
-			if (this.inputStreamSource instanceof Resource resource) {
+			if (this.inputStreamSource instanceof Resource resource && resource.getFilename() != null) {
 				return resource.getFilename();
 			}
 			else {

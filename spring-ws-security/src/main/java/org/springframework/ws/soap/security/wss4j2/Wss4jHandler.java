@@ -26,6 +26,7 @@ import org.apache.wss4j.dom.engine.WSSecurityEngineResult;
 import org.apache.wss4j.dom.handler.HandlerAction;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.apache.wss4j.dom.handler.WSHandler;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 
 import org.springframework.util.StringUtils;
@@ -45,11 +46,11 @@ class Wss4jHandler extends WSHandler {
 	/** Keys are constants from {@link ConfigurationConstants}; values are strings. */
 	private final Properties options = new Properties();
 
-	private String securementPassword;
+	private @Nullable String securementPassword;
 
-	private Crypto securementEncryptionCrypto;
+	private @Nullable Crypto securementEncryptionCrypto;
 
-	private Crypto securementSignatureCrypto;
+	private @Nullable Crypto securementSignatureCrypto;
 
 	Wss4jHandler() {
 		// set up default handler properties
@@ -94,7 +95,7 @@ class Wss4jHandler extends WSHandler {
 	}
 
 	@Override
-	public String getPassword(Object msgContext) {
+	public @Nullable String getPassword(Object msgContext) {
 		String contextPassword = (String) getProperty(msgContext,
 				Wss4jSecurityInterceptor.SECUREMENT_PASSWORD_PROPERTY_NAME);
 		if (StringUtils.hasLength(contextPassword)) {
@@ -104,17 +105,17 @@ class Wss4jHandler extends WSHandler {
 	}
 
 	@Override
-	public Object getProperty(Object msgContext, String key) {
+	public @Nullable Object getProperty(Object msgContext, String key) {
 		return ((MessageContext) msgContext).getProperty(key);
 	}
 
 	@Override
-	protected Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
+	protected @Nullable Crypto loadEncryptionCrypto(RequestData reqData) throws WSSecurityException {
 		return this.securementEncryptionCrypto;
 	}
 
 	@Override
-	public Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
+	public @Nullable Crypto loadSignatureCrypto(RequestData reqData) throws WSSecurityException {
 		return this.securementSignatureCrypto;
 	}
 

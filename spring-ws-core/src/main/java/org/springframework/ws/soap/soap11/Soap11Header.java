@@ -18,6 +18,8 @@ package org.springframework.ws.soap.soap11;
 
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapHeaderException;
@@ -39,6 +41,6 @@ public interface Soap11Header extends SoapHeader {
 	 * @throws SoapHeaderException if the headers cannot be returned
 	 * @see SoapHeaderElement
 	 */
-	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String[] actors) throws SoapHeaderException;
+	Iterator<SoapHeaderElement> examineHeaderElementsToProcess(String @Nullable [] actors) throws SoapHeaderException;
 
 }

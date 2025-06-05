@@ -20,6 +20,7 @@ import java.security.cert.X509Certificate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
@@ -56,6 +57,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
+	@SuppressWarnings("NullAway.Init")
 	private X509AuthoritiesPopulator x509AuthoritiesPopulator;
 
 	private X509UserCache userCache = new NullX509UserCache();
@@ -88,7 +90,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 	 * authentication request.
 	 */
 	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		if (!supports(authentication.getClass())) {
 			return null;
 		}

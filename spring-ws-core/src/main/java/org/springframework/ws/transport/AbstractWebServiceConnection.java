@@ -18,6 +18,8 @@ package org.springframework.ws.transport;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
@@ -29,9 +31,9 @@ import org.springframework.ws.WebServiceMessageFactory;
  */
 public abstract class AbstractWebServiceConnection implements WebServiceConnection {
 
-	private TransportInputStream tis;
+	private @Nullable TransportInputStream tis;
 
-	private TransportOutputStream tos;
+	private @Nullable TransportOutputStream tos;
 
 	private boolean closed = false;
 
@@ -65,7 +67,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	 * @return the output stream
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected abstract TransportOutputStream createTransportOutputStream() throws IOException;
+	protected abstract @Nullable TransportOutputStream createTransportOutputStream() throws IOException;
 
 	/**
 	 * Called after the given message has been written to the
@@ -79,7 +81,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	}
 
 	@Override
-	public final WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
+	public final @Nullable WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
 		checkClosed();
 		onReceiveBeforeRead();
 		this.tis = createTransportInputStream();
@@ -107,7 +109,7 @@ public abstract class AbstractWebServiceConnection implements WebServiceConnecti
 	 * @return the input stream, or {@code null} if no response can be read
 	 * @throws IOException when an I/O exception occurs
 	 */
-	protected abstract TransportInputStream createTransportInputStream() throws IOException;
+	protected abstract @Nullable TransportInputStream createTransportInputStream() throws IOException;
 
 	/**
 	 * Called when the given message has been read from the {@code TransportInputStream}.

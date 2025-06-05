@@ -18,4 +18,7 @@
  * Provides miscellaneous endpoints {@code EndpointInterceptor} implementations for SOAP
  * purposes.
  */
+@NullMarked
 package org.springframework.ws.soap.server.endpoint.interceptor;
+
+import org.jspecify.annotations.NullMarked;

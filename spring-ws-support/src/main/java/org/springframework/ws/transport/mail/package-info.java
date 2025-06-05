@@ -17,4 +17,7 @@
 /**
  * Package providing support for handling messages via email.
  */
+@NullMarked
 package org.springframework.ws.transport.mail;
+
+import org.jspecify.annotations.NullMarked;

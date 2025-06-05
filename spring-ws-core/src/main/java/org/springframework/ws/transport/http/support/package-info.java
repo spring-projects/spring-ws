@@ -17,4 +17,7 @@
 /**
  * Support classes for handling messages via HTTP.
  */
+@NullMarked
 package org.springframework.ws.transport.http.support;
+
+import org.jspecify.annotations.NullMarked;

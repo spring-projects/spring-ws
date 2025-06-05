@@ -20,6 +20,7 @@ import jakarta.jms.BytesMessage;
 import jakarta.jms.Message;
 import jakarta.jms.Session;
 import jakarta.jms.TextMessage;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.ws.transport.WebServiceMessageReceiver;
@@ -44,7 +45,7 @@ public class JmsMessageReceiver extends SimpleWebServiceMessageReceiverObjectSup
 
 	private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
-	private MessagePostProcessor postProcessor;
+	private @Nullable MessagePostProcessor postProcessor;
 
 	/**
 	 * Sets the encoding used to read from and write to {@link TextMessage} messages.

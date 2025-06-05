@@ -30,6 +30,7 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -81,8 +82,7 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] roles,
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String @Nullable [] roles,
 			final boolean isUltimateDestination) throws SoapHeaderException {
 		RolePlayer rolePlayer = null;
 		if (!ObjectUtils.isEmpty(roles)) {
@@ -97,7 +97,7 @@ class AxiomSoap12Header extends AxiomSoapHeader implements Soap12Header {
 				}
 			};
 		}
-		Iterator<SOAPHeaderBlock> result = (Iterator<SOAPHeaderBlock>) getAxiomHeader().getHeadersToProcess(rolePlayer);
+		Iterator<SOAPHeaderBlock> result = getAxiomHeader().getHeadersToProcess(rolePlayer);
 		return new AxiomSoapHeaderElementIterator(result);
 	}
 

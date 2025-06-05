@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xpath;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.xml.XmlException;
 
 /**
@@ -42,7 +44,7 @@ public class XPathException extends XmlException {
 	 * @param message the detail message
 	 * @param throwable the wrapped exception
 	 */
-	public XPathException(String message, Throwable throwable) {
+	public XPathException(@Nullable String message, Throwable throwable) {
 		super(message, throwable);
 	}
 

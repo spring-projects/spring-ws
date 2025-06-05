@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
@@ -49,7 +50,7 @@ public class WebServiceMessageReceiverHandlerAdapter extends WebServiceMessageRe
 		implements HandlerAdapter {
 
 	@Override
-	public ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+	public @Nullable ModelAndView handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			Object handler) throws Exception {
 		if (HttpTransportConstants.METHOD_POST.equals(httpServletRequest.getMethod())) {
 			WebServiceConnection connection = new HttpServletConnection(httpServletRequest, httpServletResponse);

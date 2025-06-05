@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.context.MessageContext;
 
@@ -47,7 +49,7 @@ public interface MethodReturnValueHandler {
 	 * @param returnValue the return value to handle
 	 * @throws Exception in case of errors
 	 */
-	void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
+	void handleReturnValue(MessageContext messageContext, MethodParameter returnType, @Nullable Object returnValue)
 			throws Exception;
 
 }

@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.soap.security.WsSecurityValidationException;
 
 /**
@@ -33,7 +35,7 @@ public class Wss4jSecurityValidationException extends WsSecurityValidationExcept
 		super(msg);
 	}
 
-	public Wss4jSecurityValidationException(String msg, Throwable ex) {
+	public Wss4jSecurityValidationException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 

@@ -33,6 +33,7 @@ import org.apache.axiom.soap.SOAPFaultSubCode;
 import org.apache.axiom.soap.SOAPFaultText;
 import org.apache.axiom.soap.SOAPFaultValue;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.axiom.support.AxiomUtils;
@@ -107,7 +108,7 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 	}
 
 	@Override
-	public String getFaultNode() {
+	public @Nullable String getFaultNode() {
 		SOAPFaultNode faultNode = getAxiomFault().getNode();
 		if (faultNode == null) {
 			return null;
@@ -130,12 +131,12 @@ class AxiomSoap12Fault extends AxiomSoapFault implements Soap12Fault {
 	}
 
 	@Override
-	public String getFaultStringOrReason() {
+	public @Nullable String getFaultStringOrReason() {
 		return getFaultReasonText(Locale.getDefault());
 	}
 
 	@Override
-	public String getFaultReasonText(Locale locale) {
+	public @Nullable String getFaultReasonText(Locale locale) {
 		SOAPFaultReason faultReason = getAxiomFault().getReason();
 		String language = AxiomUtils.toLanguage(locale);
 		SOAPFaultText faultText = faultReason.getSOAPFaultText(language);

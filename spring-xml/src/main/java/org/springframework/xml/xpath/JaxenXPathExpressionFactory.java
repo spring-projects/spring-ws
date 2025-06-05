@@ -24,6 +24,7 @@ import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.jaxen.dom.DOMXPath;
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 
@@ -92,7 +93,7 @@ abstract class JaxenXPathExpressionFactory {
 		}
 
 		@Override
-		public Node evaluateAsNode(Node node) {
+		public @Nullable Node evaluateAsNode(Node node) {
 			try {
 				return (Node) this.xpath.selectSingleNode(node);
 			}
@@ -125,7 +126,7 @@ abstract class JaxenXPathExpressionFactory {
 		}
 
 		@Override
-		public String evaluateAsString(Node node) {
+		public @Nullable String evaluateAsString(Node node) {
 			try {
 				return this.xpath.stringValueOf(node);
 			}
@@ -148,7 +149,7 @@ abstract class JaxenXPathExpressionFactory {
 		}
 
 		@Override
-		public <T> T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
+		public <T> @Nullable T evaluateAsObject(Node context, NodeMapper<T> nodeMapper) throws XPathException {
 			try {
 				Node result = (Node) this.xpath.selectSingleNode(context);
 				if (result != null) {

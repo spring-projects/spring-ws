@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server.endpoint.adapter.method;
 
+import java.lang.reflect.Method;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -25,6 +27,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,6 +36,7 @@ import org.w3c.dom.NodeList;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.XPathParam;
 import org.springframework.ws.server.endpoint.support.NamespaceUtils;
@@ -91,8 +95,10 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 	}
 
 	@Override
-	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
+	public @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
 			throws TransformerException, XPathExpressionException {
+		Method method = parameter.getMethod();
+		Assert.notNull(method, "Method must not be null");
 		Class<?> parameterType = parameter.getParameterType();
 		QName evaluationReturnType = getReturnType(parameterType);
 		boolean useConversionService = false;
@@ -100,17 +106,20 @@ public class XPathParamMethodArgumentResolver implements MethodArgumentResolver 
 			evaluationReturnType = XPathConstants.STRING;
 			useConversionService = true;
 		}
-
 		XPath xpath = createXPath();
-		xpath.setNamespaceContext(NamespaceUtils.getNamespaceContext(parameter.getMethod()));
+		xpath.setNamespaceContext(NamespaceUtils.getNamespaceContext(method));
 
-		Element rootElement = getRootElement(messageContext.getRequest().getPayloadSource());
-		String expression = parameter.getParameterAnnotation(XPathParam.class).value();
+		Source payloadSource = messageContext.getRequest().getPayloadSource();
+		Assert.notNull(payloadSource, "No payload source available");
+		Element rootElement = getRootElement(payloadSource);
+		XPathParam annotation = parameter.getParameterAnnotation(XPathParam.class);
+		Assert.state(annotation != null, "No @XPathParam annotation found");
+		String expression = annotation.value();
 		Object result = xpath.evaluate(expression, rootElement, evaluationReturnType);
 		return (useConversionService) ? this.conversionService.convert(result, parameterType) : result;
 	}
 
-	private QName getReturnType(Class<?> parameterType) {
+	private @Nullable QName getReturnType(Class<?> parameterType) {
 		if (Boolean.class.equals(parameterType) || Boolean.TYPE.equals(parameterType)) {
 			return XPathConstants.BOOLEAN;
 		}

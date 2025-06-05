@@ -18,6 +18,7 @@ package org.springframework.ws.config;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Element;
 
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.parsing.CompositeComponentDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.ws.server.SmartEndpointInterceptor;
@@ -45,7 +47,7 @@ import org.springframework.ws.soap.server.endpoint.interceptor.SoapActionSmartEn
 class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 
 	@Override
-	public BeanDefinition parse(Element element, ParserContext parserContext) {
+	public @Nullable BeanDefinition parse(Element element, ParserContext parserContext) {
 		CompositeComponentDefinition compDefinition = new CompositeComponentDefinition(element.getTagName(),
 				parserContext.extractSource(element));
 		parserContext.pushContainingComponent(compDefinition);
@@ -149,11 +151,12 @@ class InterceptorsBeanDefinitionParser implements BeanDefinitionParser {
 
 	private BeanDefinitionHolder createInterceptorDefinition(ParserContext parserContext, Element element) {
 		BeanDefinitionHolder interceptorDef = parserContext.getDelegate().parseBeanDefinitionElement(element);
+		Assert.notNull(interceptorDef, "No interceptor definition found for element [" + element + "]");
 		interceptorDef = parserContext.getDelegate().decorateBeanDefinitionIfRequired(element, interceptorDef);
 		return interceptorDef;
 	}
 
-	private BeanReference createInterceptorReference(ParserContext parserContext, Element element) {
+	private @Nullable BeanReference createInterceptorReference(ParserContext parserContext, Element element) {
 		// A generic reference to any name of any bean.
 		String refName = element.getAttribute("bean");
 		if (!StringUtils.hasLength(refName)) {

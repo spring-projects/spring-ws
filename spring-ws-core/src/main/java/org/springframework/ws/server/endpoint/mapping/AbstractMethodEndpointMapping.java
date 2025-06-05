@@ -26,8 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.core.BridgeMethodResolver;
 import org.springframework.util.Assert;
@@ -59,7 +62,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @see #getLookupKeyForMessage(MessageContext)
 	 */
 	@Override
-	protected Object getEndpointInternal(MessageContext messageContext) throws Exception {
+	protected @Nullable Object getEndpointInternal(MessageContext messageContext) throws Exception {
 		T key = getLookupKeyForMessage(messageContext);
 		if (key == null) {
 			return null;
@@ -74,14 +77,14 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * Returns the endpoint keys for the given message context.
 	 * @return the registration keys
 	 */
-	protected abstract T getLookupKeyForMessage(MessageContext messageContext) throws Exception;
+	protected abstract @Nullable T getLookupKeyForMessage(MessageContext messageContext) throws Exception;
 
 	/**
 	 * Looks up an endpoint instance for the given keys. All keys are tried in order.
 	 * @param key key the beans are mapped to
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
-	protected MethodEndpoint lookupEndpoint(T key) {
+	protected @Nullable MethodEndpoint lookupEndpoint(T key) {
 		return this.endpointMap.get(key);
 	}
 
@@ -91,7 +94,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @param endpoint the method endpoint instance
 	 * @throws BeansException if the endpoint could not be registered
 	 */
-	protected void registerEndpoint(T key, MethodEndpoint endpoint) throws BeansException {
+	protected void registerEndpoint(T key, @Nullable MethodEndpoint endpoint) throws BeansException {
 		Object mappedEndpoint = this.endpointMap.get(key);
 		if (mappedEndpoint != null) {
 			throw new ApplicationContextException("Cannot map endpoint [" + endpoint + "] on registration key [" + key
@@ -136,8 +139,11 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @see #getLookupKeysForMethod(Method)
 	 */
 	protected void registerMethods(String beanName) {
+		ApplicationContext applicationContext = getApplicationContext();
+		Assert.notNull(applicationContext, "'applicationContext' must not be null");
 		Assert.hasText(beanName, "'beanName' must not be empty");
-		Class<?> endpointType = getApplicationContext().getType(beanName);
+		Class<?> endpointType = applicationContext.getType(beanName);
+		Assert.state(endpointType != null, "No type found for bean with name  [" + beanName + "]");
 		endpointType = ClassUtils.getUserClass(endpointType);
 
 		Set<Method> methods = findEndpointMethods(endpointType, new ReflectionUtils.MethodFilter() {
@@ -149,7 +155,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		for (Method method : methods) {
 			List<T> keys = getLookupKeysForMethod(method);
 			for (T key : keys) {
-				registerEndpoint(key, new MethodEndpoint(beanName, getApplicationContext(), method));
+				registerEndpoint(key, new MethodEndpoint(beanName, applicationContext, method));
 			}
 		}
 
@@ -188,7 +194,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 	 * @return a registration key, or {@code null} if the method is not to be registered
 	 * @see #getLookupKeysForMethod(Method)
 	 */
-	protected T getLookupKeyForMethod(Method method) {
+	protected @Nullable T getLookupKeyForMethod(Method method) {
 		return null;
 	}
 

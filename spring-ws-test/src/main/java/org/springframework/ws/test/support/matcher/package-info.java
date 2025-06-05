@@ -19,4 +19,7 @@
  * {@link org.springframework.ws.test.support.matcher.WebServiceMessageMatcher
  * WebServiceMessageMatcher} interface, and implementations.
  */
+@NullMarked
 package org.springframework.ws.test.support.matcher;
+
+import org.jspecify.annotations.NullMarked;

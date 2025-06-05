@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 
@@ -49,10 +51,10 @@ public interface WebServiceConnection extends AutoCloseable {
 	 * @return the read message, or {@code null} if no message received
 	 * @throws IOException in case of I/O errors
 	 */
-	WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException;
+	@Nullable WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException;
 
 	/** Returns the URI for this connection. */
-	URI getUri() throws URISyntaxException;
+	@Nullable URI getUri() throws URISyntaxException;
 
 	/**
 	 * Indicates whether this connection has an error. Typically, error detection is done
@@ -67,7 +69,7 @@ public interface WebServiceConnection extends AutoCloseable {
 	 * present
 	 * @see #hasError()
 	 */
-	String getErrorMessage() throws IOException;
+	@Nullable String getErrorMessage() throws IOException;
 
 	/**
 	 * Closes this connection.

@@ -17,4 +17,7 @@
 /**
  * Contains various strategies for generating WS-Addressing MessageIDs.
  */
+@NullMarked
 package org.springframework.ws.soap.addressing.messageid;
+
+import org.jspecify.annotations.NullMarked;

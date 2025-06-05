@@ -20,6 +20,8 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
@@ -49,11 +51,7 @@ import org.springframework.xml.transform.TransformerFactoryUtils;
  */
 public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMapping {
 
-	private static TransformerFactory transformerFactory;
-
-	static {
-		setTransformerFactory(TransformerFactoryUtils.newInstance());
-	}
+	private static TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	/**
 	 * Override the default {@link TransformerFactory}.
@@ -64,7 +62,7 @@ public class PayloadRootQNameEndpointMapping extends AbstractQNameEndpointMappin
 	}
 
 	@Override
-	protected QName resolveQName(MessageContext messageContext) throws TransformerException {
+	protected @Nullable QName resolveQName(MessageContext messageContext) throws TransformerException {
 		return PayloadRootUtils.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory);
 	}
 

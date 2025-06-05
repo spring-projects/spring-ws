@@ -16,6 +16,8 @@
 
 package org.springframework.xml.xsd.commons;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.xml.xsd.XsdSchemaException;
 
 /**
@@ -31,7 +33,7 @@ public class CommonsXsdSchemaException extends XsdSchemaException {
 		super(message);
 	}
 
-	public CommonsXsdSchemaException(String message, Throwable exception) {
+	public CommonsXsdSchemaException(@Nullable String message, Throwable exception) {
 		super(message, exception);
 	}
 

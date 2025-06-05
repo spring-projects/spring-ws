@@ -17,4 +17,7 @@
 /**
  * User details popular for X.509 client certificates.
  */
+@NullMarked
 package org.springframework.ws.soap.security.x509.populator;
+
+import org.jspecify.annotations.NullMarked;

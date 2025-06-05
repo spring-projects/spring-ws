@@ -16,6 +16,8 @@
 
 package org.springframework.ws.client;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.FaultAwareWebServiceMessage;
 
 /**
@@ -27,7 +29,7 @@ import org.springframework.ws.FaultAwareWebServiceMessage;
 @SuppressWarnings("serial")
 public class WebServiceFaultException extends WebServiceClientException {
 
-	private final FaultAwareWebServiceMessage faultMessage;
+	private final @Nullable FaultAwareWebServiceMessage faultMessage;
 
 	/** Create a new instance of the {@code WebServiceFaultException} class. */
 	public WebServiceFaultException(String msg) {
@@ -45,7 +47,7 @@ public class WebServiceFaultException extends WebServiceClientException {
 	}
 
 	/** Returns the fault message. */
-	public FaultAwareWebServiceMessage getWebServiceMessage() {
+	public @Nullable FaultAwareWebServiceMessage getWebServiceMessage() {
 		return this.faultMessage;
 	}
 

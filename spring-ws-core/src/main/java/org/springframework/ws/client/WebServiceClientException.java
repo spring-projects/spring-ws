@@ -16,6 +16,8 @@
 
 package org.springframework.ws.client;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceException;
 
 /**
@@ -31,7 +33,7 @@ public abstract class WebServiceClientException extends WebServiceException {
 	 * Create a new instance of the {@code WebServiceClientException} class.
 	 * @param msg the detail message
 	 */
-	public WebServiceClientException(String msg) {
+	public WebServiceClientException(@Nullable String msg) {
 		super(msg);
 	}
 

@@ -19,4 +19,7 @@
  * {@link org.springframework.ws.test.support.creator.WebServiceMessageCreator
  * WebServiceMessageCreator} interface, and implementations.
  */
+@NullMarked
 package org.springframework.ws.test.support.creator;
+
+import org.jspecify.annotations.NullMarked;

@@ -18,6 +18,8 @@ package org.springframework.ws.server.endpoint.adapter.method;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -35,15 +37,15 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	// MethodArgumentResolver
 
 	@Override
-	public final Object resolveArgument(MessageContext messageContext, MethodParameter parameter) throws Exception {
+	public final @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter)
+			throws Exception {
 		Source requestPayload = getRequestPayload(messageContext);
 		return (requestPayload != null) ? resolveRequestPayloadArgument(parameter, requestPayload) : null;
 	}
 
 	/** Returns the request payload as {@code Source}. */
-	private Source getRequestPayload(MessageContext messageContext) {
-		WebServiceMessage request = messageContext.getRequest();
-		return (request != null) ? request.getPayloadSource() : null;
+	private @Nullable Source getRequestPayload(MessageContext messageContext) {
+		return messageContext.getRequest().getPayloadSource();
 	}
 
 	/**
@@ -60,14 +62,12 @@ public abstract class AbstractPayloadSourceMethodProcessor extends AbstractPaylo
 	// MethodReturnValueHandler
 
 	@Override
-	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType, Object returnValue)
-			throws Exception {
+	public final void handleReturnValue(MessageContext messageContext, MethodParameter returnType,
+			@Nullable Object returnValue) throws Exception {
 		if (returnValue != null) {
 			Source responsePayload = createResponsePayload(returnType, returnValue);
-			if (responsePayload != null) {
-				WebServiceMessage response = messageContext.getResponse();
-				transform(responsePayload, response.getPayloadResult());
-			}
+			WebServiceMessage response = messageContext.getResponse();
+			transform(responsePayload, response.getPayloadResult());
 		}
 	}
 

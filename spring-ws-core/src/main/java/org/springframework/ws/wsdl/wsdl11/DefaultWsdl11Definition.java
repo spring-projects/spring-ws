@@ -20,6 +20,8 @@ import java.util.Properties;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.provider.DefaultMessagesProvider;
@@ -63,7 +65,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	private final ProviderBasedWsdl4jDefinition delegate = new ProviderBasedWsdl4jDefinition();
 
-	private String serviceName;
+	private @Nullable String serviceName;
 
 	/** Creates a new instance of the {@link DefaultWsdl11Definition}. */
 	public DefaultWsdl11Definition() {
@@ -175,7 +177,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if (!StringUtils.hasText(this.delegate.getTargetNamespace()) && this.typesProvider.getSchemaCollection() != null
+		if (!StringUtils.hasText(this.delegate.getTargetNamespace())
 				&& this.typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
 			XsdSchema schema = this.typesProvider.getSchemaCollection().getXsdSchemas()[0];
 			setTargetNamespace(schema.getTargetNamespace());

@@ -18,4 +18,7 @@
  * Provides the Plain Old XML (POX) functionality of the Spring Web Services framework.
  * Contains the PoxMessage and related interfaces.
  */
+@NullMarked
 package org.springframework.ws.pox;
+
+import org.jspecify.annotations.NullMarked;

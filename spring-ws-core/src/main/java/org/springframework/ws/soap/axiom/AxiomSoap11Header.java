@@ -24,6 +24,7 @@ import org.apache.axiom.soap.RolePlayer;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axiom.soap.SOAPHeaderBlock;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.ObjectUtils;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -43,7 +44,7 @@ class AxiomSoap11Header extends AxiomSoapHeader implements Soap11Header {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String[] actors) {
+	public Iterator<SoapHeaderElement> examineHeaderElementsToProcess(final String @Nullable [] actors) {
 		RolePlayer rolePlayer = null;
 		if (!ObjectUtils.isEmpty(actors)) {
 			rolePlayer = new RolePlayer() {

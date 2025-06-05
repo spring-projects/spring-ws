@@ -16,12 +16,14 @@
 
 package org.springframework.xml.xpath;
 
+import java.util.Collections;
 import java.util.Map;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -38,7 +40,7 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  */
 public abstract class AbstractXPathTemplate extends TransformerObjectSupport implements XPathOperations {
 
-	private Map<String, String> namespaces;
+	private Map<String, String> namespaces = Collections.emptyMap();
 
 	/** Returns namespaces used in the XPath expression. */
 	public Map<String, String> getNamespaces() {
@@ -81,7 +83,7 @@ public abstract class AbstractXPathTemplate extends TransformerObjectSupport imp
 		}
 
 		@Override
-		public Object mapNode(Node node, int nodeNum) throws DOMException {
+		public @Nullable Object mapNode(Node node, int nodeNum) throws DOMException {
 			this.callbackHandler.processNode(node);
 			return null;
 		}

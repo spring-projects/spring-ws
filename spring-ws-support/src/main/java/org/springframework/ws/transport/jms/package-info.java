@@ -17,4 +17,7 @@
 /**
  * Package providing support for handling messages via JMS.
  */
+@NullMarked
 package org.springframework.ws.transport.jms;
+
+import org.jspecify.annotations.NullMarked;

@@ -18,6 +18,8 @@ package org.springframework.ws.client.support.destination;
 
 import java.net.URI;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Strategy interface for providing a
  * {@link org.springframework.ws.client.core.WebServiceTemplate} destination URI at
@@ -36,6 +38,6 @@ public interface DestinationProvider {
 	 * Return the destination URI.
 	 * @return the destination URI
 	 */
-	URI getDestination();
+	@Nullable URI getDestination();
 
 }

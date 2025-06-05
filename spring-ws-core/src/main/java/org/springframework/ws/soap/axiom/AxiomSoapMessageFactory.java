@@ -37,6 +37,7 @@ import org.apache.axiom.soap.SOAPModelBuilder;
 import org.apache.axiom.soap.SOAPVersion;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -95,12 +96,13 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
 
-	private XMLInputFactory inputFactory;
+	private @Nullable XMLInputFactory inputFactory;
 
 	private boolean payloadCaching = true;
 
 	private boolean attachmentCaching = false;
 
+	@SuppressWarnings("NullAway.Init")
 	private File attachmentCacheDir;
 
 	private int attachmentCacheThreshold = 4096;
@@ -263,7 +265,8 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 		}
 	}
 
-	private String getHeaderValue(TransportInputStream transportInputStream, String header) throws IOException {
+	private @Nullable String getHeaderValue(TransportInputStream transportInputStream, String header)
+			throws IOException {
 		String contentType = null;
 		Iterator<String> iterator = transportInputStream.getHeaders(header);
 		if (iterator.hasNext()) {

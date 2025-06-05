@@ -18,4 +18,7 @@
  * Provides classes that help with DOM: the Document Object Model. Mostly for internal use
  * by the framework.
  */
+@NullMarked
 package org.springframework.xml.dom;
+
+import org.jspecify.annotations.NullMarked;

@@ -27,11 +27,13 @@ import jakarta.jms.Message;
 import jakarta.jms.Queue;
 import jakarta.jms.Session;
 import jakarta.jms.Topic;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
 import org.springframework.jms.core.MessagePostProcessor;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.JmsDestinationAccessor;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -117,7 +119,7 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 
 	private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
-	private MessagePostProcessor postProcessor;
+	private @Nullable MessagePostProcessor postProcessor;
 
 	/**
 	 * Create a new {@code JmsMessageSender}
@@ -165,6 +167,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
+		ConnectionFactory connectionFactory = getConnectionFactory();
+		Assert.notNull(connectionFactory, "ConnectionFactory is required");
 		Connection jmsConnection = null;
 		Session jmsSession = null;
 		try {
@@ -172,8 +176,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 			jmsSession = createSession(jmsConnection);
 			Destination requestDestination = resolveRequestDestination(jmsSession, uri);
 			Message requestMessage = createRequestMessage(jmsSession, uri);
-			JmsSenderConnection wsConnection = new JmsSenderConnection(getConnectionFactory(), jmsConnection,
-					jmsSession, requestDestination, requestMessage);
+			JmsSenderConnection wsConnection = new JmsSenderConnection(connectionFactory, jmsConnection, jmsSession,
+					requestDestination, requestMessage);
 			wsConnection.setDeliveryMode(JmsTransportUtils.getDeliveryMode(uri));
 			wsConnection.setPriority(JmsTransportUtils.getPriority(uri));
 			wsConnection.setReceiveTimeout(this.receiveTimeout);
@@ -197,10 +201,12 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	}
 
 	private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {
-		return resolveDestinationName(session, JmsTransportUtils.getDestinationName(uri));
+		String destinationName = JmsTransportUtils.getDestinationName(uri);
+		Assert.notNull(destinationName, "No destination name found for URI [" + uri + "]");
+		return resolveDestinationName(session, destinationName);
 	}
 
-	private Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
+	private @Nullable Destination resolveResponseDestination(Session session, URI uri) throws JMSException {
 		String destinationName = JmsTransportUtils.getReplyToName(uri);
 		return StringUtils.hasLength(destinationName) ? resolveDestinationName(session, destinationName) : null;
 	}

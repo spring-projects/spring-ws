@@ -18,6 +18,8 @@ package org.springframework.ws.test.client;
 
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.test.support.matcher.XPathExpectationsHelper;
 
 /**
@@ -31,7 +33,7 @@ class XPathExpectationsHelperAdapter implements RequestXPathExpectations {
 
 	private final XPathExpectationsHelper helper;
 
-	XPathExpectationsHelperAdapter(String expression, Map<String, String> namespaces) {
+	XPathExpectationsHelperAdapter(String expression, @Nullable Map<String, String> namespaces) {
 		this.helper = new XPathExpectationsHelper(expression, namespaces);
 	}
 

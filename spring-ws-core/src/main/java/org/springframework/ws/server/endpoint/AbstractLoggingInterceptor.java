@@ -27,6 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -116,7 +117,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * Does nothing by default.
 	 */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 	}
 
 	/**
@@ -146,7 +147,7 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * @param source the source to be logged
 	 * @throws TransformerException in case of errors
 	 */
-	protected void logMessageSource(String logMessage, Source source) throws TransformerException {
+	protected void logMessageSource(String logMessage, @Nullable Source source) throws TransformerException {
 		if (source != null) {
 			Transformer transformer = createNonIndentingTransformer();
 			StringWriter writer = new StringWriter();
@@ -173,6 +174,6 @@ public abstract class AbstractLoggingInterceptor extends TransformerObjectSuppor
 	 * @param message the message
 	 * @return the source of the message
 	 */
-	protected abstract Source getSource(WebServiceMessage message);
+	protected abstract @Nullable Source getSource(WebServiceMessage message);
 
 }

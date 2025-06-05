@@ -18,6 +18,8 @@ package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -44,13 +46,13 @@ public class PayloadValidatingInterceptor extends AbstractFaultCreatingValidatin
 
 	/** Returns the payload source of the given message. */
 	@Override
-	protected Source getValidationRequestSource(WebServiceMessage request) {
+	protected @Nullable Source getValidationRequestSource(WebServiceMessage request) {
 		return request.getPayloadSource();
 	}
 
 	/** Returns the payload source of the given message. */
 	@Override
-	protected Source getValidationResponseSource(WebServiceMessage response) {
+	protected @Nullable Source getValidationResponseSource(WebServiceMessage response) {
 		return response.getPayloadSource();
 	}
 

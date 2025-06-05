@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeansException;
 
 /**
@@ -57,7 +59,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	// contents will be copied over to endpointMap
 	private final Map<URI, Object> actionMap = new HashMap<>();
 
-	private URI address;
+	private @Nullable URI address;
 
 	/**
 	 * Map action URIs to endpoint bean names. This is the typical way of configuring this
@@ -132,7 +134,7 @@ public class SimpleActionEndpointMapping extends AbstractActionEndpointMapping {
 	}
 
 	@Override
-	protected URI getEndpointAddress(Object endpoint) {
+	protected @Nullable URI getEndpointAddress(Object endpoint) {
 		return this.address;
 	}
 

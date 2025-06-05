@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -60,15 +61,16 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	private String schemaLanguage = XmlValidatorFactory.SCHEMA_W3C_XML;
 
-	private Resource[] schemas;
+	private Resource @Nullable [] schemas;
 
 	private boolean validateRequest = true;
 
 	private boolean validateResponse = false;
 
+	@SuppressWarnings("NullAway.Init")
 	private XmlValidator validator;
 
-	private ValidationErrorHandler errorHandler;
+	private @Nullable ValidationErrorHandler errorHandler;
 
 	public String getSchemaLanguage() {
 		return this.schemaLanguage;
@@ -87,7 +89,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	/**
 	 * Returns the schema resources to use for validation.
 	 */
-	public Resource[] getSchemas() {
+	public Resource @Nullable [] getSchemas() {
 		return this.schemas;
 	}
 
@@ -275,7 +277,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 
 	/** Does nothing by default. */
 	@Override
-	public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
 	}
 
 	/**
@@ -285,7 +287,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * @return the part of the message that is to validated, or {@code null} not to
 	 * validate anything
 	 */
-	protected abstract Source getValidationRequestSource(WebServiceMessage request);
+	protected abstract @Nullable Source getValidationRequestSource(WebServiceMessage request);
 
 	/**
 	 * Abstract template method that returns the part of the response message that is to
@@ -294,6 +296,6 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * @return the part of the message that is to validated, or {@code null} not to
 	 * validate anything
 	 */
-	protected abstract Source getValidationResponseSource(WebServiceMessage response);
+	protected abstract @Nullable Source getValidationResponseSource(WebServiceMessage response);
 
 }

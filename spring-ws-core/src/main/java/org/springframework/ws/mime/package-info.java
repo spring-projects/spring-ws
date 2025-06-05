@@ -18,4 +18,7 @@
  * Provides MIME functionality for use the Spring Web Services framework. Contains the
  * Attachment and MimeMessage and related interfaces.
  */
+@NullMarked
 package org.springframework.ws.mime;
+
+import org.jspecify.annotations.NullMarked;

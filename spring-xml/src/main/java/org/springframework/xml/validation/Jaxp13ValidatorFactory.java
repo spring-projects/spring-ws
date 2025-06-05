@@ -24,6 +24,7 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
+import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -62,7 +63,8 @@ abstract class Jaxp13ValidatorFactory {
 		}
 
 		@Override
-		public SAXParseException[] validate(Source source, ValidationErrorHandler errorHandler) throws IOException {
+		public SAXParseException[] validate(Source source, @Nullable ValidationErrorHandler errorHandler)
+				throws IOException {
 			if (errorHandler == null) {
 				errorHandler = new DefaultValidationErrorHandler();
 			}

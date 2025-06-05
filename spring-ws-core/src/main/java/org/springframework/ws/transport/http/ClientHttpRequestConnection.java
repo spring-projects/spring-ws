@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.Assert;
@@ -44,7 +46,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 
 	private final ClientHttpRequest request;
 
-	private ClientHttpResponse response;
+	private @Nullable ClientHttpResponse response;
 
 	public ClientHttpRequestConnection(ClientHttpRequest request) {
 		Assert.notNull(request, "'request' must not be null");
@@ -56,6 +58,7 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 	}
 
 	public ClientHttpResponse getClientHttpResponse() {
+		Assert.notNull(this.response, "Response is not available");
 		return this.response;
 	}
 
@@ -87,33 +90,33 @@ public class ClientHttpRequestConnection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-		return this.response.getHeaders().getContentLength();
+		return getClientHttpResponse().getHeaders().getContentLength();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() throws IOException {
-		return this.response.getHeaders().headerNames().iterator();
+		return getClientHttpResponse().getHeaders().headerNames().iterator();
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		List<String> headers = this.response.getHeaders().get(name);
+		List<String> headers = getClientHttpResponse().getHeaders().get(name);
 		return (headers != null) ? headers.iterator() : Collections.emptyIterator();
 	}
 
 	@Override
 	protected int getResponseCode() throws IOException {
-		return this.response.getStatusCode().value();
+		return getClientHttpResponse().getStatusCode().value();
 	}
 
 	@Override
 	protected String getResponseMessage() throws IOException {
-		return this.response.getStatusText();
+		return getClientHttpResponse().getStatusText();
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-		return this.response.getBody();
+		return getClientHttpResponse().getBody();
 	}
 
 	@Override

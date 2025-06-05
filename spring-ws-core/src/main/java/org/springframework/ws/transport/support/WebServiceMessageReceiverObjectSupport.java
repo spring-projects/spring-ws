@@ -51,6 +51,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
+	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageFactory messageFactory;
 
 	/** Returns the {@code WebServiceMessageFactory}. */
@@ -88,6 +89,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 
 		try {
 			WebServiceMessage request = connection.receive(getMessageFactory());
+			Assert.notNull(request, "no WebServiceMessage received");
 			MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
 			receiver.receive(messageContext);
 			if (messageContext.hasResponse()) {

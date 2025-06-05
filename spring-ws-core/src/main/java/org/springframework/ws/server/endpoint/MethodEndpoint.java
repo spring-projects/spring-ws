@@ -19,6 +19,8 @@ package org.springframework.ws.server.endpoint;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
@@ -39,7 +41,7 @@ public final class MethodEndpoint {
 
 	private final Method method;
 
-	private final BeanFactory beanFactory;
+	private final @Nullable BeanFactory beanFactory;
 
 	/**
 	 * Constructs a new method endpoint with the given bean and method.

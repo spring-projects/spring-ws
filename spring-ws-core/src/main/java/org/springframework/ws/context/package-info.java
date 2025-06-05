@@ -17,4 +17,7 @@
 /**
  * Contains the {@code MessageContext} interface and implementations thereof.
  */
+@NullMarked
 package org.springframework.ws.context;
+
+import org.jspecify.annotations.NullMarked;

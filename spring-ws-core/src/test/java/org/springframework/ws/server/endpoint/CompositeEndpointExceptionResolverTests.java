@@ -75,7 +75,7 @@ class CompositeEndpointExceptionResolverTests {
 		}
 
 		@Override
-		protected void logException(Exception ex, MessageContext messageContext) {
+		protected void logException(MessageContext messageContext, Exception ex) {
 			if (this.logException) {
 				throw new IllegalStateException("Log exception already called");
 			}

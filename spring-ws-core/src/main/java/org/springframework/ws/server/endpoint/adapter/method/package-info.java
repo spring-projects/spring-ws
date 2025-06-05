@@ -18,4 +18,7 @@
  * Provides the {@code MethodArgumentResolver} and {@code MethodReturnValueHandler}
  * abstractions, and various implementations thereof.
  */
+@NullMarked
 package org.springframework.ws.server.endpoint.adapter.method;
+
+import org.jspecify.annotations.NullMarked;

@@ -17,4 +17,7 @@
 /**
  * Classes supporting the org.springframework.ws.transport.jms package.
  */
+@NullMarked
 package org.springframework.ws.transport.jms.support;
+
+import org.jspecify.annotations.NullMarked;

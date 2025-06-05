@@ -24,6 +24,7 @@ import org.apache.axiom.om.OMDataSource;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapBody;
@@ -51,7 +52,7 @@ abstract class AxiomSoapBody extends AxiomSoapElement implements SoapBody {
 	}
 
 	@Override
-	public Source getPayloadSource() {
+	public @Nullable Source getPayloadSource() {
 		return this.payload.getSource();
 	}
 

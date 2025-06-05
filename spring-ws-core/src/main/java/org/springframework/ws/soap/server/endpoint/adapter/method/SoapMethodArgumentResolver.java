@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.server.endpoint.adapter.method;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
@@ -42,7 +44,7 @@ public class SoapMethodArgumentResolver implements MethodArgumentResolver {
 	}
 
 	@Override
-	public Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
+	public @Nullable Object resolveArgument(MessageContext messageContext, MethodParameter parameter) {
 		Assert.isInstanceOf(SoapMessage.class, messageContext.getRequest());
 		SoapMessage request = (SoapMessage) messageContext.getRequest();
 

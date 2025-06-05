@@ -36,10 +36,13 @@ import org.springframework.util.CollectionUtils;
  */
 public class XPathExpressionFactoryBean implements FactoryBean<XPathExpression>, InitializingBean {
 
+	@SuppressWarnings("NullAway.Init")
 	private Map<String, String> namespaces;
 
+	@SuppressWarnings("NullAway.Init")
 	private String expressionString;
 
+	@SuppressWarnings("NullAway.Init")
 	private XPathExpression expression;
 
 	/** Sets the XPath expression. Setting this property is required. */

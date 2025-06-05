@@ -20,8 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 
@@ -42,10 +46,12 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 
 	private boolean registerBeanNames = false;
 
+	private boolean configured = false;
+
 	private final Map<String, Object> endpointMap = new HashMap<>();
 
 	// holds mappings set via setEndpointMap and setMappings
-	private Map<String, Object> temporaryEndpointMap = new HashMap<>();
+	private final Map<String, Object> temporaryEndpointMap = new HashMap<>();
 
 	/**
 	 * Set whether to lazily initialize endpoints. Only applicable to singleton endpoints,
@@ -77,6 +83,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * @throws IllegalArgumentException if the endpoint is invalid
 	 */
 	public final void setEndpointMap(Map<String, Object> endpointMap) {
+		Assert.state(!this.configured, "Mappings have already been configured");
 		this.temporaryEndpointMap.putAll(endpointMap);
 	}
 
@@ -85,6 +92,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * exact subclass used. They can be qualified names, for instance, or mime headers.
 	 */
 	public void setMappings(Properties mappings) {
+		Assert.state(!this.configured, "Mappings have already been configured");
 		for (Map.Entry<Object, Object> entry : mappings.entrySet()) {
 			if (entry.getKey() instanceof String) {
 				this.temporaryEndpointMap.put((String) entry.getKey(), entry.getValue());
@@ -103,7 +111,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * key cannot be found.
 	 * @return the registration key; or {@code null}
 	 */
-	protected abstract String getLookupKeyForMessage(MessageContext messageContext) throws Exception;
+	protected abstract @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception;
 
 	/**
 	 * Lookup an endpoint for the given message. The extraction of the endpoint key is
@@ -111,7 +119,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * @return the looked up endpoint, or {@code null}
 	 */
 	@Override
-	protected final Object getEndpointInternal(MessageContext messageContext) throws Exception {
+	protected final @Nullable Object getEndpointInternal(MessageContext messageContext) throws Exception {
 		String key = getLookupKeyForMessage(messageContext);
 		if (!StringUtils.hasLength(key)) {
 			return null;
@@ -127,7 +135,7 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 	 * @param key key the beans are mapped to
 	 * @return the associated endpoint instance, or {@code null} if not found
 	 */
-	protected Object lookupEndpoint(String key) {
+	protected @Nullable Object lookupEndpoint(String key) {
 		return this.endpointMap.get(key);
 	}
 
@@ -176,18 +184,19 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 			}
 			registerEndpoint(key, endpoint);
 		}
-		this.temporaryEndpointMap = null;
+		this.temporaryEndpointMap.clear();
+		this.configured = true;
 		if (this.registerBeanNames) {
+			ApplicationContext applicationContext = obtainApplicationContext();
 			if (this.logger.isDebugEnabled()) {
-				this.logger
-					.debug("Looking for endpoint mappings in application context: [" + getApplicationContext() + "]");
+				this.logger.debug("Looking for endpoint mappings in application context: [" + applicationContext + "]");
 			}
-			String[] beanNames = getApplicationContext().getBeanDefinitionNames();
+			String[] beanNames = applicationContext.getBeanDefinitionNames();
 			for (String beanName : beanNames) {
 				if (validateLookupKey(beanName)) {
 					registerEndpoint(beanName, beanName);
 				}
-				String[] aliases = getApplicationContext().getAliases(beanName);
+				String[] aliases = applicationContext.getAliases(beanName);
 				for (String aliase : aliases) {
 					if (validateLookupKey(aliase)) {
 						registerEndpoint(aliase, beanName);

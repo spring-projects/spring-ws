@@ -18,10 +18,12 @@ package org.springframework.ws.test.support.matcher;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 
 import org.springframework.util.Assert;
@@ -61,7 +63,7 @@ public class XPathExpectationsHelper {
 	 * @param expression the XPath expression
 	 * @param namespaces the namespaces, can be empty or {@code null}
 	 */
-	public XPathExpectationsHelper(String expression, Map<String, String> namespaces) {
+	public XPathExpectationsHelper(String expression, @Nullable Map<String, String> namespaces) {
 		Assert.hasLength(expression, "'expression' must not be empty");
 		this.expression = XPathExpressionFactory.createXPathExpression(expression, namespaces);
 		this.expressionString = expression;
@@ -139,12 +141,11 @@ public class XPathExpectationsHelper {
 	private Node transformToNode(WebServiceMessage request) {
 		DOMResult domResult = new DOMResult();
 		try {
-			this.transformerHelper.transform(request.getPayloadSource(), domResult);
+			this.transformerHelper.transform(Objects.requireNonNull(request.getPayloadSource()), domResult);
 			return domResult.getNode();
 		}
 		catch (TransformerException ex) {
-			AssertionErrors.fail("Could not transform request payload: " + ex.getMessage());
-			return null;
+			throw new AssertionError("Could not transform request payload: " + ex.getMessage());
 		}
 	}
 

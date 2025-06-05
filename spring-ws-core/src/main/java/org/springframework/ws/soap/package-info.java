@@ -18,4 +18,7 @@
  * Provides the SOAP functionality of the Spring Web Services framework. Contains the
  * SoapMessage and related interfaces.
  */
+@NullMarked
 package org.springframework.ws.soap;
+
+import org.jspecify.annotations.NullMarked;

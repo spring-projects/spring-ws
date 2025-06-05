@@ -22,6 +22,7 @@ import org.apache.axiom.soap.SOAPFault;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axiom.soap.SOAPFaultRole;
 import org.apache.axiom.soap.SOAPProcessingException;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -38,7 +39,7 @@ abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 	}
 
 	@Override
-	public String getFaultActorOrRole() {
+	public @Nullable String getFaultActorOrRole() {
 		SOAPFaultRole faultRole = getAxiomFault().getRole();
 		return (faultRole != null) ? faultRole.getRoleValue() : null;
 	}
@@ -56,7 +57,7 @@ abstract class AxiomSoapFault extends AxiomSoapElement implements SoapFault {
 	}
 
 	@Override
-	public SoapFaultDetail getFaultDetail() {
+	public @Nullable SoapFaultDetail getFaultDetail() {
 		try {
 			SOAPFaultDetail axiomFaultDetail = getAxiomFault().getDetail();
 			return (axiomFaultDetail != null) ? new AxiomSoapFaultDetail(axiomFaultDetail, getAxiomFactory()) : null;

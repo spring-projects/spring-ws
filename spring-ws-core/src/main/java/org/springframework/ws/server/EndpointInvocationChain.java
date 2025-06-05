@@ -16,6 +16,8 @@
 
 package org.springframework.ws.server;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Endpoint invocation chain, consisting of an endpoint object and any preprocessing
  * interceptors.
@@ -28,7 +30,7 @@ public class EndpointInvocationChain {
 
 	private final Object endpoint;
 
-	private EndpointInterceptor[] interceptors;
+	private EndpointInterceptor @Nullable [] interceptors;
 
 	/**
 	 * Create new {@code EndpointInvocationChain}.
@@ -43,7 +45,7 @@ public class EndpointInvocationChain {
 	 * @param endpoint the endpoint object to invoke
 	 * @param interceptors the array of interceptors to apply
 	 */
-	public EndpointInvocationChain(Object endpoint, EndpointInterceptor[] interceptors) {
+	public EndpointInvocationChain(Object endpoint, EndpointInterceptor @Nullable [] interceptors) {
 		this.endpoint = endpoint;
 		this.interceptors = interceptors;
 	}
@@ -60,7 +62,7 @@ public class EndpointInvocationChain {
 	 * Returns the array of interceptors to apply before the handler executes.
 	 * @return the array of interceptors
 	 */
-	public EndpointInterceptor[] getInterceptors() {
+	public EndpointInterceptor @Nullable [] getInterceptors() {
 		return this.interceptors;
 	}
 
