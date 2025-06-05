@@ -1,7 +1,6 @@
 plugins {
 	id "java-library"
 	id "maven-publish"
-	id "io.spring.compatibility-test" version "${compatibilityTestPluginVersion}"
 	id "org.springframework.ws.conventions"
 	id "org.springframework.ws.optional-dependencies"
 }
@@ -34,11 +33,3 @@ dependencies {
 	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.springframework:spring-test")
 }
-
-compatibilityTest {
-	dependency("WSS4J") { wss4j ->
-		wss4j.groupId = "org.apache.wss4"
-		wss4j.versions = ["2.0.+", "3.0.+"]
-	}
-}
-
