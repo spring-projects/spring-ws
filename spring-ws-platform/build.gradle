@@ -37,7 +37,7 @@ dependencies {
 		api("org.apache.commons:commons-collections4:4.4")
 		api("org.apache.httpcomponents.client5:httpclient5:5.2.3")
 		api("org.apache.httpcomponents:httpclient:4.5.14")
-		api("org.apache.santuario:xmlsec:3.0.4")
+		api("org.apache.santuario:xmlsec:3.0.6")
 		api("org.apache.wss4j:wss4j-ws-security-dom:2.4.3")
 		api("org.apache.ws.xmlschema:xmlschema-core:2.3.1")
 		api("org.apiguardian:apiguardian-api:1.1.2")
