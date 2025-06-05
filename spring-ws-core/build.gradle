@@ -19,16 +19,10 @@ dependencies {
 
 	optional("jakarta.mail:jakarta.mail-api")
 	optional("jakarta.servlet:jakarta.servlet-api")
-	optional("org.apache.httpcomponents:httpclient") {
-		exclude(group: "commons-logging", module: "commons-logging")
-	}
+	optional("org.apache.httpcomponents:httpclient")
 	optional("org.apache.httpcomponents.client5:httpclient5")
-	optional("org.apache.ws.commons.axiom:axiom-impl") {
-		exclude(group: "commons-logging", module: "commons-logging")
-	}
-	optional("org.apache.ws.commons.axiom:axiom-legacy-attachments") {
-		exclude(group: "commons-logging", module: "commons-logging")
-	}
+	optional("org.apache.ws.commons.axiom:axiom-impl")
+	optional("org.apache.ws.commons.axiom:axiom-legacy-attachments")
 	optional("org.apache.ws.xmlschema:xmlschema-core")
 	optional("org.dom4j:dom4j")
 	optional("org.jdom:jdom2")
