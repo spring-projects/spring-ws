@@ -1,7 +1,8 @@
 <component name="CopyrightManager">
   <settings>
     <module2copyright>
-      <element module="java" copyright="java" />
+      <element module="java" copyright="copyright" />
+      <element module="build.gradle" copyright="copyright" />
     </module2copyright>
   </settings>
 </component>
