@@ -21,6 +21,8 @@ import java.util.Iterator;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * The base interface for all elements that are contained in a SOAP message.
  *
@@ -61,7 +63,7 @@ public interface SoapElement {
 	 * @param name the qualified name
 	 * @return the value, or {@code null} if there is no such attribute
 	 */
-	String getAttributeValue(QName name);
+	@Nullable String getAttributeValue(QName name);
 
 	/**
 	 * Returns an {@code Iterator} over all of the attributes in element as {@link QName
