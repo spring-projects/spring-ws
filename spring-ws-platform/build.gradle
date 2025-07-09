@@ -27,7 +27,7 @@ dependencies {
 	api(platform("org.apache.activemq:activemq-bom:6.1.6"))
 	api(platform("org.eclipse.jetty:jetty-bom:12.0.19"))
 	api(platform("org.eclipse.jetty.ee10:jetty-ee10-bom:12.0.19"))
-	api(platform("org.junit:junit-bom:5.12.2"))
+	api(platform("org.junit:junit-bom:5.13.3"))
 	api(platform("org.slf4j:slf4j-bom:2.0.17"))
 	api(platform("org.springframework:spring-framework-bom:${springFrameworkVersion}"))
 	api(platform("org.springframework.security:spring-security-bom:7.0.0-SNAPSHOT"))
