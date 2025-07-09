@@ -74,7 +74,7 @@ dependencies {
 		api("org.igniterealtime.smack:smack-tcp:4.3.5")
 		api("org.jdom:jdom2:2.0.6.1")
 		api("org.jvnet.staxex:stax-ex:2.1.0")
-		api("org.mockito:mockito-core:5.17.0")
+		api("org.mockito:mockito-core:5.18.0")
 		api("org.xmlunit:xmlunit-assertj:2.10.3")
 		api("org.xmlunit:xmlunit-core:2.10.3")
 		api("org.xmlunit:xmlunit-placeholders:2.10.3")
