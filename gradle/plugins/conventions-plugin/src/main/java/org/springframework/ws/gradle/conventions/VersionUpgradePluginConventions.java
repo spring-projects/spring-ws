@@ -35,6 +35,9 @@ class VersionUpgradePluginConventions {
 	void apply(Project project) {
 		project.getPlugins().apply(VersionsPlugin.class);
 		project.getTasks().withType(DependencyUpdatesTask.class, (updateTask) -> {
+			updateTask.doFirst((task) -> project.getRepositories()
+				.removeIf((candidate) -> candidate.getName()
+					.equals(JavaBasePluginConventions.SPRING_SNAPSHOT_REPOSITORY_NAME)));
 			updateTask.setFilterConfigurations((configuration) -> !(configuration.getName().contains("_")
 					&& configuration.getName().endsWith("+")));
 			VersionUpgradePolicy upgradePolicy = getUpgradePolicy(project);

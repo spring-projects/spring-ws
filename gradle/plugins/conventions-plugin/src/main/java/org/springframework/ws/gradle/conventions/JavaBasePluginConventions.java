@@ -29,6 +29,10 @@ import org.gradle.external.javadoc.MinimalJavadocOptions;
  */
 class JavaBasePluginConventions {
 
+	static final String SPRING_MILESTONE_REPOSITORY_NAME = "Spring Milestones";
+
+	static final String SPRING_SNAPSHOT_REPOSITORY_NAME = "Spring Snapshots";
+
 	void apply(Project project) {
 		configureRepositories(project);
 		project.getTasks().withType(Javadoc.class).configureEach((javadoc) -> {
@@ -46,13 +50,13 @@ class JavaBasePluginConventions {
 		String version = project.getVersion().toString();
 		if (version.contains("-")) {
 			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Milestones");
+				repository.setName(SPRING_MILESTONE_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/milestone");
 			});
 		}
 		if (version.endsWith("-SNAPSHOT")) {
 			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Snapshots");
+				repository.setName(SPRING_SNAPSHOT_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/snapshot");
 			});
 		}
