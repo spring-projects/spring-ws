@@ -29,6 +29,12 @@ import org.gradle.external.javadoc.MinimalJavadocOptions;
  */
 class JavaBasePluginConventions {
 
+	static final String SPRING_MILESTONE_REPOSITORY_NAME = "Spring Milestones";
+
+	static final String SPRING_SNAPSHOT_REPOSITORY_NAME = "Spring Snapshots";
+
+	static final String SHIBBOLETH_RELEASES_REPOSITORY_NAME = "Shibboleth Releases";
+
 	void apply(Project project) {
 		configureRepositories(project);
 		project.getTasks().withType(Javadoc.class).configureEach((javadoc) -> {
@@ -44,7 +50,7 @@ class JavaBasePluginConventions {
 	private void configureRepositories(Project project) {
 		project.getRepositories().mavenCentral();
 		project.getRepositories().maven((repository) -> {
-			repository.setName("Shibboleth Releases");
+			repository.setName(SHIBBOLETH_RELEASES_REPOSITORY_NAME);
 			repository.setUrl("https://build.shibboleth.net/nexus/content/repositories/releases");
 			repository.content((content) -> {
 				content.includeGroup("org.opensaml");
@@ -54,13 +60,13 @@ class JavaBasePluginConventions {
 		String version = project.getVersion().toString();
 		if (version.contains("-")) {
 			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Milestones");
+				repository.setName(SPRING_MILESTONE_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/milestone");
 			});
 		}
 		if (version.endsWith("-SNAPSHOT")) {
 			project.getRepositories().maven((repository) -> {
-				repository.setName("Spring Snapshots");
+				repository.setName(SPRING_SNAPSHOT_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/snapshot");
 			});
 		}
