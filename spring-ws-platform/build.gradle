@@ -65,7 +65,7 @@ dependencies {
 		api("org.aspectj:aspectjweaver:1.9.24")
 		api("org.assertj:assertj-core:3.27.3")
 		api("org.awaitility:awaitility:4.3.0")
-		api("org.dom4j:dom4j:2.1.4")
+		api("org.dom4j:dom4j:2.2.0")
 		api("org.easymock:easymock:5.6.0")
 		api("org.eclipse.angus:angus-mail:2.0.3")
 		api("org.glassfish.jaxb:jaxb-runtime:4.0.5")
