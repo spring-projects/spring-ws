@@ -29,8 +29,6 @@ import org.gradle.external.javadoc.MinimalJavadocOptions;
  */
 class JavaBasePluginConventions {
 
-	static final String SPRING_MILESTONE_REPOSITORY_NAME = "Spring Milestones";
-
 	static final String SPRING_SNAPSHOT_REPOSITORY_NAME = "Spring Snapshots";
 
 	static final String SHIBBOLETH_RELEASES_REPOSITORY_NAME = "Shibboleth Releases";
@@ -58,12 +56,6 @@ class JavaBasePluginConventions {
 			});
 		});
 		String version = project.getVersion().toString();
-		if (version.contains("-")) {
-			project.getRepositories().maven((repository) -> {
-				repository.setName(SPRING_MILESTONE_REPOSITORY_NAME);
-				repository.setUrl("https://repo.spring.io/milestone");
-			});
-		}
 		if (version.endsWith("-SNAPSHOT")) {
 			project.getRepositories().maven((repository) -> {
 				repository.setName(SPRING_SNAPSHOT_REPOSITORY_NAME);
