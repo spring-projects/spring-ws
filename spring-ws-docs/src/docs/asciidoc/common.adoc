@@ -6,6 +6,18 @@
 This chapter explores the components that are shared between client- and server-side Spring-WS development.
 These interfaces and classes represent the building blocks of Spring-WS, so you need to understand what they do, even if you do not use them directly.
 
+[[web-service-null-safety]]
+== Null Safety
+Spring-WS is annotated with https://jspecify.dev/docs/start-here/[JSpecify] annotations to declare the nullability of its API.
+To learn more about JSpecify, its https://jspecify.dev/docs/user-guide/[user guide] is recommended reading.
+
+The primary goal of declaring the nullability of the API is to prevent a `NullPointerException` from being thrown at runtime.
+This is achieved through build-time checks that are available with both Java and Kotlin.
+Performing the checks with Java requires some tooling such as https://github.com/uber/NullAway[NullAway] or an IDE that supports JSpecify annotations such as IntelliJ IDEA.
+The checks are available automatically with Kotlin which translates the JSpecify annotations into Kotlin's null safety.
+
+To learn more about null safety with Spring, refer to the {spring-framework-docs}/core/null-safety.html[Spring Framework reference documentation].
+
 [[web-service-messages]]
 == Web Service Messages
 
