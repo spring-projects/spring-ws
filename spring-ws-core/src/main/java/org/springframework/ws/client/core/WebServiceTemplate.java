@@ -413,7 +413,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	}
 
 	@Override
-	public @Nullable Object marshalSendAndReceive(final Object requestPayload,
+	public @Nullable Object marshalSendAndReceive(final @Nullable Object requestPayload,
 			final @Nullable WebServiceMessageCallback requestCallback) {
 		String defaultUri = getDefaultUri();
 		Assert.notNull(defaultUri, "'defaultUri' must not be null");
@@ -433,9 +433,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 								"No marshaller registered. Check configuration of WebServiceTemplate.");
 					}
 					MarshallingUtils.marshal(marshaller, requestPayload, request);
-					if (requestCallback != null) {
-						requestCallback.doWithMessage(request);
-					}
+				}
+				if (requestCallback != null) {
+					requestCallback.doWithMessage(request);
 				}
 			}
 		}, new WebServiceMessageExtractor<>() {

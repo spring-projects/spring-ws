@@ -56,6 +56,7 @@ import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
@@ -271,14 +272,36 @@ class WebServiceTemplateTests {
 
 	@Test
 	void testSendAndReceiveMarshalResponse() throws Exception {
+		Object unmarshalled = new Object();
+		setupMarshallerAndUnmarshaller(unmarshalled);
+		Object result = this.template.marshalSendAndReceive(new Object());
+		assertThat(result).isEqualTo(unmarshalled);
+	}
 
+	@Test
+	void testSendAndReceiveInvokesCallback() throws Exception {
+		WebServiceMessageCallback callback = mock(WebServiceMessageCallback.class);
+		setupMarshallerAndUnmarshaller(new Object());
+		this.template.marshalSendAndReceive(new Object(), callback);
+		verify(callback).doWithMessage(isA(MockWebServiceMessage.class));
+	}
+
+	@Test
+	void testSendAndReceiveWithNoBodyInvokesCallback() throws Exception {
+		WebServiceMessageCallback callback = mock(WebServiceMessageCallback.class);
+		setupMarshallerAndUnmarshaller(new Object());
+		Object requestPayload = null;
+		this.template.marshalSendAndReceive(requestPayload, callback);
+		verify(callback).doWithMessage(isA(MockWebServiceMessage.class));
+	}
+
+	private void setupMarshallerAndUnmarshaller(Object unmarshalled) throws Exception {
 		Marshaller marshallerMock = mock(Marshaller.class);
 		this.template.setMarshaller(marshallerMock);
 		marshallerMock.marshal(isA(Object.class), isA(Result.class));
 
 		Unmarshaller unmarshallerMock = mock(Unmarshaller.class);
 		this.template.setUnmarshaller(unmarshallerMock);
-		Object unmarshalled = new Object();
 		when(unmarshallerMock.unmarshal(isA(Source.class))).thenReturn(unmarshalled);
 
 		this.connectionMock.send(isA(WebServiceMessage.class));
@@ -286,10 +309,6 @@ class WebServiceTemplateTests {
 		when(this.connectionMock.receive(this.messageFactory)).thenReturn(new MockWebServiceMessage("<response/>"));
 		when(this.connectionMock.hasFault()).thenReturn(false);
 		this.connectionMock.close();
-
-		Object result = this.template.marshalSendAndReceive(new Object());
-
-		assertThat(result).isEqualTo(unmarshalled);
 	}
 
 	@Test
