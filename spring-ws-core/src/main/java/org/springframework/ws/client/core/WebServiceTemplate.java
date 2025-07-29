@@ -429,9 +429,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 								"No marshaller registered. Check configuration of WebServiceTemplate.");
 					}
 					MarshallingUtils.marshal(marshaller, requestPayload, request);
-					if (requestCallback != null) {
-						requestCallback.doWithMessage(request);
-					}
+				}
+				if (requestCallback != null) {
+					requestCallback.doWithMessage(request);
 				}
 			}
 		}, new WebServiceMessageExtractor<>() {
