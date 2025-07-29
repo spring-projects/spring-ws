@@ -687,7 +687,7 @@ In the next couple of sections, a more elaborate description of the `@Endpoint` 
 Endpoints, like any other Spring Bean, are scoped as a singleton by default.
 That is, one instance of the bean definition is created per container.
 Being a singleton implies that more than one thread can use it at the same time, so the endpoint has to be thread safe.
-If you want to use a different scope, such as prototype, see the {spring-framework-docs}/core/beans/factory-scopes.html#beans-factory-scopes-other-injection[Spring Reference documentation].
+If you want to use a different scope, such as prototype, see the {spring-framework-docs}/core/beans/factory-scopes.html#beans-factory-scopes-other-injection[Spring Framework reference documentation].
 ====
 
 Note that all abstract base classes provided in Spring-WS are thread safe, unless otherwise indicated in the class-level Javadoc.

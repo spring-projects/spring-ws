@@ -10,7 +10,7 @@ Arjen Poutsma, Rick Evans, Tareq Abed Rabbo, Greg Turnquist, Jay Bryant, Corneil
 :docs-site: https://docs.spring.io
 :spring-framework-docs-root: {docs-site}/spring-framework/docs
 :spring-framework-api: {spring-framework-docs-root}/{spring-framework-version}/javadoc-api/org/springframework
-:spring-framework-docs: https://docs.spring.io/spring-framework/reference
+:spring-framework-docs: https://docs.spring.io/spring-framework/reference/6.1
 :spring-ws-docs-root: {docs-site}/spring-ws/docs
 :spring-ws-api: {spring-ws-docs-root}/{spring-ws-version}/api/org/springframework/ws
 
