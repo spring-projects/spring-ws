@@ -1252,8 +1252,8 @@ public class CustomSoapExceptionResolver extends SimpleSoapExceptionResolver {
 		try {
 			this.transformer.transform(new StringSource("""
 					<ns2:YourCustomException xmlns:ns2="http://serviceendpoint/">
-						<errorCode>Your custom error code</exName>
-						<systemMessage>A system message</exMessage>
+						<errorCode>Your custom error code</errorCode>
+						<systemMessage>A system message</systemMessage>
 					 </ns2:YourCustomException >
 					"""), faultDetail.getResult());
 		}
