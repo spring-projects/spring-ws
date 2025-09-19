@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 
 /**
  * {@code Authentication} implementation for X.509 client-certificate authentication.
@@ -55,7 +56,7 @@ public class X509AuthenticationToken extends AbstractAuthenticationToken {
 	 * @param credentials the certificate
 	 */
 	public X509AuthenticationToken(X509Certificate credentials) {
-		super(null);
+		super(AuthorityUtils.NO_AUTHORITIES);
 		this.credentials = credentials;
 	}
 

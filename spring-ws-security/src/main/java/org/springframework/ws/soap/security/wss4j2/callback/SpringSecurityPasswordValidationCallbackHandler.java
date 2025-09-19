@@ -16,7 +16,6 @@
 
 package org.springframework.ws.soap.security.wss4j2.callback;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -32,7 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
@@ -80,21 +78,18 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	 * <p>
 	 * Default implementation throws an {@link UnsupportedCallbackException}.
 	 */
-	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
+	protected void handleUsernameToken(WSPasswordCallback callback) {
 		UserDetails user = loadUserDetails(callback.getIdentifier());
-		if (user != null) {
-			SpringSecurityUtils.checkUserValidity(user);
-			callback.setPassword(user.getPassword());
-		}
+		SpringSecurityUtils.checkUserValidity(user);
+		callback.setPassword(user.getPassword());
 	}
 
 	@Override
-	protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback)
-			throws IOException, UnsupportedCallbackException {
+	protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback) {
 		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
 		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
-				principal.getPassword(), (user != null) ? user.getAuthorities() : null);
+				principal.getPassword(), user.getAuthorities());
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Authentication success: " + authRequest);
 		}
@@ -103,23 +98,15 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	}
 
 	@Override
-	protected void handleCleanup(CleanupCallback callback) throws IOException, UnsupportedCallbackException {
+	protected void handleCleanup(CleanupCallback callback) {
 		SecurityContextHolder.clearContext();
 	}
 
-	private @Nullable UserDetails loadUserDetails(String username) throws DataAccessException {
+	private UserDetails loadUserDetails(String username) throws DataAccessException {
 		UserDetails user = this.userCache.getUserFromCache(username);
 
 		if (user == null) {
-			try {
-				user = Objects.requireNonNull(this.userDetailsService).loadUserByUsername(username);
-			}
-			catch (UsernameNotFoundException notFound) {
-				if (this.logger.isDebugEnabled()) {
-					this.logger.debug("Username '" + username + "' not found");
-				}
-				return null;
-			}
+			user = Objects.requireNonNull(this.userDetailsService).loadUserByUsername(username);
 			this.userCache.putUserInCache(user);
 		}
 		return user;

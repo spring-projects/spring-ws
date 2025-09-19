@@ -35,6 +35,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
@@ -73,7 +74,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	void testHandleUsernameToken() throws Exception {
+	void testHandleUsernameToken() {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
@@ -90,7 +91,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	void testHandleUsernameTokenUserNotFound() throws Exception {
+	void testHandleUsernameTokenUserNotFound() {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
@@ -100,15 +101,12 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 
 		replay(userDetailsService);
 
-		this.callbackHandler.handleUsernameToken(this.passwordCallback);
-
-		assertThat(this.passwordCallback.getPassword()).isNull();
-
-		verify(userDetailsService);
+		assertThatExceptionOfType(UsernameNotFoundException.class)
+			.isThrownBy(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
 	}
 
 	@Test
-	void testHandleUsernameTokenPrincipal() throws Exception {
+	void testHandleUsernameTokenPrincipal() {
 
 		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);

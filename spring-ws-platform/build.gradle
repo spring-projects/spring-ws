@@ -30,7 +30,7 @@ dependencies {
 	api(platform("org.junit:junit-bom:5.13.3"))
 	api(platform("org.slf4j:slf4j-bom:2.0.17"))
 	api(platform("org.springframework:spring-framework-bom:${springFrameworkVersion}"))
-	api(platform("org.springframework.security:spring-security-bom:7.0.0-M1"))
+	api(platform("org.springframework.security:spring-security-bom:7.0.0-SNAPSHOT"))
 	constraints {
 		api("com.fasterxml.woodstox:woodstox-core:7.1.1")
 		api("com.google.code.findbugs:jsr305:3.0.2")
