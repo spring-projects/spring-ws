@@ -50,17 +50,16 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * the mocks.
  * <p>
  * For example: <pre><code class="java">
- * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
- * import org.springframework.test.context.ContextConfiguration;
- * import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ * import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * import org.springframework.xml.transform.StringSource;
+
  * <strong>import org.springframework.ws.test.client.MockWebServiceServer</strong>;
  * <strong>import static org.springframework.ws.test.client.RequestMatchers.*</strong>;
  * <strong>import static org.springframework.ws.test.client.ResponseCreators.*</strong>;
+ * import static org.assertj.core.api.Assertions.assertThat;
  *
- * &#064;RunWith(SpringJUnit4ClassRunner.class)
- * &#064;ContextConfiguration("applicationContext.xml")
+ * &#064;SpringJUnitConfig(locations = "applicationContext.xml")
  * public class MyWebServiceClientIntegrationTest {
  *
  *	 // MyWebServiceClient extends WebServiceGatewaySupport, and is configured in applicationContext.xml
@@ -86,7 +85,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  *
  *	   // client.getCustomerCount() uses the WebServiceTemplate
  *	   int customerCount = client.getCustomerCount();
- *	   assertEquals(10, response.getCustomerCount());
+ *	   assertThat(response.getCustomerCount()).isEqualTo(10);
  *
  *	   <strong>mockServer.verify();</strong>
  *	 }

@@ -57,18 +57,16 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
  * the mocks.
  * <p>
  * For example: <pre><code class="java">
- * import org.junit.*;
  * import org.springframework.beans.factory.annotation.Autowired;
  * import org.springframework.context.ApplicationContext;
- * import org.springframework.test.context.ContextConfiguration;
- * import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+ * import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * import org.springframework.xml.transform.StringSource;
+ *
  * <strong>import org.springframework.ws.test.server.MockWebServiceClient</strong>;
  * <strong>import static org.springframework.ws.test.server.RequestCreators.*</strong>;
  * <strong>import static org.springframework.ws.test.server.ResponseMatchers.*</strong>;
  *
- * &#064;RunWith(SpringJUnit4ClassRunner.class)
- * &#064;ContextConfiguration("applicationContext.xml")
+ * &#064;SpringJUnitConfig(locations = "applicationContext.xml")
  * public class MyWebServiceIntegrationTest {
  *
  *	 // a standard MessageDispatcherServlet application context, containing endpoints, mappings, etc.
