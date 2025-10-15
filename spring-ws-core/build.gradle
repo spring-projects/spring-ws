@@ -63,7 +63,7 @@ dependencies {
 	testImplementation("org.aspectj:aspectjweaver")
 	testImplementation("org.easymock:easymock")
 	testImplementation("org.eclipse.jetty:jetty-server")
-	testImplementation("org.eclipse.jetty.ee10:jetty-ee10-servlet")
+	testImplementation("org.eclipse.jetty.ee11:jetty-ee11-servlet")
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.slf4j:slf4j-api")
