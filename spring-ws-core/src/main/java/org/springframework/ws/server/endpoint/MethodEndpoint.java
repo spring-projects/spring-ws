@@ -125,7 +125,7 @@ public final class MethodEndpoint {
 	 * @return the invocation result
 	 * @throws Exception when the method invocation results in an exception
 	 */
-	public Object invoke(Object... args) throws Exception {
+	public Object invoke(@Nullable Object... args) throws Exception {
 		Object endpoint = getBean();
 		ReflectionUtils.makeAccessible(this.method);
 		try {
