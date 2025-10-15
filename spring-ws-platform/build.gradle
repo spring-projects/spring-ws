@@ -40,7 +40,7 @@ dependencies {
 		api("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
 		api("commons-io:commons-io:2.20.0")
 		api("commons-logging:commons-logging:1.3.5")
-		api("jakarta.activation:jakarta.activation-api:2.1.3")
+		api("jakarta.activation:jakarta.activation-api:2.1.4")
 		api("jakarta.annotation:jakarta.annotation-api:3.0.0")
 		api("jakarta.jms:jakarta.jms-api:3.1.0")
 		api("jakarta.mail:jakarta.mail-api:2.1.3")
