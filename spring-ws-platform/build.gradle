@@ -44,7 +44,7 @@ dependencies {
 		api("jakarta.jms:jakarta.jms-api:3.1.0")
 		api("jakarta.mail:jakarta.mail-api:2.1.5")
 		api("jakarta.servlet:jakarta.servlet-api:6.0.0")
-		api("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+		api("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
 		api("jakarta.xml.soap:jakarta.xml.soap-api:3.0.2")
 		api("jaxen:jaxen:2.0.0")
 		api("net.minidev:json-smart:2.5.2")
