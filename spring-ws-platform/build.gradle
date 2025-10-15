@@ -64,7 +64,7 @@ dependencies {
 		api("org.dom4j:dom4j:2.1.5")
 		api("org.easymock:easymock:4.3")
 		api("org.eclipse.angus:angus-mail:1.1.0")
-		api("org.glassfish.jaxb:jaxb-runtime:4.0.5")
+		api("org.glassfish.jaxb:jaxb-runtime:4.0.6")
 		api("org.igniterealtime.smack:smack-extensions:4.3.5")
 		api("org.igniterealtime.smack:smack-java7:4.3.5")
 		api("org.igniterealtime.smack:smack-tcp:4.3.5")
