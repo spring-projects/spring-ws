@@ -48,7 +48,9 @@ We like to know the Spring Web Services version, operating system, and JVM versi
 
 You don't need to build from source to use Spring Web Services (binaries in https://repo.spring.io[repo.spring.io]).
 If you want to try out the latest and greatest, Spring Web Services can be built and published to your local Maven cache using the https://docs.gradle.org/current/userguide/gradle_wrapper.html[Gradle wrapper].
-You also need JDK 17.
+You also need JDK 25.
+
+NOTE: Java 25 is only required by the build process, you can use Java 17+ to use the project.
 
 [source,shell]
 ----

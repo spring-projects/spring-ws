@@ -61,16 +61,14 @@ class JavaPluginConventions {
 	private void configureJavaConventions(Project project) {
 		project.getTasks().withType(JavaCompile.class, (compile) -> {
 			compile.getOptions().setEncoding("UTF-8");
+			compile.getOptions().getRelease().set(17);
 			List<String> args = compile.getOptions().getCompilerArgs();
 			if (!args.contains("-parameters")) {
 				args.add("-parameters");
 			}
-			boolean buildWithJava17 = !project.hasProperty("toolchainVersion")
-					&& JavaVersion.current() == JavaVersion.VERSION_17;
-			if (buildWithJava17) {
-				args.addAll(Arrays.asList("-Werror", "-Xlint:unchecked", "-Xlint:deprecation", "-Xlint:rawtypes",
-						"-Xlint:varargs"));
-			}
+			args.addAll(Arrays.asList("-Werror", "-Xlint:unchecked", "-Xlint:deprecation", "-Xlint:rawtypes",
+					"-Xlint:varargs"));
+
 		});
 		project.getDependencies().add("compileOnly", "com.google.code.findbugs:jsr305");
 	}
