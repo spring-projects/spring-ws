@@ -270,7 +270,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	}
 
 	/** Sets the marshaller for this template. */
-	public void setMarshaller(Marshaller marshaller) {
+	public void setMarshaller(@Nullable Marshaller marshaller) {
 		this.marshaller = marshaller;
 	}
 
@@ -280,7 +280,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	}
 
 	/** Sets the unmarshaller for this template. */
-	public void setUnmarshaller(Unmarshaller unmarshaller) {
+	public void setUnmarshaller(@Nullable Unmarshaller unmarshaller) {
 		this.unmarshaller = unmarshaller;
 	}
 
@@ -566,7 +566,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	}
 
 	@Override
-	public <T> @Nullable T sendAndReceive(WebServiceMessageCallback requestCallback,
+	public <T> @Nullable T sendAndReceive(@Nullable WebServiceMessageCallback requestCallback,
 			WebServiceMessageExtractor<T> responseExtractor) {
 		String defaultUri = getDefaultUri();
 		Assert.notNull(defaultUri, "'defaultUri' must not be null");
@@ -574,7 +574,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	}
 
 	@Override
-	public <T> @Nullable T sendAndReceive(String uriString, WebServiceMessageCallback requestCallback,
+	public <T> @Nullable T sendAndReceive(String uriString, @Nullable WebServiceMessageCallback requestCallback,
 			WebServiceMessageExtractor<T> responseExtractor) {
 		Assert.notNull(responseExtractor, "'responseExtractor' must not be null");
 		Assert.hasLength(uriString, "'uri' must not be empty");

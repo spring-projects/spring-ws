@@ -19,6 +19,8 @@ package org.springframework.ws.soap.support;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.TransportConstants;
@@ -38,7 +40,7 @@ public abstract class SoapUtils {
 	}
 
 	/** Escapes the given SOAP action to be surrounded by quotes. */
-	public static String escapeAction(String soapAction) {
+	public static String escapeAction(@Nullable String soapAction) {
 
 		if (!StringUtils.hasLength(soapAction)) {
 			soapAction = "\"\"";

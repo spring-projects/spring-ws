@@ -194,12 +194,13 @@ public class MailMessageReceiver extends AbstractAsyncStandaloneMessageReceiver 
 	}
 
 	private void openSession() throws MessagingException {
-		this.store = this.session.getStore(this.storeUri);
+		Store storeToConnectTo = this.session.getStore(this.storeUri);
 		if (this.logger.isDebugEnabled()) {
 			this.logger
 				.debug("Connecting to store [" + MailTransportUtils.toPasswordProtectedString(this.storeUri) + "]");
 		}
-		this.store.connect();
+		storeToConnectTo.connect();
+		this.store = storeToConnectTo;
 	}
 
 	private void openFolder() throws MessagingException {

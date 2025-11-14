@@ -34,6 +34,7 @@ import jakarta.xml.soap.SOAPConstants;
 import jakarta.xml.soap.SOAPException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.awaitility.Awaitility;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,15 +228,15 @@ class JmsMessageSenderIntegrationTests {
 
 	static class TestJmsListener {
 
-		private ThrowingFunction<jakarta.jms.Message, Object> messageHandler;
+		private ThrowingFunction<jakarta.jms.Message, @Nullable Object> messageHandler;
 
-		public void handleMessage(ThrowingFunction<Message, Object> messageHandler) {
+		public void handleMessage(ThrowingFunction<Message, @Nullable Object> messageHandler) {
 			this.messageHandler = messageHandler;
 		}
 
 		@JmsListener(destination = "SenderRequestQueue")
 		@SendTo("SenderResponseQueue")
-		Object handleRequest(jakarta.jms.Message message) {
+		@Nullable Object handleRequest(jakarta.jms.Message message) {
 			return this.messageHandler.apply(message);
 		}
 

@@ -16,6 +16,8 @@
 
 package org.springframework.ws.transport.context;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Simple holder class that associates a {@code TransportContext} instance with the
  * current thread. The {@code TransportContext} will be inherited by any child threads
@@ -34,8 +36,13 @@ public abstract class TransportContextHolder {
 	 * @param transportContext the current transport context, or {@code null} to reset the
 	 * thread-bound context
 	 */
-	public static void setTransportContext(TransportContext transportContext) {
-		transportContextHolder.set(transportContext);
+	public static void setTransportContext(@Nullable TransportContext transportContext) {
+		if (transportContext != null) {
+			transportContextHolder.set(transportContext);
+		}
+		else {
+			transportContextHolder.remove();
+		}
 	}
 
 	/**

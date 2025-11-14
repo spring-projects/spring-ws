@@ -17,6 +17,7 @@
 package org.springframework.ws.wsdl.wsdl11.provider;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Fault;
@@ -90,7 +91,7 @@ public abstract class AbstractPortTypesProvider implements PortTypesProvider {
 	 */
 	protected void populatePortType(Definition definition, PortType portType) throws WSDLException {
 
-		QName portTypeName = new QName(definition.getTargetNamespace(), getPortTypeName());
+		QName portTypeName = new QName(definition.getTargetNamespace(), Objects.requireNonNull(getPortTypeName()));
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Creating port type [" + portTypeName + "]");
 		}

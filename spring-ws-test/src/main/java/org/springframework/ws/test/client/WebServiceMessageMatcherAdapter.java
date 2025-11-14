@@ -19,6 +19,8 @@ package org.springframework.ws.test.client;
 import java.io.IOException;
 import java.net.URI;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.test.support.matcher.WebServiceMessageMatcher;
@@ -39,7 +41,7 @@ class WebServiceMessageMatcherAdapter implements RequestMatcher {
 	}
 
 	@Override
-	public void match(URI uri, WebServiceMessage request) throws IOException, AssertionError {
+	public void match(@Nullable URI uri, WebServiceMessage request) throws IOException, AssertionError {
 		this.adaptee.match(request);
 	}
 
