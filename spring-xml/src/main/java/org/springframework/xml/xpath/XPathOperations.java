@@ -133,7 +133,7 @@ public interface XPathOperations {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	<T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
+	<T> List<@Nullable T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException;
 
 	/**
 	 * Evaluates the given expression, handling the result {@link Node} objects on a

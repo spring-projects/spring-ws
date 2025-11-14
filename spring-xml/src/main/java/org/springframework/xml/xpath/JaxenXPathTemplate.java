@@ -148,12 +148,13 @@ public class JaxenXPathTemplate extends AbstractXPathTemplate {
 	}
 
 	@Override
-	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+	public <T> List<@Nullable T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper)
+			throws XPathException {
 		try {
 			XPath xpath = createXPath(expression);
 			Element element = getRootElement(context);
 			List<?> nodes = xpath.selectNodes(element);
-			List<T> results = new ArrayList<>(nodes.size());
+			List<@Nullable T> results = new ArrayList<>(nodes.size());
 			for (int i = 0; i < nodes.size(); i++) {
 				Node node = (Node) nodes.get(i);
 				try {

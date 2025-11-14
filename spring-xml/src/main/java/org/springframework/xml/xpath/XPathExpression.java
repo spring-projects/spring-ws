@@ -121,6 +121,6 @@ public interface XPathExpression {
 	 * @throws XPathException in case of XPath errors
 	 * @see <a href="http://www.w3.org/TR/xpath#node-sets">XPath specification</a>
 	 */
-	<T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException;
+	<T> List<@Nullable T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException;
 
 }

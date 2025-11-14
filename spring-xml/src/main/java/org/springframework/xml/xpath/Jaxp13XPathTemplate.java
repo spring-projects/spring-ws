@@ -123,9 +123,10 @@ public class Jaxp13XPathTemplate extends AbstractXPathTemplate {
 	}
 
 	@Override
-	public <T> List<T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper) throws XPathException {
+	public <T> List<@Nullable T> evaluate(String expression, Source context, NodeMapper<T> nodeMapper)
+			throws XPathException {
 		NodeList nodes = (NodeList) evaluate(expression, context, XPathConstants.NODESET);
-		List<T> results = new ArrayList<>();
+		List<@Nullable T> results = new ArrayList<>();
 		if (nodes != null) {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				try {

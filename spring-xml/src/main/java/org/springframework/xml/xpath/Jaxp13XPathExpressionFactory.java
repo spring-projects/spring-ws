@@ -165,9 +165,9 @@ abstract class Jaxp13XPathExpressionFactory {
 		}
 
 		@Override
-		public <T> List<T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
+		public <T> List<@Nullable T> evaluate(Node node, NodeMapper<T> nodeMapper) throws XPathException {
 			NodeList nodes = (NodeList) evaluate(node, XPathConstants.NODESET);
-			List<T> results = new ArrayList<>(nodes.getLength());
+			List<@Nullable T> results = new ArrayList<>(nodes.getLength());
 			for (int i = 0; i < nodes.getLength(); i++) {
 				try {
 					results.add(nodeMapper.mapNode(nodes.item(i), i));

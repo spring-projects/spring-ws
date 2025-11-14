@@ -171,10 +171,10 @@ abstract class JaxenXPathExpressionFactory {
 		}
 
 		@Override
-		public <T> List<T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
+		public <T> List<@Nullable T> evaluate(Node context, NodeMapper<T> nodeMapper) throws XPathException {
 			try {
 				List<?> nodes = this.xpath.selectNodes(context);
-				List<T> results = new ArrayList<>(nodes.size());
+				List<@Nullable T> results = new ArrayList<>(nodes.size());
 				for (int i = 0; i < nodes.size(); i++) {
 					Node node = (Node) nodes.get(i);
 					try {
