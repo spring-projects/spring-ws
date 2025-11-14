@@ -48,7 +48,7 @@ jobs:
           distribution: 'liberica'
           java-version: 17
       - name: Set Up Gradle
-        uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
+        uses: gradle/actions/setup-gradle@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
         with:
           cache-read-only: false
       - name: Configure Gradle Properties
@@ -66,7 +66,7 @@ jobs:
         run: ./gradlew spring-ws-release-verification-tests:test
       - name: Upload Build Reports on Failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-reports
           path: '**/build/reports/'
