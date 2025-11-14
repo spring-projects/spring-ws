@@ -53,7 +53,7 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 	}
 
 	@Override
-	public Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) {
+	public Soap11Fault addFault(QName faultCode, String faultString, @Nullable Locale faultStringLocale) {
 		Assert.notNull(faultCode, "No faultCode given");
 		Assert.hasLength(faultString, "faultString cannot be empty");
 		Assert.hasLength(faultCode.getLocalPart(), "faultCode's localPart cannot be empty");
@@ -80,22 +80,22 @@ class SaajSoap11Body extends SaajSoapBody implements Soap11Body {
 	}
 
 	@Override
-	public Soap11Fault addClientOrSenderFault(String faultString, Locale locale) {
+	public Soap11Fault addClientOrSenderFault(String faultString, @Nullable Locale locale) {
 		return addFault(SoapVersion.SOAP_11.getClientOrSenderFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap11Fault addMustUnderstandFault(String faultString, Locale locale) {
+	public Soap11Fault addMustUnderstandFault(String faultString, @Nullable Locale locale) {
 		return addFault(SoapVersion.SOAP_11.getMustUnderstandFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap11Fault addServerOrReceiverFault(String faultString, Locale locale) {
+	public Soap11Fault addServerOrReceiverFault(String faultString, @Nullable Locale locale) {
 		return addFault(SoapVersion.SOAP_11.getServerOrReceiverFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap11Fault addVersionMismatchFault(String faultString, Locale locale) {
+	public Soap11Fault addVersionMismatchFault(String faultString, @Nullable Locale locale) {
 		return addFault(SoapVersion.SOAP_11.getVersionMismatchFaultName(), faultString, locale);
 	}
 

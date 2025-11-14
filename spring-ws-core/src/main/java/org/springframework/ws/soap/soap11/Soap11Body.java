@@ -44,21 +44,22 @@ public interface Soap11Body extends SoapBody {
 	 * @return the added {@code Soap11Fault}
 	 * @throws IllegalArgumentException if the fault faultCode is not fully qualified
 	 */
-	Soap11Fault addFault(QName faultCode, String faultString, Locale faultStringLocale) throws SoapFaultException;
+	Soap11Fault addFault(QName faultCode, String faultString, @Nullable Locale faultStringLocale)
+			throws SoapFaultException;
 
 	@Override
 	@Nullable Soap11Fault getFault();
 
 	@Override
-	Soap11Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap11Fault addMustUnderstandFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap11Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap11Fault addClientOrSenderFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap11Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap11Fault addServerOrReceiverFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap11Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap11Fault addVersionMismatchFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 }

@@ -68,7 +68,7 @@ public interface SoapBody extends SoapElement {
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @return the created {@code SoapFault}
 	 */
-	SoapFault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	SoapFault addMustUnderstandFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	/**
 	 * Adds a {@code Client}/{@code Sender} fault to the body. For SOAP 1.1, this adds a
@@ -80,7 +80,7 @@ public interface SoapBody extends SoapElement {
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @return the created {@code SoapFault}
 	 */
-	SoapFault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	SoapFault addClientOrSenderFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	/**
 	 * Adds a {@code Server}/{@code Receiver} fault to the body. For SOAP 1.1, this adds a
@@ -92,7 +92,7 @@ public interface SoapBody extends SoapElement {
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @return the created {@code SoapFault}
 	 */
-	SoapFault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	SoapFault addServerOrReceiverFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	/**
 	 * Adds a {@code VersionMismatch} fault to the body.
@@ -102,7 +102,7 @@ public interface SoapBody extends SoapElement {
 	 * @param locale the language of faultStringOrReason. Optional for SOAP 1.1
 	 * @return the created {@code SoapFault}
 	 */
-	SoapFault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	SoapFault addVersionMismatchFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	/**
 	 * Indicates whether this body has a {@code SoapFault}.

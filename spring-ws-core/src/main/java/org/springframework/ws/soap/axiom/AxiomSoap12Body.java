@@ -49,28 +49,28 @@ class AxiomSoap12Body extends AxiomSoapBody implements Soap12Body {
 	}
 
 	@Override
-	public Soap12Fault addMustUnderstandFault(String reason, Locale locale) {
+	public Soap12Fault addMustUnderstandFault(String reason, @Nullable Locale locale) {
 		Assert.notNull(locale, "No locale given");
 		SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_MUST_UNDERSTAND, reason, locale);
 		return new AxiomSoap12Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap12Fault addClientOrSenderFault(String reason, Locale locale) {
+	public Soap12Fault addClientOrSenderFault(String reason, @Nullable Locale locale) {
 		Assert.notNull(locale, "No locale given");
 		SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_SENDER, reason, locale);
 		return new AxiomSoap12Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap12Fault addServerOrReceiverFault(String reason, Locale locale) {
+	public Soap12Fault addServerOrReceiverFault(String reason, @Nullable Locale locale) {
 		Assert.notNull(locale, "No locale given");
 		SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_RECEIVER, reason, locale);
 		return new AxiomSoap12Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap12Fault addVersionMismatchFault(String reason, Locale locale) {
+	public Soap12Fault addVersionMismatchFault(String reason, @Nullable Locale locale) {
 		Assert.notNull(locale, "No locale given");
 		SOAPFault fault = addStandardFault(SOAP12Constants.FAULT_CODE_VERSION_MISMATCH, reason, locale);
 		return new AxiomSoap12Fault(fault, getAxiomFactory());

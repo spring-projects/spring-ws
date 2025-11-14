@@ -54,31 +54,31 @@ class AxiomSoap11Body extends AxiomSoapBody implements Soap11Body {
 	}
 
 	@Override
-	public Soap11Fault addMustUnderstandFault(String faultString, Locale locale) {
+	public Soap11Fault addMustUnderstandFault(String faultString, @Nullable Locale locale) {
 		SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_MUST_UNDERSTAND, faultString, locale);
 		return new AxiomSoap11Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap11Fault addClientOrSenderFault(String faultString, Locale locale) {
+	public Soap11Fault addClientOrSenderFault(String faultString, @Nullable Locale locale) {
 		SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_SENDER, faultString, locale);
 		return new AxiomSoap11Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap11Fault addServerOrReceiverFault(String faultString, Locale locale) {
+	public Soap11Fault addServerOrReceiverFault(String faultString, @Nullable Locale locale) {
 		SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_RECEIVER, faultString, locale);
 		return new AxiomSoap11Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap11Fault addVersionMismatchFault(String faultString, Locale locale) {
+	public Soap11Fault addVersionMismatchFault(String faultString, @Nullable Locale locale) {
 		SOAPFault fault = addStandardFault(SOAP11Constants.FAULT_CODE_VERSION_MISMATCH, faultString, locale);
 		return new AxiomSoap11Fault(fault, getAxiomFactory());
 	}
 
 	@Override
-	public Soap11Fault addFault(QName code, String faultString, Locale faultStringLocale) {
+	public Soap11Fault addFault(QName code, String faultString, @Nullable Locale faultStringLocale) {
 		Assert.notNull(code, "No faultCode given");
 		Assert.hasLength(faultString, "faultString cannot be empty");
 		if (!StringUtils.hasLength(code.getNamespaceURI())) {

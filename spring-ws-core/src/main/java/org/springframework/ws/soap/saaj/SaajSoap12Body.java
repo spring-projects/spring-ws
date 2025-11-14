@@ -50,22 +50,26 @@ class SaajSoap12Body extends SaajSoapBody implements Soap12Body {
 	}
 
 	@Override
-	public Soap12Fault addClientOrSenderFault(String faultString, Locale locale) {
+	public Soap12Fault addClientOrSenderFault(String faultString, @Nullable Locale locale) {
+		Assert.notNull(locale, "No locale given");
 		return addFault(SoapVersion.SOAP_12.getClientOrSenderFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap12Fault addMustUnderstandFault(String faultString, Locale locale) {
+	public Soap12Fault addMustUnderstandFault(String faultString, @Nullable Locale locale) {
+		Assert.notNull(locale, "No locale given");
 		return addFault(SoapVersion.SOAP_12.getMustUnderstandFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap12Fault addServerOrReceiverFault(String faultString, Locale locale) {
+	public Soap12Fault addServerOrReceiverFault(String faultString, @Nullable Locale locale) {
+		Assert.notNull(locale, "No locale given");
 		return addFault(SoapVersion.SOAP_12.getServerOrReceiverFaultName(), faultString, locale);
 	}
 
 	@Override
-	public Soap12Fault addVersionMismatchFault(String faultString, Locale locale) {
+	public Soap12Fault addVersionMismatchFault(String faultString, @Nullable Locale locale) {
+		Assert.notNull(locale, "No locale given");
 		return addFault(SoapVersion.SOAP_12.getVersionMismatchFaultName(), faultString, locale);
 	}
 

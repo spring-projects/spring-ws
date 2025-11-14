@@ -49,15 +49,15 @@ public interface Soap12Body extends SoapBody {
 	@Nullable Soap12Fault getFault();
 
 	@Override
-	Soap12Fault addMustUnderstandFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap12Fault addMustUnderstandFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap12Fault addClientOrSenderFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap12Fault addClientOrSenderFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap12Fault addServerOrReceiverFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap12Fault addServerOrReceiverFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 	@Override
-	Soap12Fault addVersionMismatchFault(String faultStringOrReason, Locale locale) throws SoapFaultException;
+	Soap12Fault addVersionMismatchFault(String faultStringOrReason, @Nullable Locale locale) throws SoapFaultException;
 
 }
