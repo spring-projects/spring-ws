@@ -35,6 +35,8 @@ import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.testing.Test;
 import org.gradle.jvm.toolchain.JavaLanguageVersion;
 
+import org.springframework.ws.gradle.conventions.toolchain.ToolchainPlugin;
+
 /**
  * Conventions for the {@link JavaPlugin}.
  *
@@ -49,11 +51,11 @@ class JavaPluginConventions {
 		configureJavaConventions(project);
 		JavaPluginExtension java = project.getExtensions().getByType(JavaPluginExtension.class);
 		enableSourceAndJavadocJars(java);
-		configureSourceAndTargetCompatibility(java);
+		configureSourceAndTargetCompatibility(project);
 		configureDependencyManagement(project);
 		configureVersionUpgradePolicy(project);
 		configureJarManifest(project);
-		configureToolchain(project, java);
+		configureToolchain(project);
 		configureJavadocClasspath(project, java);
 		configureJUnitPlatform(project);
 	}
@@ -78,9 +80,12 @@ class JavaPluginConventions {
 		java.withJavadocJar();
 	}
 
-	private void configureSourceAndTargetCompatibility(JavaPluginExtension java) {
-		java.setSourceCompatibility(JAVA_BASELINE);
-		java.setTargetCompatibility(JAVA_BASELINE);
+	private void configureSourceAndTargetCompatibility(Project project) {
+		if (!project.hasProperty("toolchainVersion")) {
+			JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+			javaPluginExtension.setSourceCompatibility(JAVA_BASELINE);
+			javaPluginExtension.setTargetCompatibility(JAVA_BASELINE);
+		}
 	}
 
 	private void configureDependencyManagement(Project project) {
@@ -113,11 +118,8 @@ class JavaPluginConventions {
 		}));
 	}
 
-	private void configureToolchain(Project project, JavaPluginExtension java) {
-		Object toolchainVersion = project.findProperty("toolchainVersion");
-		if (toolchainVersion != null) {
-			java.getToolchain().getLanguageVersion().set(JavaLanguageVersion.of(toolchainVersion.toString()));
-		}
+	private void configureToolchain(Project project) {
+		project.getPlugins().apply(ToolchainPlugin.class);
 	}
 
 	private void configureJavadocClasspath(Project project, JavaPluginExtension java) {
