@@ -3,14 +3,13 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="targetConnectionFactory"
-		  class="org.apache.activemq.ActiveMQConnectionFactory">
-		<property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
-	</bean>
-
 	<bean id="connectionFactory"
 		  class="org.springframework.jms.connection.SingleConnectionFactory">
-		<property name="targetConnectionFactory" ref="targetConnectionFactory"/>
+		<property name="targetConnectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="vm://localhost?broker.persistent=false"/>
+			</bean>
+		</property>
 	</bean>
 
 	<bean id="requestQueue" class="org.apache.activemq.command.ActiveMQQueue">
