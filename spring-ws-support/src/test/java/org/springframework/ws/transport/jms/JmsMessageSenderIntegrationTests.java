@@ -43,7 +43,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
-import org.springframework.jms.connection.SingleConnectionFactory;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessagePostProcessor;
@@ -247,8 +246,8 @@ class JmsMessageSenderIntegrationTests {
 	static class JmsBrokerConfig {
 
 		@Bean
-		SingleConnectionFactory connectionFactory() {
-			return new SingleConnectionFactory(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false"));
+		ActiveMQConnectionFactory connectionFactory() {
+			return new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
 		}
 
 		@Bean
