@@ -2,8 +2,8 @@ name: Release Milestone
 on:
   push:
     tags:
-      - v5.0.0-M[1-9]
-      - v5.0.0-RC[1-9]
+      - v5.1.0-M[1-9]
+      - v5.1.0-RC[1-9]
 permissions:
   contents: read
 concurrency:
