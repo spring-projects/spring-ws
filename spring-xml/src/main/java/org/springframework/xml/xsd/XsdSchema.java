@@ -18,6 +18,8 @@ package org.springframework.xml.xsd;
 
 import javax.xml.transform.Source;
 
+import org.jspecify.annotations.Nullable;
+
 import org.springframework.xml.validation.XmlValidator;
 
 /**
@@ -28,6 +30,14 @@ import org.springframework.xml.validation.XmlValidator;
  * @since 1.5.0
  */
 public interface XsdSchema {
+
+	/**
+	 * Return the name of the schema, if known.
+	 * @since 5.1.0
+	 */
+	default @Nullable String getName() {
+		return null;
+	}
 
 	/**
 	 * Returns the target namespace of this schema.

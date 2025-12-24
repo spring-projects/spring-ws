@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -49,13 +50,15 @@ import org.springframework.xml.validation.XmlValidatorFactory;
  * @author Greg Turnquist
  * @since 1.5.0
  */
-public class SimpleXsdSchema implements XsdSchema, InitializingBean {
+public class SimpleXsdSchema implements XsdSchema, BeanNameAware, InitializingBean {
 
 	private static final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 
 	private static final String SCHEMA_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
 	private static final QName SCHEMA_NAME = new QName(SCHEMA_NAMESPACE, "schema", "xsd");
+
+	private @Nullable String name;
 
 	private @Nullable Resource xsdResource;
 
@@ -81,8 +84,36 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 	 * {@code null}
 	 */
 	public SimpleXsdSchema(Resource xsdResource) {
+		this(xsdResource, null);
+	}
+
+	/**
+	 * Create a new instance of the {@link SimpleXsdSchema} class with the specified
+	 * resource and name.
+	 * @param xsdResource the XSD resource; must not be {@code null}
+	 * @param name name of the schema
+	 * @throws IllegalArgumentException if the supplied {@code xsdResource} is
+	 * {@code null}
+	 * @since 5.1.0
+	 */
+	public SimpleXsdSchema(Resource xsdResource, @Nullable String name) {
 		Assert.notNull(xsdResource, "xsdResource must not be null");
 		this.xsdResource = xsdResource;
+		this.name = name;
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Set the name of this schem.
+	 * @param name the name
+	 * @since 5.1.0
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -120,6 +151,13 @@ public class SimpleXsdSchema implements XsdSchema, InitializingBean {
 		}
 		catch (IOException ex) {
 			throw new XsdSchemaException(ex.getMessage(), ex);
+		}
+	}
+
+	@Override
+	public void setBeanName(String name) {
+		if (this.name == null) {
+			this.name = name;
 		}
 	}
 

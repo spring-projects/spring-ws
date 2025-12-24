@@ -17,21 +17,23 @@
 package org.springframework.ws.transport.http;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import org.xmlunit.assertj.XmlAssert;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
@@ -43,9 +45,17 @@ import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMa
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Tests for {@link MessageDispatcherServlet}.
+ *
+ * @author Arjen Poutsma
+ * @author Greg Turnquist
+ * @author Stephane Nicoll
+ */
 class MessageDispatcherServletTests {
 
 	private ServletConfig config;
@@ -54,23 +64,18 @@ class MessageDispatcherServletTests {
 
 	@BeforeEach
 	void setUp() {
-
 		this.config = new MockServletConfig(new MockServletContext(), "spring-ws");
 		this.servlet = new MessageDispatcherServlet();
 	}
 
 	private void assertStrategies(Class<?> expectedClass, List<?> actual) {
-
 		assertThat(actual).hasSize(1);
-
 		Object strategy = actual.get(0);
-
 		assertThat(expectedClass).isAssignableFrom(strategy.getClass());
 	}
 
 	@Test
 	void testDefaultStrategies() throws ServletException {
-
 		this.servlet.setContextClass(StaticWebApplicationContext.class);
 		this.servlet.init(this.config);
 		MessageDispatcher messageDispatcher = (MessageDispatcher) this.servlet.getMessageReceiver();
@@ -80,8 +85,11 @@ class MessageDispatcherServletTests {
 
 	@Test
 	void testDetectedStrategies() throws ServletException {
-
-		this.servlet.setContextClass(DetectWebApplicationContext.class);
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		context.registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
+		context.registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
+		context.registerSingleton("simpleExceptionResolver", SimpleSoapExceptionResolver.class);
+		this.servlet.setApplicationContext(context);
 		this.servlet.init(this.config);
 		MessageDispatcher messageDispatcher = (MessageDispatcher) this.servlet.getMessageReceiver();
 
@@ -92,49 +100,72 @@ class MessageDispatcherServletTests {
 	}
 
 	@Test
-	void testDetectWsdlDefinitions() throws Exception {
+	void detectWsdlDefinitionUsesDefinitionName() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		ClassPathResource wsdlResource = new ClassPathResource("wsdl11-input.wsdl", getClass());
+		context.registerBean("definition", SimpleWsdl11Definition.class, wsdlResource, "test");
+		this.servlet.setApplicationContext(context);
+		this.servlet.init(this.config);
+		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/test.wsdl");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		this.servlet.service(request, response);
 
-		this.servlet.setContextClass(WsdlDefinitionWebApplicationContext.class);
+		assertResponseIdentical(response, wsdlResource);
+	}
+
+	@Test
+	void detectWsdlDefinitionUsesBeanNameIfNoNameIsSet() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		ClassPathResource wsdlResource = new ClassPathResource("wsdl11-input.wsdl", getClass());
+		context.registerBean("definition", SimpleWsdl11Definition.class, wsdlResource);
+		this.servlet.setApplicationContext(context);
 		this.servlet.init(this.config);
 		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET,
 				"/definition.wsdl");
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		this.servlet.service(request, response);
+
+		assertResponseIdentical(response, wsdlResource);
+	}
+
+	@Test
+	void detectXsdSchemaUsesDefinitionName() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		ClassPathResource wsdlResource = new ClassPathResource("single.xsd", getClass());
+		context.registerBean("definition", SimpleXsdSchema.class, wsdlResource, "test");
+		this.servlet.setApplicationContext(context);
+		this.servlet.init(this.config);
+		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET, "/test.xsd");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		this.servlet.service(request, response);
+
+		assertResponseIdentical(response, wsdlResource);
+	}
+
+	@Test
+	void detectXsdSchemaUsesBeanNameIfNoNameIsSet() throws Exception {
+		StaticWebApplicationContext context = new StaticWebApplicationContext();
+		ClassPathResource wsdlResource = new ClassPathResource("single.xsd", getClass());
+		context.registerBean("definition", SimpleXsdSchema.class, wsdlResource);
+		this.servlet.setApplicationContext(context);
+		this.servlet.init(this.config);
+		MockHttpServletRequest request = new MockHttpServletRequest(HttpTransportConstants.METHOD_GET,
+				"/definition.xsd");
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		this.servlet.service(request, response);
+
+		assertResponseIdentical(response, wsdlResource);
+	}
+
+	private void assertResponseIdentical(MockHttpServletResponse response, Resource expectedContent)
+			throws ParserConfigurationException, SAXException, IOException {
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactoryUtils.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
 		DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 		Document result = documentBuilder.parse(new ByteArrayInputStream(response.getContentAsByteArray()));
-		Document expected = documentBuilder.parse(getClass().getResourceAsStream("wsdl11-input.wsdl"));
+		Document expected = documentBuilder.parse(expectedContent.getInputStream());
 
 		XmlAssert.assertThat(result).and(expected).ignoreWhitespace().areIdentical();
-	}
-
-	private static final class DetectWebApplicationContext extends StaticWebApplicationContext {
-
-		@Override
-		public void refresh() throws BeansException, IllegalStateException {
-
-			registerSingleton("payloadMapping", PayloadRootQNameEndpointMapping.class);
-			registerSingleton("payloadAdapter", PayloadEndpointAdapter.class);
-			registerSingleton("simpleExceptionResolver", SimpleSoapExceptionResolver.class);
-
-			super.refresh();
-		}
-
-	}
-
-	private static final class WsdlDefinitionWebApplicationContext extends StaticWebApplicationContext {
-
-		@Override
-		public void refresh() throws BeansException, IllegalStateException {
-
-			MutablePropertyValues mpv = new MutablePropertyValues();
-			mpv.addPropertyValue("wsdl", new ClassPathResource("wsdl11-input.wsdl", getClass()));
-			registerSingleton("definition", SimpleWsdl11Definition.class, mpv);
-
-			super.refresh();
-		}
-
 	}
 
 }

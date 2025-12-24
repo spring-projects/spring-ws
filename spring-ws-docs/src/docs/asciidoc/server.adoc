@@ -141,8 +141,8 @@ Alternatively, it can be a `@Bean` method in a `@Configuration` class:
 [source,java]
 ----
 @Bean
-public SimpleWsdl11Definition orders() {
-	return new SimpleWsdl11Definition(new ClassPathResource("orders.wsdl"));
+public SimpleWsdl11Definition ordersWsdl11Definition() {
+	return new SimpleWsdl11Definition(new ClassPathResource("orders.wsdl"), "orders");
 }
 ----
 ====
@@ -158,8 +158,9 @@ http://localhost:8080/spring-ws/orders.wsdl
 
 [NOTE]
 ====
-All `WsdlDefinition` bean definitions are exposed by the `MessageDispatcherServlet` under their bean name with a suffix of`.wsdl`.
-So, if the bean name is `echo`, the host name is `server`, and the Servlet context (war name) is `spring-ws`, the WSDL can be found at `http://server/spring-ws/echo.wsdl`.
+All `WsdlDefinition` bean definitions are exposed by the `MessageDispatcherServlet` under their name with a suffix of`.wsdl`.
+If no name is provided by the definition, the name of the bean is used.
+For example, if the name is `echo`, the host name is `server`, and the Servlet context (war name) is `spring-ws`, the WSDL can be found at `http://server/spring-ws/echo.wsdl`.
 ====
 
 Another nice feature of the `MessageDispatcherServlet` (or more correctly the `WsdlDefinitionHandlerAdapter`) is that it can transform the value of the `location` of all the WSDL that it exposes to reflect the URL of the incoming request.
@@ -215,8 +216,9 @@ Alternatively, you can use the Java `@Bean` method:
 [source,java]
 ----
 @Bean
-public DefaultWsdl11Definition orders() {
+public DefaultWsdl11Definition ordersWsdlDefinition() {
     DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+	definition.setName("orders");
     definition.setPortTypeName("Orders");
     definition.setLocationUri("http://localhost:8080/ordersService/");
     definition.setSchema(new SimpleXsdSchema(new ClassPathResource("Orders.xsd")));
@@ -247,6 +249,7 @@ With Java config, you can use `CommonsXsdSchemaCollection` as shown in the follo
 @Bean
 public DefaultWsdl11Definition ordersWsdlDefinition() throws Exception {
     DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
+	wsdl11Definition.setName("orders");
     // ... configuration
     CommonsXsdSchemaCollection schemas = new CommonsXsdSchemaCollection(
 			new ClassPathResource("xsd/order/main.xsd"));
@@ -283,7 +286,7 @@ By default, the `DispatcherServlet` can delegate only to `Controllers`, but we c
 
     <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="defaultHandler" ref="messageDispatcher"/>
-    </bean
+    </bean>
 
     <bean id="messageDispatcher" class="org.springframework.ws.soap.server.SoapMessageDispatcher"/>
 

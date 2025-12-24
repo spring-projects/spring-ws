@@ -22,6 +22,7 @@ import javax.wsdl.factory.WSDLFactory;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.wsdl.wsdl11.provider.BindingsProvider;
@@ -59,7 +60,7 @@ import org.springframework.ws.wsdl.wsdl11.provider.TypesProvider;
  * @see #setBindingsProvider(BindingsProvider)
  * @see #setServicesProvider(ServicesProvider)
  */
-public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements InitializingBean {
+public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements BeanNameAware, InitializingBean {
 
 	/** The prefix used to register the target namespace in the WSDL. */
 	public static final String TARGET_NAMESPACE_PREFIX = "tns";
@@ -222,6 +223,13 @@ public class ProviderBasedWsdl4jDefinition extends Wsdl4jDefinition implements I
 	 */
 	public void setTargetNamespace(String targetNamespace) {
 		this.targetNamespace = targetNamespace;
+	}
+
+	@Override
+	public void setBeanName(String name) {
+		if (this.name == null) {
+			this.name = name;
+		}
 	}
 
 	@Override

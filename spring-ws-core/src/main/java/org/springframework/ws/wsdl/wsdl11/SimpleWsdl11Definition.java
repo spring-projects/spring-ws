@@ -24,6 +24,7 @@ import org.jspecify.annotations.Nullable;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
@@ -40,9 +41,11 @@ import org.springframework.xml.transform.ResourceSource;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBean {
+public class SimpleWsdl11Definition implements Wsdl11Definition, BeanNameAware, InitializingBean {
 
 	private @Nullable Resource wsdlResource;
+
+	private @Nullable String name;
 
 	/**
 	 * Create a new instance of the {@link SimpleWsdl11Definition} class.
@@ -60,14 +63,49 @@ public class SimpleWsdl11Definition implements Wsdl11Definition, InitializingBea
 	 * {@code null}
 	 */
 	public SimpleWsdl11Definition(Resource wsdlResource) {
+		this(wsdlResource, null);
+	}
+
+	/**
+	 * Create a new instance of the {@link SimpleWsdl11Definition} class with the
+	 * specified resource, and name.
+	 * @param wsdlResource the WSDL resource; must not be {@code null}
+	 * @param name the name of the definition
+	 * @throws IllegalArgumentException if the supplied {@code wsdlResource} is
+	 * {@code null}
+	 * @since 5.1.0
+	 */
+	public SimpleWsdl11Definition(Resource wsdlResource, @Nullable String name) {
 		Assert.notNull(wsdlResource, "wsdlResource must not be null");
 		this.wsdlResource = wsdlResource;
+		this.name = name;
+	}
+
+	@Override
+	public void setBeanName(String name) {
+		if (this.name == null) {
+			this.name = name;
+		}
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(this.wsdlResource, "wsdl is required");
 		Assert.isTrue(this.wsdlResource.exists(), "wsdl '" + this.wsdlResource + "' does not exist");
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Set the name of this definition.
+	 * @param name the name
+	 * @since 5.1.0
+	 */
+	public void setName(@Nullable String name) {
+		this.name = name;
 	}
 
 	@Override

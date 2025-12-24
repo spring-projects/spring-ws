@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.provider.DefaultMessagesProvider;
@@ -53,7 +54,9 @@ import org.springframework.xml.xsd.XsdSchemaCollection;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBean {
+public class DefaultWsdl11Definition implements Wsdl11Definition, BeanNameAware, InitializingBean {
+
+	private @Nullable String name;
 
 	private final InliningXsdSchemaTypesProvider typesProvider = new InliningXsdSchemaTypesProvider();
 
@@ -176,6 +179,13 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 	}
 
 	@Override
+	public void setBeanName(String name) {
+		if (this.name == null) {
+			this.name = name;
+		}
+	}
+
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!StringUtils.hasText(this.delegate.getTargetNamespace())
 				&& this.typesProvider.getSchemaCollection().getXsdSchemas().length > 0) {
@@ -185,7 +195,22 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, InitializingBe
 		if (!StringUtils.hasText(this.serviceName) && StringUtils.hasText(this.portTypesProvider.getPortTypeName())) {
 			this.soapProvider.setServiceName(this.portTypesProvider.getPortTypeName() + "Service");
 		}
+		this.delegate.setName(this.name);
 		this.delegate.afterPropertiesSet();
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.delegate.getName();
+	}
+
+	/**
+	 * Set the name of this definition.
+	 * @param name the name
+	 * @since 5.1.0
+	 */
+	public void setName(@Nullable String name) {
+		this.name = name;
 	}
 
 	@Override

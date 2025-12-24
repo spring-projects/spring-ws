@@ -18,6 +18,7 @@ package org.springframework.ws.transport.http;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -476,24 +477,34 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 	}
 
 	private void initWsdlDefinitions(ApplicationContext context) {
-		this.wsdlDefinitions = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, WsdlDefinition.class, true,
-				false);
+		this.wsdlDefinitions = BeanFactoryUtils
+			.beansOfTypeIncludingAncestors(context, WsdlDefinition.class, true, false)
+			.entrySet()
+			.stream()
+			.collect(Collectors.toMap(
+					(entry) -> (entry.getValue().getName() != null) ? entry.getValue().getName() : entry.getKey(),
+					Map.Entry::getValue));
 		if (this.logger.isDebugEnabled()) {
 			for (Map.Entry<String, WsdlDefinition> entry : this.wsdlDefinitions.entrySet()) {
-				String beanName = entry.getKey();
+				String name = entry.getKey();
 				WsdlDefinition definition = entry.getValue();
-				this.logger.debug("Published [" + definition + "] as " + beanName + WSDL_SUFFIX_NAME);
+				this.logger.debug("Published [" + definition + "] as " + name + WSDL_SUFFIX_NAME);
 			}
 		}
 	}
 
 	private void initXsdSchemas(ApplicationContext context) {
-		this.xsdSchemas = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, XsdSchema.class, true, false);
+		this.xsdSchemas = BeanFactoryUtils.beansOfTypeIncludingAncestors(context, XsdSchema.class, true, false)
+			.entrySet()
+			.stream()
+			.collect(Collectors.toMap(
+					(entry) -> (entry.getValue().getName() != null) ? entry.getValue().getName() : entry.getKey(),
+					Map.Entry::getValue));
 		if (this.logger.isDebugEnabled()) {
 			for (Map.Entry<String, XsdSchema> entry : this.xsdSchemas.entrySet()) {
-				String beanName = entry.getKey();
+				String name = entry.getKey();
 				XsdSchema schema = entry.getValue();
-				this.logger.debug("Published [" + schema + "] as " + beanName + XSD_SUFFIX_NAME);
+				this.logger.debug("Published [" + schema + "] as " + name + XSD_SUFFIX_NAME);
 			}
 		}
 	}

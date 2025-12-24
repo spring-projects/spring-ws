@@ -43,6 +43,8 @@ import org.springframework.ws.wsdl.WsdlDefinitionException;
  */
 public class Wsdl4jDefinition implements Wsdl11Definition {
 
+	protected @Nullable String name;
+
 	private @Nullable Definition definition;
 
 	/** WSDL4J is not thread safe, hence the need for a monitor. */
@@ -61,6 +63,20 @@ public class Wsdl4jDefinition implements Wsdl11Definition {
 	 */
 	public Wsdl4jDefinition(Definition definition) {
 		setDefinition(definition);
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.name;
+	}
+
+	/**
+	 * Set the name of this definition.
+	 * @param name the name
+	 * @since 5.1.0
+	 */
+	public void setName(@Nullable String name) {
+		this.name = name;
 	}
 
 	/** Returns the WSDL4J {@code Definition}. */

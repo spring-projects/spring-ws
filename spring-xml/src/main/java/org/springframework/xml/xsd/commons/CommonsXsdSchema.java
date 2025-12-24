@@ -57,6 +57,8 @@ public class CommonsXsdSchema implements XsdSchema {
 
 	private final @Nullable XmlSchemaCollection collection;
 
+	private final @Nullable String name;
+
 	/**
 	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified
 	 * {@link XmlSchema} reference.
@@ -76,9 +78,29 @@ public class CommonsXsdSchema implements XsdSchema {
 	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
 	 */
 	protected CommonsXsdSchema(XmlSchema schema, @Nullable XmlSchemaCollection collection) {
+		this(schema, collection, null);
+	}
+
+	/**
+	 * Create a new instance of the {@code CommonsXsdSchema} class with the specified
+	 * {@link XmlSchema}, {@link XmlSchemaCollection} reference, and name.
+	 * @param schema the Commons {@code XmlSchema} object; must not be {@code null}
+	 * @param collection the Commons {@code XmlSchemaCollection} object; can be
+	 * {@code null}
+	 * @param name the name of the schema
+	 * @throws IllegalArgumentException if the supplied {@code schema} is {@code null}
+	 * @since 5.1.0
+	 */
+	protected CommonsXsdSchema(XmlSchema schema, @Nullable XmlSchemaCollection collection, @Nullable String name) {
 		Assert.notNull(schema, "'schema' must not be null");
 		this.schema = schema;
 		this.collection = collection;
+		this.name = name;
+	}
+
+	@Override
+	public @Nullable String getName() {
+		return this.name;
 	}
 
 	@Override
