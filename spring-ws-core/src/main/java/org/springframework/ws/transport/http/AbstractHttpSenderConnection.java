@@ -111,8 +111,10 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 		return (isGzipResponse()) ? new GZIPInputStream(inputStream) : inputStream;
 	}
 
-	/** Determine whether the response is a GZIP response. */
-	private boolean isGzipResponse() throws IOException {
+	/**
+	 * Determine whether the response is a GZIP response.
+	 */
+	protected boolean isGzipResponse() throws IOException {
 		Iterator<String> iterator = getResponseHeaders(HttpTransportConstants.HEADER_CONTENT_ENCODING);
 		if (iterator.hasNext()) {
 			String encodingHeader = iterator.next();
