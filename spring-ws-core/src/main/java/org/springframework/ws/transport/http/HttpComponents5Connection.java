@@ -148,6 +148,15 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	 */
 
 	@Override
+	protected boolean isGzipResponse() throws IOException {
+		HttpEntity entity = getHttpEntity();
+		if (entity != null) {
+			return HttpTransportConstants.CONTENT_ENCODING_GZIP.equals(entity.getContentEncoding());
+		}
+		return super.isGzipResponse();
+	}
+
+	@Override
 	protected int getResponseCode() throws IOException {
 		return getHttpResponse().getCode();
 	}
@@ -159,28 +168,19 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 
 	@Override
 	protected long getResponseContentLength() throws IOException {
-
-		if (this.httpResponse instanceof ClassicHttpResponse response) {
-
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				return entity.getContentLength();
-			}
+		HttpEntity entity = getHttpEntity();
+		if (entity != null) {
+			return entity.getContentLength();
 		}
 		return 0;
 	}
 
 	@Override
 	protected InputStream getRawResponseInputStream() throws IOException {
-
-		if (this.httpResponse instanceof ClassicHttpResponse response) {
-
-			HttpEntity entity = response.getEntity();
-			if (entity != null) {
-				return entity.getContent();
-			}
+		HttpEntity entity = getHttpEntity();
+		if (entity != null) {
+			return entity.getContent();
 		}
-
 		throw new IllegalStateException("Response has no enclosing response entity, cannot create input stream");
 	}
 
@@ -194,6 +194,13 @@ public class HttpComponents5Connection extends AbstractHttpSenderConnection {
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
 
 		return Arrays.stream(getHttpResponse().getHeaders(name)).map(NameValuePair::getValue).iterator();
+	}
+
+	private @Nullable HttpEntity getHttpEntity() {
+		if (this.httpResponse instanceof ClassicHttpResponse response) {
+			return response.getEntity();
+		}
+		return null;
 	}
 
 }
