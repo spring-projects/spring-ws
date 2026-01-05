@@ -28,6 +28,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationConvention;
+import io.micrometer.observation.ObservationRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
@@ -44,6 +47,10 @@ import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
+import org.springframework.ws.client.core.observation.ClientWebServiceObservationContext;
+import org.springframework.ws.client.core.observation.ClientWebServiceObservationConvention;
+import org.springframework.ws.client.core.observation.ClientWebServiceObservationDocumentation;
+import org.springframework.ws.client.core.observation.DefaultClientWebServiceObservationConvention;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -134,6 +141,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	protected static final Log receivedMessageTracingLogger = LogFactory
 		.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
+	private static final ClientWebServiceObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultClientWebServiceObservationConvention();
+
 	private @Nullable Marshaller marshaller;
 
 	private @Nullable Unmarshaller unmarshaller;
@@ -147,6 +156,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	private ClientInterceptor @Nullable [] interceptors;
 
 	private @Nullable DestinationProvider destinationProvider;
+
+	private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
+
+	private @Nullable ClientWebServiceObservationConvention observationConvention;
 
 	/** Creates a new {@code WebServiceTemplate} using default settings. */
 	public WebServiceTemplate() {
@@ -358,6 +371,50 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 */
 	public final void setInterceptors(ClientInterceptor[] interceptors) {
 		this.interceptors = interceptors;
+	}
+
+	/**
+	 * Configure an {@link ObservationRegistry} for collecting spans and metrics for
+	 * request execution. By default, {@link Observation observations} are no-ops.
+	 * @param observationRegistry the observation registry to use
+	 * @since 5.1.0
+	 */
+	public void setObservationRegistry(ObservationRegistry observationRegistry) {
+		Assert.notNull(observationRegistry, "observationRegistry must not be null");
+		this.observationRegistry = observationRegistry;
+	}
+
+	/**
+	 * Return the configured {@link ObservationRegistry}.
+	 * @since 5.1.0
+	 */
+	public ObservationRegistry getObservationRegistry() {
+		return this.observationRegistry;
+	}
+
+	/**
+	 * Configure an {@link ObservationConvention} that sets the name of the
+	 * {@link Observation observation} as well as its
+	 * {@link io.micrometer.common.KeyValues} extracted from the
+	 * {@link ClientWebServiceObservationContext}. If none set, the
+	 * {@link DefaultClientWebServiceObservationConvention default convention} will be
+	 * used.
+	 * @param observationConvention the observation convention to use
+	 * @since 5.1.0
+	 * @see #setObservationRegistry(ObservationRegistry)
+	 */
+	public void setObservationConvention(ClientWebServiceObservationConvention observationConvention) {
+		Assert.notNull(observationConvention, "observationConvention must not be null");
+		this.observationConvention = observationConvention;
+	}
+
+	/**
+	 * Return the configured {@link ClientWebServiceObservationConvention}, or
+	 * {@code null} if not set.
+	 * @since 5.1.0
+	 */
+	public @Nullable ClientWebServiceObservationConvention getObservationConvention() {
+		return this.observationConvention;
 	}
 
 	/**
@@ -622,7 +679,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			@Nullable WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
 			throws IOException {
 		int interceptorIndex = -1;
-		try {
+		ClientWebServiceObservationContext observationContext = new ClientWebServiceObservationContext(connection);
+		Observation observation = ClientWebServiceObservationDocumentation.WEB_SERVICE_CLIENT_EXCHANGES
+			.observation(this.observationConvention, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext,
+					this.observationRegistry)
+			.start();
+		try (Observation.Scope scope = observation.openScope()) {
 			if (requestCallback != null) {
 				requestCallback.doWithMessage(messageContext.getRequest());
 			}
@@ -647,6 +709,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 					return (T) fallback;
 				}
 				WebServiceMessage response = connection.receive(getMessageFactory());
+				if (response != null) {
+					observationContext.setResponse(response);
+				}
 				messageContext.setResponse(response);
 			}
 			logResponse(messageContext);
@@ -677,6 +742,9 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			// Trigger after-completion for thrown exception.
 			triggerAfterCompletion(interceptorIndex, messageContext, ex);
 			throw ex;
+		}
+		finally {
+			observation.stop();
 		}
 	}
 
