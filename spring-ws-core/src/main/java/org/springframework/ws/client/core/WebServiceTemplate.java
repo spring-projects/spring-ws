@@ -736,11 +736,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 		}
 		catch (TransformerException ex) {
 			triggerAfterCompletion(interceptorIndex, messageContext, ex);
+			observation.error(ex);
 			throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
 		}
 		catch (RuntimeException | IOException ex) {
 			// Trigger after-completion for thrown exception.
 			triggerAfterCompletion(interceptorIndex, messageContext, ex);
+			observation.error(ex);
 			throw ex;
 		}
 		finally {

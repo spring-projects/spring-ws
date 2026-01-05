@@ -21,11 +21,11 @@ import io.micrometer.observation.Observation.Context;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.docs.ObservationDocumentation;
 
-import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.ws.WebServiceMessage;
 
 /**
- * Documented {@link io.micrometer.common.KeyValue KeyValues} for
- * {@link ClientHttpRequestFactory web service client} observations.
+ * Documented {@link io.micrometer.common.KeyValue KeyValues} for {@link WebServiceMessage
+ * web service client} observations.
  * <p>
  * This class is used by automated tools to document KeyValues attached to the web service
  * client observations.
