@@ -23,6 +23,7 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
+import io.micrometer.observation.tck.TestObservationRegistry;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.AssertProvider;
@@ -62,6 +63,8 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 class WebServiceTemplateTests {
 
+	private static final URI CONNECTION_URI = URI.create("http://www.springframework.org/spring-ws");
+
 	private WebServiceTemplate template;
 
 	private FaultAwareWebServiceConnection connectionMock;
@@ -74,8 +77,7 @@ class WebServiceTemplateTests {
 		this.messageFactory = new MockWebServiceMessageFactory();
 		this.template = new WebServiceTemplate(this.messageFactory);
 		this.connectionMock = mock(FaultAwareWebServiceConnection.class);
-		final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
-		when(this.connectionMock.getUri()).thenReturn(expectedUri);
+		when(this.connectionMock.getUri()).thenReturn(CONNECTION_URI);
 		this.template.setMessageSender(new WebServiceMessageSender() {
 
 			@Override
@@ -86,12 +88,12 @@ class WebServiceTemplateTests {
 			@Override
 			public boolean supports(URI uri) {
 
-				assertThat(uri).isEqualTo(expectedUri);
+				assertThat(uri).isEqualTo(CONNECTION_URI);
 				return true;
 			}
 		});
 
-		this.template.setDefaultUri(expectedUri.toString());
+		this.template.setDefaultUri(CONNECTION_URI.toString());
 	}
 
 	@Test
@@ -617,6 +619,20 @@ class WebServiceTemplateTests {
 		Object result = this.template.sendAndReceive(null, extractorMock);
 
 		assertThat(result).isNull();
+	}
+
+	@Test
+	void testObservationWithSendAndReceiveResultResponse() throws Exception {
+		TestObservationRegistry observationRegistry = TestObservationRegistry.create();
+		this.template.setObservationRegistry(observationRegistry);
+		Object unmarshalled = new Object();
+		setupMarshallerAndUnmarshaller(unmarshalled);
+		this.template.marshalSendAndReceive(new Object());
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client")
+			.that()
+			.hasLowCardinalityKeyValue("protocol", "http")
+			.hasHighCardinalityKeyValue("uri", CONNECTION_URI.toString());
+
 	}
 
 	private static WebServiceMessageExtractor<Object> mockWebServiceMessageExtractor() {
