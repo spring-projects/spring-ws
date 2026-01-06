@@ -38,7 +38,7 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 	SOAP_CLIENT_REQUESTS {
 		@Override
 		public Class<? extends ObservationConvention<? extends Context>> getDefaultConvention() {
-			return DefaultSoapClientObservationConvention.class;
+			return SoapClientObservationConvention.class;
 		}
 
 		@Override
@@ -113,7 +113,7 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 		/**
 		 * Target URI.
 		 */
-		URL {
+		URI {
 			@Override
 			public String asString() {
 				return "url";

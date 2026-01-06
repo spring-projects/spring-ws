@@ -53,14 +53,14 @@ public class MessageReceiverObservationTests {
 		};
 		this.receiver.handleConnection(this.connectionMock, receiver);
 
-		assertThat(this.observationRegistry).hasSingleObservationThat().hasNameEqualTo("soap.server.duration");
+		assertThat(this.observationRegistry).hasSingleObservationThat().hasNameEqualTo("soap.server.requests");
 	}
 
 	@Test
 	void shouldHaveCurrentObservationInScope() throws Exception {
 		WebServiceMessageReceiver receiver = messageContext -> {
 			assertThat(this.observationRegistry.getCurrentObservation().getContextView().getName())
-				.isEqualTo("soap.server.duration");
+				.isEqualTo("soap.server.requests");
 		};
 		this.receiver.handleConnection(this.connectionMock, receiver);
 	}

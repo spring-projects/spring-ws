@@ -46,12 +46,12 @@ class DefaultSoapServerObservationConventionTests {
 
 	@Test
 	void observationName() {
-		assertThat(this.convention.getName()).isEqualTo("soap.server.duration");
+		assertThat(this.convention.getName()).isEqualTo("soap.server.requests");
 	}
 
 	@Test
 	void contextualName() {
-		this.context.setMethodName("getCountry");
+		this.context.setOperationName("getCountry");
 		assertThat(this.convention.getContextualName(this.context)).isEqualTo("soap getCountry");
 	}
 
@@ -59,49 +59,41 @@ class DefaultSoapServerObservationConventionTests {
 	void faultCode() {
 		this.response.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.fault.code", "{http://schemas.xmlsoap.org/soap/envelope/}Client"));
+			.contains(KeyValue.of("fault.code", "{http://schemas.xmlsoap.org/soap/envelope/}Client"));
 	}
 
 	@Test
-	void method() {
-		this.context.setMethodName("getCountry");
+	void operationName() {
+		this.context.setOperationName("getCountry");
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.method", "getCountry"));
+			.contains(KeyValue.of("operation.name", "getCountry"));
 	}
 
 	@Test
-	void addressName() throws Exception {
+	void protocol() throws Exception {
 		when(this.connectionMock.getUri()).thenReturn(URI.create("https://localhost:443/services"));
-		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.server.address.name", "localhost"));
+		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("protocol", "https"));
 	}
 
 	@Test
-	void addressProtocol() throws Exception {
-		when(this.connectionMock.getUri()).thenReturn(URI.create("https://localhost:443/services"));
+	void namespace() {
+		this.context.setNamespace("CountriesPort");
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.server.address.protocol", "https"));
-	}
-
-	@Test
-	void service() {
-		this.context.setServiceName("CountriesPort");
-		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.service", "CountriesPort"));
+			.contains(KeyValue.of("namespace", "CountriesPort"));
 	}
 
 	@Test
 	void uri() throws Exception {
 		when(this.connectionMock.getUri()).thenReturn(URI.create("https://localhost:443/services"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.server.address.url", "https://localhost:443/services"));
+			.contains(KeyValue.of("uri", "https://localhost:443/services"));
 	}
 
 	@Test
 	void faultReason() {
 		this.response.setFaultReason("Invalid country format");
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("soap.fault.reason", "Invalid country format"));
+			.contains(KeyValue.of("fault.reason", "Invalid country format"));
 	}
 
 }

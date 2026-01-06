@@ -104,7 +104,7 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			throws Exception {
 
 		SoapServerObservationContext observationContext = new SoapServerObservationContext(connection);
-		Observation observation = SoapServerObservationDocumentation.SOAP_SERVER_DURATION
+		Observation observation = SoapServerObservationDocumentation.SOAP_SERVER_REQUESTS
 			.observation(null, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext, this.observationRegistry)
 			.start();
 		logUri(connection);

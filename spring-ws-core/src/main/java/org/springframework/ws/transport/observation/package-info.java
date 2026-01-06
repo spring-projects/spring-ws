@@ -15,7 +15,7 @@
  */
 
 /**
- * Observation support for SOAP server message handling over many transports.
+ * Observation support for SOAP server message handling.
  */
 @NullMarked
 package org.springframework.ws.transport.observation;

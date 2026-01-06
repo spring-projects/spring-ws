@@ -17,6 +17,9 @@
 package org.springframework.ws.transport.observation;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.micrometer.observation.transport.Propagator;
@@ -31,7 +34,7 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 
 /**
  * Context that holds information for metadata collection regarding
- * {@link SoapServerObservationDocumentation#SOAP_SERVER_DURATION SOAP requests}
+ * {@link SoapServerObservationDocumentation#SOAP_SERVER_REQUESTS SOAP requests}
  * observations.
  * <p>
  * This context also extends {@link RequestReplyReceiverContext} for propagating tracing
@@ -53,27 +56,31 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 
 	private @Nullable MessageContext messageContext;
 
-	private @Nullable String serviceName;
+	private @Nullable String namespace;
 
-	private @Nullable String methodName;
+	private @Nullable String operationName;
 
 	public SoapServerObservationContext(WebServiceConnection connection) {
 		super(GETTER);
 		setCarrier(connection);
 	}
 
-	/**
-	 * Return the {@link WebServiceConnection web service connection} used for the current
-	 * exchange.
-	 */
-	@SuppressWarnings("NullAway")
-	public WebServiceConnection getConnection() {
-		return getCarrier();
+	public static Optional<SoapServerObservationContext> findCurrentObservationContext(MessageContext holder) {
+		return Optional
+			.ofNullable((SoapServerObservationContext) holder.getProperty(CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE));
 	}
 
 	public void setAsCurrent(MessageContext messageContext) {
 		messageContext.setProperty(CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE, this);
 		this.messageContext = messageContext;
+	}
+
+	/**
+	 * Return the {@link WebServiceConnection web service connection} used for the current
+	 * request.
+	 */
+	public WebServiceConnection getConnection() {
+		return Objects.requireNonNull(getCarrier());
 	}
 
 	public @Nullable WebServiceMessage getRequest() {
@@ -85,31 +92,36 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 
 	@Override
 	public @Nullable WebServiceMessage getResponse() {
-		if (this.messageContext != null) {
+		if (this.messageContext != null && this.messageContext.hasResponse()) {
 			return this.messageContext.getResponse();
 		}
 		return null;
 	}
 
-	public @Nullable String getServiceName() {
-		return this.serviceName;
+	public @Nullable String getNamespace() {
+		return this.namespace;
 	}
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setNamespace(String namespace) {
+		this.namespace = namespace;
 	}
 
-	public @Nullable String getMethodName() {
-		return this.methodName;
+	public @Nullable String getOperationName() {
+		return this.operationName;
 	}
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
+	public void setOperationName(String operationName) {
+		this.operationName = operationName;
 	}
 
-	public static Optional<SoapServerObservationContext> findCurrentObservationContext(MessageContext holder) {
-		return Optional
-			.ofNullable((SoapServerObservationContext) holder.getProperty(CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE));
+	public @Nullable URI getUri() {
+		try {
+			return getConnection().getUri();
+		}
+		catch (URISyntaxException ex) {
+			// ignore
+		}
+		return null;
 	}
 
 	static final class HeaderGetter implements Propagator.Getter<WebServiceConnection> {

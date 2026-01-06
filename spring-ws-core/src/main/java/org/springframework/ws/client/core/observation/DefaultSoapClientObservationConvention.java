@@ -17,17 +17,20 @@
 package org.springframework.ws.client.core.observation;
 
 import java.net.URI;
+import java.util.Objects;
+
+import javax.xml.namespace.QName;
 
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
-import org.jspecify.annotations.Nullable;
 
+import org.springframework.ws.FaultAwareWebServiceMessage;
+import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation.HighCardinalityKeyNames;
 import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation.LowCardinalityKeyNames;
 
 /**
- * Default implementation for a {@link SoapClientObservationConvention}, extracting
- * information from the {@link SoapClientObservationConvention}.
+ * Default {@link SoapClientObservationConvention} implementation.
  *
  * @author Stephane Nicoll
  * @since 5.1.0
@@ -54,8 +57,16 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 	}
 
 	@Override
-	public @Nullable String getName() {
+	public String getName() {
 		return this.name;
+	}
+
+	@Override
+	public String getContextualName(SoapClientObservationContext context) {
+		if (context.getOperationName() != null) {
+			return "soap " + context.getOperationName();
+		}
+		return "soap";
 	}
 
 	@Override
@@ -63,22 +74,30 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 		return KeyValues.of(faultCode(context), namespace(context), operationName(context), protocol(context));
 	}
 
-	protected KeyValue faultCode(SoapClientObservationContext context) {
-		// FIXME
+	private KeyValue faultCode(SoapClientObservationContext context) {
+		WebServiceMessage response = context.getResponse();
+		if (response instanceof FaultAwareWebServiceMessage faultResponse) {
+			QName faultCode = faultResponse.getFaultCode();
+			if (faultCode != null) {
+				return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, faultCode.toString());
+			}
+		}
 		return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue namespace(SoapClientObservationContext context) {
-		// FIXME
-		return KeyValue.of(LowCardinalityKeyNames.NAMESPACE, KeyValue.NONE_VALUE);
+	private KeyValue namespace(SoapClientObservationContext context) {
+		return KeyValue.of(LowCardinalityKeyNames.NAMESPACE,
+				Objects.requireNonNullElse(context.getNamespace(), KeyValue.NONE_VALUE));
 	}
 
-	protected KeyValue operationName(SoapClientObservationContext context) {
-		// FIXME
+	private KeyValue operationName(SoapClientObservationContext context) {
+		if (context.getOperationName() != null) {
+			return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, context.getOperationName());
+		}
 		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue protocol(SoapClientObservationContext context) {
+	private KeyValue protocol(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String protocol = (uri != null) ? uri.getScheme() : KeyValue.NONE_VALUE;
 		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, protocol);
@@ -89,15 +108,21 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 		return KeyValues.of(faultReason(context), uri(context));
 	}
 
-	protected KeyValue faultReason(SoapClientObservationContext context) {
-		// FIXME
+	private KeyValue faultReason(SoapClientObservationContext context) {
+		WebServiceMessage response = context.getResponse();
+		if (response instanceof FaultAwareWebServiceMessage faultResponse) {
+			String faultReason = faultResponse.getFaultReason();
+			if (faultReason != null) {
+				return KeyValue.of(HighCardinalityKeyNames.FAULT_REASON, faultReason);
+			}
+		}
 		return KeyValue.of(HighCardinalityKeyNames.FAULT_REASON, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue uri(SoapClientObservationContext context) {
+	private KeyValue uri(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String value = (uri != null) ? uri.toString() : KeyValue.NONE_VALUE;
-		return KeyValue.of(HighCardinalityKeyNames.URL, value);
+		return KeyValue.of(HighCardinalityKeyNames.URI, value);
 	}
 
 }

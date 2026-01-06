@@ -21,15 +21,15 @@ import io.micrometer.observation.ObservationConvention;
 
 /**
  * Interface for an {@link ObservationConvention} for
- * {@link SoapServerObservationDocumentation#SOAP_SERVER_DURATION SOAP server requests}.
+ * {@link SoapServerObservationDocumentation#SOAP_SERVER_REQUESTS SOAP server requests}.
  *
  * @author Brian Clozel
  * @since 5.1.0
  */
-public class SoapServerObservationConvention implements ObservationConvention<SoapServerObservationContext> {
+public interface SoapServerObservationConvention extends ObservationConvention<SoapServerObservationContext> {
 
 	@Override
-	public boolean supportsContext(Context context) {
+	default boolean supportsContext(Context context) {
 		return context instanceof SoapServerObservationContext;
 	}
 

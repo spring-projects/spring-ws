@@ -17,13 +17,12 @@
 package org.springframework.ws.transport.observation;
 
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
 import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
-import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.FaultAwareWebServiceMessage;
 import org.springframework.ws.WebServiceMessage;
@@ -31,14 +30,14 @@ import org.springframework.ws.transport.observation.SoapServerObservationDocumen
 import org.springframework.ws.transport.observation.SoapServerObservationDocumentation.LowCardinalityKeyNames;
 
 /**
- * Default {@link SoapServerObservationConvention}.
+ * Default {@link SoapServerObservationConvention} implementation.
  *
  * @author Brian Clozel
  * @since 5.1.0
  */
-public class DefaultSoapServerObservationConvention extends SoapServerObservationConvention {
+public class DefaultSoapServerObservationConvention implements SoapServerObservationConvention {
 
-	private static final String DEFAULT_NAME = "soap.server.duration";
+	private static final String DEFAULT_NAME = "soap.server.requests";
 
 	private final String name;
 
@@ -64,15 +63,15 @@ public class DefaultSoapServerObservationConvention extends SoapServerObservatio
 
 	@Override
 	public String getContextualName(SoapServerObservationContext context) {
-		if (context.getMethodName() != null) {
-			return "soap " + context.getMethodName();
+		if (context.getOperationName() != null) {
+			return "soap " + context.getOperationName();
 		}
 		return "soap";
 	}
 
 	@Override
 	public KeyValues getLowCardinalityKeyValues(SoapServerObservationContext context) {
-		return KeyValues.of(faultCode(context), method(context), address(context), protocol(context), service(context));
+		return KeyValues.of(faultCode(context), namespace(context), operationName(context), protocol(context));
 	}
 
 	private KeyValue faultCode(SoapServerObservationContext context) {
@@ -86,57 +85,27 @@ public class DefaultSoapServerObservationConvention extends SoapServerObservatio
 		return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, KeyValue.NONE_VALUE);
 	}
 
-	private KeyValue method(SoapServerObservationContext context) {
-		if (context.getMethodName() != null) {
-			return KeyValue.of(LowCardinalityKeyNames.METHOD, context.getMethodName());
-		}
-		return KeyValue.of(LowCardinalityKeyNames.METHOD, KeyValue.NONE_VALUE);
+	private KeyValue namespace(SoapServerObservationContext context) {
+		return KeyValue.of(LowCardinalityKeyNames.NAMESPACE,
+				Objects.requireNonNullElse(context.getNamespace(), KeyValue.NONE_VALUE));
 	}
 
-	private KeyValue address(SoapServerObservationContext context) {
-		URI uri = getConnectionURI(context);
-		if (uri != null) {
-			return KeyValue.of(LowCardinalityKeyNames.ADDRESS, uri.getHost());
+	private KeyValue operationName(SoapServerObservationContext context) {
+		if (context.getOperationName() != null) {
+			return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, context.getOperationName());
 		}
-		return KeyValue.of(LowCardinalityKeyNames.ADDRESS, KeyValue.NONE_VALUE);
+		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
 	}
 
 	private KeyValue protocol(SoapServerObservationContext context) {
-		URI uri = getConnectionURI(context);
-		if (uri != null) {
-			return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, uri.getScheme());
-		}
-		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, KeyValue.NONE_VALUE);
-	}
-
-	private KeyValue service(SoapServerObservationContext context) {
-		String serviceName = context.getServiceName();
-		if (serviceName != null) {
-			return KeyValue.of(LowCardinalityKeyNames.SERVICE, serviceName);
-		}
-		return KeyValue.of(LowCardinalityKeyNames.SERVICE, KeyValue.NONE_VALUE);
-	}
-
-	private @Nullable URI getConnectionURI(SoapServerObservationContext context) {
-		try {
-			return context.getConnection().getUri();
-		}
-		catch (URISyntaxException exc) {
-			return null;
-		}
+		URI uri = context.getUri();
+		String protocol = (uri != null) ? uri.getScheme() : KeyValue.NONE_VALUE;
+		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, protocol);
 	}
 
 	@Override
 	public KeyValues getHighCardinalityKeyValues(SoapServerObservationContext context) {
 		return KeyValues.of(faultReason(context), uri(context));
-	}
-
-	private KeyValue uri(SoapServerObservationContext context) {
-		URI uri = getConnectionURI(context);
-		if (uri != null) {
-			return KeyValue.of(HighCardinalityKeyNames.URL, uri.toString());
-		}
-		return KeyValue.of(HighCardinalityKeyNames.URL, KeyValue.NONE_VALUE);
 	}
 
 	private KeyValue faultReason(SoapServerObservationContext context) {
@@ -148,6 +117,12 @@ public class DefaultSoapServerObservationConvention extends SoapServerObservatio
 			}
 		}
 		return KeyValue.of(HighCardinalityKeyNames.FAULT_REASON, KeyValue.NONE_VALUE);
+	}
+
+	private KeyValue uri(SoapServerObservationContext context) {
+		URI uri = context.getUri();
+		String value = (uri != null) ? uri.toString() : KeyValue.NONE_VALUE;
+		return KeyValue.of(HighCardinalityKeyNames.URI, value);
 	}
 
 }
