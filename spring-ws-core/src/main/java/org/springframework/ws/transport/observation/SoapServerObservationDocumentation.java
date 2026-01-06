@@ -26,7 +26,7 @@ import io.micrometer.observation.docs.ObservationDocumentation;
  * observations.
  *
  * @author Brian Clozel
- * @since 4.1.0
+ * @since 5.1.0
  */
 public enum SoapServerObservationDocumentation implements ObservationDocumentation {
 

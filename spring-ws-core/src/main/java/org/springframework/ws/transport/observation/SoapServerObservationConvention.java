@@ -24,7 +24,7 @@ import io.micrometer.observation.ObservationConvention;
  * {@link SoapServerObservationDocumentation#SOAP_SERVER_DURATION SOAP server requests}.
  *
  * @author Brian Clozel
- * @since 4.1.0
+ * @since 5.1.0
  */
 public class SoapServerObservationConvention implements ObservationConvention<SoapServerObservationContext> {
 
