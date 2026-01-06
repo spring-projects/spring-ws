@@ -38,7 +38,7 @@ import org.springframework.ws.transport.http.HttpServletConnection;
  * information over supported transports.
  *
  * @author Brian Clozel
- * @since 4.1.0
+ * @since 5.1.0
  */
 public class SoapServerObservationContext extends RequestReplyReceiverContext<WebServiceConnection, WebServiceMessage> {
 

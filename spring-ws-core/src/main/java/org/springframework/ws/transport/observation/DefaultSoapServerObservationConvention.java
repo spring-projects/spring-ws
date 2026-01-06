@@ -34,7 +34,7 @@ import org.springframework.ws.transport.observation.SoapServerObservationDocumen
  * Default {@link SoapServerObservationConvention}.
  *
  * @author Brian Clozel
- * @since 4.1.0
+ * @since 5.1.0
  */
 public class DefaultSoapServerObservationConvention extends SoapServerObservationConvention {
 
