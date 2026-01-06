@@ -22,27 +22,27 @@ import io.micrometer.common.KeyValue;
 import io.micrometer.common.KeyValues;
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.ws.client.core.observation.ClientWebServiceObservationDocumentation.HighCardinalityKeyNames;
-import org.springframework.ws.client.core.observation.ClientWebServiceObservationDocumentation.LowCardinalityKeyNames;
+import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation.HighCardinalityKeyNames;
+import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation.LowCardinalityKeyNames;
 
 /**
- * Default implementation for a {@link ClientWebServiceObservationConvention}, extracting
- * information from the {@link ClientWebServiceObservationConvention}.
+ * Default implementation for a {@link SoapClientObservationConvention}, extracting
+ * information from the {@link SoapClientObservationConvention}.
  *
  * @author Stephane Nicoll
  * @since 5.1.0
  */
-public class DefaultClientWebServiceObservationConvention implements ClientWebServiceObservationConvention {
+public class DefaultSoapClientObservationConvention implements SoapClientObservationConvention {
 
 	private static final String DEFAULT_NAME = "soap.client";
 
 	private final String name;
 
-	public DefaultClientWebServiceObservationConvention() {
+	public DefaultSoapClientObservationConvention() {
 		this(DEFAULT_NAME);
 	}
 
-	public DefaultClientWebServiceObservationConvention(String name) {
+	public DefaultSoapClientObservationConvention(String name) {
 		this.name = name;
 	}
 
@@ -52,42 +52,42 @@ public class DefaultClientWebServiceObservationConvention implements ClientWebSe
 	}
 
 	@Override
-	public KeyValues getLowCardinalityKeyValues(ClientWebServiceObservationContext context) {
+	public KeyValues getLowCardinalityKeyValues(SoapClientObservationContext context) {
 		return KeyValues.of(location(context), namespace(context), protocol(context), operationName(context));
 	}
 
-	protected KeyValue location(ClientWebServiceObservationContext context) {
+	protected KeyValue location(SoapClientObservationContext context) {
 		// FIXME
 		return KeyValue.of(LowCardinalityKeyNames.LOCATION, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue namespace(ClientWebServiceObservationContext context) {
+	protected KeyValue namespace(SoapClientObservationContext context) {
 		// FIXME
 		return KeyValue.of(LowCardinalityKeyNames.NAMESPACE, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue protocol(ClientWebServiceObservationContext context) {
+	protected KeyValue protocol(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String protocol = (uri != null) ? uri.getScheme() : KeyValue.NONE_VALUE;
 		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, protocol);
 	}
 
-	protected KeyValue operationName(ClientWebServiceObservationContext context) {
+	protected KeyValue operationName(SoapClientObservationContext context) {
 		// FIXME
 		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
 	}
 
-	protected KeyValue faultCode(ClientWebServiceObservationContext context) {
+	protected KeyValue faultCode(SoapClientObservationContext context) {
 		// FIXME
 		return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, KeyValue.NONE_VALUE);
 	}
 
 	@Override
-	public KeyValues getHighCardinalityKeyValues(ClientWebServiceObservationContext context) {
+	public KeyValues getHighCardinalityKeyValues(SoapClientObservationContext context) {
 		return KeyValues.of(uri(context));
 	}
 
-	protected KeyValue uri(ClientWebServiceObservationContext context) {
+	protected KeyValue uri(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String value = (uri != null) ? uri.toString() : KeyValue.NONE_VALUE;
 		return KeyValue.of(HighCardinalityKeyNames.URI, value);

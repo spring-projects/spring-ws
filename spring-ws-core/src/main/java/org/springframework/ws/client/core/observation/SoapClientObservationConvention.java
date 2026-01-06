@@ -21,18 +21,17 @@ import io.micrometer.observation.ObservationConvention;
 
 /**
  * Interface for an {@link ObservationConvention} for
- * {@link ClientWebServiceObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES web
- * service client exchanges}.
+ * {@link SoapClientObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES SOAP client
+ * requests}.
  *
  * @author Stephane Nicoll
  * @since 6.1.0
  */
-public interface ClientWebServiceObservationConvention
-		extends ObservationConvention<ClientWebServiceObservationContext> {
+public interface SoapClientObservationConvention extends ObservationConvention<SoapClientObservationContext> {
 
 	@Override
 	default boolean supportsContext(Context context) {
-		return context instanceof ClientWebServiceObservationContext;
+		return context instanceof SoapClientObservationContext;
 	}
 
 }

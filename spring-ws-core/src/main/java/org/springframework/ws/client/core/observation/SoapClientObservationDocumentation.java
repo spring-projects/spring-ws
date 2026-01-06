@@ -24,16 +24,13 @@ import io.micrometer.observation.docs.ObservationDocumentation;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Documented {@link io.micrometer.common.KeyValue KeyValues} for {@link WebServiceMessage
- * web service client} observations.
- * <p>
- * This class is used by automated tools to document KeyValues attached to the web service
- * client observations.
+ * Documented {@link io.micrometer.common.KeyValue KeyValues} for the
+ * {@link WebServiceMessage SOAP client} observations.
  *
  * @author Stephane Nicoll
  * @since 4.1.0
  */
-public enum ClientWebServiceObservationDocumentation implements ObservationDocumentation {
+public enum SoapClientObservationDocumentation implements ObservationDocumentation {
 
 	/**
 	 * Web Service exchanges observations for clients.
@@ -41,7 +38,7 @@ public enum ClientWebServiceObservationDocumentation implements ObservationDocum
 	WEB_SERVICE_CLIENT_EXCHANGES {
 		@Override
 		public Class<? extends ObservationConvention<? extends Context>> getDefaultConvention() {
-			return DefaultClientWebServiceObservationConvention.class;
+			return DefaultSoapClientObservationConvention.class;
 		}
 
 		@Override
