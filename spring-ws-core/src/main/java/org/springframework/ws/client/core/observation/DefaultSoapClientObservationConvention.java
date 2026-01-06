@@ -34,14 +34,21 @@ import org.springframework.ws.client.core.observation.SoapClientObservationDocum
  */
 public class DefaultSoapClientObservationConvention implements SoapClientObservationConvention {
 
-	private static final String DEFAULT_NAME = "soap.client";
+	private static final String DEFAULT_NAME = "soap.client.requests";
 
 	private final String name;
 
+	/**
+	 * Create a convention with the default name {@value DEFAULT_NAME}.
+	 */
 	public DefaultSoapClientObservationConvention() {
 		this(DEFAULT_NAME);
 	}
 
+	/**
+	 * Create a convention with a custom name.
+	 * @param name the observation name
+	 */
 	public DefaultSoapClientObservationConvention(String name) {
 		this.name = name;
 	}
@@ -53,17 +60,22 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 
 	@Override
 	public KeyValues getLowCardinalityKeyValues(SoapClientObservationContext context) {
-		return KeyValues.of(location(context), namespace(context), protocol(context), operationName(context));
+		return KeyValues.of(faultCode(context), namespace(context), operationName(context), protocol(context));
 	}
 
-	protected KeyValue location(SoapClientObservationContext context) {
+	protected KeyValue faultCode(SoapClientObservationContext context) {
 		// FIXME
-		return KeyValue.of(LowCardinalityKeyNames.LOCATION, KeyValue.NONE_VALUE);
+		return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, KeyValue.NONE_VALUE);
 	}
 
 	protected KeyValue namespace(SoapClientObservationContext context) {
 		// FIXME
 		return KeyValue.of(LowCardinalityKeyNames.NAMESPACE, KeyValue.NONE_VALUE);
+	}
+
+	protected KeyValue operationName(SoapClientObservationContext context) {
+		// FIXME
+		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
 	}
 
 	protected KeyValue protocol(SoapClientObservationContext context) {
@@ -72,25 +84,20 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, protocol);
 	}
 
-	protected KeyValue operationName(SoapClientObservationContext context) {
-		// FIXME
-		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
-	}
-
-	protected KeyValue faultCode(SoapClientObservationContext context) {
-		// FIXME
-		return KeyValue.of(LowCardinalityKeyNames.FAULT_CODE, KeyValue.NONE_VALUE);
-	}
-
 	@Override
 	public KeyValues getHighCardinalityKeyValues(SoapClientObservationContext context) {
-		return KeyValues.of(uri(context));
+		return KeyValues.of(faultReason(context), uri(context));
+	}
+
+	protected KeyValue faultReason(SoapClientObservationContext context) {
+		// FIXME
+		return KeyValue.of(HighCardinalityKeyNames.FAULT_REASON, KeyValue.NONE_VALUE);
 	}
 
 	protected KeyValue uri(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String value = (uri != null) ? uri.toString() : KeyValue.NONE_VALUE;
-		return KeyValue.of(HighCardinalityKeyNames.URI, value);
+		return KeyValue.of(HighCardinalityKeyNames.URL, value);
 	}
 
 }

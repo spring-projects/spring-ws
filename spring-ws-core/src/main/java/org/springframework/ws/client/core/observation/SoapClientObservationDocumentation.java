@@ -24,18 +24,18 @@ import io.micrometer.observation.docs.ObservationDocumentation;
 import org.springframework.ws.WebServiceMessage;
 
 /**
- * Documented {@link io.micrometer.common.KeyValue KeyValues} for the
- * {@link WebServiceMessage SOAP client} observations.
+ * Documented {@link io.micrometer.common.KeyValue KeyValues} for {@link WebServiceMessage
+ * SOAP client} observations.
  *
  * @author Stephane Nicoll
- * @since 4.1.0
+ * @since 5.1.0
  */
 public enum SoapClientObservationDocumentation implements ObservationDocumentation {
 
 	/**
-	 * Web Service exchanges observations for clients.
+	 * SOAP request observations for clients.
 	 */
-	WEB_SERVICE_CLIENT_EXCHANGES {
+	SOAP_CLIENT_REQUESTS {
 		@Override
 		public Class<? extends ObservationConvention<? extends Context>> getDefaultConvention() {
 			return DefaultSoapClientObservationConvention.class;
@@ -55,13 +55,14 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 	public enum LowCardinalityKeyNames implements KeyName {
 
 		/**
-		 * Endpoint URL.
+		 * Fault code for the SOAP response.
 		 */
-		LOCATION {
+		FAULT_CODE {
 			@Override
 			public String asString() {
-				return "location";
+				return "fault.code";
 			}
+
 		},
 
 		/**
@@ -71,16 +72,6 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 			@Override
 			public String asString() {
 				return "namespace";
-			}
-		},
-
-		/**
-		 * Name of the protocol used to perform the operation.
-		 */
-		PROTOCOL {
-			@Override
-			public String asString() {
-				return "protocol";
 			}
 		},
 
@@ -95,12 +86,12 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 		},
 
 		/**
-		 * TODO.
+		 * Name of the protocol used to perform the operation.
 		 */
-		FAULT_CODE {
+		PROTOCOL {
 			@Override
 			public String asString() {
-				return "fault.code";
+				return "protocol";
 			}
 		}
 
@@ -109,12 +100,23 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 	public enum HighCardinalityKeyNames implements KeyName {
 
 		/**
-		 * Target URI.
+		 * Fault reason for the SOAP response.
 		 */
-		URI {
+		FAULT_REASON {
 			@Override
 			public String asString() {
-				return "uri";
+				return "fault.reason";
+			}
+
+		},
+
+		/**
+		 * Target URI.
+		 */
+		URL {
+			@Override
+			public String asString() {
+				return "url";
 			}
 		}
 

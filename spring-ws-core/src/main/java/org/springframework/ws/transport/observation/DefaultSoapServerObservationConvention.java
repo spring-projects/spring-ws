@@ -43,7 +43,7 @@ public class DefaultSoapServerObservationConvention extends SoapServerObservatio
 	private final String name;
 
 	/**
-	 * Create a convention with the default name {@code "http.server.requests"}.
+	 * Create a convention with the default name {@value DEFAULT_NAME}.
 	 */
 	public DefaultSoapServerObservationConvention() {
 		this(DEFAULT_NAME);

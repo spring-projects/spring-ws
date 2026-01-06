@@ -628,10 +628,10 @@ class WebServiceTemplateTests {
 		Object unmarshalled = new Object();
 		setupMarshallerAndUnmarshaller(unmarshalled);
 		this.template.marshalSendAndReceive(new Object());
-		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client")
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
 			.that()
 			.hasLowCardinalityKeyValue("protocol", "http")
-			.hasHighCardinalityKeyValue("uri", CONNECTION_URI.toString());
+			.hasHighCardinalityKeyValue("url", CONNECTION_URI.toString());
 
 	}
 
