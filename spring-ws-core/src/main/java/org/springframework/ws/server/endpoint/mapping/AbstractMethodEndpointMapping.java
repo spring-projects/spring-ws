@@ -53,6 +53,12 @@ import org.springframework.ws.server.endpoint.MethodEndpoint;
  */
 public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointMapping {
 
+	/**
+	 * {@link MessageContext#getProperty(String) Property name} for the endpoint mapping
+	 * lookup key.
+	 */
+	public static final String LOOKUP_KEY_PROPERTY = AbstractMethodEndpointMapping.class.getName() + ".lookupKey";
+
 	private final Map<T, MethodEndpoint> endpointMap = new HashMap<>();
 
 	/**
@@ -70,6 +76,7 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
+		messageContext.setProperty(LOOKUP_KEY_PROPERTY, key);
 		return lookupEndpoint(key);
 	}
 

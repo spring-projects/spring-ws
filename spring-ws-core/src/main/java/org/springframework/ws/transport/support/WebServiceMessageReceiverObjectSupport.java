@@ -18,6 +18,8 @@ package org.springframework.ws.transport.support;
 
 import java.net.URISyntaxException;
 
+import javax.xml.namespace.QName;
+
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.Observation.Scope;
 import io.micrometer.observation.ObservationRegistry;
@@ -32,6 +34,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.mapping.AbstractMethodEndpointMapping;
 import org.springframework.ws.transport.EndpointAwareWebServiceConnection;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -117,6 +120,11 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
 			observationContext.setAsCurrent(messageContext);
 			receiver.receive(messageContext);
+			Object lookupKey = messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY);
+			if (lookupKey instanceof QName qName) {
+				observationContext.setNamespace(qName.getNamespaceURI());
+				observationContext.setOperationName(qName.getLocalPart());
+			}
 			if (messageContext.hasResponse()) {
 				WebServiceMessage response = messageContext.getResponse();
 				if (response instanceof FaultAwareWebServiceMessage faultResponse
