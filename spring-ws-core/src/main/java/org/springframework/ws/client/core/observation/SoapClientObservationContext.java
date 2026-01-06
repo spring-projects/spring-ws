@@ -35,6 +35,9 @@ import org.springframework.ws.transport.WebServiceConnection;
  * Context that holds information for metadata collection during the
  * {@link SoapClientObservationDocumentation#SOAP_CLIENT_REQUESTS SOAP client}
  * observations.
+ * <p>
+ * This context also extends {@link RequestReplySenderContext} for propagating tracing
+ * information over supported transports.
  *
  * @author Stephane Nicoll
  * @since 5.1.0
@@ -51,6 +54,10 @@ public class SoapClientObservationContext extends RequestReplySenderContext<WebS
 	private static final HeaderSetter SETTER = new HeaderSetter();
 
 	private final MessageContext messageContext;
+
+	private @Nullable String namespace;
+
+	private @Nullable String operationName;
 
 	public SoapClientObservationContext(MessageContext messageContext, WebServiceConnection connection) {
 		super(SETTER);
@@ -80,18 +87,35 @@ public class SoapClientObservationContext extends RequestReplySenderContext<WebS
 	}
 
 	@Override
-	public WebServiceMessage getResponse() {
-		return this.messageContext.getResponse();
+	public @Nullable WebServiceMessage getResponse() {
+		if (this.messageContext.hasResponse()) {
+			return this.messageContext.getResponse();
+		}
+		return null;
+	}
+
+	public @Nullable String getNamespace() {
+		return this.namespace;
+	}
+
+	public void setNamespace(@Nullable String namespace) {
+		this.namespace = namespace;
+	}
+
+	public @Nullable String getOperationName() {
+		return this.operationName;
+	}
+
+	public void setOperationName(@Nullable String operationName) {
+		this.operationName = operationName;
 	}
 
 	public @Nullable URI getUri() {
-		if (getCarrier() != null) {
-			try {
-				return getCarrier().getUri();
-			}
-			catch (URISyntaxException ex) {
-				// ignore
-			}
+		try {
+			return getConnection().getUri();
+		}
+		catch (URISyntaxException ex) {
+			// ignore
 		}
 		return null;
 	}

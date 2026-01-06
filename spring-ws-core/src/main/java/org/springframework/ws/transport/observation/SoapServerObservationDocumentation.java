@@ -21,9 +21,11 @@ import io.micrometer.observation.Observation.Context;
 import io.micrometer.observation.ObservationConvention;
 import io.micrometer.observation.docs.ObservationDocumentation;
 
+import org.springframework.ws.WebServiceMessage;
+
 /**
- * Documented {@link io.micrometer.common.KeyValue KeyValues} for the SOAP server
- * observations.
+ * Documented {@link io.micrometer.common.KeyValue KeyValues} for {@link WebServiceMessage
+ * SOAP server} observations.
  *
  * @author Brian Clozel
  * @since 5.1.0
@@ -33,7 +35,7 @@ public enum SoapServerObservationDocumentation implements ObservationDocumentati
 	/**
 	 * SOAP request observations for servers.
 	 */
-	SOAP_SERVER_DURATION {
+	SOAP_SERVER_REQUESTS {
 		@Override
 		public Class<? extends ObservationConvention<? extends Context>> getDefaultConvention() {
 			return SoapServerObservationConvention.class;
@@ -58,49 +60,38 @@ public enum SoapServerObservationDocumentation implements ObservationDocumentati
 		FAULT_CODE {
 			@Override
 			public String asString() {
-				return "soap.fault.code";
+				return "fault.code";
 			}
 
 		},
 
 		/**
-		 * Name of the protocol used for reaching out to the server.
+		 * Target namespace of the operation.
+		 */
+		NAMESPACE {
+			@Override
+			public String asString() {
+				return "namespace";
+			}
+		},
+
+		/**
+		 * Name of the operation, as defined by {@code wsdl:operation name}.
+		 */
+		OPERATION_NAME {
+			@Override
+			public String asString() {
+				return "operation.name";
+			}
+		},
+
+		/**
+		 * Name of the protocol used to perform the operation.
 		 */
 		PROTOCOL {
 			@Override
 			public String asString() {
-				return "soap.server.address.protocol";
-			}
-
-		},
-
-		/**
-		 * Name of the address used by the client to reach out to the server.
-		 */
-		ADDRESS {
-			@Override
-			public String asString() {
-				return "soap.server.address.name";
-			}
-		},
-
-		/**
-		 * Name of the SOAP method called by the current request.
-		 */
-		METHOD {
-			@Override
-			public String asString() {
-				return "soap.method";
-			}
-		},
-
-		/**
-		 * Target namespace URI for the SOAP service.
-		 */
-		SERVICE {
-			@Override
-			public String asString() {
-				return "soap.service";
+				return "protocol";
 			}
 		}
 
@@ -114,18 +105,18 @@ public enum SoapServerObservationDocumentation implements ObservationDocumentati
 		FAULT_REASON {
 			@Override
 			public String asString() {
-				return "soap.fault.reason";
+				return "fault.reason";
 			}
 
 		},
 
 		/**
-		 * The URL of the server.
+		 * URI of the server.
 		 */
-		URL {
+		URI {
 			@Override
 			public String asString() {
-				return "soap.server.address.url";
+				return "uri";
 			}
 		}
 
