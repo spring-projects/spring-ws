@@ -19,42 +19,69 @@ package org.springframework.ws.client.core.observation;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
+import java.util.Optional;
 
+import io.micrometer.observation.transport.Propagator;
 import io.micrometer.observation.transport.RequestReplySenderContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * Context that holds information for metadata collection during the
- * {@link SoapClientObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES SOAP client}
+ * {@link SoapClientObservationDocumentation#SOAP_CLIENT_REQUESTS SOAP client}
  * observations.
  *
  * @author Stephane Nicoll
- * @since 6.1.0
+ * @since 5.1.0
  */
 public class SoapClientObservationContext extends RequestReplySenderContext<WebServiceConnection, WebServiceMessage> {
 
-	private static final Log logger = LogFactory.getLog(SoapClientObservationContext.class);
+	/**
+	 * Name of the message context property holding the
+	 * {@link SoapClientObservationContext} for the current observation.
+	 */
+	private static final String CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE = SoapClientObservationContext.class.getName()
+			+ ".context";
 
-	public SoapClientObservationContext(WebServiceConnection connection) {
-		super(SoapClientObservationContext::setRequestHeader);
+	private static final HeaderSetter SETTER = new HeaderSetter();
+
+	private final MessageContext messageContext;
+
+	public SoapClientObservationContext(MessageContext messageContext, WebServiceConnection connection) {
+		super(SETTER);
+		this.messageContext = messageContext;
 		setCarrier(connection);
+		messageContext.setProperty(CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE, this);
 	}
 
-	private static void setRequestHeader(@Nullable WebServiceConnection connection, String name, String value) {
-		if (connection instanceof HeadersAwareSenderWebServiceConnection headersAwareConnection) {
-			try {
-				headersAwareConnection.addRequestHeader(name, value);
-			}
-			catch (IOException ex) {
-				logger.warn("Failed to add request header '" + name + "'", ex);
-			}
-		}
+	public static Optional<SoapClientObservationContext> findCurrentObservationContext(MessageContext holder) {
+		return Optional
+			.ofNullable((SoapClientObservationContext) holder.getProperty(CURRENT_OBSERVATION_CONTEXT_ATTRIBUTE));
+	}
+
+	/**
+	 * Return the {@link WebServiceConnection web service connection} used for the current
+	 * request.
+	 */
+	public WebServiceConnection getConnection() {
+		return Objects.requireNonNull(getCarrier());
+	}
+
+	/**
+	 * Return the {@link MessageContext} used for the current request.
+	 */
+	public MessageContext getMessageContext() {
+		return this.messageContext;
+	}
+
+	@Override
+	public WebServiceMessage getResponse() {
+		return this.messageContext.getResponse();
 	}
 
 	public @Nullable URI getUri() {
@@ -67,6 +94,22 @@ public class SoapClientObservationContext extends RequestReplySenderContext<WebS
 			}
 		}
 		return null;
+	}
+
+	static final class HeaderSetter implements Propagator.Setter<WebServiceConnection> {
+
+		@Override
+		public void set(@Nullable WebServiceConnection connection, String key, String value) {
+			if (connection instanceof HeadersAwareSenderWebServiceConnection wsConnection) {
+				try {
+					wsConnection.addRequestHeader(key, value);
+				}
+				catch (IOException ex) {
+					// ignore
+				}
+			}
+		}
+
 	}
 
 }

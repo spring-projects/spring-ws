@@ -21,8 +21,7 @@ import io.micrometer.observation.ObservationConvention;
 
 /**
  * Interface for an {@link ObservationConvention} for
- * {@link SoapClientObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES SOAP client
- * requests}.
+ * {@link SoapClientObservationDocumentation#SOAP_CLIENT_REQUESTS SOAP client requests}.
  *
  * @author Stephane Nicoll
  * @since 6.1.0

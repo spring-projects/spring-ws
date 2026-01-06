@@ -15,7 +15,7 @@
  */
 
 /**
- * Support for client web service {@link io.micrometer.observation.Observation}.
+ * Observation support for SOAP client message handling.
  */
 @NullMarked
 package org.springframework.ws.client.core.observation;

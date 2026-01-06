@@ -678,8 +678,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			@Nullable WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
 			throws IOException {
 		int interceptorIndex = -1;
-		SoapClientObservationContext observationContext = new SoapClientObservationContext(connection);
-		Observation observation = SoapClientObservationDocumentation.WEB_SERVICE_CLIENT_EXCHANGES
+		SoapClientObservationContext observationContext = new SoapClientObservationContext(messageContext, connection);
+		Observation observation = SoapClientObservationDocumentation.SOAP_CLIENT_REQUESTS
 			.observation(this.observationConvention, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext,
 					this.observationRegistry)
 			.start();
