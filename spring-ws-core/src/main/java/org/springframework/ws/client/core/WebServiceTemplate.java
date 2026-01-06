@@ -47,10 +47,10 @@ import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
-import org.springframework.ws.client.core.observation.ClientWebServiceObservationContext;
-import org.springframework.ws.client.core.observation.ClientWebServiceObservationConvention;
-import org.springframework.ws.client.core.observation.ClientWebServiceObservationDocumentation;
-import org.springframework.ws.client.core.observation.DefaultClientWebServiceObservationConvention;
+import org.springframework.ws.client.core.observation.DefaultSoapClientObservationConvention;
+import org.springframework.ws.client.core.observation.SoapClientObservationContext;
+import org.springframework.ws.client.core.observation.SoapClientObservationConvention;
+import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -141,7 +141,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	protected static final Log receivedMessageTracingLogger = LogFactory
 		.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
-	private static final ClientWebServiceObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultClientWebServiceObservationConvention();
+	private static final SoapClientObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultSoapClientObservationConvention();
 
 	private @Nullable Marshaller marshaller;
 
@@ -159,7 +159,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 
 	private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
 
-	private @Nullable ClientWebServiceObservationConvention observationConvention;
+	private @Nullable SoapClientObservationConvention observationConvention;
 
 	/** Creates a new {@code WebServiceTemplate} using default settings. */
 	public WebServiceTemplate() {
@@ -396,24 +396,23 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 * Configure an {@link ObservationConvention} that sets the name of the
 	 * {@link Observation observation} as well as its
 	 * {@link io.micrometer.common.KeyValues} extracted from the
-	 * {@link ClientWebServiceObservationContext}. If none set, the
-	 * {@link DefaultClientWebServiceObservationConvention default convention} will be
-	 * used.
+	 * {@link SoapClientObservationContext}. If none set, the
+	 * {@link DefaultSoapClientObservationConvention default convention} will be used.
 	 * @param observationConvention the observation convention to use
 	 * @since 5.1.0
 	 * @see #setObservationRegistry(ObservationRegistry)
 	 */
-	public void setObservationConvention(ClientWebServiceObservationConvention observationConvention) {
+	public void setObservationConvention(SoapClientObservationConvention observationConvention) {
 		Assert.notNull(observationConvention, "observationConvention must not be null");
 		this.observationConvention = observationConvention;
 	}
 
 	/**
-	 * Return the configured {@link ClientWebServiceObservationConvention}, or
-	 * {@code null} if not set.
+	 * Return the configured {@link SoapClientObservationConvention}, or {@code null} if
+	 * not set.
 	 * @since 5.1.0
 	 */
-	public @Nullable ClientWebServiceObservationConvention getObservationConvention() {
+	public @Nullable SoapClientObservationConvention getObservationConvention() {
 		return this.observationConvention;
 	}
 
@@ -679,8 +678,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			@Nullable WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
 			throws IOException {
 		int interceptorIndex = -1;
-		ClientWebServiceObservationContext observationContext = new ClientWebServiceObservationContext(connection);
-		Observation observation = ClientWebServiceObservationDocumentation.WEB_SERVICE_CLIENT_EXCHANGES
+		SoapClientObservationContext observationContext = new SoapClientObservationContext(connection);
+		Observation observation = SoapClientObservationDocumentation.WEB_SERVICE_CLIENT_EXCHANGES
 			.observation(this.observationConvention, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext,
 					this.observationRegistry)
 			.start();

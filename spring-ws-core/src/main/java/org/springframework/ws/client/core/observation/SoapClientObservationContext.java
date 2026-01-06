@@ -31,19 +31,18 @@ import org.springframework.ws.transport.WebServiceConnection;
 
 /**
  * Context that holds information for metadata collection during the
- * {@link ClientWebServiceObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES web
- * service clientPexchanges} observations.
+ * {@link SoapClientObservationDocumentation#WEB_SERVICE_CLIENT_EXCHANGES SOAP client}
+ * observations.
  *
  * @author Stephane Nicoll
  * @since 6.1.0
  */
-public class ClientWebServiceObservationContext
-		extends RequestReplySenderContext<WebServiceConnection, WebServiceMessage> {
+public class SoapClientObservationContext extends RequestReplySenderContext<WebServiceConnection, WebServiceMessage> {
 
-	private static final Log logger = LogFactory.getLog(ClientWebServiceObservationContext.class);
+	private static final Log logger = LogFactory.getLog(SoapClientObservationContext.class);
 
-	public ClientWebServiceObservationContext(WebServiceConnection connection) {
-		super(ClientWebServiceObservationContext::setRequestHeader);
+	public SoapClientObservationContext(WebServiceConnection connection) {
+		super(SoapClientObservationContext::setRequestHeader);
 		setCarrier(connection);
 	}
 
