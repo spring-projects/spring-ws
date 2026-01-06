@@ -25,6 +25,7 @@ description = "Spring WS Core"
 
 dependencies {
 	api(project(":spring-xml"))
+	api("io.micrometer:micrometer-observation")
 	api("jakarta.xml.bind:jakarta.xml.bind-api")
 	api("jakarta.xml.soap:jakarta.xml.soap-api")
 	api("org.springframework:spring-aop")
