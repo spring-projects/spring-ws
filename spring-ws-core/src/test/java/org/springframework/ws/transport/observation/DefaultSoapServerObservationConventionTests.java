@@ -59,7 +59,7 @@ class DefaultSoapServerObservationConventionTests {
 	void faultCode() {
 		this.response.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-				.contains(KeyValue.of("soap.fault.code", "{http://schemas.xmlsoap.org/soap/envelope/}Client"));
+			.contains(KeyValue.of("soap.fault.code", "{http://schemas.xmlsoap.org/soap/envelope/}Client"));
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class DefaultSoapServerObservationConventionTests {
 	void faultReason() {
 		this.response.setFaultReason("Invalid country format");
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
-				.contains(KeyValue.of("soap.fault.reason", "Invalid country format"));
+			.contains(KeyValue.of("soap.fault.reason", "Invalid country format"));
 	}
 
 }
