@@ -18,85 +18,98 @@ package org.springframework.ws.support;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanInitializationException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+/**
+ * Tests for {@link DefaultStrategiesHelper}.
+ *
+ * @author Arjen Poutsma
+ * @author Stephane Nicoll
+ */
 class DefaultStrategiesHelperTests {
 
 	@Test
-	void testGetDefaultStrategies() {
-
+	void getDefaultStrategies() {
 		Properties strategies = new Properties();
 		strategies.put(Strategy.class.getName(),
-				StrategyImpl.class.getName() + "," + ContextAwareStrategyImpl.class.getName());
+				Stream.of(StrategyImpl.class, ContextAwareStrategyImpl.class)
+					.map(Class::getName)
+					.collect(Collectors.joining(",")));
 		DefaultStrategiesHelper helper = new DefaultStrategiesHelper(strategies);
-
-		StaticApplicationContext applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("strategy1", StrategyImpl.class);
-		applicationContext.registerSingleton("strategy2", ContextAwareStrategyImpl.class);
+		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		applicationContext.refresh();
 
 		List<Strategy> result = helper.getDefaultStrategies(Strategy.class, applicationContext);
 
-		assertThat(result).isNotNull();
 		assertThat(result).hasSize(2);
-		assertThat(result.get(0)).isNotNull();
-		assertThat(result.get(1)).isNotNull();
-		assertThat(result.get(0)).isInstanceOf(StrategyImpl.class);
-		assertThat(result.get(1)).isInstanceOf(ContextAwareStrategyImpl.class);
-
-		ContextAwareStrategyImpl impl = (ContextAwareStrategyImpl) result.get(1);
-
-		assertThat(impl.getApplicationContext()).isNotNull();
+		assertThat(result).element(0).isInstanceOf(StrategyImpl.class);
+		assertThat(result).element(1).isInstanceOfSatisfying(ContextAwareStrategyImpl.class, (impl) -> {
+			assertThat(impl.applicationContext).isSameAs(applicationContext);
+			assertThat(impl.resourceLoader).isSameAs(applicationContext);
+			assertThat(impl.initialized).isTrue();
+		});
 	}
 
 	@Test
-	void testGetDefaultStrategy() {
-
+	void getDefaultStrategy() {
 		Properties strategies = new Properties();
-		strategies.put(Strategy.class.getName(), StrategyImpl.class.getName());
+		strategies.put(Strategy.class.getName(), ContextAwareStrategyImpl.class.getName());
 		DefaultStrategiesHelper helper = new DefaultStrategiesHelper(strategies);
-
-		StaticApplicationContext applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("strategy1", StrategyImpl.class);
-		applicationContext.registerSingleton("strategy2", ContextAwareStrategyImpl.class);
+		GenericApplicationContext applicationContext = new GenericApplicationContext();
+		applicationContext.refresh();
 
 		Object result = helper.getDefaultStrategy(Strategy.class, applicationContext);
-
-		assertThat(result).isNotNull();
-		assertThat(result).isInstanceOf(Strategy.class);
-		assertThat(result).isInstanceOf(StrategyImpl.class);
+		assertThat(result).isInstanceOfSatisfying(ContextAwareStrategyImpl.class, (impl) -> {
+			assertThat(impl.applicationContext).isSameAs(applicationContext);
+			assertThat(impl.resourceLoader).isSameAs(applicationContext);
+			assertThat(impl.initialized).isTrue();
+		});
 	}
 
 	@Test
-	void testGetDefaultStrategyMoreThanOne() {
+	void getDefaultStrategyWithoutApplicationContext() {
+		Properties strategies = new Properties();
+		strategies.put(Strategy.class.getName(), ContextAwareStrategyImpl.class.getName());
+		DefaultStrategiesHelper helper = new DefaultStrategiesHelper(strategies);
 
+		Object result = helper.getDefaultStrategy(Strategy.class, null);
+		assertThat(result).isInstanceOfSatisfying(ContextAwareStrategyImpl.class, (impl) -> {
+			assertThat(impl.applicationContext).isNull();
+			assertThat(impl.resourceLoader).isNull();
+			assertThat(impl.initialized).isTrue();
+		});
+	}
+
+	@Test
+	void getDefaultStrategyWithMultipleCandidates() {
 		Properties strategies = new Properties();
 		strategies.put(Strategy.class.getName(),
 				StrategyImpl.class.getName() + "," + ContextAwareStrategyImpl.class.getName());
 		DefaultStrategiesHelper helper = new DefaultStrategiesHelper(strategies);
 
-		StaticApplicationContext applicationContext = new StaticApplicationContext();
-		applicationContext.registerSingleton("strategy1", StrategyImpl.class);
-		applicationContext.registerSingleton("strategy2", ContextAwareStrategyImpl.class);
-
 		assertThatExceptionOfType(BeanInitializationException.class)
-			.isThrownBy(() -> helper.getDefaultStrategy(Strategy.class, applicationContext));
+			.isThrownBy(() -> helper.getDefaultStrategy(Strategy.class, null));
 	}
 
 	@Test
-	void testResourceConstructor() {
-
+	void createWithResource() {
 		Resource resource = new ClassPathResource("strategies.properties", getClass());
 		new DefaultStrategiesHelper(resource);
 	}
@@ -109,17 +122,28 @@ class DefaultStrategiesHelperTests {
 
 	}
 
-	private static final class ContextAwareStrategyImpl implements Strategy, ApplicationContextAware {
+	private static final class ContextAwareStrategyImpl
+			implements Strategy, ApplicationContextAware, ResourceLoaderAware, InitializingBean {
 
 		private ApplicationContext applicationContext;
 
-		public ApplicationContext getApplicationContext() {
-			return this.applicationContext;
-		}
+		private ResourceLoader resourceLoader;
+
+		private boolean initialized;
 
 		@Override
 		public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 			this.applicationContext = applicationContext;
+		}
+
+		@Override
+		public void setResourceLoader(ResourceLoader resourceLoader) {
+			this.resourceLoader = resourceLoader;
+		}
+
+		@Override
+		public void afterPropertiesSet() throws Exception {
+			this.initialized = true;
 		}
 
 	}

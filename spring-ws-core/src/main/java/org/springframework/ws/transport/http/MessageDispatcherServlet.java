@@ -393,70 +393,85 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 
 	private void initMessageReceiverHandlerAdapter(ApplicationContext context) {
 		try {
-			try {
-				this.messageReceiverHandlerAdapter = context.getBean(getMessageReceiverHandlerAdapterBeanName(),
-						WebServiceMessageReceiverHandlerAdapter.class);
-			}
-			catch (NoSuchBeanDefinitionException ignored) {
-				this.messageReceiverHandlerAdapter = new WebServiceMessageReceiverHandlerAdapter();
-			}
-			initWebServiceMessageFactory(context);
-			this.messageReceiverHandlerAdapter.afterPropertiesSet();
+			this.messageReceiverHandlerAdapter = context.getBean(getMessageReceiverHandlerAdapterBeanName(),
+					WebServiceMessageReceiverHandlerAdapter.class);
 		}
-		catch (Exception ex) {
-			throw new BeanInitializationException("Could not initialize WebServiceMessageReceiverHandlerAdapter", ex);
+		catch (NoSuchBeanDefinitionException ignored) {
+			try {
+				WebServiceMessageReceiverHandlerAdapter adapter = new WebServiceMessageReceiverHandlerAdapter();
+				if (this.logger.isTraceEnabled()) {
+					this.logger.trace(
+							"No WebServiceMessageReceiverHandlerAdapter '" + getMessageReceiverHandlerAdapterBeanName()
+									+ "': using default [" + adapter.getClass().getSimpleName() + "]");
+				}
+				adapter.setMessageFactory(getWebServiceMessageFactory(context));
+				adapter.afterPropertiesSet();
+				this.messageReceiverHandlerAdapter = adapter;
+			}
+			catch (Exception ex) {
+				throw new BeanInitializationException(
+						"Could not initialize default WebServiceMessageReceiverHandlerAdapter", ex);
+			}
 		}
 	}
 
-	private void initWebServiceMessageFactory(ApplicationContext context) {
-		WebServiceMessageFactory messageFactory;
+	private WebServiceMessageFactory getWebServiceMessageFactory(ApplicationContext context) {
 		try {
-			messageFactory = context.getBean(getMessageFactoryBeanName(), WebServiceMessageFactory.class);
+			return context.getBean(getMessageFactoryBeanName(), WebServiceMessageFactory.class);
 		}
 		catch (NoSuchBeanDefinitionException ignored) {
-			messageFactory = this.defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageFactory.class, context);
-			if (this.logger.isDebugEnabled()) {
-				this.logger
-					.debug("No WebServiceMessageFactory found in servlet '" + getServletName() + "': using default");
+			WebServiceMessageFactory factory = this.defaultStrategiesHelper
+				.getDefaultStrategy(WebServiceMessageFactory.class, context);
+			if (this.logger.isTraceEnabled()) {
+				this.logger.trace("No WebServiceMessageFactory '" + getMessageFactoryBeanName() + "': using default ["
+						+ factory.getClass().getSimpleName() + "]");
 			}
+			return factory;
 		}
-		this.messageReceiverHandlerAdapter.setMessageFactory(messageFactory);
 	}
 
 	private void initWsdlDefinitionHandlerAdapter(ApplicationContext context) {
 		try {
-			try {
-				this.wsdlDefinitionHandlerAdapter = context.getBean(getWsdlDefinitionHandlerAdapterBeanName(),
-						WsdlDefinitionHandlerAdapter.class);
-
-			}
-			catch (NoSuchBeanDefinitionException ignored) {
-				this.wsdlDefinitionHandlerAdapter = new WsdlDefinitionHandlerAdapter();
-			}
-			this.wsdlDefinitionHandlerAdapter.setTransformLocations(isTransformWsdlLocations());
-			this.wsdlDefinitionHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
-			this.wsdlDefinitionHandlerAdapter.afterPropertiesSet();
+			this.wsdlDefinitionHandlerAdapter = context.getBean(getWsdlDefinitionHandlerAdapterBeanName(),
+					WsdlDefinitionHandlerAdapter.class);
 		}
-		catch (Exception ex) {
-			throw new BeanInitializationException("Could not initialize WsdlDefinitionHandlerAdapter", ex);
+		catch (NoSuchBeanDefinitionException ignored) {
+			try {
+				WsdlDefinitionHandlerAdapter adapter = new WsdlDefinitionHandlerAdapter();
+				if (this.logger.isTraceEnabled()) {
+					this.logger.trace("No WsdlDefinitionHandlerAdapter '" + getWsdlDefinitionHandlerAdapterBeanName()
+							+ "': using default [" + adapter.getClass().getSimpleName() + "]");
+				}
+				adapter.setTransformLocations(isTransformWsdlLocations());
+				adapter.setTransformSchemaLocations(isTransformSchemaLocations());
+				adapter.afterPropertiesSet();
+				this.wsdlDefinitionHandlerAdapter = adapter;
+			}
+			catch (Exception ex) {
+				throw new BeanInitializationException("Could not initialize default WsdlDefinitionHandlerAdapter", ex);
+			}
 		}
 	}
 
 	private void initXsdSchemaHandlerAdapter(ApplicationContext context) {
 		try {
-			try {
-				this.xsdSchemaHandlerAdapter = context.getBean(getXsdSchemaHandlerAdapterBeanName(),
-						XsdSchemaHandlerAdapter.class);
-
-			}
-			catch (NoSuchBeanDefinitionException ignored) {
-				this.xsdSchemaHandlerAdapter = new XsdSchemaHandlerAdapter();
-			}
-			this.xsdSchemaHandlerAdapter.setTransformSchemaLocations(isTransformSchemaLocations());
-			this.xsdSchemaHandlerAdapter.afterPropertiesSet();
+			this.xsdSchemaHandlerAdapter = context.getBean(getXsdSchemaHandlerAdapterBeanName(),
+					XsdSchemaHandlerAdapter.class);
 		}
-		catch (Exception ex) {
-			throw new BeanInitializationException("Could not initialize XsdSchemaHandlerAdapter", ex);
+		catch (NoSuchBeanDefinitionException ignored) {
+			try {
+				XsdSchemaHandlerAdapter adapter = new XsdSchemaHandlerAdapter();
+				if (this.logger.isTraceEnabled()) {
+					this.logger.trace("No XsdSchemaHandlerAdapter '" + getXsdSchemaHandlerAdapterBeanName()
+							+ "': using default [" + adapter.getClass().getSimpleName() + "]");
+				}
+				adapter.setTransformSchemaLocations(isTransformSchemaLocations());
+				adapter.afterPropertiesSet();
+				this.xsdSchemaHandlerAdapter = adapter;
+			}
+			catch (Exception ex) {
+				throw new BeanInitializationException("Could not initialize default XsdSchemaHandlerAdapter", ex);
+			}
 		}
 	}
 
@@ -465,14 +480,16 @@ public class MessageDispatcherServlet extends FrameworkServlet {
 			this.messageReceiver = context.getBean(getMessageReceiverBeanName(), WebServiceMessageReceiver.class);
 		}
 		catch (NoSuchBeanDefinitionException ex) {
-			this.messageReceiver = this.defaultStrategiesHelper.getDefaultStrategy(WebServiceMessageReceiver.class,
-					context);
-			if (this.messageReceiver instanceof BeanNameAware && getServletName() != null) {
-				((BeanNameAware) this.messageReceiver).setBeanName(getServletName());
+			WebServiceMessageReceiver receiver = this.defaultStrategiesHelper
+				.getDefaultStrategy(WebServiceMessageReceiver.class, context);
+			if (this.logger.isTraceEnabled()) {
+				this.logger.trace("No WebServiceMessageReceiver '" + getMessageReceiverBeanName() + "': using default ["
+						+ receiver.getClass().getSimpleName() + "]");
 			}
-			if (this.logger.isDebugEnabled()) {
-				this.logger.debug("No MessageDispatcher found in servlet '" + getServletName() + "': using default");
+			if (receiver instanceof BeanNameAware beanNameAware && getServletName() != null) {
+				beanNameAware.setBeanName(getServletName());
 			}
+			this.messageReceiver = receiver;
 		}
 	}
 

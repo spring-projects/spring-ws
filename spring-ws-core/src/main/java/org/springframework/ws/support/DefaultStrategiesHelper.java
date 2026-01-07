@@ -22,23 +22,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import jakarta.servlet.ServletContext;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.context.MessageSourceAware;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.OrderComparator;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -46,17 +38,11 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
- * Helper class for for loading default implementations of an interface. Encapsulates a
+ * Helper class for loading default implementations of an interface. Encapsulates a
  * properties object, which contains strategy interface names as keys, and comma-separated
  * class names as values.
- * <p>
- * Simulates the {@link BeanFactory normal lifecycle} for beans, by calling
- * {@link BeanFactoryAware#setBeanFactory(BeanFactory)},
- * {@link ApplicationContextAware#setApplicationContext(ApplicationContext)}, etc.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -64,7 +50,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class DefaultStrategiesHelper {
 
 	/** Keys are strategy interface names, values are implementation class names. */
-	private Properties defaultStrategies;
+	private final Properties defaultStrategies;
 
 	/**
 	 * Initializes a new instance of the {@code DefaultStrategiesHelper} based on the
@@ -155,47 +141,31 @@ public class DefaultStrategiesHelper {
 		}
 	}
 
-	/** Instantiates the given bean, simulating the standard bean life cycle. */
+	/**
+	 * Instantiate the given bean.
+	 * @param clazz the type to instantiate
+	 * @param applicationContext the application context to apply standard bean lifecycles
+	 * @return a bean instance ready to be used
+	 */
 	private <T> T instantiateBean(Class<T> clazz, @Nullable ApplicationContext applicationContext) {
-		T strategy = BeanUtils.instantiateClass(clazz);
-		if (strategy instanceof BeanNameAware beanNameAware) {
-			beanNameAware.setBeanName(clazz.getName());
-		}
 		if (applicationContext != null) {
-			if (strategy instanceof BeanClassLoaderAware && applicationContext.getClassLoader() != null) {
-				((BeanClassLoaderAware) strategy).setBeanClassLoader(applicationContext.getClassLoader());
+			return applicationContext.getAutowireCapableBeanFactory().createBean(clazz);
+		}
+		else {
+			T strategy = BeanUtils.instantiateClass(clazz);
+			if (strategy instanceof BeanNameAware beanNameAware) {
+				beanNameAware.setBeanName(clazz.getName());
 			}
-			if (strategy instanceof BeanFactoryAware) {
-				((BeanFactoryAware) strategy).setBeanFactory(applicationContext);
-			}
-			if (strategy instanceof ResourceLoaderAware) {
-				((ResourceLoaderAware) strategy).setResourceLoader(applicationContext);
-			}
-			if (strategy instanceof ApplicationEventPublisherAware) {
-				((ApplicationEventPublisherAware) strategy).setApplicationEventPublisher(applicationContext);
-			}
-			if (strategy instanceof MessageSourceAware) {
-				((MessageSourceAware) strategy).setMessageSource(applicationContext);
-			}
-			if (strategy instanceof ApplicationContextAware applicationContextAware) {
-				applicationContextAware.setApplicationContext(applicationContext);
-			}
-			if (applicationContext instanceof WebApplicationContext && strategy instanceof ServletContextAware) {
-				ServletContext servletContext = ((WebApplicationContext) applicationContext).getServletContext();
-				if (servletContext != null) {
-					((ServletContextAware) strategy).setServletContext(servletContext);
+			if (strategy instanceof InitializingBean initializingBean) {
+				try {
+					initializingBean.afterPropertiesSet();
+				}
+				catch (Throwable ex) {
+					throw new BeanCreationException("Invocation of init method failed", ex);
 				}
 			}
+			return strategy;
 		}
-		if (strategy instanceof InitializingBean initializingBean) {
-			try {
-				initializingBean.afterPropertiesSet();
-			}
-			catch (Throwable ex) {
-				throw new BeanCreationException("Invocation of init method failed", ex);
-			}
-		}
-		return strategy;
 	}
 
 	/**
