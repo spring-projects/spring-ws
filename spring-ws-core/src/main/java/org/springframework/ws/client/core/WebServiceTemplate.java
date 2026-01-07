@@ -27,6 +27,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationConvention;
@@ -59,6 +60,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.support.MarshallingUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.TransportException;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -68,6 +70,7 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 import org.springframework.ws.transport.support.TransportUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a
@@ -142,6 +145,8 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 		.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
 	private static final SoapClientObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultSoapClientObservationConvention();
+
+	private static final TransformerFactory transformerFactory = TransformerFactoryUtils.newInstance();
 
 	private @Nullable Marshaller marshaller;
 
@@ -697,6 +702,13 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 						break;
 					}
 				}
+			}
+			try {
+				observationContext.setPayloadRootQName(PayloadRootUtils
+					.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), transformerFactory));
+			}
+			catch (TransformerException ignored) {
+
 			}
 			// no send/receive if an interceptor has set a response or if the chain
 			// has been interrupted

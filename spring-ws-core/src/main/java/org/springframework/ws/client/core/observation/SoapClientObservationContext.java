@@ -22,6 +22,8 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.xml.namespace.QName;
+
 import io.micrometer.observation.transport.Propagator;
 import io.micrometer.observation.transport.RequestReplySenderContext;
 import org.jspecify.annotations.Nullable;
@@ -108,6 +110,13 @@ public class SoapClientObservationContext extends RequestReplySenderContext<WebS
 
 	public void setOperationName(@Nullable String operationName) {
 		this.operationName = operationName;
+	}
+
+	public void setPayloadRootQName(@Nullable QName payloadRootQName) {
+		if (payloadRootQName != null) {
+			setNamespace(payloadRootQName.getNamespaceURI());
+			setOperationName(payloadRootQName.getLocalPart());
+		}
 	}
 
 	public @Nullable URI getUri() {
