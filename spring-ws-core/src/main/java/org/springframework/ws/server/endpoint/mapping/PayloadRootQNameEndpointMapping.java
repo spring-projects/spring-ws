@@ -23,7 +23,7 @@ import javax.xml.transform.TransformerFactory;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**

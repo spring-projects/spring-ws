@@ -31,7 +31,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointMapping;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoots;
-import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
