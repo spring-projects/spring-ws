@@ -91,10 +91,8 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 	}
 
 	private KeyValue operationName(SoapClientObservationContext context) {
-		if (context.getOperationName() != null) {
-			return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, context.getOperationName());
-		}
-		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME, KeyValue.NONE_VALUE);
+		return KeyValue.of(LowCardinalityKeyNames.OPERATION_NAME,
+				Objects.requireNonNullElse(context.getOperationName(), KeyValue.NONE_VALUE));
 	}
 
 	private KeyValue protocol(SoapClientObservationContext context) {
