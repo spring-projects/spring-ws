@@ -28,7 +28,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**

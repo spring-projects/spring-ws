@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.EndpointInterceptor;
-import org.springframework.ws.server.endpoint.support.PayloadRootUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.xml.transform.TransformerHelper;
 
 /**
