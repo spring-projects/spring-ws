@@ -109,14 +109,14 @@ class DefaultSoapServerObservationConventionTests {
 	void mailUri() throws Exception {
 		when(this.connectionMock.getUri()).thenReturn(URI.create("mailto:server@localhost?subject=SOAP%20Test"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
-				.contains(KeyValue.of("uri", "mailto:server@localhost?subject=SOAP%20Test"));
+			.contains(KeyValue.of("uri", "mailto:server@localhost?subject=SOAP%20Test"));
 	}
 
 	@Test
 	void jmsUri() throws Exception {
 		when(this.connectionMock.getUri()).thenReturn(URI.create("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
-				.contains(KeyValue.of("uri", "jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
+			.contains(KeyValue.of("uri", "jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
 	}
 
 	@Test
