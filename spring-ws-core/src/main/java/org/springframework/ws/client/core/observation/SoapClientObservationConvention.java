@@ -24,7 +24,7 @@ import io.micrometer.observation.ObservationConvention;
  * {@link SoapClientObservationDocumentation#SOAP_CLIENT_REQUESTS SOAP client requests}.
  *
  * @author Stephane Nicoll
- * @since 6.1.0
+ * @since 5.1.0
  */
 public interface SoapClientObservationConvention extends ObservationConvention<SoapClientObservationContext> {
 

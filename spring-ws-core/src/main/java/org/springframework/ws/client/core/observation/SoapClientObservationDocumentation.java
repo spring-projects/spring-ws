@@ -116,7 +116,7 @@ public enum SoapClientObservationDocumentation implements ObservationDocumentati
 		URI {
 			@Override
 			public String asString() {
-				return "url";
+				return "uri";
 			}
 		}
 

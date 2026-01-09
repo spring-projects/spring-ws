@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns2:getCountryRequest xmlns:ns2="http://www.springframework.org/spring-ws">
+	<ns2:name>Spain</ns2:name>
+</ns2:getCountryRequest>

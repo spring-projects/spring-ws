@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.springframework.ws.transport.observation;
+package org.springframework.ws.client.core.observation;
 
 import java.net.URI;
 
@@ -34,35 +34,34 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for {@link DefaultSoapServerObservationConvention}.
+ * Tests for {@link DefaultSoapClientObservationConvention}.
  *
- * @author Brian Clozel
+ * @author Stephane Nicoll
  */
-class DefaultSoapServerObservationConventionTests {
+class DefaultSoapClientObservationConventionTests {
 
-	FaultAwareWebServiceConnection connectionMock = mock(FaultAwareWebServiceConnection.class);
+	FaultAwareWebServiceConnection connection = mock(FaultAwareWebServiceConnection.class);
 
-	SoapServerObservationConvention convention = new DefaultSoapServerObservationConvention();
+	private final SoapClientObservationConvention convention = new DefaultSoapClientObservationConvention();
 
-	SoapServerObservationContext context = new SoapServerObservationContext(this.connectionMock);
+	private final MockWebServiceMessageFactory messageFactory = new MockWebServiceMessageFactory();
 
-	MockWebServiceMessage request = new MockWebServiceMessage();
+	private final MockWebServiceMessage response = this.messageFactory.createWebServiceMessage();
 
-	MockWebServiceMessage response = new MockWebServiceMessage();
+	private final MessageContext messageContext = new DefaultMessageContext(
+			this.messageFactory.createWebServiceMessage(), this.messageFactory);
 
-	MockWebServiceMessageFactory messageFactory = new MockWebServiceMessageFactory();
-
-	MessageContext messageContext = new DefaultMessageContext(this.request, this.messageFactory);
+	private final SoapClientObservationContext context = new SoapClientObservationContext(this.messageContext,
+			this.connection);
 
 	@BeforeEach
 	void setup() {
 		this.messageContext.setResponse(this.response);
-		this.context.setAsCurrent(this.messageContext);
 	}
 
 	@Test
 	void observationName() {
-		assertThat(this.convention.getName()).isEqualTo("soap.server.requests");
+		assertThat(this.convention.getName()).isEqualTo("soap.client.requests");
 	}
 
 	@Test
@@ -79,13 +78,6 @@ class DefaultSoapServerObservationConventionTests {
 	}
 
 	@Test
-	void operationName() {
-		this.context.setOperationName("getCountry");
-		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
-			.contains(KeyValue.of("operation.name", "getCountry"));
-	}
-
-	@Test
 	void namespace() {
 		this.context.setNamespace("https://spring.io/guides/gs-producing-web-service");
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
@@ -93,8 +85,15 @@ class DefaultSoapServerObservationConventionTests {
 	}
 
 	@Test
+	void operationName() {
+		this.context.setOperationName("getCountry");
+		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
+			.contains(KeyValue.of("operation.name", "getCountry"));
+	}
+
+	@Test
 	void httpTransport() throws Exception {
-		when(this.connectionMock.getUri()).thenReturn(URI.create("https://localhost:443/services"));
+		when(this.connection.getUri()).thenReturn(URI.create("https://localhost:443/services"));
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("protocol", "https"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("uri", "https://localhost:443/services"));
@@ -102,7 +101,7 @@ class DefaultSoapServerObservationConventionTests {
 
 	@Test
 	void mailTransport() throws Exception {
-		when(this.connectionMock.getUri()).thenReturn(URI.create("mailto:server@localhost?subject=SOAP%20Test"));
+		when(this.connection.getUri()).thenReturn(URI.create("mailto:server@localhost?subject=SOAP%20Test"));
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("protocol", "mailto"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
@@ -111,7 +110,7 @@ class DefaultSoapServerObservationConventionTests {
 
 	@Test
 	void jmsTransport() throws Exception {
-		when(this.connectionMock.getUri()).thenReturn(URI.create("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
+		when(this.connection.getUri()).thenReturn(URI.create("jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("protocol", "jms"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("uri", "jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
