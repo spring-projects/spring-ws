@@ -16,20 +16,29 @@
 
 package org.springframework.ws.transport.jms;
 
+import java.util.List;
+
+import jakarta.jms.ConnectionFactory;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.soap.server.SoapMessageDispatcher;
+import org.springframework.ws.transport.test.EchoPayloadEndpoint;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import static org.xmlunit.assertj.XmlAssert.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("jms-applicationContext.xml")
+@SpringJUnitConfig
 class JmsIntegrationTests {
 
 	@Autowired
@@ -50,6 +59,60 @@ class JmsIntegrationTests {
 		StringResult result = new StringResult();
 		this.webServiceTemplate.sendSourceAndReceiveToResult(url, new StringSource(content), result);
 		assertThat(result.toString()).and(content).ignoreWhitespace().areSimilar();
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class Config {
+
+		@Bean
+		ActiveMQConnectionFactory connectionFactory() {
+			return new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false");
+		}
+
+		@Bean
+		SaajSoapMessageFactory messageFactory() {
+			return new SaajSoapMessageFactory();
+		}
+
+		@Bean
+		SoapMessageDispatcher soapMessageDispatcher() {
+			SoapMessageDispatcher messageDispatcher = new SoapMessageDispatcher();
+			PayloadRootQNameEndpointMapping endpointMapping = new PayloadRootQNameEndpointMapping();
+			endpointMapping.setDefaultEndpoint(new EchoPayloadEndpoint());
+			messageDispatcher.setEndpointMappings(List.of(endpointMapping));
+			return messageDispatcher;
+		}
+
+		@Bean
+		WebServiceMessageListener webServiceMessageListener(WebServiceMessageFactory messageFactory,
+				SoapMessageDispatcher soapMessageDispatcher) {
+			WebServiceMessageListener webServiceMessageListener = new WebServiceMessageListener();
+			webServiceMessageListener.setMessageFactory(messageFactory);
+			webServiceMessageListener.setMessageReceiver(soapMessageDispatcher);
+			return webServiceMessageListener;
+		}
+
+		@Bean
+		DefaultMessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory,
+				WebServiceMessageListener messageListener) {
+			DefaultMessageListenerContainer container = new DefaultMessageListenerContainer();
+			container.setConnectionFactory(connectionFactory);
+			container.setDestinationName("RequestQueue");
+			container.setMessageListener(messageListener);
+			return container;
+		}
+
+		@Bean
+		WebServiceTemplate webServiceTemplate(WebServiceMessageFactory messageFactory,
+				ConnectionFactory connectionFactory) {
+			WebServiceTemplate webServiceTemplate = new WebServiceTemplate(messageFactory);
+			JmsMessageSender jmsMessageSender = new JmsMessageSender();
+			jmsMessageSender.setConnectionFactory(connectionFactory);
+			webServiceTemplate.setMessageSender(jmsMessageSender);
+			webServiceTemplate.setDefaultUri("jms:RequestQueue?deliveryMode=NON_PERSISTENT");
+			return webServiceTemplate;
+		}
+
 	}
 
 }
