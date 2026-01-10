@@ -20,12 +20,16 @@ import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.test.client.MockWebServiceServer;
+import org.springframework.ws.test.integration.CustomerCountRequest;
+import org.springframework.ws.test.integration.CustomerCountResponse;
 import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,8 +42,7 @@ import static org.springframework.ws.test.client.ResponseCreators.withPayload;
  *
  * @author Arjen Poutsma
  */
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration("integration-test.xml")
+@SpringJUnitConfig
 class ClientIntegrationTests {
 
 	@Autowired
@@ -54,7 +57,6 @@ class ClientIntegrationTests {
 
 	@Test
 	void basic() {
-
 		Source expectedRequestPayload = new StringSource(
 				"<customerCountRequest xmlns='http://springframework.org/spring-ws'>"
 						+ "<customerName>John Doe</customerName>" + "</customerCountRequest>");
@@ -62,12 +64,37 @@ class ClientIntegrationTests {
 				+ "<customerCount>10</customerCount>" + "</customerCountResponse>");
 
 		this.mockServer.expect(payload(expectedRequestPayload)).andRespond(withPayload(responsePayload));
-
 		int result = this.client.getCustomerCount();
-
 		assertThat(result).isEqualTo(10);
-
 		this.mockServer.verify();
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class Config {
+
+		@Bean
+		Jaxb2Marshaller jaxb2Marshaller() {
+			Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
+			jaxb2Marshaller.setClassesToBeBound(CustomerCountRequest.class, CustomerCountResponse.class);
+			return jaxb2Marshaller;
+		}
+
+		@Bean
+		WebServiceTemplate webServiceTemplate(Jaxb2Marshaller marshallerUnmarshaller) {
+			WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
+			webServiceTemplate.setDefaultUri("http://example.com");
+			webServiceTemplate.setMarshaller(marshallerUnmarshaller);
+			webServiceTemplate.setUnmarshaller(marshallerUnmarshaller);
+			return webServiceTemplate;
+		}
+
+		@Bean
+		CustomerClient customerClient(WebServiceTemplate webServiceTemplate) {
+			CustomerClient client = new CustomerClient();
+			client.setWebServiceTemplate(webServiceTemplate);
+			return client;
+		}
+
 	}
 
 }
