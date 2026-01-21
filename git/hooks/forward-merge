@@ -106,6 +106,12 @@ def create_issue(username, password, repository, original, title, labels, milest
   return response['number']
 end
 
+$log.debug "Checking if a forward port issue is necessary"
+current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+if current_branch == "main"
+    return nil
+end
+
 $log.debug "Running forward-merge hook script"
 message_file=ARGV[0]
 
