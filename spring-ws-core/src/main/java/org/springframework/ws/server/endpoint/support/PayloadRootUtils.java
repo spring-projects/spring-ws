@@ -36,7 +36,6 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import org.springframework.lang.Contract;
 import org.springframework.xml.namespace.QNameUtils;
 import org.springframework.xml.transform.TransformerHelper;
 import org.springframework.xml.transform.TraxUtils;
@@ -59,7 +58,6 @@ public abstract class PayloadRootUtils {
 	 * not a {@code DOMSource}
 	 * @return the root element, or {@code null} if {@code source} is {@code null}
 	 */
-	@Contract("!null, _ -> !null")
 	public static @Nullable QName getPayloadRootQName(@Nullable Source source, TransformerFactory transformerFactory)
 			throws TransformerException {
 		return getPayloadRootQName(source, new TransformerHelper(transformerFactory));
