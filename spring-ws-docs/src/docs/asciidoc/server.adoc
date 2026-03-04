@@ -1142,7 +1142,7 @@ The `handleResponse(..)` and `handleFault(..)` methods also have a boolean retur
 When these methods return `false`, the response will not be sent back to the client.
 
 There are a number of standard `EndpointInterceptor` implementations that you can use in your Web service.
-Additionally, there is the `XwsSecurityInterceptor`, which is described in <<security-xws-security-interceptor>>.
+Additionally, there is the `Wss4jSecurityInterceptor`, which is described in <<security>>.
 
 ==== `PayloadLoggingInterceptor` and `SoapEnvelopeLoggingInterceptor`
 
