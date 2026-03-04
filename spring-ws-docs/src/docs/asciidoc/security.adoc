@@ -29,6 +29,39 @@ WSS4J implements the following standards:
 
 This interceptor supports messages created by the `AxiomSoapMessageFactory` and the `SaajSoapMessageFactory`.
 
+[[security.build]]
+== Build Configuration
+WSS4J support builds off of the OpenSAML library that https://shibboleth.atlassian.net/wiki/spaces/DEV/pages/1123844333/Use+of+Maven+Central#Publishing-to-Maven-Central[requires an extra repository] configuration.
+
+[[security.build.maven]]
+=== Using Maven
+With Maven, you need to add an extra `repository` element to your POM as follows:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<repositories>
+	<repository>
+		<id>shibboleth-releases</id>
+		<name>Shibboleth Releases Repository</name>
+		<url>https://build.shibboleth.net/maven/releases</url>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+</repositories>
+----
+
+[[security.build.gradle]]
+=== Using Gradle
+With Gradle, a repository element should be added to your build script:
+
+[source,gradle,subs="verbatim,attributes"]
+----
+repositories {
+    maven { url "https://build.shibboleth.net/maven/releases" }
+}
+----
+
 == Configuring `Wss4jSecurityInterceptor`
 
 WSS4J uses no external configuration file.
