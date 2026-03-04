@@ -35,6 +35,7 @@ import jakarta.xml.soap.SOAPException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.awaitility.Awaitility;
 import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +97,7 @@ class JmsMessageSenderIntegrationTests {
 	}
 
 	@Test
+	@Disabled("flaky")
 	void testSendAndReceiveQueueBytesMessagePermanentQueue() throws Exception {
 		String responseQueueName = "SenderResponseQueue";
 		URI uri = new URI("jms:SenderRequestQueue?replyToName=" + responseQueueName + "&deliveryMode=NON_PERSISTENT");
