@@ -163,7 +163,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 	/**
 	 * Set additional interceptors to be applied before the implicit WS-Addressing
-	 * interceptor, e.g. {@code XwsSecurityInterceptor}.
+	 * interceptor, e.g. {@code Wss4jSecurityInterceptor}.
 	 */
 	public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
 		Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
