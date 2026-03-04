@@ -40,7 +40,7 @@ The following listing shows an example configuration:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="validationActions" value="UsernameToken Encrypt"/>
     ...
     <property name="securementActions" value="Encrypt"/>
@@ -119,7 +119,7 @@ The following example configuration uses `CryptoFactoryBean`:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+<bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
     <property name="keyStorePassword" value="mypassword"/>
     <property name="keyStoreLocation" value="file:/path_to_keystore/keystore.jks"/>
 </bean>
@@ -146,7 +146,7 @@ You can configure it as follows:
 [source,xml]
 ----
 <bean id="callbackHandler"
-    class="org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler">
+    class="org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler">
     <property name="users">
         <props>
             <prop key="Bert">Ernie</prop>
@@ -169,7 +169,7 @@ Additionally, you can set a `userCache` property, to cache loaded user details, 
 [source,xml]
 ----
 <beans>
-    <bean class="org.springframework.ws.soap.security.wss4j.callback.SpringDigestPasswordValidationCallbackHandler">
+    <bean class="org.springframework.ws.soap.security.wss4j2.callback.SpringDigestPasswordValidationCallbackHandler">
         <property name="userDetailsService" ref="userDetailsService"/>
     </bean>
 
@@ -191,7 +191,7 @@ The following example generates a username token with a digest password:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="securementActions" value="UsernameToken"/>
     <property name="securementUsername" value="Ernie"/>
     <property name="securementPassword" value="Bert"/>
@@ -207,7 +207,7 @@ The following example generates a username token with a plain text password, a `
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="securementActions" value="UsernameToken"/>
     <property name="securementUsername" value="Ernie"/>
     <property name="securementPassword" value="Bert"/>
@@ -226,13 +226,13 @@ The certificate's name and password are passed through the `securementUsername` 
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="securementActions" value="Signature"/>
     <property name="securementSignatureKeyIdentifier" value="DirectReference"/>
     <property name="securementUsername" value="mycert"/>
     <property name="securementPassword" value="certpass"/>
     <property name="securementSignatureCrypto">
-      <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+      <bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
         <property name="keyStorePassword" value="123456"/>
         <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
       </bean>
@@ -246,10 +246,10 @@ For the certificate validation, regular signature validation applies:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="validationActions" value="Signature"/>
     <property name="validationSignatureCrypto">
-      <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+      <bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
         <property name="keyStorePassword" value="123456"/>
         <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
       </bean>
@@ -278,7 +278,7 @@ In the following example, the interceptor limits the timestamp validity window t
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="validationActions" value="Timestamp"/>
     <property name="timestampStrict" value="true"/>
     <property name="timeToLive" value="10"/>
@@ -297,7 +297,7 @@ The following listing adds a timestamp:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="securementActions" value="Timestamp"/>
     <property name="timestampPrecisionInMilliseconds" value="true"/>
 </bean>
@@ -317,10 +317,10 @@ Additionally, the `validationSignatureCrypto` property must point to the keystor
 ====
 [source,xml]
 ----
-<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean id="wsSecurityInterceptor" class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="validationActions" value="Signature"/>
     <property name="validationSignatureCrypto">
-        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
             <property name="keyStorePassword" value="123456"/>
             <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
         </bean>
@@ -337,12 +337,12 @@ The alias and the password of the private key to use are specified by the `secur
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="securementActions" value="Signature"/>
     <property name="securementUsername" value="mykey"/>
     <property name="securementPassword" value="123456"/>
     <property name="securementSignatureCrypto">
-        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
             <property name="keyStorePassword" value="123456"/>
             <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
         </bean>
@@ -386,11 +386,11 @@ The following example sets the `enableSignatureConfirmation` property to `true`:
 ====
 [source,xml]
 ----
-<bean class="org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor">
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
     <property name="validationActions" value="Signature"/>
     <property name="enableSignatureConfirmation" value="true"/>
     <property name="validationSignatureCrypto">
-        <bean class="org.springframework.ws.soap.security.wss4j.support.CryptoFactoryBean">
+        <bean class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
             <property name="keyStorePassword" value="123456"/>
             <property name="keyStoreLocation" value="file:/keystore.jks"/>
         </bean>
