@@ -127,7 +127,11 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
-		return lookupEndpoint(key);
+		Object endpoint = lookupEndpoint(key);
+		if (endpoint != null) {
+			messageContext.setProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY, key);
+		}
+		return endpoint;
 	}
 
 	/**

@@ -123,6 +123,22 @@ public class MessageReceiverObservationTests {
 			});
 	}
 
+	@Test
+	void shouldSetStringKeyInObservationContext() throws Exception {
+		WebServiceMessageReceiver receiver = messageContext -> messageContext
+			.setProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY, "http://example.com/SoapAction");
+		this.receiver.handleConnection(this.connectionMock, receiver);
+		assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.server.requests")
+			.that()
+			.matches(context -> {
+				if (context instanceof SoapServerObservationContext observationContext) {
+					return Objects.equals(observationContext.getNamespace(), null)
+							&& Objects.equals(observationContext.getOperationName(), "http://example.com/SoapAction");
+				}
+				return false;
+			});
+	}
+
 	static class ObservationMessageReceiver extends WebServiceMessageReceiverObjectSupport {
 
 	}

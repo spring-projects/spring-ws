@@ -23,9 +23,12 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.ws.MockWebServiceMessageFactory;
+import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test case for AbstractMapBasedEndpointMapping.
@@ -47,15 +50,15 @@ class MapBasedSoapEndpointMappingTests {
 
 		// try bean
 		mapping.setKey("endpoint");
-		assertThat(mapping.getEndpointInternal(null)).isNotNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNotNull();
 
 		// try alias
 		mapping.setKey("alias");
-		assertThat(mapping.getEndpointInternal(null)).isNotNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNotNull();
 
 		// try non-mapped values
 		mapping.setKey("endpointMapping");
-		assertThat(mapping.getEndpointInternal(null)).isNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNull();
 
 	}
 
@@ -71,12 +74,39 @@ class MapBasedSoapEndpointMappingTests {
 		mapping.setApplicationContext(context);
 
 		mapping.setKey("endpoint");
-		assertThat(mapping.getEndpointInternal(null)).isNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNull();
+	}
+
+	@Test
+	void getEndpointMappedSetsLookupKeyProperty() throws Exception {
+		Map<String, Object> endpointMap = new TreeMap<>();
+		Object endpoint1 = new Object();
+		endpointMap.put("endpoint1", endpoint1);
+		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
+		mapping.setValidKeys(new String[] { "endpoint1" });
+		mapping.setEndpointMap(endpointMap);
+		mapping.setApplicationContext(new StaticApplicationContext());
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		mapping.setKey("endpoint1");
+
+		mapping.getEndpointInternal(messageContext);
+		assertThat(messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY))
+			.isEqualTo("endpoint1");
+	}
+
+	@Test
+	void getEndpointUnmappedDoesNotSetLookupKeyProperty() throws Exception {
+		MyMapBasedEndpointMapping mapping = new MyMapBasedEndpointMapping();
+		mapping.setApplicationContext(new StaticApplicationContext());
+		MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessageFactory());
+		mapping.setKey("unmapped");
+
+		mapping.getEndpointInternal(messageContext);
+		assertThat(messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY)).isNull();
 	}
 
 	@Test
 	void testEndpointMap() throws Exception {
-
 		Map<String, Object> endpointMap = new TreeMap<>();
 		Object endpoint1 = new Object();
 		Object endpoint2 = new Object();
@@ -91,15 +121,15 @@ class MapBasedSoapEndpointMappingTests {
 
 		// try endpoint1
 		mapping.setKey("endpoint1");
-		assertThat(mapping.getEndpointInternal(null)).isNotNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNotNull();
 
 		// try endpoint2
 		mapping.setKey("endpoint2");
-		assertThat(mapping.getEndpointInternal(null)).isNotNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNotNull();
 
 		// try non-mapped values
 		mapping.setKey("endpoint3");
-		assertThat(mapping.getEndpointInternal(null)).isNull();
+		assertThat(mapping.getEndpointInternal(mock(MessageContext.class))).isNull();
 	}
 
 	private static final class MyMapBasedEndpointMapping extends AbstractMapBasedEndpointMapping {

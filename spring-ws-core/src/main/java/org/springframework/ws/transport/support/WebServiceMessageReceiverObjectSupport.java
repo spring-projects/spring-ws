@@ -125,6 +125,9 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 				observationContext.setNamespace(qName.getNamespaceURI());
 				observationContext.setOperationName(qName.getLocalPart());
 			}
+			else if (lookupKey instanceof String stringKey) {
+				observationContext.setOperationName(stringKey);
+			}
 			if (messageContext.hasResponse()) {
 				WebServiceMessage response = messageContext.getResponse();
 				if (response instanceof FaultAwareWebServiceMessage faultResponse
