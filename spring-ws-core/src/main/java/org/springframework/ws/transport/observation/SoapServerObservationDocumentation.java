@@ -86,12 +86,32 @@ public enum SoapServerObservationDocumentation implements ObservationDocumentati
 		},
 
 		/**
+		 * Outcome of the SOAP exchange.
+		 */
+		OUTCOME {
+			@Override
+			public String asString() {
+				return "outcome";
+			}
+		},
+
+		/**
 		 * Name of the protocol used to perform the operation.
 		 */
 		PROTOCOL {
 			@Override
 			public String asString() {
 				return "protocol";
+			}
+		},
+
+		/**
+		 * SOAP action of the operation.
+		 */
+		SOAP_ACTION {
+			@Override
+			public String asString() {
+				return "soap.action";
 			}
 		}
 

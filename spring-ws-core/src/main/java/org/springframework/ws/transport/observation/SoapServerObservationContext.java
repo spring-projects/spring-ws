@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.http.HttpServletConnection;
@@ -112,6 +113,14 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 
 	public void setOperationName(String operationName) {
 		this.operationName = operationName;
+	}
+
+	public @Nullable String getSoapAction() {
+		WebServiceMessage request = getRequest();
+		if (request instanceof SoapMessage soapMessage) {
+			return soapMessage.getSoapAction();
+		}
+		return null;
 	}
 
 	public @Nullable URI getUri() {

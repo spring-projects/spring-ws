@@ -39,6 +39,14 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 
 	private static final String DEFAULT_NAME = "soap.client.requests";
 
+	private static final KeyValue OUTCOME_SUCCESS = KeyValue.of(LowCardinalityKeyNames.OUTCOME, "SUCCESS");
+
+	private static final KeyValue OUTCOME_FAULT = KeyValue.of(LowCardinalityKeyNames.OUTCOME, "FAULT");
+
+	private static final KeyValue OUTCOME_ERROR = KeyValue.of(LowCardinalityKeyNames.OUTCOME, "ERROR");
+
+	private static final KeyValue OUTCOME_UNKNOWN = KeyValue.of(LowCardinalityKeyNames.OUTCOME, "UNKNOWN");
+
 	private final String name;
 
 	/**
@@ -71,7 +79,8 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 
 	@Override
 	public KeyValues getLowCardinalityKeyValues(SoapClientObservationContext context) {
-		return KeyValues.of(faultCode(context), namespace(context), operationName(context), protocol(context));
+		return KeyValues.of(faultCode(context), namespace(context), operationName(context), outcome(context),
+				protocol(context), soapAction(context));
 	}
 
 	private KeyValue faultCode(SoapClientObservationContext context) {
@@ -95,10 +104,29 @@ public class DefaultSoapClientObservationConvention implements SoapClientObserva
 				Objects.requireNonNullElse(context.getOperationName(), KeyValue.NONE_VALUE));
 	}
 
+	private KeyValue outcome(SoapClientObservationContext context) {
+		if (context.getError() != null) {
+			return OUTCOME_ERROR;
+		}
+		WebServiceMessage response = context.getResponse();
+		if (response == null) {
+			return OUTCOME_UNKNOWN;
+		}
+		if (response instanceof FaultAwareWebServiceMessage faultResponse && faultResponse.hasFault()) {
+			return OUTCOME_FAULT;
+		}
+		return OUTCOME_SUCCESS;
+	}
+
 	private KeyValue protocol(SoapClientObservationContext context) {
 		URI uri = context.getUri();
 		String protocol = (uri != null) ? uri.getScheme() : KeyValue.NONE_VALUE;
 		return KeyValue.of(LowCardinalityKeyNames.PROTOCOL, protocol);
+	}
+
+	private KeyValue soapAction(SoapClientObservationContext context) {
+		return KeyValue.of(LowCardinalityKeyNames.SOAP_ACTION,
+				Objects.requireNonNullElse(context.getSoapAction(), KeyValue.NONE_VALUE));
 	}
 
 	@Override

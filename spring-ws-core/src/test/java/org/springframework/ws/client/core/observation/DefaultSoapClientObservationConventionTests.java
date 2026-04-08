@@ -92,6 +92,25 @@ class DefaultSoapClientObservationConventionTests {
 	}
 
 	@Test
+	void outcomeSuccess() {
+		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
+			.contains(KeyValue.of("outcome", "SUCCESS"));
+	}
+
+	@Test
+	void outcomeFault() {
+		this.response.setFault(true);
+		this.response.setFaultCode(SoapVersion.SOAP_11.getClientOrSenderFaultName());
+		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("outcome", "FAULT"));
+	}
+
+	@Test
+	void outcomeError() {
+		this.context.setError(new RuntimeException("Test exception"));
+		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("outcome", "ERROR"));
+	}
+
+	@Test
 	void httpTransport() throws Exception {
 		when(this.connection.getUri()).thenReturn(URI.create("https://localhost:443/services"));
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("protocol", "https"));
@@ -114,6 +133,17 @@ class DefaultSoapClientObservationConventionTests {
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context)).contains(KeyValue.of("protocol", "jms"));
 		assertThat(this.convention.getHighCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("uri", "jms:SenderRequestQueue?deliveryMode=NON_PERSISTENT"));
+	}
+
+	@Test
+	void soapAction() {
+		org.springframework.ws.soap.SoapMessage soapMessage = mock(org.springframework.ws.soap.SoapMessage.class);
+		when(soapMessage.getSoapAction()).thenReturn("http://example.com/action");
+		MessageContext customContext = new DefaultMessageContext(soapMessage, this.messageFactory);
+		SoapClientObservationContext customObservationContext = new SoapClientObservationContext(customContext,
+				this.connection);
+		assertThat(this.convention.getLowCardinalityKeyValues(customObservationContext))
+			.contains(KeyValue.of("soap.action", "http://example.com/action"));
 	}
 
 	@Test
