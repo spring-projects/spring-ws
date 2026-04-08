@@ -76,8 +76,11 @@ public abstract class AbstractMethodEndpointMapping<T> extends AbstractEndpointM
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
-		messageContext.setProperty(LOOKUP_KEY_PROPERTY, key);
-		return lookupEndpoint(key);
+		Object endpoint = lookupEndpoint(key);
+		if (endpoint != null) {
+			messageContext.setProperty(LOOKUP_KEY_PROPERTY, key);
+		}
+		return endpoint;
 	}
 
 	/**

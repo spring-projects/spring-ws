@@ -34,6 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.MessageDispatcher;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter;
@@ -110,6 +111,35 @@ class PayloadRootAnnotationMethodEndpointMappingTests {
 	@Test
 	void registrationInvalid() {
 		assertThat(this.mapping.lookupEndpoint(new QName("http://springframework.org/spring-ws", "Invalid"))).isNull();
+	}
+
+	@Test
+	void getEndpointUnmappedDoesNotSetLookupKeyProperty() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage request = messageFactory.createMessage();
+		request.getSOAPBody().addBodyElement(QName.valueOf("{http://springframework.org/spring-ws}Invalid"));
+		MessageContext messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
+				new SaajSoapMessageFactory(messageFactory));
+
+		EndpointInvocationChain endpoint = this.mapping.getEndpoint(messageContext);
+
+		assertThat(endpoint).isNull();
+		assertThat(messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY)).isNull();
+	}
+
+	@Test
+	void getEndpointMappedSetsLookupKeyProperty() throws Exception {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage request = messageFactory.createMessage();
+		request.getSOAPBody().addBodyElement(QName.valueOf("{http://springframework.org/spring-ws}Request"));
+		MessageContext messageContext = new DefaultMessageContext(new SaajSoapMessage(request),
+				new SaajSoapMessageFactory(messageFactory));
+
+		EndpointInvocationChain endpoint = this.mapping.getEndpoint(messageContext);
+
+		assertThat(endpoint).isNotNull();
+		assertThat(messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY))
+			.isEqualTo(new QName("http://springframework.org/spring-ws", "Request"));
 	}
 
 	@Test
