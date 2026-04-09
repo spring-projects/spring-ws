@@ -67,7 +67,7 @@ class DefaultSoapServerObservationConventionTests {
 
 	@Test
 	void contextualName() {
-		this.context.setOperationName("getCountry");
+		this.context.setOperation(null, "getCountry");
 		assertThat(this.convention.getContextualName(this.context)).isEqualTo("soap getCountry");
 	}
 
@@ -80,14 +80,14 @@ class DefaultSoapServerObservationConventionTests {
 
 	@Test
 	void operationName() {
-		this.context.setOperationName("getCountry");
+		this.context.setOperation(null, "getCountry");
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("operation.name", "getCountry"));
 	}
 
 	@Test
 	void namespace() {
-		this.context.setNamespace("https://spring.io/guides/gs-producing-web-service");
+		this.context.setOperation("https://spring.io/guides/gs-producing-web-service", null);
 		assertThat(this.convention.getLowCardinalityKeyValues(this.context))
 			.contains(KeyValue.of("namespace", "https://spring.io/guides/gs-producing-web-service"));
 	}

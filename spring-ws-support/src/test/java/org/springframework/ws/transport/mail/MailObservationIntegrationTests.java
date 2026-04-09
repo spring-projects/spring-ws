@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Properties;
 
 import com.icegreen.greenmail.spring.GreenMailBean;
-import com.icegreen.greenmail.util.GreenMailUtil;
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.tck.TestObservationRegistry;
 import jakarta.mail.Session;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.MimeMessage;
@@ -44,32 +45,58 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
+/**
+ * Tests for Mail transport with observations.
+ *
+ * @author Stephane Nicoll
+ */
 @SpringJUnitConfig
 @DirtiesContext
-class MailIntegrationTests {
+class MailObservationIntegrationTests {
+
+	@Autowired
+	private WebServiceTemplate webServiceTemplate;
 
 	@Autowired
 	private GreenMailBean greenMailBean;
 
 	@Autowired
-	private WebServiceTemplate webServiceTemplate;
+	private TestObservationRegistry observationRegistry;
 
 	@Test
-	void testMailTransport() {
+	void sendMailMessageCreateObservations() {
 		String content = """
 				<root xmlns="http://springframework.org/spring-ws">
 					<child/>
 				</root>""";
 		StringResult result = new StringResult();
 		this.webServiceTemplate.sendSourceAndReceiveToResult(new StringSource(content), result);
-		MimeMessage[] receivedMessages = this.greenMailBean.getGreenMail().getReceivedMessages();
-		assertThat(receivedMessages).singleElement().satisfies((receivedMessage) -> {
-			assertThat(GreenMailUtil.getAddressList(receivedMessage.getFrom()))
-				.isEqualTo("Spring-WS SOAP Client <client@localhost>");
-			assertThat(GreenMailUtil.getAddressList(receivedMessage.getAllRecipients())).isEqualTo("server@localhost");
-			assertThat(GreenMailUtil.getBody(receivedMessage)).containsIgnoringWhitespaces(content);
-		});
+
+		assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.doesNotHaveError()
+			.hasLowCardinalityKeyValue("fault.code", "none")
+			.hasLowCardinalityKeyValue("protocol", "mailto")
+			.hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+			.hasLowCardinalityKeyValue("operation.name", "root")
+			.hasHighCardinalityKeyValue("fault.reason", "none")
+			.hasHighCardinalityKeyValue("uri", "mailto:system@localhost?subject=SOAP%20Test");
+
+		// Mail server observation happens asynchronously as the receiver polls for emails
+		await().untilAsserted(
+				() -> assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.server.requests")
+					.that()
+					.hasBeenStopped()
+					.doesNotHaveError()
+					.hasLowCardinalityKeyValue("fault.code", "none")
+					.hasLowCardinalityKeyValue("protocol", "mailto")
+					.hasLowCardinalityKeyValue("namespace", "http://springframework.org/spring-ws")
+					.hasLowCardinalityKeyValue("operation.name", "root")
+					.hasHighCardinalityKeyValue("fault.reason", "none")
+					.hasHighCardinalityKeyValue("uri", "mailto:system@localhost?subject=SOAP%20Test"));
 	}
 
 	@Configuration(proxyBeanMethods = false)
@@ -78,6 +105,11 @@ class MailIntegrationTests {
 		@Bean
 		SaajSoapMessageFactory messageFactory() {
 			return new SaajSoapMessageFactory();
+		}
+
+		@Bean
+		TestObservationRegistry observationRegistry() {
+			return TestObservationRegistry.create();
 		}
 
 		@Bean
@@ -110,7 +142,8 @@ class MailIntegrationTests {
 		@Bean
 		@DependsOn("mailServer")
 		MailMessageReceiver messageReceiver(WebServiceMessageFactory messageFactory,
-				SoapMessageDispatcher messageDispatcher, Session session) throws AddressException {
+				SoapMessageDispatcher messageDispatcher, Session session, ObservationRegistry observationRegistry)
+				throws AddressException {
 			MailMessageReceiver messageReceiver = new MailMessageReceiver();
 			messageReceiver.setMessageFactory(messageFactory);
 			messageReceiver.setFrom("Spring-WS SOAP Server <server@localhost>");
@@ -118,15 +151,16 @@ class MailIntegrationTests {
 			messageReceiver.setTransportUri("smtp://system:password@localhost:3025");
 			messageReceiver.setMessageReceiver(messageDispatcher);
 			messageReceiver.setSession(session);
-			Pop3PollingMonitoringStrategy monitoringStrategy = new Pop3PollingMonitoringStrategy();
+			messageReceiver.setObservationRegistry(observationRegistry);
+			org.springframework.ws.transport.mail.monitor.PollingMonitoringStrategy monitoringStrategy = new org.springframework.ws.transport.mail.monitor.PollingMonitoringStrategy();
 			monitoringStrategy.setPollingInterval(500);
 			messageReceiver.setMonitoringStrategy(monitoringStrategy);
 			return messageReceiver;
 		}
 
 		@Bean
-		WebServiceTemplate webServiceTemplate(WebServiceMessageFactory messageFactory, Session session)
-				throws AddressException {
+		WebServiceTemplate webServiceTemplate(WebServiceMessageFactory messageFactory, Session session,
+				TestObservationRegistry observationRegistry) throws AddressException {
 			WebServiceTemplate webServiceTemplate = new WebServiceTemplate(messageFactory);
 			MailMessageSender messageSender = new MailMessageSender();
 			messageSender.setFrom("Spring-WS SOAP Client <client@localhost>");
@@ -135,7 +169,8 @@ class MailIntegrationTests {
 			messageSender.setReceiveSleepTime(1000);
 			messageSender.setSession(session);
 			webServiceTemplate.setMessageSender(messageSender);
-			webServiceTemplate.setDefaultUri("mailto:server@localhost?subject=SOAP%20Test");
+			webServiceTemplate.setDefaultUri("mailto:system@localhost?subject=SOAP%20Test");
+			webServiceTemplate.setObservationRegistry(observationRegistry);
 			return webServiceTemplate;
 		}
 

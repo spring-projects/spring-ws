@@ -16,11 +16,12 @@
 
 package org.springframework.ws.transport.jms;
 
+import java.time.Duration;
+
 import io.micrometer.observation.ObservationRegistry;
 import io.micrometer.observation.tck.TestObservationRegistry;
 import jakarta.jms.ConnectionFactory;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +31,30 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.SimpleTestingMessageReceiver;
+import org.springframework.context.annotation.Import;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
+import org.springframework.messaging.handler.annotation.SendTo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Tests for {@link WebServiceMessageListener} with observations.
+ * Tests for JMS transport with observations.
  *
  * @author Stephane Nicoll
  */
 @SpringJUnitConfig
-class WebServiceMessageListenerObservationIntegrationTests {
+class JmsObservationIntegrationTests {
 
 	private static final String REQUEST_QUEUE_NAME = "RequestQueue";
+
+	private static final String CLIENT_REQUEST_QUEUE_NAME = "ClientRequestQueue";
+
+	private static final String CLIENT_RESPONSE_QUEUE_NAME = "ClientResponseQueue";
 
 	private static final String CONTENT = """
 			<SOAP-ENV:Envelope xmlns:SOAP-ENV='http://schemas.xmlsoap.org/soap/envelope/'>
@@ -54,18 +65,21 @@ class WebServiceMessageListenerObservationIntegrationTests {
 				</SOAP-ENV:Body>
 			</SOAP-ENV:Envelope>""";
 
-	private final JmsTemplate jmsTemplate;
+	private static final String CLIENT_CONTENT = """
+			<m:GetLastTradePrice xmlns:m='http://www.springframework.org/spring-ws'>
+				<symbol>DIS</symbol>
+			</m:GetLastTradePrice>""";
 
-	private final TestObservationRegistry observationRegistry;
+	@Autowired
+	private JmsTemplate jmsTemplate;
 
-	WebServiceMessageListenerObservationIntegrationTests(@Autowired ConnectionFactory connectionFactory,
-			@Autowired TestObservationRegistry observationRegistry) {
-		this.jmsTemplate = new JmsTemplate(connectionFactory);
-		this.observationRegistry = observationRegistry;
-	}
+	@Autowired
+	private WebServiceTemplate webServiceTemplate;
+
+	@Autowired
+	private TestObservationRegistry observationRegistry;
 
 	@Test
-	@Disabled("FIXME: namespace and operation name not discovered yet")
 	void sendMessageCreateServerObservation() {
 		this.jmsTemplate.sendAndReceive(REQUEST_QUEUE_NAME, session -> session.createTextMessage(CONTENT));
 		assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.server.requests")
@@ -80,7 +94,29 @@ class WebServiceMessageListenerObservationIntegrationTests {
 			.hasHighCardinalityKeyValue("uri", "jms:RequestQueue");
 	}
 
+	@Test
+	void sendMessageCreateClientObservation() {
+		this.webServiceTemplate.sendSourceAndReceiveToResult(
+				"jms:" + CLIENT_REQUEST_QUEUE_NAME + "?replyToName=" + CLIENT_RESPONSE_QUEUE_NAME
+						+ "&deliveryMode=NON_PERSISTENT",
+				new org.springframework.xml.transform.StringSource(CLIENT_CONTENT),
+				new org.springframework.xml.transform.StringResult());
+
+		assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.doesNotHaveError()
+			.hasLowCardinalityKeyValue("fault.code", "none")
+			.hasLowCardinalityKeyValue("protocol", "jms")
+			.hasLowCardinalityKeyValue("namespace", "http://www.springframework.org/spring-ws")
+			.hasLowCardinalityKeyValue("operation.name", "GetLastTradePrice")
+			.hasHighCardinalityKeyValue("fault.reason", "none")
+			.hasHighCardinalityKeyValue("uri", "jms:ClientRequestQueue");
+	}
+
 	@Configuration(proxyBeanMethods = false)
+	@EnableJms
+	@Import(TestJmsListener.class)
 	static class Config {
 
 		@Bean
@@ -96,6 +132,29 @@ class WebServiceMessageListenerObservationIntegrationTests {
 		@Bean
 		TestObservationRegistry observationRegistry() {
 			return TestObservationRegistry.create();
+		}
+
+		@Bean
+		public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+			DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+			factory.setConnectionFactory(connectionFactory);
+			return factory;
+		}
+
+		@Bean
+		JmsMessageSender messageSender(ConnectionFactory connectionFactory) {
+			JmsMessageSender messageSender = new JmsMessageSender(connectionFactory);
+			messageSender.setReceiveTimeout(Duration.ofSeconds(10).toMillis());
+			return messageSender;
+		}
+
+		@Bean
+		WebServiceTemplate webServiceTemplate(SaajSoapMessageFactory messageFactory, JmsMessageSender messageSender,
+				TestObservationRegistry observationRegistry) {
+			WebServiceTemplate template = new WebServiceTemplate(messageFactory);
+			template.setMessageSender(messageSender);
+			template.setObservationRegistry(observationRegistry);
+			return template;
 		}
 
 		@Bean
@@ -116,6 +175,29 @@ class WebServiceMessageListenerObservationIntegrationTests {
 			container.setDestinationName(REQUEST_QUEUE_NAME);
 			container.setMessageListener(messageListener);
 			return container;
+		}
+
+		@Bean
+		JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+			return new JmsTemplate(connectionFactory);
+		}
+
+	}
+
+	static class TestJmsListener {
+
+		@JmsListener(destination = CLIENT_REQUEST_QUEUE_NAME)
+		@SendTo(CLIENT_RESPONSE_QUEUE_NAME)
+		public Object handleRequest(jakarta.jms.Message request) throws Exception {
+			java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+			jakarta.xml.soap.MessageFactory.newInstance(jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL)
+				.createMessage()
+				.writeTo(bos);
+			String text = bos.toString(java.nio.charset.StandardCharsets.UTF_8);
+			return org.springframework.messaging.support.MessageBuilder.withPayload(text)
+				.setHeader(JmsTransportConstants.PROPERTY_CONTENT_TYPE,
+						org.springframework.ws.soap.SoapVersion.SOAP_11.getContentType())
+				.build();
 		}
 
 	}

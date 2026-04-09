@@ -21,6 +21,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
+
+import javax.xml.namespace.QName;
+import javax.xml.transform.TransformerFactory;
 
 import io.micrometer.observation.transport.Propagator;
 import io.micrometer.observation.transport.RequestReplyReceiverContext;
@@ -28,10 +32,13 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.mapping.AbstractMethodEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.http.HttpServletConnection;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * Context that holds information for metadata collection regarding
@@ -55,11 +62,11 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 
 	private static final HeaderGetter GETTER = new HeaderGetter();
 
+	private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactoryUtils.newInstance();
+
 	private @Nullable MessageContext messageContext;
 
-	private @Nullable String namespace;
-
-	private @Nullable String operationName;
+	private Supplier<Operation> operation = this::resolveOperation;
 
 	public SoapServerObservationContext(WebServiceConnection connection) {
 		super(GETTER);
@@ -100,19 +107,40 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 	}
 
 	public @Nullable String getNamespace() {
-		return this.namespace;
-	}
-
-	public void setNamespace(String namespace) {
-		this.namespace = namespace;
+		return this.operation.get().namespace;
 	}
 
 	public @Nullable String getOperationName() {
-		return this.operationName;
+		return this.operation.get().operationName;
 	}
 
-	public void setOperationName(String operationName) {
-		this.operationName = operationName;
+	public void setOperation(@Nullable String namespace, @Nullable String operationName) {
+		this.operation = () -> new Operation(namespace, operationName);
+	}
+
+	private Operation resolveOperation() {
+		if (this.messageContext != null) {
+			Object lookupKey = this.messageContext.getProperty(AbstractMethodEndpointMapping.LOOKUP_KEY_PROPERTY);
+			if (lookupKey instanceof QName qName) {
+				return new Operation(qName.getNamespaceURI(), qName.getLocalPart());
+			}
+			else if (lookupKey instanceof String stringKey) {
+				return new Operation(null, stringKey);
+			}
+			else {
+				try {
+					QName qName = PayloadRootUtils
+						.getPayloadRootQName(this.messageContext.getRequest().getPayloadSource(), TRANSFORMER_FACTORY);
+					if (qName != null) {
+						return new Operation(qName.getNamespaceURI(), qName.getLocalPart());
+					}
+				}
+				catch (Exception ex) {
+					// ignore
+				}
+			}
+		}
+		return new Operation(null, null);
 	}
 
 	public @Nullable String getSoapAction() {
@@ -152,6 +180,9 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 			return null;
 		}
 
+	}
+
+	record Operation(@Nullable String namespace, @Nullable String operationName) {
 	}
 
 }
