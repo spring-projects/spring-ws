@@ -25,12 +25,14 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.x509.cache.NullX509UserCache;
 import org.springframework.ws.soap.security.x509.cache.X509UserCache;
@@ -60,6 +62,8 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 
 	private X509UserCache userCache = new NullX509UserCache();
 
+	private UserDetailsChecker accountStatusChecker = new AccountStatusUserDetailsChecker();
+
 	// ~ Methods
 	// ========================================================================================================
 
@@ -68,6 +72,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 		Assert.notNull(this.userCache, "An x509UserCache must be set");
 		Assert.notNull(this.x509AuthoritiesPopulator, "An X509AuthoritiesPopulator must be set");
 		Assert.notNull(this.messages, "A message source must be set");
+		Assert.notNull(this.accountStatusChecker, "An account status UserDetailsChecker must be set");
 	}
 
 	/**
@@ -104,16 +109,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 					this.messages.getMessage("X509AuthenticationProvider.certificateNull", "Certificate is null"));
 		}
 
-		UserDetails user = this.userCache.getUserFromCache(clientCertificate);
-
-		if (user == null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Authenticating with certificate " + clientCertificate);
-			}
-			user = this.x509AuthoritiesPopulator.getUserDetails(clientCertificate);
-			this.userCache.putUserInCache(clientCertificate, user);
-		}
-
+		UserDetails user = resolveAuthenticatedPrincipal(clientCertificate);
 		X509AuthenticationToken result = new X509AuthenticationToken(user, clientCertificate, user.getAuthorities());
 
 		result.setDetails(authentication.getDetails());
@@ -121,9 +117,38 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 		return result;
 	}
 
+	/**
+	 * Resolve and validate the authenticated principal for the given
+	 * {@link X509Certificate}.
+	 * @return a valid {@link UserDetails}
+	 */
+	private UserDetails resolveAuthenticatedPrincipal(X509Certificate clientCertificate) {
+		UserDetails user = this.userCache.getUserFromCache(clientCertificate);
+		if (user != null) {
+			this.accountStatusChecker.check(user);
+			return user;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Authenticating with certificate " + clientCertificate);
+		}
+		user = this.x509AuthoritiesPopulator.getUserDetails(clientCertificate);
+		this.accountStatusChecker.check(user);
+		this.userCache.putUserInCache(clientCertificate, user);
+		return user;
+	}
+
 	@Override
 	public void setMessageSource(MessageSource messageSource) {
 		this.messages = new MessageSourceAccessor(messageSource);
+	}
+
+	/**
+	 * Sets the {@link UserDetailsChecker} to use. Defaults to
+	 * {@link AccountStatusUserDetailsChecker}.
+	 * @since 3.1.9
+	 */
+	public void setAccountStatusUserDetailsChecker(UserDetailsChecker accountStatusChecker) {
+		this.accountStatusChecker = accountStatusChecker;
 	}
 
 	public void setX509AuthoritiesPopulator(X509AuthoritiesPopulator x509AuthoritiesPopulator) {
