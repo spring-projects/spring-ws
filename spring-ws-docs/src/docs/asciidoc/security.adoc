@@ -147,6 +147,12 @@ The default is `false`, in line with WSS4J.
 Set it to `true` only when a partner cannot use RSA-OAEP.
 For **outbound** encryption, prefer `setSecurementEncryptionKeyTransportAlgorithm` with `http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p` (or the constant exposed by WSS4J) when the recipient supports it.
 
+==== Replay detection during validation
+
+When you validate `UsernameToken` elements that include `Nonce` and `Created`, validate `Timestamp` tokens, or validate SAML assertions with one-time-use semantics, configure `setValidationReplayCache` with an Apache WSS4J `org.apache.wss4j.common.cache.ReplayCache` implementation.
+Spring-WS registers that cache on the WSS4J `RequestData` for nonce, timestamp, and SAML one-time-use replay checks.
+See `org.springframework.ws.soap.security.wss4j2.cache.SpringReplayCache` for an implementation based on Spring's Cache abstraction.
+
 == Handling Digital Certificates
 
 For cryptographic operations that require interaction with a keystore or certificate handling (signature, encryption, and decryption operations), WSS4J requires an instance of `org.apache.ws.security.components.crypto.Crypto`.

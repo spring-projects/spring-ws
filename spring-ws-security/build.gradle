@@ -35,7 +35,7 @@ dependencies {
 	}
 	api("org.jvnet.staxex:stax-ex")
 	api("org.slf4j:slf4j-api")
-	api("org.springframework:spring-beans")
+	api("org.springframework:spring-context")
 	api("org.springframework:spring-tx")
 	api("org.springframework.security:spring-security-core")
 
