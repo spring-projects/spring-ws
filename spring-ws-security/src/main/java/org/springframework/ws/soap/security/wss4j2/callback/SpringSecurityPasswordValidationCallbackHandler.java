@@ -25,16 +25,18 @@ import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
-import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring
@@ -55,6 +57,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 
 	private UserDetailsService userDetailsService;
 
+	private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
+
 	/** Sets the users cache. Not required, but can benefit performance. */
 	public void setUserCache(UserCache userCache) {
 		this.userCache = userCache;
@@ -65,9 +69,19 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		this.userDetailsService = userDetailsService;
 	}
 
+	/**
+	 * Set the checker invoked before supplying a password to WSS4J for UsernameToken
+	 * validation. Defaults to {@link AccountStatusUserDetailsChecker}.
+	 * @since 3.1.9
+	 */
+	public void setUserDetailsChecker(UserDetailsChecker userDetailsChecker) {
+		this.userDetailsChecker = userDetailsChecker;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(this.userDetailsService, "userDetailsService is required");
+		Assert.notNull(this.userDetailsChecker, "userDetailsChecker is required");
 	}
 
 	/**
@@ -81,8 +95,13 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	protected void handleUsernameToken(WSPasswordCallback callback) throws IOException, UnsupportedCallbackException {
 		UserDetails user = loadUserDetails(callback.getIdentifier());
 		if (user != null) {
-			SpringSecurityUtils.checkUserValidity(user);
-			callback.setPassword(user.getPassword());
+			try {
+				this.userDetailsChecker.check(user);
+				callback.setPassword(user.getPassword());
+			}
+			catch (AccountStatusException ex) {
+				// Leave password unset so WSS4J reports a generic authentication failure
+			}
 		}
 	}
 

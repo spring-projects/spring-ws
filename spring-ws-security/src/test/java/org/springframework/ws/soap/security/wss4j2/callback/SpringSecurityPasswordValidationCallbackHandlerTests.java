@@ -35,10 +35,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author tareq
@@ -57,8 +57,6 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 
 	@BeforeEach
 	void setUp() {
-		// add clearContext() at the beginning of each method in case {@code
-		// SecurityContextHolder} isn't clean
 		SecurityContextHolder.clearContext();
 
 		this.callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
@@ -73,49 +71,90 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 	}
 
 	@Test
-	void testHandleUsernameToken() throws Exception {
-
-		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+	void handleUsernameTokenLoadsPasswordWhenUserValid() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(this.user).anyTimes();
-
-		replay(userDetailsService);
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(this.user);
 
 		this.callbackHandler.handleUsernameToken(this.passwordCallback);
 
 		assertThat(this.passwordCallback.getPassword()).isEqualTo("Bert");
-
-		verify(userDetailsService);
+		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
 
 	@Test
-	void testHandleUsernameTokenUserNotFound() throws Exception {
-
-		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+	void handleUsernameTokenLeavesPasswordUnsetWhenUserNotFound() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie"))
-			.andThrow(new UsernameNotFoundException("User 'Ernie' not found"));
-
-		replay(userDetailsService);
+		when(userDetailsService.loadUserByUsername("Ernie"))
+			.thenThrow(new UsernameNotFoundException("User 'Ernie' not found"));
 
 		this.callbackHandler.handleUsernameToken(this.passwordCallback);
 
 		assertThat(this.passwordCallback.getPassword()).isNull();
-
-		verify(userDetailsService);
+		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
 
 	@Test
-	void testHandleUsernameTokenPrincipal() throws Exception {
+	void handleUsernameTokenDisabledAccountLeavesPasswordUnset() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
+		UserDetails disabledUser = new User("Ernie", "Bert", false, true, true, true,
+				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(disabledUser);
 
-		UserDetailsService userDetailsService = createMock(UserDetailsService.class);
+		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThat(this.passwordCallback.getPassword()).isNull();
+		verify(userDetailsService).loadUserByUsername("Ernie");
+	}
+
+	@Test
+	void handleUsernameTokenLockedAccountLeavesPasswordUnset() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
+		UserDetails lockedUser = new User("Ernie", "Bert", true, true, true, false,
+				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(lockedUser);
+
+		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThat(this.passwordCallback.getPassword()).isNull();
+		verify(userDetailsService).loadUserByUsername("Ernie");
+	}
+
+	@Test
+	void handleUsernameTokenAccountExpiredLeavesPasswordUnset() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
+		UserDetails expiredAccountUser = new User("Ernie", "Bert", true, false, true, true,
+				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(expiredAccountUser);
+
+		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThat(this.passwordCallback.getPassword()).isNull();
+		verify(userDetailsService).loadUserByUsername("Ernie");
+	}
+
+	@Test
+	void handleUsernameTokenCredentialsExpiredLeavesPasswordUnset() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
+		this.callbackHandler.setUserDetailsService(userDetailsService);
+		UserDetails expiredCredsUser = new User("Ernie", "Bert", true, true, false, true,
+				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(expiredCredsUser);
+
+		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThat(this.passwordCallback.getPassword()).isNull();
+		verify(userDetailsService).loadUserByUsername("Ernie");
+	}
+
+	@Test
+	void handleUsernameTokenPrincipalStoresAuthentication() throws Exception {
+		UserDetailsService userDetailsService = mock(UserDetailsService.class);
 		this.callbackHandler.setUserDetailsService(userDetailsService);
 
-		expect(userDetailsService.loadUserByUsername("Ernie")).andReturn(this.user).anyTimes();
-
-		replay(userDetailsService);
+		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(this.user);
 
 		this.callbackHandler.handleUsernameTokenPrincipal(this.callback);
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -134,7 +173,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 
 		assertThat(authentication.getDetails()).isEqualTo(this.user);
 
-		verify(userDetailsService);
+		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
 
 }

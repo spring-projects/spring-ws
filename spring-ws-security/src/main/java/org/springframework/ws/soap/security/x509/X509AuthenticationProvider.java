@@ -25,6 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,6 +45,7 @@ import org.springframework.ws.soap.security.x509.cache.X509UserCache;
  * </p>
  *
  * @author Luke Taylor
+ * @author Stephane Nicoll
  * @version $Id: X509AuthenticationProvider.java 3256 2008-08-18 18:20:48Z luke_t $
  */
 public class X509AuthenticationProvider implements AuthenticationProvider, InitializingBean, MessageSourceAware {
@@ -90,7 +92,7 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 	 * @throws AuthenticationException if the {@link X509AuthoritiesPopulator} rejects the
 	 * certficate.
 	 * @throws BadCredentialsException if no certificate was presented in the
-	 * authentication request.
+	 * authentication request, or if account status checks fail (generic message).
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -125,16 +127,26 @@ public class X509AuthenticationProvider implements AuthenticationProvider, Initi
 	private UserDetails resolveAuthenticatedPrincipal(X509Certificate clientCertificate) {
 		UserDetails user = this.userCache.getUserFromCache(clientCertificate);
 		if (user != null) {
-			this.accountStatusChecker.check(user);
+			checkUserDetails(user);
 			return user;
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Authenticating with certificate " + clientCertificate);
 		}
 		user = this.x509AuthoritiesPopulator.getUserDetails(clientCertificate);
-		this.accountStatusChecker.check(user);
+		checkUserDetails(user);
 		this.userCache.putUserInCache(clientCertificate, user);
 		return user;
+	}
+
+	private void checkUserDetails(UserDetails user) {
+		try {
+			this.accountStatusChecker.check(user);
+		}
+		catch (AccountStatusException ex) {
+			throw new BadCredentialsException(
+					this.messages.getMessage("X509AuthenticationProvider.badCredentials", "Bad credentials"));
+		}
 	}
 
 	@Override

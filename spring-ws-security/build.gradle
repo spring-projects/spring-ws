@@ -49,7 +49,6 @@ dependencies {
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 	testImplementation("org.assertj:assertj-core")
-	testImplementation("org.easymock:easymock")
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.springframework:spring-test")
