@@ -111,7 +111,14 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 			return true;
 		}
 		else {
-			sendOutOfBand(messageContext, replyEpr);
+			sendOutOfBand(messageContext, replyEpr, () -> {
+				if (logger.isWarnEnabled()) {
+					logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
+							+ "Configure WebServiceMessageSenders which support this uri.");
+				}
+				messageContext.clearResponse();
+				this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
+			});
 			return false;
 		}
 	}
@@ -139,7 +146,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 		return false;
 	}
 
-	private void sendOutOfBand(MessageContext messageContext, EndpointReference replyEpr) throws IOException {
+	private void sendOutOfBand(MessageContext messageContext, EndpointReference replyEpr, Runnable actionIfUnsupported)
+			throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
 					+ "] reply address; sending out-of-band reply [" + messageContext.getResponse() + "]");
@@ -158,9 +166,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 				}
 			}
 		}
-		if (!supported && logger.isWarnEnabled()) {
-			logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
-					+ "Configure WebServiceMessageSenders which support this uri.");
+		if (!supported) {
+			actionIfUnsupported.run();
 		}
 	}
 
