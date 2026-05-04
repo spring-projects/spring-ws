@@ -227,6 +227,64 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		verify(this.strategyMock, senderMock, connectionMock);
 	}
 
+	@Test
+	void outOfBandReplyToEmailAddressWithHttpOnlySender() throws Exception {
+
+		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
+
+		URI replyAction = new URI("urn:replyAction");
+		URI faultAction = new URI("urn:replyAction");
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
+				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-reply-to-mailto.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+
+		URI messageId = new URI("uid:1234");
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		URI replyTo = new URI("mailto:client@example.com");
+		expect(senderMock.supports(replyTo)).andReturn(false);
+		replay(this.strategyMock, senderMock);
+
+		boolean result = this.interceptor.handleResponse(context, null);
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isTrue();
+		assertThat(((SaajSoapMessage) context.getResponse()).getSoapBody().hasFault()).isTrue();
+
+		verify(this.strategyMock, senderMock);
+	}
+
+	@Test
+	void outOfBandFaultToEmailAddressWithHttpOnlySender() throws Exception {
+
+		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
+
+		URI replyAction = new URI("urn:replyAction");
+		URI faultAction = new URI("urn:faultAction");
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
+				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to-mailto.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+		response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
+
+		URI messageId = new URI("uid:1234");
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		URI faultTo = new URI("mailto:client@example.com");
+		expect(senderMock.supports(faultTo)).andReturn(false);
+		replay(this.strategyMock, senderMock);
+
+		boolean result = this.interceptor.handleFault(context, null);
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isTrue();
+		assertThat(((SaajSoapMessage) context.getResponse()).getSoapBody().hasFault()).isTrue();
+
+		verify(this.strategyMock, senderMock);
+	}
+
 	protected abstract AddressingVersion getVersion();
 
 	protected abstract String getTestPath();
