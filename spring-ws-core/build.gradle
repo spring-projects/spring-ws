@@ -16,6 +16,7 @@
 
 plugins {
 	id "java-library"
+	id "java-test-fixtures"
 	id "maven-publish"
 	id "org.springframework.ws.conventions"
 	id "org.springframework.ws.optional-dependencies"
@@ -59,6 +60,7 @@ dependencies {
 		exclude(group: "org.eclipse.angus", module: "angus-activation")
 	}
 
+	testFixturesApi("org.mockito:mockito-core")
 	testImplementation("com.fasterxml.woodstox:woodstox-core")
 	testImplementation("commons-io:commons-io")
 	testImplementation("net.minidev:json-smart:jar")

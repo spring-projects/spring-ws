@@ -19,6 +19,7 @@ package org.springframework.ws.transport.mail;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
+import java.util.function.Predicate;
 
 import jakarta.mail.Session;
 import jakarta.mail.URLName;
@@ -29,6 +30,7 @@ import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.transport.AbstractWebServiceMessageSender;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.mail.monitor.PollingMonitoringStrategy;
@@ -66,12 +68,21 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * <p>
  * Some examples of email URIs are: {@code mailto:john@example.com}<br>
  * {@code mailto:john@example.com@?subject=SOAP%20Test}<br>
+ * <p>
+ * For {@link UriSource#APPLICATION}, default checks accept any {@code mailto:} URI. For
+ * {@link UriSource#REMOTE}, default checks require a well-formed mailbox in the
+ * {@link MailDestinationDescriptor} (parsable {@code To}, extractable host, basic
+ * header-injection guards); reject {@code localhost} and {@code *.localhost} in the
+ * mailbox host segment. Use a {@link WebServiceMessageSender.DestinationPolicy} for
+ * domain allowlists, header rules, or other mail-specific validation.
  *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 1.5.0
  * @see <a href="http://www.ietf.org/rfc/rfc2368.txt">The mailto URL scheme</a>
  */
-public class MailMessageSender implements WebServiceMessageSender, InitializingBean {
+public class MailMessageSender extends AbstractWebServiceMessageSender<MailDestinationDescriptor>
+		implements InitializingBean {
 
 	/**
 	 * Default timeout for receive operations. Set to 1000 * 60 milliseconds (i.e. 1
@@ -88,6 +99,10 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 	private URLName transportUri;
 
 	private InternetAddress from;
+
+	public MailMessageSender() {
+		super((uri) -> uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME));
+	}
 
 	/**
 	 * Sets the from address to use when sending request messages.
@@ -177,8 +192,21 @@ public class MailMessageSender implements WebServiceMessageSender, InitializingB
 	}
 
 	@Override
-	public boolean supports(URI uri) {
-		return uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME);
+	protected MailDestinationDescriptor createDescriptor(URI uri, UriSource uriSource) {
+		return MailDestinationDescriptor.of(uri, uriSource);
+	}
+
+	@Override
+	protected Predicate<MailDestinationDescriptor> defaultChecks(UriSource uriSource) {
+		return (uriSource == UriSource.REMOTE) ? this::remoteDefaultChecks : (details) -> true;
+	}
+
+	protected boolean remoteDefaultChecks(MailDestinationDescriptor details) {
+		if (details.toAddress() == null || details.mailboxHost() == null) {
+			return false;
+		}
+		String host = details.mailboxHost();
+		return !"localhost".equals(host) && !host.endsWith(".localhost");
 	}
 
 }

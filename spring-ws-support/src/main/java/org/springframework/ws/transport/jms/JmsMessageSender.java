@@ -18,6 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.function.Predicate;
 
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
@@ -93,8 +94,16 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code jms:SomeTopic?priority=3&deliveryMode=NON_PERSISTENT}<br>
  * {@code jms:RequestQueue?replyToName=ResponseQueueName}<br>
  * {@code jms:Queue?messageType=TEXT_MESSAGE}</blockquote>
+ * <p>
+ * For {@link UriSource#APPLICATION}, default checks accept any {@code jms:} URI. For
+ * {@link UriSource#REMOTE}, default checks reject destination and {@code replyToName}
+ * fragments that resemble JNDI/LDAP/RMI-style indirection (see
+ * {@link JmsDestinationDescriptor#containsSuspiciousJmsNameIndirection()}). Use a
+ * {@link DestinationPolicy} for explicit allowlists, resolver-specific rules, or to tune
+ * validation when legitimate destination names contain such substrings.
  *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 1.5.0
  * @see <a href="https://datatracker.ietf.org/doc/rfc6167">IRI Scheme for Java(tm) Message
  * Service 1.0</a>
@@ -118,6 +127,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	private String textMessageEncoding = DEFAULT_TEXT_MESSAGE_ENCODING;
 
 	private MessagePostProcessor postProcessor;
+
+	private DestinationPolicy<JmsDestinationDescriptor> destinationPolicy;
 
 	/**
 	 * Create a new {@code JmsMessageSender}
@@ -163,6 +174,16 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 		this.postProcessor = postProcessor;
 	}
 
+	/**
+	 * Set a custom {@link DestinationPolicy} to compose with the sender's default checks.
+	 * When unset, only default checks apply.
+	 * @param destinationPolicy the policy to apply
+	 * @since 3.1.9
+	 */
+	public void setDestinationPolicy(DestinationPolicy<JmsDestinationDescriptor> destinationPolicy) {
+		this.destinationPolicy = destinationPolicy;
+	}
+
 	@Override
 	public WebServiceConnection createConnection(URI uri) throws IOException {
 		Connection jmsConnection = null;
@@ -192,8 +213,23 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	}
 
 	@Override
-	public boolean supports(URI uri) {
-		return uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME);
+	public boolean supports(URI uri, UriSource uriSource) {
+		if (!uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME)) {
+			return false;
+		}
+		JmsDestinationDescriptor descriptor = JmsDestinationDescriptor.of(uri, uriSource);
+		Predicate<JmsDestinationDescriptor> defaultChecks = defaultChecks(uriSource);
+		return (this.destinationPolicy != null) ? this.destinationPolicy.accept(descriptor, defaultChecks)
+				: defaultChecks.test(descriptor);
+	}
+
+	/**
+	 * Return the default checks to apply for the given {@link UriSource}.
+	 * @return the default checks to apply
+	 * @since 3.1.9
+	 */
+	protected Predicate<JmsDestinationDescriptor> defaultChecks(UriSource uriSource) {
+		return (descriptor) -> uriSource != UriSource.REMOTE || !descriptor.containsSuspiciousJmsNameIndirection();
 	}
 
 	private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {

@@ -269,6 +269,19 @@ Therefore, you should use `<dynamic-wsdl>` only during the development stages of
 We recommend using your browser to download the generated WSDL, store it in the project, and expose it with `<static-wsdl>`.
 This is the only way to be really sure that the WSDL does not change over time.
 
+[[server-http-sender-validation]]
+==== HTTP message senders and out-of-band validation
+
+For WS-Addressing `ReplyTo` or `FaultTo` (see <<server-endpoint-out-of-band-replies>>), HTTP-based message senders validate the peer-supplied URL before opening a connection:
+
+* The URL must have a real host (not empty or obviously local-only forms).
+* Literal IP addresses that are loopback, link-local, or "any" are rejected without DNS lookups, which blocks many metadata-style and lateral-movement URLs.
+* Ordinary host names are not resolved by default to avoid a performance penalty, so malicious hostnames resolving to internal IPs are not blocked by the default IP-level checks. To secure out-of-band replies without the DNS resolution latency, use a `DestinationPolicy` to configure a strict allowlist. Alternatively, DNS resolution can be enabled by setting `allowDnsResolution` to `true` to apply IP-level checks to the resolved addresses.
+* RFC&nbsp;1918-style private *IPv4 literals* are rejected by default; they can be enabled by setting `allowSiteLocalIpv4` to `true` while still composing with the built-in checks.
+* HTTP clients may follow redirects depending on the stack (`HttpURLConnection` vs Apache HttpComponents and its redirect strategy). Treat redirects as part of your threat model for out-of-band POSTs, or configure the client not to follow them if your environment requires it.
+
+Register a `DestinationPolicy` on the sender for allow-lists, DNS-backed checks, or other organization rules; it composes with these defaults.
+
 === Wiring up Spring-WS in a `DispatcherServlet`
 
 As an alternative to the `MessageDispatcherServlet`, you can wire up a `MessageDispatcher` in a standard, Spring-Web MVC `DispatcherServlet`.
@@ -373,6 +386,11 @@ The following configuration example shows this:
 ----
 ====
 
+[[server-jms-sender-validation]]
+==== Out-of-band JMS replies
+
+When a JMS message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, destination and reply names are screened for patterns that often indicate unsafe indirection (embedded LDAP- or JNDI-style fragments and similar). If your environment uses names that legitimately contain such substrings, attach a `DestinationPolicy` to the sender so you can express allow-lists or resolver-specific exceptions while still composing with the defaults.
+
 === Email Transport
 
 In addition to HTTP and JMS, Spring-WS also provides server-side email handling.
@@ -425,6 +443,11 @@ The following piece of configuration shows how to use the server-side email supp
 </beans>
 ----
 ====
+
+[[server-mail-sender-validation]]
+==== Out-of-band mail replies
+
+When a mail message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the mailbox must be well-formed and local-only mailbox hosts are rejected by default. Use a `DestinationPolicy` for domain allow-lists or stricter rules.
 
 === Embedded HTTP Server transport
 
@@ -482,6 +505,8 @@ The following snippet shows a configuration example of the HTTP server transport
 ----
 ====
 
+If you configure HTTP-based `WebServiceMessageSender` beans for WS-Addressing out-of-band replies, they follow the same validation rules as in servlet-based deployments; see <<server-http-sender-validation>>.
+
 === XMPP transport
 
 Spring-WS has support for XMPP, otherwise known as Jabber.
@@ -524,6 +549,11 @@ The following example shows how to set up the server-side XMPP components:
 </beans>
 ----
 ====
+
+[[server-xmpp-sender-validation]]
+==== Out-of-band XMPP replies
+
+When an XMPP message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the Jabber ID's domain must match the service domain of the configured connection. Use a `DestinationPolicy` if you need allow-lists or multi-tenant rules.
 
 === MTOM
 
@@ -1068,9 +1098,21 @@ If necessary, specific versions of the spec can be injected into the `versions` 
 In addition to the `@Action` annotation, you can annotate the class with the `@Address` annotation.
 If set, the value is compared to the `To` header property of the incoming message.
 
-Finally, there is the `messageSenders` property, which is required for sending  response messages to non-anonymous, out-of-bound addresses.
-You can set `MessageSender` implementations in this property, the same as you would on the `WebServiceTemplate`.
-See <<client-transports>>.
+[[server-endpoint-out-of-band-replies]]
+=== Out-of-band Replies
+
+When WS-Addressing signals a non-anonymous reply or fault path, the response cannot ride the original inbound transport and Spring-WS must open a separate connection. Configure `messageSenders` on your endpoint mapping with the same `WebServiceMessageSender` implementations you would use on a client `WebServiceTemplate`; see <<client-transports>> for transport overview and wiring.
+
+Spring-WS tries each configured sender in order; the first one that supports the `wsa:ReplyTo` or `wsa:FaultTo` URI sends the message. Because those addresses are chosen by the remote party, senders apply stricter validation before opening a connection than they would when your application supplied the destination. If the built-in rules are too strict for your environment (for example names that legitimately contain unusual substrings) or too loose (for example you need explicit allow-lists), register a `DestinationPolicy` on the sender bean so your rules compose with the defaults.
+
+IMPORTANT: When WS-Addressing out-of-band senders are configured, security interceptors must run before the WS-Addressing interceptor to prevent unauthenticated requests from triggering fault delivery to an attacker-supplied `wsa:FaultTo` address. Spring-WS guarantees this by ordering WS-Security interceptors (typically `Wss4jSecurityInterceptor`) before the addressing interceptor regardless of how they are registered. See `AbstractWsSecurityInterceptor.DEFAULT_ORDER` and `AddressingEndpointInterceptor.DEFAULT_ORDER` for the concrete order values.
+
+Default checks for peer-supplied reply and fault addresses are documented per transport:
+
+* <<server-http-sender-validation,HTTP message senders>>
+* <<server-jms-sender-validation,JMS message senders>>
+* <<server-mail-sender-validation,Mail message senders>>
+* <<server-xmpp-sender-validation,XMPP message senders>>
 
 [[server-endpoint-interceptor]]
 === Intercepting Requests -- the `EndpointInterceptor` Interface

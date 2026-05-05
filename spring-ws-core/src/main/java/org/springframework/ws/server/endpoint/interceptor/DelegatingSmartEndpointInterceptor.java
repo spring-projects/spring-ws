@@ -16,6 +16,7 @@
 
 package org.springframework.ws.server.endpoint.interceptor;
 
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
@@ -25,11 +26,22 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
 /**
  * Implementation of the {@link SmartEndpointInterceptor} interface that delegates to a
  * delegate {@link EndpointInterceptor}.
+ * <p>
+ * If the target {@link EndpointInterceptor} does not implement {@link Ordered}, a default
+ * order is applied ({@value #DEFAULT_ORDER}).
  *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 2.0
  */
-public class DelegatingSmartEndpointInterceptor implements SmartEndpointInterceptor {
+public class DelegatingSmartEndpointInterceptor implements SmartEndpointInterceptor, Ordered {
+
+	/**
+	 * Default order for {@link SmartEndpointInterceptor} instances managed by this class
+	 * that do not implement {@link Ordered} themselves.
+	 * @since 3.1.9
+	 */
+	public static final int DEFAULT_ORDER = 100;
 
 	private final EndpointInterceptor delegate;
 
@@ -49,6 +61,14 @@ public class DelegatingSmartEndpointInterceptor implements SmartEndpointIntercep
 	 */
 	public EndpointInterceptor getDelegate() {
 		return this.delegate;
+	}
+
+	@Override
+	public int getOrder() {
+		if (this.delegate instanceof Ordered) {
+			return ((Ordered) this.delegate).getOrder();
+		}
+		return DEFAULT_ORDER;
 	}
 
 	/**

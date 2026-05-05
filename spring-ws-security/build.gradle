@@ -16,6 +16,7 @@
 
 plugins {
 	id "java-library"
+	id "java-test-fixtures"
 	id "maven-publish"
 	id "io.spring.compatibility-test" version "${compatibilityTestPluginVersion}"
 	id "org.springframework.ws.conventions"
@@ -46,6 +47,7 @@ dependencies {
 		exclude(group: "commons-logging", module: "commons-logging")
 	}
 
+	testImplementation(testFixtures(project(":spring-ws-core")))
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 	testImplementation("org.assertj:assertj-core")

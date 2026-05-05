@@ -22,6 +22,7 @@ import java.net.URI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -33,6 +34,7 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInterceptor;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 
 /**
  * {@link SoapEndpointInterceptor} implementation that deals with WS-Addressing headers.
@@ -41,7 +43,17 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @author Arjen Poutsma
  * @since 1.5.0
  */
-class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
+class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered {
+
+	/**
+	 * Default order for WS-Addressing support. Application endpoint interceptors should
+	 * usually be invoked after, so that addressing headers such as required-header checks
+	 * and message ID deduplication have been validated. Interceptors with no order or a
+	 * positive order can rely on the request being fully WS-Addressing-conformant. Use a
+	 * negative value to order an interceptor before WS-Addressing processing.
+	 * @since 3.1.9
+	 */
+	public static final int DEFAULT_ORDER = 0;
 
 	private static final Log logger = LogFactory.getLog(AddressingEndpointInterceptor.class);
 
@@ -114,7 +126,7 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 			sendOutOfBand(messageContext, replyEpr, () -> {
 				if (logger.isWarnEnabled()) {
 					logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
-							+ "Configure WebServiceMessageSenders which support this uri.");
+							+ "Configure WebServiceMessageSenders which support this uri and pass remote destination checks.");
 				}
 				messageContext.clearResponse();
 				this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
@@ -153,11 +165,12 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 					+ "] reply address; sending out-of-band reply [" + messageContext.getResponse() + "]");
 		}
 
+		URI address = replyEpr.getAddress();
 		boolean supported = false;
 		for (WebServiceMessageSender messageSender : this.messageSenders) {
-			if (messageSender.supports(replyEpr.getAddress())) {
+			if (messageSender.supports(address, UriSource.REMOTE)) {
 				supported = true;
-				try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())) {
+				try (WebServiceConnection connection = messageSender.createConnection(address)) {
 					connection.send(messageContext.getResponse());
 					break;
 				}
@@ -177,6 +190,11 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor {
 			logger.trace("Generated reply MessageID [" + responseMessageId + "] for [" + response + "]");
 		}
 		return responseMessageId;
+	}
+
+	@Override
+	public int getOrder() {
+		return DEFAULT_ORDER;
 	}
 
 	@Override

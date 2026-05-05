@@ -54,6 +54,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
+import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.ws.transport.support.FreePortScanner;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -131,7 +132,7 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 
 	@Test
 	void testSupports() {
-		assertThat(this.messageSender.supports(this.connectionUri)).isTrue();
+		assertThat(this.messageSender.supports(this.connectionUri, UriSource.APPLICATION)).isTrue();
 	}
 
 	@Test
