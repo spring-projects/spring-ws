@@ -34,7 +34,7 @@ jobs:
       - name: Check Out Release Verification Tests
         uses: actions/checkout@v5
         with:
-          ref: 'cbe06d1b44f4bb5a094d516e59680e61a89e30aa'
+          ref: '4b5fd7acb93b089d250957220ddb16b979f8777b'
           repository: spring-projects/spring-ws-release-verification
           token: ${{ secrets.token }}
       - name: Check Out Send Notification Action
