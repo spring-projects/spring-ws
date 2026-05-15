@@ -1,0 +1,22 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+	<SOAP-ENV:Header>
+		<wsse:Security
+				xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+				SOAP-ENV:mustUnderstand="1">
+			<wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="Timestamp-1">
+				<wsu:Created>2006-06-01T22:14:15Z</wsu:Created>
+				<wsu:Expires>2036-06-01T22:19:15Z</wsu:Expires>
+			</wsu:Timestamp>
+			<wsse:UsernameToken
+					xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+					wsu:Id="XWSSGID-1149200055993710197275"
+					xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+				<wsse:Username>Bert</wsse:Username>
+				<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">Ernie</wsse:Password>
+			</wsse:UsernameToken>
+		</wsse:Security>
+	</SOAP-ENV:Header>
+	<SOAP-ENV:Body>
+		<tru:StockSymbol xmlns:tru="http://fabrikam123.com/payloads">QQQ</tru:StockSymbol>
+	</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
