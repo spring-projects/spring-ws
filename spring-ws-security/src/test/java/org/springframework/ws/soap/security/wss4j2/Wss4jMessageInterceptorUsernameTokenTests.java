@@ -25,9 +25,11 @@ import org.w3c.dom.Document;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTests {
 
@@ -46,6 +48,28 @@ public abstract class Wss4jMessageInterceptorUsernameTokenTests extends Wss4jTes
 		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
 		interceptor.validateMessage(message, messageContext);
 		assertValidateUsernameToken(message);
+	}
+
+	@Test
+	void testValidateUsernameTokenPlainTextAndTimestampWithStrictActionCheckingFalse() throws Exception {
+		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
+		interceptor.setStrictActionChecking(false);
+		interceptor.setValidationTimeToLive(3600 * 24 * 365 * 30); // 30 years
+		SoapMessage message = loadSoap11Message("usernameTokenPlainTextAndTimestamp-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		interceptor.validateMessage(message, messageContext);
+		assertValidateUsernameToken(message);
+	}
+
+	@Test
+	void testValidateUsernameTokenPlainTextAndTimestampWithStrictActionCheckingTrue() throws Exception {
+		Wss4jSecurityInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
+		interceptor.setValidationTimeToLive(3600 * 24 * 365 * 30); // 30 years
+		SoapMessage message = loadSoap11Message("usernameTokenPlainTextAndTimestamp-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		assertThatExceptionOfType(WsSecurityValidationException.class)
+			.isThrownBy(() -> interceptor.validateMessage(message, messageContext))
+			.withMessage("Security processing failed (actions mismatch)");
 	}
 
 	@Test
