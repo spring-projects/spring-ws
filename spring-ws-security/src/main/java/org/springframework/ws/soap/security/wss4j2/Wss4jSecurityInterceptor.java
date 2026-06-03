@@ -163,6 +163,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public static final String SECUREMENT_PASSWORD_PROPERTY_NAME = "Wss4jSecurityInterceptor.securementPassword";
 
+	private boolean strictActionChecking = true;
+
 	private @Nullable String securementActions;
 
 	private @Nullable String securementUsername;
@@ -228,6 +230,16 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	 */
 	public Wss4jSecurityInterceptor(WSSecurityEngine securityEngine) {
 		this.securityEngine = securityEngine;
+	}
+
+	/**
+	 * Whether the interceptor should strictly check the validation actions.
+	 * <p>
+	 * Set this to {@code false} to allow extra security actions in the incoming message.
+	 * @since 4.1.4
+	 */
+	public void setStrictActionChecking(boolean strictActionChecking) {
+		this.strictActionChecking = strictActionChecking;
 	}
 
 	public void setSecurementActions(String securementActions) {
@@ -891,8 +903,22 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	protected void checkResults(List<WSSecurityEngineResult> results, List<Integer> validationActions)
 			throws Wss4jSecurityValidationException {
 
-		if (!this.handler.checkReceiverResultsAnyOrder(results, validationActions)) {
-			throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+		if (this.strictActionChecking) {
+			if (!this.handler.checkReceiverResultsAnyOrder(results, validationActions)) {
+				throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+			}
+		}
+		else {
+			List<Integer> requiredActions = new ArrayList<>(validationActions);
+			for (WSSecurityEngineResult result : results) {
+				Integer action = (Integer) result.get(WSSecurityEngineResult.TAG_ACTION);
+				if (action != null) {
+					requiredActions.remove(action);
+				}
+			}
+			if (!requiredActions.isEmpty()) {
+				throw new Wss4jSecurityValidationException("Security processing failed (actions mismatch)");
+			}
 		}
 	}
 
