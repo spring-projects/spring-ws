@@ -37,7 +37,7 @@ dependencies {
 		api("com.icegreen:greenmail:2.1.8")
 		api("com.icegreen:greenmail-junit5:2.1.8")
 		api("com.icegreen:greenmail-spring:2.1.8")
-		api("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
+		api("com.sun.xml.messaging.saaj:saaj-impl:3.0.5")
 		api("commons-io:commons-io:2.19.0")
 		api("jakarta.activation:jakarta.activation-api:2.1.4")
 		api("jakarta.annotation:jakarta.annotation-api:2.1.1")
