@@ -84,7 +84,7 @@ class WebServiceTemplateTests {
 			}
 
 			@Override
-			public boolean supports(URI uri) {
+			public boolean supports(URI uri, UriSource uriSource) {
 
 				assertThat(uri).isEqualTo(expectedUri);
 				return true;
@@ -340,7 +340,7 @@ class WebServiceTemplateTests {
 			}
 
 			@Override
-			public boolean supports(URI uri) {
+			public boolean supports(URI uri, UriSource uriSource) {
 
 				assertThat(uri).isEqualTo(customUri);
 				return true;
@@ -597,7 +597,7 @@ class WebServiceTemplateTests {
 			}
 
 			@Override
-			public boolean supports(URI uri) {
+			public boolean supports(URI uri, UriSource uriSource) {
 
 				assertThat(uri).isEqualTo(providerUri);
 				return true;

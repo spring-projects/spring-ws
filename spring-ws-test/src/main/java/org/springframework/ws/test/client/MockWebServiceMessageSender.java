@@ -61,7 +61,7 @@ public class MockWebServiceMessageSender implements WebServiceMessageSender {
 	 * Always returns {@code true}.
 	 */
 	@Override
-	public boolean supports(URI uri) {
+	public boolean supports(URI uri, UriSource uriSource) {
 		return true;
 	}
 

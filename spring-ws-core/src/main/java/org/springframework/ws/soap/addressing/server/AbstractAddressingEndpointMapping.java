@@ -32,6 +32,7 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
@@ -51,6 +52,7 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
@@ -68,19 +70,30 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * {@link UuidMessageIdStrategy}.
  * <p>
  * The {@link #setMessageSenders(WebServiceMessageSender[]) messageSenders} are used to
- * send out-of-band reply messages. If a request messages defines a non-anonymous reply
- * address, these senders will be used to send the message.
+ * send out-of-band reply messages. If a request message defines a non-anonymous reply
+ * address, these senders will be used to send the message. Each sender's
+ * {@link WebServiceMessageSender#supports(java.net.URI, UriSource)} with
+ * {@link UriSource#REMOTE} determines whether client-supplied {@code wsa:ReplyTo} /
+ * {@code wsa:FaultTo} URIs are accepted for that transport.
  * <p>
  * This mapping (and all subclasses) uses an implicit WS-Addressing
  * {@link EndpointInterceptor}, which is added in every {@link EndpointInvocationChain}
  * produced. As such, this mapping does not have the standard {@code interceptors}
  * property, but rather a {@link #setPreInterceptors(EndpointInterceptor[])
- * preInterceptors} and {@link #setPostInterceptors(EndpointInterceptor[])
- * postInterceptors} property, which are added before and after the implicit WS-Addressing
- * interceptor, respectively.
+ * preInterceptors} property and a {@link #setPostInterceptors(EndpointInterceptor[])
+ * postInterceptors} property.
+ * <p>
+ * Pre-interceptors always run first in the order they have been configured. All other
+ * interceptors — the implicit WS-Addressing interceptor, any auto-discovered
+ * {@link org.springframework.ws.server.SmartEndpointInterceptor
+ * SmartEndpointInterceptors}, and post-interceptors — are sorted together using
+ * {@link org.springframework.core.OrderComparator}. The implicit WS-Addressing
+ * interceptor has a fixed order of {@code 0}; unordered interceptors default to
+ * {@link Integer#MAX_VALUE} so they run last.
  *
  * @author Arjen Poutsma
  * @author Nate Stoddard
+ * @author Stephane Nicoll
  * @since 1.5.0
  */
 public abstract class AbstractAddressingEndpointMapping extends TransformerObjectSupport
@@ -160,8 +173,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Set additional interceptors to be applied before the implicit WS-Addressing
-	 * interceptor, e.g. {@code Wss4jSecurityInterceptor}.
+	 * Set the {@link EndpointInterceptor interceptors} to be applied first, in the order
+	 * they have been defined.
+	 * @param preInterceptors the interceptors to apply first, in that order
 	 */
 	public final void setPreInterceptors(EndpointInterceptor[] preInterceptors) {
 		Assert.notNull(preInterceptors, "'preInterceptors' must not be null");
@@ -169,8 +183,18 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	}
 
 	/**
-	 * Set additional interceptors to be applied after the implicit WS-Addressing
-	 * interceptor, e.g. {@code PayloadLoggingInterceptor}.
+	 * Set additional interceptors to apply alongside the implicit WS-Addressing
+	 * interceptor.
+	 * <p>
+	 * Interceptors are sorted together with any auto-discovered
+	 * {@link org.springframework.ws.server.SmartEndpointInterceptor
+	 * SmartEndpointInterceptors} and the implicit WS-Addressing interceptor (order
+	 * {@code 0}) using {@link org.springframework.core.OrderComparator}. By default,
+	 * interceptors without an explicit order are placed at the end, and therefore after
+	 * the WS-Addressing interceptor. Implement {@link org.springframework.core.Ordered}
+	 * to customize the position.
+	 * @param postInterceptors additional interceptors to apply alongside the implicit
+	 * WS-Addressing interceptor
 	 */
 	public final void setPostInterceptors(EndpointInterceptor[] postInterceptors) {
 		Assert.notNull(postInterceptors, "'postInterceptors' must not be null");
@@ -280,22 +304,37 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 
 		WebServiceMessageSender[] messageSenders = getMessageSenders(endpoint);
 		MessageIdStrategy messageIdStrategy = getMessageIdStrategy(endpoint);
-
-		List<EndpointInterceptor> interceptors = new ArrayList<>(Arrays.asList(this.preInterceptors));
-
 		AddressingEndpointInterceptor addressingInterceptor = new AddressingEndpointInterceptor(version,
 				messageIdStrategy, messageSenders, responseAction, faultAction);
-		interceptors.add(addressingInterceptor);
-		interceptors.addAll(Arrays.asList(this.postInterceptors));
+		EndpointInterceptor[] interceptors = buildInterceptors(endpoint, messageContext, addressingInterceptor);
+		return new SoapEndpointInvocationChain(endpoint, interceptors, this.actorsOrRoles, this.isUltimateReceiver);
+	}
 
+	/**
+	 * Build the list of {@link EndpointInterceptor EndpointInterceptors} for the given
+	 * endpoint and message context. Only add {@link SmartEndpointInterceptor} that should
+	 * be {@link SmartEndpointInterceptor#shouldIntercept(MessageContext, Object)
+	 * intercepted}.
+	 * @param endpoint the endpoint
+	 * @param messageContext the current message context
+	 * @param addressingInterceptor the implicit WS-Addressing interceptor
+	 * @return the interceptors to use
+	 * @since 3.1.9
+	 */
+	protected EndpointInterceptor[] buildInterceptors(Object endpoint, MessageContext messageContext,
+			EndpointInterceptor addressingInterceptor) {
+		List<EndpointInterceptor> allInterceptor = new ArrayList<>(Arrays.asList(this.preInterceptors));
+		List<EndpointInterceptor> interceptors = new ArrayList<>();
 		for (SmartEndpointInterceptor smartInterceptor : this.smartInterceptors) {
 			if (smartInterceptor.shouldIntercept(messageContext, endpoint)) {
 				interceptors.add(smartInterceptor);
 			}
 		}
-
-		return new SoapEndpointInvocationChain(endpoint, interceptors.toArray(new EndpointInterceptor[0]),
-				this.actorsOrRoles, this.isUltimateReceiver);
+		interceptors.add(addressingInterceptor);
+		interceptors.addAll(Arrays.asList(this.postInterceptors));
+		OrderComparator.sort(interceptors);
+		allInterceptor.addAll(interceptors);
+		return allInterceptor.toArray(new EndpointInterceptor[0]);
 	}
 
 	private boolean supports(AddressingVersion version, SoapMessage request) {

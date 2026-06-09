@@ -1,0 +1,16 @@
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope"
+			  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<env:Header>
+		<wsa:MessageID>urn:uuid:12345678-1234-1234-1234-123456789012</wsa:MessageID>
+		<wsa:ReplyTo>
+			<wsa:Address>http://example.com/reply</wsa:Address>
+		</wsa:ReplyTo>
+		<wsa:To env:mustUnderstand="true">http://example.com/target</wsa:To>
+		<wsa:Action>http://example.com/Echo</wsa:Action>
+	</env:Header>
+	<env:Body>
+		<echoRequest xmlns="http://springframework.org/spring-ws">
+			<message>Hello World</message>
+		</echoRequest>
+	</env:Body>
+</env:Envelope>

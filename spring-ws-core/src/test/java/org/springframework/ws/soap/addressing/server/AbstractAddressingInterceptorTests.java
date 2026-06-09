@@ -34,9 +34,11 @@ import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
@@ -212,7 +214,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
 		URI uri = new URI("http://example.com/business/client1");
-		expect(senderMock.supports(uri)).andReturn(true);
+		expect(senderMock.supports(eq(uri), eq(UriSource.REMOTE))).andReturn(true);
 		expect(senderMock.createConnection(uri)).andReturn(connectionMock);
 		connectionMock.send(response);
 		connectionMock.close();
@@ -225,6 +227,42 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		assertThat(context.hasResponse()).isFalse();
 
 		verify(this.strategyMock, senderMock, connectionMock);
+	}
+
+	@Test
+	public void testOutOfBandFaultTo() throws Exception {
+
+		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
+
+		URI replyAction = new URI("urn:replyAction");
+		URI faultAction = new URI("urn:faultAction");
+		interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
+				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
+
+		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to-mailto.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+		response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
+
+		URI messageId = new URI("uid:1234");
+		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+
+		URI uri = new URI("mailto:client@example.com");
+		expect(senderMock.supports(eq(uri), eq(UriSource.REMOTE))).andReturn(true);
+		expect(senderMock.createConnection(uri)).andReturn(connectionMock);
+		connectionMock.send(response);
+		connectionMock.close();
+
+		replay(strategyMock, senderMock, connectionMock);
+
+		boolean result = interceptor.handleFault(context, null);
+
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isFalse();
+
+		verify(strategyMock, senderMock, connectionMock);
 	}
 
 	@Test
@@ -243,7 +281,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		URI messageId = new URI("uid:1234");
 		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 		URI replyTo = new URI("mailto:client@example.com");
-		expect(senderMock.supports(replyTo)).andReturn(false);
+		expect(senderMock.supports(eq(replyTo), eq(UriSource.REMOTE))).andReturn(false);
 		replay(this.strategyMock, senderMock);
 
 		boolean result = this.interceptor.handleResponse(context, null);
@@ -273,7 +311,7 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		URI messageId = new URI("uid:1234");
 		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 		URI faultTo = new URI("mailto:client@example.com");
-		expect(senderMock.supports(faultTo)).andReturn(false);
+		expect(senderMock.supports(eq(faultTo), eq(UriSource.REMOTE))).andReturn(false);
 		replay(this.strategyMock, senderMock);
 
 		boolean result = this.interceptor.handleFault(context, null);

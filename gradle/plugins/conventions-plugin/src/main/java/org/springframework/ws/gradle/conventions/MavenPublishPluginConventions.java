@@ -17,8 +17,12 @@
 package org.springframework.ws.gradle.conventions;
 
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.ConfigurationContainer;
+import org.gradle.api.component.AdhocComponentWithVariants;
+import org.gradle.api.component.ConfigurationVariantDetails;
 import org.gradle.api.plugins.JavaPlatformPlugin;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.JavaTestFixturesPlugin;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin;
@@ -51,6 +55,18 @@ class MavenPublishPluginConventions {
 				configure(project, publication);
 			});
 		});
+		project.getPlugins()
+			.withType(JavaTestFixturesPlugin.class, (testFixtures) -> disableTextFixturesPublishing(project));
+	}
+
+	private void disableTextFixturesPublishing(Project project) {
+		ConfigurationContainer configurations = project.getConfigurations();
+		AdhocComponentWithVariants javaComponent = (AdhocComponentWithVariants) project.getComponents()
+			.getByName("java");
+		javaComponent.withVariantsFromConfiguration(configurations.getByName("testFixturesApiElements"),
+				ConfigurationVariantDetails::skip);
+		javaComponent.withVariantsFromConfiguration(configurations.getByName("testFixturesRuntimeElements"),
+				ConfigurationVariantDetails::skip);
 	}
 
 	void configureRepositories(Project project, PublishingExtension publishing) {

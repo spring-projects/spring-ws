@@ -34,6 +34,8 @@ You can either set a `defaultUri` property on the template itself or explicitly 
 The URI is resolved into a `WebServiceMessageSender`, which is responsible for sending the XML message across a transport layer.
 You can set one or more message senders by using the `messageSender` or `messageSenders` properties of the `WebServiceTemplate` class.
 
+NOTE: If your organization needs additional rules on top of what the chosen sender already enforces, you can register a `DestinationPolicy` on that sender bean to accept or reject destinations before a connection is opened.
+
 ===== HTTP transports
 
 There are three implementations of the `WebServiceMessageSender` interface for sending messages over HTTP.
