@@ -134,6 +134,12 @@ The following table shows the available securement actions:
 The order of the actions is significant and is enforced by the interceptor.
 If its security actions were performed in a different order than the one specified by `validationActions`, the interceptor rejects an incoming SOAP message.
 
+=== WS-I Basic Security Profile
+
+The `setBspCompliant(boolean)` property controls WS-I Basic Security Profile (BSP) enforcement for **validation**, consistent with Apache WSS4J.
+The default is `true`.
+Use `false` only when you must accept messages from peers that intentionally deviate from BSP rules and you accept the reduced validation.
+
 == Handling Digital Certificates
 
 For cryptographic operations that require interaction with a keystore or certificate handling (signature, encryption, and decryption operations), WSS4J requires an instance of `org.apache.ws.security.components.crypto.Crypto`.
