@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import org.apache.wss4j.common.cache.MemoryReplayCache;
+import org.apache.wss4j.common.cache.ReplayCache;
 import org.apache.wss4j.dom.engine.WSSecurityEngine;
 import org.apache.wss4j.dom.handler.RequestData;
 import org.junit.jupiter.api.Test;
@@ -146,6 +148,21 @@ public abstract class Wss4jInterceptorTests extends Wss4jTests {
 		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
 		RequestData requestData = interceptor.initializeValidationRequestData(context);
 		assertThat(requestData.isAllowRSA15KeyTransportAlgorithm()).isTrue();
+	}
+
+	@Test
+	void validationReplayCachesArePropagatedToRequestData() throws Exception {
+		WSSecurityEngine engine = new WSSecurityEngine();
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);
+		ReplayCache replayCache = new MemoryReplayCache();
+		interceptor.setValidationReplayCache(replayCache);
+
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		RequestData requestData = interceptor.initializeValidationRequestData(context);
+		assertThat(requestData.getNonceReplayCache()).isSameAs(replayCache);
+		assertThat(requestData.getTimestampReplayCache()).isSameAs(replayCache);
+		assertThat(requestData.getSamlOneTimeUseReplayCache()).isSameAs(replayCache);
 	}
 
 }
