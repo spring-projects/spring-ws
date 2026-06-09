@@ -125,4 +125,27 @@ public abstract class Wss4jInterceptorTests extends Wss4jTests {
 		assertThat(requestData.isDisableBSPEnforcement()).isTrue();
 	}
 
+	@Test
+	void rsa15KeyTransportAlgorithmShouldBeDisabledByDefault() throws Exception {
+		WSSecurityEngine engine = new WSSecurityEngine();
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);
+
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		RequestData requestData = interceptor.initializeValidationRequestData(context);
+		assertThat(requestData.isAllowRSA15KeyTransportAlgorithm()).isFalse();
+	}
+
+	@Test
+	void rsa15KeyTransportAlgorithmCanBeEnabled() throws Exception {
+		WSSecurityEngine engine = new WSSecurityEngine();
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor(engine);
+		interceptor.setAllowRSA15KeyTransportAlgorithm(true);
+
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		RequestData requestData = interceptor.initializeValidationRequestData(context);
+		assertThat(requestData.isAllowRSA15KeyTransportAlgorithm()).isTrue();
+	}
+
 }

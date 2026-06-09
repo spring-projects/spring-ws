@@ -18,14 +18,19 @@ package org.springframework.ws.soap.security.wss4j2;
 
 import java.util.Properties;
 
+import org.apache.wss4j.common.crypto.Crypto;
+import org.apache.wss4j.dom.WSConstants;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j2.callback.KeyStoreCallbackHandler;
 import org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests {
 
@@ -33,7 +38,6 @@ public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests 
 
 	@Override
 	protected void onSetup() throws Exception {
-
 		this.interceptor = new Wss4jSecurityInterceptor();
 		this.interceptor.setValidationActions("Encrypt");
 		this.interceptor.setSecurementActions("Encrypt");
@@ -42,6 +46,67 @@ public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests 
 		callbackHandler.setPrivateKeyPassword("123456");
 		this.interceptor.setValidationCallbackHandler(callbackHandler);
 
+		Crypto crypto = setupCrypto();
+		this.interceptor.setValidationDecryptionCrypto(crypto);
+		this.interceptor.setSecurementEncryptionCrypto(crypto);
+		this.interceptor.afterPropertiesSet();
+
+		this.xpathTemplate.getNamespaces().put("tru", "http://fabrikam123.com/payloads");
+	}
+
+	@Test
+	public void testDecryptRequestRejectsLegacyRsaKeyTransportByDefault() throws Exception {
+		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		assertThatExceptionOfType(WsSecurityValidationException.class).isThrownBy(() -> {
+			this.interceptor.validateMessage(message, messageContext);
+		});
+	}
+
+	@Test
+	public void testDecryptRequestAcceptsLegacyRsaKeyTransportWhenOptedIn() throws Exception {
+		this.interceptor.setAllowRSA15KeyTransportAlgorithm(true);
+
+		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+		this.interceptor.validateMessage(message, messageContext);
+
+		Document document = getDocument((SoapMessage) messageContext.getRequest());
+		assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
+				document);
+		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
+				getDocument(message));
+	}
+
+	@Test
+	public void testDecryptRequestWithRsaOaepKeyTransportRoundTrip() throws Exception {
+		this.interceptor.setSecurementEncryptionKeyTransportAlgorithm(WSConstants.KEYTRANSPORT_RSAOAEP);
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+		this.interceptor.setSecurementEncryptionUser("rsakey");
+		this.interceptor.secureMessage(message, messageContext);
+		this.interceptor.validateMessage(message, messageContext);
+
+		Document document = getDocument((SoapMessage) messageContext.getRequest());
+		assertXpathEvaluatesTo("Decryption error", "QQQ", "/SOAP-ENV:Envelope/SOAP-ENV:Body/tru:StockSymbol/text()",
+				document);
+		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
+				getDocument(message));
+	}
+
+	@Test
+	public void testEncryptResponse() throws Exception {
+		SoapMessage message = loadSoap11Message("empty-soap.xml");
+		MessageContext messageContext = getSoap11MessageContext(message);
+		this.interceptor.setSecurementEncryptionUser("rsakey");
+		this.interceptor.secureMessage(message, messageContext);
+
+		Document document = getDocument(message);
+		assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
+				document);
+	}
+
+	private Crypto setupCrypto() throws Exception {
 		CryptoFactoryBean cryptoFactoryBean = new CryptoFactoryBean();
 
 		Properties cryptoFactoryBeanConfig = new Properties();
@@ -54,37 +119,7 @@ public abstract class Wss4jMessageInterceptorEncryptionTests extends Wss4jTests 
 		cryptoFactoryBeanConfig.setProperty("org.apache.ws.security.crypto.merlin.file", "private.jks");
 		cryptoFactoryBean.setConfiguration(cryptoFactoryBeanConfig);
 		cryptoFactoryBean.afterPropertiesSet();
-		this.interceptor.setValidationDecryptionCrypto(cryptoFactoryBean.getObject());
-		this.interceptor.setSecurementEncryptionCrypto(cryptoFactoryBean.getObject());
-
-		this.interceptor.afterPropertiesSet();
-	}
-
-	@Test
-	void testDecryptRequest() throws Exception {
-
-		SoapMessage message = loadSoap11Message("encrypted-soap.xml");
-		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
-		this.interceptor.validateMessage(message, messageContext);
-		Document document = getDocument((SoapMessage) messageContext.getRequest());
-
-		assertXpathEvaluatesTo("Decryption error", "Hello", "/SOAP-ENV:Envelope/SOAP-ENV:Body/echo:echoRequest/text()",
-				document);
-		assertXpathNotExists("Security Header not removed", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security",
-				getDocument(message));
-	}
-
-	@Test
-	void testEncryptResponse() throws Exception {
-
-		SoapMessage message = loadSoap11Message("empty-soap.xml");
-		MessageContext messageContext = getSoap11MessageContext(message);
-		this.interceptor.setSecurementEncryptionUser("rsakey");
-		this.interceptor.secureMessage(message, messageContext);
-		Document document = getDocument(message);
-
-		assertXpathExists("Encryption error", "/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/xenc:EncryptedKey",
-				document);
+		return cryptoFactoryBean.getObject();
 	}
 
 }
