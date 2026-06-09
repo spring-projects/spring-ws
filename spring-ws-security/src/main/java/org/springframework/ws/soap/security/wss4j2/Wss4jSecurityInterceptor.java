@@ -30,6 +30,7 @@ import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 
 import org.apache.wss4j.common.ConfigurationConstants;
+import org.apache.wss4j.common.cache.ReplayCache;
 import org.apache.wss4j.common.crypto.Crypto;
 import org.apache.wss4j.common.ext.WSSecurityException;
 import org.apache.wss4j.common.principal.WSUsernameTokenPrincipalImpl;
@@ -140,6 +141,16 @@ import org.springframework.ws.soap.security.wss4j2.callback.UsernameTokenPrincip
  * <p>
  * The order of the actions that the client performed to secure the messages is
  * significant and is enforced by the interceptor.
+ * <p>
+ * For validation, configure an Apache WSS4J {@link ReplayCache} with
+ * {@link #setValidationReplayCache(ReplayCache)} so username-token nonces and (when
+ * applicable) timestamp/signature and SAML one-time-use replay checks run across
+ * requests. By default, the same cache is used for all three; override
+ * {@link #getValidationNonceReplayCache()}, {@link #getValidationTimestampReplayCache()},
+ * or {@link #getValidationSamlOneTimeUseReplayCache()} to use different caches. See
+ * {@link org.springframework.ws.soap.security.wss4j2.cache.SpringReplayCache
+ * SpringReplayCache} for a convenient implementation based on Spring's
+ * {@link org.springframework.cache.Cache Cache abstraction}.
  *
  * @author Tareq Abed Rabbo
  * @author Arjen Poutsma
@@ -213,6 +224,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
+
+	private @Nullable ReplayCache validationReplayCache;
 
 	private List<Pattern> signatureSubjectDnPatterns = Collections.emptyList();
 
@@ -706,6 +719,45 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		this.removeSecurityHeader = removeSecurityHeader;
 	}
 
+	/**
+	 * Set the {@link ReplayCache} used during message validation for username-token
+	 * nonces, timestamp/signature replay detection, and SAML one-time-use assertions.
+	 * @since 3.1.9
+	 */
+	public void setValidationReplayCache(@Nullable ReplayCache validationReplayCache) {
+		this.validationReplayCache = validationReplayCache;
+	}
+
+	/**
+	 * Return the replay cache for {@code UsernameToken} nonces. The default
+	 * implementation returns the cache configured with
+	 * {@link #setValidationReplayCache(ReplayCache)}.
+	 * @since 3.1.9
+	 */
+	protected @Nullable ReplayCache getValidationNonceReplayCache() {
+		return this.validationReplayCache;
+	}
+
+	/**
+	 * Return the replay cache for timestamp/signature replay detection. The default
+	 * implementation returns the cache configured with
+	 * {@link #setValidationReplayCache(ReplayCache)}.
+	 * @since 3.1.9
+	 */
+	protected @Nullable ReplayCache getValidationTimestampReplayCache() {
+		return this.validationReplayCache;
+	}
+
+	/**
+	 * Return the replay cache for SAML {@code OneTimeUse} assertions. The default
+	 * implementation returns the cache configured with
+	 * {@link #setValidationReplayCache(ReplayCache)}.
+	 * @since 3.1.9
+	 */
+	protected @Nullable ReplayCache getValidationSamlOneTimeUseReplayCache() {
+		return this.validationReplayCache;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 
@@ -831,6 +883,19 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 		requestData.setAddInclusivePrefixes(this.addInclusivePrefixes);
 		// allow for qualified password types for .Net interoperability
 		requestData.setAllowNamespaceQualifiedPasswordTypes(true);
+
+		ReplayCache nonceReplayCache = getValidationNonceReplayCache();
+		if (nonceReplayCache != null) {
+			requestData.setNonceReplayCache(nonceReplayCache);
+		}
+		ReplayCache timestampReplayCache = getValidationTimestampReplayCache();
+		if (timestampReplayCache != null) {
+			requestData.setTimestampReplayCache(timestampReplayCache);
+		}
+		ReplayCache samlOneTimeUseReplayCache = getValidationSamlOneTimeUseReplayCache();
+		if (samlOneTimeUseReplayCache != null) {
+			requestData.setSamlOneTimeUseReplayCache(samlOneTimeUseReplayCache);
+		}
 
 		requestData.setSubjectCertConstraints(this.signatureSubjectDnPatterns);
 		return requestData;
