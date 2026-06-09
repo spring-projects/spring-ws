@@ -209,8 +209,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private @Nullable CallbackHandler attachmentCallbackHandler;
 
-	// Allow RSA 15 to maintain default behavior
-	private boolean allowRSA15KeyTransportAlgorithm = true;
+	private boolean allowRSA15KeyTransportAlgorithm = false;
 
 	// To maintain same behavior as default, this flag is set to true
 	private boolean removeSecurityHeader = true;
@@ -679,7 +678,9 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	}
 
 	/**
-	 * Sets whether the RSA 1.5 key transport algorithm is allowed.
+	 * Sets whether the RSA PKCS#1 v1.5 key transport algorithm is allowed when
+	 * <strong>validating</strong> encrypted messages. Default is {@code false}, matching
+	 * Apache WSS4J. Enable only for interoperability with peers that cannot use RSA-OAEP.
 	 */
 	public void setAllowRSA15KeyTransportAlgorithm(boolean allow) {
 		this.allowRSA15KeyTransportAlgorithm = allow;

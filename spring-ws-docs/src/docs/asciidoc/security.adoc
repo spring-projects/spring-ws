@@ -140,6 +140,13 @@ The `setBspCompliant(boolean)` property controls WS-I Basic Security Profile (BS
 The default is `true`.
 Use `false` only when you must accept messages from peers that intentionally deviate from BSP rules and you accept the reduced validation.
 
+=== Inbound XML Encryption key transport
+
+The `setAllowRSA15KeyTransportAlgorithm(boolean)` property controls whether the RSA PKCS#1 v1.5 XML Encryption key transport algorithm is accepted when **decrypting** inbound messages.
+The default is `false`, in line with WSS4J.
+Set it to `true` only when a partner cannot use RSA-OAEP.
+For **outbound** encryption, prefer `setSecurementEncryptionKeyTransportAlgorithm` with `http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p` (or the constant exposed by WSS4J) when the recipient supports it.
+
 == Handling Digital Certificates
 
 For cryptographic operations that require interaction with a keystore or certificate handling (signature, encryption, and decryption operations), WSS4J requires an instance of `org.apache.ws.security.components.crypto.Crypto`.
@@ -556,6 +563,7 @@ In the next example, the outgoing message is encrypted with a key aliased `secre
 
 The `securementEncryptionKeyTransportAlgorithm` property defines which algorithm to use to encrypt the generated symmetric key.
 Supported values are `http://www.w3.org/2001/04/xmlenc#rsa-1_5`, which is the default, and `http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p`.
+Inbound acceptance of RSA PKCS#1 v1.5 key transport during decryption is controlled separately by `setAllowRSA15KeyTransportAlgorithm`.
 
 You can set the symmetric encryption algorithm to use by setting the `securementEncryptionSymAlgorithm` property.
 Supported values are `http://www.w3.org/2001/04/xmlenc#aes128-cbc` (default), `http://www.w3.org/2001/04/xmlenc#tripledes-cbc`, `http://www.w3.org/2001/04/xmlenc#aes256-cbc`, and `http://www.w3.org/2001/04/xmlenc#aes192-cbc`.
