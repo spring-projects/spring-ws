@@ -18,14 +18,18 @@ package org.springframework.ws.transport.xmpp;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.transport.AbstractWebServiceMessageSender;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
@@ -36,13 +40,26 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  * {@link #setConnection(org.jivesoftware.smack.XMPPConnection) connection}to be set.
  * <p>
  * This message sender supports URI's of the following format: <blockquote>
- * {@code xmpp:<to>} </blockquote> The {@code to} represents a Jabber ID.
+ * <tt><b>xmpp:</b></tt><i>to</i> </blockquote> The <i>to</i> represents a Jabber ID.
+ * <p>
+ * For {@link UriSource#APPLICATION}, default checks accept any {@code xmpp:} URI. For
+ * {@link UriSource#REMOTE}, default checks require a configured {@link XMPPConnection}
+ * and accept only URIs whose JID domain matches the connection's XMPP service domain (see
+ * {@link XmppDestinationDescriptor#domain()}). Use a
+ * {@link WebServiceMessageSender.DestinationPolicy} for allow-lists, multi-tenant
+ * routing, or stricter JID checks.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 2.0
  */
-public class XmppMessageSender implements WebServiceMessageSender, InitializingBean {
+public class XmppMessageSender extends AbstractWebServiceMessageSender<XmppDestinationDescriptor>
+		implements InitializingBean {
+
+	public XmppMessageSender() {
+		super((uri) -> uri.getScheme().equals(XmppTransportConstants.XMPP_URI_SCHEME));
+	}
 
 	/**
 	 * Default timeout for receive operations: -1 indicates a blocking receive without
@@ -102,8 +119,24 @@ public class XmppMessageSender implements WebServiceMessageSender, InitializingB
 	}
 
 	@Override
-	public boolean supports(URI uri) {
-		return uri.getScheme().equals(XmppTransportConstants.XMPP_URI_SCHEME);
+	protected XmppDestinationDescriptor createDescriptor(URI uri, WebServiceMessageSender.UriSource uriSource) {
+		return XmppDestinationDescriptor.of(uri, uriSource);
+	}
+
+	@Override
+	protected Predicate<XmppDestinationDescriptor> defaultChecks(WebServiceMessageSender.UriSource uriSource) {
+		return (uriSource == UriSource.REMOTE) ? this::xmppRemoteDefaultChecks : (details) -> true;
+	}
+
+	private boolean xmppRemoteDefaultChecks(XmppDestinationDescriptor descriptor) {
+		if (this.connection == null) {
+			return false;
+		}
+		String serviceDomain = this.connection.getXMPPServiceDomain().toString().toLowerCase(Locale.ROOT);
+		if (!StringUtils.hasLength(serviceDomain)) {
+			return false;
+		}
+		return descriptor.domain() != null && serviceDomain.equalsIgnoreCase(descriptor.domain());
 	}
 
 	protected String createThread() {

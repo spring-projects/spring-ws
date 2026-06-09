@@ -16,6 +16,7 @@
 
 plugins {
 	id "java-library"
+	id "java-test-fixtures"
 	id "maven-publish"
 	id "org.springframework.ws.conventions"
 	id "org.springframework.ws.optional-dependencies"
@@ -41,6 +42,7 @@ dependencies {
 	optional("org.apache.ws.commons.axiom:axiom-impl")
 	optional("org.apache.ws.commons.axiom:axiom-legacy-attachments")
 
+	testImplementation(testFixtures(project(":spring-ws-core")))
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 	testImplementation("org.assertj:assertj-core")

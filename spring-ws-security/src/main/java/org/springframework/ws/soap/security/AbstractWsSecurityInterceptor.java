@@ -26,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.core.Ordered;
 import org.springframework.util.Assert;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -53,7 +54,15 @@ import org.springframework.ws.soap.soap11.Soap11Body;
  * @author Arjen Poutsma
  * @since 1.0.0
  */
-public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInterceptor, ClientInterceptor {
+public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInterceptor, ClientInterceptor, Ordered {
+
+	/**
+	 * Default order for WS-Security interceptors, ensuring they run early. Any
+	 * interceptor with a higher precedence than {@value} will therefore run before
+	 * security is applied.
+	 * @since 3.1.9
+	 */
+	public static final int DEFAULT_ORDER = -200;
 
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -120,6 +129,11 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	/*
 	 * Server-side
 	 */
+
+	@Override
+	public int getOrder() {
+		return DEFAULT_ORDER;
+	}
 
 	/**
 	 * Validates a server-side incoming request. Delegates to

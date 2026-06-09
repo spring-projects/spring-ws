@@ -25,6 +25,7 @@ import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
 /**
@@ -97,8 +98,9 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 	 * resolved.
 	 * <p>
 	 * Default implementation iterates over all configured {@link WebServiceMessageSender}
-	 * objects, and calls {@link WebServiceMessageSender#supports(URI)} for each of them.
-	 * If the sender supports the parameter URI, it creates a connection using
+	 * objects, and calls {@link WebServiceMessageSender#supports(URI, UriSource)} with
+	 * {@link UriSource#APPLICATION} for each of them. If the sender supports the
+	 * parameter URI, it creates a connection using
 	 * {@link WebServiceMessageSender#createConnection(URI)} .
 	 * @param uri the URI to open a connection to
 	 * @return the created connection
@@ -109,7 +111,7 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 		Assert.notEmpty(getMessageSenders(), "Property 'messageSenders' is required");
 		WebServiceMessageSender[] messageSenders = getMessageSenders();
 		for (WebServiceMessageSender messageSender : messageSenders) {
-			if (messageSender.supports(uri)) {
+			if (messageSender.supports(uri, UriSource.APPLICATION)) {
 				WebServiceConnection connection = messageSender.createConnection(uri);
 				if (this.logger.isDebugEnabled()) {
 					try {
