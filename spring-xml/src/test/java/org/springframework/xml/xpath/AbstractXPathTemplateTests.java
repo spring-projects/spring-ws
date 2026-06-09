@@ -18,6 +18,7 @@ package org.springframework.xml.xpath;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.List;
 
@@ -44,9 +45,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.ResourceSource;
+import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public abstract class AbstractXPathTemplateTests {
 
@@ -235,6 +238,43 @@ public abstract class AbstractXPathTemplateTests {
 
 		assertThat(results).isNotNull();
 		assertThat(results).containsExactly("text", "number", "boolean");
+	}
+
+	@Test
+	void testEvaluateWhenDoctypeWithExternalEntityIsRejected() {
+		String xxe = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<!DOCTYPE foo [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><foo>&xxe;</foo>";
+		assertThatThrownBy(() -> this.template.evaluateAsString("/foo/text()", new StreamSource(new StringReader(xxe))))
+			.isInstanceOf(XPathException.class)
+			.hasRootCauseInstanceOf(SAXException.class);
+	}
+
+	@Test
+	void testEvaluateWhenPlainXmlStreamSourceEvaluates() throws XPathException {
+		String xml = "<root><child>expected</child></root>";
+		assertThat(this.template.evaluateAsString("/root/child/text()", new StreamSource(new StringReader(xml))))
+			.isEqualTo("expected");
+	}
+
+	@Test
+	void testEvaluateWhenStringSource() throws XPathException {
+		StringSource source = new StringSource("<root><v>42</v></root>");
+		assertThat(this.template.evaluateAsString("/root/v/text()", source)).isEqualTo("42");
+	}
+
+	@Test
+	void testEvaluateWhenSAXSourceWithInputSourceOnlyEvaluates() throws XPathException {
+		String xml = "<data><item>a</item></data>";
+		SAXSource source = new SAXSource(new InputSource(new StringReader(xml)));
+		assertThat(this.template.evaluateAsString("/data/item/text()", source)).isEqualTo("a");
+	}
+
+	@Test
+	void testEvaluateWhenSAXSourceWithDoctypeWithExternalEntityIsRejected() {
+		String xxe = "<?xml version=\"1.0\"?><!DOCTYPE r [<!ENTITY e SYSTEM \"file:///etc/passwd\">]><r>&e;</r>";
+		SAXSource source = new SAXSource(new InputSource(new StringReader(xxe)));
+		assertThatThrownBy(() -> this.template.evaluateAsString("/r/text()", source)).isInstanceOf(XPathException.class)
+			.hasRootCauseInstanceOf(SAXException.class);
 	}
 
 }
