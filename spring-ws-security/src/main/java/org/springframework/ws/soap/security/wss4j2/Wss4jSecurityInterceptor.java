@@ -199,7 +199,7 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 	private boolean enableRevocation;
 
-	private boolean bspCompliant;
+	private boolean bspCompliant = true;
 
 	private boolean addInclusivePrefixes = true;
 
