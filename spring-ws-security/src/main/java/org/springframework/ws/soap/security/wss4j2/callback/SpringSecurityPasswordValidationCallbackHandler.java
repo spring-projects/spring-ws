@@ -26,15 +26,18 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.cache.NullUserCache;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.security.callback.CleanupCallback;
-import org.springframework.ws.soap.security.support.SpringSecurityUtils;
 
 /**
  * Callback handler that validates a plain text or digest password using an Spring
@@ -55,6 +58,8 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 
 	private @Nullable UserDetailsService userDetailsService;
 
+	private UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
+
 	/** Sets the users cache. Not required, but can benefit performance. */
 	public void setUserCache(UserCache userCache) {
 		this.userCache = userCache;
@@ -65,9 +70,19 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		this.userDetailsService = userDetailsService;
 	}
 
+	/**
+	 * Set the checker invoked before supplying a password to WSS4J for UsernameToken
+	 * validation. Defaults to {@link AccountStatusUserDetailsChecker}.
+	 * @since 3.1.9
+	 */
+	public void setUserDetailsChecker(UserDetailsChecker userDetailsChecker) {
+		this.userDetailsChecker = userDetailsChecker;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Assert.notNull(this.userDetailsService, "userDetailsService is required");
+		Assert.notNull(this.userDetailsChecker, "userDetailsChecker is required");
 	}
 
 	/**
@@ -80,13 +95,21 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 	 */
 	protected void handleUsernameToken(WSPasswordCallback callback) {
 		UserDetails user = loadUserDetails(callback.getIdentifier());
-		SpringSecurityUtils.checkUserValidity(user);
-		callback.setPassword(user.getPassword());
+		if (user != null) {
+			try {
+				this.userDetailsChecker.check(user);
+				callback.setPassword(user.getPassword());
+			}
+			catch (AccountStatusException ex) {
+				// Leave password unset so WSS4J reports a generic authentication failure
+			}
+		}
 	}
 
 	@Override
 	protected void handleUsernameTokenPrincipal(UsernameTokenPrincipalCallback callback) {
-		UserDetails user = loadUserDetails(callback.getPrincipal().getName());
+		UserDetails user = Objects.requireNonNull(loadUserDetails(callback.getPrincipal().getName()),
+				"UserDetails must still resolve after UsernameToken validation");
 		WSUsernameTokenPrincipalImpl principal = callback.getPrincipal();
 		UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(principal,
 				principal.getPassword(), user.getAuthorities());
@@ -102,11 +125,20 @@ public class SpringSecurityPasswordValidationCallbackHandler extends AbstractWsP
 		SecurityContextHolder.clearContext();
 	}
 
-	private UserDetails loadUserDetails(String username) throws DataAccessException {
+	private @Nullable UserDetails loadUserDetails(String username) throws DataAccessException {
 		UserDetails user = this.userCache.getUserFromCache(username);
 
 		if (user == null) {
-			user = Objects.requireNonNull(this.userDetailsService).loadUserByUsername(username);
+			Assert.notNull(this.userDetailsService, "userDetailsService is required");
+			try {
+				user = this.userDetailsService.loadUserByUsername(username);
+			}
+			catch (UsernameNotFoundException notFound) {
+				if (this.logger.isDebugEnabled()) {
+					this.logger.debug("Username '" + username + "' not found");
+				}
+				return null;
+			}
 			this.userCache.putUserInCache(user);
 		}
 		return user;
