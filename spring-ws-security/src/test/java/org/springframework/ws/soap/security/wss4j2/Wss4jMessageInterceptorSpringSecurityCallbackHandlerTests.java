@@ -16,14 +16,20 @@
 
 package org.springframework.ws.soap.security.wss4j2;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.wss4j.dom.WSConstants;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AccountStatusException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
@@ -32,32 +38,24 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests extends Wss4jTests {
 
-	private Properties users = new Properties();
-
-	private AuthenticationManager authenticationManager;
+	private final Properties users = new Properties();
 
 	@Override
 	protected void onSetup() {
-
-		this.authenticationManager = createMock(AuthenticationManager.class);
 		this.users.setProperty("Bert", "Ernie,ROLE_TEST");
 	}
 
 	@AfterEach
-	public void tearDown() {
-
-		verify(this.authenticationManager);
+	void tearDown() {
 		SecurityContextHolder.clearContext();
 	}
 
 	@Test
-	void testValidateUsernameTokenPlainText() throws Exception {
+	void validateUsernameTokenPlainText() throws Exception {
 
 		EndpointInterceptor interceptor = prepareInterceptor("UsernameToken", true, false);
 		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
@@ -65,7 +63,6 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 		interceptor.handleRequest(messageContext, null);
 		assertValidateUsernameToken(message);
 
-		// test clean up
 		messageContext.getResponse();
 		interceptor.handleResponse(messageContext, null);
 		interceptor.afterCompletion(messageContext, null, null);
@@ -74,7 +71,63 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 	}
 
 	@Test
-	void testValidateUsernameTokenDigest() throws Exception {
+	void validateUsernameTokenPlainTextUnknownUserDoesNotExposeEnumerationDetailsInException() throws Exception {
+
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setValidationActions("UsernameToken");
+		interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
+
+		SpringSecurityPasswordValidationCallbackHandler callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
+		callbackHandler.setUserDetailsService(username -> {
+			throw new UsernameNotFoundException("User 'Bert' not found");
+		});
+		interceptor.setValidationCallbackHandler(callbackHandler);
+		interceptor.afterPropertiesSet();
+
+		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+
+		assertThatExceptionOfType(Wss4jSecurityValidationException.class)
+			.isThrownBy(() -> interceptor.validateMessage(message, messageContext))
+			.satisfies(ex -> {
+				String text = stackTraceString(ex);
+				assertThat(text).doesNotContain("Granted Authorities");
+				assertThat(text).doesNotContain("UsernameNotFoundException");
+				assertThat(text.toLowerCase()).doesNotContain("bert");
+				assertNoAccountStatusExceptionInCauseChain(ex);
+			});
+	}
+
+	@Test
+	void validateUsernameTokenPlainTextDisabledUserDoesNotExposeAccountDetailsInException() throws Exception {
+
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+		interceptor.setValidationActions("UsernameToken");
+		interceptor.setSecurementPasswordType(WSConstants.PW_TEXT);
+
+		SpringSecurityPasswordValidationCallbackHandler callbackHandler = new SpringSecurityPasswordValidationCallbackHandler();
+		User bertDisabled = new User("Bert", "Ernie", false, true, true, true,
+				Collections.singletonList(new SimpleGrantedAuthority("ROLE_TEST")));
+		callbackHandler.setUserDetailsService(new InMemoryUserDetailsManager(bertDisabled));
+		interceptor.setValidationCallbackHandler(callbackHandler);
+		interceptor.afterPropertiesSet();
+
+		SoapMessage message = loadSoap11Message("usernameTokenPlainText-soap.xml");
+		MessageContext messageContext = new DefaultMessageContext(message, getSoap11MessageFactory());
+
+		assertThatExceptionOfType(Wss4jSecurityValidationException.class)
+			.isThrownBy(() -> interceptor.validateMessage(message, messageContext))
+			.satisfies(ex -> {
+				String text = stackTraceString(ex);
+				assertThat(text).doesNotContain("Granted Authorities");
+				assertThat(text).doesNotContain("ROLE_TEST");
+				assertThat(text.toLowerCase()).doesNotContain("bert");
+				assertNoAccountStatusExceptionInCauseChain(ex);
+			});
+	}
+
+	@Test
+	void validateUsernameTokenDigest() throws Exception {
 
 		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
 		interceptor.setSecurementActions("UsernameToken");
@@ -90,7 +143,6 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 		interceptor.handleRequest(messageContext, null);
 		assertValidateUsernameToken(message);
 
-		// test clean up
 		messageContext.getResponse();
 		interceptor.handleResponse(messageContext, null);
 		interceptor.afterCompletion(messageContext, null, null);
@@ -133,9 +185,22 @@ public abstract class Wss4jMessageInterceptorSpringSecurityCallbackHandlerTests 
 
 		interceptor.setValidationCallbackHandler(callbackHandler);
 		interceptor.afterPropertiesSet();
-		replay(this.authenticationManager);
 
 		return interceptor;
+	}
+
+	private static String stackTraceString(Throwable ex) {
+		StringWriter sw = new StringWriter();
+		ex.printStackTrace(new PrintWriter(sw));
+		return sw.toString();
+	}
+
+	private static void assertNoAccountStatusExceptionInCauseChain(Throwable ex) {
+		Throwable current = ex;
+		while (current != null) {
+			assertThat(current).isNotInstanceOf(AccountStatusException.class);
+			current = current.getCause();
+		}
 	}
 
 }
