@@ -18,6 +18,7 @@ package org.springframework.ws.soap.saaj;
 
 import java.util.Iterator;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 
@@ -29,6 +30,8 @@ import jakarta.xml.soap.SOAPMessage;
 import org.junit.jupiter.api.Test;
 import org.xmlunit.assertj.XmlAssert;
 
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.soap11.AbstractSoap11MessageTests;
 import org.springframework.xml.transform.StringResult;
@@ -58,6 +61,22 @@ class SaajSoap11MessageTests extends AbstractSoap11MessageTests {
 		this.saajMessage.getSOAPHeader().detachNode();
 
 		return new SaajSoapMessage(this.saajMessage, true, messageFactory);
+	}
+
+	@Test
+	void getDocumentReflectsAddedHeaderElement() throws Exception {
+
+		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
+		SoapHeader soapHeader = message.getSoapHeader();
+		QName qName = new QName("http://www.w3.org/2005/08/addressing", "Action", "a");
+		SoapHeaderElement soapHeaderElement = soapHeader.addHeaderElement(qName);
+		soapHeaderElement.setMustUnderstand(true);
+		soapHeaderElement.setText("some text");
+
+		XmlAssert.assertThat(message.getDocument())
+			.valueByXPath("count(//*[local-name()='Action' and namespace-uri()='http://www.w3.org/2005/08/addressing' and text()='some text'])")
+			.isEqualTo("1");
 	}
 
 	@Test
