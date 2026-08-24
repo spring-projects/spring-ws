@@ -609,3 +609,67 @@ Similarly, `WsSecurityValidationException` exceptions are handled by the `handle
 By default, this method creates a SOAP 1.1 Client or SOAP 1.2 sender fault and sends that back as a response.
 
 NOTE: Both `handleSecurementException` and `handleValidationException` are protected methods, which you can override to change their default behavior.
+
+[[security-scoping-interceptors]]
+== Scoping Security Interceptors
+
+A security interceptor, such as `Wss4jSecurityInterceptor`, is a regular `EndpointInterceptor` implementations.
+You can apply it to every request, or you can scope it to a subset of operations.
+A common way to scope an interceptor is to wrap it in a conditional `SmartEndpointInterceptor`, such as `PayloadRootSmartSoapEndpointInterceptor` or `SoapActionSmartEndpointInterceptor`.
+Such a wrapper decides whether the wrapped interceptor participates in the interceptor chain for a given request through its `shouldIntercept` method.
+
+[WARNING]
+====
+When you scope a security interceptor this way, the discriminator used by the wrapper must match the discriminator used by the active endpoint mapping to route requests to endpoints.
+Otherwise, the security interceptor can be applied to a different set of requests than the one that actually reaches a given endpoint, which can leave that endpoint effectively unprotected.
+
+A request is routed to an endpoint by an endpoint mapping.
+For example, the default `PayloadRootAnnotationMethodEndpointMapping`, which routes on the payload root element while a `SmartEndpointInterceptor` decides independently whether it participates in the chain.
+If the two use different keys (for example, the endpoint mapping routes on the payload root but the security interceptor is scoped by SOAP action), the value that selects the endpoint and the value that drives the security decision come from different, independently supplied parts of the request.
+
+The SOAP action is especially unsuitable as a security discriminator: it is carried in the transport (for example, an HTTP header for SOAP 1.1) rather than in the message body, and it is not covered by a WS-Security signature.
+It can therefore be set independently of the message body that determines routing.
+====
+
+The following example scopes a `Wss4jSecurityInterceptor` to a single operation by payload root, matching the default `PayloadRootAnnotationMethodEndpointMapping`.
+The endpoint is mapped with the same payload root, so the interceptor guards exactly the requests that reach that endpoint.
+Here, the discriminator is the payload root QName `{http://example.com/accounts}DebitAccountRequest` on both sides:
+
+====
+[source,java]
+----
+@PayloadRoot(namespace = "http://example.com/accounts", localPart = "DebitAccountRequest")
+@ResponsePayload
+public DebitAccountResponse debit(@RequestPayload DebitAccountRequest request) {
+    ...
+}
+
+@Bean
+SmartEndpointInterceptor securityInterceptor(Wss4jSecurityInterceptor wss4jSecurityInterceptor) {
+    return new PayloadRootSmartSoapEndpointInterceptor(wss4jSecurityInterceptor,
+            "http://example.com/accounts", "DebitAccountRequest");
+}
+----
+====
+
+By contrast, scoping the same interceptor by SOAP action while the endpoints are mapped by payload root relies on two unrelated discriminators.
+Concretely, the SOAP action `urn:DebitAccount` for the security decision and the payload root for routing.
+This must be avoided:
+
+====
+[source,java]
+----
+@Bean
+SmartEndpointInterceptor securityInterceptor(Wss4jSecurityInterceptor wss4jSecurityInterceptor) {
+    // AVOID: the SOAP action is not related to the payload root used for routing
+    return new SoapActionSmartEndpointInterceptor(wss4jSecurityInterceptor, "urn:DebitAccount");
+}
+----
+====
+
+To scope security safely, follow these guidelines:
+
+* Scope the security interceptor by the *same* discriminator that the endpoint mapping uses to route requests.
+When routing on the payload root (the default), scope by the payload root as well.
+* Do not use the SOAP action to gate a security interceptor.
+* When in doubt, apply the security interceptor unconditionally and enforce any per-operation policy inside or after the security validation, where the decision is based on the validated message rather than on an unauthenticated selector.
