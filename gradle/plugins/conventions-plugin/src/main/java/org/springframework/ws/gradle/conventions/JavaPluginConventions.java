@@ -33,7 +33,6 @@ import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.bundling.Jar;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.api.tasks.testing.Test;
-import org.gradle.jvm.toolchain.JavaLanguageVersion;
 
 import org.springframework.ws.gradle.conventions.toolchain.ToolchainPlugin;
 
