@@ -24,5 +24,7 @@ out
 
 !/**/src/**/bin
 !/**/src/**/build
+!/**/.github/**/bin
+!/**/.github/**/build
 
 build.log
