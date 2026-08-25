@@ -32,13 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Release Verification Tests
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: '4b5fd7acb93b089d250957220ddb16b979f8777b'
           repository: spring-projects/spring-ws-release-verification
           token: ${{ secrets.token }}
       - name: Check Out Send Notification Action
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           path: send-notification
           sparse-checkout: .github/actions/send-notification
