@@ -76,8 +76,10 @@ public interface EndpointInterceptor {
 	 * method, each interceptor can post-process an invocation, getting applied in inverse
 	 * order of the execution chain.
 	 * <p>
-	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has
-	 * successfully completed.
+	 * Note: Will only be called if this interceptor's {@link #handleRequest} method
+	 * returned, whether {@code true} or {@code false}. An interceptor whose
+	 * {@code handleRequest} threw an exception is not called here, only in
+	 * {@link #afterCompletion}.
 	 * @param messageContext contains both request and response messages
 	 * @param endpoint chosen endpoint to invoke
 	 * @return {@code true} to continue processing of the response interceptor chain;
@@ -99,8 +101,10 @@ public interface EndpointInterceptor {
 	 * method, each interceptor can post-process an invocation, getting applied in inverse
 	 * order of the execution chain.
 	 * <p>
-	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has
-	 * successfully completed.
+	 * Note: Will only be called if this interceptor's {@link #handleRequest} method
+	 * returned, whether {@code true} or {@code false}. An interceptor whose
+	 * {@code handleRequest} threw an exception is not called here, only in
+	 * {@link #afterCompletion}.
 	 * @param messageContext contains both request and response messages, the response
 	 * should contains a Fault
 	 * @param endpoint chosen endpoint to invoke
@@ -114,8 +118,12 @@ public interface EndpointInterceptor {
 	 * called on any outcome of endpoint invocation, thus allows for proper resource
 	 * cleanup.
 	 * <p>
-	 * Note: Will only be called if this interceptor's {@link #handleRequest} method has
-	 * successfully completed.
+	 * Note: Will be called if this interceptor's {@link #handleRequest} method was
+	 * invoked, whatever its outcome. In particular, it is called when
+	 * {@code handleRequest} returned {@code false} or threw an exception, so that an
+	 * interceptor can release whatever it had set up by then. This differs from
+	 * {@link #handleResponse} and {@link #handleFault}, which are only called when
+	 * {@code handleRequest} returned.
 	 * <p>
 	 * As with the {@link #handleResponse} method, the method will be invoked on each
 	 * interceptor in the chain in reverse order, so the first interceptor will be the

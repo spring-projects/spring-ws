@@ -16,17 +16,24 @@
 
 package org.springframework.ws.server;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.ws.MockWebServiceMessage;
+import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.server.endpoint.MessageEndpoint;
+import org.springframework.ws.server.endpoint.adapter.MessageEndpointAdapter;
 import org.springframework.ws.server.endpoint.adapter.PayloadEndpointAdapter;
 import org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.SimpleSoapExceptionResolver;
@@ -430,6 +437,119 @@ class MessageDispatcherTests {
 
 		StaticApplicationContext applicationContext = new StaticApplicationContext();
 		this.dispatcher.setApplicationContext(applicationContext);
+	}
+
+	@Nested
+	class UnwindTests {
+
+		private final List<String> calls = new ArrayList<>();
+
+		private MessageDispatcher dispatcher;
+
+		@BeforeEach
+		void setUp() {
+			StaticApplicationContext context = new StaticApplicationContext();
+			context.refresh();
+			this.dispatcher = new MessageDispatcher();
+			this.dispatcher.setApplicationContext(context);
+			this.dispatcher.setEndpointAdapters(List.of(new MessageEndpointAdapter()));
+			this.dispatcher.setEndpointExceptionResolvers(List.of((messageContext, endpoint, ex) -> {
+				((MockWebServiceMessage) messageContext.getResponse()).setFault(true);
+				return true;
+			}));
+		}
+
+		@Test
+		void interceptorWhoseHandleRequestThrewIsOnlyCompleted() throws Exception {
+			dispatch(new RecordingInterceptor("first", Outcome.PROCEED),
+					new RecordingInterceptor("throwing", Outcome.THROW));
+			assertThat(this.calls).containsExactly("first.handleRequest", "throwing.handleRequest", "first.handleFault",
+					"throwing.afterCompletion", "first.afterCompletion");
+		}
+
+		@Test
+		void interceptorWhoseHandleRequestReturnedFalseIsHandledAndCompleted() throws Exception {
+			dispatch(new RecordingInterceptor("first", Outcome.PROCEED),
+					new RecordingInterceptor("blocking", Outcome.BLOCK));
+			assertThat(this.calls).containsExactly("first.handleRequest", "blocking.handleRequest",
+					"blocking.handleResponse", "first.handleResponse", "blocking.afterCompletion",
+					"first.afterCompletion");
+		}
+
+		@Test
+		void everyInterceptorIsHandledAndCompletedWhenTheEndpointIsInvoked() throws Exception {
+			dispatch(new RecordingInterceptor("first", Outcome.PROCEED),
+					new RecordingInterceptor("second", Outcome.PROCEED));
+			assertThat(this.calls).containsExactly("first.handleRequest", "second.handleRequest", "endpoint",
+					"second.handleResponse", "first.handleResponse", "second.afterCompletion", "first.afterCompletion");
+		}
+
+		private void dispatch(EndpointInterceptor... interceptors) throws Exception {
+			MessageEndpoint endpoint = (messageContext) -> {
+				this.calls.add("endpoint");
+				messageContext.getResponse();
+			};
+			this.dispatcher
+				.setEndpointMappings(List.of((messageContext) -> new EndpointInvocationChain(endpoint, interceptors)));
+			MessageContext messageContext = new DefaultMessageContext(new MockWebServiceMessage("<root/>"),
+					new MockWebServiceMessageFactory());
+			try {
+				this.dispatcher.receive(messageContext);
+			}
+			catch (IllegalStateException ex) {
+				// raised by Outcome.THROW, the dispatcher rethrows it
+			}
+		}
+
+		private enum Outcome {
+
+			PROCEED, BLOCK, THROW
+
+		}
+
+		private final class RecordingInterceptor implements EndpointInterceptor {
+
+			private final String name;
+
+			private final Outcome outcome;
+
+			private RecordingInterceptor(String name, Outcome outcome) {
+				this.name = name;
+				this.outcome = outcome;
+			}
+
+			@Override
+			public boolean handleRequest(MessageContext messageContext, Object endpoint) {
+				UnwindTests.this.calls.add(this.name + ".handleRequest");
+				if (this.outcome == Outcome.THROW) {
+					throw new IllegalStateException("handleRequest failed");
+				}
+				if (this.outcome == Outcome.BLOCK) {
+					messageContext.getResponse();
+					return false;
+				}
+				return true;
+			}
+
+			@Override
+			public boolean handleResponse(MessageContext messageContext, Object endpoint) {
+				UnwindTests.this.calls.add(this.name + ".handleResponse");
+				return true;
+			}
+
+			@Override
+			public boolean handleFault(MessageContext messageContext, Object endpoint) {
+				UnwindTests.this.calls.add(this.name + ".handleFault");
+				return true;
+			}
+
+			@Override
+			public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
+				UnwindTests.this.calls.add(this.name + ".afterCompletion");
+			}
+
+		}
+
 	}
 
 }

@@ -219,7 +219,10 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 */
 	protected final void dispatch(MessageContext messageContext) throws Exception {
 		EndpointInvocationChain mappedEndpoint = null;
-		int interceptorIndex = -1;
+		// Interceptors that can handle the response, because handleRequest returned.
+		int responseInterceptorIndex = -1;
+		// Interceptors that must be completed, because handleRequest was invoked.
+		int completionInterceptorIndex = -1;
 		try {
 			try {
 				// Determine endpoint for the current context
@@ -234,10 +237,12 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				if (mappedEndpoint.getInterceptors() != null) {
 					for (int i = 0; i < mappedEndpoint.getInterceptors().length; i++) {
 						EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
-						interceptorIndex = i;
-						if (!interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint())) {
-							triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
-							triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, null);
+						completionInterceptorIndex = i;
+						boolean shouldProceed = interceptor.handleRequest(messageContext, mappedEndpoint.getEndpoint());
+						responseInterceptorIndex = i;
+						if (!shouldProceed) {
+							triggerHandleResponse(messageContext, mappedEndpoint, responseInterceptorIndex);
+							triggerAfterCompletion(messageContext, mappedEndpoint, completionInterceptorIndex, null);
 							return;
 						}
 					}
@@ -247,7 +252,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				endpointAdapter.invoke(messageContext, mappedEndpoint.getEndpoint());
 
 				// Apply handleResponse methods of registered interceptors
-				triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
+				triggerHandleResponse(messageContext, mappedEndpoint, responseInterceptorIndex);
 			}
 			catch (NoEndpointFoundException ex) {
 				// No triggering of interceptors if no endpoint is found
@@ -259,16 +264,16 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			catch (Exception ex) {
 				Object endpoint = (mappedEndpoint != null) ? mappedEndpoint.getEndpoint() : null;
 				processEndpointException(messageContext, endpoint, ex);
-				triggerHandleResponse(messageContext, mappedEndpoint, interceptorIndex);
+				triggerHandleResponse(messageContext, mappedEndpoint, responseInterceptorIndex);
 			}
-			triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, null);
+			triggerAfterCompletion(messageContext, mappedEndpoint, completionInterceptorIndex, null);
 		}
 		catch (NoEndpointFoundException ex) {
 			throw ex;
 		}
 		catch (Exception ex) {
 			// Trigger after-completion for thrown exception.
-			triggerAfterCompletion(messageContext, mappedEndpoint, interceptorIndex, ex);
+			triggerAfterCompletion(messageContext, mappedEndpoint, completionInterceptorIndex, ex);
 			throw ex;
 		}
 	}
@@ -358,7 +363,9 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * {@code true}, in addition to the last interceptor who returned {@code false}.
 	 * @param messageContext the message context, whose request and response are filled
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
-	 * @param interceptorIndex index of last interceptor that was called
+	 * @param interceptorIndex index of the last interceptor whose
+	 * {@link EndpointInterceptor#handleRequest(MessageContext, Object) handleRequest}
+	 * returned
 	 * @see EndpointInterceptor#handleResponse(MessageContext, Object)
 	 * @see EndpointInterceptor#handleFault(MessageContext, Object)
 	 */
@@ -390,7 +397,9 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 	 * successfully completed and returned true, in addition to the last interceptor who
 	 * returned {@code false}.
 	 * @param mappedEndpoint the mapped EndpointInvocationChain
-	 * @param interceptorIndex index of last interceptor that successfully completed
+	 * @param interceptorIndex index of the last interceptor whose
+	 * {@link EndpointInterceptor#handleRequest(MessageContext, Object) handleRequest} was
+	 * invoked
 	 * @param ex exception thrown on handler execution, or {@code null} if none
 	 * @see EndpointInterceptor#afterCompletion
 	 */
