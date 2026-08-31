@@ -27,7 +27,11 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.ObservationConvention;
+import io.micrometer.observation.ObservationRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
@@ -44,6 +48,10 @@ import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransformerException;
 import org.springframework.ws.client.WebServiceTransportException;
+import org.springframework.ws.client.core.observation.DefaultSoapClientObservationConvention;
+import org.springframework.ws.client.core.observation.SoapClientObservationContext;
+import org.springframework.ws.client.core.observation.SoapClientObservationConvention;
+import org.springframework.ws.client.core.observation.SoapClientObservationDocumentation;
 import org.springframework.ws.client.support.WebServiceAccessor;
 import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -52,6 +60,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.ws.support.DefaultStrategiesHelper;
 import org.springframework.ws.support.MarshallingUtils;
+import org.springframework.ws.support.PayloadRootUtils;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.TransportException;
 import org.springframework.ws.transport.WebServiceConnection;
@@ -61,6 +70,7 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 import org.springframework.ws.transport.support.TransportUtils;
+import org.springframework.xml.transform.TransformerFactoryUtils;
 
 /**
  * <strong>The central class for client-side Web services.</strong> It provides a
@@ -134,6 +144,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	protected static final Log receivedMessageTracingLogger = LogFactory
 		.getLog(WebServiceTemplate.MESSAGE_TRACING_LOG_CATEGORY + ".received");
 
+	private static final SoapClientObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultSoapClientObservationConvention();
+
+	private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactoryUtils.newInstance();
+
 	private @Nullable Marshaller marshaller;
 
 	private @Nullable Unmarshaller unmarshaller;
@@ -147,6 +161,10 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	private ClientInterceptor @Nullable [] interceptors;
 
 	private @Nullable DestinationProvider destinationProvider;
+
+	private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
+
+	private @Nullable SoapClientObservationConvention observationConvention;
 
 	/** Creates a new {@code WebServiceTemplate} using default settings. */
 	public WebServiceTemplate() {
@@ -358,6 +376,49 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 	 */
 	public final void setInterceptors(ClientInterceptor[] interceptors) {
 		this.interceptors = interceptors;
+	}
+
+	/**
+	 * Configure an {@link ObservationRegistry} for collecting spans and metrics for
+	 * request execution. By default, {@link Observation observations} are no-ops.
+	 * @param observationRegistry the observation registry to use
+	 * @since 5.1.0
+	 */
+	public void setObservationRegistry(ObservationRegistry observationRegistry) {
+		Assert.notNull(observationRegistry, "'observationRegistry' must not be null");
+		this.observationRegistry = observationRegistry;
+	}
+
+	/**
+	 * Return the configured {@link ObservationRegistry}.
+	 * @since 5.1.0
+	 */
+	public ObservationRegistry getObservationRegistry() {
+		return this.observationRegistry;
+	}
+
+	/**
+	 * Configure an {@link ObservationConvention} that sets the name of the
+	 * {@link Observation observation} as well as its
+	 * {@link io.micrometer.common.KeyValues} extracted from the
+	 * {@link SoapClientObservationContext}. If none set, the
+	 * {@link DefaultSoapClientObservationConvention default convention} is used.
+	 * @param observationConvention the observation convention to use
+	 * @since 5.1.0
+	 * @see #setObservationRegistry(ObservationRegistry)
+	 */
+	public void setObservationConvention(SoapClientObservationConvention observationConvention) {
+		Assert.notNull(observationConvention, "'observationConvention' must not be null");
+		this.observationConvention = observationConvention;
+	}
+
+	/**
+	 * Return the configured {@link SoapClientObservationConvention}, or {@code null} if
+	 * not set.
+	 * @since 5.1.0
+	 */
+	public @Nullable SoapClientObservationConvention getObservationConvention() {
+		return this.observationConvention;
 	}
 
 	/**
@@ -622,7 +683,12 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 			@Nullable WebServiceMessageCallback requestCallback, WebServiceMessageExtractor<T> responseExtractor)
 			throws IOException {
 		int interceptorIndex = -1;
-		try {
+		SoapClientObservationContext observationContext = new SoapClientObservationContext(messageContext, connection);
+		Observation observation = SoapClientObservationDocumentation.SOAP_CLIENT_REQUESTS
+			.observation(this.observationConvention, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext,
+					this.observationRegistry)
+			.start();
+		try (Observation.Scope scope = observation.openScope()) {
 			if (requestCallback != null) {
 				requestCallback.doWithMessage(messageContext.getRequest());
 			}
@@ -637,6 +703,11 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 					}
 				}
 			}
+			// The payload of a streaming message can only be read before it is sent, so
+			// the operation is resolved eagerly rather than by the observation convention
+			if (!observation.isNoop()) {
+				setPayloadRootQName(observationContext, messageContext);
+			}
 			// no send/receive if an interceptor has set a response or if the chain
 			// has been interrupted
 			if (!messageContext.hasResponse() && !intercepted) {
@@ -646,8 +717,7 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 					triggerAfterCompletion(interceptorIndex, messageContext, null);
 					return (T) fallback;
 				}
-				WebServiceMessage response = connection.receive(getMessageFactory());
-				messageContext.setResponse(response);
+				messageContext.setResponse(connection.receive(getMessageFactory()));
 			}
 			logResponse(messageContext);
 			if (messageContext.hasResponse()) {
@@ -671,12 +741,29 @@ public class WebServiceTemplate extends WebServiceAccessor implements WebService
 		}
 		catch (TransformerException ex) {
 			triggerAfterCompletion(interceptorIndex, messageContext, ex);
-			throw new WebServiceTransformerException("Transformation error: " + ex.getMessage(), ex);
+			WebServiceTransformerException exception = new WebServiceTransformerException(
+					"Transformation error: " + ex.getMessage(), ex);
+			observation.error(exception);
+			throw exception;
 		}
 		catch (RuntimeException | IOException ex) {
 			// Trigger after-completion for thrown exception.
 			triggerAfterCompletion(interceptorIndex, messageContext, ex);
+			observation.error(ex);
 			throw ex;
+		}
+		finally {
+			observation.stop();
+		}
+	}
+
+	private void setPayloadRootQName(SoapClientObservationContext observationContext, MessageContext messageContext) {
+		try {
+			observationContext.setPayloadRootQName(PayloadRootUtils
+				.getPayloadRootQName(messageContext.getRequest().getPayloadSource(), TRANSFORMER_FACTORY));
+		}
+		catch (TransformerException ex) {
+			// The operation remains unknown, which the convention reports as "none"
 		}
 	}
 

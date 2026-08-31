@@ -26,6 +26,7 @@ description = "Spring WS Core"
 
 dependencies {
 	api(project(":spring-xml"))
+	api("io.micrometer:micrometer-observation")
 	api("jakarta.xml.bind:jakarta.xml.bind-api")
 	api("jakarta.xml.soap:jakarta.xml.soap-api")
 	api("org.springframework:spring-aop")
@@ -57,6 +58,7 @@ dependencies {
 	testFixturesApi("org.mockito:mockito-core")
 	testImplementation("com.fasterxml.woodstox:woodstox-core")
 	testImplementation("commons-io:commons-io")
+	testImplementation("io.micrometer:micrometer-observation-test")
 	testImplementation("net.minidev:json-smart:jar")
 	testImplementation("org.apache.logging.log4j:log4j-core")
 	testImplementation("org.apache.logging.log4j:log4j-slf4j2-impl")

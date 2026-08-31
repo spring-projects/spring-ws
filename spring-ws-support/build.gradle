@@ -42,6 +42,7 @@ dependencies {
 	testImplementation("com.icegreen:greenmail")
 	testImplementation("com.icegreen:greenmail-junit5")
 	testImplementation("com.icegreen:greenmail-spring")
+	testImplementation("io.micrometer:micrometer-observation-test")
 	testImplementation("jakarta.annotation:jakarta.annotation-api")
 	testImplementation("org.apache.activemq:activemq-broker")
 	testImplementation("org.apache.httpcomponents.client5:httpclient5")
