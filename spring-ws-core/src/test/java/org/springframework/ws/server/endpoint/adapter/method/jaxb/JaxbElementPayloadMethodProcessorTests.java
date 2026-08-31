@@ -17,9 +17,14 @@
 package org.springframework.ws.server.endpoint.adapter.method.jaxb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.sax.SAXSource;
 
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
@@ -27,6 +32,8 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXParseException;
 import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.core.MethodParameter;
@@ -43,6 +50,7 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class JaxbElementPayloadMethodProcessorTests {
 
@@ -87,6 +95,48 @@ class JaxbElementPayloadMethodProcessorTests {
 		MyType type = (MyType) result.getValue();
 
 		assertThat(type.getString()).isEqualTo("Foo");
+	}
+
+	@Test
+	void resolveArgumentFromStreamSourceWithDoctypeIsRejected() {
+		WebServiceMessage request = new MockWebServiceMessage("<!DOCTYPE myType [<!ENTITY foo 'Foo'>]>"
+				+ "<myType xmlns='http://springframework.org'><string>&foo;</string></myType>");
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		assertThatExceptionOfType(JAXBException.class)
+			.isThrownBy(() -> this.processor.resolveArgument(messageContext, this.supportedParameter))
+			.withRootCauseInstanceOf(SAXParseException.class);
+	}
+
+	@Test
+	void resolveArgumentFromStreamBackedSAXSourceWithDoctypeIsRejected() {
+		String payload = "<!DOCTYPE myType [<!ENTITY foo 'Foo'>]>"
+				+ "<myType xmlns='http://springframework.org'><string>&foo;</string></myType>";
+		SAXSource source = new SAXSource(new InputSource(new StringReader(payload)));
+		MessageContext messageContext = new DefaultMessageContext(payloadSourceRequest(source),
+				new MockWebServiceMessageFactory());
+		assertThatExceptionOfType(JAXBException.class)
+			.isThrownBy(() -> this.processor.resolveArgument(messageContext, this.supportedParameter))
+			.withRootCauseInstanceOf(SAXParseException.class);
+	}
+
+	private static WebServiceMessage payloadSourceRequest(Source payloadSource) {
+		return new WebServiceMessage() {
+
+			@Override
+			public void writeTo(OutputStream outputStream) {
+				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public Source getPayloadSource() {
+				return payloadSource;
+			}
+
+			@Override
+			public Result getPayloadResult() {
+				throw new UnsupportedOperationException();
+			}
+		};
 	}
 
 	@Test

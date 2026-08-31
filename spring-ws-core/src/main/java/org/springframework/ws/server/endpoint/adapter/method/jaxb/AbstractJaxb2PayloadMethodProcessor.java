@@ -21,11 +21,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
@@ -35,7 +37,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBElement;
@@ -48,6 +49,9 @@ import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Node;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
 
@@ -231,6 +235,49 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		return jaxbContext;
 	}
 
+	/**
+	 * Return whether the given {@code InputSource} produces its SAX events through the
+	 * {@code XMLReader} of the enclosing {@link SAXSource} rather than from a stream or a
+	 * system identifier that a parser can read.
+	 */
+	private static boolean isReaderDriven(InputSource inputSource) {
+		return inputSource.getByteStream() == null && inputSource.getCharacterStream() == null
+				&& inputSource.getSystemId() == null;
+	}
+
+	/**
+	 * Create a {@link SAXSource} for the given {@code InputSource}, using an
+	 * {@code XMLReader} that does not allow document type declarations. This keeps
+	 * unparsed request payloads aligned with the payload sources that are already parsed
+	 * by the message factory, which use
+	 * {@link org.springframework.xml.DocumentBuilderFactoryUtils} and
+	 * {@link org.springframework.xml.XMLInputFactoryUtils}.
+	 */
+	private static SAXSource createSaxSource(InputSource inputSource) throws SAXException {
+		SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+		parserFactory.setNamespaceAware(true);
+		setFeature(parserFactory, XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		setFeature(parserFactory, "http://apache.org/xml/features/disallow-doctype-decl", true);
+		setFeature(parserFactory, "http://xml.org/sax/features/external-general-entities", false);
+		setFeature(parserFactory, "http://xml.org/sax/features/external-parameter-entities", false);
+		setFeature(parserFactory, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		try {
+			return new SAXSource(parserFactory.newSAXParser().getXMLReader(), inputSource);
+		}
+		catch (ParserConfigurationException ex) {
+			throw new IllegalStateException("Could not create XMLReader", ex);
+		}
+	}
+
+	private static void setFeature(SAXParserFactory parserFactory, String feature, boolean value) throws SAXException {
+		try {
+			parserFactory.setFeature(feature, value);
+		}
+		catch (ParserConfigurationException | SAXNotRecognizedException | SAXNotSupportedException ex) {
+			// Feature not supported by this parser; carry on with the remaining ones
+		}
+	}
+
 	// Callbacks
 
 	private final class Jaxb2SourceCallback implements TraxUtils.SourceCallback {
@@ -250,8 +297,7 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 
 		@Override
 		public void saxSource(XMLReader reader, InputSource inputSource) throws Exception {
-			if (inputSource.getByteStream() == null && inputSource.getCharacterStream() == null
-					&& inputSource.getSystemId() == null) {
+			if (isReaderDriven(inputSource)) {
 				// The InputSource neither has a stream nor a system ID set; this means
 				// that
 				// we are dealing with a custom SAXSource that is not backed by a SAX
@@ -266,11 +312,11 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 				this.result = handler.getResult();
 			}
 			else {
-				// If a stream or system ID is set, we assume that the SAXSource is backed
-				// by a SAX parser and we only pass the InputSource to the unmarshaller.
-				// This effectively ignores the SAX parser and lets the unmarshaller take
-				// care of the parsing (in a potentially more efficient way).
-				this.result = this.unmarshaller.unmarshal(inputSource);
+				// If a stream or system ID is set, the SAXSource merely carries
+				// input that still needs to be parsed. The given reader is then
+				// replaced by one that is configured consistently with the other
+				// kinds of payload source.
+				this.result = this.unmarshaller.unmarshal(createSaxSource(inputSource));
 			}
 		}
 
@@ -285,18 +331,18 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		}
 
 		@Override
-		public void streamSource(InputStream inputStream) throws IOException, JAXBException {
-			this.result = this.unmarshaller.unmarshal(inputStream);
+		public void streamSource(InputStream inputStream) throws IOException, JAXBException, SAXException {
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(inputStream)));
 		}
 
 		@Override
-		public void streamSource(Reader reader) throws IOException, JAXBException {
-			this.result = this.unmarshaller.unmarshal(reader);
+		public void streamSource(Reader reader) throws IOException, JAXBException, SAXException {
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(reader)));
 		}
 
 		@Override
 		public void source(String systemId) throws Exception {
-			this.result = this.unmarshaller.unmarshal(new URL(systemId));
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(systemId)));
 		}
 
 	}
@@ -320,8 +366,10 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		}
 
 		@Override
-		public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException {
-			this.result = this.unmarshaller.unmarshal(new SAXSource(reader, inputSource), this.declaredType);
+		public void saxSource(XMLReader reader, InputSource inputSource) throws JAXBException, SAXException {
+			SAXSource saxSource = isReaderDriven(inputSource) ? new SAXSource(reader, inputSource)
+					: createSaxSource(inputSource);
+			this.result = this.unmarshaller.unmarshal(saxSource, this.declaredType);
 		}
 
 		@Override
@@ -335,18 +383,18 @@ public abstract class AbstractJaxb2PayloadMethodProcessor extends AbstractPayloa
 		}
 
 		@Override
-		public void streamSource(InputStream inputStream) throws IOException, JAXBException {
-			this.result = this.unmarshaller.unmarshal(new StreamSource(inputStream), this.declaredType);
+		public void streamSource(InputStream inputStream) throws IOException, JAXBException, SAXException {
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(inputStream)), this.declaredType);
 		}
 
 		@Override
-		public void streamSource(Reader reader) throws IOException, JAXBException {
-			this.result = this.unmarshaller.unmarshal(new StreamSource(reader), this.declaredType);
+		public void streamSource(Reader reader) throws IOException, JAXBException, SAXException {
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(reader)), this.declaredType);
 		}
 
 		@Override
 		public void source(String systemId) throws Exception {
-			this.result = this.unmarshaller.unmarshal(new StreamSource(systemId), this.declaredType);
+			this.result = this.unmarshaller.unmarshal(createSaxSource(new InputSource(systemId)), this.declaredType);
 		}
 
 	}
