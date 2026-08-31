@@ -51,6 +51,20 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
  */
 public abstract class AbstractEndpointMapping extends ApplicationObjectSupport implements EndpointMapping, Ordered {
 
+	/**
+	 * Name of the {@link MessageContext#getProperty(String) message context property}
+	 * that holds the key that this mapping used to look up the endpoint for the current
+	 * request.
+	 * <p>
+	 * The property is only set if the lookup succeeded, so that consumers such as
+	 * observability instrumentation can safely derive metadata from a key that is known
+	 * to match the service contract. The type of the value depends on the mapping
+	 * implementation; it is a {@link javax.xml.namespace.QName} for payload root based
+	 * mappings and a {@code String} for SOAP action or WS-Addressing based mappings.
+	 * @since 5.1.0
+	 */
+	public static final String LOOKUP_KEY_PROPERTY = AbstractEndpointMapping.class.getName() + ".lookupKey";
+
 	private int order = Integer.MAX_VALUE; // default: same as non-Ordered
 
 	private @Nullable Object defaultEndpoint;

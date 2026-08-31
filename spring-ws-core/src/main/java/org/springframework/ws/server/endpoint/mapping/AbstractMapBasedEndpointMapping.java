@@ -127,7 +127,23 @@ public abstract class AbstractMapBasedEndpointMapping extends AbstractEndpointMa
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Looking up endpoint for [" + key + "]");
 		}
-		return lookupEndpoint(key);
+		Object endpoint = lookupEndpoint(key);
+		if (endpoint != null) {
+			messageContext.setProperty(LOOKUP_KEY_PROPERTY, getLookupKeyPropertyValue(key));
+		}
+		return endpoint;
+	}
+
+	/**
+	 * Return the value to publish in the {@link #LOOKUP_KEY_PROPERTY lookup key property}
+	 * for the given key. Subclasses can override this method to publish a richer
+	 * representation of the key, such as a {@link javax.xml.namespace.QName}.
+	 * @param key the key that the endpoint was looked up with
+	 * @return the value to publish
+	 * @since 5.1.0
+	 */
+	protected Object getLookupKeyPropertyValue(String key) {
+		return key;
 	}
 
 	/**

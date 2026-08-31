@@ -49,4 +49,9 @@ public abstract class AbstractQNameEndpointMapping extends AbstractMapBasedEndpo
 		return QNameUtils.validateQName(key);
 	}
 
+	@Override
+	protected Object getLookupKeyPropertyValue(String key) {
+		return QName.valueOf(key);
+	}
+
 }

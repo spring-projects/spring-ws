@@ -392,3 +392,155 @@ DEBUG [server.MessageTracing.sent] Sent response [SaajSoapMessage {http://exampl
 DEBUG [client.MessageTracing.received] Received response [SaajSoapMessage {http://example.com}response] ...
 ----
 ====
+
+[[observability]]
+== Observability
+
+Spring-WS is instrumented using the https://docs.micrometer.io/micrometer/reference/observation.html[Micrometer Observation API], so that a single instrumentation produces both metrics and tracing spans for the web service exchanges it takes part in.
+Observations are disabled by default: they are only recorded once an `ObservationRegistry` is configured on the components described in this section.
+
+NOTE: To learn more about the concepts involved, refer to the {spring-framework-docs}/integration/observability.html[Spring Framework reference documentation].
+
+[[observability-client]]
+=== Client-side Observations
+
+Set an `ObservationRegistry` on the <<client-web-service-template,`WebServiceTemplate`>> to record an observation for each exchange it performs:
+
+====
+[source,java]
+----
+WebServiceTemplate template = new WebServiceTemplate(messageFactory);
+template.setObservationRegistry(observationRegistry);
+----
+====
+
+Each exchange is recorded under the `soap.client.requests` name, using the following key values:
+
+[cols="1,1,3", options="header"]
+|===
+| Name
+| Cardinality
+| Description
+
+| `exception`
+| Low
+| Simple class name of the exception that terminated the exchange, or `none` if the exchange completed normally.
+
+| `fault.code`
+| Low
+| Fault code of the SOAP response, or `none` if the response is not a fault.
+
+| `namespace`
+| Low
+| Target namespace of the operation, or `none` if it could not be determined.
+
+| `operation.name`
+| Low
+| Name of the operation, as defined by `wsdl:operation name`, or `none` if it could not be determined.
+
+| `outcome`
+| Low
+| `SUCCESS` for a regular response, `FAULT` for a SOAP fault, `ERROR` if an exception was thrown, or `UNKNOWN` if no response was received.
+
+| `protocol`
+| Low
+| Scheme of the transport used to perform the operation, such as `http`, `jms`, or `mailto`.
+
+| `soap.action`
+| Low
+| SOAP action of the operation, or `none` if the request does not define one.
+
+| `fault.reason`
+| High
+| Fault reason of the SOAP response, or `none` if the response is not a fault.
+
+| `uri`
+| High
+| URI of the service that the request was sent to.
+|===
+
+The namespace and the operation name are derived from the root element of the request payload, which corresponds to the `wsdl:operation` of a document-style contract.
+
+NOTE: A SOAP fault is reported with an `outcome` of `FAULT`, even though the default `FaultMessageResolver` turns it into a `SoapFaultClientException`.
+The `exception` key value lets you distinguish a fault that was turned into an exception from one that was handled by a custom `FaultMessageResolver`.
+
+[[observability-server]]
+=== Server-side Observations
+
+Server-side observations are recorded by the transport, so the `ObservationRegistry` must be set on the component that handles the incoming connections.
+For the <<message-dispatcher-servlet,`MessageDispatcherServlet`>>, this is the `WebServiceMessageReceiverHandlerAdapter`:
+
+====
+[source,java]
+----
+@Bean
+WebServiceMessageReceiverHandlerAdapter messageReceiverHandlerAdapter(WebServiceMessageFactory messageFactory,
+		ObservationRegistry observationRegistry) {
+	WebServiceMessageReceiverHandlerAdapter adapter = new WebServiceMessageReceiverHandlerAdapter();
+	adapter.setMessageFactory(messageFactory);
+	adapter.setObservationRegistry(observationRegistry);
+	return adapter;
+}
+----
+====
+
+The other transports expose the same property on their respective message receiver, such as `WebServiceMessageListener` for <<server-jms-transport,JMS>> and `MailMessageReceiver` for <<server-mail-transport,email>>.
+
+Each request is recorded under the `soap.server.requests` name, using the same key values as the client, with the following differences:
+
+* `namespace` and `operation.name` are derived from the key that the endpoint mapping used to look up the endpoint, rather than from the request payload.
+They are reported as `none` for a request that could not be mapped to an endpoint.
+This is deliberate: deriving them from the payload of an unmapped request would let a caller create an unbounded number of metric series by sending arbitrary payloads.
+* `outcome` is `UNKNOWN` if the endpoint did not produce a response, which is the case for a one-way operation.
+* `uri` is the URI that the request was received on.
+
+[[observability-tracing]]
+=== Trace Propagation
+
+The client writes the tracing information of the current span as request headers, and the server reads it back from the request headers, for the transports that support headers.
+This makes a client exchange and the server-side handling of the corresponding request part of the same trace.
+
+Tracing information is not read on the server side for the HTTP transport, as the Servlet layer is instrumented already.
+On that transport, the `soap.server.requests` observation is recorded as a child of the `http.server.requests` observation.
+
+[[observability-conventions]]
+=== Customizing Observations
+
+The name of an observation and the key values it records are determined by an `ObservationConvention`.
+To customize them, extend `DefaultSoapClientObservationConvention` or `DefaultSoapServerObservationConvention` and register your implementation using `setObservationConvention`:
+
+====
+[source,java]
+----
+class CustomConvention extends DefaultSoapClientObservationConvention {
+
+	@Override
+	public KeyValues getLowCardinalityKeyValues(SoapClientObservationContext context) {
+		return super.getLowCardinalityKeyValues(context).and("tenant", resolveTenant(context));
+	}
+
+}
+----
+====
+
+CAUTION: Only add key values with a bounded set of values to `getLowCardinalityKeyValues`, as each combination of low cardinality key values creates a separate metric series.
+Values that are unbounded, such as an identifier extracted from the payload, belong to `getHighCardinalityKeyValues`, which only contributes to tracing spans.
+
+An interceptor can also contribute metadata to the observation of the request it intercepts.
+`SoapClientObservationContext.findCurrentObservationContext(MessageContext)` and its server-side counterpart return the context of the current observation, if any:
+
+====
+[source,java]
+----
+class OperationClientInterceptor implements ClientInterceptor {
+
+	@Override
+	public boolean handleRequest(MessageContext messageContext) {
+		SoapClientObservationContext.findCurrentObservationContext(messageContext)
+			.ifPresent((context) -> context.setOperationName("getCountry"));
+		return true;
+	}
+
+}
+----
+====

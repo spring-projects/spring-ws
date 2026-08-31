@@ -18,8 +18,13 @@ package org.springframework.ws.transport.support;
 
 import java.net.URISyntaxException;
 
+import io.micrometer.observation.Observation;
+import io.micrometer.observation.Observation.Scope;
+import io.micrometer.observation.ObservationConvention;
+import io.micrometer.observation.ObservationRegistry;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -36,6 +41,10 @@ import org.springframework.ws.transport.WebServiceMessageReceiver;
 import org.springframework.ws.transport.context.DefaultTransportContext;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.observation.DefaultSoapServerObservationConvention;
+import org.springframework.ws.transport.observation.SoapServerObservationContext;
+import org.springframework.ws.transport.observation.SoapServerObservationConvention;
+import org.springframework.ws.transport.observation.SoapServerObservationDocumentation;
 
 /**
  * Convenience base class for server-side transport objects. Contains a
@@ -48,11 +57,17 @@ import org.springframework.ws.transport.context.TransportContextHolder;
  */
 public abstract class WebServiceMessageReceiverObjectSupport implements InitializingBean {
 
+	private static final SoapServerObservationConvention DEFAULT_OBSERVATION_CONVENTION = new DefaultSoapServerObservationConvention();
+
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	@SuppressWarnings("NullAway.Init")
 	private WebServiceMessageFactory messageFactory;
+
+	private ObservationRegistry observationRegistry = ObservationRegistry.NOOP;
+
+	private @Nullable SoapServerObservationConvention observationConvention;
 
 	/** Returns the {@code WebServiceMessageFactory}. */
 	public WebServiceMessageFactory getMessageFactory() {
@@ -62,6 +77,49 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 	/** Sets the {@code WebServiceMessageFactory}. */
 	public void setMessageFactory(WebServiceMessageFactory messageFactory) {
 		this.messageFactory = messageFactory;
+	}
+
+	/**
+	 * Configure an {@link ObservationRegistry} for collecting spans and metrics for
+	 * request handling. By default, {@link Observation observations} are no-ops.
+	 * @param observationRegistry the observation registry to use
+	 * @since 5.1.0
+	 */
+	public void setObservationRegistry(ObservationRegistry observationRegistry) {
+		Assert.notNull(observationRegistry, "'observationRegistry' must not be null");
+		this.observationRegistry = observationRegistry;
+	}
+
+	/**
+	 * Return the configured {@link ObservationRegistry}.
+	 * @since 5.1.0
+	 */
+	public ObservationRegistry getObservationRegistry() {
+		return this.observationRegistry;
+	}
+
+	/**
+	 * Configure an {@link ObservationConvention} that sets the name of the
+	 * {@link Observation observation} as well as its
+	 * {@link io.micrometer.common.KeyValues} extracted from the
+	 * {@link SoapServerObservationContext}. If none set, the
+	 * {@link DefaultSoapServerObservationConvention default convention} is used.
+	 * @param observationConvention the observation convention to use
+	 * @since 5.1.0
+	 * @see #setObservationRegistry(ObservationRegistry)
+	 */
+	public void setObservationConvention(SoapServerObservationConvention observationConvention) {
+		Assert.notNull(observationConvention, "'observationConvention' must not be null");
+		this.observationConvention = observationConvention;
+	}
+
+	/**
+	 * Return the configured {@link SoapServerObservationConvention}, or {@code null} if
+	 * not set.
+	 * @since 5.1.0
+	 */
+	public @Nullable SoapServerObservationConvention getObservationConvention() {
+		return this.observationConvention;
 	}
 
 	@Override
@@ -87,10 +145,16 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 		TransportContext previousTransportContext = TransportContextHolder.getTransportContext();
 		TransportContextHolder.setTransportContext(new DefaultTransportContext(connection));
 
-		try {
+		SoapServerObservationContext observationContext = new SoapServerObservationContext(connection);
+		Observation observation = SoapServerObservationDocumentation.SOAP_SERVER_REQUESTS
+			.observation(this.observationConvention, DEFAULT_OBSERVATION_CONVENTION, () -> observationContext,
+					this.observationRegistry)
+			.start();
+		try (Scope observationScope = observation.openScope()) {
 			WebServiceMessage request = connection.receive(getMessageFactory());
 			Assert.notNull(request, "no WebServiceMessage received");
 			MessageContext messageContext = new DefaultMessageContext(request, getMessageFactory());
+			observationContext.setAsCurrent(messageContext);
 			receiver.receive(messageContext);
 			if (messageContext.hasResponse()) {
 				WebServiceMessage response = messageContext.getResponse();
@@ -102,11 +166,17 @@ public abstract class WebServiceMessageReceiverObjectSupport implements Initiali
 			}
 		}
 		catch (NoEndpointFoundException ex) {
+			observation.error(ex);
 			handleNoEndpointFoundException(ex, connection, receiver);
+		}
+		catch (Exception ex) {
+			observation.error(ex);
+			throw ex;
 		}
 		finally {
 			TransportUtils.closeConnection(connection);
 			TransportContextHolder.setTransportContext(previousTransportContext);
+			observation.stop();
 		}
 	}
 

@@ -22,7 +22,10 @@ import java.net.URI;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamSource;
 
+import io.micrometer.observation.ObservationRegistry;
+import io.micrometer.observation.tck.TestObservationRegistry;
 import org.assertj.core.api.AbstractObjectAssert;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.AssertProvider;
@@ -30,17 +33,20 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
+import org.springframework.ws.client.WebServiceIOException;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.support.destination.DestinationProvider;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.transport.FaultAwareWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.WebServiceMessageSender;
@@ -52,6 +58,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
@@ -61,6 +68,8 @@ import static org.mockito.Mockito.when;
 
 @SuppressWarnings("unchecked")
 class WebServiceTemplateTests {
+
+	private static final URI CONNECTION_URI = URI.create("http://www.springframework.org/spring-ws");
 
 	private WebServiceTemplate template;
 
@@ -74,8 +83,7 @@ class WebServiceTemplateTests {
 		this.messageFactory = new MockWebServiceMessageFactory();
 		this.template = new WebServiceTemplate(this.messageFactory);
 		this.connectionMock = mock(FaultAwareWebServiceConnection.class);
-		final URI expectedUri = new URI("http://www.springframework.org/spring-ws");
-		when(this.connectionMock.getUri()).thenReturn(expectedUri);
+		when(this.connectionMock.getUri()).thenReturn(CONNECTION_URI);
 		this.template.setMessageSender(new WebServiceMessageSender() {
 
 			@Override
@@ -86,12 +94,12 @@ class WebServiceTemplateTests {
 			@Override
 			public boolean supports(URI uri, UriSource uriSource) {
 
-				assertThat(uri).isEqualTo(expectedUri);
+				assertThat(uri).isEqualTo(CONNECTION_URI);
 				return true;
 			}
 		});
 
-		this.template.setDefaultUri(expectedUri.toString());
+		this.template.setDefaultUri(CONNECTION_URI.toString());
 	}
 
 	@Test
@@ -617,6 +625,107 @@ class WebServiceTemplateTests {
 		Object result = this.template.sendAndReceive(null, extractorMock);
 
 		assertThat(result).isNull();
+	}
+
+	@Test
+	void observationWithMarshalSendAndReceive() throws Exception {
+		TestObservationRegistry observationRegistry = TestObservationRegistry.create();
+		this.template.setObservationRegistry(observationRegistry);
+		setupMarshallerAndUnmarshaller(new Object());
+		this.template.marshalSendAndReceive(new Object());
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.doesNotHaveError()
+			.hasLowCardinalityKeyValue("exception", "none")
+			.hasLowCardinalityKeyValue("fault.code", "none")
+			.hasLowCardinalityKeyValue("namespace", "none")
+			.hasLowCardinalityKeyValue("operation.name", "none")
+			.hasLowCardinalityKeyValue("outcome", "SUCCESS")
+			.hasLowCardinalityKeyValue("protocol", "http")
+			.hasLowCardinalityKeyValue("soap.action", "none")
+			.hasHighCardinalityKeyValue("fault.reason", "none")
+			.hasHighCardinalityKeyValue("uri", CONNECTION_URI.toString());
+	}
+
+	@Test
+	void observationResolvesOperationFromThePayloadRoot() throws IOException {
+		TestObservationRegistry observationRegistry = TestObservationRegistry.create();
+		this.template.setObservationRegistry(observationRegistry);
+
+		when(this.connectionMock.hasError()).thenReturn(false);
+		when(this.connectionMock.receive(this.messageFactory)).thenReturn(new MockWebServiceMessage("<response/>"));
+		when(this.connectionMock.hasFault()).thenReturn(false);
+
+		StreamSource source = new StreamSource(new ClassPathResource("country-body.xml", getClass()).getInputStream());
+		assertThat(this.template.sendSourceAndReceiveToResult(source, new StringResult())).isTrue();
+
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.doesNotHaveError()
+			.hasContextualNameEqualTo("soap getCountryRequest")
+			.hasLowCardinalityKeyValue("namespace", "http://www.springframework.org/spring-ws")
+			.hasLowCardinalityKeyValue("operation.name", "getCountryRequest")
+			.hasLowCardinalityKeyValue("outcome", "SUCCESS");
+	}
+
+	@Test
+	void observationWithFault() throws IOException {
+		TestObservationRegistry observationRegistry = TestObservationRegistry.create();
+		this.template.setObservationRegistry(observationRegistry);
+
+		FaultMessageResolver faultMessageResolverMock = mock(FaultMessageResolver.class);
+		this.template.setFaultMessageResolver(faultMessageResolverMock);
+		doThrow(new IllegalStateException("test")).when(faultMessageResolverMock)
+			.resolveFault(isA(WebServiceMessage.class));
+
+		MockWebServiceMessage response = new MockWebServiceMessage("<response/>");
+		response.setFault(true);
+		response.setFaultCode(SoapVersion.SOAP_11.getServerOrReceiverFaultName());
+		response.setFaultReason("Test");
+
+		when(this.connectionMock.hasError()).thenReturn(false);
+		when(this.connectionMock.hasFault()).thenReturn(true);
+		when(this.connectionMock.receive(this.messageFactory)).thenReturn(response);
+
+		assertThatIllegalStateException()
+			.isThrownBy(() -> this.template.sendAndReceive(null, mockWebServiceMessageExtractor()))
+			.withMessage("test");
+
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.hasError()
+			.hasLowCardinalityKeyValue("exception", "IllegalStateException")
+			.hasLowCardinalityKeyValue("fault.code", "{http://schemas.xmlsoap.org/soap/envelope/}Server")
+			.hasLowCardinalityKeyValue("outcome", "FAULT")
+			.hasHighCardinalityKeyValue("fault.reason", "Test");
+	}
+
+	@Test
+	void observationWithTransportError() throws IOException {
+		TestObservationRegistry observationRegistry = TestObservationRegistry.create();
+		this.template.setObservationRegistry(observationRegistry);
+
+		doThrow(new IOException("Connection refused")).when(this.connectionMock).send(isA(WebServiceMessage.class));
+
+		assertThatExceptionOfType(WebServiceIOException.class)
+			.isThrownBy(() -> this.template.sendAndReceive(null, mockWebServiceMessageExtractor()));
+
+		assertThat(observationRegistry).hasObservationWithNameEqualTo("soap.client.requests")
+			.that()
+			.hasBeenStopped()
+			.hasError()
+			.hasLowCardinalityKeyValue("exception", "IOException")
+			.hasLowCardinalityKeyValue("outcome", "ERROR");
+	}
+
+	@Test
+	void observationIsNotRecordedWithNoopRegistry() throws Exception {
+		setupMarshallerAndUnmarshaller(new Object());
+		this.template.marshalSendAndReceive(new Object());
+		assertThat(this.template.getObservationRegistry()).isSameAs(ObservationRegistry.NOOP);
 	}
 
 	private static WebServiceMessageExtractor<Object> mockWebServiceMessageExtractor() {
