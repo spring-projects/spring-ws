@@ -27,6 +27,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ApplicationObjectSupport;
+import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -37,6 +38,11 @@ import org.springframework.ws.server.SmartEndpointInterceptor;
 /**
  * Abstract base class for EndpointMapping implementations. Supports a default endpoint,
  * and endpoint interceptors.
+ * <p>
+ * Interceptors configured through {@link #setInterceptors(EndpointInterceptor[])} run
+ * first, in the order they have been configured, followed by any auto-discovered
+ * {@link SmartEndpointInterceptor} beans sorted using
+ * {@link org.springframework.core.OrderComparator}.
  *
  * @author Arjen Poutsma
  * @since 1.0.0
@@ -97,13 +103,18 @@ public abstract class AbstractEndpointMapping extends ApplicationObjectSupport i
 
 	/**
 	 * Initialize the specified interceptors, adapting them where necessary.
+	 * <p>
+	 * Auto-discovered {@link SmartEndpointInterceptor} beans are sorted using
+	 * {@link OrderComparator}.
 	 * @see #setInterceptors
 	 */
 	protected void initInterceptors() {
 		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
 			.beansOfTypeIncludingAncestors(obtainApplicationContext(), SmartEndpointInterceptor.class, true, false);
 		if (!smartInterceptors.isEmpty()) {
-			this.smartInterceptors = smartInterceptors.values().toArray(new SmartEndpointInterceptor[0]);
+			List<SmartEndpointInterceptor> orderedInterceptors = new ArrayList<>(smartInterceptors.values());
+			OrderComparator.sort(orderedInterceptors);
+			this.smartInterceptors = orderedInterceptors.toArray(new SmartEndpointInterceptor[0]);
 		}
 	}
 
