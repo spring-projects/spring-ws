@@ -386,6 +386,20 @@ The following configuration example shows this:
 ----
 ====
 
+[[server-jms-reply-destinations]]
+==== Reply destinations
+
+The JMS transport follows the JMS request/reply idiom: the response is sent to the `JMSReplyTo` destination of the request, correlated with its `JMSCorrelationID`, and inherits the request's delivery mode and priority.
+A request that carries no `JMSReplyTo` gets no response.
+
+It means the sender of a request chooses where its response is delivered, so the inbound destination should be treated as a trust boundary.
+Restrict who may produce onto the inbound destination, and use your broker's per-destination authorization to constrain which destinations the application's own session may produce to.
+Spring-WS does not screen `JMSReplyTo`, because on this transport it is the reply channel itself rather than an address supplied inside the message.
+
+NOTE: This is different from the out-of-band replies described below.
+A `wsa:ReplyTo` address travels inside the SOAP envelope, is acted on after the request has been processed, and can direct a reply onto a transport other than the one the request arrived on.
+Those addresses *are* screened.
+
 [[server-jms-sender-validation]]
 ==== Out-of-band JMS replies
 
