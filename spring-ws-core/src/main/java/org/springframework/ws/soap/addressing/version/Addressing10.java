@@ -52,11 +52,16 @@ public class Addressing10 extends AbstractAddressingVersion {
 		if (map.getAction() == null) {
 			return false;
 		}
-		if (map.getReplyTo() != null || map.getFaultTo() != null) {
+		if (requiresMessageId(map.getReplyTo()) || requiresMessageId(map.getFaultTo())) {
 			return map.getMessageId() != null;
 		}
 		return true;
 
+	}
+
+	private boolean requiresMessageId(@Nullable EndpointReference endpointReference) {
+		return endpointReference != null && !hasAnonymousAddress(endpointReference)
+				&& !hasNoneAddress(endpointReference);
 	}
 
 	@Override

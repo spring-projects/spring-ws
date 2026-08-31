@@ -65,4 +65,52 @@ class AddressingInterceptor10Tests extends AbstractAddressingInterceptorTests {
 		verify(this.strategyMock);
 	}
 
+	@Test
+	void testAnonymousReplyToWithoutMessageId() throws Exception {
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-anonymous-no-message-id.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		expect(this.strategyMock.isDuplicate(null)).andReturn(false);
+		replay(this.strategyMock);
+
+		boolean result = this.interceptor.handleRequest(context, null);
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
+
+		verify(this.strategyMock);
+	}
+
+	@Test
+	void testNoReplyToWithoutMessageId() throws Exception {
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-no-reply-to-no-message-id.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		expect(this.strategyMock.isDuplicate(null)).andReturn(false);
+		replay(this.strategyMock);
+
+		boolean result = this.interceptor.handleRequest(context, null);
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
+
+		verify(this.strategyMock);
+	}
+
+	@Test
+	void testNoneReplyToWithoutMessageId() throws Exception {
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-none-no-message-id.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		expect(this.strategyMock.isDuplicate(null)).andReturn(false);
+		replay(this.strategyMock);
+
+		boolean result = this.interceptor.handleRequest(context, null);
+
+		assertThat(result).isTrue();
+		assertThat(context.hasResponse()).isFalse();
+
+		verify(this.strategyMock);
+	}
+
 }
