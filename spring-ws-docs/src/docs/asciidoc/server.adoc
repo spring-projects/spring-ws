@@ -409,6 +409,7 @@ Those addresses *are* screened.
 
 When a JMS message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, destination and reply names are screened for patterns that often indicate unsafe indirection (embedded LDAP- or JNDI-style fragments and similar). If your environment uses names that legitimately contain such substrings, attach a `DestinationPolicy` to the sender so you can express allow-lists or resolver-specific exceptions while still composing with the defaults.
 
+[[server-mail-transport]]
 === Email Transport
 
 In addition to HTTP and JMS, Spring-WS also provides server-side email handling.
