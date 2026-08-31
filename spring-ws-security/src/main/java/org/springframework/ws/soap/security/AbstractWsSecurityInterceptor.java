@@ -121,7 +121,23 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 		this.exceptionResolver = exceptionResolver;
 	}
 
-	/** Allows skipping validation if no security header is present. */
+	/**
+	 * Indicates whether validation is skipped for messages that carry no
+	 * {@code wsse:Security} header. Defaults to {@code false}.
+	 * <p>
+	 * On the server side, this applies to incoming requests, and the sender of a request
+	 * decides whether to include the header. Enabling this therefore makes every
+	 * {@link #setValidateRequest(boolean) validation action} configured on this
+	 * interceptor optional from the caller's point of view: a request that simply omits
+	 * the header reaches the endpoint with no signature, encryption, timestamp or
+	 * username token check applied. Do not enable this for endpoints that rely on
+	 * WS-Security to authenticate or authorize their callers.
+	 * <p>
+	 * On the client side, this applies to the {@link #setValidateResponse(boolean)
+	 * validation of responses} received from a server that the client chose to call,
+	 * where accepting an unsecured reply is usually a deliberate interoperability
+	 * decision rather than a trust boundary.
+	 */
 	public void setSkipValidationIfNoHeaderPresent(boolean skipValidationIfNoHeaderPresent) {
 		this.skipValidationIfNoHeaderPresent = skipValidationIfNoHeaderPresent;
 	}
