@@ -117,7 +117,10 @@ public class XmppMessageReceiver extends AbstractStandaloneMessageReceiver {
 
 		@Override
 		public void processStanza(Stanza packet) {
-			XmppMessageReceiver.this.logger.info("Received " + packet);
+			if (XmppMessageReceiver.this.logger.isDebugEnabled()) {
+				XmppMessageReceiver.this.logger
+					.debug("Received stanza [" + packet.getStanzaId() + "] from [" + packet.getFrom() + "]");
+			}
 			if (packet instanceof Message message) {
 				try {
 					XmppReceiverConnection wsConnection = new XmppReceiverConnection(getConnection(), message);

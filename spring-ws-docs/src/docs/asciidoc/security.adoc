@@ -134,6 +134,32 @@ The following table shows the available securement actions:
 The order of the actions is significant and is enforced by the interceptor.
 If its security actions were performed in a different order than the one specified by `validationActions`, the interceptor rejects an incoming SOAP message.
 
+=== Skipping Validation
+
+The `skipValidationIfNoHeaderPresent` property controls what happens to a message that carries no `wsse:Security` header at all.
+It defaults to `false`, which means such a message is passed to the configured `validationActions` and rejected.
+
+On the server side, the sender of a request decides whether to include the header.
+Setting this property to `true` therefore makes every configured validation action optional from the caller's point of view: a request that simply omits the header reaches the endpoint with no signature, encryption, timestamp or username token check applied.
+
+====
+[source,xml]
+----
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
+    <property name="validationActions" value="UsernameToken Signature"/>
+    <!-- Requests without a wsse:Security header are NOT validated -->
+    <property name="skipValidationIfNoHeaderPresent" value="true"/>
+</bean>
+----
+====
+
+WARNING: Do not enable `skipValidationIfNoHeaderPresent` on the server side for endpoints that rely on WS-Security to authenticate or authorize their callers.
+Doing so leaves those endpoints reachable by anyone who omits the header.
+If some clients are expected to send unsecured requests, route them to a separate endpoint mapping that is not covered by this interceptor, rather than relaxing validation for every endpoint behind it.
+
+On the client side, the same property applies to the validation of responses received from a server that the client chose to call.
+Accepting an unsecured reply there is usually a deliberate interoperability decision rather than a trust boundary.
+
 === WS-I Basic Security Profile
 
 The `setBspCompliant(boolean)` property controls WS-I Basic Security Profile (BSP) enforcement for **validation**, consistent with Apache WSS4J.
