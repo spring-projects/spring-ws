@@ -53,7 +53,7 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 	@SuppressWarnings("NullAway.Init")
 	private Pattern subjectDNPattern;
 
-	private String subjectDNRegex = "CN=(.*?),";
+	private String subjectDNRegex = "CN=(.*?)(?:,|$)";
 
 	@SuppressWarnings("NullAway.Init")
 	private UserDetailsService userDetailsService;
@@ -105,13 +105,18 @@ public class DaoX509AuthoritiesPopulator implements X509AuthoritiesPopulator, In
 	 * Sets the regular expression which will by used to extract the user name from the
 	 * certificate's Subject DN.
 	 * <p>
-	 * It should contain a single group; for example the default expression "CN=(.?),"
-	 * matches the common name field. So "CN=Jimi Hendrix, OU=..." will give a user name
-	 * of "Jimi Hendrix".
+	 * It should contain a single group; for example the default expression
+	 * {@code "CN=(.*?)(?:,|$)"} matches the common name field. So "CN=Jimi Hendrix,
+	 * OU=..." will give a user name of "Jimi Hendrix".
 	 * </p>
 	 * <p>
-	 * The matches are case insensitive. So "emailAddress=(.?)," will match
+	 * The matches are case insensitive. So {@code "emailAddress=(.*?),"} will match
 	 * "EMAILADDRESS=jimi@hendrix.org, CN=..." giving a user name "jimi@hendrix.org"
+	 * </p>
+	 * <p>
+	 * The expression is matched against
+	 * {@link javax.security.auth.x500.X500Principal#getName()}, which renders the DN in
+	 * RFC 2253 form and escapes the separators that appear inside an attribute value.
 	 * </p>
 	 * @param subjectDNRegex the regular expression to find in the subject
 	 */
