@@ -24,6 +24,7 @@ import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
 import org.springframework.ws.server.SmartEndpointInterceptor;
+import org.springframework.core.annotation.Order;
 import org.springframework.ws.server.test.OrderedEndpointInterceptor;
 import org.springframework.ws.server.test.OrderedSmartEndpointInterceptor;
 import org.springframework.ws.soap.addressing.server.test.TestAddressingEndpointMapping;
@@ -147,6 +148,58 @@ class AbstractAddressingEndpointMappingTests {
 				(third) -> assertThat(third).isSameAs(smartInterceptor1),
 				(fourth) -> assertThat(fourth).isInstanceOf(AddressingEndpointInterceptor.class),
 				(fifth) -> assertThat(fifth).isSameAs(smartInterceptor2));
+	}
+
+	@Test
+	void smartInterceptorWithOrderAnnotationIsInvokedBeforeAddressingInterceptor() throws Exception {
+		this.applicationContext.registerSingleton("afterAddressing", AnnotatedAfterInterceptor.class);
+		this.applicationContext.registerSingleton("beforeAddressing", AnnotatedBeforeInterceptor.class);
+		AbstractAddressingEndpointMapping mapping = TestAddressingEndpointMapping.create(this.applicationContext);
+
+		EndpointInvocationChain chain = mapping.getEndpoint(createMessageContext());
+		assertThat(chain).isNotNull();
+		assertThat(chain.getInterceptors()).satisfiesExactly(
+				(first) -> assertThat(first).isSameAs(this.applicationContext.getBean("beforeAddressing")),
+				(second) -> assertThat(second).isInstanceOf(AddressingEndpointInterceptor.class),
+				(third) -> assertThat(third).isSameAs(this.applicationContext.getBean("afterAddressing")));
+	}
+
+	@Order(-100)
+	public static class AnnotatedBeforeInterceptor extends AlwaysInterceptingSmartInterceptor {
+
+	}
+
+	@Order(100)
+	public static class AnnotatedAfterInterceptor extends AlwaysInterceptingSmartInterceptor {
+
+	}
+
+	public abstract static class AlwaysInterceptingSmartInterceptor implements SmartEndpointInterceptor {
+
+		@Override
+		public boolean shouldIntercept(MessageContext messageContext, Object endpoint) {
+			return true;
+		}
+
+		@Override
+		public boolean handleRequest(MessageContext messageContext, Object endpoint) {
+			return true;
+		}
+
+		@Override
+		public boolean handleResponse(MessageContext messageContext, Object endpoint) {
+			return true;
+		}
+
+		@Override
+		public boolean handleFault(MessageContext messageContext, Object endpoint) {
+			return true;
+		}
+
+		@Override
+		public void afterCompletion(MessageContext messageContext, Object endpoint, Exception ex) {
+		}
+
 	}
 
 	private MessageContext createMessageContext() {

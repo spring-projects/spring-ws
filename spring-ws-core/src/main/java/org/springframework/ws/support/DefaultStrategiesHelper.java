@@ -31,7 +31,7 @@ import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -132,7 +132,7 @@ public class DefaultStrategiesHelper {
 				T strategy = instantiateBean(clazz, applicationContext);
 				result.add(strategy);
 			}
-			result.sort(new OrderComparator());
+			result.sort(AnnotationAwareOrderComparator.INSTANCE);
 			return result;
 		}
 		catch (ClassNotFoundException ex) {

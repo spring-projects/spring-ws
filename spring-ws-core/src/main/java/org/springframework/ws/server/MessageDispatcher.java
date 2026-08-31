@@ -32,7 +32,7 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -426,7 +426,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointAdapter.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.endpointAdapters = new ArrayList<>(matchingBeans.values());
-				this.endpointAdapters.sort(new OrderComparator());
+				this.endpointAdapters.sort(AnnotationAwareOrderComparator.INSTANCE);
 			}
 			else {
 				this.endpointAdapters = this.defaultStrategiesHelper.getDefaultStrategies(EndpointAdapter.class,
@@ -450,7 +450,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointExceptionResolver.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.endpointExceptionResolvers = new ArrayList<>(matchingBeans.values());
-				this.endpointExceptionResolvers.sort(new OrderComparator());
+				this.endpointExceptionResolvers.sort(AnnotationAwareOrderComparator.INSTANCE);
 			}
 			else {
 				this.endpointExceptionResolvers = this.defaultStrategiesHelper
@@ -474,7 +474,7 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				.beansOfTypeIncludingAncestors(applicationContext, EndpointMapping.class, true, false);
 			if (!matchingBeans.isEmpty()) {
 				this.endpointMappings = new ArrayList<>(matchingBeans.values());
-				this.endpointMappings.sort(new OrderComparator());
+				this.endpointMappings.sort(AnnotationAwareOrderComparator.INSTANCE);
 			}
 			else {
 				this.endpointMappings = this.defaultStrategiesHelper.getDefaultStrategies(EndpointMapping.class,

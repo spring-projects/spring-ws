@@ -19,9 +19,11 @@ package org.springframework.ws.server;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.NoEndpointFoundException;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -423,6 +425,87 @@ class MessageDispatcherTests {
 		assertThat(this.dispatcher.getEndpointExceptionResolvers()).hasSize(1);
 		assertThat(this.dispatcher.getEndpointExceptionResolvers())
 			.hasOnlyElementsOfType(SimpleSoapExceptionResolver.class);
+	}
+
+	@Test
+	void detectedStrategiesAreSortedByAnOrderAnnotationOnTheBeanClass() {
+		StaticApplicationContext applicationContext = new StaticApplicationContext();
+		applicationContext.registerSingleton("lastMapping", LastEndpointMapping.class);
+		applicationContext.registerSingleton("firstMapping", FirstEndpointMapping.class);
+		applicationContext.registerSingleton("lastAdapter", LastEndpointAdapter.class);
+		applicationContext.registerSingleton("firstAdapter", FirstEndpointAdapter.class);
+		applicationContext.registerSingleton("lastResolver", LastExceptionResolver.class);
+		applicationContext.registerSingleton("firstResolver", FirstExceptionResolver.class);
+
+		this.dispatcher.setApplicationContext(applicationContext);
+
+		assertThat(this.dispatcher.getEndpointMappings()).hasExactlyElementsOfTypes(FirstEndpointMapping.class,
+				LastEndpointMapping.class);
+		assertThat(this.dispatcher.getEndpointAdapters()).hasExactlyElementsOfTypes(FirstEndpointAdapter.class,
+				LastEndpointAdapter.class);
+		assertThat(this.dispatcher.getEndpointExceptionResolvers())
+			.hasExactlyElementsOfTypes(FirstExceptionResolver.class, LastExceptionResolver.class);
+	}
+
+	public static class StubEndpointMapping implements EndpointMapping {
+
+		@Override
+		public @Nullable EndpointInvocationChain getEndpoint(MessageContext messageContext) {
+			return null;
+		}
+
+	}
+
+	@Order(-100)
+	public static class FirstEndpointMapping extends StubEndpointMapping {
+
+	}
+
+	@Order(100)
+	public static class LastEndpointMapping extends StubEndpointMapping {
+
+	}
+
+	public static class StubEndpointAdapter implements EndpointAdapter {
+
+		@Override
+		public boolean supports(Object endpoint) {
+			return false;
+		}
+
+		@Override
+		public void invoke(MessageContext messageContext, Object endpoint) {
+		}
+
+	}
+
+	@Order(-100)
+	public static class FirstEndpointAdapter extends StubEndpointAdapter {
+
+	}
+
+	@Order(100)
+	public static class LastEndpointAdapter extends StubEndpointAdapter {
+
+	}
+
+	public static class StubExceptionResolver implements EndpointExceptionResolver {
+
+		@Override
+		public boolean resolveException(MessageContext messageContext, Object endpoint, Exception ex) {
+			return false;
+		}
+
+	}
+
+	@Order(-100)
+	public static class FirstExceptionResolver extends StubExceptionResolver {
+
+	}
+
+	@Order(100)
+	public static class LastExceptionResolver extends StubExceptionResolver {
+
 	}
 
 	@Test

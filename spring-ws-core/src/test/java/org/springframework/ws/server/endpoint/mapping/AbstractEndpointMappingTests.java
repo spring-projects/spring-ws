@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.context.support.StaticApplicationContext;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.ws.MockWebServiceMessage;
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
@@ -66,6 +67,35 @@ class AbstractEndpointMappingTests {
 				new EndpointInterceptor[] { new NamedInterceptor("configuredA"), new NamedInterceptor("configuredB") });
 		mapping.setApplicationContext(context);
 		assertThat(names(mapping.getEndpoint(messageContext()))).containsExactly("configuredA", "configuredB", "smart");
+	}
+
+	@Test
+	void smartInterceptorsAreSortedByAnOrderAnnotationOnTheBeanClass() throws Exception {
+		StaticApplicationContext context = new StaticApplicationContext();
+		context.registerSingleton("annotatedLast", AnnotatedLastInterceptor.class);
+		context.registerSingleton("annotatedFirst", AnnotatedFirstInterceptor.class);
+		context.refresh();
+		AbstractEndpointMapping mapping = new TestEndpointMapping();
+		mapping.setApplicationContext(context);
+		assertThat(names(mapping.getEndpoint(messageContext()))).containsExactly("annotatedFirst", "annotatedLast");
+	}
+
+	@Order(-100)
+	public static class AnnotatedFirstInterceptor extends NamedSmartInterceptor {
+
+		public AnnotatedFirstInterceptor() {
+			super("annotatedFirst");
+		}
+
+	}
+
+	@Order(100)
+	public static class AnnotatedLastInterceptor extends NamedSmartInterceptor {
+
+		public AnnotatedLastInterceptor() {
+			super("annotatedLast");
+		}
+
 	}
 
 	private static EndpointInvocationChain chainFor(SmartEndpointInterceptor... interceptors) throws Exception {

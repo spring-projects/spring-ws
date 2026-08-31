@@ -32,8 +32,8 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.OrderComparator;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.util.Assert;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
@@ -87,9 +87,9 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * interceptors — the implicit WS-Addressing interceptor, any auto-discovered
  * {@link org.springframework.ws.server.SmartEndpointInterceptor
  * SmartEndpointInterceptors}, and post-interceptors — are sorted together using
- * {@link org.springframework.core.OrderComparator}. The implicit WS-Addressing
- * interceptor has a fixed order of {@code 0}; unordered interceptors default to
- * {@link Integer#MAX_VALUE} so they run last.
+ * {@link AnnotationAwareOrderComparator}. The implicit WS-Addressing interceptor has a
+ * fixed order of {@code 0}; unordered interceptors default to {@link Integer#MAX_VALUE}
+ * so they run last.
  *
  * @author Arjen Poutsma
  * @author Nate Stoddard
@@ -189,10 +189,12 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * Interceptors are sorted together with any auto-discovered
 	 * {@link org.springframework.ws.server.SmartEndpointInterceptor
 	 * SmartEndpointInterceptors} and the implicit WS-Addressing interceptor (order
-	 * {@code 0}) using {@link org.springframework.core.OrderComparator}. By default,
-	 * interceptors without an explicit order are placed at the end, and therefore after
-	 * the WS-Addressing interceptor. Implement {@link org.springframework.core.Ordered}
-	 * to customize the position.
+	 * {@code 0}) using {@link AnnotationAwareOrderComparator}. By default, interceptors
+	 * without an explicit order are placed at the end, and therefore after the
+	 * WS-Addressing interceptor. Implement {@link org.springframework.core.Ordered}, or
+	 * annotate the interceptor with
+	 * {@link org.springframework.core.annotation.Order @Order}, to customize the
+	 * position.
 	 * @param postInterceptors additional interceptors to apply alongside the implicit
 	 * WS-Addressing interceptor
 	 */
@@ -332,7 +334,7 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 		}
 		interceptors.add(addressingInterceptor);
 		interceptors.addAll(Arrays.asList(this.postInterceptors));
-		OrderComparator.sort(interceptors);
+		AnnotationAwareOrderComparator.sort(interceptors);
 		allInterceptor.addAll(interceptors);
 		return allInterceptor.toArray(new EndpointInterceptor[0]);
 	}
