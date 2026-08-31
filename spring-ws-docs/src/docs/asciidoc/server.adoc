@@ -343,6 +343,7 @@ In a similar fashion, you can wire a `WsdlDefinitionHandlerAdapter` to make sure
 ----
 ====
 
+[[server-jms-transport]]
 === JMS transport
 
 Spring-WS supports server-side JMS handling through the JMS functionality provided in the Spring framework.
