@@ -19,6 +19,7 @@ package org.springframework.ws.server;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
@@ -566,6 +567,30 @@ class MessageDispatcherTests {
 					"second.handleResponse", "first.handleResponse", "second.afterCompletion", "first.afterCompletion");
 		}
 
+		@Test
+		void outerInterceptorHandlesFaultWhenInnerInterceptorAddsFault() throws Exception {
+			RecordingInterceptor inner = new RecordingInterceptor("inner", Outcome.PROCEED);
+			inner.onHandleResponse = (messageContext) -> setFault(messageContext, true);
+			dispatch(new RecordingInterceptor("outer", Outcome.PROCEED), inner);
+			assertThat(this.calls).containsExactly("outer.handleRequest", "inner.handleRequest", "endpoint",
+					"inner.handleResponse", "outer.handleFault", "inner.afterCompletion", "outer.afterCompletion");
+		}
+
+		@Test
+		void outerInterceptorHandlesResponseWhenInnerInterceptorRemovesFault() throws Exception {
+			RecordingInterceptor inner = new RecordingInterceptor("inner", Outcome.PROCEED);
+			inner.onHandleFault = (messageContext) -> setFault(messageContext, false);
+			dispatch(new RecordingInterceptor("outer", Outcome.PROCEED), inner,
+					new RecordingInterceptor("failing", Outcome.THROW));
+			assertThat(this.calls).containsExactly("outer.handleRequest", "inner.handleRequest",
+					"failing.handleRequest", "inner.handleFault", "outer.handleResponse", "failing.afterCompletion",
+					"inner.afterCompletion", "outer.afterCompletion");
+		}
+
+		private void setFault(MessageContext messageContext, boolean fault) {
+			((MockWebServiceMessage) messageContext.getResponse()).setFault(fault);
+		}
+
 		private void dispatch(EndpointInterceptor... interceptors) throws Exception {
 			MessageEndpoint endpoint = (messageContext) -> {
 				this.calls.add("endpoint");
@@ -595,6 +620,10 @@ class MessageDispatcherTests {
 
 			private final Outcome outcome;
 
+			private @Nullable Consumer<MessageContext> onHandleResponse;
+
+			private @Nullable Consumer<MessageContext> onHandleFault;
+
 			private RecordingInterceptor(String name, Outcome outcome) {
 				this.name = name;
 				this.outcome = outcome;
@@ -616,12 +645,18 @@ class MessageDispatcherTests {
 			@Override
 			public boolean handleResponse(MessageContext messageContext, Object endpoint) {
 				UnwindTests.this.calls.add(this.name + ".handleResponse");
+				if (this.onHandleResponse != null) {
+					this.onHandleResponse.accept(messageContext);
+				}
 				return true;
 			}
 
 			@Override
 			public boolean handleFault(MessageContext messageContext, Object endpoint) {
 				UnwindTests.this.calls.add(this.name + ".handleFault");
+				if (this.onHandleFault != null) {
+					this.onHandleFault.accept(messageContext);
+				}
 				return true;
 			}
 
