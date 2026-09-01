@@ -33,8 +33,8 @@ import org.springframework.ws.transport.support.AbstractStandaloneMessageReceive
 
 /**
  * Server-side component for receiving XMPP (Jabber) messages. Requires a
- * {@linkplain #setConnection(XMPPTCPConnection)} connection} to be set, in addition to
- * the {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
+ * {@linkplain #setConnection(XMPPTCPConnection) connection} to be set, in addition to the
+ * {@link #setMessageFactory(org.springframework.ws.WebServiceMessageFactory)
  * messageFactory} and
  * {@link #setMessageReceiver(org.springframework.ws.transport.WebServiceMessageReceiver)
  * messageReceiver} required by the base class.
