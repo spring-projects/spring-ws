@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 import org.springframework.core.io.Resource;
@@ -44,17 +46,35 @@ public abstract class SaxUtils {
 
 	/**
 	 * Create a default {@link XMLReader} that is
-	 * {@linkplain SAXParserFactory#setNamespaceAware(boolean) namespace aware}.
+	 * {@linkplain SAXParserFactory#setNamespaceAware(boolean) namespace aware} and
+	 * configured to prevent external entity access.
 	 * @return a new {@link XMLReader}
 	 */
 	public static XMLReader namespaceAwareXmlReader() throws SAXException {
 		try {
 			SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 			parserFactory.setNamespaceAware(true);
-			return parserFactory.newSAXParser().getXMLReader();
+			XMLReader xmlReader = parserFactory.newSAXParser().getXMLReader();
+			setFeature(xmlReader, "http://apache.org/xml/features/disallow-doctype-decl", true);
+			setFeature(xmlReader, "http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+			setFeature(xmlReader, "http://xml.org/sax/features/external-general-entities", false);
+			setFeature(xmlReader, "http://xml.org/sax/features/external-parameter-entities", false);
+			return xmlReader;
 		}
 		catch (ParserConfigurationException ex) {
 			throw new IllegalStateException(ex);
+		}
+	}
+
+	private static void setFeature(XMLReader xmlReader, String feature, boolean value) {
+		try {
+			xmlReader.setFeature(feature, value);
+		}
+		catch (SAXNotRecognizedException | SAXNotSupportedException ex) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("FEATURE '" + feature + "' is probably not supported by "
+						+ xmlReader.getClass().getCanonicalName());
+			}
 		}
 	}
 
