@@ -96,8 +96,6 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 
 	private static final Log logger = LogFactory.getLog(AxiomSoapMessageFactory.class);
 
-	private @Nullable XMLInputFactory inputFactory;
-
 	private boolean payloadCaching = true;
 
 	private boolean attachmentCaching = false;
@@ -198,16 +196,22 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	/**
 	 * Sets whether internal entity references should be replaced with their replacement
 	 * text and report them as characters.
+	 * @deprecated as of 5.0.3 as this setting has no effect, see
+	 * {@link #createXmlInputFactory()}
 	 * @see XMLInputFactory#IS_REPLACING_ENTITY_REFERENCES
 	 */
+	@Deprecated
 	public void setReplacingEntityReferences(boolean replacingEntityReferences) {
 		this.replacingEntityReferences = replacingEntityReferences;
 	}
 
 	/**
 	 * Sets whether external parsed entities should be resolved.
+	 * @deprecated as of 5.0.3 as this setting has no effect, see
+	 * {@link #createXmlInputFactory()}
 	 * @see XMLInputFactory#IS_SUPPORTING_EXTERNAL_ENTITIES
 	 */
+	@Deprecated
 	public void setSupportingExternalEntities(boolean supportingExternalEntities) {
 		this.supportingExternalEntities = supportingExternalEntities;
 	}
@@ -221,7 +225,6 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 			String tempDir = System.getProperty("java.io.tmpdir");
 			setAttachmentCacheDir(new File(tempDir));
 		}
-		this.inputFactory = createXmlInputFactory();
 	}
 
 	@Override
@@ -233,9 +236,6 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	public AxiomSoapMessage createWebServiceMessage(InputStream inputStream) throws IOException {
 		Assert.isInstanceOf(TransportInputStream.class, inputStream,
 				"AxiomSoapMessageFactory requires a TransportInputStream");
-		if (this.inputFactory == null) {
-			this.inputFactory = createXmlInputFactory();
-		}
 		TransportInputStream transportInputStream = (TransportInputStream) inputStream;
 		String contentType = getHeaderValue(transportInputStream, TransportConstants.HEADER_CONTENT_TYPE);
 		if (!StringUtils.hasLength(contentType)) {
@@ -354,15 +354,17 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	 * Create a {@code XMLInputFactory} that this resolver will use to create
 	 * {@link XMLStreamReader} objects.
 	 * <p>
-	 * Can be overridden in subclasses, adding further initialization of the factory. The
-	 * resulting factory is cached, so this method will only be called once.
-	 * <p>
 	 * By default this method creates a standard {@link XMLInputFactory} and configures it
 	 * based on the {@link #setReplacingEntityReferences(boolean)
 	 * replacingEntityReferences} and {@link #setSupportingExternalEntities(boolean)
 	 * supportingExternalEntities} properties.
 	 * @return the created factory
+	 * @deprecated as of 5.0.3 as the factory it creates is no longer used. Axiom parses
+	 * SOAP messages with its own {@code XMLInputFactory}, configured to reject any
+	 * message carrying a DOCTYPE declaration, which is stricter than what this method can
+	 * express and cannot be relaxed by the properties above
 	 */
+	@Deprecated
 	protected XMLInputFactory createXmlInputFactory() {
 		XMLInputFactory inputFactory = XMLInputFactoryUtils.newInstance();
 		inputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, this.replacingEntityReferences);
