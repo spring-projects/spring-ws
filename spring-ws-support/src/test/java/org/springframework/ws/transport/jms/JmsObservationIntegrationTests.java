@@ -55,6 +55,7 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 /**
  * Tests for JMS transport with observations.
@@ -94,19 +95,20 @@ class JmsObservationIntegrationTests {
 	@Test
 	void receiveMessageCreatesServerObservation() {
 		this.jmsTemplate.sendAndReceive(SERVER_REQUEST_QUEUE_NAME, session -> session.createTextMessage(ENVELOPE));
-		assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.server.requests")
-			.that()
-			.hasBeenStopped()
-			.doesNotHaveError()
-			.hasContextualNameEqualTo("soap GetLastTradePrice")
-			.hasLowCardinalityKeyValue("exception", "none")
-			.hasLowCardinalityKeyValue("fault.code", "none")
-			.hasLowCardinalityKeyValue("namespace", "http://www.springframework.org/spring-ws")
-			.hasLowCardinalityKeyValue("operation.name", "GetLastTradePrice")
-			.hasLowCardinalityKeyValue("outcome", "SUCCESS")
-			.hasLowCardinalityKeyValue("protocol", "jms")
-			.hasHighCardinalityKeyValue("fault.reason", "none")
-			.hasHighCardinalityKeyValue("uri", "jms:RequestQueue");
+		await().untilAsserted(
+				() -> assertThat(this.observationRegistry).hasObservationWithNameEqualTo("soap.server.requests")
+					.that()
+					.hasBeenStopped()
+					.doesNotHaveError()
+					.hasContextualNameEqualTo("soap GetLastTradePrice")
+					.hasLowCardinalityKeyValue("exception", "none")
+					.hasLowCardinalityKeyValue("fault.code", "none")
+					.hasLowCardinalityKeyValue("namespace", "http://www.springframework.org/spring-ws")
+					.hasLowCardinalityKeyValue("operation.name", "GetLastTradePrice")
+					.hasLowCardinalityKeyValue("outcome", "SUCCESS")
+					.hasLowCardinalityKeyValue("protocol", "jms")
+					.hasHighCardinalityKeyValue("fault.reason", "none")
+					.hasHighCardinalityKeyValue("uri", "jms:RequestQueue"));
 	}
 
 	@Test
