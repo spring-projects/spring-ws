@@ -373,15 +373,10 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 			int interceptorIndex) throws Exception {
 		if (mappedEndpoint != null && messageContext.hasResponse()
 				&& !ObjectUtils.isEmpty(mappedEndpoint.getInterceptors())) {
-			boolean hasFault = false;
-			WebServiceMessage response = messageContext.getResponse();
-			if (response instanceof FaultAwareWebServiceMessage) {
-				hasFault = ((FaultAwareWebServiceMessage) response).hasFault();
-			}
 			boolean resume = true;
 			for (int i = interceptorIndex; resume && i >= 0; i--) {
 				EndpointInterceptor interceptor = mappedEndpoint.getInterceptors()[i];
-				if (!hasFault) {
+				if (!hasFault(messageContext)) {
 					resume = interceptor.handleResponse(messageContext, mappedEndpoint.getEndpoint());
 				}
 				else {
@@ -389,6 +384,14 @@ public class MessageDispatcher implements WebServiceMessageReceiver, BeanNameAwa
 				}
 			}
 		}
+	}
+
+	private boolean hasFault(MessageContext messageContext) {
+		if (!messageContext.hasResponse()) {
+			return false;
+		}
+		WebServiceMessage response = messageContext.getResponse();
+		return (response instanceof FaultAwareWebServiceMessage faultAwareResponse) && faultAwareResponse.hasFault();
 	}
 
 	/**
