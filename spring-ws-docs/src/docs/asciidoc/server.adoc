@@ -1290,7 +1290,18 @@ Endpoint exception resolvers are automatically picked up by the `MessageDispatch
 Besides implementing the `EndpointExceptionResolver` interface, which is only a matter of implementing the `resolveException(MessageContext, endpoint, Exception)` method, you may also use one of the provided implementations.
 
 The simplest implementation is the `SimpleSoapExceptionResolver`, which creates a SOAP 1.1 Server or SOAP 1.2 Receiver fault and uses the exception message as the fault string.
-You can subclass it to customize the fault, as shown in the following example:
+
+WARNING: `SimpleSoapExceptionResolver` is one of the resolvers that the `MessageDispatcher` uses when the application context declares no `EndpointExceptionResolver` bean, so this is what an endpoint does out of the box.
+The fault string is the message of the exception, or its `toString()` representation if it has none, and the caller of the endpoint sees it.
+An exception raised by your own code, or by a library that it uses, can carry internal detail such as a file path, a SQL statement, or a host name.
+<<server-endpoint-exception-resolver-simple,Subclassing this resolver>> does not change that, as it only lets you customize the detail of the fault, not its fault string.
+To decide what the fault string says, declare a <<server-endpoint-exception-resolver-mapping,`SoapFaultMappingExceptionResolver`>> instead.
+
+[[server-endpoint-exception-resolver-simple]]
+=== `SimpleSoapExceptionResolver`
+
+Where the fault string of the exception message is acceptable, this resolver needs no configuration at all, as the `MessageDispatcher` falls back to it.
+Subclass it to add a detail element to every fault it produces, by overriding `customizeFault`:
 
 [source,java]
 ----
@@ -1322,8 +1333,9 @@ public class CustomSoapExceptionResolver extends SimpleSoapExceptionResolver {
 }
 ----
 
-The `SimpleSoapExceptionResolver` is the default, but it can be overridden by explicitly adding another resolver.
+The fault string is set on the fault before `customizeFault` is called, so this is the place to describe the failure further, not to replace what it already says.
 
+[[server-endpoint-exception-resolver-mapping]]
 === `SoapFaultMappingExceptionResolver`
 
 The `SoapFaultMappingExceptionResolver` is a more sophisticated implementation.
@@ -1335,7 +1347,7 @@ This resolver lets you take the class name of any exception that might be thrown
 <beans>
     <bean id="exceptionResolver"
         class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
-        <property name="defaultFault" value="SERVER"/>
+        <property name="defaultFault" value="SERVER,Internal server error"/>
         <property name="exceptionMappings">
             <value>
                 org.springframework.oxm.ValidationFailureException=CLIENT,Invalid request
@@ -1349,6 +1361,9 @@ This resolver lets you take the class name of any exception that might be thrown
 The key values and default endpoint use a format of `faultCode,faultString,locale`, where only the fault code is required.
 If the fault string is not set, it defaults to the exception message.
 If the language is not set, it defaults to English.
+
+The default fault handles every exception that is not mapped, so giving it a fault string of its own, as the example above does, is what keeps the message of an exception you did not anticipate from reaching the caller.
+Such an exception is otherwise only recorded if the `warnLogCategory` property is set, which is worth doing once the fault no longer carries its detail.
 The preceding configuration maps exceptions of type `ValidationFailureException` to a client-side SOAP fault with a fault string of `Invalid request`, as follows:
 
 ====
