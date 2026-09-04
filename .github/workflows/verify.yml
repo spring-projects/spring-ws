@@ -67,7 +67,7 @@ jobs:
         run: ./gradlew spring-ws-release-verification-tests:test
       - name: Upload Build Reports on Failure
         if: failure()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: build-reports
           path: '**/build/reports/'
