@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     branches:
-      - 'main'
+      - 'main-internal'
 permissions:
   contents: read
 concurrency:
@@ -10,13 +10,13 @@ concurrency:
 jobs:
   ci:
     name: '${{ matrix.os.name}} | Java ${{ matrix.java.version}}'
-    if: ${{ github.repository == 'spring-projects/spring-ws' }}
+    if: ${{ github.repository == 'spring-projects/spring-ws-commercial' }}
     runs-on: ${{ matrix.os.id }}
     timeout-minutes: 60
     strategy:
       matrix:
         os:
-          - id: ubuntu-latest
+          - id: ${{ vars.UBUNTU_MEDIUM || 'ubuntu-latest' }}
             name: Linux
         java:
           - version: 17
@@ -43,7 +43,10 @@ jobs:
         id: build
         uses: ./.github/actions/build
         with:
-          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          commercial-release-repository-url: ${{ vars.COMMERCIAL_RELEASE_REPO_URL }}
+          commercial-repository-password: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
+          commercial-repository-username: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
+          commercial-snapshot-repository-url: ${{ vars.COMMERCIAL_SNAPSHOT_REPO_URL }}
           java-early-access: ${{ matrix.java.early-access || 'false' }}
           java-distribution: ${{ matrix.java.distribution }}
           java-toolchain: ${{ matrix.java.toolchain }}

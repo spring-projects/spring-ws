@@ -2,7 +2,7 @@ name: Build and Deploy Snapshot
 on:
   push:
     branches:
-      - 'main'
+      - 'main-internal'
 permissions:
   contents: read
 concurrency:
@@ -10,8 +10,8 @@ concurrency:
 jobs:
   build-and-deploy-snapshot:
     name: Build and Deploy Snapshot
-    if: ${{ github.repository == 'spring-projects/spring-ws' }}
-    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'spring-projects/spring-ws-commercial' }}
+    runs-on: ${{ vars.UBUNTU_MEDIUM || 'ubuntu-latest' }}
     timeout-minutes: 60
     steps:
       - name: Check Out Code
@@ -20,21 +20,23 @@ jobs:
         id: build-and-publish
         uses: ./.github/actions/build
         with:
-          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+          commercial-release-repository-url: ${{ vars.COMMERCIAL_RELEASE_REPO_URL }}
+          commercial-repository-password: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
+          commercial-repository-username: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
+          commercial-snapshot-repository-url: ${{ vars.COMMERCIAL_SNAPSHOT_REPO_URL }}
           publish: true
       - name: Deploy
         uses: spring-io/artifactory-deploy-action@aba148f1541e09adcf5735af90029fac9a6d3083 # v0.0.5
         with:
-          artifact-properties: |
-            /**/spring-ws-docs-*.zip::zip.type=docs,zip.name=spring-ws,zip.deployed=false
           build-name: 'spring-ws-5.1.x'
           folder: 'deployment-repository'
-          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          repository: 'libs-snapshot-local'
+          password: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
+          project: 'spring'
+          repository: 'spring-enterprise-maven-dev-local'
           signing-key: ${{ secrets.GPG_PRIVATE_KEY }}
           signing-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          uri: 'https://repo.spring.io'
-          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          uri: ${{ secrets.COMMERCIAL_ARTIFACTORY_URL}}
+          username: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
       - name: Send Notification
         if: always()
         uses: ./.github/actions/send-notification
@@ -50,9 +52,9 @@ jobs:
     needs: build-and-deploy-snapshot
     uses: ./.github/workflows/verify.yml
     secrets:
+      commercial-repository-password: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
+      commercial-repository-username: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
       google-chat-webhook-url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-      repository-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
-      repository-username: ${{ secrets.ARTIFACTORY_USERNAME }}
       token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
     with:
       version: ${{ needs.build-and-deploy-snapshot.outputs.version }}

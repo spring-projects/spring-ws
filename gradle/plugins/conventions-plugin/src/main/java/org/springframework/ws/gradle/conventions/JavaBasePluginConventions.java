@@ -16,7 +16,10 @@
 
 package org.springframework.ws.gradle.conventions;
 
+import java.util.function.Function;
+
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.repositories.PasswordCredentials;
 import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.tasks.javadoc.Javadoc;
 import org.gradle.external.javadoc.CoreJavadocOptions;
@@ -47,6 +50,7 @@ class JavaBasePluginConventions {
 
 	private void configureRepositories(Project project) {
 		project.getRepositories().mavenCentral();
+		configureReleaseTrainRepository(project);
 		project.getRepositories().maven((repository) -> {
 			repository.setName(SHIBBOLETH_RELEASES_REPOSITORY_NAME);
 			repository.setUrl("https://build.shibboleth.net/nexus/content/repositories/releases");
@@ -56,10 +60,40 @@ class JavaBasePluginConventions {
 			});
 		});
 		String version = project.getVersion().toString();
+		project.getRepositories().maven((repository) -> {
+			repository.setName("spring-commercial-release");
+			repository.setUrl(System.getenv("COMMERCIAL_RELEASE_REPO_URL"));
+			repository.credentials(this::configureCommercialCredentials);
+		});
 		if (version.endsWith("-SNAPSHOT")) {
+			project.getRepositories().maven((repository) -> {
+				repository.setName("spring-commercial-snapshot");
+				repository.setUrl(System.getenv("COMMERCIAL_SNAPSHOT_REPO_URL"));
+				repository.credentials(this::configureCommercialCredentials);
+			});
 			project.getRepositories().maven((repository) -> {
 				repository.setName(SPRING_SNAPSHOT_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/snapshot");
+			});
+		}
+	}
+
+	private void configureCommercialCredentials(PasswordCredentials credentials) {
+		credentials.setUsername(System.getenv("COMMERCIAL_REPO_USERNAME"));
+		credentials.setPassword(System.getenv("COMMERCIAL_REPO_PASSWORD"));
+	}
+
+	private void configureReleaseTrainRepository(Project project) {
+		Function<String, String> envLookup = (name) -> System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_" + name);
+		String url = envLookup.apply("URL");
+		if (url != null) {
+			project.getRepositories().maven((repository) -> {
+				repository.setName("Release Train");
+				repository.setUrl(url);
+				repository.credentials((credentials) -> {
+					credentials.setUsername(envLookup.apply("USERNAME"));
+					credentials.setPassword(envLookup.apply("PASSWORD"));
+				});
 			});
 		}
 	}

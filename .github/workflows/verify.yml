@@ -12,15 +12,15 @@ on:
         required: true
         type: string
     secrets:
+      commercial-repository-password:
+        description: 'Password for authentication with the commercial repository'
+        required: false
+      commercial-repository-username:
+        description: 'Username for authentication with the commercial repository'
+        required: false
       google-chat-webhook-url:
         description: 'Google Chat Webhook URL'
         required: true
-      repository-password:
-        description: 'Password for authentication with the repository'
-        required: false
-      repository-username:
-        description: 'Username for authentication with the repository'
-        required: false
       token:
         description: 'Token to use for authentication with GitHub'
         required: true
@@ -29,7 +29,7 @@ permissions:
 jobs:
   verify:
     name: Verify
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.UBUNTU_SMALL || 'ubuntu-latest' }}
     steps:
       - name: Check Out Release Verification Tests
         uses: actions/checkout@v7
@@ -59,9 +59,9 @@ jobs:
           echo 'org.gradle.daemon=false' >> $HOME/.gradle/gradle.properties
       - name: Run Release Verification Tests
         env:
-          RVT_OSS_REPOSITORY_PASSWORD: ${{ secrets.repository-password }}
-          RVT_OSS_REPOSITORY_USERNAME: ${{ secrets.repository-username }}
-          RVT_RELEASE_TYPE: oss
+          RVT_COMMERCIAL_REPOSITORY_PASSWORD: ${{ secrets.commercial-repository-password }}
+          RVT_COMMERCIAL_REPOSITORY_USERNAME: ${{ secrets.commercial-repository-username }}
+          RVT_RELEASE_TYPE: commercial
           RVT_STAGING: ${{ inputs.staging }}
           RVT_VERSION: ${{ inputs.version }}
         run: ./gradlew spring-ws-release-verification-tests:test
