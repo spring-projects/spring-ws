@@ -1,0 +1,9 @@
+artifactory:
+  artifacts:
+    - pattern: "/**/spring-ws-docs-*.zip"
+      properties:
+        zip.deployed: "false"
+        zip.type: "docs"
+maven-central:
+  excludes:
+    - "org/springframework/ws/spring-ws-*.zip"
