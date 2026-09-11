@@ -243,8 +243,8 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 		@Override
 		public InputSource resolveEntity(String namespace, String schemaLocation, String baseUri) {
 			if (CommonsXsdSchemaCollection.this.resourceLoader != null) {
-				Resource resource = CommonsXsdSchemaCollection.this.resourceLoader.getResource(schemaLocation);
-				if (resource.exists()) {
+				Resource resource = resolveIfExists(CommonsXsdSchemaCollection.this.resourceLoader, schemaLocation);
+				if (resource != null) {
 					return createInputSource(resource);
 				}
 				else if (StringUtils.hasLength(baseUri)) {
@@ -262,12 +262,23 @@ public class CommonsXsdSchemaCollection implements XsdSchemaCollection, Initiali
 				}
 				// let's try and find it on the classpath, see SWS-362
 				String classpathLocation = ResourceLoader.CLASSPATH_URL_PREFIX + "/" + schemaLocation;
-				resource = CommonsXsdSchemaCollection.this.resourceLoader.getResource(classpathLocation);
-				if (resource.exists()) {
+				resource = resolveIfExists(CommonsXsdSchemaCollection.this.resourceLoader, classpathLocation);
+				if (resource != null) {
 					return createInputSource(resource);
 				}
 			}
 			return super.resolveEntity(namespace, schemaLocation, baseUri);
+		}
+
+		private @Nullable Resource resolveIfExists(ResourceLoader resourceLoader, String location) {
+			try {
+				Resource resource = resourceLoader.getResource(location);
+				return resource.exists() ? resource : null;
+			}
+			catch (RuntimeException ex) {
+				// Fallback for path traversal
+				return null;
+			}
 		}
 
 		private InputSource createInputSource(Resource resource) {

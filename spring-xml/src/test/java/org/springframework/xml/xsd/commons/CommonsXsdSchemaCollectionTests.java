@@ -28,7 +28,9 @@ import org.w3c.dom.Document;
 import org.xmlunit.assertj.XmlAssert;
 
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.sax.SaxUtils;
 import org.springframework.xml.transform.TransformerFactoryUtils;
@@ -143,6 +145,19 @@ class CommonsXsdSchemaCollectionTests {
 	}
 
 	@Test
+	void resolveEntityFallsBackToBaseUriWhenResourceLoaderRejectsRelativeLocation() throws Exception {
+		Resource order = new ClassPathResource("relative/order.xsd", getClass());
+		this.collection.setResourceLoader(new PathTraversalRejectingResourceLoader());
+		this.collection.setXsds(order);
+		this.collection.setInline(true);
+		this.collection.afterPropertiesSet();
+		XsdSchema[] schemas = this.collection.getXsdSchemas();
+		assertThat(schemas).hasSize(2);
+		assertThat(schemas[0].getTargetNamespace()).isEqualTo("http://mycompany.com/relative/order");
+		assertThat(schemas[1].getTargetNamespace()).isEqualTo("http://mycompany.com/relative/common");
+	}
+
+	@Test
 	void testIncludesAndImports() throws Exception {
 
 		Resource hr = new ClassPathResource("hr.xsd", getClass());
@@ -169,6 +184,31 @@ class CommonsXsdSchemaCollectionTests {
 		this.transformer.transform(schemas[1].getSource(), domResult);
 
 		XmlAssert.assertThat(domResult.getNode()).and(expected).ignoreWhitespace().areIdentical();
+	}
+
+	/**
+	 * Mimics a {@code ResourceLoader} backed by a Servlet container (such as Tomcat) that
+	 * rejects locations attempting to traverse outside a given root, instead of simply
+	 * reporting the resource as non-existent.
+	 */
+	private static final class PathTraversalRejectingResourceLoader implements ResourceLoader {
+
+		private final ResourceLoader delegate = new DefaultResourceLoader();
+
+		@Override
+		public Resource getResource(String location) {
+			if (location.contains("..")) {
+				throw new IllegalArgumentException(
+						"The resource path [" + location + "] has been normalized to [null] which is not valid");
+			}
+			return this.delegate.getResource(location);
+		}
+
+		@Override
+		public ClassLoader getClassLoader() {
+			return this.delegate.getClassLoader();
+		}
+
 	}
 
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:common="http://mycompany.com/relative/common"
+		   elementFormDefault="qualified"
+		   targetNamespace="http://mycompany.com/relative/order">
+	<xs:import namespace="http://mycompany.com/relative/common" schemaLocation="../common.xsd"/>
+	<xs:element name="Order">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Common" type="common:CommonType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
