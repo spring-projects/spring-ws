@@ -17,9 +17,9 @@
 package org.springframework.ws.gradle.conventions;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import io.spring.javaformat.gradle.SpringJavaFormatPlugin;
 import org.gradle.api.JavaVersion;
@@ -107,7 +107,7 @@ class JavaPluginConventions {
 
 	private void configureJarManifest(Project project) {
 		project.getTasks().named("jar", Jar.class, (jar) -> jar.manifest((manifest) -> {
-			Map<String, Object> attributes = new TreeMap<>();
+			Map<String, Object> attributes = new LinkedHashMap<>();
 			attributes.put("Automatic-Module-Name", project.getName().replace("-", "."));
 			attributes.put("Build-Jdk-Spec", JAVA_BASELINE.getMajorVersion());
 			attributes.put("Built-By", "Spring");
