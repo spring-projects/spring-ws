@@ -16,6 +16,8 @@
 
 package org.springframework.ws.soap.saaj;
 
+import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -60,7 +62,6 @@ class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 
 	@Test
 	void getDocumentReflectsAddedHeaderElement() throws Exception {
-
 		MessageFactory messageFactory = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
 		SaajSoapMessage message = new SaajSoapMessage(messageFactory.createMessage(), true, messageFactory);
 		SoapHeader soapHeader = message.getSoapHeader();
@@ -69,9 +70,10 @@ class SaajSoap12MessageTests extends AbstractSoap12MessageTests {
 		soapHeaderElement.setMustUnderstand(true);
 		soapHeaderElement.setText("some text");
 
-		XmlAssert.assertThat(message.getDocument())
-			.valueByXPath("count(//*[local-name()='Action' and namespace-uri()='http://www.w3.org/2005/08/addressing' and text()='some text'])")
-			.isEqualTo("1");
+		XmlAssert xmlAssert = XmlAssert.assertThat(message.getDocument())
+			.withNamespaceContext(Map.of("a", "http://www.w3.org/2005/08/addressing"));
+		xmlAssert.hasXPath("//a:Action");
+		xmlAssert.valueByXPath("//a:Action").isEqualTo("some text");
 	}
 
 	@Test

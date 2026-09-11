@@ -196,12 +196,12 @@ public class SaajSoapMessage extends AbstractSoapMessage {
 		// return saajSoapMessage.getSaajMessage().getSOAPPart(); // does not work, see
 		// SWS-345
 		try {
-			SOAPMessage message = getSaajMessage();
-			message.saveChanges();
+			SOAPMessage currentSaajMessage = getSaajMessage();
+			currentSaajMessage.saveChanges();
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			message.writeTo(bos);
+			currentSaajMessage.writeTo(bos);
 			ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-			SOAPMessage saajMessage = this.messageFactory.createMessage(getSaajMessage().getMimeHeaders(), bis);
+			SOAPMessage saajMessage = this.messageFactory.createMessage(currentSaajMessage.getMimeHeaders(), bis);
 			setSaajMessage(saajMessage);
 			return saajMessage.getSOAPPart();
 		}
