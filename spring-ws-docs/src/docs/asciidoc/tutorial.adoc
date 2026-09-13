@@ -369,9 +369,9 @@ The following command creates a Maven web application project for us by using th
 
 ====
 ----
-mvn archetype:create -DarchetypeGroupId=org.springframework.ws \
+mvn archetype:generate -B -DarchetypeGroupId=org.springframework.ws \
   -DarchetypeArtifactId=spring-ws-archetype \
-  -DarchetypeVersion= \
+  -DarchetypeVersion=2.1.4.RELEASE \
   -DgroupId=com.mycompany.hr \
   -DartifactId=holidayService
 ----
