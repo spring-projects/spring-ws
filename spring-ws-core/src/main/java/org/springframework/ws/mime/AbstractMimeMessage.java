@@ -63,7 +63,6 @@ public abstract class AbstractMimeMessage implements MimeMessage {
 	 * {@code InputStreamSource}.
 	 *
 	 * @author Arjen Poutsma
-	 * @since 1.0.0
 	 */
 	private static final class InputStreamSourceDataSource implements DataSource {
 

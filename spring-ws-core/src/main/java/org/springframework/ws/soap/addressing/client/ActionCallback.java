@@ -60,7 +60,7 @@ public class ActionCallback implements WebServiceMessageCallback {
 
 	private final URI action;
 
-	private @Nullable final URI to;
+	private final @Nullable URI to;
 
 	private boolean shouldInitializeTo;
 

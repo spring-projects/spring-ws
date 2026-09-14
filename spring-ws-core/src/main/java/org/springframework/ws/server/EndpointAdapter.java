@@ -34,7 +34,7 @@ import org.springframework.ws.context.MessageContext;
 public interface EndpointAdapter {
 
 	/**
-	 * Does this {@code EndpointAdapter} support the given {@code endpoint}?
+	 * Whether this {@code EndpointAdapter} support the given {@code endpoint}.
 	 * <p>
 	 * Typical {@code EndpointAdapters} will base the decision on the endpoint type.
 	 * @param endpoint endpoint object to check
