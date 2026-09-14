@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
 import org.jspecify.annotations.Nullable;
 
@@ -42,6 +43,10 @@ public abstract class XmppTransportUtils {
 	/**
 	 * Converts the given XMPP destination into a {@code xmpp} URI.
 	 */
+	public static URI toUri(MessageBuilder requestMessage) throws URISyntaxException {
+		return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo().asUnescapedString(), null);
+	}
+
 	public static URI toUri(Message requestMessage) throws URISyntaxException {
 		return new URI(XmppTransportConstants.XMPP_URI_SCHEME, requestMessage.getTo().asUnescapedString(), null);
 	}
@@ -50,20 +55,20 @@ public abstract class XmppTransportUtils {
 		return uri.getSchemeSpecificPart();
 	}
 
-	public static boolean hasError(@Nullable Message message) {
+	public static boolean hasError(@Nullable MessageBuilder message) {
 		return message != null && Message.Type.error.equals(message.getType());
 	}
 
-	public static @Nullable String getErrorMessage(@Nullable Message message) {
-		if (message == null || !Message.Type.error.equals(message.getType())) {
+	public static @Nullable String getErrorMessage(@Nullable MessageBuilder messageBuilder) {
+		if (messageBuilder == null || !Message.Type.error.equals(messageBuilder.getType())) {
 			return null;
 		}
 		else {
-			return message.getBody();
+			return messageBuilder.getBody();
 		}
 	}
 
-	public static void addHeader(Message message, String name, String value) {
+	public static void addHeader(MessageBuilder message, String name, String value) {
 		JivePropertiesManager.addProperty(message, name, value);
 	}
 

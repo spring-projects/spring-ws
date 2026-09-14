@@ -36,7 +36,7 @@ dependencies {
 	optional("jakarta.mail:jakarta.mail-api")
 	optional("org.eclipse.angus:angus-mail")
 	optional("org.igniterealtime.smack:smack-extensions")
-	optional("org.igniterealtime.smack:smack-java7")
+	optional("org.igniterealtime.smack:smack-java8")
 	optional("org.igniterealtime.smack:smack-tcp")
 
 	testImplementation("com.icegreen:greenmail")

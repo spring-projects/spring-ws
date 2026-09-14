@@ -20,12 +20,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 
-import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 
 import org.springframework.util.Assert;
 
 /**
- * Output stream that wraps a {@link Message}.
+ * Output stream that updates a {@link MessageBuilder} when the body is flushed.
  *
  * @author Gildas Cuisinier
  * @author Arjen Poutsma
@@ -33,15 +33,15 @@ import org.springframework.util.Assert;
  */
 class MessageOutputStream extends FilterOutputStream {
 
-	private final Message message;
+	private final MessageBuilder messageBuilder;
 
 	private final String encoding;
 
-	MessageOutputStream(Message message, String encoding) {
+	MessageOutputStream(MessageBuilder messageBuilder, String encoding) {
 		super(new ByteArrayOutputStream());
-		Assert.notNull(message, "'message' must not be null");
+		Assert.notNull(messageBuilder, "'messageBuilder' must not be null");
 		Assert.notNull(encoding, "'encoding' must not be null");
-		this.message = message;
+		this.messageBuilder = messageBuilder;
 		this.encoding = encoding;
 	}
 
@@ -50,7 +50,7 @@ class MessageOutputStream extends FilterOutputStream {
 		super.flush();
 		ByteArrayOutputStream bos = (ByteArrayOutputStream) this.out;
 		String text = bos.toString(this.encoding);
-		this.message.setBody(text);
+		this.messageBuilder.setBody(text);
 	}
 
 }

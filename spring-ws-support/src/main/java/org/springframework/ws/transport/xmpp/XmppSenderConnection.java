@@ -32,6 +32,7 @@ import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jivesoftware.smack.packet.Stanza;
 import org.jspecify.annotations.Nullable;
 import org.jxmpp.jid.impl.JidCreate;
@@ -54,11 +55,11 @@ import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
  */
 public class XmppSenderConnection extends AbstractSenderConnection {
 
-	private final Message requestMessage;
+	private final MessageBuilder requestMessageBuilder;
 
 	private final XMPPConnection connection;
 
-	private @Nullable Message responseMessage;
+	private @Nullable MessageBuilder responseMessageBuilder;
 
 	private String messageEncoding = XmppMessageReceiver.DEFAULT_MESSAGE_ENCODING;
 
@@ -70,22 +71,25 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		Assert.hasLength(thread, "'thread' must not be empty");
 		this.connection = connection;
 		try {
-			this.requestMessage = new Message(JidCreate.from(to), Message.Type.chat);
+			this.requestMessageBuilder = connection.getStanzaFactory()
+				.buildMessageStanza()
+				.to(JidCreate.from(to))
+				.ofType(Message.Type.chat)
+				.setThread(thread);
 		}
 		catch (XmppStringprepException ex) {
 			throw new RuntimeException(ex);
 		}
-		this.requestMessage.setThread(thread);
 	}
 
 	/** Returns the request message for this connection. */
 	public Message getRequestMessage() {
-		return this.requestMessage;
+		return this.requestMessageBuilder.build();
 	}
 
 	/** Returns the response message, if any, for this connection. */
 	public @Nullable Message getResponseMessage() {
-		return this.responseMessage;
+		return (this.responseMessageBuilder != null) ? this.responseMessageBuilder.build() : null;
 	}
 
 	/*
@@ -106,7 +110,7 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public URI getUri() throws URISyntaxException {
-		return XmppTransportUtils.toUri(this.requestMessage);
+		return XmppTransportUtils.toUri(this.requestMessageBuilder);
 	}
 
 	/*
@@ -115,12 +119,12 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public boolean hasError() {
-		return XmppTransportUtils.hasError(this.responseMessage);
+		return XmppTransportUtils.hasError(this.responseMessageBuilder);
 	}
 
 	@Override
 	public @Nullable String getErrorMessage() {
-		return XmppTransportUtils.getErrorMessage(this.responseMessage);
+		return XmppTransportUtils.getErrorMessage(this.responseMessageBuilder);
 	}
 
 	/*
@@ -129,19 +133,19 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 
 	@Override
 	public void addRequestHeader(String name, String value) {
-		XmppTransportUtils.addHeader(this.requestMessage, name, value);
+		XmppTransportUtils.addHeader(this.requestMessageBuilder, name, value);
 	}
 
 	@Override
 	protected OutputStream getRequestOutputStream() throws IOException {
-		return new MessageOutputStream(this.requestMessage, this.messageEncoding);
+		return new MessageOutputStream(this.requestMessageBuilder, this.messageEncoding);
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
-		this.requestMessage.setFrom(this.connection.getUser());
+		this.requestMessageBuilder.from(this.connection.getUser());
 		try {
-			this.connection.sendStanza(this.requestMessage);
+			this.connection.sendStanza(this.requestMessageBuilder.build());
 		}
 		catch (SmackException.NotConnectedException | InterruptedException ex) {
 			throw new IOException(ex);
@@ -160,8 +164,8 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		try {
 			Stanza packet = (this.receiveTimeout >= 0) ? collector.nextResult(this.receiveTimeout)
 					: collector.nextResult();
-			if (packet instanceof Message) {
-				this.responseMessage = (Message) packet;
+			if (packet instanceof Message message) {
+				this.responseMessageBuilder = this.connection.getStanzaFactory().buildMessageStanzaFrom(message);
 			}
 			else if (packet != null) {
 				throw new IllegalArgumentException(
@@ -176,28 +180,29 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 	private StanzaFilter createPacketFilter() {
 		AndFilter andFilter = new AndFilter();
 		andFilter.addFilter(new StanzaTypeFilter(Message.class));
-		andFilter.addFilter(new ThreadFilter(this.requestMessage.getThread()));
+		andFilter.addFilter(new ThreadFilter(this.requestMessageBuilder.getThread()));
 		return andFilter;
 	}
 
 	@Override
 	protected boolean hasResponse() throws IOException {
-		return this.responseMessage != null;
+		return this.responseMessageBuilder != null;
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaderNames() {
-		return XmppTransportUtils.getHeaderNames(Objects.requireNonNull(this.responseMessage));
+		return XmppTransportUtils.getHeaderNames(Objects.requireNonNull(this.responseMessageBuilder).build());
 	}
 
 	@Override
 	public Iterator<String> getResponseHeaders(String name) throws IOException {
-		return XmppTransportUtils.getHeaders(Objects.requireNonNull(this.responseMessage), name);
+		return XmppTransportUtils.getHeaders(Objects.requireNonNull(this.responseMessageBuilder).build(), name);
 	}
 
 	@Override
 	protected InputStream getResponseInputStream() throws IOException {
-		return new MessageInputStream(Objects.requireNonNull(this.responseMessage), this.messageEncoding);
+		return new MessageInputStream(Objects.requireNonNull(this.responseMessageBuilder).build(),
+				this.messageEncoding);
 	}
 
 }

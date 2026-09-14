@@ -27,6 +27,7 @@ import java.util.Objects;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.MessageBuilder;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
@@ -50,7 +51,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	private final Message requestMessage;
 
-	private @Nullable Message responseMessage;
+	private @Nullable MessageBuilder responseMessageBuilder;
 
 	private String messageEncoding = XmppMessageReceiver.DEFAULT_MESSAGE_ENCODING;
 
@@ -68,7 +69,7 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	/** Returns the response message, if any, for this connection. */
 	public @Nullable Message getResponseMessage() {
-		return this.responseMessage;
+		return (this.responseMessageBuilder != null) ? this.responseMessageBuilder.build() : null;
 	}
 
 	/*
@@ -94,12 +95,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 
 	@Override
 	public boolean hasError() {
-		return XmppTransportUtils.hasError(this.responseMessage);
+		return XmppTransportUtils.hasError(this.responseMessageBuilder);
 	}
 
 	@Override
 	public @Nullable String getErrorMessage() {
-		return XmppTransportUtils.getErrorMessage(this.responseMessage);
+		return XmppTransportUtils.getErrorMessage(this.responseMessageBuilder);
 	}
 
 	/*
@@ -107,12 +108,12 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	public Iterator<String> getRequestHeaderNames() throws IOException {
+	public Iterator<String> getRequestHeaderNames() {
 		return XmppTransportUtils.getHeaderNames(this.requestMessage);
 	}
 
 	@Override
-	public Iterator<String> getRequestHeaders(String name) throws IOException {
+	public Iterator<String> getRequestHeaders(String name) {
 		return XmppTransportUtils.getHeaders(this.requestMessage, name);
 	}
 
@@ -126,26 +127,29 @@ public class XmppReceiverConnection extends AbstractReceiverConnection {
 	 */
 
 	@Override
-	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
-		this.responseMessage = new Message(this.requestMessage.getFrom(), Message.Type.chat);
-		this.responseMessage.setFrom(this.connection.getUser());
-		this.responseMessage.setThread(this.requestMessage.getThread());
+	protected void onSendBeforeWrite(WebServiceMessage message) {
+		this.responseMessageBuilder = this.connection.getStanzaFactory()
+			.buildMessageStanza()
+			.to(this.requestMessage.getFrom())
+			.ofType(Message.Type.chat)
+			.from(this.connection.getUser())
+			.setThread(this.requestMessage.getThread());
 	}
 
 	@Override
-	public void addResponseHeader(String name, String value) throws IOException {
-		XmppTransportUtils.addHeader(Objects.requireNonNull(this.responseMessage), name, value);
+	public void addResponseHeader(String name, String value) {
+		XmppTransportUtils.addHeader(Objects.requireNonNull(this.responseMessageBuilder), name, value);
 	}
 
 	@Override
-	protected OutputStream getResponseOutputStream() throws IOException {
-		return new MessageOutputStream(Objects.requireNonNull(this.responseMessage), this.messageEncoding);
+	protected OutputStream getResponseOutputStream() {
+		return new MessageOutputStream(Objects.requireNonNull(this.responseMessageBuilder), this.messageEncoding);
 	}
 
 	@Override
 	protected void onSendAfterWrite(WebServiceMessage message) throws IOException {
 		try {
-			this.connection.sendStanza(this.responseMessage);
+			this.connection.sendStanza(Objects.requireNonNull(this.responseMessageBuilder).build());
 		}
 		catch (SmackException.NotConnectedException | InterruptedException ex) {
 			throw new IOException(ex);
