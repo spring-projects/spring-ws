@@ -32,7 +32,7 @@ import org.jspecify.annotations.Nullable;
 public interface FaultAwareWebServiceMessage extends WebServiceMessage {
 
 	/**
-	 * Does this message have a fault?
+	 * Whether this message has a fault.
 	 * @return {@code true} if the message has a fault.
 	 * @see #getFaultReason()
 	 */
