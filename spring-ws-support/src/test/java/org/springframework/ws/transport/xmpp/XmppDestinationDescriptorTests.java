@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-class XmppDestinationDescriptorTest {
+class XmppDestinationDescriptorTests {
 
 	@Test
 	void ofExposesUriAndSource() {

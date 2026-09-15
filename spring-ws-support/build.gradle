@@ -50,6 +50,7 @@ dependencies {
 	testImplementation("org.assertj:assertj-core")
 	testImplementation("org.awaitility:awaitility")
 	testImplementation("org.junit.jupiter:junit-jupiter")
+	testImplementation("org.mockito:mockito-core")
 	testImplementation("org.slf4j:slf4j-api")
 	testImplementation("org.springframework:spring-test")
 	testImplementation("org.xmlunit:xmlunit-assertj")

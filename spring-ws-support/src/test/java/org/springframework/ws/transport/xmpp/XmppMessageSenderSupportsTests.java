@@ -29,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * @author Stephane Nicoll
  */
-class XmppMessageSenderSupportsTest {
+class XmppMessageSenderSupportsTests {
 
 	private final XmppMessageSender sender = new XmppMessageSender();
 
