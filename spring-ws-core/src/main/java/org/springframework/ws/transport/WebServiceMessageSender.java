@@ -48,8 +48,7 @@ public interface WebServiceMessageSender {
 
 	/**
 	 * Whether this sender supports the given URI for the supplied {@link UriSource}.
-	 * Implementations typically apply the same transport rules for
-	 * {@link UriSource#APPLICATION} as for legacy {@link #supports(URI)}, and add
+	 * Implementations typically are permissive for {@link UriSource#APPLICATION}, and add
 	 * stricter checks for {@link UriSource#REMOTE}.
 	 * @param uri the URI to be checked
 	 * @param uriSource whether the URI is application-controlled or remote-influenced
@@ -57,18 +56,6 @@ public interface WebServiceMessageSender {
 	 * @since 3.1.9
 	 */
 	boolean supports(URI uri, UriSource uriSource);
-
-	/**
-	 * Whether this sender supports the given URI for application-controlled use.
-	 * @param uri the URI to be checked
-	 * @return {@code true} if this {@code WebServiceMessageSender} supports the supplied
-	 * URI
-	 * @deprecated as of 3.1.9 in favor of {@link #supports(URI, UriSource)}
-	 */
-	@Deprecated
-	default boolean supports(URI uri) {
-		return supports(uri, UriSource.APPLICATION);
-	}
 
 	/**
 	 * Source of a destination URI.

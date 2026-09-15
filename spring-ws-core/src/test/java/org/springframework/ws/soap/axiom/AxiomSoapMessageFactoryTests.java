@@ -46,11 +46,8 @@ class AxiomSoapMessageFactoryTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void messageWithDoctypeDeclarationIsRejectedEvenWhenExternalEntitiesAreEnabled(@TempDir Path tempDir) {
 		AxiomSoapMessageFactory messageFactory = new AxiomSoapMessageFactory();
-		messageFactory.setSupportingExternalEntities(true);
-		messageFactory.setReplacingEntityReferences(true);
 		assertThatExceptionOfType(AxiomSoapMessageCreationException.class)
 			.isThrownBy(() -> createMessage(messageFactory, withExternalEntity(tempDir)))
 			.withMessageContaining("DOCTYPE is not allowed");
