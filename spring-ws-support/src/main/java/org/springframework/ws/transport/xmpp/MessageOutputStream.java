@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.MessageBuilder;
 
 import org.springframework.util.Assert;
@@ -50,6 +51,20 @@ class MessageOutputStream extends FilterOutputStream {
 		super.flush();
 		ByteArrayOutputStream bos = (ByteArrayOutputStream) this.out;
 		String text = bos.toString(this.encoding);
+		setBody(text);
+	}
+
+	/**
+	 * Set the body of the message managed by this instance to the given {@code text}.
+	 * <p>
+	 * Remove the previous body, if any as {@link MessageBuilder} does not allow to mutate
+	 * it.
+	 * @param text the body
+	 */
+	private void setBody(String text) {
+		for (Message.Body body : this.messageBuilder.getExtensions(Message.Body.class)) {
+			this.messageBuilder.removeExtension(body);
+		}
 		this.messageBuilder.setBody(text);
 	}
 
