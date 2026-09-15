@@ -16,6 +16,8 @@
 
 package org.springframework.ws;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Exception thrown when a {@link WebServiceMessageFactory} cannot parse the XML passed on
  * to {@link WebServiceMessageFactory#createWebServiceMessage(java.io.InputStream)}.
@@ -26,7 +28,11 @@ package org.springframework.ws;
 @SuppressWarnings("serial")
 public final class InvalidXmlException extends WebServiceException {
 
-	public InvalidXmlException(String msg, Throwable ex) {
+	public InvalidXmlException(@Nullable String msg) {
+		super(msg);
+	}
+
+	public InvalidXmlException(@Nullable String msg, Throwable ex) {
 		super(msg, ex);
 	}
 
