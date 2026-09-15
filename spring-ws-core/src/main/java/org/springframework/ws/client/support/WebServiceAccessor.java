@@ -77,9 +77,9 @@ public abstract class WebServiceAccessor extends TransformerObjectSupport implem
 
 	/**
 	 * Set the {@linkplain WebServiceMessageSender message senders} to use. The first
-	 * instance that {@linkplain WebServiceMessageSender#supports(URI) supports} a given
-	 * URI is used. This allows for using a singe instance with various transport
-	 * implementations. {@link WebServiceConnection}.
+	 * instance that {@linkplain WebServiceMessageSender#supports(URI, UriSource)
+	 * supports} a given URI is used. This allows for using a singe instance with various
+	 * transport implementations. {@link WebServiceConnection}.
 	 * @see #createConnection(URI)
 	 */
 	public void setMessageSenders(WebServiceMessageSender[] messageSenders) {
