@@ -833,6 +833,11 @@ It shows the supported types, whether the parameter should be annotated with `@R
 | No
 | Enabled by default.
 
+| SOAP header (unmarshalled)
+| Any type (or `List` thereof) supported by a Spring OXM {spring-framework-docs}/data-access/oxm.html#oxm-marshaller-unmarshaller[`Unmarshaller`], when used in combination with the `@SoapHeader` annotation.
+| No
+| Enabled when the `unmarshaller` attribute of `<sws:annotation-driven/>` is specified. See <<server-soap-header-unmarshalling>>.
+
 | JAXB2
 | Any type that is annotated with `javax.xml.bind.annotation.XmlRootElement`, and `javax.xml.bind.JAXBElement`.
 | Yes
@@ -878,6 +883,25 @@ public void handle(@RequestPayload MyJaxb2Object requestObject, @RequestPayload 
 As you can see, there are a lot of possibilities when it comes to defining how to handle method signatures.
 You can even extend this mechanism to support your own parameter types.
 See the Javadoc of {spring-ws-api}/server/endpoint/adapter/DefaultMethodEndpointAdapter.html[`DefaultMethodEndpointAdapter`] and {spring-ws-api}/server/endpoint/adapter/method/MethodArgumentResolver.html[`MethodArgumentResolver`] to see how.
+
+[[server-soap-header-unmarshalling]]
+==== Unmarshalling `@SoapHeader` Parameters
+
+By default, a parameter annotated with `@SoapHeader` must be of type `SoapHeaderElement` (or a `List` of them, for headers that occur multiple times).
+When an `unmarshaller` has been configured (through the `unmarshaller` attribute of `<sws:annotation-driven/>`), you can instead annotate a parameter of any type supported by that unmarshaller, in which case the content of the matching SOAP header is unmarshalled into the target type.
+This saves you from having to manually retrieve the `Source` from the `SoapHeaderElement` and pass it to an unmarshaller yourself.
+
+The following method is invoked with the content of the `{http://samples}security` SOAP header unmarshalled into a `Credentials` object:
+
+====
+[source,java]
+----
+public void handle(@RequestPayload OrderRequest orderRequest, @SoapHeader("{http://samples}security") Credentials credentials)
+----
+====
+
+If no header with a matching qualified name is found, the parameter is resolved as `null`.
+If the header occurs multiple times, you can declare the parameter as `List<Credentials>` instead, in which case every matching header is unmarshalled and added to the list.
 
 [[server-xpath-param]]
 ==== `@XPathParam`

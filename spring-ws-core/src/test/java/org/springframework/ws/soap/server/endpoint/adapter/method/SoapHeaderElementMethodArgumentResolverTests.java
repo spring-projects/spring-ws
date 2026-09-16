@@ -19,11 +19,13 @@ package org.springframework.ws.soap.server.endpoint.adapter.method;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.core.MethodParameter;
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.adapter.method.AbstractMethodArgumentResolverTests;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -32,9 +34,19 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 /**
+ * Tests for {@link SoapHeaderElementMethodArgumentResolver}.
+ *
  * @author Tareq Abedrabbo
+ * @author Stephane Nicoll
  */
 class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumentResolverTests {
 
@@ -56,10 +68,19 @@ class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumen
 
 	private MethodParameter soapHeaderMismatchList;
 
+	private MethodParameter soapHeaderUnmarshalled;
+
+	private MethodParameter soapHeaderUnmarshalledMismatch;
+
+	private MethodParameter soapHeaderUnmarshalledList;
+
+	private Unmarshaller unmarshaller;
+
 	@BeforeEach
 	void setUp() throws Exception {
 
 		this.resolver = new SoapHeaderElementMethodArgumentResolver();
+		this.unmarshaller = mock(Unmarshaller.class);
 		this.messageContext = createSaajMessageContext();
 		SoapMessage message = (SoapMessage) this.messageContext.getRequest();
 		for (int i = 0; i < 3; i++) {
@@ -76,6 +97,12 @@ class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumen
 				getClass().getMethod("soapHeaderMismatch", SoapHeaderElement.class), 0);
 		this.soapHeaderMismatchList = new MethodParameter(getClass().getMethod("soapHeaderMismatchList", List.class),
 				0);
+		this.soapHeaderUnmarshalled = new MethodParameter(
+				getClass().getMethod("soapHeaderUnmarshalled", MyHeader.class), 0);
+		this.soapHeaderUnmarshalledMismatch = new MethodParameter(
+				getClass().getMethod("soapHeaderUnmarshalledMismatch", MyHeader.class), 0);
+		this.soapHeaderUnmarshalledList = new MethodParameter(
+				getClass().getMethod("soapHeaderUnmarshalledList", List.class), 0);
 	}
 
 	@Test
@@ -143,6 +170,75 @@ class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumen
 		assertThat((List<?>) result).isEmpty();
 	}
 
+	@Test
+	void supportsParameterUnmarshallerSupported() {
+		when(this.unmarshaller.supports(MyHeader.class)).thenReturn(true);
+		this.resolver.setUnmarshaller(this.unmarshaller);
+		assertThat(this.resolver.supportsParameter(this.soapHeaderUnmarshalled)).isTrue();
+		verify(this.unmarshaller).supports(MyHeader.class);
+	}
+
+	@Test
+	void supportsParameterUnmarshallerUnsupported() {
+		when(this.unmarshaller.supports(MyHeader.class)).thenReturn(false);
+		this.resolver.setUnmarshaller(this.unmarshaller);
+		assertThat(this.resolver.supportsParameter(this.soapHeaderUnmarshalled)).isFalse();
+		verify(this.unmarshaller).supports(MyHeader.class);
+	}
+
+	@Test
+	void supportsParameterNoUnmarshaller() {
+		assertThat(this.resolver.supportsParameter(this.soapHeaderUnmarshalled)).isFalse();
+	}
+
+	@Test
+	void resolveSoapHeaderUnmarshallerMissing() {
+		assertThatIllegalStateException()
+			.isThrownBy(() -> this.resolver.resolveArgument(this.messageContext, this.soapHeaderUnmarshalled))
+			.withMessage("'unmarshaller' must be set to extract SOAP header with custom type");
+	}
+
+	@Test
+	void resolveSoapHeaderUnmarshalled() throws Exception {
+		MyHeader expected = new MyHeader();
+		when(this.unmarshaller.unmarshal(any(Source.class))).thenReturn(expected);
+		this.resolver.setUnmarshaller(this.unmarshaller);
+
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderUnmarshalled);
+		assertThat(result).isEqualTo(expected);
+		verify(this.unmarshaller).unmarshal(any(Source.class));
+	}
+
+	@Test
+	void resolveSoapHeaderUnmarshalledMismatch() throws Exception {
+		this.resolver.setUnmarshaller(this.unmarshaller);
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderUnmarshalledMismatch);
+
+		assertThat(result).isNull();
+		verifyNoInteractions(this.unmarshaller);
+	}
+
+	@Test
+	void resolveSoapHeaderListUnmarshallerMissing() {
+		assertThatIllegalStateException()
+			.isThrownBy(() -> this.resolver.resolveArgument(this.messageContext, this.soapHeaderUnmarshalledList))
+			.withMessage("'unmarshaller' must be set to extract SOAP header with custom type");
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	void resolveSoapHeaderUnmarshalledList() throws Exception {
+		MyHeader first = new MyHeader();
+		MyHeader second = new MyHeader();
+		MyHeader third = new MyHeader();
+		when(this.unmarshaller.unmarshal(any(Source.class))).thenReturn(first, second, third);
+		this.resolver.setUnmarshaller(this.unmarshaller);
+
+		Object result = this.resolver.resolveArgument(this.messageContext, this.soapHeaderUnmarshalledList);
+		assertThat((List<MyHeader>) result).containsExactly(first, second, third);
+		verify(this.unmarshaller, times(3)).unmarshal(any(Source.class));
+	}
+
 	public void soapHeaderWithEmptyValue(@SoapHeader("") SoapHeaderElement element) {
 	}
 
@@ -158,6 +254,20 @@ class SoapHeaderElementMethodArgumentResolverTests extends AbstractMethodArgumen
 
 	public void soapHeaderMismatchList(
 			@SoapHeader("{http://springframework.org/ws}xxx") List<SoapHeaderElement> elements) {
+	}
+
+	public void soapHeaderUnmarshalled(@SoapHeader("{http://springframework.org/ws}header") MyHeader header) {
+	}
+
+	public void soapHeaderUnmarshalledMismatch(@SoapHeader("{http://springframework.org/ws}xxx") MyHeader header) {
+	}
+
+	public void soapHeaderUnmarshalledList(
+			@SoapHeader("{http://springframework.org/ws}header") List<MyHeader> headers) {
+	}
+
+	public static class MyHeader {
+
 	}
 
 }

@@ -120,7 +120,9 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 		argumentResolvers.add(createBeanDefinition(MessageContextMethodArgumentResolver.class, source));
 		argumentResolvers.add(createBeanDefinition(XPathParamMethodArgumentResolver.class, source));
 		argumentResolvers.add(createBeanDefinition(SoapMethodArgumentResolver.class, source));
-		argumentResolvers.add(createBeanDefinition(SoapHeaderElementMethodArgumentResolver.class, source));
+		RootBeanDefinition soapHeaderElementResolverDef = createBeanDefinition(
+				SoapHeaderElementMethodArgumentResolver.class, source);
+		argumentResolvers.add(soapHeaderElementResolverDef);
 
 		RuntimeBeanReference domProcessor = createBeanReference(parserContext, DomPayloadMethodProcessor.class, source);
 		argumentResolvers.add(domProcessor);
@@ -179,6 +181,7 @@ class AnnotationDrivenBeanDefinitionParser implements BeanDefinitionParser {
 			marshallingProcessorDef.getPropertyValues().add("unmarshaller", unmarshallerReference);
 			argumentResolvers.add(marshallingProcessorDef);
 			returnValueHandlers.add(marshallingProcessorDef);
+			soapHeaderElementResolverDef.getPropertyValues().add("unmarshaller", unmarshallerReference);
 		}
 
 		adapterDef.getPropertyValues().add("methodArgumentResolvers", argumentResolvers);
