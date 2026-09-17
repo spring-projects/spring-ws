@@ -160,6 +160,28 @@ If some clients are expected to send unsecured requests, route them to a separat
 On the client side, the same property applies to the validation of responses received from a server that the client chose to call.
 Accepting an unsecured reply there is usually a deliberate interoperability decision rather than a trust boundary.
 
+[[security-fault-responses]]
+=== Securing Fault Responses
+
+By default, `AbstractWsSecurityInterceptor` leaves fault responses alone: server-side fault responses are not secured, and client-side fault responses are not validated, even when `secureResponse`/`validateResponse` (or their request-side equivalents) are enabled.
+
+Some clients, such as those built with WCF, require that fault responses carry the same WS-Security header (for instance a `Timestamp`) as regular responses.
+Set `secureFault` to `true` on the server side to have fault responses go through the same securement actions as regular responses:
+
+====
+[source,xml]
+----
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="Timestamp"/>
+    <property name="secureFault" value="true"/>
+</bean>
+----
+====
+
+Symmetrically, set `validateFault` to `true` on the client side to validate a secured fault response received from the server, the same way regular responses are validated.
+
+These properties default to `false`: turning them on unconditionally could break an existing configuration whose securement or validation actions do not expect to run against a fault message.
+
 === WS-I Basic Security Profile
 
 The `setBspCompliant(boolean)` property controls WS-I Basic Security Profile (BSP) enforcement for **validation**, consistent with Apache WSS4J.

@@ -96,6 +96,162 @@ public abstract class Wss4jInterceptorTests extends Wss4jTests {
 	}
 
 	@Test
+	void testHandleFaultNotSecuredByDefault() throws Exception {
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				fail("secure not expected");
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				fail("validate not expected");
+			}
+
+		};
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+		assertThat(interceptor.handleFault(context, null)).isTrue();
+	}
+
+	@Test
+	void testHandleFaultSecuredWhenEnabled() throws Exception {
+		SoapMessage securedFault = loadSoap11Message("empty-soap.xml");
+		final Object securedFaultMessage = getMessage(securedFault);
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				setMessage(soapMessage, securedFaultMessage);
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				fail("validate not expected");
+			}
+
+		};
+		interceptor.setSecureFault(true);
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+
+		boolean result = interceptor.handleFault(context, null);
+		assertThat(result).isTrue();
+		assertThat(getMessage((SoapMessage) context.getResponse())).isEqualTo(securedFaultMessage);
+	}
+
+	@Test
+	void testHandleFaultSecurementFailureClearsResponse() throws Exception {
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				throw new Wss4jSecuritySecurementException("simulated failure");
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				fail("validate not expected");
+			}
+
+		};
+		interceptor.setSecureFault(true);
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+
+		boolean result = interceptor.handleFault(context, null);
+		assertThat(result).isFalse();
+		assertThat(context.hasResponse()).isFalse();
+	}
+
+	@Test
+	void testHandleFaultNotValidatedByDefaultOnClient() throws Exception {
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				fail("secure not expected");
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				fail("validate not expected");
+			}
+
+		};
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+
+		assertThat(interceptor.handleFault(context)).isTrue();
+	}
+
+	@Test
+	void testHandleFaultValidatedWhenEnabledOnClient() throws Exception {
+		SoapMessage validatedFault = loadSoap11Message("empty-soap.xml");
+		final Object validatedFaultMessage = getMessage(validatedFault);
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				fail("secure not expected");
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				setMessage(soapMessage, validatedFaultMessage);
+			}
+
+		};
+		interceptor.setValidateFault(true);
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+
+		boolean result = interceptor.handleFault(context);
+		assertThat(result).isTrue();
+		assertThat(getMessage((SoapMessage) context.getResponse())).isEqualTo(validatedFaultMessage);
+	}
+
+	@Test
+	void testHandleFaultValidationFailureOnClient() throws Exception {
+		Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor() {
+
+			@Override
+			protected void secureMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecuritySecurementException {
+				fail("secure not expected");
+			}
+
+			@Override
+			protected void validateMessage(SoapMessage soapMessage, MessageContext messageContext)
+					throws WsSecurityValidationException {
+				throw new Wss4jSecurityValidationException("simulated failure");
+			}
+
+		};
+		interceptor.setValidateFault(true);
+		SoapMessage request = loadSoap11Message("empty-soap.xml");
+		MessageContext context = new DefaultMessageContext(request, getSoap11MessageFactory());
+		context.getResponse();
+		assertThat(interceptor.handleFault(context)).isFalse();
+	}
+
+	@Test
 	void testHandleCustomSecurityEngine() {
 
 		WSSecurityEngine engine = new WSSecurityEngine();
