@@ -2,7 +2,8 @@ name: Publicize Release
 on:
   push:
     tags:
-      - v5.1.[0-9]+
+      - v5.1.0-M[1-9]
+      - v5.1.0-RC[1-9]
 permissions:
   contents: read
 concurrency:
@@ -25,4 +26,5 @@ jobs:
         uses: ./.github/actions/create-github-release
         with:
           milestone: ${{ steps.read-version.outputs.version }}
+          pre-release: true
           token: ${{ secrets.GH_ACTIONS_REPO_TOKEN }}
