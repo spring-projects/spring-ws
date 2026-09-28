@@ -5,8 +5,8 @@ permissions:
 jobs:
   build:
     name: Build Pull Request
-    if: ${{ github.repository == 'spring-projects/spring-ws' }}
-    runs-on: ubuntu-latest
+    if: ${{ github.repository == 'spring-projects/spring-ws' || github.repository == 'spring-projects/spring-ws-commercial' }}
+    runs-on: ${{ vars.UBUNTU_MEDIUM || 'ubuntu-latest' }}
     timeout-minutes: 60
     steps:
       - name: Check Out Code

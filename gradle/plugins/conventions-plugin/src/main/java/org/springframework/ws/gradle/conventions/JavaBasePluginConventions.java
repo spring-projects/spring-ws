@@ -17,10 +17,13 @@
 package org.springframework.ws.gradle.conventions;
 
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.repositories.PasswordCredentials;
 import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.tasks.javadoc.Javadoc;
 import org.gradle.external.javadoc.CoreJavadocOptions;
 import org.gradle.external.javadoc.MinimalJavadocOptions;
+
+import org.springframework.ws.gradle.conventions.build.BuildSettings;
 
 /**
  * Conventions for the {@link JavaBasePlugin}.
@@ -56,12 +59,28 @@ class JavaBasePluginConventions {
 			});
 		});
 		String version = project.getVersion().toString();
+		BuildSettings buildSettings = BuildSettings.get(project);
+		buildSettings.withCommercialBuild(() -> project.getRepositories().maven((repository) -> {
+			repository.setName("spring-commercial-release");
+			repository.setUrl(System.getenv("COMMERCIAL_RELEASE_REPO_URL"));
+			repository.credentials(this::configureCommercialCredentials);
+		}));
 		if (version.endsWith("-SNAPSHOT")) {
+			buildSettings.withCommercialBuild(() -> project.getRepositories().maven((repository) -> {
+				repository.setName("spring-commercial-snapshot");
+				repository.setUrl(System.getenv("COMMERCIAL_SNAPSHOT_REPO_URL"));
+				repository.credentials(this::configureCommercialCredentials);
+			}));
 			project.getRepositories().maven((repository) -> {
 				repository.setName(SPRING_SNAPSHOT_REPOSITORY_NAME);
 				repository.setUrl("https://repo.spring.io/snapshot");
 			});
 		}
+	}
+
+	private void configureCommercialCredentials(PasswordCredentials credentials) {
+		credentials.setUsername(System.getenv("COMMERCIAL_REPO_USERNAME"));
+		credentials.setPassword(System.getenv("COMMERCIAL_REPO_PASSWORD"));
 	}
 
 }
