@@ -24,9 +24,11 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.wsdl.wsdl11.provider.DefaultMessagesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.InliningXsdSchemaTypesProvider;
+import org.springframework.ws.wsdl.wsdl11.provider.PolicyProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.SoapProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.SuffixBasedMessagesProvider;
 import org.springframework.ws.wsdl.wsdl11.provider.SuffixBasedPortTypesProvider;
@@ -66,9 +68,13 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, BeanNameAware,
 
 	private final SoapProvider soapProvider = new SoapProvider();
 
+	private final PolicyProvider policyProvider = new PolicyProvider();
+
 	private final ProviderBasedWsdl4jDefinition delegate = new ProviderBasedWsdl4jDefinition();
 
 	private @Nullable String serviceName;
+
+	private @Nullable Resource policy;
 
 	/** Creates a new instance of the {@link DefaultWsdl11Definition}. */
 	public DefaultWsdl11Definition() {
@@ -77,6 +83,7 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, BeanNameAware,
 		this.delegate.setPortTypesProvider(this.portTypesProvider);
 		this.delegate.setBindingsProvider(this.soapProvider);
 		this.delegate.setServicesProvider(this.soapProvider);
+		this.policyProvider.setDelegate(this.soapProvider);
 	}
 
 	/**
@@ -169,6 +176,19 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, BeanNameAware,
 	}
 
 	/**
+	 * Set a policy document, such as a WS-Policy {@code Policy} or
+	 * {@code PolicyReference} element, to attach to every binding in the generated WSDL.
+	 * <p>
+	 * Default to {@code null}, indicating that no policy is attached.
+	 * @param policy the policy resource
+	 * @since 5.1.0
+	 */
+	public void setPolicy(Resource policy) {
+		this.policy = policy;
+		this.policyProvider.setPolicy(policy);
+	}
+
+	/**
 	 * Sets the service name.
 	 * <p>
 	 * Defaults to the port type name, with the suffix {@code Service} appended to it.
@@ -194,6 +214,9 @@ public class DefaultWsdl11Definition implements Wsdl11Definition, BeanNameAware,
 		}
 		if (!StringUtils.hasText(this.serviceName) && StringUtils.hasText(this.portTypesProvider.getPortTypeName())) {
 			this.soapProvider.setServiceName(this.portTypesProvider.getPortTypeName() + "Service");
+		}
+		if (this.policy != null) {
+			this.delegate.setBindingsProvider(this.policyProvider);
 		}
 		this.delegate.setName(this.name);
 		this.delegate.afterPropertiesSet();

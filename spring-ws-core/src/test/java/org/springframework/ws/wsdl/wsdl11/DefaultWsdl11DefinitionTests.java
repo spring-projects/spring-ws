@@ -124,6 +124,25 @@ class DefaultWsdl11DefinitionTests {
 	}
 
 	@Test
+	void testPolicy() throws Exception {
+		Resource resource = new ClassPathResource("single.xsd", getClass());
+		SimpleXsdSchema schema = new SimpleXsdSchema(resource);
+		schema.afterPropertiesSet();
+		this.definition.setSchema(schema);
+		this.definition.setTargetNamespace("http://www.springframework.org/spring-ws/single/definitions");
+		this.definition.setPortTypeName("Order");
+		this.definition.setLocationUri("http://localhost:8080/");
+		this.definition.setPolicy(new ClassPathResource("policy.xml", getClass()));
+		this.definition.afterPropertiesSet();
+
+		DOMResult domResult = new DOMResult();
+		this.transformer.transform(this.definition.getSource(), domResult);
+		Document result = (Document) domResult.getNode();
+		Document expected = this.documentBuilder.parse(getClass().getResourceAsStream("single-inline-policy.wsdl"));
+		assertThat(result).and(expected).ignoreWhitespace().areIdentical();
+	}
+
+	@Test
 	void testSoap11And12() throws Exception {
 
 		Resource resource = new ClassPathResource("single.xsd", getClass());

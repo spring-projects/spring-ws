@@ -261,6 +261,23 @@ public DefaultWsdl11Definition ordersWsdlDefinition() throws Exception {
 
 This greatly simplifies the deployment of the schemas, while still making it possible to edit them separately.
 
+`DefaultWsdl11Definition` can also attach a policy document to every binding it generates, such as a WS-Policy or WS-SecurityPolicy fragment describing the security requirements of the service.
+Set the `policy` property to a `Resource` containing the policy XML, and it is added as-is to each `binding` element in the generated WSDL:
+
+[source,java]
+----
+@Bean
+public DefaultWsdl11Definition ordersWsdlDefinition() {
+    DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+    // ... configuration
+    definition.setPolicy(new ClassPathResource("orders-policy.xml"));
+    return definition;
+}
+----
+
+This only exposes the policy in the WSDL contract, for interoperability with clients that expect security requirements to be declared alongside the binding; it does not enforce the policy against incoming or outgoing messages.
+The underlying {spring-ws-api}/wsdl/wsdl11/provider/PolicyProvider.html[`PolicyProvider`] can also be used directly with `ProviderBasedWsdl4jDefinition`.
+
 [WARNING]
 ====
 Even though it can be handy to create the WSDL at runtime from your XSDs, there are a couple of drawbacks to this approach.
