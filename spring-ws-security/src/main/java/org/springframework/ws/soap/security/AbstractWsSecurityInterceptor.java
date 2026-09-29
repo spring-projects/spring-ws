@@ -18,7 +18,6 @@ package org.springframework.ws.soap.security;
 
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Objects;
 
 import javax.xml.namespace.QName;
 
@@ -63,6 +62,17 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * @since 3.1.9
 	 */
 	public static final int DEFAULT_ORDER = -200;
+
+	/**
+	 * Fault string of the fault returned to the sender when validation of a request
+	 * fails.
+	 * <p>
+	 * The same fault string is used whatever went wrong, so that the fault does not tell
+	 * a sender which check failed. The details are logged instead, see
+	 * {@link #handleValidationException(WsSecurityValidationException, MessageContext)}.
+	 * @since 3.1.10
+	 */
+	public static final String VALIDATION_FAULT_STRING = "Security processing failed";
 
 	/** Logger available to subclasses. */
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -335,7 +345,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 	 * Handles an invalid SOAP message. Default implementation logs the given exception,
 	 * delegates to the set {@link #setExceptionResolver(EndpointExceptionResolver)
 	 * exceptionResolver} if any, or creates a SOAP 1.1 Client or SOAP 1.2 Sender Fault
-	 * with the exception message as fault string, and returns {@code false}.
+	 * with {@link #VALIDATION_FAULT_STRING} as fault string, and returns {@code false}.
 	 * @param ex the validation exception
 	 * @param messageContext the message context
 	 * @return {@code true} to continue processing the message, {@code false} (the
@@ -353,7 +363,7 @@ public abstract class AbstractWsSecurityInterceptor implements SoapEndpointInter
 				this.logger.debug("No exception resolver present, creating basic soap fault");
 			}
 			SoapBody response = ((SoapMessage) messageContext.getResponse()).getSoapBody();
-			response.addClientOrSenderFault(Objects.requireNonNull(ex.getMessage()), Locale.ENGLISH);
+			response.addClientOrSenderFault(VALIDATION_FAULT_STRING, Locale.ENGLISH);
 		}
 		return false;
 	}
