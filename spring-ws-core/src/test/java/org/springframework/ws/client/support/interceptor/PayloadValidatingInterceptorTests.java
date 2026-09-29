@@ -128,9 +128,9 @@ class PayloadValidatingInterceptorTests {
 		MockWebServiceMessage response = (MockWebServiceMessage) this.context.getResponse();
 		response.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
 
-		boolean result = this.interceptor.handleResponse(this.context);
-
-		assertThat(result).isFalse();
+		assertThatExceptionOfType(WebServiceValidationException.class)
+			.isThrownBy(() -> this.interceptor.handleResponse(this.context))
+			.withMessageContaining("XML validation error on response");
 	}
 
 	@Test
@@ -227,9 +227,10 @@ class PayloadValidatingInterceptorTests {
 		this.context = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
 		MockWebServiceMessage response = (MockWebServiceMessage) this.context.getResponse();
 		response.setPayload(new ClassPathResource(INVALID_MESSAGE, getClass()));
-		boolean result = this.interceptor.handleResponse(this.context);
 
-		assertThat(result).isFalse();
+		assertThatExceptionOfType(WebServiceValidationException.class)
+			.isThrownBy(() -> this.interceptor.handleResponse(this.context))
+			.withMessageContaining("XML validation error on response");
 	}
 
 	@Test

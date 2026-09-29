@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.WebServiceIOException;
+import org.springframework.ws.client.support.interceptor.WebServiceValidationException.ValidatedMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.xml.transform.TransformerObjectSupport;
 import org.springframework.xml.validation.XmlValidator;
@@ -215,7 +216,7 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 		for (SAXParseException error : errors) {
 			this.logger.error("XML validation error on request: " + error.getMessage());
 		}
-		throw new WebServiceValidationException(errors);
+		throw new WebServiceValidationException(ValidatedMessage.REQUEST, errors);
 	}
 
 	/**
@@ -255,19 +256,25 @@ public abstract class AbstractValidatingInterceptor extends TransformerObjectSup
 	 * Template method that is called when the response message contains validation
 	 * errors.
 	 * <p>
-	 * Default implementation logs all errors, and returns {@code false}, i.e. do not cot
-	 * continue to process the respone interceptor chain.
+	 * Default implementation logs all errors, and throws a
+	 * {@link WebServiceValidationException}, as does
+	 * {@link #handleRequestValidationErrors(MessageContext, SAXParseException[])}.
+	 * Subclasses can override this method to customize this behavior.
+	 * <p>
+	 * Returning {@code false} rather than throwing leaves the response in place for the
+	 * caller to consume, and stops the remaining interceptors of the chain from handling
+	 * it.
 	 * @param messageContext the message context
 	 * @param errors the validation errors
-	 * @return {@code true} to continue the reponse interceptor chain, {@code false} (the
-	 * default) otherwise
+	 * @return {@code true} to continue the response interceptor chain, {@code false}
+	 * otherwise
 	 */
 	protected boolean handleResponseValidationErrors(MessageContext messageContext, SAXParseException[] errors)
 			throws WebServiceValidationException {
 		for (SAXParseException error : errors) {
 			this.logger.warn("XML validation error on response: " + error.getMessage());
 		}
-		return false;
+		throw new WebServiceValidationException(ValidatedMessage.RESPONSE, errors);
 	}
 
 	/** Does nothing by default. Faults are not validated. */
