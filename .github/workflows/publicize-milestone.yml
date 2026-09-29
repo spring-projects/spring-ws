@@ -1,4 +1,4 @@
-name: Publicize Release
+name: Publicize Milestone
 on:
   push:
     tags:
