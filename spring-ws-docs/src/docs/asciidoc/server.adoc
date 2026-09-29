@@ -1187,6 +1187,10 @@ Spring-WS tries each configured sender in order; the first one that supports the
 
 IMPORTANT: When WS-Addressing out-of-band senders are configured, security interceptors must run before the WS-Addressing interceptor to prevent unauthenticated requests from triggering fault delivery to an attacker-supplied `wsa:FaultTo` address. Spring-WS guarantees this by ordering WS-Security interceptors (typically `Wss4jSecurityInterceptor`) before the addressing interceptor regardless of how they are registered. See `AbstractWsSecurityInterceptor.DEFAULT_ORDER` and `AddressingEndpointInterceptor.DEFAULT_ORDER` for the concrete order values.
 
+On the response side, the addressing interceptor does not transmit an out-of-band reply or fault immediately.
+It defers the actual send until the whole response interceptor chain has run, so that interceptors ordered before it -- notably WS-Security response securing (signing, encryption, timestamping) -- are applied to the message before it leaves the server.
+A reply that is intended to be signed or encrypted is therefore never delivered in cleartext to the peer-supplied `wsa:ReplyTo` or `wsa:FaultTo` address.
+
 Default checks for peer-supplied reply and fault addresses are documented per transport:
 
 * <<server-http-sender-validation,HTTP message senders>>
