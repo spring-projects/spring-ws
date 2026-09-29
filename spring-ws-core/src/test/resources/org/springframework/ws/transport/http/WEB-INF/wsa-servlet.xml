@@ -6,7 +6,18 @@
 
     <bean class="org.springframework.ws.soap.addressing.server.AnnotationActionEndpointMapping">
         <property name="messageSender">
-            <bean class="org.springframework.ws.transport.http.HttpComponentsMessageSender"/>
+            <bean class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
+                <property name="destinationPolicy">
+                    <bean class="org.springframework.ws.transport.http.HttpDestinationPolicies"
+                          factory-method="allowedHosts">
+                        <constructor-arg>
+                            <array>
+                                <value>localhost</value>
+                            </array>
+                        </constructor-arg>
+                    </bean>
+                </property>
+            </bean>
         </property>
     </bean>
 

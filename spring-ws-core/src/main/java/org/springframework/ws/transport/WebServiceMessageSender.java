@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.function.Predicate;
 
+import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
 
 /**
@@ -48,9 +49,12 @@ public interface WebServiceMessageSender {
 
 	/**
 	 * Whether this sender supports the given URI for the supplied {@link UriSource}.
-	 * Implementations typically apply the same transport rules for
-	 * {@link UriSource#APPLICATION} as for legacy {@link #supports(URI)}, and add
-	 * stricter checks for {@link UriSource#REMOTE}.
+	 * <p>
+	 * A URI is supported when this sender handles its transport <b>and</b> the configured
+	 * {@link DestinationPolicy} accepts it. When no policy is configured,
+	 * {@link UriSource#APPLICATION} destinations are accepted and
+	 * {@link UriSource#REMOTE} destinations are rejected: only the application knows
+	 * which peer-supplied destinations are legitimate, so there is no safe default.
 	 * @param uri the URI to be checked
 	 * @param uriSource whether the URI is application-controlled or remote-influenced
 	 * @return {@code true} if this sender accepts the URI for that source
@@ -68,6 +72,20 @@ public interface WebServiceMessageSender {
 	@Deprecated
 	default boolean supports(URI uri) {
 		return supports(uri, UriSource.APPLICATION);
+	}
+
+	/**
+	 * Whether this sender is configured to accept destinations supplied by a remote peer
+	 * at all.
+	 * <p>
+	 * Return {@code false} when the sender rejects every {@link UriSource#REMOTE}
+	 * destination out of hand, typically because no {@link DestinationPolicy} is
+	 * configured.
+	 * @return {@code false} if no remote destination can ever be accepted
+	 * @since 3.1.10
+	 */
+	default boolean supportsRemoteDestinations() {
+		return true;
 	}
 
 	/**
@@ -93,8 +111,7 @@ public interface WebServiceMessageSender {
 
 	/**
 	 * Description of a destination URI for validation, including its
-	 * {@linkplain UriSource source}. Transport-specific descriptors provide additional
-	 * details to help express custom checks.
+	 * {@linkplain UriSource source}.
 	 *
 	 * @since 3.1.9
 	 */
@@ -115,9 +132,18 @@ public interface WebServiceMessageSender {
 	}
 
 	/**
-	 * Specifies the policy to apply for a given {@linkplain DestinationDescriptor
-	 * descriptor}. Implementation may choose to apply the default checks that would
-	 * otherwise be applied if such policy was not configured.
+	 * Decides which destinations a sender may open a connection to.
+	 * <p>
+	 * A policy is <b>required</b> to send to a {@link UriSource#REMOTE} destination: when
+	 * a sender has no policy, every remote destination is rejected. Express the
+	 * destinations that the application considers legitimate, ideally as an explicit
+	 * allowlist. Transport-specific factories are available to cover the common case and
+	 * leave {@link UriSource#APPLICATION} destinations untouched.
+	 * <p>
+	 * A policy is consulted for every destination, whatever its source, so a policy that
+	 * only means to constrain remote destinations should either check
+	 * {@link DestinationDescriptor#uriSource()} or be built with
+	 * {@link #forRemoteDestinations(Predicate)}.
 	 *
 	 * @param <D> concrete descriptor type supplied by the sender implementation
 	 * @since 3.1.9
@@ -128,12 +154,23 @@ public interface WebServiceMessageSender {
 		/**
 		 * Whether the given destination is acceptable.
 		 * @param descriptor transport-specific view of the destination
-		 * @param defaultChecks predicate that runs the sender's default checks for this
-		 * descriptor. Call {@code defaultChecks.test(descriptor)} when those checks
-		 * should apply
 		 * @return whether the destination is acceptable
+		 * @since 3.1.10
 		 */
-		boolean accept(D descriptor, Predicate<D> defaultChecks);
+		boolean accept(D descriptor);
+
+		/**
+		 * Return a policy that applies the given predicate to {@link UriSource#REMOTE}
+		 * destinations and accepts every other destination.
+		 * @param <D> concrete descriptor type supplied by the sender implementation
+		 * @param remotePolicy the predicate to apply to remote destinations
+		 * @return a policy that only constrains remote destinations
+		 * @since 3.1.10
+		 */
+		static <D extends DestinationDescriptor> DestinationPolicy<D> forRemoteDestinations(Predicate<D> remotePolicy) {
+			Assert.notNull(remotePolicy, "'remotePolicy' must not be null");
+			return (descriptor) -> descriptor.uriSource() != UriSource.REMOTE || remotePolicy.test(descriptor);
+		}
 
 	}
 

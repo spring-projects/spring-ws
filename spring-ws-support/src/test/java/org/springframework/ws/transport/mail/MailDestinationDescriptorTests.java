@@ -47,43 +47,12 @@ class MailDestinationDescriptorTest {
 	}
 
 	@Test
-	void mailboxHostExtractedFromAddress() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:user@example.com");
-		assertThat(descriptor.mailboxHost()).isEqualTo("example.com");
-	}
-
-	@Test
-	void mailboxHostIsLowercased() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:User@Example.COM");
-		assertThat(descriptor.mailboxHost()).isEqualTo("example.com");
-	}
-
-	@Test
-	void mailboxHostIsNullWhenAddressHasNoAtSign() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:invalid");
-		assertThat(descriptor.mailboxHost()).isNull();
-	}
-
-	@Test
-	void mailboxHostIsNullWhenAtSignIsAtEnd() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:user@");
-		assertThat(descriptor.mailboxHost()).isNull();
-	}
-
-	@Test
-	void mailboxHostIsNullWhenAddressContainsNewline() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:user@example.com%0Abcc@evil.com");
-		assertThat(descriptor.mailboxHost()).isNull();
-	}
-
-	@Test
-	void mailboxHostIsNullWhenAddressContainsCarriageReturn() {
-		MailDestinationDescriptor descriptor = createDescriptor("mailto:user@example.com%0Dbcc@evil.com");
-		assertThat(descriptor.mailboxHost()).isNull();
+	void toAddressIsNullWhenMailtoCannotBeParsed() {
+		assertThat(createDescriptor("mailto:@example.com").toAddress()).isNull();
 	}
 
 	private MailDestinationDescriptor createDescriptor(String uri) {
-		return MailDestinationDescriptor.of(URI.create(uri), UriSource.APPLICATION);
+		return MailDestinationDescriptor.of(URI.create(uri), UriSource.REMOTE);
 	}
 
 }

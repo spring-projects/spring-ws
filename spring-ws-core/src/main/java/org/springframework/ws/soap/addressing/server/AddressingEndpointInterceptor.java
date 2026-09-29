@@ -134,8 +134,9 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered 
 			return true;
 		}
 		if (logger.isWarnEnabled()) {
-			logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
-					+ "Configure WebServiceMessageSenders which support this uri and pass remote destination checks.");
+			logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress()
+					+ "]: no configured WebServiceMessageSender accepts it. A sender supporting this transport "
+					+ "must be configured with a DestinationPolicy that allows this destination.");
 		}
 		messageContext.clearResponse();
 		this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());

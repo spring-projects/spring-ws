@@ -41,42 +41,16 @@ class XmppDestinationDescriptorTests {
 
 	@Test
 	void jabberIdIsSchemeSpecificPart() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:user@example.org");
-		assertThat(descriptor.jabberId()).isEqualTo("user@example.org");
+		assertThat(createDescriptor("xmpp:user@example.org").jabberId()).isEqualTo("user@example.org");
 	}
 
 	@Test
-	void domainExtractedFromJid() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:user@example.org");
-		assertThat(descriptor.domain()).isEqualTo("example.org");
-	}
-
-	@Test
-	void domainIsLowercased() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:user@Example.ORG");
-		assertThat(descriptor.domain()).isEqualTo("example.org");
-	}
-
-	@Test
-	void domainStripsResourcePart() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:user@example.org/resource");
-		assertThat(descriptor.domain()).isEqualTo("example.org");
-	}
-
-	@Test
-	void domainIsNullWhenJidHasNoAtSign() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:noDomain");
-		assertThat(descriptor.domain()).isNull();
-	}
-
-	@Test
-	void domainIsNullWhenAtSignIsAtEnd() {
-		XmppDestinationDescriptor descriptor = createDescriptor("xmpp:user@");
-		assertThat(descriptor.domain()).isNull();
+	void jabberIdKeepsResource() {
+		assertThat(createDescriptor("xmpp:user@example.org/mobile").jabberId()).isEqualTo("user@example.org/mobile");
 	}
 
 	private XmppDestinationDescriptor createDescriptor(String uri) {
-		return XmppDestinationDescriptor.of(URI.create(uri), UriSource.APPLICATION);
+		return XmppDestinationDescriptor.of(URI.create(uri), UriSource.REMOTE);
 	}
 
 }

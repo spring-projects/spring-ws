@@ -44,14 +44,20 @@ class XmppMessageSenderSupportsTests {
 	}
 
 	@Test
-	void remoteRejectsWhenNoConnectionConfigured() {
+	void supportsRemoteDestinationsReflectsWhetherAPolicyIsConfigured() {
+		assertThat(this.sender.supportsRemoteDestinations()).isFalse();
+		this.sender.setDestinationPolicy((descriptor) -> true);
+		assertThat(this.sender.supportsRemoteDestinations()).isTrue();
+	}
+
+	@Test
+	void remoteRejectsWithoutPolicy() {
 		assertThat(this.sender.supports(URI.create("xmpp:user@example.org"), UriSource.REMOTE)).isFalse();
 	}
 
 	@Test
-	void destinationPolicyUsesJabberIdDomain() {
-		this.sender.setDestinationPolicy((descriptor, defaultChecks) -> descriptor.domain() != null
-				&& descriptor.domain().equalsIgnoreCase("example.org"));
+	void remoteUsesConfiguredPolicy() {
+		this.sender.setDestinationPolicy((descriptor) -> "user@example.org".equals(descriptor.jabberId()));
 		assertThat(this.sender.supports(URI.create("xmpp:user@example.org"), UriSource.REMOTE)).isTrue();
 		assertThat(this.sender.supports(URI.create("xmpp:user@other.org"), UriSource.REMOTE)).isFalse();
 	}
