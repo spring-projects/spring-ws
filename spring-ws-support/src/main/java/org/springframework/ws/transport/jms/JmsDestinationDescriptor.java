@@ -17,17 +17,21 @@
 package org.springframework.ws.transport.jms;
 
 import java.net.URI;
-import java.util.Locale;
 
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceMessageSender.DestinationDescriptor;
 import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.ws.transport.jms.support.JmsTransportUtils;
 
 /**
  * {@link DestinationDescriptor} implementation for JMS destinations.
+ * <p>
+ * The {@linkplain #destinationName() destination name} and {@linkplain #replyToName()
+ * replyTo name} are the exact strings that the sender hands to its
+ * {@code DestinationResolver}, so a policy comparing them decides on the names that will
+ * actually be resolved. Both matter: a resolver that performs a JNDI lookup treats either
+ * name as a lookup key.
  *
  * @author Stephane Nicoll
  * @since 3.1.9
@@ -77,26 +81,6 @@ public final class JmsDestinationDescriptor implements DestinationDescriptor {
 	 */
 	public @Nullable String replyToName() {
 		return JmsTransportUtils.getReplyToName(this.uri);
-	}
-
-	/**
-	 * Check if either the destination name or the replyTo name are suspicious, that is if
-	 * either of those names contains a known protocol that could lead to RCE attacks.
-	 * @return {@code true} if any of the destination or replyTo names is suspicious,
-	 * {@code false} otherwise
-	 */
-	public boolean containsSuspiciousJmsNameIndirection() {
-		return containsSuspiciousToken(destinationName()) || containsSuspiciousToken(replyToName());
-	}
-
-	private static boolean containsSuspiciousToken(@Nullable String name) {
-		if (!StringUtils.hasLength(name)) {
-			return false;
-		}
-		String lower = name.toLowerCase(Locale.ROOT);
-		return lower.contains("ldap:") || lower.contains("ldaps:") || lower.contains("rmi:") || lower.contains("dns:")
-				|| lower.contains("iiop:") || lower.contains("iiopname:") || lower.contains("corbaname:")
-				|| lower.contains("java:") || lower.contains("${");
 	}
 
 }

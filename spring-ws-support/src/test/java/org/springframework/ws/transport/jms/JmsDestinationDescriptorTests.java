@@ -19,8 +19,6 @@ package org.springframework.ws.transport.jms;
 import java.net.URI;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 
@@ -43,56 +41,28 @@ class JmsDestinationDescriptorTest {
 
 	@Test
 	void destinationNameParsedFromSimpleUri() {
-		JmsDestinationDescriptor descriptor = createDescriptor("jms:RequestQueue");
-		assertThat(descriptor.destinationName()).isEqualTo("RequestQueue");
+		assertThat(createDescriptor("jms:RequestQueue").destinationName()).isEqualTo("RequestQueue");
 	}
 
 	@Test
 	void destinationNameParsedFromUriWithReplyToName() {
-		JmsDestinationDescriptor descriptor = createDescriptor("jms:RequestQueue?replyToName=ResponseQueue");
-		assertThat(descriptor.destinationName()).isEqualTo("RequestQueue");
+		assertThat(createDescriptor("jms:RequestQueue?replyToName=ResponseQueue").destinationName())
+			.isEqualTo("RequestQueue");
 	}
 
 	@Test
 	void replyToNameParsedFromUri() {
-		JmsDestinationDescriptor descriptor = createDescriptor("jms:RequestQueue?replyToName=ResponseQueue");
-		assertThat(descriptor.replyToName()).isEqualTo("ResponseQueue");
+		assertThat(createDescriptor("jms:RequestQueue?replyToName=ResponseQueue").replyToName())
+			.isEqualTo("ResponseQueue");
 	}
 
 	@Test
 	void replyToNameIsNullWhenAbsent() {
-		JmsDestinationDescriptor descriptor = createDescriptor("jms:RequestQueue");
-		assertThat(descriptor.replyToName()).isNull();
-	}
-
-	@ParameterizedTest
-	@ValueSource(strings = { "ldap:", "ldaps:", "rmi:", "dns:", "iiop:", "iiopname:", "corbaname:", "java:" })
-	void containsSuspiciousJmsNameIndirectionDetectsInDestinationName(String prefix) {
-		String uri = "jms:" + prefix + "evil/a";
-		assertThat(createDescriptor(uri).containsSuspiciousJmsNameIndirection()).isTrue();
-	}
-
-	@ParameterizedTest
-	@ValueSource(strings = { "ldap:", "ldaps:", "rmi:", "dns:", "iiop:", "iiopname:", "corbaname:", "java:" })
-	void containsSuspiciousJmsNameIndirectionDetectsInReplyToName(String prefix) {
-		String uri = "jms:RequestQueue?replyToName=" + prefix + "evil/a";
-		assertThat(createDescriptor(uri).containsSuspiciousJmsNameIndirection()).isTrue();
-	}
-
-	@Test
-	void containsSuspiciousJmsNameIndirectionIsCaseInsensitive() {
-		assertThat(createDescriptor("jms:LDAP://evil/a").containsSuspiciousJmsNameIndirection()).isTrue();
-	}
-
-	@Test
-	void containsSuspiciousJmsNameIndirectionReturnsFalseForPlainNames() {
-		assertThat(
-				createDescriptor("jms:RequestQueue?replyToName=ResponseQueue").containsSuspiciousJmsNameIndirection())
-			.isFalse();
+		assertThat(createDescriptor("jms:RequestQueue").replyToName()).isNull();
 	}
 
 	private JmsDestinationDescriptor createDescriptor(String uri) {
-		return JmsDestinationDescriptor.of(URI.create(uri), UriSource.APPLICATION);
+		return JmsDestinationDescriptor.of(URI.create(uri), UriSource.REMOTE);
 	}
 
 }

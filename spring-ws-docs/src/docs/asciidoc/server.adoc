@@ -270,17 +270,30 @@ We recommend using your browser to download the generated WSDL, store it in the 
 This is the only way to be really sure that the WSDL does not change over time.
 
 [[server-http-sender-validation]]
-==== HTTP message senders and out-of-band validation
+==== Out-of-band HTTP replies
 
-For WS-Addressing `ReplyTo` or `FaultTo` (see <<server-endpoint-out-of-band-replies>>), HTTP-based message senders validate the peer-supplied URL before opening a connection:
+When an HTTP message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the peer-supplied `wsa:ReplyTo` or `wsa:FaultTo` URL is only accepted if the sender's `DestinationPolicy` accepts it.
+Without a policy, every peer-supplied URL is rejected: only your application knows which reply destinations are legitimate, so there is no safe default.
+Destinations that your application supplies, such as a `WebServiceTemplate` endpoint URL, are not affected.
 
-* The URL must have a real host (not empty or obviously local-only forms).
-* Literal IP addresses that are loopback, link-local, or "any" are rejected without DNS lookups, which blocks many metadata-style and lateral-movement URLs.
-* Ordinary host names are not resolved by default to avoid a performance penalty, so malicious hostnames resolving to internal IPs are not blocked by the default IP-level checks. To secure out-of-band replies without the DNS resolution latency, use a `DestinationPolicy` to configure a strict allowlist. Alternatively, DNS resolution can be enabled by setting `allowDnsResolution` to `true` to apply IP-level checks to the resolved addresses.
-* RFC&nbsp;1918-style private *IPv4 literals* are rejected by default; they can be enabled by setting `allowSiteLocalIpv4` to `true` while still composing with the built-in checks.
-* HTTP clients may follow redirects depending on the stack (`HttpURLConnection` vs Apache HttpComponents and its redirect strategy). Treat redirects as part of your threat model for out-of-band POSTs, or configure the client not to follow them if your environment requires it.
+Configure an allowlist of the hosts that out-of-band replies may target:
 
-Register a `DestinationPolicy` on the sender for allow-lists, DNS-backed checks, or other organization rules; it composes with these defaults.
+====
+[source,java]
+----
+HttpUrlConnectionMessageSender sender = new HttpUrlConnectionMessageSender();
+sender.setDestinationPolicy(HttpDestinationPolicies.allowedHosts("replies.partner.example.com"));
+----
+====
+
+A host is compared as written, so that what is compared is what will be connected to.
+For rules that a host allowlist cannot express, implement `DestinationPolicy` yourself.
+
+The `HttpDestinationDescriptor` gives you the destination URI, which is the URI the sender hands to its HTTP client.
+It deliberately offers no classified view of that URI, such as whether its host is private or resolves to a local address: whether a network location is acceptable is a judgement about your network, and one that would not necessarily agree with what the HTTP client resolves and connects to.
+
+WARNING: A policy sees the destination that the sender is about to connect to, and nothing beyond it.
+HTTP clients that follow redirects can still be steered to another host by an allowed destination, so allow only destinations that you trust not to redirect elsewhere, or configure the underlying client not to follow redirects.
 
 === Wiring up Spring-WS in a `DispatcherServlet`
 
@@ -404,7 +417,21 @@ Those addresses *are* screened.
 [[server-jms-sender-validation]]
 ==== Out-of-band JMS replies
 
-When a JMS message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, destination and reply names are screened for patterns that often indicate unsafe indirection (embedded LDAP- or JNDI-style fragments and similar). If your environment uses names that legitimately contain such substrings, attach a `DestinationPolicy` to the sender so you can express allow-lists or resolver-specific exceptions while still composing with the defaults.
+When a JMS message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the peer-supplied destination is only accepted if the sender's `DestinationPolicy` accepts it.
+Without a policy, every peer-supplied destination is rejected.
+Configure an allowlist of the destination names that replies may target:
+
+====
+[source,java]
+----
+JmsMessageSender sender = new JmsMessageSender(connectionFactory);
+sender.setDestinationPolicy(JmsDestinationPolicies.allowedDestinationNames("ReplyQueue"));
+----
+====
+
+The allowlist covers both the destination name and the `replyToName`, because the sender hands both to its destination resolver.
+That matters most when the resolver performs a JNDI lookup, as it then treats either name as a lookup key.
+Names are compared exactly, including case, since a JMS destination name is opaque and only the provider can declare two names equal.
 
 === Email Transport
 
@@ -462,7 +489,20 @@ The following piece of configuration shows how to use the server-side email supp
 [[server-mail-sender-validation]]
 ==== Out-of-band mail replies
 
-When a mail message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the mailbox must be well-formed and local-only mailbox hosts are rejected by default. Use a `DestinationPolicy` for domain allow-lists or stricter rules.
+When a mail message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the peer-supplied mailbox is only accepted if the sender's `DestinationPolicy` accepts it.
+Without a policy, every peer-supplied mailbox is rejected, which also prevents your SMTP identity from being used to mail arbitrary recipients.
+Configure an allowlist of the mailboxes that replies may target:
+
+====
+[source,java]
+----
+MailMessageSender sender = new MailMessageSender();
+sender.setDestinationPolicy(MailDestinationPolicies.allowedRecipients("replies@partner.example.com"));
+----
+====
+
+Both sides of the comparison are a mailbox parsed by JavaMail, so what is compared is the mailbox the message would be sent to.
+The comparison is exact, including the case of the local part, which only the receiving mail system can declare insignificant.
 
 === Embedded HTTP Server transport
 
@@ -568,7 +608,20 @@ The following example shows how to set up the server-side XMPP components:
 [[server-xmpp-sender-validation]]
 ==== Out-of-band XMPP replies
 
-When an XMPP message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the Jabber ID's domain must match the service domain of the configured connection. Use a `DestinationPolicy` if you need allow-lists or multi-tenant rules.
+When an XMPP message sender is used for <<server-endpoint-out-of-band-replies,out-of-band replies>>, the peer-supplied Jabber ID is only accepted if the sender's `DestinationPolicy` accepts it.
+Without a policy, every peer-supplied Jabber ID is rejected.
+List the Jabber IDs that replies may target, which for a reply address is normally a bare JID on the service the sender is connected to:
+
+====
+[source,java]
+----
+XmppMessageSender sender = new XmppMessageSender();
+sender.setConnection(connection);
+sender.setDestinationPolicy(XmppDestinationPolicies.allowedJabberIds("replies@example.org"));
+----
+====
+
+A Jabber ID is compared exactly as the sender would hand it to the XMPP connection, without normalization of any part of it, so a JID that differs in case or that carries a resource where none is configured does not match.
 
 === MTOM
 
@@ -1183,7 +1236,13 @@ If set, the value is compared to the `To` header property of the incoming messag
 
 When WS-Addressing signals a non-anonymous reply or fault path, the response cannot ride the original inbound transport and Spring-WS must open a separate connection. Configure `messageSenders` on your endpoint mapping with the same `WebServiceMessageSender` implementations you would use on a client `WebServiceTemplate`; see <<client-transports>> for transport overview and wiring.
 
-Spring-WS tries each configured sender in order; the first one that supports the `wsa:ReplyTo` or `wsa:FaultTo` URI sends the message. Because those addresses are chosen by the remote party, senders apply stricter validation before opening a connection than they would when your application supplied the destination. If the built-in rules are too strict for your environment (for example names that legitimately contain unusual substrings) or too loose (for example you need explicit allow-lists), register a `DestinationPolicy` on the sender bean so your rules compose with the defaults.
+Spring-WS tries each configured sender in order; the first one that supports the `wsa:ReplyTo` or `wsa:FaultTo` URI sends the message.
+Because those addresses are chosen by the remote party, a sender only accepts them if it has been configured with a `DestinationPolicy` that accepts them.
+Enabling out-of-band replies is therefore a two-step decision: configure a sender, then state which destinations that sender may target.
+A sender registered here without a policy could never deliver anything, so the endpoint mapping rejects that configuration when it initializes rather than letting every reply fail at request time.
+
+Whatever the transport, a policy decides on the exact value that the sender hands to it: the URI for HTTP, the parsed mailbox for mail, the destination and `replyToName` for JMS, the Jabber ID for XMPP.
+Nothing is normalized on the way, so a destination that differs from an allowed one in any way that the transport might treat as significant is rejected rather than reshaped into a match.
 
 IMPORTANT: When WS-Addressing out-of-band senders are configured, security interceptors must run before the WS-Addressing interceptor to prevent unauthenticated requests from triggering fault delivery to an attacker-supplied `wsa:FaultTo` address. Spring-WS guarantees this by ordering WS-Security interceptors (typically `Wss4jSecurityInterceptor`) before the addressing interceptor regardless of how they are registered. See `AbstractWsSecurityInterceptor.DEFAULT_ORDER` and `AddressingEndpointInterceptor.DEFAULT_ORDER` for the concrete order values.
 
@@ -1191,7 +1250,7 @@ On the response side, the addressing interceptor does not transmit an out-of-ban
 It defers the actual send until the whole response interceptor chain has run, so that interceptors ordered before it -- notably WS-Security response securing (signing, encryption, timestamping) -- are applied to the message before it leaves the server.
 A reply that is intended to be signed or encrypted is therefore never delivered in cleartext to the peer-supplied `wsa:ReplyTo` or `wsa:FaultTo` address.
 
-Default checks for peer-supplied reply and fault addresses are documented per transport:
+Destination policies for peer-supplied reply and fault addresses are documented per transport:
 
 * <<server-http-sender-validation,HTTP message senders>>
 * <<server-jms-sender-validation,JMS message senders>>

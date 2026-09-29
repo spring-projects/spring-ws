@@ -18,7 +18,7 @@ package org.springframework.ws.transport.jms;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.function.Predicate;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import jakarta.jms.Connection;
 import jakarta.jms.ConnectionFactory;
@@ -28,6 +28,7 @@ import jakarta.jms.Message;
 import jakarta.jms.Queue;
 import jakarta.jms.Session;
 import jakarta.jms.Topic;
+import org.apache.commons.logging.Log;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.jms.connection.ConnectionFactoryUtils;
@@ -97,12 +98,15 @@ import org.springframework.ws.transport.jms.support.JmsTransportUtils;
  * {@code jms:RequestQueue?replyToName=ResponseQueueName}<br>
  * {@code jms:Queue?messageType=TEXT_MESSAGE}</blockquote>
  * <p>
- * For {@link UriSource#APPLICATION}, default checks accept any {@code jms:} URI. For
- * {@link UriSource#REMOTE}, default checks reject destination and {@code replyToName}
- * fragments that resemble JNDI/LDAP/RMI-style indirection (see
- * {@link JmsDestinationDescriptor#containsSuspiciousJmsNameIndirection()}). Use a
- * {@link DestinationPolicy} for explicit allowlists, resolver-specific rules, or to tune
- * validation when legitimate destination names contain such substrings.
+ * Any {@code jms:} URI supplied by the application is accepted. A URI supplied by a
+ * {@linkplain UriSource#REMOTE remote} peer, such as a WS-Addressing {@code ReplyTo} or
+ * {@code FaultTo} address, is only accepted when a {@link DestinationPolicy
+ * DestinationPolicy} accepts it; without a policy, every remote destination is rejected.
+ * Use {@link JmsDestinationPolicies#allowedDestinationNames(String...)} for the common
+ * case. Remember that both the destination name and the {@code replyToName} are handed to
+ * the {@link #getDestinationResolver() destination resolver}, so a policy has to
+ * constrain both. That matters most when the resolver performs a JNDI lookup, as it then
+ * treats either name as a lookup key.
  *
  * @author Arjen Poutsma
  * @author Stephane Nicoll
@@ -131,6 +135,8 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	private @Nullable MessagePostProcessor postProcessor;
 
 	private @Nullable DestinationPolicy<JmsDestinationDescriptor> destinationPolicy;
+
+	private final DestinationPolicy<JmsDestinationDescriptor> fallbackDestinationPolicy = new FallbackDestinationPolicy<>();
 
 	/**
 	 * Create a new {@code JmsMessageSender}
@@ -177,8 +183,12 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 	}
 
 	/**
-	 * Set a custom {@link DestinationPolicy} to compose with the sender's default checks.
-	 * When unset, only default checks apply.
+	 * Set the {@link DestinationPolicy} that decides which destinations this sender may
+	 * open a connection to.
+	 * <p>
+	 * A policy is required to send to a {@link UriSource#REMOTE} destination, such as a
+	 * WS-Addressing {@code ReplyTo} or {@code FaultTo} address: when none is configured,
+	 * every remote destination is rejected.
 	 * @param destinationPolicy the policy to apply
 	 * @since 3.1.9
 	 */
@@ -221,19 +231,14 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 		if (!uri.getScheme().equals(JmsTransportConstants.JMS_URI_SCHEME)) {
 			return false;
 		}
-		JmsDestinationDescriptor descriptor = JmsDestinationDescriptor.of(uri, uriSource);
-		Predicate<JmsDestinationDescriptor> defaultChecks = defaultChecks(uriSource);
-		return (this.destinationPolicy != null) ? this.destinationPolicy.accept(descriptor, defaultChecks)
-				: defaultChecks.test(descriptor);
+		DestinationPolicy<JmsDestinationDescriptor> destinationPolicyToUse = (this.destinationPolicy != null)
+				? this.destinationPolicy : this.fallbackDestinationPolicy;
+		return destinationPolicyToUse.accept(JmsDestinationDescriptor.of(uri, uriSource));
 	}
 
-	/**
-	 * Return the default checks to apply for the given {@link UriSource}.
-	 * @return the default checks to apply
-	 * @since 3.1.9
-	 */
-	protected Predicate<JmsDestinationDescriptor> defaultChecks(UriSource uriSource) {
-		return (descriptor) -> uriSource != UriSource.REMOTE || !descriptor.containsSuspiciousJmsNameIndirection();
+	@Override
+	public boolean supportsRemoteDestinations() {
+		return this.destinationPolicy != null;
 	}
 
 	private Destination resolveRequestDestination(Session session, URI uri) throws JMSException {
@@ -257,6 +262,35 @@ public class JmsMessageSender extends JmsDestinationAccessor implements WebServi
 		}
 		else {
 			throw new IllegalArgumentException("Invalid message type [" + messageType + "].");
+		}
+
+	}
+
+	private final class FallbackDestinationPolicy<T extends DestinationDescriptor> implements DestinationPolicy<T> {
+
+		private final AtomicBoolean missingDestinationPolicyLogged = new AtomicBoolean();
+
+		@Override
+		public boolean accept(T descriptor) {
+			if (descriptor.uriSource() == UriSource.REMOTE) {
+				logMissingDestinationPolicy(descriptor.uri());
+				return false;
+			}
+			return true;
+		}
+
+		private void logMissingDestinationPolicy(URI uri) {
+			Log loggerToUse = JmsMessageSender.this.logger;
+			if (this.missingDestinationPolicyLogged.compareAndSet(false, true)) {
+				loggerToUse.warn("Rejected remote destination [" + uri + "]: no DestinationPolicy is configured on "
+						+ getClass().getName() + ", so every destination supplied by a remote peer is rejected. "
+						+ "Call setDestinationPolicy with an explicit allowlist of the destinations that out-of-band "
+						+ "replies may target. Further rejections are logged at debug level.");
+			}
+			else if (loggerToUse.isDebugEnabled()) {
+				loggerToUse.debug("Rejected remote destination [" + uri + "]: no DestinationPolicy is configured on "
+						+ getClass().getName());
+			}
 		}
 
 	}
