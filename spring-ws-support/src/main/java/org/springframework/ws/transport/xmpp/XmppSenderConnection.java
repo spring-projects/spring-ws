@@ -28,6 +28,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.StanzaCollector;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.filter.AndFilter;
+import org.jivesoftware.smack.filter.FromMatchesFilter;
 import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.filter.StanzaTypeFilter;
 import org.jivesoftware.smack.filter.ThreadFilter;
@@ -171,12 +172,16 @@ public class XmppSenderConnection extends AbstractSenderConnection {
 		catch (InterruptedException ex) {
 			throw new IOException(ex);
 		}
+		finally {
+			collector.cancel();
+		}
 	}
 
 	private StanzaFilter createPacketFilter() {
 		AndFilter andFilter = new AndFilter();
 		andFilter.addFilter(new StanzaTypeFilter(Message.class));
 		andFilter.addFilter(new ThreadFilter(this.requestMessage.getThread()));
+		andFilter.addFilter(FromMatchesFilter.createBare(this.requestMessage.getTo()));
 		return andFilter;
 	}
 
