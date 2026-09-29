@@ -28,7 +28,9 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import org.springframework.util.Assert;
+import org.springframework.util.unit.DataSize;
 import org.springframework.ws.WebServiceMessageFactory;
+import org.springframework.ws.support.BoundedInputStream;
 import org.springframework.xml.DocumentBuilderFactoryUtils;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
@@ -48,6 +50,8 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	private final DocumentBuilderFactory documentBuilderFactory;
 
 	private String contentType = DEFAULT_CONTENT_TYPE;
+
+	private DataSize maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE;
 
 	/**
 	 * Use default {@link DocumentBuilderFactory}.
@@ -95,6 +99,16 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 		this.documentBuilderFactory.setExpandEntityReferences(expandEntityRef);
 	}
 
+	/**
+	 * Set the maximum message size allowed for incoming message. Defaults to
+	 * {@link #DEFAULT_MAX_MESSAGE_SIZE}. Set to {@code -1} for unlimited message size.
+	 * @since 3.1.10
+	 * @see #createWebServiceMessage(InputStream)
+	 */
+	public void setMaxMessageSize(DataSize maxMessageSize) {
+		this.maxMessageSize = maxMessageSize;
+	}
+
 	@Override
 	public DomPoxMessage createWebServiceMessage() {
 		try {
@@ -114,6 +128,9 @@ public class DomPoxMessageFactory extends TransformerObjectSupport implements We
 	public DomPoxMessage createWebServiceMessage(InputStream inputStream) throws IOException {
 		try {
 			DocumentBuilder documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+			if (!this.maxMessageSize.isNegative()) {
+				inputStream = new BoundedInputStream(inputStream, this.maxMessageSize);
+			}
 			Document request = documentBuilder.parse(inputStream);
 			return new DomPoxMessage(request, createTransformer(), this.contentType);
 		}
