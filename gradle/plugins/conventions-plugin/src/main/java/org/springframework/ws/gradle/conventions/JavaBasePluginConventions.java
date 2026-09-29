@@ -16,6 +16,8 @@
 
 package org.springframework.ws.gradle.conventions;
 
+import java.util.function.Function;
+
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.repositories.PasswordCredentials;
 import org.gradle.api.plugins.JavaBasePlugin;
@@ -50,6 +52,7 @@ class JavaBasePluginConventions {
 
 	private void configureRepositories(Project project) {
 		project.getRepositories().mavenCentral();
+		configureReleaseTrainRepository(project);
 		project.getRepositories().maven((repository) -> {
 			repository.setName(SHIBBOLETH_RELEASES_REPOSITORY_NAME);
 			repository.setUrl("https://build.shibboleth.net/nexus/content/repositories/releases");
@@ -81,6 +84,21 @@ class JavaBasePluginConventions {
 	private void configureCommercialCredentials(PasswordCredentials credentials) {
 		credentials.setUsername(System.getenv("COMMERCIAL_REPO_USERNAME"));
 		credentials.setPassword(System.getenv("COMMERCIAL_REPO_PASSWORD"));
+	}
+
+	private void configureReleaseTrainRepository(Project project) {
+		Function<String, String> envLookup = (name) -> System.getenv("RELEASE_TRAIN_MAVEN_REPOSITORY_" + name);
+		String url = envLookup.apply("URL");
+		if (url != null) {
+			project.getRepositories().maven((repository) -> {
+				repository.setName("Release Train");
+				repository.setUrl(url);
+				repository.credentials((credentials) -> {
+					credentials.setUsername(envLookup.apply("USERNAME"));
+					credentials.setPassword(envLookup.apply("PASSWORD"));
+				});
+			});
+		}
 	}
 
 }
