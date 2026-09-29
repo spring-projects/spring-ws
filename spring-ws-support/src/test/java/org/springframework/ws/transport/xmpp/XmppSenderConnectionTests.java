@@ -34,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.mockito.ArgumentCaptor;
 
 import org.springframework.ws.WebServiceMessage;
@@ -43,6 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -195,6 +197,55 @@ class XmppSenderConnectionTests {
 		connection.onReceiveBeforeRead();
 		assertThat(connection.hasError()).isTrue();
 		assertThat(connection.getErrorMessage()).isEqualTo("boom");
+	}
+
+	@Test
+	void responseFilterAcceptsReplyFromAddressedService() throws Exception {
+		StanzaCollector collector = mock(StanzaCollector.class);
+		given(this.connection.createStanzaCollector(any(StanzaFilter.class))).willReturn(collector);
+		StanzaFilter filter = receiveAndCaptureFilter(createConnection("service@example.org", "thread-1"), collector);
+		assertThat(filter.accept(response("service@example.org", "thread-1"))).isTrue();
+	}
+
+	@Test
+	void responseFilterAcceptsReplyFromAddressedServiceFullJid() throws Exception {
+		StanzaCollector collector = mock(StanzaCollector.class);
+		given(this.connection.createStanzaCollector(any(StanzaFilter.class))).willReturn(collector);
+		StanzaFilter filter = receiveAndCaptureFilter(createConnection("service@example.org", "thread-1"), collector);
+		assertThat(filter.accept(response("service@example.org/resource", "thread-1"))).isTrue();
+	}
+
+	@Test
+	void responseFilterRejectsReplyForgedByAnotherSender() throws Exception {
+		StanzaCollector collector = mock(StanzaCollector.class);
+		given(this.connection.createStanzaCollector(any(StanzaFilter.class))).willReturn(collector);
+		StanzaFilter filter = receiveAndCaptureFilter(createConnection("service@example.org", "thread-1"), collector);
+		assertThat(filter.accept(response("attacker@evil.example", "thread-1"))).isFalse();
+	}
+
+	@Test
+	void collectorIsCancelledAfterReceive() throws Exception {
+		XmppSenderConnection connection = createConnection("service@example.org", "thread-1");
+		StanzaCollector collector = mock(StanzaCollector.class);
+		given(this.connection.createStanzaCollector(any(StanzaFilter.class))).willReturn(collector);
+
+		connection.onReceiveBeforeRead();
+		then(collector).should().cancel();
+	}
+
+	private StanzaFilter receiveAndCaptureFilter(XmppSenderConnection connection, StanzaCollector collector)
+			throws Exception {
+		ArgumentCaptor<StanzaFilter> filterCaptor = ArgumentCaptor.forClass(StanzaFilter.class);
+		connection.onReceiveBeforeRead();
+		then(this.connection).should().createStanzaCollector(filterCaptor.capture());
+		return filterCaptor.getValue();
+	}
+
+	private static Message response(String from, String thread) throws XmppStringprepException {
+		Message message = new Message();
+		message.setFrom(JidCreate.from(from));
+		message.setThread(thread);
+		return message;
 	}
 
 	private Message createMessage(Message.Type type, String body) {
