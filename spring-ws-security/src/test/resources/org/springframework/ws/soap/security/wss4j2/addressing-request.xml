@@ -1,0 +1,16 @@
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:wsa="http://www.w3.org/2005/08/addressing">
+    <SOAP-ENV:Header>
+        <wsa:MessageID>urn:uuid:1234</wsa:MessageID>
+        <wsa:ReplyTo>
+            <wsa:Address>http://example.com/business/client1</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:To>http://example.com/fabrikam</wsa:To>
+        <wsa:Action>http://example.com/fabrikam/Delete</wsa:Action>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <f:Delete xmlns:f="http://example.com/fabrikam">
+            <f:maxCount>42</f:maxCount>
+        </f:Delete>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

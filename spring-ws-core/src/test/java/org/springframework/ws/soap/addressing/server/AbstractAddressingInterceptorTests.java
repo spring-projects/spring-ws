@@ -42,6 +42,7 @@ import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.same;
 import static org.easymock.EasyMock.verify;
 
 public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddressingTests {
@@ -221,33 +222,34 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 
 		replay(this.strategyMock, senderMock, connectionMock);
 
-		boolean result = this.interceptor.handleResponse(context, null);
+		assertThat(this.interceptor.handleResponse(context, null)).isTrue();
+		assertThat(context.hasResponse()).isTrue();
 
-		assertThat(result).isFalse();
+		this.interceptor.afterCompletion(context, null, null);
 		assertThat(context.hasResponse()).isFalse();
 
 		verify(this.strategyMock, senderMock, connectionMock);
 	}
 
 	@Test
-	public void testOutOfBandFaultTo() throws Exception {
+	void testOutOfBandFaultTo() throws Exception {
 
 		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
 
 		URI replyAction = new URI("urn:replyAction");
 		URI faultAction = new URI("urn:faultAction");
-		interceptor = new AddressingEndpointInterceptor(getVersion(), strategyMock,
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
 				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
 
 		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
 
 		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/request-fault-to-mailto.xml");
-		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(messageFactory));
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
 		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
 		response.getSoapBody().addServerOrReceiverFault("Error", Locale.ENGLISH);
 
 		URI messageId = new URI("uid:1234");
-		expect(strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
 
 		URI uri = new URI("mailto:client@example.com");
 		expect(senderMock.supports(eq(uri), eq(UriSource.REMOTE))).andReturn(true);
@@ -255,14 +257,49 @@ public abstract class AbstractAddressingInterceptorTests extends AbstractWsAddre
 		connectionMock.send(response);
 		connectionMock.close();
 
-		replay(strategyMock, senderMock, connectionMock);
+		replay(this.strategyMock, senderMock, connectionMock);
 
-		boolean result = interceptor.handleFault(context, null);
+		assertThat(this.interceptor.handleFault(context, null)).isTrue();
+		assertThat(context.hasResponse()).isTrue();
 
-		assertThat(result).isFalse();
+		this.interceptor.afterCompletion(context, null, null);
 		assertThat(context.hasResponse()).isFalse();
+		verify(this.strategyMock, senderMock, connectionMock);
+	}
 
-		verify(strategyMock, senderMock, connectionMock);
+	@Test
+	void outOfBandReplyIsSentOnlyAfterResponseChainCompletes() throws Exception {
+
+		WebServiceMessageSender senderMock = createMock(WebServiceMessageSender.class);
+
+		URI replyAction = new URI("urn:replyAction");
+		URI faultAction = new URI("urn:replyAction");
+		this.interceptor = new AddressingEndpointInterceptor(getVersion(), this.strategyMock,
+				new WebServiceMessageSender[] { senderMock }, replyAction, faultAction);
+
+		WebServiceConnection connectionMock = createMock(WebServiceConnection.class);
+
+		SaajSoapMessage valid = loadSaajMessage(getTestPath() + "/valid.xml");
+		MessageContext context = new DefaultMessageContext(valid, new SaajSoapMessageFactory(this.messageFactory));
+		SaajSoapMessage response = (SaajSoapMessage) context.getResponse();
+
+		URI messageId = new URI("uid:1234");
+		expect(this.strategyMock.newMessageId((SoapMessage) context.getResponse())).andReturn(messageId);
+
+		URI uri = new URI("http://example.com/business/client1");
+		expect(senderMock.supports(eq(uri), eq(UriSource.REMOTE))).andReturn(true);
+		expect(senderMock.createConnection(uri)).andReturn(connectionMock);
+		connectionMock.send(same(response));
+		connectionMock.close();
+
+		replay(this.strategyMock, senderMock, connectionMock);
+
+		assertThat(this.interceptor.handleResponse(context, null)).isTrue();
+		assertThat(context.hasResponse()).isTrue();
+
+		this.interceptor.afterCompletion(context, null, null);
+		assertThat(context.hasResponse()).isFalse();
+		verify(this.strategyMock, senderMock, connectionMock);
 	}
 
 	@Test
