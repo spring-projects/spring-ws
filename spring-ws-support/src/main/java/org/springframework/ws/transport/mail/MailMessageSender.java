@@ -101,6 +101,8 @@ public class MailMessageSender extends AbstractWebServiceMessageSender<MailDesti
 
 	private @Nullable InternetAddress from;
 
+	private boolean verifyResponseSender = false;
+
 	public MailMessageSender() {
 		super((uri) -> uri.getScheme().equals(MailTransportConstants.MAIL_URI_SCHEME));
 	}
@@ -130,6 +132,21 @@ public class MailMessageSender extends AbstractWebServiceMessageSender<MailDesti
 	 */
 	public void setReceiveSleepTime(long receiveSleepTime) {
 		this.receiveSleepTime = receiveSleepTime;
+	}
+
+	/**
+	 * Set whether a received response must originate from the address the request was
+	 * sent to before it is accepted as the reply. Defaults to {@code false}.
+	 * <p>
+	 * Enabling this adds a defense-in-depth check against forged responses. Do not enable
+	 * it if legitimate replies may arrive from a different address than the request
+	 * destination.
+	 * @param verifyResponseSender whether to validate the response originates from the
+	 * address of the request
+	 * @since 3.1.10
+	 */
+	public void setVerifyResponseSender(boolean verifyResponseSender) {
+		this.verifyResponseSender = verifyResponseSender;
 	}
 
 	/**
@@ -185,6 +202,7 @@ public class MailMessageSender extends AbstractWebServiceMessageSender<MailDesti
 		Assert.notNull(to, "No TO address found for '" + uri + "'");
 		MailSenderConnection connection = new MailSenderConnection(this.session, this.transportUri, this.storeUri, to,
 				this.receiveSleepTime);
+		connection.setVerifyResponseSender(this.verifyResponseSender);
 		if (this.from != null) {
 			connection.setFrom(this.from);
 		}
