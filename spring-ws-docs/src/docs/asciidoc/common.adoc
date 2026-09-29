@@ -189,6 +189,33 @@ For SOAP, this means that (currently) the best version to use is 1.1.
 Version 1.2 might become more popular in the future, but 1.1 is currently the safest bet.
 ====
 
+[[maximum_message_size]]
+==== Maximum Message Size
+
+To protect applications against memory exhaustion attacks from oversized incoming messages, `WebServiceMessageFactory` implementations enforce a default maximum message size of 10MB.
+If an incoming message exceeds the configured size limit, it is rejected.
+You can customize the maximum size or disable the limit by setting the `maxMessageSize` property:
+
+====
+[source,xml]
+----
+<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+    <property name="maxMessageSize" value="20MB"/>
+</bean>
+----
+====
+
+To disable the limit entirely, set `maxMessageSize` to `-1`:
+
+====
+[source,xml]
+----
+<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+    <property name="maxMessageSize" value="-1"/>
+</bean>
+----
+====
+
 [[message-context]]
 === `MessageContext`
 

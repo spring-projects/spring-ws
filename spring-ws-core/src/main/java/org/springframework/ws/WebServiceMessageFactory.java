@@ -19,6 +19,9 @@ package org.springframework.ws;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.springframework.util.unit.DataSize;
+import org.springframework.ws.support.BoundedInputStream;
+
 /**
  * The {@code WebServiceMessageFactory} serves as a factory for
  * {@link org.springframework.ws.WebServiceMessage WebServiceMessages}.
@@ -26,10 +29,17 @@ import java.io.InputStream;
  * Allows the creation of empty messages, or messages based on {@code InputStream}s.
  *
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 1.0.0
  * @see org.springframework.ws.WebServiceMessage
  */
 public interface WebServiceMessageFactory {
+
+	/**
+	 * Default maximum message size: 10MB.
+	 * @since 3.1.10
+	 */
+	DataSize DEFAULT_MAX_MESSAGE_SIZE = DataSize.ofMegabytes(10);
 
 	/**
 	 * Creates a new, empty {@code WebServiceMessage}.
@@ -38,7 +48,9 @@ public interface WebServiceMessageFactory {
 	WebServiceMessage createWebServiceMessage();
 
 	/**
-	 * Reads a {@link WebServiceMessage} from the given input stream.
+	 * Reads a {@link WebServiceMessage} from the given input stream. Implementation
+	 * should limit the size consumed by the {@link InputStream}, using
+	 * {@link #DEFAULT_MAX_MESSAGE_SIZE} by default.
 	 * <p>
 	 * If the given stream is an instance of
 	 * {@link org.springframework.ws.transport.TransportInputStream TransportInputStream},
@@ -47,6 +59,7 @@ public interface WebServiceMessageFactory {
 	 * @return the created message
 	 * @throws InvalidXmlException if the XML read from the input stream is invalid
 	 * @throws IOException if an I/O exception occurs
+	 * @see BoundedInputStream
 	 */
 	WebServiceMessage createWebServiceMessage(InputStream inputStream) throws InvalidXmlException, IOException;
 
