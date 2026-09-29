@@ -16,15 +16,20 @@
 
 package org.springframework.ws.soap.axiom;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.junit.jupiter.api.Test;
 import org.xmlunit.assertj.XmlAssert;
 
+import org.springframework.util.unit.DataSize;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.WebServiceMessageFactory;
@@ -35,6 +40,7 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatException;
 
 public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
@@ -142,6 +148,51 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 				+ "</PDresponse>]]></sendMessageReturn>" + "</ns1:sendMessageResponse>";
 
 		XmlAssert.assertThat(result.toString()).and(expectedPayload).ignoreWhitespace().areIdentical();
+	}
+
+	@Test
+	public void testMaxMessageSizeExceeded() throws Exception {
+		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
+		factory.setMaxMessageSize(DataSize.ofBytes(100));
+		factory.afterPropertiesSet();
+		StringBuilder sb = new StringBuilder();
+		sb.append("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>");
+		sb.append("<soapenv:Body><test>");
+		for (int i = 0; i < 100; i++) {
+			sb.append("<item>AAAAAAAAAAAAAAAAAAAA</item>");
+		}
+		sb.append("</test></soapenv:Body></soapenv:Envelope>");
+		TransportInputStream tis = new MockTransportInputStream(
+				new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8)));
+		assertThatExceptionOfType(AxiomSoapMessageCreationException.class)
+			.isThrownBy(() -> factory.createWebServiceMessage(tis))
+			.havingCause()
+			.withMessageContaining("Maximum message size exceeded");
+	}
+
+	@Test
+	public void testMaxGzipDecompressedSizeExceeded() throws Exception {
+		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
+		factory.setMaxMessageSize(DataSize.ofBytes(100));
+		factory.afterPropertiesSet();
+		StringBuilder sb = new StringBuilder();
+		sb.append("<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/'>");
+		sb.append("<soapenv:Body><test>");
+		for (int i = 0; i < 100; i++) {
+			sb.append("<item>AAAAAAAAAAAAAAAAAAAA</item>");
+		}
+		sb.append("</test></soapenv:Body></soapenv:Envelope>");
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try (GZIPOutputStream gzipOut = new GZIPOutputStream(baos)) {
+			gzipOut.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+		}
+		TransportInputStream tis = new MockTransportInputStream(
+				new GZIPInputStream(new ByteArrayInputStream(baos.toByteArray())));
+		assertThatExceptionOfType(AxiomSoapMessageCreationException.class)
+			.isThrownBy(() -> factory.createWebServiceMessage(tis))
+			.havingCause()
+			.withMessageContaining("Maximum message size exceeded");
 	}
 
 }
