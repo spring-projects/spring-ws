@@ -17,18 +17,20 @@
 package org.springframework.ws.transport.mail;
 
 import java.net.URI;
-import java.util.Locale;
 
 import jakarta.mail.internet.InternetAddress;
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceMessageSender.DestinationDescriptor;
 import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.ws.transport.mail.support.MailTransportUtils;
 
 /**
  * {@link DestinationDescriptor} implementation for Mail destinations.
+ * <p>
+ * The {@linkplain #toAddress() To address} is the very {@link InternetAddress} that the
+ * sender sets as the recipient of the message, so a policy comparing it decides on the
+ * mailbox that will actually be used.
  *
  * @author Stephane Nicoll
  * @since 3.1.9
@@ -41,14 +43,10 @@ public final class MailDestinationDescriptor implements DestinationDescriptor {
 
 	private final @Nullable InternetAddress toAddress;
 
-	private final @Nullable String mailboxHost;
-
-	private MailDestinationDescriptor(URI uri, UriSource uriSource, @Nullable InternetAddress toAddress,
-			@Nullable String mailboxHost) {
+	private MailDestinationDescriptor(URI uri, UriSource uriSource, @Nullable InternetAddress toAddress) {
 		this.uri = uri;
 		this.uriSource = uriSource;
 		this.toAddress = toAddress;
-		this.mailboxHost = mailboxHost;
 	}
 
 	/**
@@ -58,8 +56,7 @@ public final class MailDestinationDescriptor implements DestinationDescriptor {
 	 * @return a descriptor
 	 */
 	public static MailDestinationDescriptor of(URI uri, UriSource uriSource) {
-		InternetAddress parsedTo = MailTransportUtils.getTo(uri);
-		return new MailDestinationDescriptor(uri, uriSource, parsedTo, extractMailboxHost(parsedTo));
+		return new MailDestinationDescriptor(uri, uriSource, MailTransportUtils.getTo(uri));
 	}
 
 	@Override
@@ -78,37 +75,6 @@ public final class MailDestinationDescriptor implements DestinationDescriptor {
 	 */
 	public @Nullable InternetAddress toAddress() {
 		return this.toAddress;
-	}
-
-	/**
-	 * Return the domain part of the mailbox (after {@code @}), lower-cased, or
-	 * {@code null} when not extractable.
-	 * @return the mailbox host, or {@code null}
-	 */
-	public @Nullable String mailboxHost() {
-		return this.mailboxHost;
-	}
-
-	private static @Nullable String extractMailboxHost(@Nullable InternetAddress to) {
-		if (to == null) {
-			return null;
-		}
-		String address = to.getAddress();
-		if (!StringUtils.hasText(address) || address.length() > 512) {
-			return null;
-		}
-		if (address.indexOf('\n') >= 0 || address.indexOf('\r') >= 0) {
-			return null;
-		}
-		int at = address.lastIndexOf('@');
-		if (at <= 0 || at == address.length() - 1) {
-			return null;
-		}
-		String host = address.substring(at + 1).trim().toLowerCase(Locale.ROOT);
-		if (!StringUtils.hasLength(host)) {
-			return null;
-		}
-		return host;
 	}
 
 }

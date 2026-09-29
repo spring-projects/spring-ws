@@ -17,8 +17,11 @@
 package org.springframework.ws.transport;
 
 import java.net.URI;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.util.Assert;
@@ -32,6 +35,10 @@ import org.springframework.ws.transport.WebServiceMessageSender.DestinationDescr
  * irrespective of whether it is acceptable according to an {@link UriSource}.
  * Implementations typically inspect the URI scheme (or other transport-specific traits)
  * in that filter.
+ * <p>
+ * A URI that passes that filter is accepted when the configured {@link DestinationPolicy}
+ * accepts it. Without a policy, {@link UriSource#APPLICATION} URIs are accepted and
+ * {@link UriSource#REMOTE} URIs are rejected.
  *
  * @param <D> concrete {@link DestinationDescriptor} type
  * @author Stephane Nicoll
@@ -40,9 +47,13 @@ import org.springframework.ws.transport.WebServiceMessageSender.DestinationDescr
 public abstract class AbstractWebServiceMessageSender<D extends DestinationDescriptor>
 		implements WebServiceMessageSender {
 
+	private final Log logger = LogFactory.getLog(getClass());
+
 	private final Predicate<URI> supportedUriFilter;
 
 	private @Nullable DestinationPolicy<D> destinationPolicy;
+
+	private final DestinationPolicy<D> fallbackDestinationPolicy = new FallbackDestinationPolicy<>();
 
 	/**
 	 * Create an instance with the URI filter to apply to accept a given URI.
@@ -55,8 +66,12 @@ public abstract class AbstractWebServiceMessageSender<D extends DestinationDescr
 	}
 
 	/**
-	 * Set a custom {@link DestinationPolicy} to compose with the sender's default checks.
-	 * When unset, only default checks apply.
+	 * Set the {@link DestinationPolicy} that decides which destinations this sender may
+	 * open a connection to.
+	 * <p>
+	 * A policy is required to send to a {@link UriSource#REMOTE} destination, such as a
+	 * WS-Addressing {@code ReplyTo} or {@code FaultTo} address: when none is configured,
+	 * every remote destination is rejected.
 	 * @param destinationPolicy the policy to apply
 	 */
 	public void setDestinationPolicy(DestinationPolicy<D> destinationPolicy) {
@@ -72,14 +87,18 @@ public abstract class AbstractWebServiceMessageSender<D extends DestinationDescr
 	}
 
 	@Override
+	public boolean supportsRemoteDestinations() {
+		return this.destinationPolicy != null;
+	}
+
+	@Override
 	public boolean supports(URI uri, UriSource uriSource) {
 		if (!this.supportedUriFilter.test(uri)) {
 			return false;
 		}
-		D details = createDescriptor(uri, uriSource);
-		Predicate<D> defaultChecks = defaultChecks(uriSource);
-		return (this.destinationPolicy != null) ? this.destinationPolicy.accept(details, defaultChecks)
-				: defaultChecks.test(details);
+		DestinationPolicy<D> destinationPolicyToUse = (this.destinationPolicy != null) ? this.destinationPolicy
+				: this.fallbackDestinationPolicy;
+		return destinationPolicyToUse.accept(createDescriptor(uri, uriSource));
 	}
 
 	/**
@@ -91,10 +110,33 @@ public abstract class AbstractWebServiceMessageSender<D extends DestinationDescr
 	 */
 	protected abstract D createDescriptor(URI uri, UriSource uriSource);
 
-	/**
-	 * Return the default checks to apply for the given {@link UriSource}.
-	 * @return the default checks to apply
-	 */
-	protected abstract Predicate<D> defaultChecks(UriSource uriSource);
+	private final class FallbackDestinationPolicy<T extends DestinationDescriptor> implements DestinationPolicy<T> {
+
+		private final AtomicBoolean missingDestinationPolicyLogged = new AtomicBoolean();
+
+		@Override
+		public boolean accept(T descriptor) {
+			if (descriptor.uriSource() == UriSource.REMOTE) {
+				logMissingDestinationPolicy(descriptor.uri());
+				return false;
+			}
+			return true;
+		}
+
+		private void logMissingDestinationPolicy(URI uri) {
+			Log loggerToUse = AbstractWebServiceMessageSender.this.logger;
+			if (this.missingDestinationPolicyLogged.compareAndSet(false, true)) {
+				loggerToUse.warn("Rejected remote destination [" + uri + "]: no DestinationPolicy is configured on "
+						+ getClass().getName() + ", so every destination supplied by a remote peer is rejected. "
+						+ "Call setDestinationPolicy with an explicit allowlist of the destinations that out-of-band "
+						+ "replies may target. Further rejections are logged at debug level.");
+			}
+			else if (loggerToUse.isDebugEnabled()) {
+				loggerToUse.debug("Rejected remote destination [" + uri + "]: no DestinationPolicy is configured on "
+						+ getClass().getName());
+			}
+		}
+
+	}
 
 }

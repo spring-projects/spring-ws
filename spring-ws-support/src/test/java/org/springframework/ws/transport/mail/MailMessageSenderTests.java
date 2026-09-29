@@ -34,30 +34,32 @@ class MailMessageSenderTests {
 	private final MailMessageSender sender = new MailMessageSender();
 
 	@Test
-	void remoteRejectsLocalhostMailboxHost() {
-		assertThat(this.sender.supports(URI.create("mailto:user@localhost"), UriSource.REMOTE)).isFalse();
+	void rejectsNonMailScheme() {
+		assertThat(this.sender.supports(URI.create("http://example.org/service"), UriSource.APPLICATION)).isFalse();
 	}
 
 	@Test
-	void remoteRejectsLocalhostSubdomainMailboxHost() {
-		assertThat(this.sender.supports(URI.create("mailto:user@internal.localhost"), UriSource.REMOTE)).isFalse();
-	}
-
-	@Test
-	void remoteAcceptsPublicMailbox() {
-		assertThat(this.sender.supports(URI.create("mailto:user@example.org"), UriSource.REMOTE)).isTrue();
-	}
-
-	@Test
-	void applicationAllowsLocalhostMailbox() {
+	void applicationAllowsAnyMailbox() {
 		assertThat(this.sender.supports(URI.create("mailto:user@localhost"), UriSource.APPLICATION)).isTrue();
+		assertThat(this.sender.supports(URI.create("mailto:user@example.org"), UriSource.APPLICATION)).isTrue();
 	}
 
 	@Test
-	void destinationPolicyUsesMailboxHost() {
-		this.sender.setDestinationPolicy(
-				(descriptor, defaultChecks) -> defaultChecks.and(d -> "corp.example".equalsIgnoreCase(d.mailboxHost()))
-					.test(descriptor));
+	void supportsRemoteDestinationsReflectsWhetherAPolicyIsConfigured() {
+		assertThat(this.sender.supportsRemoteDestinations()).isFalse();
+		this.sender.setDestinationPolicy((descriptor) -> true);
+		assertThat(this.sender.supportsRemoteDestinations()).isTrue();
+	}
+
+	@Test
+	void remoteRejectsPublicMailboxWithoutPolicy() {
+		assertThat(this.sender.supports(URI.create("mailto:user@example.org"), UriSource.REMOTE)).isFalse();
+	}
+
+	@Test
+	void remoteUsesConfiguredPolicy() {
+		this.sender.setDestinationPolicy((descriptor) -> descriptor.toAddress() != null
+				&& "a@corp.example".equals(descriptor.toAddress().getAddress()));
 		assertThat(this.sender.supports(URI.create("mailto:a@corp.example"), UriSource.REMOTE)).isTrue();
 		assertThat(this.sender.supports(URI.create("mailto:a@other.example"), UriSource.REMOTE)).isFalse();
 	}

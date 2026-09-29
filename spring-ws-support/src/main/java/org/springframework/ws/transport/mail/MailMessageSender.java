@@ -19,7 +19,6 @@ package org.springframework.ws.transport.mail;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
-import java.util.function.Predicate;
 
 import jakarta.mail.Session;
 import jakarta.mail.URLName;
@@ -70,12 +69,12 @@ import org.springframework.ws.transport.mail.support.MailTransportUtils;
  * Some examples of email URIs are: {@code mailto:john@example.com}<br>
  * {@code mailto:john@example.com@?subject=SOAP%20Test}<br>
  * <p>
- * For {@link UriSource#APPLICATION}, default checks accept any {@code mailto:} URI. For
- * {@link UriSource#REMOTE}, default checks require a well-formed mailbox in the
- * {@link MailDestinationDescriptor} (parsable {@code To}, extractable host, basic
- * header-injection guards); reject {@code localhost} and {@code *.localhost} in the
- * mailbox host segment. Use a {@link WebServiceMessageSender.DestinationPolicy} for
- * domain allowlists, header rules, or other mail-specific validation.
+ * Any {@code mailto:} URI supplied by the application is accepted. A URI supplied by a
+ * {@linkplain UriSource#REMOTE remote} peer, such as a WS-Addressing {@code ReplyTo} or
+ * {@code FaultTo} address, is only accepted when a {@link DestinationPolicy
+ * DestinationPolicy} accepts it; without a policy, every remote destination is rejected.
+ * Use {@link MailDestinationPolicies#allowedRecipients(String...)} to state the mailboxes
+ * that remote destinations may target.
  *
  * @author Arjen Poutsma
  * @author Stephane Nicoll
@@ -216,19 +215,6 @@ public class MailMessageSender extends AbstractWebServiceMessageSender<MailDesti
 	@Override
 	protected MailDestinationDescriptor createDescriptor(URI uri, UriSource uriSource) {
 		return MailDestinationDescriptor.of(uri, uriSource);
-	}
-
-	@Override
-	protected Predicate<MailDestinationDescriptor> defaultChecks(UriSource uriSource) {
-		return (uriSource == UriSource.REMOTE) ? this::remoteDefaultChecks : (details) -> true;
-	}
-
-	protected boolean remoteDefaultChecks(MailDestinationDescriptor details) {
-		if (details.toAddress() == null || details.mailboxHost() == null) {
-			return false;
-		}
-		String host = details.mailboxHost();
-		return !"localhost".equals(host) && !host.endsWith(".localhost");
 	}
 
 }

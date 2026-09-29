@@ -52,6 +52,7 @@ import org.springframework.ws.soap.addressing.version.AddressingVersion;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.transport.WebServiceMessageSender;
+import org.springframework.ws.transport.WebServiceMessageSender.DestinationPolicy;
 import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
@@ -74,7 +75,11 @@ import org.springframework.xml.transform.TransformerObjectSupport;
  * address, these senders will be used to send the message. Each sender's
  * {@link WebServiceMessageSender#supports(java.net.URI, UriSource)} with
  * {@link UriSource#REMOTE} determines whether client-supplied {@code wsa:ReplyTo} /
- * {@code wsa:FaultTo} URIs are accepted for that transport.
+ * {@code wsa:FaultTo} URIs are accepted for that transport. Each
+ * {@link WebServiceMessageSender} <b>must</b> be configured with a
+ * {@link DestinationPolicy DestinationPolicy} that states which destinations that sender
+ * may target. A sender without a policy rejects every such address, which this mapping
+ * refuses at initialization rather than at request time.
  * <p>
  * This mapping (and all subclasses) uses an implicit WS-Addressing
  * {@link EndpointInterceptor}, which is added in every {@link EndpointInvocationChain}
@@ -224,6 +229,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * Sets a single message senders, which is used to send out-of-band reply messages. If
 	 * a request messages defines a non-anonymous reply address, this senders will be used
 	 * to send the message.
+	 * <p>
+	 * The sender must be configured with a {@link DestinationPolicy DestinationPolicy}
+	 * that accepts the reply addresses that this application considers legitimate.
 	 * @param messageSender the message sender
 	 */
 	public final void setMessageSender(WebServiceMessageSender messageSender) {
@@ -235,6 +243,9 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	 * Sets the message senders, which are used to send out-of-band reply messages. If a
 	 * request messages defines a non-anonymous reply address, these senders will be used
 	 * to send the message.
+	 * <p>
+	 * Each sender must be configured with a {@link DestinationPolicy DestinationPolicy}
+	 * that accepts the reply addresses that this application considers legitimate.
 	 * @param messageSenders the message senders
 	 */
 	public final void setMessageSenders(WebServiceMessageSender[] messageSenders) {
@@ -266,6 +277,12 @@ public abstract class AbstractAddressingEndpointMapping extends TransformerObjec
 	public void afterPropertiesSet() throws Exception {
 		if (this.logger.isInfoEnabled()) {
 			this.logger.info("Supporting " + Arrays.asList(this.versions));
+		}
+		for (WebServiceMessageSender messageSender : this.messageSenders) {
+			if (!messageSender.supportsRemoteDestinations()) {
+				throw new IllegalStateException("Message sender [" + messageSender.getClass().getName()
+						+ "] must be configured with a DestinationPolicy.");
+			}
 		}
 		Map<String, SmartEndpointInterceptor> smartInterceptors = BeanFactoryUtils
 			.beansOfTypeIncludingAncestors(getApplicationContext(), SmartEndpointInterceptor.class, true, false);
