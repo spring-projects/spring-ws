@@ -69,6 +69,8 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered 
 
 	private final @Nullable URI faultAction;
 
+	private @Nullable Runnable outOfBandReply;
+
 	AddressingEndpointInterceptor(AddressingVersion version, MessageIdStrategy messageIdStrategy,
 			WebServiceMessageSender[] messageSenders, @Nullable URI replyAction, @Nullable URI faultAction) {
 		Assert.notNull(version, "version must not be null");
@@ -124,17 +126,20 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered 
 		if (handleAnonymousAddress(messageContext, replyEpr)) {
 			return true;
 		}
-		else {
-			sendOutOfBand(messageContext, replyEpr, () -> {
-				if (logger.isWarnEnabled()) {
-					logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
-							+ "Configure WebServiceMessageSenders which support this uri and pass remote destination checks.");
-				}
-				messageContext.clearResponse();
-				this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
-			});
-			return false;
+		WebServiceMessageSender sender = findSupportingSender(replyEpr.getAddress());
+		if (sender != null) {
+			// Send the non-anonymous reply out-of-band over a separate connection, once
+			// the full response interceptor chain has run.
+			this.outOfBandReply = () -> sendOutOfBand(messageContext, replyEpr, sender);
+			return true;
 		}
+		if (logger.isWarnEnabled()) {
+			logger.warn("Could not send out-of-band response to [" + replyEpr.getAddress() + "]. "
+					+ "Configure WebServiceMessageSenders which support this uri and pass remote destination checks.");
+		}
+		messageContext.clearResponse();
+		this.version.addInvalidAddressingHeaderFault((SoapMessage) messageContext.getResponse());
+		return false;
 	}
 
 	@Contract("_, null -> true")
@@ -161,29 +166,34 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered 
 		return false;
 	}
 
-	private void sendOutOfBand(MessageContext messageContext, EndpointReference replyEpr, Runnable actionIfUnsupported)
-			throws IOException {
+	private @Nullable WebServiceMessageSender findSupportingSender(URI address) {
+		for (WebServiceMessageSender messageSender : this.messageSenders) {
+			if (messageSender.supports(address, UriSource.REMOTE)) {
+				return messageSender;
+			}
+		}
+		return null;
+	}
+
+	private void sendOutOfBand(MessageContext messageContext, EndpointReference replyEpr,
+			WebServiceMessageSender messageSender) {
+		if (!messageContext.hasResponse()) {
+			return;
+		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Request [" + messageContext.getRequest() + "] has [" + replyEpr
 					+ "] reply address; sending out-of-band reply [" + messageContext.getResponse() + "]");
 		}
-
-		URI address = replyEpr.getAddress();
-		boolean supported = false;
-		for (WebServiceMessageSender messageSender : this.messageSenders) {
-			if (messageSender.supports(address, UriSource.REMOTE)) {
-				supported = true;
-				try (WebServiceConnection connection = messageSender.createConnection(address)) {
-					connection.send(messageContext.getResponse());
-					break;
-				}
-				finally {
-					messageContext.clearResponse();
-				}
+		try (WebServiceConnection connection = messageSender.createConnection(replyEpr.getAddress())) {
+			connection.send(messageContext.getResponse());
+		}
+		catch (IOException ex) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("Could not send out-of-band reply to [" + replyEpr.getAddress() + "]", ex);
 			}
 		}
-		if (!supported) {
-			actionIfUnsupported.run();
+		finally {
+			messageContext.clearResponse();
 		}
 	}
 
@@ -202,6 +212,10 @@ class AddressingEndpointInterceptor implements SoapEndpointInterceptor, Ordered 
 
 	@Override
 	public void afterCompletion(MessageContext messageContext, Object endpoint, @Nullable Exception ex) {
+		if (this.outOfBandReply != null) {
+			this.outOfBandReply.run();
+			this.outOfBandReply = null;
+		}
 	}
 
 	@Override
