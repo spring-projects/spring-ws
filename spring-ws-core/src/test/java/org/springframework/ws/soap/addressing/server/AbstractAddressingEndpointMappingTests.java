@@ -29,8 +29,11 @@ import org.springframework.ws.server.test.OrderedEndpointInterceptor;
 import org.springframework.ws.server.test.OrderedSmartEndpointInterceptor;
 import org.springframework.ws.soap.addressing.server.test.TestAddressingEndpointMapping;
 import org.springframework.ws.soap.saaj.test.SaajSoapMessages;
+import org.springframework.ws.transport.http.HttpDestinationPolicies;
+import org.springframework.ws.transport.http.HttpUrlConnectionMessageSender;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -41,6 +44,25 @@ import static org.mockito.Mockito.mock;
 class AbstractAddressingEndpointMappingTests {
 
 	private final StaticApplicationContext applicationContext = new StaticApplicationContext();
+
+	@Test
+	void messageSenderWithoutDestinationPolicyIsRejected() {
+		HttpUrlConnectionMessageSender messageSender = new HttpUrlConnectionMessageSender();
+		assertThatIllegalStateException()
+			.isThrownBy(() -> TestAddressingEndpointMapping.create(this.applicationContext,
+					(beanConfiguration) -> beanConfiguration.setMessageSender(messageSender)))
+			.havingRootCause()
+			.withMessageContaining("must be configured with a DestinationPolicy");
+	}
+
+	@Test
+	void messageSenderWithDestinationPolicyIsAccepted() {
+		HttpUrlConnectionMessageSender messageSender = new HttpUrlConnectionMessageSender();
+		messageSender.setDestinationPolicy(HttpDestinationPolicies.allowedHosts("replies.example.org"));
+		AbstractAddressingEndpointMapping mapping = TestAddressingEndpointMapping.create(this.applicationContext,
+				(beanConfiguration) -> beanConfiguration.setMessageSender(messageSender));
+		assertThat(mapping.getMessageSenders()).containsExactly(messageSender);
+	}
 
 	@Test
 	void preInterceptorsAreInvokedAsConfigured() throws Exception {

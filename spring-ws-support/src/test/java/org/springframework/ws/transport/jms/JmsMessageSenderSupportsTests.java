@@ -34,33 +34,32 @@ class JmsMessageSenderSupportsTest {
 	private final JmsMessageSender sender = new JmsMessageSender();
 
 	@Test
-	void remoteRejectsSuspiciousDestinationName() {
-		URI uri = URI.create("jms:ldap://evil/a?replyToName=queue");
-		assertThat(this.sender.supports(uri, UriSource.REMOTE)).isFalse();
+	void rejectsNonJmsScheme() {
+		assertThat(this.sender.supports(URI.create("http://example.org/service"), UriSource.APPLICATION)).isFalse();
 	}
 
 	@Test
-	void remoteRejectsSuspiciousReplyToName() {
-		URI uri = URI.create("jms:RequestQueue?replyToName=ldap://evil/a");
-		assertThat(this.sender.supports(uri, UriSource.REMOTE)).isFalse();
+	void applicationAllowsAnyJmsUri() {
+		assertThat(this.sender.supports(URI.create("jms:RequestQueue"), UriSource.APPLICATION)).isTrue();
+		assertThat(this.sender.supports(URI.create("jms:ldap://evil/a"), UriSource.APPLICATION)).isTrue();
 	}
 
 	@Test
-	void remoteAllowsPlainDestination() {
+	void supportsRemoteDestinationsReflectsWhetherAPolicyIsConfigured() {
+		assertThat(this.sender.supportsRemoteDestinations()).isFalse();
+		this.sender.setDestinationPolicy((descriptor) -> true);
+		assertThat(this.sender.supportsRemoteDestinations()).isTrue();
+	}
+
+	@Test
+	void remoteRejectsPlainDestinationWithoutPolicy() {
 		URI uri = URI.create("jms:RequestQueue?replyToName=ResponseQueueName");
-		assertThat(this.sender.supports(uri, UriSource.REMOTE)).isTrue();
+		assertThat(this.sender.supports(uri, UriSource.REMOTE)).isFalse();
 	}
 
 	@Test
-	void applicationDoesNotApplySuspiciousHeuristic() {
-		URI uri = URI.create("jms:ldap://evil/a");
-		assertThat(this.sender.supports(uri, UriSource.APPLICATION)).isTrue();
-	}
-
-	@Test
-	void destinationPolicyUsesDescriptor() {
-		this.sender.setDestinationPolicy((descriptor,
-				defaultChecks) -> defaultChecks.and(d -> "RequestQueue".equals(d.destinationName())).test(descriptor));
+	void remoteUsesConfiguredPolicy() {
+		this.sender.setDestinationPolicy((descriptor) -> "RequestQueue".equals(descriptor.destinationName()));
 		assertThat(this.sender.supports(URI.create("jms:RequestQueue"), UriSource.REMOTE)).isTrue();
 		assertThat(this.sender.supports(URI.create("jms:OtherQueue"), UriSource.REMOTE)).isFalse();
 	}

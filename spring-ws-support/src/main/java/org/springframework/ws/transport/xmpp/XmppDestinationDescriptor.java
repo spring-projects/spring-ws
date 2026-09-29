@@ -17,17 +17,17 @@
 package org.springframework.ws.transport.xmpp;
 
 import java.net.URI;
-import java.util.Locale;
 
-import org.jspecify.annotations.Nullable;
-
-import org.springframework.util.StringUtils;
 import org.springframework.ws.transport.WebServiceMessageSender.DestinationDescriptor;
 import org.springframework.ws.transport.WebServiceMessageSender.UriSource;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 
 /**
  * {@link DestinationDescriptor} implementation for XMPP destinations.
+ * <p>
+ * The {@linkplain #jabberId() Jabber ID} is the exact string that the sender hands to the
+ * XMPP connection as the recipient of the message, so a policy comparing it decides on
+ * the JID that will actually be used.
  *
  * @author Stephane Nicoll
  * @since 3.1.9
@@ -40,13 +40,10 @@ public final class XmppDestinationDescriptor implements DestinationDescriptor {
 
 	private final String jabberId;
 
-	private final @Nullable String domain;
-
-	private XmppDestinationDescriptor(URI uri, UriSource uriSource, String jabberId, @Nullable String domain) {
+	private XmppDestinationDescriptor(URI uri, UriSource uriSource, String jabberId) {
 		this.uri = uri;
 		this.uriSource = uriSource;
 		this.jabberId = jabberId;
-		this.domain = domain;
 	}
 
 	/**
@@ -56,24 +53,7 @@ public final class XmppDestinationDescriptor implements DestinationDescriptor {
 	 * @return a descriptor
 	 */
 	public static XmppDestinationDescriptor of(URI uri, UriSource uriSource) {
-		String to = XmppTransportUtils.getTo(uri);
-		return new XmppDestinationDescriptor(uri, uriSource, to, extractDomainFromJid(to));
-	}
-
-	private static @Nullable String extractDomainFromJid(String jid) {
-		if (!StringUtils.hasLength(jid)) {
-			return null;
-		}
-		int at = jid.indexOf('@');
-		if (at < 0 || at == jid.length() - 1) {
-			return null;
-		}
-		String rest = jid.substring(at + 1);
-		int slash = rest.indexOf('/');
-		if (slash >= 0) {
-			rest = rest.substring(0, slash);
-		}
-		return rest.toLowerCase(Locale.ROOT);
+		return new XmppDestinationDescriptor(uri, uriSource, XmppTransportUtils.getTo(uri));
 	}
 
 	@Override
@@ -92,15 +72,6 @@ public final class XmppDestinationDescriptor implements DestinationDescriptor {
 	 */
 	public String jabberId() {
 		return this.jabberId;
-	}
-
-	/**
-	 * Return the domain part of the JabberID (after {@code @}), lower-cased, or
-	 * {@code null}.
-	 * @return the domain, or {@code null}
-	 */
-	public @Nullable String domain() {
-		return this.domain;
 	}
 
 }
