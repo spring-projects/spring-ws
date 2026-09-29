@@ -29,9 +29,11 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
+import jakarta.mail.Address;
 import jakarta.mail.Flags;
 import jakarta.mail.Folder;
 import jakarta.mail.Header;
@@ -91,6 +93,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 
 	private @Nullable String subject;
 
+	private boolean verifyResponseSender = false;
+
 	private final long receiveTimeout;
 
 	private @Nullable Store store;
@@ -131,6 +135,17 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		this.from = from;
 	}
 
+	/**
+	 * Sets whether a received response must originate from the address the request was
+	 * sent to before it is accepted as the reply. Defaults to {@code false}.
+	 * @param verifyResponseSender whether to validate the response originates from the
+	 * address of the request
+	 * @since 3.1.10
+	 */
+	void setVerifyResponseSender(boolean verifyResponseSender) {
+		this.verifyResponseSender = verifyResponseSender;
+	}
+
 	void setSubject(String subject) {
 		this.subject = subject;
 	}
@@ -149,7 +164,8 @@ public class MailSenderConnection extends AbstractSenderConnection {
 	@Override
 	protected void onSendBeforeWrite(WebServiceMessage message) throws IOException {
 		try {
-			this.requestMessage = new MimeMessage(this.session);
+			this.requestMessage = new UniqueMessageIdMimeMessage(this.session,
+					(this.from != null) ? this.from : this.to);
 			this.requestMessage.setRecipient(Message.RecipientType.TO, this.to);
 			this.requestMessage.setSentDate(new Date());
 			if (this.from != null) {
@@ -231,15 +247,37 @@ public class MailSenderConnection extends AbstractSenderConnection {
 				if (responses.length > 1) {
 					logger.warn("Received more than one response for request with ID [" + requestMessageId + "]");
 				}
-				this.responseMessage = responses[0];
-			}
-			if (this.deleteAfterReceive && this.responseMessage != null) {
-				this.responseMessage.setFlag(Flags.Flag.DELETED, true);
+				Message response = responses[0];
+				if (!this.verifyResponseSender || isFromExpectedSender(response)) {
+					this.responseMessage = response;
+					if (this.deleteAfterReceive) {
+						this.responseMessage.setFlag(Flags.Flag.DELETED, true);
+					}
+				}
+				else if (logger.isWarnEnabled()) {
+					logger.warn("Ignoring response for request with ID [" + requestMessageId
+							+ "] as it did not originate from the expected sender [" + this.to + "]");
+				}
 			}
 		}
 		catch (MessagingException ex) {
 			throw new MailTransportException(ex);
 		}
+	}
+
+	/**
+	 * Whether the given message originates from the address the request was sent to.
+	 */
+	private boolean isFromExpectedSender(Message message) throws MessagingException {
+		Address[] from = message.getFrom();
+		if (from != null) {
+			for (Address address : from) {
+				if (this.to.equals(address)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private Folder openFolder() throws MessagingException {
@@ -319,6 +357,37 @@ public class MailSenderConnection extends AbstractSenderConnection {
 		if (this.store != null) {
 			MailTransportUtils.closeService(this.store);
 		}
+	}
+
+	/**
+	 * {@link MimeMessage} that uses an unguessable, random {@code Message-ID} rather than
+	 * JavaMail's predictable default. The response is correlated to the request by
+	 * echoing this value in the {@code In-Reply-To} header, so a predictable identifier
+	 * would let an attacker forge a response that the client accepts as the legitimate
+	 * reply.
+	 */
+	private static final class UniqueMessageIdMimeMessage extends MimeMessage {
+
+		private final InternetAddress address;
+
+		UniqueMessageIdMimeMessage(Session session, InternetAddress address) {
+			super(session);
+			this.address = address;
+		}
+
+		@Override
+		protected void updateMessageID() throws MessagingException {
+			String id = UUID.randomUUID().toString();
+			String host = resolveMessageIdHost();
+			setHeader("Message-ID", (host != null) ? "<" + id + "@" + host + ">" : "<" + id + ">");
+		}
+
+		private @Nullable String resolveMessageIdHost() {
+			String value = this.address.getAddress();
+			int index = (value != null) ? value.indexOf('@') : -1;
+			return (index != -1 && index < value.length() - 1) ? value.substring(index + 1) : null;
+		}
+
 	}
 
 	private static final class ByteArrayDataSource implements DataSource {
