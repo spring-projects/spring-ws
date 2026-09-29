@@ -159,6 +159,26 @@ The following example shows how to use the email transport:
 ----
 ====
 
+The email transport correlates a response to its request by matching the request's `Message-ID` against the `In-Reply-To` header of messages in the store mailbox.
+Email itself provides no authentication of the sender unless the receiving mailbox enforces it (for example, through SPF, DKIM, or DMARC).
+Spring Web Services uses an unguessable, random `Message-ID` for each request so that a response cannot be forged by a party that has not observed the request.
+
+For defense in depth, you can set `verifyResponseSender` to `true` to additionally require that a response originates from the address the request was sent to:
+
+[source,xml]
+----
+<bean class="org.springframework.ws.transport.mail.MailMessageSender">
+    <property name="from" value="Spring-WS SOAP Client &lt;client@example.com&gt;"/>
+    <property name="transportUri" value="smtp://client:s04p@smtp.example.com"/>
+    <property name="storeUri" value="imap://client:s04p@imap.example.com/INBOX"/>
+    <property name="verifyResponseSender" value="true"/>
+</bean>
+----
+
+This option is disabled by default.
+Do not enable it if legitimate replies may arrive from a different address than the request destination (for example, when a relay or role address answers on behalf of the service).
+Because sender addresses can be spoofed, treat this as a hardening measure rather than a substitute for mailbox-level sender authentication.
+
 ===== XMPP Transport
 
 Spring-WS also provides a XMPP (Jabber) transport, which you can use to send and receive web service messages over XMPP.
