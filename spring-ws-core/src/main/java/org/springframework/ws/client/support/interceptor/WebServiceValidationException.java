@@ -25,6 +25,7 @@ import org.springframework.ws.client.WebServiceClientException;
  *
  * @author Stefan Schmidt
  * @author Arjen Poutsma
+ * @author Stephane Nicoll
  * @since 1.5.4
  */
 @SuppressWarnings("serial")
@@ -34,14 +35,29 @@ public class WebServiceValidationException extends WebServiceClientException {
 
 	/**
 	 * Create a new instance of the {@code WebServiceValidationException} class.
+	 * @deprecated as of 3.1.10 in favor of
+	 * {@link WebServiceValidationException#WebServiceValidationException(ValidatedMessage, SAXParseException[])}
 	 */
+	@Deprecated
 	public WebServiceValidationException(SAXParseException[] validationErrors) {
-		super(createMessage(validationErrors));
+		this(ValidatedMessage.REQUEST, validationErrors);
+	}
+
+	/**
+	 * Create a new instance of the {@code WebServiceValidationException} class for
+	 * validation errors found in the given message.
+	 * @param validatedMessage the message that failed validation
+	 * @param validationErrors the validation errors
+	 * @since 3.1.10
+	 */
+	public WebServiceValidationException(ValidatedMessage validatedMessage, SAXParseException[] validationErrors) {
+		super(createMessage(validatedMessage, validationErrors));
 		this.validationErrors = validationErrors;
 	}
 
-	private static String createMessage(SAXParseException[] validationErrors) {
-		StringBuilder builder = new StringBuilder("XML validation error on request: ");
+	private static String createMessage(ValidatedMessage validatedMessage, SAXParseException[] validationErrors) {
+		StringBuilder builder = new StringBuilder("XML validation error on ");
+		builder.append(validatedMessage.description).append(": ");
 
 		for (SAXParseException validationError : validationErrors) {
 			builder.append(validationError.getMessage());
@@ -54,6 +70,31 @@ public class WebServiceValidationException extends WebServiceClientException {
 	 */
 	public SAXParseException[] getValidationErrors() {
 		return this.validationErrors;
+	}
+
+	/**
+	 * The message of an exchange that failed validation.
+	 *
+	 * @since 3.1.10
+	 */
+	public enum ValidatedMessage {
+
+		/**
+		 * The request that was about to be sent.
+		 */
+		REQUEST("request"),
+
+		/**
+		 * The response that was received.
+		 */
+		RESPONSE("response");
+
+		private final String description;
+
+		ValidatedMessage(String description) {
+			this.description = description;
+		}
+
 	}
 
 }
