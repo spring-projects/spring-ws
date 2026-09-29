@@ -39,11 +39,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.util.unit.DataSize;
 import org.springframework.ws.InvalidXmlException;
 import org.springframework.ws.soap.SoapMessageCreationException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.support.SaajUtils;
+import org.springframework.ws.support.BoundedInputStream;
 import org.springframework.ws.transport.TransportConstants;
 import org.springframework.ws.transport.TransportInputStream;
 
@@ -78,6 +80,8 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 
 	private @Nullable Map<String, ?> messageProperties;
 
+	private DataSize maxMessageSize = DEFAULT_MAX_MESSAGE_SIZE;
+
 	/** Default, empty constructor. */
 	public SaajSoapMessageFactory() {
 	}
@@ -104,6 +108,16 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	 */
 	public void setMessageProperties(Map<String, ?> messageProperties) {
 		this.messageProperties = messageProperties;
+	}
+
+	/**
+	 * Set the maximum message size allowed for incoming message. Defaults to
+	 * {@link #DEFAULT_MAX_MESSAGE_SIZE}. Set to {@code -1} for unlimited message size.
+	 * @since 3.1.10
+	 * @see #createWebServiceMessage(InputStream)
+	 */
+	public void setMaxMessageSize(DataSize maxMessageSize) {
+		this.maxMessageSize = maxMessageSize;
 	}
 
 	/**
@@ -202,6 +216,9 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 		MimeHeaders mimeHeaders = parseMimeHeaders(inputStream);
 		try {
 			inputStream = checkForUtf8ByteOrderMark(inputStream);
+			if (!this.maxMessageSize.isNegative()) {
+				inputStream = new BoundedInputStream(inputStream, this.maxMessageSize);
+			}
 			SOAPMessage saajMessage = getMessageFactory().createMessage(mimeHeaders, inputStream);
 			saajMessage.getSOAPPart().getEnvelope();
 			postProcess(saajMessage);
