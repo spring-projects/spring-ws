@@ -864,6 +864,8 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 
 		requestData.setSigVerCrypto(this.validationSignatureCrypto);
 
+		requestData.setEnableRevocation(this.enableRevocation);
+
 		requestData.setCallbackHandler(this.validationCallbackHandler);
 
 		messageContext.setProperty(WSHandlerConstants.TIMESTAMP_STRICT, this.timestampStrict);
@@ -1013,11 +1015,15 @@ public class Wss4jSecurityInterceptor extends AbstractWsSecurityInterceptor impl
 	protected void verifyCertificateTrust(WSHandlerResult result) throws WSSecurityException {
 
 		List<WSSecurityEngineResult> results = result.getActionResults().get(WSConstants.SIGN);
-
-		if (!CollectionUtils.isEmpty(results)) {
-			WSSecurityEngineResult actionResult = results.get(0);
+		if (CollectionUtils.isEmpty(results)) {
+			return;
+		}
+		for (WSSecurityEngineResult actionResult : results) {
 			X509Certificate returnCert = (X509Certificate) actionResult
 				.get(WSSecurityEngineResult.TAG_X509_CERTIFICATE);
+			if (returnCert == null) {
+				continue;
+			}
 			Credential credential = new Credential();
 			credential.setCertificates(new X509Certificate[] { returnCert });
 
