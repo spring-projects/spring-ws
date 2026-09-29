@@ -26,8 +26,8 @@ import org.springframework.ws.WebServiceMessage;
  * Client-side interceptor that validates the contents of {@code WebServiceMessage}s using
  * a schema. Allows for both W3C XML and RELAX NG schemas.
  * <p>
- * When the payload is invalid, this interceptor stops processing of the interceptor
- * chain.
+ * When the payload is invalid, this interceptor throws a
+ * {@link WebServiceValidationException}.
  * <p>
  * The schema to validate against is set with the {@code schema} property or
  * {@code schemas} property. By default, only the request message is validated, but this
