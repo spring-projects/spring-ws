@@ -24,9 +24,19 @@ import org.gradle.api.plugins.JavaPlatformPlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaTestFixturesPlugin;
 import org.gradle.api.publish.PublishingExtension;
+import org.gradle.api.publish.maven.MavenPomDeveloperSpec;
+import org.gradle.api.publish.maven.MavenPomIssueManagement;
+import org.gradle.api.publish.maven.MavenPomLicenseSpec;
+import org.gradle.api.publish.maven.MavenPomOrganization;
+import org.gradle.api.publish.maven.MavenPomScm;
 import org.gradle.api.publish.maven.MavenPublication;
 import org.gradle.api.publish.maven.plugins.MavenPublishPlugin;
 import org.gradle.api.publish.tasks.GenerateModuleMetadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.ws.gradle.conventions.build.BuildSettings;
+import org.springframework.ws.gradle.conventions.build.BuildType;
 
 /**
  * Conventions for the {@link MavenPublishPlugin}.
@@ -34,6 +44,8 @@ import org.gradle.api.publish.tasks.GenerateModuleMetadata;
  * @author Andy Wilkinson
  */
 class MavenPublishPluginConventions {
+
+	private static final Logger logger = LoggerFactory.getLogger(MavenPublishPluginConventions.class);
 
 	void apply(Project project) {
 		PublishingExtension publishing = project.getExtensions().getByType(PublishingExtension.class);
@@ -85,32 +97,62 @@ class MavenPublishPluginConventions {
 	}
 
 	void configurePom(Project project, MavenPublication mavenPublication) {
-		String organizationName = "Broadcom Inc.";
-		String organizationUrl = "https://www.spring.io";
+		BuildType buildType = BuildSettings.get(project).buildType();
 		mavenPublication.pom((pom) -> {
 			pom.getUrl().set("https://spring.io/projects/spring-ws");
 			pom.getName().set(project.provider(project::getName));
 			pom.getDescription().set(project.provider(project::getDescription));
-			pom.developers((developers) -> developers.developer((developer) -> {
-				developer.getName().set("Spring");
-				developer.getEmail().set("ask@spring.io");
-				developer.getOrganization().set(organizationName);
-				developer.getOrganizationUrl().set(organizationUrl);
-			}));
-			pom.licenses((licenses) -> licenses.license((license) -> {
-				license.getName().set("The Apache License, Version 2.0");
-				license.getUrl().set("http://www.apache.org/licenses/LICENSE-2.0.txt");
-			}));
-			pom.organization((organization) -> {
-				organization.getName().set(organizationName);
-				organization.getUrl().set(organizationUrl);
-			});
-			pom.scm((scm) -> {
-				scm.getConnection().set("scm:git:git://github.com/spring-projects/spring-ws.git");
-				scm.getDeveloperConnection().set("scm:git:ssh://git@github.com:spring-projects/spring-ws.git");
-				scm.getUrl().set("https://github.com/spring-projects/spring-ws");
-			});
+			pom.licenses((licenses) -> customizeLicences(licenses, buildType));
+			pom.organization(this::customizeOrganization);
+			pom.developers(this::customizeDevelopers);
+			pom.issueManagement((issueManagement) -> customizeIssueManagement(issueManagement, buildType));
+			pom.scm((scm) -> customizeScm(scm, buildType));
 		});
+	}
+
+	private void customizeLicences(MavenPomLicenseSpec licences, BuildType buildType) {
+		licences.license((licence) -> {
+			if (buildType == BuildType.OPEN_SOURCE) {
+				licence.getName().set("Apache License, Version 2.0");
+				licence.getUrl().set("https://www.apache.org/licenses/LICENSE-2.0");
+			}
+			else {
+				licence.getName().set("Broadcom Foundation License");
+			}
+		});
+	}
+
+	private void customizeOrganization(MavenPomOrganization organization) {
+		organization.getName().set("Broadcom Inc.");
+		organization.getUrl().set("https://www.spring.io");
+	}
+
+	private void customizeDevelopers(MavenPomDeveloperSpec developers) {
+		developers.developer((developer) -> {
+			developer.getName().set("Spring");
+			developer.getEmail().set("ask@spring.io");
+			developer.getOrganization().set("Broadcom Inc.");
+			developer.getOrganizationUrl().set("https://www.spring.io");
+		});
+	}
+
+	private void customizeIssueManagement(MavenPomIssueManagement issueManagement, BuildType buildType) {
+		if (buildType != BuildType.OPEN_SOURCE) {
+			logger.debug("Skipping Maven POM SCM for non open source build type");
+			return;
+		}
+		issueManagement.getSystem().set("GitHub");
+		issueManagement.getUrl().set("https://github.com/spring-projects/spring-ws/issues");
+	}
+
+	private void customizeScm(MavenPomScm scm, BuildType buildType) {
+		if (buildType != BuildType.OPEN_SOURCE) {
+			logger.debug("Skipping Maven POM SCM for non open source build type");
+			return;
+		}
+		scm.getConnection().set("scm:git:git://github.com/spring-projects/spring-ws.git");
+		scm.getDeveloperConnection().set("scm:git:ssh://git@github.com:spring-projects/spring-ws.git");
+		scm.getUrl().set("https://github.com/spring-projects/spring-ws");
 	}
 
 }

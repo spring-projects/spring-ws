@@ -1,5 +1,4 @@
 changelog:
-  repository: spring-projects/spring-ws
   sections:
     - title: ":warning: Noteworthy Changes"
       labels:
@@ -27,3 +26,5 @@ changelog:
       names:
         - "snicoll"
         - "wilkinsona"
+  issues:
+    generate_links: true
