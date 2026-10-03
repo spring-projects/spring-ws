@@ -92,7 +92,6 @@ class JavaPluginConventions {
 		Configuration dependencyManagement = configurations.create("dependencyManagement", (configuration) -> {
 			configuration.setCanBeConsumed(false);
 			configuration.setCanBeResolved(false);
-			configuration.setVisible(false);
 		});
 		configurations.matching((candidate) -> candidate.getName().endsWith("Classpath"))
 			.all((classpath) -> classpath.extendsFrom(dependencyManagement));
@@ -133,7 +132,7 @@ class JavaPluginConventions {
 	}
 
 	private void configureJUnitPlatform(Project project) {
-		project.getTasks().withType(Test.class).configureEach((task) -> task.useJUnitPlatform());
+		project.getTasks().withType(Test.class).configureEach(Test::useJUnitPlatform);
 		project.getDependencies().add("testImplementation", "org.apiguardian:apiguardian-api");
 		project.getDependencies().add("testRuntimeOnly", "org.junit.platform:junit-platform-launcher");
 	}
