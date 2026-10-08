@@ -33,7 +33,7 @@ dependencies {
 	api(platform("org.springframework:spring-framework-bom:${springFrameworkVersion}"))
 	api(platform("org.springframework.security:spring-security-bom:7.1.0-M2"))
 	constraints {
-		api("com.fasterxml.woodstox:woodstox-core:7.2.2")
+		api("com.fasterxml.woodstox:woodstox-core:7.3.0")
 		api("com.google.code.findbugs:jsr305:3.0.2")
 		api("com.icegreen:greenmail:2.1.13")
 		api("com.icegreen:greenmail-junit5:2.1.13")
