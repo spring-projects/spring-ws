@@ -22,6 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.aot.hint.annotation.Reflective;
+
 /**
  * Marks an endpoint method as the handler for an incoming request. The annotation value
  * signifies the value for the request WS-Addressing {@code Action} header that is handled
@@ -33,6 +35,7 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Reflective
 public @interface Action {
 
 	/**

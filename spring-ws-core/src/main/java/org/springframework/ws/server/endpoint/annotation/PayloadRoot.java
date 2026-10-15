@@ -23,6 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.aot.hint.annotation.Reflective;
+
 /**
  * Marks an endpoint method as the handler for an incoming request. The annotation values
  * signify the request payload root element that is handled by the method.
@@ -35,6 +37,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(PayloadRoots.class)
+@Reflective
 public @interface PayloadRoot {
 
 	/**

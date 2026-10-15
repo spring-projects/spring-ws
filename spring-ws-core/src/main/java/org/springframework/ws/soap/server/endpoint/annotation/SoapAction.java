@@ -23,6 +23,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.aot.hint.annotation.Reflective;
+
 /**
  * Marks an endpoint method as the handler for an incoming request. The annotation value
  * signifies the value for the request {@code SOAPAction} header that is handled by the
@@ -36,6 +38,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(SoapActions.class)
+@Reflective
 public @interface SoapAction {
 
 	/**
