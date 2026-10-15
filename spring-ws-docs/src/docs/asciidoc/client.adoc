@@ -561,6 +561,31 @@ mockServer.expect(connectionTo("http://example.com")).
 
 For more information on the request matchers provided by `RequestMatchers`, see the {spring-ws-api}/test/client/RequestMatchers.html[Javadoc].
 
+[[client-test-expected-count]]
+=== Expecting a Request More Than Once
+
+An expectation set up with `expect(RequestMatcher)` is expected to be met exactly once.
+To expect a matching request a different number of times, pass an `ExpectedCount` as the first argument of `expect()`:
+
+====
+[source,java]
+----
+import static org.springframework.ws.test.client.ExpectedCount.*;
+
+mockServer.expect(times(3), payload(expectedRequestPayload)).
+ andRespond(withPayload(responsePayload));
+----
+====
+
+The `ExpectedCount` class provides the following counts: `once()`, `twice()`, `times(int)`, `min(int)`, `max(int)`, `between(int, int)`, `manyTimes()`, and `never()`.
+
+The expectations are still met in the order in which they are set up: a request is first matched against the expectations that already matched a request and can match more of them, and then against the next expectation.
+`verify()` fails if an expectation was met fewer times than its minimum count.
+
+NOTE: The response of an expectation is created for every request that meets it, and the request matchers of an expectation that can be met more than once are also called with requests that another expectation meets.
+The standard `RequestMatchers` and `ResponseCreators`, including those that take a `Resource`, can be used for any number of requests.
+A custom `RequestMatcher` or `ResponseCreator` must support being called more than once, and a custom `RequestMatcher` must not have side effects.
+
 [[client-test-response-creator]]
 === Using `ResponseCreator` and `ResponseCreators`
 
