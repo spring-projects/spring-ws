@@ -85,8 +85,9 @@ class WebServicesRuntimeHintsTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "org.dom4j.Element", "jakarta.xml.bind.Binder", "org.jdom2.Element",
 			"javax.xml.stream.XMLInputFactory", "nu.xom.Element" })
-	void optionalXmlLibrariesCanBeDetected(String className) {
-		assertThat(RuntimeHintsPredicates.reflection().onType(TypeReference.of(className))).accepts(this.hints);
+	void optionalXmlLibrariesCanBeDetectedWhenPresent(String className) {
+		assertThat(RuntimeHintsPredicates.reflection().onType(TypeReference.of(className)).test(this.hints))
+			.isEqualTo(ClassUtils.isPresent(className, ClassUtils.getDefaultClassLoader()));
 	}
 
 	@Test

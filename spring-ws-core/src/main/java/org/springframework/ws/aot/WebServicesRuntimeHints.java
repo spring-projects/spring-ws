@@ -29,22 +29,18 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.ws.client.core.WebServiceTemplate;
-import org.springframework.ws.server.MessageDispatcher;
-import org.springframework.ws.soap.server.SoapMessageDispatcher;
-import org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver;
-import org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver;
 import org.springframework.ws.support.DefaultStrategiesHelper;
-import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
 /**
  * {@link RuntimeHintsRegistrar} for the reflection that Spring Web Services performs
  * itself.
  * <ul>
- * <li>The default strategies of the {@link WebServiceTemplate}, the
- * {@link MessageDispatcher}, the {@link SoapMessageDispatcher} and the
- * {@link MessageDispatcherServlet} are listed in properties files, and instantiated by
- * the {@link DefaultStrategiesHelper}.</li>
+ * <li>The default strategies of the
+ * {@link org.springframework.ws.client.core.WebServiceTemplate WebServiceTemplate}, the
+ * {@link org.springframework.ws.server.MessageDispatcher MessageDispatcher}, the
+ * {@link org.springframework.ws.soap.server.SoapMessageDispatcher SoapMessageDispatcher}
+ * and the {@code MessageDispatcherServlet} are listed in properties files, and
+ * instantiated by the {@link DefaultStrategiesHelper}.</li>
  * <li>The SOAP-specific method argument resolvers are instantiated by class name by the
  * {@link org.springframework.ws.server.endpoint.adapter.DefaultMethodEndpointAdapter
  * DefaultMethodEndpointAdapter}, which also detects the optional XML libraries by class
@@ -59,11 +55,17 @@ import org.springframework.ws.transport.http.MessageDispatcherServlet;
  */
 class WebServicesRuntimeHints implements RuntimeHintsRegistrar {
 
-	private static final Class<?>[] TYPES_WITH_DEFAULT_STRATEGIES = { WebServiceTemplate.class, MessageDispatcher.class,
-			SoapMessageDispatcher.class, MessageDispatcherServlet.class };
+	// The types are referenced by name, as loading some of them requires optional
+	// dependencies: the MessageDispatcherServlet requires the Servlet API, for instance
 
-	private static final Class<?>[] SOAP_METHOD_ARGUMENT_RESOLVERS = { SoapMethodArgumentResolver.class,
-			SoapHeaderElementMethodArgumentResolver.class };
+	private static final String[] TYPES_WITH_DEFAULT_STRATEGIES = {
+			"org.springframework.ws.client.core.WebServiceTemplate", "org.springframework.ws.server.MessageDispatcher",
+			"org.springframework.ws.soap.server.SoapMessageDispatcher",
+			"org.springframework.ws.transport.http.MessageDispatcherServlet" };
+
+	private static final String[] SOAP_METHOD_ARGUMENT_RESOLVERS = {
+			"org.springframework.ws.soap.server.endpoint.adapter.method.SoapMethodArgumentResolver",
+			"org.springframework.ws.soap.server.endpoint.adapter.method.SoapHeaderElementMethodArgumentResolver" };
 
 	private static final String[] OPTIONAL_XML_LIBRARY_TYPES = { "org.dom4j.Element", "jakarta.xml.bind.Binder",
 			"org.jdom2.Element", "javax.xml.stream.XMLInputFactory", "nu.xom.Element" };
@@ -72,14 +74,16 @@ class WebServicesRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
-		for (Class<?> type : TYPES_WITH_DEFAULT_STRATEGIES) {
-			registerDefaultStrategies(hints, type);
+		for (String type : TYPES_WITH_DEFAULT_STRATEGIES) {
+			registerDefaultStrategies(hints, type, classLoader);
 		}
-		for (Class<?> resolver : SOAP_METHOD_ARGUMENT_RESOLVERS) {
-			hints.reflection().registerType(resolver, MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
+		for (String resolver : SOAP_METHOD_ARGUMENT_RESOLVERS) {
+			hints.reflection().registerType(TypeReference.of(resolver), MemberCategory.INVOKE_DECLARED_CONSTRUCTORS);
 		}
 		for (String type : OPTIONAL_XML_LIBRARY_TYPES) {
-			hints.reflection().registerType(TypeReference.of(type));
+			if (ClassUtils.isPresent(type, classLoader)) {
+				hints.reflection().registerType(TypeReference.of(type));
+			}
 		}
 		hints.reflection()
 			.registerType(TypeReference.of(NORMALIZE_SPACE_XPATH_FUNCTION),
@@ -88,11 +92,13 @@ class WebServicesRuntimeHints implements RuntimeHintsRegistrar {
 
 	/**
 	 * Register the properties file of the default strategies of the given type, which is
-	 * located like {@link DefaultStrategiesHelper#DefaultStrategiesHelper(Class)} does,
-	 * and the constructors of the strategies that it lists.
+	 * located next to the type, like
+	 * {@link DefaultStrategiesHelper#DefaultStrategiesHelper(Class)} does, and the
+	 * constructors of the strategies that it lists.
 	 */
-	private static void registerDefaultStrategies(RuntimeHints hints, Class<?> type) {
-		ClassPathResource resource = new ClassPathResource(ClassUtils.getShortName(type) + ".properties", type);
+	private static void registerDefaultStrategies(RuntimeHints hints, String type, @Nullable ClassLoader classLoader) {
+		ClassPathResource resource = new ClassPathResource(
+				ClassUtils.convertClassNameToResourcePath(type) + ".properties", classLoader);
 		hints.resources().registerResource(resource);
 		Properties defaultStrategies = loadDefaultStrategies(resource);
 		for (String strategyInterface : defaultStrategies.stringPropertyNames()) {
