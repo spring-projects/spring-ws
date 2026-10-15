@@ -62,6 +62,7 @@ repositories {
 }
 ----
 
+[[security.wss4j.interceptor]]
 == Configuring `Wss4jSecurityInterceptor`
 
 WSS4J uses no external configuration file.
@@ -101,6 +102,12 @@ The following table shows the available validation actions:
 | `Signature`
 | Validates the signature
 
+| `SAMLTokenSigned`
+| Validates a signed SAML assertion
+
+| `SAMLTokenUnsigned`
+| Validates an unsigned SAML assertion
+
 | `NoSecurity`
 | No action performed
 |===
@@ -126,6 +133,12 @@ The following table shows the available securement actions:
 
 | `Signature`
 | Signs the response
+
+| `SAMLTokenSigned`
+| Adds a signed SAML assertion
+
+| `SAMLTokenUnsigned`
+| Adds an unsigned SAML assertion
 
 | `NoSecurity`
 | No action performed
@@ -173,6 +186,7 @@ The default is `false`, in line with WSS4J.
 Set it to `true` only when a partner cannot use RSA-OAEP.
 For **outbound** encryption, prefer `setSecurementEncryptionKeyTransportAlgorithm` with `http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p` (or the constant exposed by WSS4J) when the recipient supports it.
 
+[[security.wss4j.interceptor.replay]]
 ==== Replay detection during validation
 
 When you validate `UsernameToken` elements that include `Nonce` and `Created`, validate `Timestamp` tokens, or validate SAML assertions with one-time-use semantics, configure `setValidationReplayCache` with an Apache WSS4J `org.apache.wss4j.common.cache.ReplayCache` implementation.
@@ -342,6 +356,40 @@ At the end of the validation, the interceptor automatically verifies the validit
 If needed, you can change this behavior by redefining the `verifyCertificateTrust` method.
 
 For more detail, see <<security-wss4j-digital-signatures>>.
+
+=== SAML Tokens
+
+To add a SAML assertion to an outgoing message, add `SAMLTokenSigned` or `SAMLTokenUnsigned` to the `securementActions` property.
+The content of the assertion (version, issuer, subject, subject confirmation method, attributes, and so on) is provided by a `CallbackHandler` that you register with the `securementSamlCallbackHandler` property.
+For each request, WSS4J passes the handler a `SAMLCallback` that the handler populates.
+
+The following example adds a signed SAML 2.0 assertion with a bearer subject confirmation:
+
+====
+[source,xml]
+----
+<bean class="org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor">
+    <property name="securementActions" value="SAMLTokenSigned"/>
+    <property name="securementSamlCallbackHandler">
+      <bean class="com.example.MySamlCallbackHandler">
+        <constructor-arg ref="crypto"/>
+      </bean>
+    </property>
+    <property name="securementSignatureCrypto" ref="crypto"/>
+</bean>
+
+<bean id="crypto" class="org.springframework.ws.soap.security.wss4j2.support.CryptoFactoryBean">
+    <property name="keyStorePassword" value="123456"/>
+    <property name="keyStoreLocation" value="classpath:/keystore.jks"/>
+</bean>
+----
+====
+
+To validate incoming SAML assertions, add `SAMLTokenSigned` or `SAMLTokenUnsigned` to the `validationActions` property.
+A signed assertion is verified against the certificates in the keystore referenced by the `validationSignatureCrypto` property.
+When the signature is over the message itself (for instance, with a sender-vouches subject confirmation), add `Signature` as well.
+
+SAML assertions that carry a `OneTimeUse` condition are protected against replay as described in <<security.wss4j.interceptor.replay>>.
 
 == Security Timestamps
 
