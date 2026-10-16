@@ -573,7 +573,72 @@ When an XMPP message sender is used for <<server-endpoint-out-of-band-replies,ou
 === MTOM
 
 https://en.wikipedia.org/wiki/Message_Transmission_Optimization_Mechanism[MTOM] is the mechanism for sending binary data to and from Web Services.
-You can look at how to implement this with Spring WS through the https://github.com/spring-projects/spring-ws-samples/tree/main/mtom[MTOM sample].
+
+The JAXB support that `@EnableWs` registers by default does not handle MTOM.
+If a client sends a binary element as an MTOM attachment, the `DataHandler` exposed by your JAXB type has no content, and reading it yields an empty stream, without any error.
+
+To handle MTOM, you need a `Jaxb2Marshaller` with `mtomEnabled` set to `true` and a `MarshallingPayloadMethodProcessor` that uses it.
+The processor must be registered _before_ the default ones, as the latter claim any JAXB annotated type first.
+You can do so by implementing `WsConfigurer`:
+
+====
+[source,java]
+----
+@Configuration
+@EnableWs
+public class MtomConfig implements WsConfigurer {
+
+	@Bean
+	public Jaxb2Marshaller marshaller() {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setContextPath("com.example.schema");
+		marshaller.setMtomEnabled(true);
+		return marshaller;
+	}
+
+	@Override
+	public void addArgumentResolvers(List<MethodArgumentResolver> argumentResolvers) {
+		argumentResolvers.add(0, new MarshallingPayloadMethodProcessor(marshaller()));
+	}
+
+	@Override
+	public void addReturnValueHandlers(List<MethodReturnValueHandler> returnValueHandlers) {
+		returnValueHandlers.add(0, new MarshallingPayloadMethodProcessor(marshaller()));
+	}
+
+}
+----
+====
+
+The context path (or, alternatively, the classes to bind) must be set explicitly, as the marshaller does not discover the JAXB classes by itself.
+Binary elements are exposed as a `DataHandler` when the schema declares a content type for them, for instance with `xmime:expectedContentTypes`.
+An endpoint can then read the attachment from the `DataHandler`:
+
+====
+[source,java]
+----
+@Endpoint
+public class ContentRepositoryEndpoint {
+
+	@PayloadRoot(localPart = "StoreContentRequest", namespace = "http://example.com/mtom")
+	@ResponsePayload
+	public StoreContentResponse store(@RequestPayload StoreContentRequest request) throws IOException {
+		try (InputStream in = request.getContent().getInputStream()) {
+			// process the attachment
+		}
+		// ...
+	}
+
+}
+----
+====
+
+NOTE: `Jaxb2Marshaller` only handles method parameters that are annotated with `@XmlRootElement` or declared as `JAXBElement<T>`.
+JAXB does not generate `@XmlRootElement` for a global element that uses a named complex type.
+If the parameter type is annotated with `@XmlType` only, the marshaller does not claim it, and the default JAXB support handles it, without MTOM.
+Declare such a parameter as `JAXBElement<T>` instead, and make sure that the `ObjectFactory` of the schema is part of the JAXB context, which is the case when you use `setContextPath`.
+
+You can also look at the https://github.com/spring-projects/spring-ws-samples/tree/main/mtom[MTOM sample], which replaces the whole `DefaultMethodEndpointAdapter` instead.
 
 [[server-endpoints]]
 == Endpoints
