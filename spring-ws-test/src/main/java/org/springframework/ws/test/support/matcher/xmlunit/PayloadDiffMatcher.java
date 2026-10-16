@@ -20,6 +20,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
@@ -36,6 +37,7 @@ import org.springframework.xml.transform.TransformerHelper;
  *
  * @author Greg Turnquist
  * @author Mikołaj Fejzer
+ * @author Sharang Gupta
  * @since 4.0
  */
 public class PayloadDiffMatcher extends DiffMatcher {
@@ -43,6 +45,8 @@ public class PayloadDiffMatcher extends DiffMatcher {
 	private final Source expected;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
+
+	private @Nullable Document expectedDocument;
 
 	public PayloadDiffMatcher(Source expected) {
 
@@ -64,16 +68,27 @@ public class PayloadDiffMatcher extends DiffMatcher {
 
 	protected Diff createDiff(Source payload) {
 
-		Document expectedDocument = createDocumentFromSource(this.expected);
 		Document actualDocument = createDocumentFromSource(payload);
 
-		return DiffBuilder.compare(expectedDocument)
+		return DiffBuilder.compare(getExpectedDocument())
 			.withTest(actualDocument)
 			.ignoreWhitespace()
 			.withDifferenceEvaluator(
 					DifferenceEvaluators.chain(new PlaceholderDifferenceEvaluator(), DifferenceEvaluators.Default))
 			.checkForSimilar()
 			.build();
+	}
+
+	/**
+	 * Return the expected payload as a document. The expected source is transformed only
+	 * once, so that a source that can be read only once can be matched more than once.
+	 * @return the expected document
+	 */
+	private Document getExpectedDocument() {
+		if (this.expectedDocument == null) {
+			this.expectedDocument = createDocumentFromSource(this.expected);
+		}
+		return this.expectedDocument;
 	}
 
 	private Document createDocumentFromSource(Source source) {

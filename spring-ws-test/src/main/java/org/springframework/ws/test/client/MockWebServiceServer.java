@@ -36,7 +36,9 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * <li>Set up request expectations by calling {@link #expect(RequestMatcher)}, possibly by
  * using the default {@link RequestMatcher} implementations provided in
  * {@link RequestMatchers} (which can be statically imported). Multiple expectations can
- * be set up by chaining {@link ResponseActions#andExpect(RequestMatcher)} calls.</li>
+ * be set up by chaining {@link ResponseActions#andExpect(RequestMatcher)} calls. To
+ * expect a matching request a given number of times, call
+ * {@link #expect(ExpectedCount, RequestMatcher)} instead.</li>
  * <li>Create an appropriate response message by calling
  * {@link ResponseActions#andRespond(ResponseCreator) andRespond(ResponseCreator)},
  * possibly by using the default {@link ResponseCreator} implementations provided in
@@ -94,6 +96,7 @@ import org.springframework.ws.test.support.MockStrategiesHelper;
  * @author Arjen Poutsma
  * @author Lukas Krecan
  * @author Greg Turnquist
+ * @author Sharang Gupta
  * @since 2.0
  */
 public class MockWebServiceServer {
@@ -159,21 +162,47 @@ public class MockWebServiceServer {
 	}
 
 	/**
-	 * Records an expectation specified by the given {@link RequestMatcher}. Returns a
-	 * {@link ResponseActions} object that allows for creating the response, or to set up
-	 * more expectations.
+	 * Records an expectation specified by the given {@link RequestMatcher} that is
+	 * expected to be met exactly once. Returns a {@link ResponseActions} object that
+	 * allows for creating the response, or to set up more expectations.
+	 * <p>
+	 * This is a shortcut for {@code expect(ExpectedCount.once(), requestMatcher)}.
 	 * @param requestMatcher the request matcher expected
 	 * @return the response actions
+	 * @see #expect(ExpectedCount, RequestMatcher)
 	 */
 	public ResponseActions expect(RequestMatcher requestMatcher) {
-		MockSenderConnection connection = this.mockMessageSender.expectNewConnection();
-		connection.addRequestMatcher(requestMatcher);
-		return connection;
+		return expect(ExpectedCount.once(), requestMatcher);
+	}
+
+	/**
+	 * Records an expectation specified by the given {@link RequestMatcher} that is
+	 * expected to be met the given number of times. Returns a {@link ResponseActions}
+	 * object that allows for creating the response, or to set up more expectations.
+	 * <p>
+	 * The expectations are met in the order in which they are recorded: a request is
+	 * matched against the expectations that already matched a request and can match more
+	 * of them first, and then against the next recorded expectation.
+	 * <p>
+	 * The response is created for each request that meets the expectation. The response
+	 * creators of {@link ResponseCreators} support this, and a custom
+	 * {@link ResponseCreator} has to support it as well. The request matchers of an
+	 * expectation that can be met more than once are also called with requests that
+	 * another expectation meets, so they must not have side effects.
+	 * @param count the expected number of matching requests
+	 * @param requestMatcher the request matcher expected
+	 * @return the response actions
+	 * @since 5.1
+	 */
+	public ResponseActions expect(ExpectedCount count, RequestMatcher requestMatcher) {
+		Assert.notNull(count, "'count' must not be null");
+		Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
+		return this.mockMessageSender.expect(count).andExpect(requestMatcher);
 	}
 
 	/**
 	 * Verifies that all of the {@link MockWebServiceMessageSender}'s expectations were
-	 * met.
+	 * met, at least the minimum number of times of their {@link ExpectedCount}.
 	 * @throws AssertionError in case of unmet expectations
 	 */
 	public void verify() {
