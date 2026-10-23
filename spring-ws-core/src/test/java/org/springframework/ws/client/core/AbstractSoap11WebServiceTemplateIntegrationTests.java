@@ -111,6 +111,8 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 		ServletHolder errors = jettyContext.addServlet(ErrorServlet.class, "/errors/server");
 		errors.setInitParameter("sc", "500");
 
+		jettyContext.addServlet(ServerErrorWithoutContentServlet.class, "/errors/serverWithoutContent");
+
 		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 	}
@@ -242,6 +244,15 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 		Object result = this.template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
 
 		assertThat(result).isNull();
+	}
+
+	@Test
+	void serverErrorWithoutContent() {
+
+		assertThatExceptionOfType(WebServiceTransportException.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/serverWithoutContent",
+					new StringSource(this.messagePayload), new StringResult()))
+			.withMessageContaining("[500]");
 	}
 
 	@Test
@@ -437,6 +448,21 @@ public abstract class AbstractSoap11WebServiceTemplateIntegrationTests {
 
 			assertThat(message.countAttachments()).isEqualTo(1);
 			return null;
+		}
+
+	}
+
+	/**
+	 * Servlet that returns a server error with a SOAP content type, but without content.
+	 */
+	@SuppressWarnings("serial")
+	public static class ServerErrorWithoutContentServlet extends HttpServlet {
+
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+			resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			resp.setContentType("text/xml");
+			resp.setContentLength(0);
 		}
 
 	}
