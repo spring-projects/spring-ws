@@ -2,7 +2,7 @@ name: Build and Deploy Snapshot
 on:
   push:
     branches:
-      - '5.0.x'
+      - '5.0.x-internal'
 permissions:
   contents: read
 concurrency:
@@ -24,14 +24,13 @@ jobs:
           commercial-repository-password: ${{ secrets.COMMERCIAL_ARTIFACTORY_PASSWORD }}
           commercial-repository-username: ${{ secrets.COMMERCIAL_ARTIFACTORY_USERNAME }}
           commercial-snapshot-repository-url: ${{ vars.COMMERCIAL_SNAPSHOT_REPO_URL }}
-          develocity-access-key: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
           publish: true
       - name: Deploy
         uses: spring-io/artifactory-deploy-action@9cb1c7df78cd8d1223de1dde974819fa6378af9f # v0.0.6
         with:
           artifact-properties: |
             /**/spring-ws-docs-*.zip::zip.type=docs,zip.name=spring-ws,zip.deployed=false
-          build-name: ${{ vars.COMMERCIAL && format('spring-ws-commercial-{0}', '5.0.x') || format('spring-ws-{0}', '5.0.x') }}
+          build-name: ${{ vars.COMMERCIAL && format('spring-ws-commercial-{0}', '5.0.x-internal') || format('spring-ws-{0}', '5.0.x-internal') }}
           folder: 'deployment-repository'
           password: ${{ vars.COMMERCIAL && secrets.COMMERCIAL_ARTIFACTORY_PASSWORD || secrets.ARTIFACTORY_PASSWORD }}
           project: ${{ vars.COMMERCIAL && 'spring' }}

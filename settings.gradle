@@ -2,10 +2,6 @@ pluginManagement {
 	includeBuild "gradle/plugins"
 }
 
-plugins {
-	id "io.spring.develocity.conventions" version "0.0.27"
-}
-
 rootProject.name = "spring-ws"
 
 include "spring-ws-bom"
