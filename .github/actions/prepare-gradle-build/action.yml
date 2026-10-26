@@ -35,8 +35,6 @@ runs:
       with:
         cache-provider: basic
         cache-read-only: false
-        develocity-access-key: ${{ inputs.develocity-access-key }}
-        develocity-token-expiry: 4
     - name: Configure Gradle Properties
       shell: bash
       run: |

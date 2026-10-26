@@ -49,7 +49,6 @@ runs:
     - name: Prepare Gradle Build
       uses: ./.github/actions/prepare-gradle-build
       with:
-        develocity-access-key: ${{ inputs.develocity-access-key }}
         java-distribution: ${{ inputs.java-distribution }}
         java-early-access: ${{ inputs.java-early-access }}
         java-toolchain: ${{ inputs.java-toolchain }}
