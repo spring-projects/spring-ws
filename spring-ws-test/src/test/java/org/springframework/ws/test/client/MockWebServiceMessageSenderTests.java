@@ -18,10 +18,14 @@ package org.springframework.ws.test.client;
 
 import java.net.URI;
 
+import jakarta.xml.soap.MessageFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.springframework.ws.test.client.RequestMatchers.anything;
 
 class MockWebServiceMessageSenderTests {
 
@@ -44,21 +48,19 @@ class MockWebServiceMessageSenderTests {
 
 		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
 
-			this.sender.expectNewConnection();
+			this.sender.expect(ExpectedCount.once());
 			this.sender.verifyConnections();
 		});
 	}
 
 	@Test
-	void verifyMoteThanOne() {
+	void verifyMoteThanOne() throws Exception {
+		this.sender.expect(ExpectedCount.once()).andExpect(anything());
+		this.sender.expect(ExpectedCount.once()).andExpect(anything());
+		this.sender.createConnection(URI.create("http://localhost"))
+			.send(new SaajSoapMessageFactory(MessageFactory.newInstance()).createWebServiceMessage());
 
-		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
-
-			this.sender.expectNewConnection();
-			this.sender.expectNewConnection();
-			this.sender.createConnection(URI.create("http://localhost"));
-			this.sender.verifyConnections();
-		});
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(this.sender::verifyConnections);
 	}
 
 }

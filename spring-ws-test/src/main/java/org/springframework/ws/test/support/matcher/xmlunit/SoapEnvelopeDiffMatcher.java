@@ -22,6 +22,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 
+import org.jspecify.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
@@ -38,6 +39,7 @@ import org.springframework.xml.transform.TransformerHelper;
  * Matches {@link Source} SOAP envelopes.
  *
  * @author Greg Turnquist
+ * @author Sharang Gupta
  * @since 4.0
  */
 public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
@@ -45,6 +47,8 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	private final Source expected;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
+
+	private @Nullable Document expectedDocument;
 
 	public SoapEnvelopeDiffMatcher(Source expected) {
 
@@ -56,8 +60,7 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 	protected void match(SoapMessage soapMessage) throws IOException, AssertionError {
 
 		Document actualDocument = soapMessage.getDocument();
-		Document expectedDocument = createDocumentFromSource(this.expected);
-		Diff diff = DiffBuilder.compare(expectedDocument)
+		Diff diff = DiffBuilder.compare(getExpectedDocument())
 			.ignoreWhitespace()
 			.withTest(actualDocument)
 			.withDifferenceEvaluator(
@@ -65,6 +68,19 @@ public class SoapEnvelopeDiffMatcher extends AbstractSoapMessageMatcher {
 			.checkForSimilar()
 			.build();
 		AssertionErrors.assertTrue("Envelopes are different, " + diff.toString(), !diff.hasDifferences());
+	}
+
+	/**
+	 * Return the expected SOAP envelope as a document. The expected source is transformed
+	 * only once, so that a source that can be read only once can be matched more than
+	 * once.
+	 * @return the expected document
+	 */
+	private Document getExpectedDocument() {
+		if (this.expectedDocument == null) {
+			this.expectedDocument = createDocumentFromSource(this.expected);
+		}
+		return this.expectedDocument;
 	}
 
 	private Document createDocumentFromSource(Source source) {
