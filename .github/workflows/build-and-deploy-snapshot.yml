@@ -31,7 +31,7 @@ jobs:
         with:
           artifact-properties: |
             /**/spring-ws-docs-*.zip::zip.type=docs,zip.name=spring-ws,zip.deployed=false
-          build-name: ${{ vars.COMMERCIAL && format('spring-ws-commercial-{0}', '5.0.x') || format('spring-ws-{0}', '5.1.x') }}
+          build-name: ${{ vars.COMMERCIAL && format('spring-ws-commercial-{0}', '5.1.x') || format('spring-ws-{0}', '5.1.x') }}
           folder: 'deployment-repository'
           password: ${{ vars.COMMERCIAL && secrets.COMMERCIAL_ARTIFACTORY_PASSWORD || secrets.ARTIFACTORY_PASSWORD }}
           project: ${{ vars.COMMERCIAL && 'spring' }}
