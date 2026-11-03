@@ -33,8 +33,8 @@ import org.springframework.ws.transport.observation.DefaultSoapServerObservation
 import org.springframework.ws.transport.observation.SoapServerObservationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -135,7 +135,7 @@ class WebServiceMessageReceiverObjectSupportObservationTests {
 
 	@Test
 	void recordExceptionThrownWhileHandlingTheMessage() throws Exception {
-		assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> handleConnection(messageContext -> {
+		assertThatIllegalStateException().isThrownBy(() -> handleConnection(messageContext -> {
 			throw new IllegalStateException("Endpoint failure");
 		})).withMessage("Endpoint failure");
 		assertThat(this.observationRegistry).hasSingleObservationThat()

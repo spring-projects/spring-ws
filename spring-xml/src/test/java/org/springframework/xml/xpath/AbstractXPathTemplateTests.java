@@ -49,7 +49,7 @@ import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatException;
 
 public abstract class AbstractXPathTemplateTests {
 
@@ -244,9 +244,10 @@ public abstract class AbstractXPathTemplateTests {
 	void testEvaluateWhenDoctypeWithExternalEntityIsRejected() {
 		String xxe = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<!DOCTYPE foo [<!ENTITY xxe SYSTEM \"file:///etc/passwd\">]><foo>&xxe;</foo>";
-		assertThatThrownBy(() -> this.template.evaluateAsString("/foo/text()", new StreamSource(new StringReader(xxe))))
+		assertThatException()
+			.isThrownBy(() -> this.template.evaluateAsString("/foo/text()", new StreamSource(new StringReader(xxe))))
 			.isInstanceOf(XPathException.class)
-			.hasRootCauseInstanceOf(SAXException.class);
+			.withRootCauseInstanceOf(SAXException.class);
 	}
 
 	@Test
@@ -273,8 +274,9 @@ public abstract class AbstractXPathTemplateTests {
 	void testEvaluateWhenSAXSourceWithDoctypeWithExternalEntityIsRejected() {
 		String xxe = "<?xml version=\"1.0\"?><!DOCTYPE r [<!ENTITY e SYSTEM \"file:///etc/passwd\">]><r>&e;</r>";
 		SAXSource source = new SAXSource(new InputSource(new StringReader(xxe)));
-		assertThatThrownBy(() -> this.template.evaluateAsString("/r/text()", source)).isInstanceOf(XPathException.class)
-			.hasRootCauseInstanceOf(SAXException.class);
+		assertThatException().isThrownBy(() -> this.template.evaluateAsString("/r/text()", source))
+			.isInstanceOf(XPathException.class)
+			.withRootCauseInstanceOf(SAXException.class);
 	}
 
 }

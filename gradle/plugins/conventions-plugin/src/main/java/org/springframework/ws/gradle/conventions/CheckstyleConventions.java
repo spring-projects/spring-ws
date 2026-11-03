@@ -43,7 +43,10 @@ public class CheckstyleConventions {
 			project.getTasks()
 				.withType(Checkstyle.class)
 				.forEach((checkstyle) -> checkstyle.getMaxHeapSize().set("1g"));
-			project.getTasks().named("checkstyleTest").configure((task) -> task.setEnabled(false));
+			project.getTasks()
+				.named("checkstyleTest", Checkstyle.class)
+				.configure((task) -> task
+					.setConfigFile(project.getRootProject().file("src/checkstyle/checkstyle-test.xml")));
 			CheckstyleExtension checkstyle = project.getExtensions().getByType(CheckstyleExtension.class);
 			checkstyle.setToolVersion("12.3.1");
 			checkstyle.getConfigDirectory().set(project.getRootProject().file("src/checkstyle"));

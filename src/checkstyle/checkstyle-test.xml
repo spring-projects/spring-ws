@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+		"https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="com.puppycrawl.tools.checkstyle.Checker">
+	<module name="com.puppycrawl.tools.checkstyle.TreeWalker">
+		<module name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
+			<property name="maximum" value="0"/>
+			<property name="format" value="org\.junit\.Assert|org\.junit\.jupiter\.api\.Assertions" />
+			<property name="message"
+			          value="Please use AssertJ imports." />
+			<property name="ignoreComments" value="true" />
+		</module>
+		<module
+				name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
+			<property name="maximum" value="0" />
+			<property name="format"
+			          value="assertThatExceptionOfType\((NullPointerException|IllegalArgumentException|IOException|IllegalStateException)\.class\)" />
+			<property name="message"
+			          value="Please use specialized AssertJ assertThat*Exception method." />
+			<property name="ignoreComments" value="true" />
+		</module>
+		<module
+				name="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck">
+			<property name="maximum" value="0" />
+			<property name="format"
+			          value="assertThatThrownBy\(" />
+			<property name="message"
+			          value="Please use AssertJ assertThatExceptionOfType method." />
+			<property name="ignoreComments" value="true" />
+		</module>
+	</module>
+</module>

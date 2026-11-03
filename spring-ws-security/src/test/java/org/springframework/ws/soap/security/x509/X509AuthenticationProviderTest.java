@@ -36,7 +36,8 @@ import org.springframework.ws.soap.security.x509.cache.NullX509UserCache;
 import org.springframework.ws.soap.security.x509.cache.X509UserCache;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -55,8 +56,8 @@ class X509AuthenticationProviderTest {
 	@Test
 	void x509AuthoritiesPopulatorIsRequired() {
 		X509AuthenticationProvider provider = new X509AuthenticationProvider();
-		assertThatThrownBy(provider::afterPropertiesSet).isInstanceOf(IllegalArgumentException.class)
-			.hasMessageContaining("X509AuthoritiesPopulator");
+		assertThatIllegalArgumentException().isThrownBy(provider::afterPropertiesSet)
+			.withMessageContaining("X509AuthoritiesPopulator");
 	}
 
 	@Test
@@ -90,8 +91,9 @@ class X509AuthenticationProviderTest {
 
 		X509AuthenticationToken request = new X509AuthenticationToken(null);
 
-		assertThatThrownBy(() -> provider.authenticate(request)).isInstanceOf(BadCredentialsException.class)
-			.hasMessageContaining("Certificate is null");
+		assertThatException().isThrownBy(() -> provider.authenticate(request))
+			.isInstanceOf(BadCredentialsException.class)
+			.withMessageContaining("Certificate is null");
 
 		verify(populator, never()).getUserDetails(any());
 	}
@@ -166,8 +168,9 @@ class X509AuthenticationProviderTest {
 
 		X509AuthenticationToken request = new X509AuthenticationToken(certificate);
 
-		assertThatThrownBy(() -> provider.authenticate(request)).isInstanceOf(BadCredentialsException.class)
-			.hasMessage("rejected");
+		assertThatException().isThrownBy(() -> provider.authenticate(request))
+			.isInstanceOf(BadCredentialsException.class)
+			.withMessage("rejected");
 
 		verify(populator).getUserDetails(certificate);
 	}
@@ -184,9 +187,9 @@ class X509AuthenticationProviderTest {
 		provider.setX509AuthoritiesPopulator(populator);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(populator).getUserDetails(certificate);
 	}
@@ -207,9 +210,9 @@ class X509AuthenticationProviderTest {
 		provider.setX509UserCache(cache);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(cache).getUserFromCache(certificate);
 		verify(cache, never()).putUserInCache(any(), any());
@@ -228,9 +231,9 @@ class X509AuthenticationProviderTest {
 		provider.setX509AuthoritiesPopulator(populator);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(populator).getUserDetails(certificate);
 	}
@@ -251,9 +254,9 @@ class X509AuthenticationProviderTest {
 		provider.setX509AuthoritiesPopulator(populator);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(populator).getUserDetails(certificate);
 	}
@@ -275,9 +278,9 @@ class X509AuthenticationProviderTest {
 		provider.setAccountStatusUserDetailsChecker(checker);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(populator).getUserDetails(certificate);
 	}
@@ -297,9 +300,9 @@ class X509AuthenticationProviderTest {
 		provider.setX509UserCache(cache);
 		provider.afterPropertiesSet();
 
-		assertThatThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
+		assertThatException().isThrownBy(() -> provider.authenticate(new X509AuthenticationToken(certificate)))
 			.isInstanceOf(BadCredentialsException.class)
-			.hasMessage("Bad credentials");
+			.withMessage("Bad credentials");
 
 		verify(populator, never()).getUserDetails(any());
 		verify(cache, times(1)).getUserFromCache(certificate);
