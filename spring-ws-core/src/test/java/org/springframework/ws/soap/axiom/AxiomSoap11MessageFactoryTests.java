@@ -35,7 +35,7 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
 
@@ -105,13 +105,8 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 		StringResult result = new StringResult();
 		this.transformer.transform(message.getPayloadSource(), result);
 
-		try {
-			this.transformer.transform(message.getPayloadSource(), result);
-			fail("TransformerException expected");
-		}
-		catch (TransformerException expected) {
-			// ignore
-		}
+		assertThatThrownBy(() -> this.transformer.transform(message.getPayloadSource(), result))
+				.isInstanceOf(TransformerException.class);
 	}
 
 	/**
