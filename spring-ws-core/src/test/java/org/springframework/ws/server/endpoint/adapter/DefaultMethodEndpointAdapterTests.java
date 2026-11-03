@@ -33,7 +33,7 @@ import org.springframework.ws.server.endpoint.adapter.method.MethodArgumentResol
 import org.springframework.ws.server.endpoint.adapter.method.MethodReturnValueHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatException;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -201,13 +201,8 @@ class DefaultMethodEndpointAdapterTests {
 
 		replay(this.argumentResolver1, this.argumentResolver2, this.returnValueHandler);
 
-		try {
-			this.adapter.invoke(messageContext, this.exceptionEndpoint);
-			fail("IOException expected");
-		}
-		catch (IOException expected) {
-			// expected
-		}
+		assertThatException().isThrownBy(() -> this.adapter.invoke(messageContext, this.exceptionEndpoint))
+			.isInstanceOf(IOException.class);
 
 		assertThat(this.supportedArgument).isEqualTo(value);
 
