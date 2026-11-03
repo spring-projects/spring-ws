@@ -40,7 +40,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.transport.xmpp.support.XmppTransportUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -181,7 +180,7 @@ class XmppSenderConnectionTests {
 		Presence presence = new Presence(Presence.Type.available);
 		given(collector.nextResult(0L)).willReturn(presence);
 
-		assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(connection::onReceiveBeforeRead)
+		assertThatIllegalArgumentException().isThrownBy(connection::onReceiveBeforeRead)
 			.withMessageContaining("Wrong packet type");
 	}
 

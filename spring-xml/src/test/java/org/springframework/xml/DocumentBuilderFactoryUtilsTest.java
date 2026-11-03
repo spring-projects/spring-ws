@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatException;
 
 /**
  * Tests for {@link DocumentBuilderFactoryUtils}.
@@ -39,7 +39,7 @@ class DocumentBuilderFactoryUtilsTest {
 		String xxe = "<?xml version=\"1.0\"?><!DOCTYPE r [<!ENTITY e SYSTEM \"file:///etc/passwd\">]><r>&e;</r>";
 		DocumentBuilderFactory factory = DocumentBuilderFactoryUtils.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		assertThatThrownBy(() -> builder.parse(new InputSource(new StringReader(xxe))))
+		assertThatException().isThrownBy(() -> builder.parse(new InputSource(new StringReader(xxe))))
 			.isInstanceOf(SAXException.class);
 	}
 

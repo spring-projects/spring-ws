@@ -35,7 +35,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -105,7 +105,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(disabledUser);
 
-		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThatNoException().isThrownBy(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
 		assertThat(this.passwordCallback.getPassword()).isNull();
 		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
@@ -118,7 +118,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(lockedUser);
 
-		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThatNoException().isThrownBy(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
 		assertThat(this.passwordCallback.getPassword()).isNull();
 		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
@@ -131,7 +131,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(expiredAccountUser);
 
-		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThatNoException().isThrownBy(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
 		assertThat(this.passwordCallback.getPassword()).isNull();
 		verify(userDetailsService).loadUserByUsername("Ernie");
 	}
@@ -144,7 +144,7 @@ class SpringSecurityPasswordValidationCallbackHandlerTests {
 				Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 		when(userDetailsService.loadUserByUsername("Ernie")).thenReturn(expiredCredsUser);
 
-		assertDoesNotThrow(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
+		assertThatNoException().isThrownBy(() -> this.callbackHandler.handleUsernameToken(this.passwordCallback));
 		assertThat(this.passwordCallback.getPassword()).isNull();
 		verify(userDetailsService).loadUserByUsername("Ernie");
 	}

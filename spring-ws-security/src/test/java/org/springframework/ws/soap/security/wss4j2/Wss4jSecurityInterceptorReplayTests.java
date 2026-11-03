@@ -44,7 +44,7 @@ import org.springframework.ws.soap.security.WsSecurityValidationException;
 import org.springframework.ws.soap.security.wss4j2.cache.ConcurrentMapReplayCache;
 import org.springframework.ws.soap.security.wss4j2.callback.SimplePasswordValidationCallbackHandler;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatException;
 
 /**
  * Tests WSS4J security interceptor with {@link ReplayCache}.
@@ -94,10 +94,10 @@ class Wss4jSecurityInterceptorReplayTests {
 		validate.afterPropertiesSet();
 
 		validate.validateMessage(first, new DefaultMessageContext(first, this.messageFactory));
-		assertThatThrownBy(
-				() -> validate.validateMessage(second, new DefaultMessageContext(second, this.messageFactory)))
+		assertThatException()
+			.isThrownBy(() -> validate.validateMessage(second, new DefaultMessageContext(second, this.messageFactory)))
 			.isInstanceOf(WsSecurityValidationException.class)
-			.hasMessageContaining("replay");
+			.withMessageContaining("replay");
 	}
 
 	private SoapMessage loadEmptySoap() throws Exception {

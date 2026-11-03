@@ -34,9 +34,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.util.AssertionErrors.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 
@@ -49,8 +47,7 @@ class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 		RequestData requestData = new RequestData();
 		Boolean springDefault = (Boolean) ReflectionTestUtils.getField(subject, Wss4jSecurityInterceptor.class,
 				"addInclusivePrefixes");
-		assertEquals("Spring-ws default for addInclusivePrefixes matches Wss4j default",
-				requestData.isAddInclusivePrefixes(), springDefault);
+		assertThat(requestData.isAddInclusivePrefixes()).isEqualTo(springDefault);
 	}
 
 	@Test
@@ -70,7 +67,7 @@ class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
 				messageContext);
 
-		assertTrue(validationData.isAddInclusivePrefixes());
+		assertThat(validationData.isAddInclusivePrefixes()).isTrue();
 	}
 
 	@Test
@@ -90,7 +87,7 @@ class SaajWss4jSecurityInterceptorDefaultsTests extends Wss4jTests {
 		RequestData validationData = ReflectionTestUtils.invokeMethod(subject, "initializeValidationRequestData",
 				messageContext);
 
-		assertFalse(validationData.isAddInclusivePrefixes());
+		assertThat(validationData.isAddInclusivePrefixes()).isFalse();
 	}
 
 }
