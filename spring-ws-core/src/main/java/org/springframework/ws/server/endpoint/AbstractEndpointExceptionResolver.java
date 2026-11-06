@@ -130,7 +130,7 @@ public abstract class AbstractEndpointExceptionResolver implements EndpointExcep
 	}
 
 	/**
-	 * Build a log message for the given exception, occured during processing the given
+	 * Build a log message for the given exception, occurred during processing the given
 	 * message context.
 	 * @param messageContext the message context
 	 * @param ex the exception that got thrown during handler execution
