@@ -105,6 +105,11 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 		ServletHolder errors = jettyContext.addServlet(ErrorServlet.class, "/errors/server");
 		errors.setInitParameter("sc", "500");
 
+		jettyContext.addServlet(ServerErrorWithoutContentServlet.class, "/errors/serverWithoutContent");
+		ServletHolder badRequestWithoutContent = jettyContext.addServlet(ServerErrorWithoutContentServlet.class,
+				"/errors/badRequestWithoutContent");
+		badRequestWithoutContent.setInitParameter("sc", "400");
+
 		jettyServer.setHandler(jettyContext);
 		jettyServer.start();
 	}
@@ -247,6 +252,24 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 		Object result = this.template.marshalSendAndReceive(baseUrl + "/soap/noResponse", requestObject);
 
 		assertThat(result).isNull();
+	}
+
+	@Test
+	void serverErrorWithoutContent() {
+
+		assertThatExceptionOfType(WebServiceTransportException.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/serverWithoutContent",
+					new StringSource(this.messagePayload), new StringResult()))
+			.withMessageContaining("[500]");
+	}
+
+	@Test
+	void badRequestWithoutContent() {
+
+		assertThatExceptionOfType(WebServiceTransportException.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(baseUrl + "/errors/badRequestWithoutContent",
+					new StringSource(this.messagePayload), new StringResult()))
+			.withMessageContaining("[400]");
 	}
 
 	@Test
@@ -451,6 +474,22 @@ public abstract class AbstractSoap12WebServiceTemplateIntegrationTests {
 
 			assertThat(message.countAttachments()).isEqualTo(1);
 			return null;
+		}
+
+	}
+
+	/**
+	 * Servlet that returns an error with a SOAP content type, but without content.
+	 */
+	@SuppressWarnings("serial")
+	public static class ServerErrorWithoutContentServlet extends HttpServlet {
+
+		@Override
+		protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+			String sc = getInitParameter("sc");
+			resp.setStatus((sc != null) ? Integer.parseInt(sc) : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			resp.setContentType("application/soap+xml");
+			resp.setContentLength(0);
 		}
 
 	}
