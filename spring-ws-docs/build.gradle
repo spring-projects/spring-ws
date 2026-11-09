@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+import org.asciidoctor.gradle.model5.jvm.formatters.AsciidoctorjGenericOutputFormatter
+import org.asciidoctor.gradle.model5.jvm.formatters.AsciidoctorjPdf
+
 plugins {
 	id "io.freefair.aggregate-javadoc" version "8.12.1"
-	id "org.asciidoctor.jvm.convert" version "4.0.5"
-	id "org.asciidoctor.jvm.pdf" version "4.0.5"
 	id "maven-publish"
+	id "org.asciidoctor.jvm" version "5.1.0"
+	id "org.asciidoctor.jvm.pdf" version "5.1.0"
 	id "org.springframework.ws.conventions"
 }
 
@@ -26,12 +29,7 @@ repositories {
 	mavenCentral()
 }
 
-configurations {
-	asciidoctorExt
-}
-
 dependencies {
-	asciidoctorExt("io.spring.asciidoctor.backends:spring-asciidoctor-backends:0.0.5")
 	javadoc(enforcedPlatform(project(":spring-ws-platform")))
 	[":spring-ws-core", ":spring-ws-security", ":spring-ws-support", ":spring-ws-test", ":spring-xml"].each {
 		javadoc(project(it))
@@ -39,35 +37,52 @@ dependencies {
 	}
 }
 
-asciidoctorj {
-	attributes = [
-		"allow-uri-read": true,
-		"numbered": true,
-		"spring-framework-version": springFrameworkVersion,
-		"spring-ws-version": project.version,
-		"toclevels": 4
-	]
-	options = [
-		"doctype": "book",
-	]
+asciidoc {
+	toolchains {
+		asciidoctorj {
+			registeredOutputFormatters {
+				springHtml(AsciidoctorjGenericOutputFormatter) {
+					backend = "spring-html"
+					copyResources = true
+					enforcedDocType = "book"
+					useModule("io.spring.asciidoctor.backends:spring-asciidoctor-backends", "0.0.5")
+					useProcessIsolation()
+				}
+			}
+			registeredOutputFormatters.named("pdf", AsciidoctorjPdf) {
+				allowUriRead = true
+				useProcessIsolation()
+			}
+		}
+	}
+	publications {
+		main {
+			sourceSet {
+				sources {
+					include "index.adoc"
+				}
+				resources {
+					include "images/**"
+				}
+				attributes {
+					add "allow-uri-read", true
+					add "numbered", true
+					add "spring-framework-version", springFrameworkVersion
+					add "spring-ws-version", project.version
+					add "toclevels", 4
+				}
+				baseDir.baseDirFollowsSourceFiles()
+			}
+			output "asciidoctorj", "springHtml", "html"
+			output "asciidoctorj", "pdf"
+		}
+	}
 }
 
-tasks.named("asciidoctor") {
-	sources {
-		include "index.adoc"
-	}
-	configureOutputOptions {
-		backends = ["spring-html"]
-	}
-	baseDirFollowsSourceFile()
-	configurations("asciidoctorExt")
-}
-
-tasks.named("asciidoctorPdf") {
-	sources {
-		include "index.adoc"
-	}
-	baseDirFollowsSourceFile()
+tasks.register("asciidoc") {
+	group = "documentation"
+	description = "Runs all asciidoc conversions (alias for asciidoctorAll)."
+	dependsOn("asciidoctorAll")
 }
 
 tasks.named("javadoc") {
@@ -78,14 +93,12 @@ tasks.named("javadoc") {
 }
 
 def zip = tasks.register("zip", Zip) {
-	archiveBaseName = project.name
-	archiveVersion = project.version
 	destinationDirectory = project.layout.buildDirectory
 	into("reference/html") {
-		from asciidoctor
+		from tasks.named("asciidoctorHtml")
 	}
 	into ("reference/pdf") {
-		from asciidoctorPdf
+		from tasks.named("asciidoctorPdf")
 	}
 	into ("api") {
 		from javadoc
