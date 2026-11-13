@@ -205,6 +205,29 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 		}
 	}
 
+	@Test
+	void testSendAndReceiveServerErrorWithoutContent() throws Exception {
+
+		MyServlet servlet = new MyServlet();
+		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		servlet.setResponse(true);
+		servlet.setContentLength(0);
+		servlet.setEmptyBody(true);
+
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
+
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
+
+			assertThat(connection.hasError()).isTrue();
+			assertThat(connection.hasFault()).isFalse();
+		}
+	}
+
 	private void validateResponse(Servlet servlet) throws Exception {
 
 		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
@@ -271,6 +294,8 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 
 		private boolean gzip;
 
+		private boolean emptyBody;
+
 		public void setResponseStatus(int responseStatus) {
 			this.responseStatus = responseStatus;
 		}
@@ -281,6 +306,10 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 
 		public void setResponse(boolean response) {
 			this.response = response;
+		}
+
+		public void setEmptyBody(boolean emptyBody) {
+			this.emptyBody = emptyBody;
 		}
 
 		public void setGzip(boolean gzip) {
@@ -326,7 +355,9 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 						os = httpServletResponse.getOutputStream();
 					}
 
-					FileCopyUtils.copy(SOAP_RESPONSE.getBytes(StandardCharsets.UTF_8), os);
+					if (!this.emptyBody) {
+						FileCopyUtils.copy(SOAP_RESPONSE.getBytes(StandardCharsets.UTF_8), os);
+					}
 				}
 			}
 			catch (Exception ex) {
