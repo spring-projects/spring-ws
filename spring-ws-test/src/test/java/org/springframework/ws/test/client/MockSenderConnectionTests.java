@@ -16,35 +16,44 @@
 
 package org.springframework.ws.test.client;
 
-import java.io.IOException;
+import java.net.URI;
 
+import jakarta.xml.soap.MessageFactory;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.springframework.ws.test.client.RequestMatchers.anything;
 import static org.springframework.ws.test.client.ResponseCreators.withError;
 import static org.springframework.ws.test.client.ResponseCreators.withPayload;
 
 class MockSenderConnectionTests {
 
+	private final MockWebServiceMessageSender messageSender = new MockWebServiceMessageSender();
+
 	@Test
-	void error() throws IOException {
+	void error() throws Exception {
 
 		String testErrorMessage = "Test Error Message";
-		MockSenderConnection connection = new MockSenderConnection();
-		connection.andRespond(withError(testErrorMessage));
+		this.messageSender.expect(ExpectedCount.once()).andExpect(anything()).andRespond(withError(testErrorMessage));
+
+		MockSenderConnection connection = sendRequest();
 
 		assertThat(connection.hasError()).isTrue();
 		assertThat(connection.getErrorMessage()).isEqualTo(testErrorMessage);
 	}
 
 	@Test
-	void normal() throws IOException {
+	void normal() throws Exception {
 
-		MockSenderConnection connection = new MockSenderConnection();
-		connection.andRespond(withPayload(new StringSource("<response/>")));
+		this.messageSender.expect(ExpectedCount.once())
+			.andExpect(anything())
+			.andRespond(withPayload(new StringSource("<response/>")));
+
+		MockSenderConnection connection = sendRequest();
 
 		assertThat(connection.hasError()).isFalse();
 		assertThat(connection.getErrorMessage()).isNull();
@@ -53,12 +62,15 @@ class MockSenderConnectionTests {
 	@Test
 	void noRequestMatchers() {
 
-		assertThatExceptionOfType(AssertionError.class).isThrownBy(() -> {
+		this.messageSender.expect(ExpectedCount.once()).andRespond(withPayload(new StringSource("<response/>")));
 
-			MockSenderConnection connection = new MockSenderConnection();
-			connection.andRespond(withPayload(new StringSource("<response/>")));
-			connection.send(null);
-		});
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(this::sendRequest);
+	}
+
+	private MockSenderConnection sendRequest() throws Exception {
+		MockSenderConnection connection = this.messageSender.createConnection(URI.create("http://example.com"));
+		connection.send(new SaajSoapMessageFactory(MessageFactory.newInstance()).createWebServiceMessage());
+		return connection;
 	}
 
 }
