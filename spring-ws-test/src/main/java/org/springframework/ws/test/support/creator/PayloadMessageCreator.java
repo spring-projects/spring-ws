@@ -20,6 +20,11 @@ import java.io.IOException;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+
+import org.jspecify.annotations.Nullable;
+import org.w3c.dom.Document;
 
 import org.springframework.util.Assert;
 import org.springframework.ws.WebServiceMessage;
@@ -31,6 +36,7 @@ import org.springframework.xml.transform.TransformerHelper;
  * {@link Source}.
  *
  * @author Arjen Poutsma
+ * @author Sharang Gupta
  * @since 2.0
  */
 public class PayloadMessageCreator extends AbstractMessageCreator {
@@ -38,6 +44,8 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 	private final Source payload;
 
 	private final TransformerHelper transformerHelper = new TransformerHelper();
+
+	private @Nullable Document payloadDocument;
 
 	/**
 	 * Creates a new instance of the {@code PayloadMessageCreator} with the given payload
@@ -52,11 +60,26 @@ public class PayloadMessageCreator extends AbstractMessageCreator {
 	@Override
 	protected void doWithMessage(WebServiceMessage message) throws IOException {
 		try {
-			this.transformerHelper.transform(this.payload, message.getPayloadResult());
+			this.transformerHelper.transform(new DOMSource(getPayloadDocument()), message.getPayloadResult());
 		}
 		catch (TransformerException ex) {
 			AssertionErrors.fail("Could not transform request payload to message: " + ex.getMessage());
 		}
+	}
+
+	/**
+	 * Return the payload as a document. The payload source is transformed only once, so
+	 * that a source that can be read only once can create more than one message.
+	 * @return the payload document
+	 * @throws TransformerException in case of transformation errors
+	 */
+	private Document getPayloadDocument() throws TransformerException {
+		if (this.payloadDocument == null) {
+			DOMResult result = new DOMResult();
+			this.transformerHelper.transform(this.payload, result);
+			this.payloadDocument = (Document) result.getNode();
+		}
+		return this.payloadDocument;
 	}
 
 }

@@ -16,7 +16,9 @@
 
 package org.springframework.ws.test.client;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -413,6 +415,301 @@ class MockWebServiceServerTests {
 			StringResult result = new StringResult();
 			this.template.sendSourceAndReceiveToResult(request, result);
 		});
+	}
+
+	@Test
+	void expectedCountTimes() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.times(3), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+		assertResponse(request, response);
+		assertResponse(request, response);
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountTimesExceeded() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.twice(), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+		assertResponse(request, response);
+
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(request, new StringResult()))
+			.withMessage("No further connections expected");
+	}
+
+	@Test
+	void expectedCountTimesNotMet() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.twice(), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(this.server::verify)
+			.withMessage("Further connection(s) expected");
+	}
+
+	@Test
+	void expectedCountMin() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.min(2), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+		assertResponse(request, response);
+		assertResponse(request, response);
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountMinNotMet() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.min(2), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(this.server::verify)
+			.withMessage("Further connection(s) expected");
+	}
+
+	@Test
+	void expectedCountMaxExceeded() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.max(2), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+		assertResponse(request, response);
+
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(request, new StringResult()))
+			.withMessage("No further connections expected");
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountBetween() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.between(1, 3), payload(request)).andRespond(withPayload(response));
+
+		assertResponse(request, response);
+		assertResponse(request, response);
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountNeverWithoutRequest() {
+
+		this.server.expect(ExpectedCount.never(), anything());
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountNeverWithRequest() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.never(), anything()).andRespond(withPayload(response));
+
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(request, new StringResult()))
+			.withMessage("No further connections expected");
+	}
+
+	@Test
+	void expectedCountsKeepTheOrderOfTheExpectations() {
+
+		Source firstRequest = new StringSource("<first xmlns='http://example.com'/>");
+		Source firstResponse = new StringSource("<firstResponse xmlns='http://example.com'/>");
+		Source secondRequest = new StringSource("<second xmlns='http://example.com'/>");
+		Source secondResponse = new StringSource("<secondResponse xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.twice(), payload(firstRequest)).andRespond(withPayload(firstResponse));
+		this.server.expect(payload(secondRequest)).andRespond(withPayload(secondResponse));
+
+		assertResponse(firstRequest, firstResponse);
+		assertResponse(firstRequest, firstResponse);
+		assertResponse(secondRequest, secondResponse);
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountRangeLetsTheNextExpectationMatch() {
+
+		Source firstRequest = new StringSource("<first xmlns='http://example.com'/>");
+		Source firstResponse = new StringSource("<firstResponse xmlns='http://example.com'/>");
+		Source secondRequest = new StringSource("<second xmlns='http://example.com'/>");
+		Source secondResponse = new StringSource("<secondResponse xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.manyTimes(), payload(firstRequest)).andRespond(withPayload(firstResponse));
+		this.server.expect(payload(secondRequest)).andRespond(withPayload(secondResponse));
+
+		assertResponse(firstRequest, firstResponse);
+		assertResponse(secondRequest, secondResponse);
+		assertResponse(firstRequest, firstResponse);
+
+		this.server.verify();
+	}
+
+	@Test
+	void requestNotMatchingTheRepeatedExpectation() {
+
+		Source expectedRequest = new StringSource("<request xmlns='http://example.com'/>");
+		Source otherRequest = new StringSource("<other xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.manyTimes(), payload(expectedRequest)).andRespond(withPayload(response));
+
+		assertResponse(expectedRequest, response);
+
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(otherRequest, new StringResult()))
+			.withMessageStartingWith("Messages are different");
+	}
+
+	@Test
+	void expectedCountWithPayloadResources() throws IOException {
+
+		String request = "<request xmlns='http://example.com'/>";
+		String response = "<response xmlns='http://example.com'/>";
+
+		this.server.expect(ExpectedCount.twice(), payload(resource(request)))
+			.andRespond(withPayload(resource(response)));
+
+		assertResponse(new StringSource(request), new StringSource(response));
+		assertResponse(new StringSource(request), new StringSource(response));
+
+		this.server.verify();
+	}
+
+	@Test
+	void expectedCountWithSoapEnvelopeResources() throws IOException {
+		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+		marshaller.setClassesToBeBound(EnvelopeMatcherRequest.class, EnvelopeMatcherResponse.class);
+
+		this.template = new WebServiceTemplate(marshaller);
+		this.template.setDefaultUri("https://example.com");
+		this.server = MockWebServiceServer.createServer(this.template);
+
+		String expectedSoapRequest = """
+				<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+					 <SOAP-ENV:Header/>
+					 <SOAP-ENV:Body>
+						 <EnvelopeMatcherRequest>
+							 <myData>123456</myData>
+						 </EnvelopeMatcherRequest>
+					 </SOAP-ENV:Body>
+				</SOAP-ENV:Envelope>""";
+		String soapResponse = """
+				<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+				  <SOAP-ENV:Body>
+				    <EnvelopeMatcherResponse>
+				      <myData>654321</myData>
+				    </EnvelopeMatcherResponse>
+				  </SOAP-ENV:Body>
+				</SOAP-ENV:Envelope>""";
+
+		this.server.expect(ExpectedCount.twice(), soapEnvelope(resource(expectedSoapRequest)))
+			.andRespond(withSoapEnvelope(resource(soapResponse)));
+
+		EnvelopeMatcherRequest request = new EnvelopeMatcherRequest();
+		request.setMyData("123456");
+		for (int i = 0; i < 2; i++) {
+			EnvelopeMatcherResponse response = (EnvelopeMatcherResponse) this.template.marshalSendAndReceive(request);
+			assertThat(response.getMyData()).isEqualTo("654321");
+		}
+
+		this.server.verify();
+	}
+
+	@Test
+	void repeatedExpectationWithPayloadResourceAfterAnotherRequest() throws IOException {
+
+		String firstRequest = "<first xmlns='http://example.com'/>";
+		String firstResponse = "<firstResponse xmlns='http://example.com'/>";
+		String secondRequest = "<second xmlns='http://example.com'/>";
+		String secondResponse = "<secondResponse xmlns='http://example.com'/>";
+
+		this.server.expect(ExpectedCount.manyTimes(), payload(resource(firstRequest)))
+			.andRespond(withPayload(new StringSource(firstResponse)));
+		this.server.expect(payload(resource(secondRequest))).andRespond(withPayload(new StringSource(secondResponse)));
+
+		assertResponse(new StringSource(firstRequest), new StringSource(firstResponse));
+		assertResponse(new StringSource(secondRequest), new StringSource(secondResponse));
+		assertResponse(new StringSource(firstRequest), new StringSource(firstResponse));
+
+		this.server.verify();
+	}
+
+	@Test
+	void verifyFailsAfterARequestThatDidNotMeetTheExpectation() {
+
+		Source expectedRequest = new StringSource("<request xmlns='http://example.com'/>");
+		Source otherRequest = new StringSource("<other xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(payload(expectedRequest)).andRespond(withPayload(response));
+
+		assertThatExceptionOfType(AssertionError.class)
+			.isThrownBy(() -> this.template.sendSourceAndReceiveToResult(otherRequest, new StringResult()));
+		assertThatExceptionOfType(AssertionError.class).isThrownBy(this.server::verify)
+			.withMessage("Further connection(s) expected");
+	}
+
+	@Test
+	void resetClearsTheExpectations() {
+
+		Source request = new StringSource("<request xmlns='http://example.com'/>");
+		Source response = new StringSource("<response xmlns='http://example.com'/>");
+
+		this.server.expect(ExpectedCount.manyTimes(), payload(request)).andRespond(withPayload(response));
+		assertResponse(request, response);
+
+		this.server.reset();
+
+		this.server.verify();
+
+		this.server.expect(ExpectedCount.once(), payload(request)).andRespond(withPayload(response));
+		assertResponse(request, response);
+		this.server.verify();
+	}
+
+	private void assertResponse(Source request, Source expectedResponse) {
+		StringResult result = new StringResult();
+		this.template.sendSourceAndReceiveToResult(request, result);
+		XmlAssert.assertThat(result.toString()).and(expectedResponse.toString()).ignoreWhitespace().areSimilar();
+	}
+
+	private static Resource resource(String xml) {
+		return new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8));
 	}
 
 	static class MyClient extends WebServiceGatewaySupport {

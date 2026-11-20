@@ -18,8 +18,6 @@ package org.springframework.ws.test.client;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
@@ -30,67 +28,43 @@ import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.transport.WebServiceConnection;
 
 /**
- * Mock implementation of {@link WebServiceConnection}. Implements {@link ResponseActions}
- * to form a fluent API.
+ * Mock implementation of {@link WebServiceConnection}. A connection is created for each
+ * request, and finds the {@link RequestExpectation} that the request meets when it is
+ * sent.
  *
  * @author Arjen Poutsma
  * @author Lukas Krecan
+ * @author Sharang Gupta
  * @since 2.0
  */
-class MockSenderConnection implements WebServiceConnection, ResponseActions {
+class MockSenderConnection implements WebServiceConnection {
 
-	private final List<RequestMatcher> requestMatchers = new LinkedList<>();
+	private final URI uri;
 
-	private @Nullable URI uri;
+	private final MockWebServiceMessageSender messageSender;
 
 	private @Nullable WebServiceMessage request;
 
-	private @Nullable ResponseCreator responseCreator;
+	private @Nullable RequestExpectation expectation;
 
-	void addRequestMatcher(RequestMatcher requestMatcher) {
-		Assert.notNull(requestMatcher, "'requestMatcher' must not be null");
-		this.requestMatchers.add(requestMatcher);
-	}
-
-	void setUri(URI uri) {
+	MockSenderConnection(URI uri, MockWebServiceMessageSender messageSender) {
 		Assert.notNull(uri, "'uri' must not be null");
+		Assert.notNull(messageSender, "'messageSender' must not be null");
 		this.uri = uri;
+		this.messageSender = messageSender;
 	}
-
-	// ResponseActions implementation
-
-	@Override
-	public ResponseActions andExpect(RequestMatcher requestMatcher) {
-		addRequestMatcher(requestMatcher);
-		return this;
-	}
-
-	@Override
-	public void andRespond(ResponseCreator responseCreator) {
-		Assert.notNull(responseCreator, "'responseCreator' must not be null");
-		this.responseCreator = responseCreator;
-	}
-
-	// FaultAwareWebServiceConnection implementation
 
 	@Override
 	public void send(WebServiceMessage message) throws IOException {
-		if (!this.requestMatchers.isEmpty()) {
-			for (RequestMatcher requestMatcher : this.requestMatchers) {
-				requestMatcher.match(Objects.requireNonNull(this.uri), message);
-			}
-		}
-		else {
-			throw new AssertionError("Unexpected send() for [" + message + "]");
-		}
+		this.expectation = this.messageSender.matchRequest(this.uri, message);
 		this.request = message;
 	}
 
 	@Override
 	public @Nullable WebServiceMessage receive(WebServiceMessageFactory messageFactory) throws IOException {
-		if (this.responseCreator != null) {
-			return this.responseCreator.createResponse(Objects.requireNonNull(this.uri),
-					Objects.requireNonNull(this.request), messageFactory);
+		ResponseCreator responseCreator = getResponseCreator();
+		if (responseCreator != null) {
+			return responseCreator.createResponse(this.uri, Objects.requireNonNull(this.request), messageFactory);
 		}
 		else {
 			return null;
@@ -98,19 +72,19 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 	}
 
 	@Override
-	public @Nullable URI getUri() {
+	public URI getUri() {
 		return this.uri;
 	}
 
 	@Override
 	public boolean hasError() throws IOException {
-		return this.responseCreator instanceof ErrorResponseCreator;
+		return getResponseCreator() instanceof ErrorResponseCreator;
 	}
 
 	@Override
 	public @Nullable String getErrorMessage() throws IOException {
-		if (this.responseCreator instanceof ErrorResponseCreator) {
-			return ((ErrorResponseCreator) this.responseCreator).getErrorMessage();
+		if (getResponseCreator() instanceof ErrorResponseCreator errorResponseCreator) {
+			return errorResponseCreator.getErrorMessage();
 		}
 		else {
 			return null;
@@ -119,10 +93,12 @@ class MockSenderConnection implements WebServiceConnection, ResponseActions {
 
 	@Override
 	public void close() throws IOException {
-		this.requestMatchers.clear();
 		this.request = null;
-		this.responseCreator = null;
-		this.uri = null;
+		this.expectation = null;
+	}
+
+	private @Nullable ResponseCreator getResponseCreator() {
+		return (this.expectation != null) ? this.expectation.getResponseCreator() : null;
 	}
 
 }
