@@ -46,6 +46,8 @@ class JavaBasePluginConventions {
 			options.source(JavaPluginConventions.JAVA_BASELINE.getMajorVersion());
 			if (options instanceof CoreJavadocOptions coreOptions) {
 				coreOptions.addBooleanOption("Xdoclint:-missing", true);
+				// Do not ship 4MB of web fonts in javadoc output
+				coreOptions.addBooleanOption("-no-fonts", true);
 			}
 		});
 	}
