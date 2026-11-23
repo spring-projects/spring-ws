@@ -40,16 +40,17 @@ class JavaBasePluginConventions {
 
 	void apply(Project project) {
 		configureRepositories(project);
-		project.getTasks().withType(Javadoc.class).configureEach((javadoc) -> {
-			MinimalJavadocOptions options = javadoc.getOptions();
-			options.quiet();
-			options.source(JavaPluginConventions.JAVA_BASELINE.getMajorVersion());
-			if (options instanceof CoreJavadocOptions coreOptions) {
-				coreOptions.addBooleanOption("Xdoclint:-missing", true);
-				// Do not ship 4MB of web fonts in javadoc output
-				coreOptions.addBooleanOption("-no-fonts", true);
-			}
-		});
+		project.getTasks().withType(Javadoc.class).configureEach(this::configureJavadoc);
+	}
+
+	private void configureJavadoc(Javadoc javadoc) {
+		MinimalJavadocOptions options = javadoc.getOptions();
+		options.quiet();
+		options.source(JavaPluginConventions.JAVA_BASELINE.getMajorVersion());
+		if (options instanceof CoreJavadocOptions coreOptions) {
+			coreOptions.addBooleanOption("Xdoclint:-missing", true);
+			coreOptions.addBooleanOption("-no-fonts", true);
+		}
 	}
 
 	private void configureRepositories(Project project) {
