@@ -130,7 +130,8 @@ public class DefaultSoapServerObservationConvention implements SoapServerObserva
 
 	private KeyValue protocol(SoapServerObservationContext context) {
 		URI uri = context.getUri();
-		return (uri != null) ? KeyValue.of(LowCardinalityKeyNames.PROTOCOL, uri.getScheme()) : PROTOCOL_NONE;
+		String scheme = (uri != null) ? uri.getScheme() : null;
+		return (scheme != null) ? KeyValue.of(LowCardinalityKeyNames.PROTOCOL, scheme) : PROTOCOL_NONE;
 	}
 
 	private KeyValue soapAction(SoapServerObservationContext context) {

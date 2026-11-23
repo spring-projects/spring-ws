@@ -210,6 +210,13 @@ class DefaultSoapClientObservationConventionTests {
 	}
 
 	@Test
+	void transportWithUriWithoutScheme() throws Exception {
+		when(this.connection.getUri()).thenReturn(URI.create("/services"));
+		assertThat(lowCardinalityKeyValues()).contains(KeyValue.of("protocol", "none"));
+		assertThat(highCardinalityKeyValues()).contains(KeyValue.of("uri", "/services"));
+	}
+
+	@Test
 	void soapAction() {
 		SoapMessage soapMessage = mock(SoapMessage.class);
 		when(soapMessage.getSoapAction()).thenReturn("http://example.com/action");
