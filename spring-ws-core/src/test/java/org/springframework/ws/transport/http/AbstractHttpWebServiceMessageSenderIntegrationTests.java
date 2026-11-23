@@ -7,6 +7,7 @@
 
 package org.springframework.ws.transport.http;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -196,6 +197,99 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 		}
 	}
 
+	@Test
+	void testSendAndReceiveServerErrorWithoutContent() throws Exception {
+
+		MyServlet servlet = new MyServlet();
+		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		servlet.setResponse(true);
+		servlet.setContentLength(0);
+		servlet.setEmptyBody(true);
+
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
+
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
+			SOAPMessage request = createRequest();
+			connection.send(new SaajSoapMessage(request));
+
+			assertThat(connection.hasError()).isTrue();
+			assertThat(connection.hasFault()).isFalse();
+		}
+	}
+
+	@Test
+	void testSendAndReceiveServerErrorWithoutContentAndUnknownLength() throws Exception {
+
+		MyServlet servlet = new MyServlet();
+		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		servlet.setResponse(true);
+		servlet.setContentLength(-1);
+		servlet.setEmptyBody(true);
+		servlet.setFlush(true);
+
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
+
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
+			connection.send(new SaajSoapMessage(createRequest()));
+
+			assertThat(connection.hasError()).isTrue();
+			assertThat(connection.hasFault()).isFalse();
+			assertThat(connection.receive(this.messageFactory)).isNull();
+		}
+	}
+
+	@Test
+	void testSendAndReceiveFaultCheckedBeforeReceiveWithUnknownLength() throws Exception {
+
+		validateFaultCheckedBeforeReceive(false);
+	}
+
+	@Test
+	void testSendAndReceiveCompressedFaultCheckedBeforeReceiveWithUnknownLength() throws Exception {
+
+		validateFaultCheckedBeforeReceive(true);
+	}
+
+	/**
+	 * Checks for a fault before receiving the response, with a response whose content
+	 * length is not known. Checking must not consume the content of the response.
+	 */
+	private void validateFaultCheckedBeforeReceive(boolean gzip) throws Exception {
+
+		MyServlet servlet = new MyServlet();
+		servlet.setResponseStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		servlet.setResponse(true);
+		servlet.setContentLength(-1);
+		servlet.setGzip(gzip);
+		servlet.setFlush(true);
+
+		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
+		this.jettyServer.setHandler(this.jettyContext);
+		this.jettyServer.start();
+
+		try (FaultAwareWebServiceConnection connection = (FaultAwareWebServiceConnection) this.messageSender
+			.createConnection(this.connectionUri)) {
+			connection.send(new SaajSoapMessage(createRequest()));
+
+			assertThat(connection.hasError()).isTrue();
+			assertThat(connection.hasFault()).isTrue();
+			WebServiceMessage response = connection.receive(this.messageFactory);
+			assertThat(response).isNotNull();
+			ByteArrayOutputStream content = new ByteArrayOutputStream();
+			response.writeTo(content);
+			XmlAssert.assertThat(content.toString(StandardCharsets.UTF_8))
+				.and(SOAP_RESPONSE)
+				.ignoreWhitespace()
+				.areIdentical();
+		}
+	}
+
 	private void validateResponse(Servlet servlet) throws Exception {
 
 		this.jettyContext.addServlet(new ServletHolder(servlet), "/");
@@ -262,6 +356,10 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 
 		private boolean gzip;
 
+		private boolean emptyBody;
+
+		private boolean flush;
+
 		public void setResponseStatus(int responseStatus) {
 			this.responseStatus = responseStatus;
 		}
@@ -272,6 +370,18 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 
 		public void setResponse(boolean response) {
 			this.response = response;
+		}
+
+		public void setEmptyBody(boolean emptyBody) {
+			this.emptyBody = emptyBody;
+		}
+
+		/**
+		 * Commit the response before writing the body, so that it is sent without a
+		 * content length.
+		 */
+		public void setFlush(boolean flush) {
+			this.flush = flush;
 		}
 
 		public void setGzip(boolean gzip) {
@@ -317,7 +427,13 @@ public abstract class AbstractHttpWebServiceMessageSenderIntegrationTests<T exte
 						os = httpServletResponse.getOutputStream();
 					}
 
-					FileCopyUtils.copy(SOAP_RESPONSE.getBytes(StandardCharsets.UTF_8), os);
+					if (this.flush) {
+						httpServletResponse.flushBuffer();
+					}
+
+					if (!this.emptyBody) {
+						FileCopyUtils.copy(SOAP_RESPONSE.getBytes(StandardCharsets.UTF_8), os);
+					}
 				}
 			}
 			catch (Exception ex) {

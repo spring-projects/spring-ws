@@ -133,13 +133,14 @@ public abstract class AbstractHttpSenderConnection extends AbstractSenderConnect
 	@Override
 	public final boolean hasFault() throws IOException {
 		// SOAP 1.1 specifies a 500 status code for faults
-		// SOAP 1.2 specifies a 400 status code for sender faults, and 500 for all other
-		// faults
-		return switch (getResponseCode()) {
+		// SOAP 1.2 specifies a 500 status code for faults, except for sender faults (400)
+		boolean faultResponse = switch (getResponseCode()) {
 			case HttpTransportConstants.STATUS_INTERNAL_SERVER_ERROR -> isSoap11Response() || isSoap12Response();
 			case HttpTransportConstants.STATUS_BAD_REQUEST -> isSoap12Response();
 			default -> false;
 		};
+		// A fault is carried in the response, so an error without content is not a fault
+		return faultResponse && hasResponse();
 	}
 
 	/** Determine whether the response is a SOAP 1.1 message. */
