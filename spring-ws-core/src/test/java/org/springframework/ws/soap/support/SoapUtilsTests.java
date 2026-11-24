@@ -61,6 +61,26 @@ class SoapUtilsTests {
 	}
 
 	@Test
+	void unescapeActionRemovesSurroundingQuotes() {
+		assertThat(SoapUtils.unescapeAction("\"action\"")).isEqualTo("action");
+		assertThat(SoapUtils.unescapeAction("\"\"")).isEmpty();
+	}
+
+	@Test
+	void unescapeActionWithoutSurroundingQuotesReturnsTheValueAsIs() {
+		assertThat(SoapUtils.unescapeAction("action")).isEqualTo("action");
+		assertThat(SoapUtils.unescapeAction("\"action")).isEqualTo("\"action");
+		assertThat(SoapUtils.unescapeAction("action\"")).isEqualTo("action\"");
+		assertThat(SoapUtils.unescapeAction("")).isEmpty();
+		assertThat(SoapUtils.unescapeAction(null)).isNull();
+	}
+
+	@Test
+	void unescapeActionWithASingleQuoteReturnsTheValueAsIs() {
+		assertThat(SoapUtils.unescapeAction("\"")).isEqualTo("\"");
+	}
+
+	@Test
 	void testSetActionInContentType() {
 
 		String soapAction = "http://springframework.org/spring-ws/Action";

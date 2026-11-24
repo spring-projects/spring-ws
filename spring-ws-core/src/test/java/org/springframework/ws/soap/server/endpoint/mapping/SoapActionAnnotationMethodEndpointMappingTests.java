@@ -118,6 +118,21 @@ class SoapActionAnnotationMethodEndpointMappingTests {
 		verify(requestMock, factoryMock);
 	}
 
+	@Test
+	void registrationWithSingleQuoteAction() throws Exception {
+
+		SoapMessage requestMock = createMock(SoapMessage.class);
+		expect(requestMock.getSoapAction()).andReturn("\"");
+		WebServiceMessageFactory factoryMock = createMock(WebServiceMessageFactory.class);
+		replay(requestMock, factoryMock);
+
+		MessageContext context = new DefaultMessageContext(requestMock, factoryMock);
+
+		assertThat(this.mapping.getEndpoint(context)).isNull();
+
+		verify(requestMock, factoryMock);
+	}
+
 	@Endpoint
 	private static final class MyEndpoint {
 

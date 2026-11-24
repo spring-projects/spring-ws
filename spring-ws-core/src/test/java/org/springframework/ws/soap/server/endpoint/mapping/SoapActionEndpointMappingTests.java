@@ -50,6 +50,13 @@ class SoapActionEndpointMappingTests {
 	}
 
 	@Test
+	void getLookupKeyForMessageWithSingleQuote() throws Exception {
+		((SoapMessage) this.context.getRequest()).setSoapAction("\"");
+
+		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo("\"");
+	}
+
+	@Test
 	void testValidateLookupKey() {
 		assertThat(this.mapping.validateLookupKey("SoapAction")).isTrue();
 	}

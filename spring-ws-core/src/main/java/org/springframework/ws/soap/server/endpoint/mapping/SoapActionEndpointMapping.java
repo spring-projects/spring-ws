@@ -18,6 +18,7 @@ import org.springframework.ws.server.endpoint.mapping.AbstractMapBasedEndpointMa
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
+import org.springframework.ws.soap.support.SoapUtils;
 
 /**
  * Implementation of the {@code EndpointMapping} interface to map from {@code SOAPAction}
@@ -86,14 +87,7 @@ public class SoapActionEndpointMapping extends AbstractMapBasedEndpointMapping i
 	@Override
 	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		if (messageContext.getRequest() instanceof SoapMessage request) {
-			String soapAction = request.getSoapAction();
-			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
-					&& soapAction.charAt(soapAction.length() - 1) == '"') {
-				return soapAction.substring(1, soapAction.length() - 1);
-			}
-			else {
-				return soapAction;
-			}
+			return SoapUtils.unescapeAction(request.getSoapAction());
 		}
 		else {
 			return null;

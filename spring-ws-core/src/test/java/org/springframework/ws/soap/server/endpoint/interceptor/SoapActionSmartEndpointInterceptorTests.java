@@ -14,6 +14,7 @@ import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.endpoint.interceptor.EndpointInterceptorAdapter;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
@@ -57,6 +58,16 @@ class SoapActionSmartEndpointInterceptorTests {
 		boolean result = interceptor.shouldIntercept(this.messageContext, null);
 
 		assertThat(result).isTrue();
+	}
+
+	@Test
+	void shouldInterceptWithSingleQuoteAction() {
+
+		((SoapMessage) this.messageContext.getRequest()).setSoapAction("\"");
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
+				this.soapAction);
+
+		assertThat(interceptor.shouldIntercept(this.messageContext, null)).isFalse();
 	}
 
 	@Test

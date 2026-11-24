@@ -46,6 +46,21 @@ public abstract class SoapUtils {
 	}
 
 	/**
+	 * Unescape the given SOAP action, removing the quotes that surround it. A SOAP action
+	 * that is not surrounded by quotes is returned as is.
+	 * @param soapAction the SOAP action, possibly surrounded by quotes
+	 * @return the SOAP action without the surrounding quotes
+	 * @since 5.0.5
+	 * @see #escapeAction(String)
+	 */
+	public static @Nullable String unescapeAction(@Nullable String soapAction) {
+		if (soapAction != null && soapAction.length() > 1 && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
+			return soapAction.substring(1, soapAction.length() - 1);
+		}
+		return soapAction;
+	}
+
+	/**
 	 * Returns the value of the action parameter in the given SOAP 1.2 content type.
 	 * @param contentType the SOAP 1.2 content type
 	 * @return the action
