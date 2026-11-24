@@ -9,11 +9,13 @@ package org.springframework.ws.client.core.observation;
 
 import java.io.IOException;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareSenderWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 
@@ -21,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link SoapClientObservationContext}.
@@ -63,6 +66,34 @@ class SoapClientObservationContextTests {
 		doThrow(new IOException("Connection closed")).when(connection)
 			.addRequestHeader("traceparent", "00-trace-span-01");
 		new SoapClientObservationContext.HeaderSetter().set(connection, "traceparent", "00-trace-span-01");
+	}
+
+	@Test
+	void soapActionIsReturnedWithoutTheQuotesOfTheWireFormat() {
+		assertThat(soapAction("\"urn:example:action\"")).isEqualTo("urn:example:action");
+	}
+
+	@Test
+	void soapActionWithoutQuotesIsReturnedAsIs() {
+		assertThat(soapAction("urn:example:action")).isEqualTo("urn:example:action");
+	}
+
+	@Test
+	void emptySoapActionIsNotAvailable() {
+		assertThat(soapAction("\"\"")).isNull();
+		assertThat(soapAction("")).isNull();
+	}
+
+	@Test
+	void soapActionWithASingleQuoteIsReturnedAsIs() {
+		assertThat(soapAction("\"")).isEqualTo("\"");
+	}
+
+	private @Nullable String soapAction(String value) {
+		SoapMessage request = mock(SoapMessage.class);
+		when(request.getSoapAction()).thenReturn(value);
+		MessageContext messageContext = new DefaultMessageContext(request, new MockWebServiceMessageFactory());
+		return new SoapClientObservationContext(messageContext, mock()).getSoapAction();
 	}
 
 }

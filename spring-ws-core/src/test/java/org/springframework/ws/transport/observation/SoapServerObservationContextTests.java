@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.ws.MockWebServiceMessageFactory;
 import org.springframework.ws.context.DefaultMessageContext;
 import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.http.HttpServletConnection;
@@ -89,6 +91,34 @@ class SoapServerObservationContextTests {
 	void getHeaderIgnoresConnectionThatDoesNotSupportHeaders() {
 		WebServiceConnection connection = mock(WebServiceConnection.class);
 		assertThat(new SoapServerObservationContext.HeaderGetter().get(connection, "traceparent")).isNull();
+	}
+
+	@Test
+	void soapActionIsReturnedWithoutTheQuotesOfTheWireFormat() {
+		assertThat(soapAction("\"urn:example:action\"")).isEqualTo("urn:example:action");
+	}
+
+	@Test
+	void soapActionWithoutQuotesIsReturnedAsIs() {
+		assertThat(soapAction("urn:example:action")).isEqualTo("urn:example:action");
+	}
+
+	@Test
+	void emptySoapActionIsNotAvailable() {
+		assertThat(soapAction("\"\"")).isNull();
+		assertThat(soapAction("")).isNull();
+	}
+
+	@Test
+	void soapActionWithASingleQuoteIsReturnedAsIs() {
+		assertThat(soapAction("\"")).isEqualTo("\"");
+	}
+
+	private @Nullable String soapAction(String value) {
+		SoapMessage request = mock(SoapMessage.class);
+		when(request.getSoapAction()).thenReturn(value);
+		this.context.setAsCurrent(new DefaultMessageContext(request, new MockWebServiceMessageFactory()));
+		return this.context.getSoapAction();
 	}
 
 }

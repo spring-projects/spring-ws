@@ -25,6 +25,7 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.mapping.AbstractEndpointMapping;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.support.SoapUtils;
 import org.springframework.ws.transport.HeadersAwareReceiverWebServiceConnection;
 import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.http.HttpServletConnection;
@@ -178,13 +179,15 @@ public class SoapServerObservationContext extends RequestReplyReceiverContext<We
 	}
 
 	/**
-	 * Return the SOAP action of the request, or {@code null} if the request is not a
-	 * {@link SoapMessage} or does not define one.
+	 * Return the SOAP action of the request, without the quotes that surround it on the
+	 * wire, or {@code null} if the request is not a {@link SoapMessage} or does not
+	 * define one.
 	 */
 	public @Nullable String getSoapAction() {
 		WebServiceMessage request = getRequest();
 		if (request instanceof SoapMessage soapMessage) {
-			return soapMessage.getSoapAction();
+			String soapAction = SoapUtils.unescapeAction(soapMessage.getSoapAction());
+			return StringUtils.hasLength(soapAction) ? soapAction : null;
 		}
 		return null;
 	}
