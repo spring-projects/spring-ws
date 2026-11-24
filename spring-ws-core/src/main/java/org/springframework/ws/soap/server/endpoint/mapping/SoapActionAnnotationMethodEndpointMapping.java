@@ -15,7 +15,6 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.server.EndpointInvocationChain;
@@ -25,6 +24,7 @@ import org.springframework.ws.soap.server.SoapEndpointInvocationChain;
 import org.springframework.ws.soap.server.SoapEndpointMapping;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapAction;
 import org.springframework.ws.soap.server.endpoint.annotation.SoapActions;
+import org.springframework.ws.soap.support.SoapUtils;
 
 /**
  * Implementation of the {@link org.springframework.ws.server.EndpointMapping} interface
@@ -87,14 +87,7 @@ public class SoapActionAnnotationMethodEndpointMapping extends AbstractAnnotatio
 	@Override
 	protected @Nullable String getLookupKeyForMessage(MessageContext messageContext) throws Exception {
 		if (messageContext.getRequest() instanceof SoapMessage request) {
-			String soapAction = request.getSoapAction();
-			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
-					&& soapAction.charAt(soapAction.length() - 1) == '"') {
-				return soapAction.substring(1, soapAction.length() - 1);
-			}
-			else {
-				return soapAction;
-			}
+			return SoapUtils.unescapeAction(request.getSoapAction());
 		}
 		else {
 			return null;

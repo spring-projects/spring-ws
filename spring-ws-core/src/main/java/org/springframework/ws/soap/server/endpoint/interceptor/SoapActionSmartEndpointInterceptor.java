@@ -8,10 +8,10 @@
 package org.springframework.ws.soap.server.endpoint.interceptor;
 
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.support.SoapUtils;
 
 /**
  * Implementation of the {@link org.springframework.ws.server.SmartEndpointInterceptor}
@@ -32,13 +32,8 @@ public class SoapActionSmartEndpointInterceptor extends DelegatingSmartSoapEndpo
 
 	@Override
 	protected boolean shouldIntercept(WebServiceMessage request, Object endpoint) {
-		if (request instanceof SoapMessage) {
-			String soapAction = ((SoapMessage) request).getSoapAction();
-			if (StringUtils.hasLength(soapAction) && soapAction.charAt(0) == '"'
-					&& soapAction.charAt(soapAction.length() - 1) == '"') {
-				soapAction = soapAction.substring(1, soapAction.length() - 1);
-			}
-			return this.soapAction.equals(soapAction);
+		if (request instanceof SoapMessage soapMessage) {
+			return this.soapAction.equals(SoapUtils.unescapeAction(soapMessage.getSoapAction()));
 		}
 		else {
 			return false;
