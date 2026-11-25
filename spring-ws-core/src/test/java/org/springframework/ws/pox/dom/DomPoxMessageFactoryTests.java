@@ -66,17 +66,10 @@ class DomPoxMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
 	}
 
 	@Test
-	void maxMessageSizeCanBeSetUsingStringRepresentation() {
+	void maxMessageSizeCanBeSetInBytes() {
 		DomPoxMessageFactory factory = new DomPoxMessageFactory();
-		factory.setMaxMessageSize("2MB");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
-	}
-
-	@Test
-	void maxMessageSizeDefaultToBytes() {
-		DomPoxMessageFactory factory = new DomPoxMessageFactory();
-		factory.setMaxMessageSize("1024");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
+		factory.setMaxMessageBytes(2048);
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(2));
 	}
 
 }

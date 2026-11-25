@@ -171,16 +171,14 @@ public class AxiomSoapMessageFactory implements SoapMessageFactory, Initializing
 	}
 
 	/**
-	 * Set the maximum message size allowed for incoming message, using a textual
-	 * representation such as {@code 20MB}, as supported by
-	 * {@link DataSize#parse(CharSequence)}. A plain number is interpreted as a number of
-	 * bytes. Set to {@code -1} for unlimited message size.
-	 * @param maxMessageSize the maximum message size, as a {@link String}
+	 * Set the maximum message size allowed for incoming message, in bytes. Set to
+	 * {@code -1} for unlimited message size.
+	 * @param maxMessageBytes the maximum message size, in bytes
 	 * @since 3.1.11
 	 * @see #setMaxMessageSize(DataSize)
 	 */
-	public void setMaxMessageSize(String maxMessageSize) {
-		setMaxMessageSize(DataSize.parse(maxMessageSize));
+	public void setMaxMessageBytes(long maxMessageBytes) {
+		setMaxMessageSize(DataSize.ofBytes(maxMessageBytes));
 	}
 
 	@Override

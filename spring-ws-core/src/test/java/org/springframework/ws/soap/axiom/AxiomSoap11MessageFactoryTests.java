@@ -187,17 +187,10 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 	}
 
 	@Test
-	void maxMessageSizeCanBeSetUsingStringRepresentation() {
+	void maxMessageSizeCanBeSetInBytes() {
 		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
-		factory.setMaxMessageSize("2MB");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
-	}
-
-	@Test
-	void maxMessageSizeDefaultToBytes() {
-		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
-		factory.setMaxMessageSize("1024");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
+		factory.setMaxMessageBytes(2048);
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(2));
 	}
 
 }

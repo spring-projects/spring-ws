@@ -37,28 +37,28 @@ public abstract class AbstractWebServiceMessageFactoryTests {
 	}
 
 	@Test
-	void maxMessageSizeCanBeSetWithStringInXmlConfiguration() {
-		WebServiceMessageFactory factory = loadMessageFactoryFromXmlConfiguration("20MB");
+	void maxMessageSizeCanBeSetInXmlConfiguration() {
+		WebServiceMessageFactory factory = loadMessageFactoryFromXmlConfiguration("20971520");
 		assertThat(ReflectionTestUtils.getField(factory, "maxMessageSize")).isEqualTo(DataSize.ofMegabytes(20));
 	}
 
 	@Test
-	void maxMessageSizeCanBeDisabledWithStringInXmlConfiguration() {
+	void maxMessageSizeCanBeDisabledInXmlConfiguration() {
 		WebServiceMessageFactory factory = loadMessageFactoryFromXmlConfiguration("-1");
 		assertThat(ReflectionTestUtils.getField(factory, "maxMessageSize")).isEqualTo(DataSize.ofBytes(-1));
 	}
 
-	private WebServiceMessageFactory loadMessageFactoryFromXmlConfiguration(String maxMessageSize) {
+	private WebServiceMessageFactory loadMessageFactoryFromXmlConfiguration(String maxMessageBytes) {
 		String xml = """
 				<beans xmlns="http://www.springframework.org/schema/beans"
 				       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				       xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 				    <bean id="messageFactory" class="%s">
-				        <property name="maxMessageSize" value="%s"/>
+				        <property name="maxMessageBytes" value="%s"/>
 				    </bean>
 				</beans>
 				"""
-			.formatted(this.messageFactory.getClass().getName(), maxMessageSize);
+			.formatted(this.messageFactory.getClass().getName(), maxMessageBytes);
 		try (GenericXmlApplicationContext context = new GenericXmlApplicationContext()) {
 			context.load(new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8)));
 			context.refresh();

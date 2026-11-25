@@ -95,19 +95,11 @@ class SaajSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
 	}
 
 	@Test
-	void maxMessageSizeCanBeSetUsingStringRepresentation() throws Exception {
+	void maxMessageSizeCanBeSetInBytes() throws Exception {
 		SaajSoapMessageFactory factory = new SaajSoapMessageFactory(
 				MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
-		factory.setMaxMessageSize("2MB");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
-	}
-
-	@Test
-	void maxMessageSizeDefaultToBytes() throws Exception {
-		SaajSoapMessageFactory factory = new SaajSoapMessageFactory(
-				MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
-		factory.setMaxMessageSize("1024");
-		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
+		factory.setMaxMessageBytes(2048);
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(2));
 	}
 
 }
