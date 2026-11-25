@@ -112,6 +112,19 @@ public class SaajSoapMessageFactory implements SoapMessageFactory, InitializingB
 	}
 
 	/**
+	 * Set the maximum message size allowed for incoming message, using a textual
+	 * representation such as {@code 20MB}, as supported by
+	 * {@link DataSize#parse(CharSequence)}. A plain number is interpreted as a number of
+	 * bytes. Set to {@code -1} for unlimited message size.
+	 * @param maxMessageSize the maximum message size, as a {@link String}
+	 * @since 3.1.11
+	 * @see #setMaxMessageSize(DataSize)
+	 */
+	public void setMaxMessageSize(String maxMessageSize) {
+		setMaxMessageSize(DataSize.parse(maxMessageSize));
+	}
+
+	/**
 	 * Defines whether a {@code xml:lang} attribute should be set on SOAP 1.1
 	 * {@code <faultstring>} elements.
 	 * <p>

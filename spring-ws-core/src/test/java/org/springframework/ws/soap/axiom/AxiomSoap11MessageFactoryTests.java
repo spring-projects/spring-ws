@@ -7,15 +7,15 @@
 
 package org.springframework.ws.soap.axiom;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 
 import org.junit.jupiter.api.Test;
 import org.xmlunit.assertj.XmlAssert;
@@ -31,8 +31,8 @@ import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.TransformerFactoryUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
 
@@ -184,6 +184,20 @@ public class AxiomSoap11MessageFactoryTests extends AbstractSoap11MessageFactory
 			.isThrownBy(() -> factory.createWebServiceMessage(tis))
 			.havingCause()
 			.withMessageContaining("Maximum message size exceeded");
+	}
+
+	@Test
+	void maxMessageSizeCanBeSetUsingStringRepresentation() {
+		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
+		factory.setMaxMessageSize("2MB");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
+	}
+
+	@Test
+	void maxMessageSizeDefaultToBytes() {
+		AxiomSoapMessageFactory factory = new AxiomSoapMessageFactory();
+		factory.setMaxMessageSize("1024");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
 	}
 
 }
