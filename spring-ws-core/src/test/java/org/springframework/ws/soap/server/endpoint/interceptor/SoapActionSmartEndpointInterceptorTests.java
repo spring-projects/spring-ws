@@ -20,6 +20,8 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SoapActionSmartEndpointInterceptorTests {
 
@@ -61,13 +63,20 @@ class SoapActionSmartEndpointInterceptorTests {
 	}
 
 	@Test
-	void shouldInterceptWithSingleQuoteAction() {
+	void shouldInterceptDoesNotFailWithSingleQuoteAction() {
 
-		((SoapMessage) this.messageContext.getRequest()).setSoapAction("\"");
 		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate,
 				this.soapAction);
 
-		assertThat(interceptor.shouldIntercept(this.messageContext, null)).isFalse();
+		assertThat(interceptor.shouldIntercept(messageContextWithSoapAction("\""), null)).isFalse();
+	}
+
+	@Test
+	void shouldInterceptMatchWithSingleQuoteAction() {
+
+		SoapActionSmartEndpointInterceptor interceptor = new SoapActionSmartEndpointInterceptor(this.delegate, "\"");
+
+		assertThat(interceptor.shouldIntercept(messageContextWithSoapAction("\""), null)).isTrue();
 	}
 
 	@Test
@@ -79,6 +88,12 @@ class SoapActionSmartEndpointInterceptorTests {
 		boolean result = interceptor.shouldIntercept(this.messageContext, null);
 
 		assertThat(result).isFalse();
+	}
+
+	private static MessageContext messageContextWithSoapAction(String soapAction) {
+		SoapMessage request = mock(SoapMessage.class);
+		when(request.getSoapAction()).thenReturn(soapAction);
+		return new DefaultMessageContext(request, mock());
 	}
 
 }

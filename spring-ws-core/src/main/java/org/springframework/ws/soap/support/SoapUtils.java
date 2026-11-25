@@ -39,7 +39,7 @@ public abstract class SoapUtils {
 		if (!soapAction.startsWith("\"")) {
 			soapAction = "\"" + soapAction;
 		}
-		if (!soapAction.endsWith("\"")) {
+		if (soapAction.length() < 2 || !soapAction.endsWith("\"")) {
 			soapAction = soapAction + "\"";
 		}
 		return soapAction;

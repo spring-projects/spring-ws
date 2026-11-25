@@ -17,6 +17,8 @@ import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SoapActionEndpointMappingTests {
 
@@ -51,9 +53,11 @@ class SoapActionEndpointMappingTests {
 
 	@Test
 	void getLookupKeyForMessageWithSingleQuote() throws Exception {
-		((SoapMessage) this.context.getRequest()).setSoapAction("\"");
+		SoapMessage request = mock(SoapMessage.class);
+		when(request.getSoapAction()).thenReturn("\"");
+		MessageContext messageContext = new DefaultMessageContext(request, mock());
 
-		assertThat(this.mapping.getLookupKeyForMessage(this.context)).isEqualTo("\"");
+		assertThat(this.mapping.getLookupKeyForMessage(messageContext)).isEqualTo("\"");
 	}
 
 	@Test

@@ -61,6 +61,17 @@ class SoapUtilsTests {
 	}
 
 	@Test
+	void escapeActionWithASingleQuote() {
+		assertThat(SoapUtils.escapeAction("\"")).isEqualTo("\"\"");
+	}
+
+	@Test
+	void escapeActionWithOneSidedQuote() {
+		assertThat(SoapUtils.escapeAction("\"action")).isEqualTo("\"action\"");
+		assertThat(SoapUtils.escapeAction("action\"")).isEqualTo("\"action\"");
+	}
+
+	@Test
 	void unescapeActionRemovesSurroundingQuotes() {
 		assertThat(SoapUtils.unescapeAction("\"action\"")).isEqualTo("action");
 		assertThat(SoapUtils.unescapeAction("\"\"")).isEmpty();
