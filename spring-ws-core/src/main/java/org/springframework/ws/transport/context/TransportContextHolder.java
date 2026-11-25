@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
  */
 public abstract class TransportContextHolder {
 
-	private static final ThreadLocal<TransportContext> transportContextHolder = new TransportThreadLocal();
+	private static final ThreadLocal<@Nullable TransportContext> transportContextHolder = new TransportThreadLocal();
 
 	/**
 	 * Associate the given {@code TransportContext} with the current thread.
@@ -40,11 +40,11 @@ public abstract class TransportContextHolder {
 	 * Return the {@code TransportContext} associated with the current thread, if any.
 	 * @return the current transport context, or {@code null} if none
 	 */
-	public static TransportContext getTransportContext() {
+	public static @Nullable TransportContext getTransportContext() {
 		return transportContextHolder.get();
 	}
 
-	private static final class TransportThreadLocal extends ThreadLocal<TransportContext> {
+	private static final class TransportThreadLocal extends ThreadLocal<@Nullable TransportContext> {
 
 		public String toString() {
 			return "Transport State";
