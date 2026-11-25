@@ -9,7 +9,6 @@ package org.springframework.ws.pox.dom;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
@@ -21,6 +20,7 @@ import org.springframework.util.unit.DataSize;
 import org.springframework.ws.AbstractWebServiceMessageFactoryTests;
 import org.springframework.ws.WebServiceMessageFactory;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIOException;
 
 class DomPoxMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
@@ -63,6 +63,20 @@ class DomPoxMessageFactoryTests extends AbstractWebServiceMessageFactoryTests {
 		InputStream is = new GZIPInputStream(new ByteArrayInputStream(baos.toByteArray()));
 		assertThatIOException().isThrownBy(() -> factory.createWebServiceMessage(is))
 			.withMessageContaining("Maximum message size exceeded");
+	}
+
+	@Test
+	void maxMessageSizeCanBeSetUsingStringRepresentation() {
+		DomPoxMessageFactory factory = new DomPoxMessageFactory();
+		factory.setMaxMessageSize("2MB");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
+	}
+
+	@Test
+	void maxMessageSizeDefaultToBytes() {
+		DomPoxMessageFactory factory = new DomPoxMessageFactory();
+		factory.setMaxMessageSize("1024");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
 	}
 
 }

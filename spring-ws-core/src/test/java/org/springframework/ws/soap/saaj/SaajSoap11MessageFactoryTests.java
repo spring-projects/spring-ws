@@ -94,4 +94,20 @@ class SaajSoap11MessageFactoryTests extends AbstractSoap11MessageFactoryTests {
 			.withStackTraceContaining("Maximum message size exceeded: 100B");
 	}
 
+	@Test
+	void maxMessageSizeCanBeSetUsingStringRepresentation() throws Exception {
+		SaajSoapMessageFactory factory = new SaajSoapMessageFactory(
+				MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+		factory.setMaxMessageSize("2MB");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofMegabytes(2));
+	}
+
+	@Test
+	void maxMessageSizeDefaultToBytes() throws Exception {
+		SaajSoapMessageFactory factory = new SaajSoapMessageFactory(
+				MessageFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL));
+		factory.setMaxMessageSize("1024");
+		assertThat(factory).hasFieldOrPropertyWithValue("maxMessageSize", DataSize.ofKilobytes(1));
+	}
+
 }
