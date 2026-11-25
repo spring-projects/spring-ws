@@ -40,7 +40,7 @@ public abstract class TransportContextHolder {
 	 * Return the {@code TransportContext} associated with the current thread, if any.
 	 * @return the current transport context, or {@code null} if none
 	 */
-	public static TransportContext getTransportContext() {
+	public static @Nullable TransportContext getTransportContext() {
 		return transportContextHolder.get();
 	}
 
