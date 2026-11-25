@@ -194,24 +194,39 @@ Version 1.2 might become more popular in the future, but 1.1 is currently the sa
 
 To protect applications against memory exhaustion attacks from oversized incoming messages, `WebServiceMessageFactory` implementations enforce a default maximum message size of 10MB.
 If an incoming message exceeds the configured size limit, it is rejected.
-You can customize the maximum size or disable the limit by setting the `maxMessageSize` property:
+You can customize the maximum size or disable the limit by setting the `maxMessageBytes` property, which takes a size in bytes (the next two examples set the limit to 20MB):
 
 ====
 [source,xml]
 ----
 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
-    <property name="maxMessageSize" value="20MB"/>
+    <property name="maxMessageBytes" value="20971520"/>
 </bean>
 ----
 ====
 
-To disable the limit entirely, set `maxMessageSize` to `-1`:
+If you prefer to express the size with a unit, you can use the `maxMessageSize` property, which takes a `DataSize`:
 
 ====
 [source,xml]
 ----
 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
-    <property name="maxMessageSize" value="-1"/>
+    <property name="maxMessageSize">
+        <bean class="org.springframework.util.unit.DataSize" factory-method="ofMegabytes">
+            <constructor-arg value="20"/>
+        </bean>
+    </property>
+</bean>
+----
+====
+
+To disable the limit entirely, set `maxMessageSize` or `maxMessageBytes` to `-1`:
+
+====
+[source,xml]
+----
+<bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+    <property name="maxMessageBytes" value="-1"/>
 </bean>
 ----
 ====
